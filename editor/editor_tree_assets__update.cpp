@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QScrollBar>
+
 #include "editor_tree_assets.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
@@ -14,6 +16,32 @@
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
 #include "project/project_world_stage_thing.h"
+
+
+//####################################################################################
+//##    Sets Selected Key, causes selected item to highlight
+//####################################################################################
+void TreeAssets::setSelectedKey(long key) {
+    m_selected_key = key;
+
+    // Scrolls to selected item if necessary
+    for (auto frame : m_asset_frames) {
+        if (frame->property(User_Property::Key).toLongLong() == key) {
+            QFrame *parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());
+            int widget_top = frame->geometry().y() + parent_frame->geometry().y();
+            int widget_bot = widget_top + frame->geometry().height();
+
+            if (widget_bot > this->geometry().height()) {
+                verticalScrollBar()->setValue( verticalScrollBar()->value() + (widget_bot - this->geometry().height() + 10));
+            } else if (widget_top < 0) {
+                verticalScrollBar()->setValue( verticalScrollBar()->value() + (widget_top - 10));
+            }
+            break;
+        }
+    }
+
+    this->repaint();
+}
 
 
 //####################################################################################

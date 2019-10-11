@@ -74,7 +74,7 @@ public:
 
     // Getters / Setters
     long            getSelectedKey() { return m_selected_key; }
-    void            setSelectedKey(long key) { m_selected_key = key; this->repaint(); }
+    void            setSelectedKey(long key);
 
 private slots:
     void            searchTextChanged(QString new_text);

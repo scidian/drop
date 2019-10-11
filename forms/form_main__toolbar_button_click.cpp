@@ -50,6 +50,20 @@ void FormMain::buttonGroupModeSetChecked(int id) {
 
 
 //####################################################################################
+//##    buttonGroupAddClicked SLOT and functions
+//####################################################################################
+void FormMain::buttonGroupAddClicked(int id) {
+    Buttons_Add clicked = static_cast<Buttons_Add>(id);
+
+    if (clicked == Buttons_Add::Add) {
+        FormPopup *popupAdd = new FormPopup(buttonsGroupAdd->button(id), m_project, widgetGroupAdd);
+        popupAdd->buildPopupAddEntity();
+        popupAdd->show();
+    }
+}
+
+
+//####################################################################################
 //##    buttonGroupLayering SLOT and functions
 //####################################################################################
 void FormMain::buttonGroupLayeringClicked(int id) {

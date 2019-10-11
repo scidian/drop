@@ -83,6 +83,7 @@ void FormMain::clearToolbar() {
 void FormMain::setToolbar(Form_Main_Mode new_mode) {
     switch (new_mode) {
         case Form_Main_Mode::World_Editor:
+            addToolbarGroup( widgetGroupAdd,        true );
             addToolbarGroup( widgetGroupLayering,   true );
             addToolbarGroup( widgetGroupEdit,       true );
             addToolbarGroup( widgetGroupTransform,  true );

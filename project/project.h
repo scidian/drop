@@ -45,8 +45,13 @@ typedef std::map<long, DrFont*>   FontMap;
 typedef std::map<long, DrImage*>  ImageMap;
 typedef std::map<Project_Options, QVariant>  OptionMap;
 
+
 // Constants
-constexpr long c_key_starting_number = 1;
+constexpr long c_key_starting_number = 1001;        // First 1001 keys or so are reserved for built in Entities in DrProject (like default images, etc)
+                                                    // ....."1001" is an easily searchable number
+constexpr long c_key_character_asset = 1;
+constexpr long c_key_object_asset =    2;
+
 
 //####################################################################################
 //##    DrProject
@@ -56,26 +61,24 @@ class DrProject
 {
 private:
     // Project Variables
-    long        m_key_generator;                        // Variable to hand out unique id key's to all children items
-    OptionMap   m_options;                              // Map holding DrProject Wide options
+    long        m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children items
+    OptionMap   m_options;                                      // Map holding DrProject Wide options
 
     // **********
     //      Every Item In These Project Maps is called an Entity and:
     //          - Inherit DrSettings for DrComponent / DrProperty usage
     //          - Is assigned an unique key upon creation from DrProject::getNextKey()
     //
-    WorldMap    m_worlds;                               // Holds worlds for the project
-    AssetMap    m_assets;                               // Holds assets for the project
-    EffectMap   m_effects;                              // Holds effects for the project
-    FontMap     m_fonts;                                // Holds custom fonts for the project
-    ImageMap    m_images;                               // Holds images for the project
-
-
+    WorldMap    m_worlds;                                       // Holds worlds for the project
+    AssetMap    m_assets;                                       // Holds assets for the project
+    EffectMap   m_effects;                                      // Holds effects for the project
+    FontMap     m_fonts;                                        // Holds custom fonts for the project
+    ImageMap    m_images;                                       // Holds images for the project
 
 
 public:
     // Constructor & Destructor
-    DrProject(long key_generator_starting_number = c_key_starting_number);
+    DrProject();
     ~DrProject();
 
     // Getters and Setters

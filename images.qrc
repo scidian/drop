@@ -165,5 +165,7 @@
         <file>assets/toolbar_icons/toolbar_trash_gray.png</file>
         <file>assets/toolbar_icons/toolbar_trash.png</file>
         <file>assets/tree_icons/tree_lock_disable.png</file>
+        <file>assets/toolbar_icons/toolbar_add_gray.png</file>
+        <file>assets/toolbar_icons/toolbar_add.png</file>
     </qresource>
 </RCC>

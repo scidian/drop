@@ -75,6 +75,24 @@ void FormMain::buildToolBar() {
         toolbarLayoutMode->addWidget(tool);
 
 
+    // ***** Mode "Editor" Add-On, Add: Adds Entity to Project
+    widgetGroupAdd = new QWidget(widgetToolbar);
+    widgetGroupAdd->hide();
+    widgetGroupAdd->setObjectName(QStringLiteral("widgetGroupAdd"));
+    widgetGroupAdd->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutAdd = new QHBoxLayout(widgetGroupAdd);
+        toolbarLayoutAdd->setSpacing(1);
+        toolbarLayoutAdd->setContentsMargins(0, 0, 0, 0);
+
+        buttonsGroupAdd = new QButtonGroup();
+        buttonsGroupAdd->setExclusive(false);
+        connect(buttonsGroupAdd, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupAddClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, 48, 26, false, true);
+        buttonsGroupAdd->addButton(tool, int(Buttons_Add::Add));
+        toolbarLayoutAdd->addWidget(tool);
+
+
     // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to Front / Back
     widgetGroupLayering = new QWidget(widgetToolbar);
     widgetGroupLayering->hide();

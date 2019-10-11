@@ -52,8 +52,25 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
     return m_components[component]->getProperty(property);
 }
 
+DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
+    for (auto component: m_components) {
+        for (auto property: component.second->getPropertyList()) {
+            if (property.second->getPropertyKey() == property_key_to_find) {
+                return property.second;
+            }
+        }
+    }
+    return nullptr;
+}
 
-// Returns Name from shared "Entity_Name" component
+DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find) {
+    return findPropertyFromPropertyKey(property_key_to_find)->getParentComponent();
+}
+
+
+//####################################################################################
+//##    Returns Name / Sets Name from shared "Entity_Name" component
+//####################################################################################
 QString DrSettings::getName() {
     DrComponent *name_component;
     DrProperty  *name_property;
@@ -76,19 +93,15 @@ QString DrSettings::getName() {
     return "Unknown Type, Can't Find Name";
 }
 
-DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
-    for (auto component: m_components) {
-        for (auto property: component.second->getPropertyList()) {
-            if (property.second->getPropertyKey() == property_key_to_find) {
-                return property.second;
-            }
-        }
-    }
-    return nullptr;
-}
-
-DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find) {
-    return findPropertyFromPropertyKey(property_key_to_find)->getParentComponent();
+// Returns Name from shared "Entity_Name" component
+void DrSettings::setName(QString new_name) {
+    DrComponent *name_component;
+    DrProperty  *name_property;
+    name_component = getComponent(Components::Entity_Name);
+    if (!name_component) return;
+    name_property  = name_component->getProperty(Properties::Entity_Name);
+    if (!name_property)  return;
+    name_property->setValue(new_name);
 }
 
 

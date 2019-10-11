@@ -63,6 +63,8 @@ QString StyleSheetToolBar() {
                                Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
 
     +
+    StyleSheetToolBarButtons("buttonAddThing",          "add.png",              "add.png",              "add_gray.png",          4, 4, 4, 4, 4, false) +
+
     StyleSheetToolBarButtons("buttonSendToBack",        "sendtoback.png",       "sendtoback.png",       "sendtoback_gray.png",   4, 4, 0, 4, 0, false) +
     StyleSheetToolBarButtons("buttonSendBackward",      "sendbackward.png",     "sendbackward.png",     "sendbackward_gray.png", 4, 0, 0, 0, 0, false) +
     StyleSheetToolBarButtons("buttonSendForward",       "sendforward.png",      "sendforward.png",      "sendforward_gray.png",  4, 0, 0, 0, 0, false) +

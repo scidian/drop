@@ -34,14 +34,17 @@ namespace Dr {
     QVariant    GetPreference(Preferences option_to_get)   { return options[option_to_get]; }
     void        SetPreference(Preferences option_to_set, QVariant new_value) { options[option_to_set] = new_value; }
 
-    void        SetActiveEditorRelay(IEditorRelay *editor_relay)   { g_active_editor =    editor_relay; }
-    void        SetActiveFormMain(FormMain *form_main)             { g_active_form_main = form_main; }
+    IEditorRelay*   GetActiveEditorRelay()                              { return g_active_editor; }
+    void            SetActiveEditorRelay(IEditorRelay *editor_relay)    { g_active_editor =    editor_relay; }
 
-    void        SetLabelText(Label_Names label, QString text)      { if (g_active_form_main) g_active_form_main->setLabelText(label, text); }
+    FormMain*       GetActiveFormMain()                                 { return g_active_form_main; }
+    void            SetActiveFormMain(FormMain *form_main)              { g_active_form_main = form_main; }
 
-    void        ClearCursor() { while (QApplication::overrideCursor()) qApp->restoreOverrideCursor(); }
-    void        HideCursor()               { qApp->setOverrideCursor( Qt::BlankCursor ); }
-    void        SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
+    void            SetLabelText(Label_Names label, QString text)       { if (g_active_form_main) g_active_form_main->setLabelText(label, text); }
+
+    void    ClearCursor() { while (QApplication::overrideCursor()) qApp->restoreOverrideCursor(); }
+    void    HideCursor()               { qApp->setOverrideCursor( Qt::BlankCursor ); }
+    void    SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
 
 
     // ########## Load saved preferences
@@ -77,8 +80,6 @@ namespace Dr {
 
 
 }   // namespace Dr
-
-
 
 
 

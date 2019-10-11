@@ -14,7 +14,7 @@
 //####################################################################################
 DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
     m_parent_project(parent_project) {
-    setKey(key);
+    this->setKey(key);
 
     QFileInfo file_info(image_path);
 

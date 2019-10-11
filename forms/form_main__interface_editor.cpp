@@ -51,6 +51,9 @@ void FormMain::buildAssetTree() {
 
 // Sends new list to Inspector
 void FormMain::buildInspector(QList<long> key_list) {
+    // If passed the no key constant, remove it to make an empty list
+    key_list.removeOne(c_no_key);
+
     // If we're currently in the middle of selecting with rubber band box, don't update yet
     if (currentViewMode() == View_Mode::Selecting) return;
 

@@ -80,16 +80,17 @@ private:
     QList<QWidget*>      toolbarWidgets { };
     QList<QLayoutItem*>  toolbarSpacers { };
 
-    QToolBar       *toolbar;
-    QWidget        *widgetToolbar;          QHBoxLayout    *widgetToolbarLayout;
+    QToolBar    *toolbar;
+    QWidget     *widgetToolbar;         QHBoxLayout     *widgetToolbarLayout;
 
-    QWidget        *widgetGroupMode;        QButtonGroup   *buttonsGroupMode;
-    QWidget        *widgetGroupEdit;        QButtonGroup   *buttonsGroupEdit;
-    QWidget        *widgetGroupLayering;    QButtonGroup   *buttonsGroupLayering;
-    QWidget        *widgetGroupTransform;   QButtonGroup   *buttonsGroupTransform;
-    QWidget        *widgetGroupGrid;        QButtonGroup   *buttonsGroupGrid;
-    QWidget        *widgetGroupPlay;        QButtonGroup   *buttonsGroupPlay;
-    QWidget        *widgetGroupSettings;
+    QWidget     *widgetGroupMode;       QButtonGroup    *buttonsGroupMode;
+    QWidget     *widgetGroupAdd;        QButtonGroup    *buttonsGroupAdd;
+    QWidget     *widgetGroupEdit;       QButtonGroup    *buttonsGroupEdit;
+    QWidget     *widgetGroupLayering;   QButtonGroup    *buttonsGroupLayering;
+    QWidget     *widgetGroupTransform;  QButtonGroup    *buttonsGroupTransform;
+    QWidget     *widgetGroupGrid;       QButtonGroup    *buttonsGroupGrid;
+    QWidget     *widgetGroupPlay;       QButtonGroup    *buttonsGroupPlay;
+    QWidget     *widgetGroupSettings;
 
 
     // ***** Shared FormMain Widgets
@@ -203,12 +204,13 @@ private:
     void            updateToolbar();
 
 private slots:
+    void            buttonGroupAddClicked(int id);
+    void            buttonGroupEditClicked(int id);
+    void            buttonGroupGridClicked(int id);
+    void            buttonGroupLayeringClicked(int id);
     void            buttonGroupModeClicked(int id);
     void            buttonGroupPlayClicked(int id);
-    void            buttonGroupLayeringClicked(int id);
-    void            buttonGroupEditClicked(int id);
     void            buttonGroupTransformClicked(int id);
-    void            buttonGroupGridClicked(int id);
 
     void            centerViewTimer(QPointF center_point);
     void            editMenuAboutToShow();

@@ -19,6 +19,7 @@ class DrProject;
 class FormPopup;
 class TreeInspector;
 enum class Color_Palettes;      // Defined in "colors.h"
+enum class DrAssetType;         // Defined in "enums.h"
 
 enum class Colors {
     Basic,
@@ -64,8 +65,11 @@ public:
     QWidget*        getInnerWidget()        { return m_inner_widget; }
 
 
-    // ***** Snap to Grid Option Popup
-    void            buildPopupGridSnap();
+    // ***** Custom Pop-Ups
+    void            buildPopupAddEntity();                                              // Add Entity to Project
+    void            addAssetFromPopup(DrAssetType asset_type, long key);                // Child function for Popup Entity Form
+
+    void            buildPopupGridSnap();                                               // Snap to Grid Option
 };
 
 

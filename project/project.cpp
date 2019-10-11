@@ -24,10 +24,8 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrProject::DrProject(long key_generator_starting_number) {
-    // #NOTE: Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
-    if (key_generator_starting_number <= 1) key_generator_starting_number = 1;
-    m_key_generator = key_generator_starting_number;
+DrProject::DrProject() {
+    clearProject();
 }
 
 DrProject::~DrProject() {
@@ -40,7 +38,19 @@ void DrProject::clearProject() {
     for (auto it = m_fonts.begin();     it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
     for (auto it = m_images.begin();    it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_effects.begin();   it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
-    m_key_generator = 1;
+
+    // Add this Image to every project for use with New Assets,     Key == c_key_character_asset == 1
+    QString ball_path =     ":/assets/test_images/ball_1.png";
+    QImage  ball =          QImage(ball_path).convertToFormat(QImage::Format::Format_ARGB32);
+    this->addImage(c_key_character_asset, ball_path, "ball_1.png", "Ball", ball);
+
+    // Add this Image to every project for use with New Assets,     Key == c_key_object_asset ==    2
+    QString block_path =    ":/assets/test_images/metal_block.png";
+    QImage  block =         QImage(block_path).convertToFormat(QImage::Format::Format_ARGB32);
+    this->addImage(c_key_object_asset, block_path, "metal_block.png", "Block", block);
+
+    // !!!!! #NOTE: Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
+    m_key_generator = c_key_starting_number;                        // starts at 100
 }
 
 

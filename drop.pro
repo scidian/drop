@@ -139,6 +139,7 @@ SOURCES += \
     forms/form_main__toolbar_build.cpp \
     forms/form_main__toolbar_button_click.cpp \
     forms/form_popup.cpp \
+    forms/form_popup__add_entity.cpp \
     forms/form_popup__grid_snap.cpp \
     forms/form_popup_colors.cpp \
     forms/form_settings.cpp \

@@ -45,14 +45,17 @@ namespace Dr {
     QVariant    GetPreference(Preferences preference_to_get);
     void        SetPreference(Preferences preference_to_set, QVariant new_value);
 
-    void        SetActiveEditorRelay(IEditorRelay *new_editor_relay);
-    void        SetActiveFormMain(FormMain *new_form_main);
+    IEditorRelay*   GetActiveEditorRelay();
+    void            SetActiveEditorRelay(IEditorRelay *new_editor_relay);
 
-    void        SetLabelText(Label_Names label, QString text);
+    FormMain*       GetActiveFormMain();
+    void            SetActiveFormMain(FormMain *new_form_main);
 
-    void        ClearCursor();
-    void        HideCursor();
-    void        SetCursor(QCursor &cursor);
+    void            SetLabelText(Label_Names label, QString text);
+
+    void    ClearCursor();
+    void    HideCursor();
+    void    SetCursor(QCursor &cursor);
 
 }   // namespace Dr
 
