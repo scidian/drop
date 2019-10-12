@@ -29,27 +29,32 @@ private:
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
     long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, DrEffect, etc.)
+    long            m_list_order = -1;                  // Keeps track of what order to be in on the asset list tree
 
     long            m_width;
     long            m_height;
 
-    long            m_list_order;                       // Keeps track of what order to be in on the asset list tree
-    long            m_group_number;                     // Keeps track of what group to be in on the asset list tree
 
 public:
     // Constructor & Destructor
-    explicit DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_image_key);
+    explicit DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key);
     virtual ~DrAsset() override;
 
+    // DrSettings Overrides
+    virtual DrType  getType() override      { return DrType::Asset; }
 
     // Getters / Setters
-    virtual DrType  getType() override      { return DrType::Asset; }
-    DrAssetType     getAssetType()          { return m_asset_type; }
-
     DrProject*      getParentProject()      { return m_parent_project; }
+    DrAssetType     getAssetType()          { return m_asset_type; }
+    long            getSourceKey()          { return m_source_key; }
+    long            getListOrder()          { return m_list_order; }
+
     long            getWidth()              { return m_width; }
     long            getHeight()             { return m_height; }
-    long            getSourceKey()          { return m_source_key; }
+
+    void            setAssetType(DrAssetType type)  { m_asset_type = type; }
+    void            setSourceKey(long key)          { m_source_key = key; }
+    void            setListOrder(long order)        { m_list_order = order; }
 
 
     // Function Calls

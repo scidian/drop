@@ -18,9 +18,9 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long new_world_key, QString new_world_name, bool add_start_stage) {
+DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage) {
     m_parent_project = parent_project;
-    this->setKey(new_world_key);
+    this->setKey(key);
 
     initializeWorldSettings(new_world_name);
 
@@ -92,10 +92,10 @@ DrStage* DrWorld::getStageWithName(QString stage_name) {
 //####################################################################################
 
 void DrWorld::initializeWorldSettings(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "World Name", "Name of the current world.");
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("World Name");
+    property_name->setDescription("Name of the current World.");
+    property_name->setValue(new_name);
 
     addComponent(Components::World_Settings, "World Settings", "Settings for current world.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);

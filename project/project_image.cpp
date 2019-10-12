@@ -12,8 +12,8 @@
 //####################################################################################
 //##    Constructors
 //####################################################################################
-DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
-    m_parent_project(parent_project) {
+DrImage::DrImage(DrProject *parent_project, long key, QString image_path) {
+    m_parent_project = parent_project;
     this->setKey(key);
 
     QFileInfo file_info(image_path);
@@ -31,7 +31,7 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) :
 // File Loading Constructor
 DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image) {
     m_parent_project = parent_project;
-    setKey(key);
+    this->setKey(key);
     m_full_path = full_path;
     m_filename = filename;
     m_simple_name = simple_name;

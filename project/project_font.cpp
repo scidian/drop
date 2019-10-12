@@ -12,12 +12,11 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) :
-    m_parent_project(parent_project) {
-
+DrFont::DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) {
+    m_parent_project = parent_project;
     this->setKey(key);
 
-    m_name =  font_name;
+    m_name =   font_name;
     m_pixmap = font_pixmap;
 
     if (use_test_rects)

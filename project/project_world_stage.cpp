@@ -33,7 +33,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
 
     if (m_is_start_stage) {
         // If start stage, make name hidden to stop user from changing it
-        DrProperty *my_name = getComponentProperty(Components::Entity_Name, Properties::Entity_Name);
+        DrProperty *my_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
         my_name->setEditable(false);
     }
 }
@@ -67,7 +67,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::Mirror:
         case DrThingType::Swirl:
         case DrThingType::Water:
-            new_name = asset->getComponentProperty(Components::Entity_Name, Properties::Entity_Name)->getValue().toString();
+            new_name = asset->getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->getValue().toString();
             break;
 
         ///case DrThingType::Camera:
@@ -88,12 +88,20 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
 void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
     if (from_thing->getThingType() != to_thing->getThingType()) return;
 
-    for (auto component : from_thing->getComponentList()) {
-        for (auto property : component.second->getPropertyList()) {
-            DrProperty *to_property = to_thing->getComponentProperty(component.first, property.first);
-            to_property->setValue(property.second->getValue());
-            to_property->setEditable(property.second->isEditable());
-            to_property->setHidden(property.second->isHidden());
+    for (auto component_pair : from_thing->getComponentMap()) {
+        for (auto property_pair : component_pair.second->getPropertyMap()) {
+            DrProperty *from_property = property_pair.second;
+            DrProperty *to_property =   to_thing->getComponentProperty(component_pair.first, property_pair.first);
+
+            // Don't copy key
+            if (to_property->getPropertyKey() == static_cast<int>(Properties::Entity_Key)) continue;
+
+            // Copy all other properties
+            to_property->setValue(      from_property->getValue());
+            to_property->setEditable(   from_property->isEditable());
+            to_property->setHidden(     from_property->isHidden());
+            to_property->setDisplayName(from_property->getDisplayName());
+            to_property->setDescription(from_property->getDescription());
         }
     }
 }
@@ -130,10 +138,10 @@ QList<long> DrStage::thingKeysSortedByZOrder() {
 //####################################################################################
 
 void DrStage::initializeStageSettings(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Stage Name", "Name of the current stage.");
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Stage Name");
+    property_name->setDescription("Name of the current Stage.");
+    property_name->setValue(new_name);
 
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for current stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);

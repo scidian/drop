@@ -128,6 +128,7 @@ void DrProject::saveProjectToFile() {
         asset_data["key"] =         QVariant::fromValue(asset->getKey());
         asset_data["source_key"] =  QVariant::fromValue(asset->getSourceKey());
         asset_data["type"] =        QVariant(Dr::EnumToInt(asset->getAssetType()));
+        asset_data["list_order"] =  QVariant::fromValue(asset->getListOrder());
         addSettingsToMap(asset, asset_data);
         settings.beginWriteArray("assets");
         settings.setArrayIndex(asset_count++);
@@ -152,7 +153,7 @@ void DrProject::saveProjectToFile() {
         settings.endArray();
 
         // Write Stages
-        QString world_array = "stages in world:" + world_data["key"].toString();
+        QString world_array = "stages_in_world:" + world_data["key"].toString();
         int stage_count = 0;
         for (auto stage_pair : world->getStageMap()) {
             if (stage_pair.first < c_key_starting_number) continue;                     // Don't save reserved items, keys / items handled by editor
@@ -168,7 +169,7 @@ void DrProject::saveProjectToFile() {
             settings.endArray();
 
             // Write Things
-            QString stage_array = "things in stage:" + stage_data["key"].toString();
+            QString stage_array = "things_in_stage:" + stage_data["key"].toString();
             int thing_count = 0;
             for (auto thing_pair : stage->getThingMap()) {
                 if (thing_pair.first < c_key_starting_number) continue;                 // Don't save reserved items, keys / items handled by editor
@@ -196,7 +197,7 @@ void DrProject::saveProjectToFile() {
 void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
     map["locked"] =  QVariant::fromValue(entity->isLocked());
     map["visible"] = QVariant::fromValue(entity->isVisible());
-    for (auto component_pair : entity->getComponentList()) {
+    for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::number(component->getComponentKey()) + ":";
         map[map_key + "display_name"] = QVariant(component->getDisplayName());
@@ -206,7 +207,7 @@ void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
         map[map_key + "turned_on"] =    QVariant(component->isTurnedOn());
         map[map_key + "comp_key"] =     QVariant::fromValue(component->getComponentKey());
 
-        for (auto property_pair : component->getPropertyList()) {
+        for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
             map[map_key + "display_name"] = QVariant(property->getDisplayName());

@@ -18,6 +18,7 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrSettings::DrSettings() {
+    addComponentEntitySettings();
     addComponentHiddenSettings();
 }
 
@@ -54,7 +55,7 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
     for (auto component: m_components) {
-        for (auto property: component.second->getPropertyList()) {
+        for (auto property: component.second->getPropertyMap()) {
             if (property.second->getPropertyKey() == property_key_to_find) {
                 return property.second;
             }
@@ -80,7 +81,7 @@ QString DrSettings::getName() {
         case DrType::StartStage:
         case DrType::Thing:
         case DrType::Asset:
-            name_component = getComponent(Components::Entity_Name);                 if (!name_component) return "No Name Component";
+            name_component = getComponent(Components::Entity_Settings);             if (!name_component) return "No Name Component";
             name_property  = name_component->getProperty(Properties::Entity_Name);  if (!name_property)  return "No Name Property";
             return name_property->getValue().toString();
         case DrType::Image:     return "DrImage - Unknown Name";
@@ -95,7 +96,7 @@ QString DrSettings::getName() {
 bool DrSettings::setName(QString new_name) {
     DrComponent *name_component;
     DrProperty  *name_property;
-    name_component = getComponent(Components::Entity_Name);                         if (!name_component) return false;
+    name_component = getComponent(Components::Entity_Settings);                     if (!name_component) return false;
     name_property  = name_component->getProperty(Properties::Entity_Name);          if (!name_property)  return false;
     name_property->setValue(new_name);
     return true;
@@ -113,6 +114,15 @@ void DrSettings::addComponent(Components component, QString display_name, QStrin
 void DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
                                         QVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
     m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
+}
+
+void DrSettings::addComponentEntitySettings() {
+    addComponent(Components::Entity_Settings, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Settings)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Name, Property_Type::String, "",
+                           "Name", "Name of the current item.");
+    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Key, Property_Type::Int, -1,
+                           "ID Key", "Unique Project Key for this item.", false, false);
 }
 
 void DrSettings::addComponentHiddenSettings() {

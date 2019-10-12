@@ -5,6 +5,7 @@
 //      Tree Inspector Definitions
 //
 //
+#include <QDebug>
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
@@ -119,14 +120,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     }
 
 
-    // Retrieve list of components for selected item
-    ComponentMap list_components = new_settings->getComponentList();
-
     // Loop through each component and add it to the Inspector list
     this->clear();
     m_widgets.clear();
 
-    for (auto component_pair: list_components) {
+    for (auto component_pair: new_settings->getComponentMap()) {
         DrComponent *component = component_pair.second;
 
         if (component->isTurnedOn() == false) {
@@ -145,7 +143,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        if (component->getComponentKey() == Dr::EnumToInt(Components::Entity_Name)) {
+        if (component->getComponentKey() == Dr::EnumToInt(Components::Entity_Settings)) {
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
@@ -186,9 +184,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
         vertical_layout->setContentsMargins(6,4,8,4);
 
         // Loop through each property and add it to the component frame
-        for (auto property_pair: component->getPropertyList()) {
+        for (auto property_pair: component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
-            if (property->isHidden()) continue;
+            if (property->isHidden() && Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) {
+                continue;
+            }
 
             QFrame *single_row = new QFrame(properties_frame);
             QBoxLayout *horizontal_split = new QHBoxLayout(single_row);

@@ -57,7 +57,7 @@ public:
     long            getComponentKey() { return m_component_key; }
     DrSettings*     getParentSettings() { return m_parent_settings; }
 
-    PropertyMap&    getPropertyList() { return m_properties; }
+    PropertyMap&    getPropertyMap() { return m_properties; }
     DrProperty*     getProperty(long setting);
     DrProperty*     getProperty(Properties setting);
 

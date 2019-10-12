@@ -35,15 +35,12 @@ DrShapeList autoCollisionShape(QPixmap pixmap);
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_asset_type, long source_image_key) {
+DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key) {
     m_parent_project = parent_project;
+    this->setKey(key);
 
-    this->setKey(new_asset_key);
     m_asset_type = new_asset_type;
     m_source_key = source_image_key;
-
-    m_list_order = new_asset_key;
-    m_group_number = 0;
 
     QPixmap     my_starting_pixmap;
     DrShapeList shape;
@@ -63,7 +60,7 @@ DrAsset::DrAsset(DrProject *parent_project, long new_asset_key, DrAssetType new_
             DrEffect *effect = m_parent_project->getEffect(source_image_key);
             if (effect == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Effect with key: " + QString::number(source_image_key));
             my_starting_pixmap = effect->getPixmap();
-            initializeAssetSettingsEffect(Dr::StringFromEffectType(m_parent_project->getEffect(source_image_key)->getEffectType()));
+            initializeAssetSettingsEffect(Dr::StringFromEffectType(effect->getEffectType()));
             break;
         }
         case DrAssetType::Text: {
@@ -157,10 +154,10 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
 //####################################################################################
 
 void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap, DrShapeList &shape) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Character Name", "Name of the current Character Asset.");
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Character Name");
+    property_name->setDescription("Name of the current Character Asset.");
+    property_name->setValue(new_name);
 
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
@@ -212,10 +209,10 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
 }
 
 void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, DrShapeList &shape) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Object Name", "Name of the current Object Asset.");
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Object Name");
+    property_name->setDescription("Name of the current Object Asset.");
+    property_name->setValue(new_name);
 
     addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
@@ -230,18 +227,18 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, Dr
 }
 
 void DrAsset::initializeAssetSettingsEffect(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Effect Name", "Name of the current Effect Asset.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect Asset.");
+    property_name->setValue(new_name);
 }
 
 
 void DrAsset::initializeAssetSettingsFont(DrFont *font) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, font->getName(),
-                           "Font Name", "Name of the current Font Asset.");
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Font Name");
+    property_name->setDescription("Name of the current Font Asset.");
+    property_name->setValue(font->getName());
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);

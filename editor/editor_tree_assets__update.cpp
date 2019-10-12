@@ -79,7 +79,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                                 for (auto stage : world.second->getStageMap()) {
                                     for (auto thing : stage.second->getThingMap()) {
                                         if (thing.second->getAssetKey() == asset->getKey()) {
-                                            thing.second->setComponentPropertyValue(Components::Entity_Name, Properties::Entity_Name, asset_text);
+                                            thing.second->setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Name, asset_text);
                                             newly_changed_items.append(thing.second);
                                             if (!newly_changed_properties.contains(Properties::Entity_Name)) {
                                                 newly_changed_properties.append(Properties::Entity_Name);

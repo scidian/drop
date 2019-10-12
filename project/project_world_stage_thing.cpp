@@ -34,7 +34,11 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     this->setKey(new_thing_key);                    // assign key passed in from key generator, this key matches key in parent Stage map container
 
     m_thing_type = new_thing_type;                  // assign thing type
-    m_asset_key = from_asset_key;                   // associated asset key
+    m_asset_key =  from_asset_key;                   // associated asset key
+
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
+    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
+                           "Asset Key", "ID Key of Asset this item represents.", false, false);
 
     DrAsset *asset = m_parent_project->findAssetFromKey(from_asset_key);
 
@@ -234,10 +238,10 @@ void DrThing::addComponentSpecialEffects() {
 //##    Camera Components
 //####################################################################################
 void DrThing::addComponentSettingsCamera(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Camera Name", "Name of the current Camera.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Camera Name");
+    property_name->setDescription("Name of the current Camera.");
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
     getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
@@ -249,20 +253,20 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 //##    Character Components
 //####################################################################################
 void DrThing::addComponentSettingsCharacter(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Character Name", "Name of the current Character.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Character Name");
+    property_name->setDescription("Name of the current Character.");
+    property_name->setValue(new_name);
 }
 
 //####################################################################################
 //##    Object Components
 //####################################################################################
 void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Object Name", "Name of the current Object.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Object Name");
+    property_name->setDescription("Name of the current Object.");
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
@@ -282,10 +286,10 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
 //##    Text Components
 //####################################################################################
 void DrThing::addComponentSettingsText(QString new_name) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, new_name,
-                           "Text Name", "Name of the current Text Box.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Text Name");
+    property_name->setDescription("Name of the current Text Box.");
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for current Text Box.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
@@ -306,10 +310,10 @@ void DrThing::addComponentSettingsText(QString new_name) {
 //##    Fire Components
 //####################################################################################
 void DrThing::addComponentSettingsFire() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fire",
-                           "Effect Name", "Name of the current Effect.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect.");
+    property_name->setValue("Fire");
 
     addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
@@ -336,10 +340,10 @@ void DrThing::addComponentSettingsFire() {
 //##    Fisheye Components
 //####################################################################################
 void DrThing::addComponentSettingsFisheye() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Fisheye",
-                           "Effect Name", "Name of the current Effect.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect.");
+    property_name->setValue("Fisheye");
 
     addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
@@ -355,10 +359,10 @@ void DrThing::addComponentSettingsFisheye() {
 //##    Light Components
 //####################################################################################
 void DrThing::addComponentSettingsLight(QColor color) {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Light",
-                           "Effect Name", "Name of the current Effect.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect.");
+    property_name->setValue("Light");
 
     addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
@@ -390,10 +394,10 @@ void DrThing::addComponentSettingsLight(QColor color) {
 //##    Mirror Components
 //####################################################################################
 void DrThing::addComponentSettingsMirror() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Mirror",
-                           "Effect Name", "Name of the current Effect.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect.");
+    property_name->setValue("Mirror");
 
     addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for current Mirror.", Component_Colors::Silver_Snow, true);
     getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
@@ -415,10 +419,10 @@ void DrThing::addComponentSettingsMirror() {
 //##    Swirl Components
 //####################################################################################
 void DrThing::addComponentSettingsSwirl() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Swirl",
-                           "Effect Name", "Name of the current Effect.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect.");
+    property_name->setValue("Swirl");
 
     addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for current Swirl.", Component_Colors::Purple_Pastel, true);
     getComponent(Components::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
@@ -434,10 +438,10 @@ void DrThing::addComponentSettingsSwirl() {
 //##    Water Components
 //####################################################################################
 void DrThing::addComponentSettingsWater() {
-    addComponent(Components::Entity_Name, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Name)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Name, Properties::Entity_Name, Property_Type::String, "Water",
-                           "Effect Name", "Name of the current Effect.", false, false);
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of the current Effect.");
+    property_name->setValue("Water");
 
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
