@@ -93,7 +93,7 @@ void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
             DrProperty *from_property = property_pair.second;
             DrProperty *to_property =   to_thing->getComponentProperty(component_pair.first, property_pair.first);
 
-            // Don't copy key
+            // !!! DO NOT COPY UNIQUE ID KEY !!!
             if (to_property->getPropertyKey() == static_cast<int>(Properties::Entity_Key)) continue;
 
             // Copy all other properties

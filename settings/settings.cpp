@@ -27,6 +27,29 @@ DrSettings::~DrSettings() {
 }
 
 
+//####################################################################################
+//##    Initial Properties of all DrSettings
+//####################################################################################
+void DrSettings::addComponentEntitySettings() {
+    addComponent(Components::Entity_Settings, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Components::Entity_Settings)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Name, Property_Type::String, "",
+                           "Name", "Name of the current item.");
+    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Key, Property_Type::Int, -1,
+                           "ID Key", "Unique Project Key for this item.", false, false);
+}
+
+void DrSettings::addComponentHiddenSettings() {
+    addComponent(Components::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
+    getComponent(Components::Hidden_Settings)->setIcon(Component_Icons::Hidden);
+    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Advisor_Description, Property_Type::Textbox, "",
+                           "Description", "Custom Advisor Description for this item.");
+    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Item_Locked, Property_Type::Bool, false,
+                           "Locked?", "Can this item be moved / changed by user?");
+    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, Property_Type::Bool, false,
+                           "Hide?", "Should this item be hidden from editor listings (Asset Tree / Project Tree?)");
+}
+
 
 //####################################################################################
 //##    Component / Property fetching
@@ -116,27 +139,6 @@ void DrSettings::addPropertyToComponent(Components component, Properties propert
     m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
 }
 
-void DrSettings::addComponentEntitySettings() {
-    addComponent(Components::Entity_Settings, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Settings)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Name, Property_Type::String, "",
-                           "Name", "Name of the current item.");
-    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Key, Property_Type::Int, -1,
-                           "ID Key", "Unique Project Key for this item.", false, false);
-}
-
-void DrSettings::addComponentHiddenSettings() {
-    addComponent(Components::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
-    getComponent(Components::Hidden_Settings)->setIcon(Component_Icons::Hidden);
-    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Advisor_Description, Property_Type::Textbox, "",
-                           "Description", "Custom Advisor Description for this item.");
-    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Item_Locked, Property_Type::Bool, false,
-                           "Locked?", "Can this item be moved / changed by user?");
-    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, Property_Type::Bool, false,
-                           "Hide?", "Should this item be hidden from editor listings (Asset Tree / Project Tree?)");
-
-
-}
 
 
 

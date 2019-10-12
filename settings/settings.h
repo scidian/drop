@@ -27,17 +27,15 @@ typedef std::map<long, DrComponent*> ComponentMap;
 class DrSettings
 {
 private:
+    // Local Variables
     ComponentMap m_components;                          // Map of pointers to DrComponent classes
 
-    // The 3 Parts of Data for Every Setting
-    long         m_key = -1;                            // Holds unique key for each object with a base class DrSettings
     long         m_is_visible = true;                   // Should this be visible in editor?
     long         m_is_locked = false;                   // Should this Entity be locked from editing?
 
 
 protected:       // so derived classes can access
-    void         setKey (long new_key) { m_key = new_key;
-                                         setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key, QVariant::fromValue(m_key)); }
+    void         setKey (long new_key) { setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key, QVariant::fromValue(new_key)); }
 
 public:
     // Constructor and Destructor
@@ -46,7 +44,7 @@ public:
 
 
     // Getters and Setters
-    long            getKey()                { return m_key; }
+    long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLongLong(); }
     virtual DrType  getType()               { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
 
     DrSettings*     getSettings()           { return this; }

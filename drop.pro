@@ -122,7 +122,7 @@ SOURCES += \
     engine_things/engine_thing_light.cpp \
     engine_things/engine_thing_mirror.cpp \
     engine_things/engine_thing_object.cpp \
-    engine_things/engine_thing_object_create.cpp \
+    engine_things/engine_thing_object__create.cpp \
     engine_things/engine_thing_swirl.cpp \
     engine_things/engine_thing_water.cpp \
     enums.cpp \

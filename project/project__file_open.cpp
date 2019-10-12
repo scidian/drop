@@ -75,7 +75,7 @@ void DrProject::openProjectFromFile(QString open_file) {
         QString     full_path =     image_data["full_path"].toString();
         QString     filename =      image_data["filename"].toString();
         QString     simple_name =   image_data["simple_name"].toString();
-        QImage      image =         image_data["image"].value<QPixmap>().toImage();
+        QImage      image =         image_data["image"].value<QPixmap>().toImage().convertToFormat(QImage::Format_ARGB32);
         addImage(key, full_path, filename, simple_name, image);
     }
     settings.endArray();
@@ -197,6 +197,10 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
         for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
+
+            // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrShapeList class
+            if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Shape)) continue;
+
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
             k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString()   );
             k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString()   );

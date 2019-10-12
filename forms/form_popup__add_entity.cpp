@@ -80,7 +80,7 @@ void FormPopup::buildPopupAddEntity() {
                 editor->buildScene( m_project->findWorldFromKey(world_key)->getFirstStageKey() );
             }
             this->close();
-            if (editor) editor->getProjectTree()->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+            if (editor) editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
         });
 
         // Adds Stage to Project
@@ -94,7 +94,7 @@ void FormPopup::buildPopupAddEntity() {
                 editor->buildScene(stage_key);
             }
             this->close();
-            if (editor) editor->getProjectTree()->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+            if (editor) editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
         });
 
         // Adds Character / Object Asset to Project

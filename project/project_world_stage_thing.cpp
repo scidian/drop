@@ -34,7 +34,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     this->setKey(new_thing_key);                    // assign key passed in from key generator, this key matches key in parent Stage map container
 
     m_thing_type = new_thing_type;                  // assign thing type
-    m_asset_key =  from_asset_key;                   // associated asset key
+    m_asset_key =  from_asset_key;                  // associated asset key
 
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
     addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
