@@ -40,16 +40,25 @@ void FormMain::menuNew() {
 
 
 void FormMain::menuOpen() {
-    QString caption =   "Open Project";
-    QString directory  = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
-    QString filter =    tr("Drop Project File (*.drop)");
+    // Grab directory from current save file, if no save file yet, use Desktop location
+    QString directory = m_project->getOption(Project_Options::File_Name_Path).toString();
+    if (directory == "") {
+        QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
+    }
+
+    // Show dialog for opening a file
+    QString caption =   tr("Open Project");
+    QString filter =    tr("All Files (*);;Drop Project File (*.drop)");
     QString selected =  tr("Drop Project File (*.drop)");
     QFileDialog::Options dialog_options;
-    QString open_file = QFileDialog::getOpenFileName(nullptr, caption, directory, filter, &selected, dialog_options);
-    setFormMainMode( Form_Main_Mode::Clear );
-    m_project->clearProject();
-    m_project->openProjectFromFile(open_file);
-    setFormMainMode( Form_Main_Mode::World_Editor );
+    QString open_file = QFileDialog::getOpenFileName(this, caption, directory, filter, &selected, dialog_options);
+
+    if (!open_file.isEmpty()) {
+        setFormMainMode( Form_Main_Mode::Clear );
+        m_project->clearProject();
+        m_project->openProjectFromFile(open_file);
+        setFormMainMode( Form_Main_Mode::World_Editor );
+    }
 }
 
 
@@ -65,10 +74,10 @@ void FormMain::menuSave(bool save_as) {
 
     // Show dialog if we need a new filename
     if (save_as) {
-        QString caption =   "Save Project As";
-        QString filter =    tr("Drop Project File (*.drop)");
+        QString caption =   tr("Save Project As");
+        QString filter =    tr("All Files (*);;Drop Project File (*.drop)");
         QString selected =  tr("Drop Project File (*.drop)");
-        full_path =  QFileDialog::getSaveFileName(nullptr, caption, full_path, filter, &selected);
+        full_path =  QFileDialog::getSaveFileName(this, caption, full_path, filter, &selected);
     }
 
     // Save the file

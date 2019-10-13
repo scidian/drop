@@ -34,6 +34,8 @@ public:
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
 
+    // Form Functions
+    void buildForm();
 
 };
 

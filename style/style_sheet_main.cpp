@@ -79,18 +79,18 @@ QString CustomStyleSheetFormatting() {
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
         // Generic Push Buttons
-        " QPushButton { "
+        " QPushButton#button { "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       border-radius: 4px; "
         "       padding-left: 20px; padding-right:  20px; "
         "       padding-top:   6px; padding-bottom:  6px; }"
-        " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        " QPushButton#button:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
-        " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        " QPushButton#button:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-        " QPushButton:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        " QPushButton#button:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
 
