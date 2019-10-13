@@ -21,6 +21,7 @@
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
+#include "form_about.h"
 #include "form_main.h"
 #include "helper.h"
 #include "helper_qt.h"
@@ -114,8 +115,9 @@ void FormMain::editMenuAboutToHide() {
 //####################################################################################
 //##    Help Menu Functions
 //####################################################################################
-void FormMain::menuAbout() {
-    QMessageBox::about(this, tr("About Drop"), tr("<b>Drop Creator</b> A Drag and Drop Game Maker by Stephens Nunnally"));
+void FormMain::menuAbout() {    
+    FormAbout *about = new FormAbout(m_project, this);
+    about->show();
 }
 
 

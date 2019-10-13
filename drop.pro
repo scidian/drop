@@ -126,6 +126,7 @@ SOURCES += \
     engine_things/engine_thing_swirl.cpp \
     engine_things/engine_thing_water.cpp \
     enums.cpp \
+    forms/form_about.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
     forms/form_fonts.cpp \
@@ -268,6 +269,7 @@ HEADERS += \
     enums.h \
     enums_dr_settings.h \
     enums_engine.h \
+    forms/form_about.h \
     forms/form_blank.h \
     forms/form_color_magnifier.h \
     forms/form_fonts.h \

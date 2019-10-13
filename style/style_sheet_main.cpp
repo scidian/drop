@@ -79,17 +79,20 @@ QString CustomStyleSheetFormatting() {
         " QLabel { color: " + Dr::GetColor(Window_Colors::Text).name() + "; padding: 0px; margin: 0px; border: 0px; } "
 
         // Generic Push Buttons
-        " QPushButton#button { "
+        " QPushButton { "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-radius: 4px; padding: 6px; }"
-        " QPushButton#button:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       border-radius: 4px; "
+        "       padding-left: 20px; padding-right:  20px; "
+        "       padding-top:   6px; padding-bottom:  6px; }"
+        " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
-        " QPushButton#button:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        " QPushButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
-        " QPushButton#button:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        " QPushButton:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+
 
         //################################################################################
         //##    Scroll bars, used mostly in QGraphicsView
@@ -111,6 +114,13 @@ QString CustomStyleSheetFormatting() {
         "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
         " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
         " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
+
+
+        //################################################################################
+        //##    Message Box / About Box Coloring
+        //################################################################################
+        " QMessageBox { background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
+
 
         //################################################################################
         //##    Asset, Stage, Inspector Trees
@@ -139,6 +149,7 @@ QString CustomStyleSheetFormatting() {
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
 
+
         //################################################################################
         //##    Dock Widgets - Stacked Dock TabBars
         //################################################################################
@@ -163,6 +174,7 @@ QString CustomStyleSheetFormatting() {
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
         "       font-size: " + QString::number(Dr::FontSize()) + "px; } "
+
 
         //################################################################################
         //##    Asset Tree - Item Frames, Search Bar

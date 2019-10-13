@@ -34,11 +34,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     setObjectName(QStringLiteral("childForm"));
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
-    // ***** Center window on screen and install dragging event filter
-    Dr::CenterFormOnScreen(parent, this);
-    this->installEventFilter(new DrFilterClickAndDragWindow(this));
-
-    // Create a contianer widget, this will allow Create a layout for the form and add a button
+    // ***** Create a contianer widget, this will allow Create a layout for the form and add a button
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
 
@@ -57,6 +53,10 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
         });
 
     layout->addWidget(m_inner_widget);
+
+    // ***** Center window on screen and install dragging event filter
+    Dr::CenterFormOnScreen(parent, this);
+    this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
 
 FormSettings::~FormSettings() { }

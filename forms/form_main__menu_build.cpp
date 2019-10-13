@@ -143,6 +143,7 @@ void FormMain::buildMenu() {
 
         menuBar->addAction(menuDebug->menuAction());
         menuDebug->addAction(actionHidden);
+        menuDebug->addSeparator();
         menuDebug->addAction(actionDebugLabels);
         menuDebug->addAction(actionListChildren);
 
