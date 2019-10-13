@@ -6,6 +6,7 @@
 //
 //
 #include <QDebug>
+#include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
@@ -19,6 +20,7 @@
 #include "editor_view/editor_scene.h"
 #include "editor_tree_inspector.h"
 #include "globals.h"
+#include "imaging/imaging.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
 #include "helper_qt.h"
@@ -30,6 +32,7 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+#include "style/style.h"
 #include "widgets/widgets.h"
 #include "widgets/widgets_event_filters.h"
 
@@ -147,6 +150,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool rebuild_on
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
+            // Build category button
             DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component->getDisplayNameQString(),
                                                                  Qt::black, Qt::black, nullptr, category_item);
             QString button_style;
@@ -166,9 +170,16 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool rebuild_on
                                                         " , stop:1.00 " + component->getColor().darker(300).name() + "); } "
                                           " QPushButton:hover:!pressed { color: " + component->getColor().lighter(200).name() + "; } "
                                           " QPushButton:pressed { color: " + component->getColor().darker(250).name() + "; } ");
-            // Apply the button widget to the tree item
-            category_button->setIcon(QIcon(component->getIcon()));
+            // Assign icon to category button
+            QPixmap cat_icon(component->getIcon());
+            QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
+            drop_shadow->setColor(component->getColor().darker(200) );
+            drop_shadow->setOffset( -4, 4 );
+            cat_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(cat_icon.toImage(), drop_shadow, 0) );
+            category_button->setIcon(QIcon(cat_icon));
             category_button->setStyleSheet(button_style);
+
+            // Add the button widget to the tree item
             m_filter_hover->attachToHoverHandler(category_button, component->getDisplayName(), component->getDescription());
             grid->addWidget(category_button);
         }

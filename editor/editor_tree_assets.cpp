@@ -287,6 +287,12 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Q
     ///colorize->setColor( Dr::GetColor(Window_Colors::Text) );
     ///text_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(text_icon.toImage(), colorize, 0) );
 
+    QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
+    drop_shadow->setColor( Dr::GetColor(Window_Colors::Shadow) );
+    drop_shadow->setColor( Dr::GetColor(Window_Colors::Button_Light).darker(200) );
+    drop_shadow->setOffset( -4, 4 );
+    text_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(text_icon.toImage(), drop_shadow, 0) );
+
     button->setIcon( text_icon );
     m_filter_hover->attachToHoverHandler(button, advisor_info);
     return button;
