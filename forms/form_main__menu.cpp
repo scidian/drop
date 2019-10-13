@@ -43,7 +43,7 @@ void FormMain::menuOpen() {
     // Grab directory from current save file, if no save file yet, use Desktop location
     QString directory = m_project->getOption(Project_Options::File_Name_Path).toString();
     if (directory == "") {
-        QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
+        directory = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
     }
 
     // Show dialog for opening a file
@@ -66,8 +66,8 @@ void FormMain::menuSave(bool save_as) {
     // Grab Filename from Project Settings, if is empty need Save As dialog anyways
     QString full_path = m_project->getOption(Project_Options::File_Name_Path).toString();
     if (full_path == "") {
-        QString directory  = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
-        QString filename =   m_project->getOption(Project_Options::Name).toString();
+        QString directory = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
+        QString filename =  m_project->getOption(Project_Options::Name).toString();
         full_path = directory + "/" + filename + ".drop";
         save_as = true;
     }

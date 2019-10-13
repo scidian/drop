@@ -134,14 +134,6 @@ void TreeProject::focusInEvent(QFocusEvent *event) {
     QTreeWidget::focusInEvent(event);
 }
 
-// Forwards some keys to SceneView
-void TreeProject::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
-        m_editor_relay->getSceneView()->keyPressEvent(event);
-        return;
-    }
-    QTreeWidget::keyPressEvent(event);
-}
 
 
 //####################################################################################

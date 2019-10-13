@@ -26,7 +26,6 @@ QString StringFromType(DrType type) {
         case DrType::Image:        return "Image";
         case DrType::World:        return "World";
         case DrType::Stage:        return "Stage";
-        case DrType::StartStage:   return "Start Stage";
         case DrType::Thing:        return "Thing";
         case DrType::NotFound:     return "Not Found";
         case DrType::BaseClass:    return "Base Class";

@@ -36,7 +36,6 @@ void TreeProject::updateItemNames(QList<DrSettings*> changed_items, QList<long> 
                                 row->setText(0, "World: " + item->getName());
                                 break;
                             case DrType::Stage:
-                            case DrType::StartStage:
                                 row->setText(0, "Stage: " + item->getName());
                                 break;
                             case DrType::Thing:

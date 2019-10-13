@@ -79,6 +79,7 @@ SOURCES += \
     editor/editor_tree_inspector__widgets3.cpp \
     editor/editor_tree_project.cpp \
     editor/editor_tree_project__drag_drop.cpp \
+    editor/editor_tree_project__key_press.cpp \
     editor/editor_tree_project__selection.cpp \
     editor/editor_tree_project__update.cpp \
     editor_view/editor_item.cpp \

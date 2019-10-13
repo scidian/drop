@@ -53,7 +53,7 @@ void TreeProject::selectionChanged (const QItemSelection &selected, const QItemS
                 DrSettings *check_for_stage = m_project->findSettingsFromKey(change_to_key);
                 if (check_for_stage == nullptr) change_to_key = world->getStartStageKey();
 
-            } else if (selected_type == DrType::Stage || selected_type == DrType::StartStage) {
+            } else if (selected_type == DrType::Stage) {
                 change_to_key = selected_key;
             } else if (selected_type == DrType::Thing) {
                 DrThing *as_thing = dynamic_cast<DrThing*>(selected_entity);

@@ -36,6 +36,12 @@ DrWorld::~DrWorld() {
     for (auto i: m_stages) { delete i.second; }
 }
 
+// Removes a Stage from the Project
+void DrWorld::deleteStage(DrStage *stage) {
+    m_stages.erase(stage->getKey());
+    delete stage;
+}
+
 
 //####################################################################################
 //##    Adds a Stage

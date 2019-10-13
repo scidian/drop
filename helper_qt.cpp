@@ -152,7 +152,19 @@ void ShowMessageBox(QString new_message, QPixmap pixmap, bool modal) {
 }
 
 
-
 }   // namespace Dr
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

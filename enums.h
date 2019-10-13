@@ -31,7 +31,6 @@ enum class DrType {
     Image,
     World,
         Stage,
-        StartStage,
             Thing,
 
 

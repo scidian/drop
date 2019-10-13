@@ -101,7 +101,6 @@ QString DrSettings::getName() {
     switch (getType()) {
         case DrType::World:
         case DrType::Stage:
-        case DrType::StartStage:
         case DrType::Thing:
         case DrType::Asset:
             name_component = getComponent(Components::Entity_Settings);             if (!name_component) return "No Name Component";
