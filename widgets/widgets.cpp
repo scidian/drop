@@ -20,6 +20,7 @@ DrQPushButtonCategory::DrQPushButtonCategory(const QString &text, QColor text_co
     connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
 
     m_parent_item =     parent_tree_item;
+
     m_text_color =      text_color;
     m_disabled_color =  disabled_color;
 }
@@ -31,7 +32,7 @@ void DrQPushButtonCategory::buttonPressed() {
 
 }
 
-// Override paint event to draw tree exanpsion decoration
+// Override paint event to draw tree expansion decoration
 void DrQPushButtonCategory::paintEvent(QPaintEvent *event) {
     QPushButton::paintEvent(event);
 

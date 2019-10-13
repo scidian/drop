@@ -174,12 +174,23 @@ QString CustomStyleSheetFormatting() {
         " QFrame#assetFrame:hover { " + StyleSheetRecessedBackgroundBorder(5, 95, true) + "; } "
         ///"       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
-        ///" QFrame#assetFrame:disabled { "
-        ///"       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        ///"       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
-        ///"       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-        ///"       border-radius: 0px; }"
-
+        " QPushButton#buttonAssetCategory { height: 22px; font: 13px; text-align: left; "
+        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "               border: none; "
+        "               border-style: solid; "
+        "               border-top-width: " + Dr::BorderWidth() + "; "
+        "               border-bottom-width: " + Dr::BorderWidth() + "; "
+        "               border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "               background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "                           stop:0.00 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+        "                           stop:0.05 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+        "                           stop:0.10 " + Dr::GetColor(Window_Colors::Button_Light).name() +
+        "                         , stop:0.90 " + Dr::GetColor(Window_Colors::Button_Light).darker(200).name() +
+        "                         , stop:0.95 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() +
+        "                         , stop:1.00 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() + "); } "
+        " QPushButton#buttonAssetCategory:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
+        " QPushButton#buttonAssetCategory:pressed  { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
+        " QPushButton#buttonAssetCategory:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
         " QWidget#assetSearchWidget {"
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "

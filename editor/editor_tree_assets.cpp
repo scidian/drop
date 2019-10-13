@@ -260,39 +260,23 @@ void TreeAssets::buildAssetTree(QString search_text) {
 //##    Create and style a buttons to be used as a header items for the categories
 //####################################################################################
 DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info) {
-    QString icon_size = "14px 14px";
-    QString padding_left = "10px";
+    QString icon_size =     "14px 14px";
+    QString padding_left =  "10px";
     if (name.toLower().contains("effects")) {
-        icon_size = "20px 18px";
-        padding_left = "7px";
+        icon_size =     "20px 18px";
+        padding_left =  "7px";
     }
 
-    QString buttonColor = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: " + icon_size + "; "
-                                                " padding-left: " + padding_left + "; "
-                                                " color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-                                                " border: none; "
-                                                " border-style: solid; "
-                                                " border-top-width: " + Dr::BorderWidth() + "; "
-                                                " border-bottom-width: " + Dr::BorderWidth() + "; "
-                                                " border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
-                                                " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-                                                "   stop:0.00 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
-                                                "   stop:0.05 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
-                                                "   stop:0.10 " + Dr::GetColor(Window_Colors::Button_Light).name() +
-                                                " , stop:0.90 " + Dr::GetColor(Window_Colors::Button_Light).darker(200).name() +
-                                                " , stop:0.95 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() +
-                                                " , stop:1.00 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() + "); } "
-                                  " QPushButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
-                                  " QPushButton:pressed  { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
-                                  " QPushButton:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } ");
+    QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
     DrQPushButtonCategory *button = new DrQPushButtonCategory(name, Dr::GetColor(Window_Colors::Text),
                                                               Dr::GetColor(Window_Colors::Text_Dark), nullptr, item);
+    button->setObjectName("buttonAssetCategory");
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);                                              // Created as false, becomes true if we add an Asset to the category
     this->setItemWidget(item, 0, button);                                   // Apply the button to the tree item
 
     QPixmap text_icon( ":/assets/tree_icons/" + icon_resource );
-    text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale, text_icon, 0 );
+    text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale,  text_icon, 0 );
     text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Brightness, text_icon, 200 );
     button->setIcon( text_icon );
     m_filter_hover->attachToHoverHandler(button, advisor_info);

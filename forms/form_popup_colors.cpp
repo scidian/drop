@@ -107,7 +107,7 @@ void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) 
 //##    Creates a block group of color buttons from palette colors
 //####################################################################################
 QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int columns, int rows, int mid_step,
-                                      int block_width, int block_height, int border, int x_spacing, int y_spacing) {
+                                          int block_width, int block_height, int border, int x_spacing, int y_spacing) {
     QWidget *color_block = new QWidget();
 
     int width =  (columns * block_width)  + (x_spacing * (columns - 1)) + 4;
@@ -179,6 +179,8 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
                 button->setFixedSize(block_width + 2, block_height + 2);
             }
 
+            QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
+            button->setToolTip( color_as_string );
             button->setStyleSheet( createButtonStyleSheet(color, border) );
 
             if (type == Colors::History) {  if (color_index >= history.count()) break;

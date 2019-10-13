@@ -21,6 +21,8 @@
 #include "forms/form_color_magnifier.h"
 #include "forms/form_popup.h"
 #include "helper.h"
+#include "project/project.h"
+#include "settings/settings.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
@@ -71,7 +73,7 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
 
     if (this->isEnabled()) {
         // Draw bottom highlight
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt() ) );
+        painter.setPen( QPen(Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt()) );
         painter.setBrush( Qt::NoBrush );
         painter.drawRoundedRect(6, 1, 20, 20, 4, 4);
 
@@ -82,12 +84,12 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
         gradient.setColorAt(0.18, middle);
         gradient.setColorAt(1.00, middle);
         painter.setBrush(gradient);
-        painter.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark).darker(200), Dr::BorderWidthAsInt() ) );
+        painter.setPen( QPen(Dr::GetColor(Window_Colors::Background_Dark).darker(200), Dr::BorderWidthAsInt()) );
         painter.drawRoundedRect(6, 1, 20, 19, 4, 4);
 
         // Draw check mark
         if (checkState()) {
-            painter.setPen( QPen( Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+            painter.setPen( QPen(Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
             QVector<QLineF> check;
             check.append( QLineF( 11, 13, 13, 16) );
             check.append( QLineF( 14, 16, 21,  8) );
@@ -96,7 +98,7 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
     } else {
         // Draw check mark
         if (checkState()) {
-            painter.setPen( QPen( Dr::GetColor(Window_Colors::Text_Dark), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap ) );
+            painter.setPen( QPen(Dr::GetColor(Window_Colors::Text_Dark), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
             QVector<QLineF> check;
             check.append( QLineF( 11, 13, 13, 16) );
             check.append( QLineF( 14, 16, 21,  8) );
@@ -302,10 +304,9 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         color_layout->setContentsMargins(0, 0, 0, 0);
         color_layout->setSpacing(0);
 
-        // This is the button that shows the color and color name, clicking it opens a color popup menu
+        // ***** This is the button that shows the color and color name, clicking it opens a color popup menu
         QPushButton *color_button = new QPushButton();
         color_button->setObjectName(QStringLiteral("buttonColorBox"));
-        color_button->setToolTip( Advisor_Info::ColorButton[0] );
         color_button->setFont(font);
         color_button->setSizePolicy(size_policy);
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
@@ -317,10 +318,14 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
             color_popup->show();
         });
         m_filter_hover->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
+        QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
+        color_button->setToolTip( color_as_string );
+        color_button->setProperty(User_Property::Body, property->getDescription() + "<br><br><b>Selected:</b> " + color_as_string);
+
         addToWidgetList(color_button);
         color_layout->addWidget(color_button);
 
-        // This is the color that shows the color picker dropper, clicking it starts the color magnifier
+        // ***** This is the color that shows the color picker dropper, clicking it starts the color magnifier
         QPushButton *picker_button = new QPushButton();
         picker_button->setObjectName(QStringLiteral("buttonColorPicker"));
         picker_button->setToolTip( Advisor_Info::ColorPicker[0] );
@@ -334,7 +339,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         m_filter_hover->attachToHoverHandler(picker_button, Advisor_Info::ColorPicker);
         color_layout->addWidget(picker_button);
 
-        // This is the button that shows the color wheel, clicking it opens the system color dialog
+        // ***** This is the button that shows the color wheel, clicking it opens the system color dialog
         QPushButton *dialog_button = new QPushButton();
         dialog_button->setObjectName(QStringLiteral("buttonColorDialog"));
         dialog_button->setToolTip( Advisor_Info::ColorDialog[0] );
@@ -373,9 +378,23 @@ void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
         text_color = QColor(205, 205, 205);
         highlight =  QColor(255, 255, 255);
     }
+    QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
     QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight, 4, 0, 4, 0, true, true, "");
+    button->setToolTip( color_as_string );
     button->setStyleSheet(color_button);
     button->setText( color.name().toUpper() );
+
+    // Update advisor info with new color
+    if (m_selected_key != c_no_key) {
+        DrSettings *settings = m_project->findSettingsFromKey(m_selected_key);
+        if (settings) {
+            DrProperty *property = settings->findPropertyFromPropertyKey( button->property(User_Property::Key).toInt() );
+            if (property) {
+                button->setProperty(User_Property::Body, property->getDescription() + "<br><br><b>Selected:</b> " + color_as_string);
+            }
+        }
+    }
+
     int alpha = static_cast<int>(color.alphaF() * 100.0);
     if (alpha != 100) button->setText( button->text() + " - " + QString::number(alpha) + "%" );
     button->setProperty(User_Property::Color, color.rgba());
