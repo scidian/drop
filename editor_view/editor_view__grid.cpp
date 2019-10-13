@@ -29,14 +29,14 @@ void DrView::updateGrid() {
     DrStage *stage = my_scene->getCurrentStageShown();
     DrWorld *world = stage->getParentWorld();
 
-    m_grid_origin =  stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
-    m_grid_size =    stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
-    m_grid_scale =   stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
-    m_grid_rotate =  stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
-    ///m_grid_color = Dr::GetColor(Window_Colors::Background_Light);
-    m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
-    m_back_color =   QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
-    m_back_color_use = world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool();
+    m_grid_origin =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
+    m_grid_size =       stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+    m_grid_scale =      stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
+    m_grid_rotate =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+    m_grid_color =      Dr::GetColor(Window_Colors::Background_Light);
+    ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
+    m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
+    m_back_color_use =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool();
 
     int style =      stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
     m_grid_style =   static_cast<Grid_Style>(style);

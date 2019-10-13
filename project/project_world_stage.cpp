@@ -18,6 +18,7 @@
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
+
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
@@ -41,6 +42,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
 DrStage::~DrStage() {
     for (auto i: m_things) { delete i.second; }
 }
+
 
 //####################################################################################
 //##
@@ -84,7 +86,16 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     return m_things[new_thing_key];
 }
 
-// Copies all component / property settings from one Thing to another Thing of the same type
+// Removes an object from the project
+void DrStage::deleteThing(DrThing *thing) {
+    m_things.erase(thing->getKey());
+    delete thing;
+}
+
+
+//####################################################################################
+//##    Copies all component / property settings from one Thing to another Thing of the same type
+//####################################################################################
 void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
     if (from_thing->getThingType() != to_thing->getThingType()) return;
 
@@ -106,14 +117,10 @@ void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
     }
 }
 
-// Removes an object from the project
-void DrStage::deleteThing(DrThing *thing) {
-    m_things.erase(thing->getKey());
-    delete thing;
-}
 
-
-// Returns a list of Thing keys contained in stage, sorted from high z value to low
+//####################################################################################
+//##    Returns a list of Thing keys contained in stage, sorted from high z value to low
+//####################################################################################
 QList<long> DrStage::thingKeysSortedByZOrder() {
     std::vector<std::pair<long, long>> zorder_key_pair;
 
@@ -171,7 +178,7 @@ void DrStage::initializeStageSettings(QString new_name) {
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Color, Property_Type::Color, Dr::GetColor(Window_Colors::Background_Light).rgba(),
-                           "Grid Color", "Color of grid lines.");
+                           "Grid Color", "Color of grid lines.", true);
 }
 
 
