@@ -34,7 +34,7 @@
 void FormMain::menuNew() {
     setFormMainMode( Form_Main_Mode::Clear );
     m_project->clearProject();
-    m_project->initializeNewProject("New Project: "+ Dr::CurrentTimeAsString(), Orientation::Portrait, 800, 1600);
+    m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600);
     setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself
 }
 

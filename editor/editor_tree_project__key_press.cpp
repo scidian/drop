@@ -41,7 +41,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             DrSettings *settings =  m_project->findSettingsFromKey( first_key );
             DrType      type =      settings->getType();
 
-            // Delete selected things
+            // Delete selected Ts
             if (type == DrType::Thing) {
                 m_editor_relay->getSceneView()->keyPressEvent(event);
 

@@ -49,14 +49,20 @@ DrFilterAssetMouseHandler::DrFilterAssetMouseHandler(QObject *parent, IEditorRel
 bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     // Grab the frame and get some properties from it
     QWidget *asset_frame =  dynamic_cast<QWidget*>(object);
-    if (!asset_frame) return false;
+    if (asset_frame == nullptr)     return false;
+    long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
+
     QLabel  *label_name =   asset_frame->findChild<QLabel*>("assetName");
     QLabel  *label_pixmap = asset_frame->findChild<QLabel*>("assetPixmap");
-    long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
+    if (label_name == nullptr)      return false;
+    if (label_pixmap == nullptr)    return false;
+
+    TreeAssets *asset_tree = m_editor_relay->getAssetTree();
+    if (asset_tree == nullptr)      return false;
 
     // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
-        m_editor_relay->getAssetTree()->setSelectedKey( asset_key );
+        asset_tree->setSelectedKey( asset_key );
         m_editor_relay->setActiveWidget(Editor_Widgets::Asset_Tree);
 
         m_editor_relay->buildInspector( { asset_key } );
@@ -84,6 +90,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     // Start scrolling name if name is too wide to be shown
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings  *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
+        if (asset == nullptr) return false;
         QString asset_name = asset->getName();
 
         if (asset_name != label_name->text()) {
@@ -101,7 +108,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Highlights selected Asset Item
     } else if (event->type() == QEvent::Paint) {
-        if (asset_key == m_editor_relay->getAssetTree()->getSelectedKey() && m_editor_relay->getAssetTree()->hasFocus()) {
+        if (asset_key == asset_tree->getSelectedKey() && asset_tree->hasFocus()) {
             QPainter painter(asset_frame);
             painter.setRenderHint(QPainter::Antialiasing, true);
             painter.setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 2) );

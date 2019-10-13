@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QApplication>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QScrollBar>
@@ -57,9 +58,6 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         }
     }
     if (layout_index == c_no_key) {     QTreeWidget::keyPressEvent(event);  return; }
-
-
-    Dr::SetLabelText(Label_Names::Label_1, "Flow Width: " + QString::number(flow->rowWidth()) + ", " + Dr::CurrentTimeAsString());
 
 
     // ***** Process arrow keys
