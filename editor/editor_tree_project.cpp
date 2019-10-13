@@ -15,6 +15,7 @@
 #include "editor_tree_project.h"
 #include "editor_view/editor_view.h"
 #include "globals.h"
+#include "imaging/imaging.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
 #include "helper_qt.h"
@@ -38,12 +39,16 @@ void TreeProject::buildProjectTree() {
     setAllowSelectionEvent(false);
     this->clear();
 
+    QColor icon_color = Dr::GetColor(Window_Colors::Icon_Dark);
+    QImage icon_image;
+
     for (auto world_pair: m_project->getWorldMap()) {
 
         QTreeWidgetItem *world_item = new QTreeWidgetItem(this);                                            // Create new item (top level item)
 
         DrWorld *world = world_pair.second;
-        world_item->setIcon(0, QIcon(":/assets/tree_icons/tree_world.png"));                                // Loads icon for world
+        icon_image = QPixmap(":/assets/tree_icons/tree_world.png").toImage();
+        world_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
         world_item->setText(0, "World: " + world->getName());                                               // Set text for item
         world_item->setData(0, User_Roles::Key, QVariant::fromValue(world->getKey()));
         this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
@@ -53,7 +58,8 @@ void TreeProject::buildProjectTree() {
             QTreeWidgetItem *stage_item = new QTreeWidgetItem(world_item);                                  // Create new item and add as child item
 
             DrStage *stage = stage_pair.second;
-            stage_item->setIcon(0, QIcon(":/assets/tree_icons/tree_stage.png"));                            // Loads icon for stage
+            icon_image = QPixmap(":/assets/tree_icons/tree_stage.png").toImage();
+            stage_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
             stage_item->setText(0, "Stage: " + stage->getName());                                           // Set text for item
             stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage->getKey()));
 
@@ -73,17 +79,17 @@ void TreeProject::buildProjectTree() {
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (thing->getThingType()) {
                     case DrThingType::None:      Dr::ShowErrorMessage("buildProjectTree", "No Icon for DrThingType::None");     break;
-                    case DrThingType::Character: thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_character.png"));       break;
-                    case DrThingType::Object:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_object.png"));          break;
-                    case DrThingType::Text:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_text.png"));            break;
-                    case DrThingType::Fire:      thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_fire.png"));            break;
-                    case DrThingType::Fisheye:   thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_fisheye.png"));         break;
-                    case DrThingType::Light:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_light.png"));           break;
-                    case DrThingType::Mirror:    thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_mirror.png"));          break;
-                    case DrThingType::Swirl:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_swirl.png"));           break;
-                    case DrThingType::Water:     thing_item->setIcon(0, QIcon(":/assets/tree_icons/tree_water.png"));           break;
+                    case DrThingType::Character: icon_image = QPixmap(":/assets/tree_icons/tree_character.png").toImage();      break;
+                    case DrThingType::Object:    icon_image = QPixmap(":/assets/tree_icons/tree_object.png").toImage();         break;
+                    case DrThingType::Text:      icon_image = QPixmap(":/assets/tree_icons/tree_text.png").toImage();           break;
+                    case DrThingType::Fire:      icon_image = QPixmap(":/assets/tree_icons/tree_fire.png").toImage();           break;
+                    case DrThingType::Fisheye:   icon_image = QPixmap(":/assets/tree_icons/tree_fisheye.png").toImage();        break;
+                    case DrThingType::Light:     icon_image = QPixmap(":/assets/tree_icons/tree_light.png").toImage();          break;
+                    case DrThingType::Mirror:    icon_image = QPixmap(":/assets/tree_icons/tree_mirror.png").toImage();         break;
+                    case DrThingType::Swirl:     icon_image = QPixmap(":/assets/tree_icons/tree_swirl.png").toImage();          break;
+                    case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();          break;
                 }
-
+                thing_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
                 thing_item->setText(0, thing->getName());                                                   // Set text for item
                 thing_item->setData(0, User_Roles::Key, QVariant::fromValue(thing->getKey()));              // Store item key in user data
 

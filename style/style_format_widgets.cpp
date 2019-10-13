@@ -6,6 +6,9 @@
 //
 //
 #include <QGraphicsDropShadowEffect>
+#include <QGraphicsEffect>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 #include <QGuiApplication>
 #include <QScreen>
 #include <QStyle>
@@ -67,6 +70,26 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type) {
         case Shadow_Types::Button_Shadow:   ApplyDropShadow(target_widget, 6,  0,  3, Dr::GetColor(Window_Colors::Shadow) );        break;
         case Shadow_Types::Tool_Tip_Shadow: ApplyDropShadow(target_widget, 4,  0,  3, Dr::GetColor(Window_Colors::Shadow) );        break;
     }
+}
+
+
+//####################################################################################
+//##    Applies QGraphicsEffect to QImage
+//####################################################################################
+QImage ApplyEffectToImage(QImage src, QGraphicsEffect *effect, int extent) {
+    if (src.isNull()) return QImage();
+    if (!effect) return src;
+
+    QGraphicsScene scene;
+    QGraphicsPixmapItem item;
+        item.setPixmap(QPixmap::fromImage(src));
+        item.setGraphicsEffect(effect);
+    scene.addItem(&item);
+    QImage image(src.size() + QSize(extent * 2, extent * 2), QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    scene.render(&painter, QRectF(), QRectF(-extent, -extent, src.width() + extent*2, src.height() + extent*2));
+    return image;
 }
 
 

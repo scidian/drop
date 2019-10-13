@@ -57,7 +57,7 @@ void TreeInspector::setAdvisorInfo(QString header, QString body) { m_editor_rela
 //####################################################################################
 //##    Dynamically build Inspector
 //####################################################################################
-void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
+void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool rebuild_only) {
 
     // If no keys were passed in, clear Inspector and exit
     if (key_list.count() == 0) {
@@ -71,9 +71,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     // Retrieve unique key of item clicked in list
     long new_key = key_list[0];
 
-    // If Inspector already contaitns this item exit now
+    // If Inspector already contains this item exit now
     if (new_key == c_no_key) return;
-    if (new_key == m_selected_key) return;
+    if (new_key == m_selected_key && !rebuild_only) return;
 
     DrSettings *new_settings = m_project->findSettingsFromKey( new_key );
     DrType new_type = new_settings->getType();
@@ -95,7 +95,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list) {
     // !!!!! END
 
     // If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
-    if (m_selected_type == DrType::Thing && new_type == DrType::Thing) {
+    if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !rebuild_only) {
         DrThing *thing1 = dynamic_cast<DrThing*>(m_project->findSettingsFromKey(m_selected_key));
         DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
         if (thing1->getThingType() == thing2->getThingType()) {

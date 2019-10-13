@@ -126,6 +126,28 @@ QImage applyPixelation(const QImage &from_image, QPointF data_pair) {
 }
 
 
+//####################################################################################
+//##    Replace all colors in image to new_color
+//####################################################################################
+QImage colorizeImage(const QImage &from_image, QColor new_color) {
+    QImage image = from_image;
+    QVector<QRgb*> lines = getScanLines(image);
+
+    for (int y = 0; y < image.height(); ++y) {
+        for (int x = 0; x < image.width(); ++x) {
+            QColor color = QColor::fromRgba( lines[y][x] );
+
+            if (color.alpha() > 10) {
+                color.setRed(   new_color.red() );
+                color.setGreen( new_color.green() );
+                color.setBlue(  new_color.blue() );
+                lines[y][x] = color.rgba();
+            }
+        }
+    }
+    return image;
+}
+
 
 }   // End DrImaging Namespace
 

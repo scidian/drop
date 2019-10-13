@@ -34,6 +34,7 @@ QString     CustomStyleSheetFormatting();
 
 void        ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, qreal offset_y, QColor shadow_color);
 void        ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type);
+QImage      ApplyEffectToImage(QImage src, QGraphicsEffect *effect, int extent);
 void        ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method = 0);
 void        ApplyPopupMask(QWidget *widget, int x_radius, int y_radius, bool below = true);
 void        CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_center,

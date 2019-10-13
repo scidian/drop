@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QEvent>
 #include <QFrame>
+#include <QGraphicsColorizeEffect>
 #include <QLabel>
 #include <QLineEdit>
 #include <QVBoxLayout>
@@ -30,6 +31,7 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+#include "style/style.h"
 #include "widgets/widgets.h"
 #include "widgets/widgets_event_filters.h"
 #include "widgets/widgets_layout.h"
@@ -267,6 +269,7 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Q
         padding_left =  "7px";
     }
 
+    // ***** Create Category Button
     QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
     DrQPushButtonCategory *button = new DrQPushButtonCategory(name, Dr::GetColor(Window_Colors::Text),
                                                               Dr::GetColor(Window_Colors::Text_Dark), nullptr, item);
@@ -275,13 +278,29 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Q
     button->setEnabled(false);                                              // Created as false, becomes true if we add an Asset to the category
     this->setItemWidget(item, 0, button);                                   // Apply the button to the tree item
 
+    // ***** Grab Icon to use, colorize it to the current palette
     QPixmap text_icon( ":/assets/tree_icons/" + icon_resource );
-    text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Grayscale,  text_icon, 0 );
-    text_icon = DrImaging::applySinglePixelFilter( Image_Filter_Type::Brightness, text_icon, 200 );
+    text_icon = QPixmap::fromImage( DrImaging::colorizeImage(text_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+
+    // Alternate method of colorizing
+    ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
+    ///colorize->setColor( Dr::GetColor(Window_Colors::Text) );
+    ///text_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(text_icon.toImage(), colorize, 0) );
+
     button->setIcon( text_icon );
     m_filter_hover->attachToHoverHandler(button, advisor_info);
     return button;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

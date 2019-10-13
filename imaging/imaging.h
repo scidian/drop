@@ -74,6 +74,8 @@ namespace DrImaging {
     QPixmap applyPixelation( const QPixmap &from_pixmap, QPointF data_pair );
     QImage  applyPixelation( const QImage  &from_image,  QPointF data_pair );
 
+    QImage  colorizeImage(const QImage &from_image, QColor new_color);
+
 
     // Draw Images for DrEffects
     QPixmap drawFibonacci(QColor background_color, QColor pen_color);

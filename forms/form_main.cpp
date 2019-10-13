@@ -105,8 +105,12 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
         widget->update();
     }
 
-    if (m_current_mode == Form_Main_Mode::World_Editor)
+    if (m_current_mode == Form_Main_Mode::World_Editor) {
+        buildAssetTree();
+        buildProjectTree();
+        treeInspector->buildInspectorFromKeys( { treeInspector->getSelectedKey() }, true );
         viewEditor->updateGrid();
+    }
 }
 
 
