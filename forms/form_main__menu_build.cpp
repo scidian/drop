@@ -82,41 +82,41 @@ void FormMain::buildMenu() {
     QMenu *menuColor_Schemes;
     menuColor_Schemes = new QMenu(menuBar);
     menuColor_Schemes->setObjectName(QStringLiteral("menuColor_Schemes"));
-    QAction *actionDark, *actionLight, *actionBlue, *actionAutumn;
-    actionDark =   new QAction(this);   actionDark->setObjectName(QStringLiteral("actionDark"));
-    actionLight =  new QAction(this);   actionLight->setObjectName(QStringLiteral("actionLight"));
-    actionBlue =   new QAction(this);   actionBlue->setObjectName(QStringLiteral("actionBlue"));
-    actionAutumn = new QAction(this);   actionAutumn->setObjectName(QStringLiteral("actionAutumn"));
+    QAction *actionDark, *actionLight, *actionNavy, *actionRust;
+    actionDark =    new QAction(this);  actionDark->setObjectName(QStringLiteral("actionDark"));
+    actionLight =   new QAction(this);  actionLight->setObjectName(QStringLiteral("actionLight"));
+    actionNavy =    new QAction(this);  actionNavy->setObjectName(QStringLiteral("actionNavy"));
+    actionRust =    new QAction(this);  actionRust->setObjectName(QStringLiteral("actionRust"));
         QActionGroup *alignmentGroup;
         alignmentGroup = new QActionGroup(this);
         alignmentGroup->addAction(actionDark);
         alignmentGroup->addAction(actionLight);
-        alignmentGroup->addAction(actionBlue);
-        alignmentGroup->addAction(actionAutumn);
+        alignmentGroup->addAction(actionNavy);
+        alignmentGroup->addAction(actionRust);
         alignmentGroup->setExclusive(true);
         actionDark->setCheckable(true);
         actionLight->setCheckable(true);
-        actionBlue->setCheckable(true);
-        actionAutumn->setCheckable(true);
+        actionNavy->setCheckable(true);
+        actionRust->setCheckable(true);
         switch (Dr::GetColorScheme()) {
             case Color_Scheme::Dark:    actionDark->setChecked(true);    break;
             case Color_Scheme::Light:   actionLight->setChecked(true);   break;
-            case Color_Scheme::Blue:    actionBlue->setChecked(true);    break;
-            case Color_Scheme::Autumn:  actionAutumn->setChecked(true);  break;
+            case Color_Scheme::Navy:    actionNavy->setChecked(true);    break;
+            case Color_Scheme::Rust:    actionRust->setChecked(true);  break;
         }
     // Instead of traditional SIGNAL to SLOT connect, we can "connect" inline lamda functions directly
     //      to signals. This allows for passing of variables not included in the SIGNAL that was fired.
     // Such as in this instance, passing a new Color_Scheme to FormMain::changePalette)
-    connect(actionDark,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Dark); });
-    connect(actionLight,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Light); });
-    connect(actionBlue,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Blue); });
-    connect(actionAutumn, &QAction::triggered, [this]() { changePalette(Color_Scheme::Autumn); });
+    connect(actionDark,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Dark); });
+    connect(actionLight, &QAction::triggered, [this]() { changePalette(Color_Scheme::Light); });
+    connect(actionNavy,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Navy); });
+    connect(actionRust,  &QAction::triggered, [this]() { changePalette(Color_Scheme::Rust); });
 
     menuBar->addAction(menuColor_Schemes->menuAction());
     menuColor_Schemes->addAction(actionDark);
     menuColor_Schemes->addAction(actionLight);
-    menuColor_Schemes->addAction(actionBlue);
-    menuColor_Schemes->addAction(actionAutumn);
+    menuColor_Schemes->addAction(actionNavy);
+    menuColor_Schemes->addAction(actionRust);
 
     QMenu *menuHelp;
     QAction *actionAbout;
@@ -181,8 +181,8 @@ void FormMain::buildMenu() {
     menuColor_Schemes->setTitle(QApplication::translate("MainWindow",   "Color Schemes", nullptr));
     actionDark->setText(QApplication::translate("MainWindow",               "Dark", nullptr));
     actionLight->setText(QApplication::translate("MainWindow",              "Light", nullptr));
-    actionBlue->setText(QApplication::translate("MainWindow",               "Blue", nullptr));
-    actionAutumn->setText(QApplication::translate("MainWindow",             "Autumn", nullptr));
+    actionNavy->setText(QApplication::translate("MainWindow",               "Navy", nullptr));
+    actionRust->setText(QApplication::translate("MainWindow",               "Rust", nullptr));
 
     menuHelp->setTitle(QApplication::translate("MainWindow",            "&Help", nullptr));
     actionAbout->setText(QApplication::translate("MainWindow",              "&About", nullptr));

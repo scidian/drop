@@ -45,7 +45,7 @@ QString StyleSheetToolBar() {
 
     " QToolButton {            border: 1px solid; "
     "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-    "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+    "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(130).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
@@ -127,8 +127,8 @@ QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QStr
     " QToolButton#" + button_name + ":hover:!checked {   border-radius: 4px; border: 1px solid; "
     "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
     "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-    " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
-    " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(12, 93) +  "; } "
+    " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
+    " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
     " QToolButton#" + button_name + "  {                image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
     " QToolButton#" + button_name + ":pressed {         image: url(:/assets/toolbar_icons/" + icon_faded_name + "); padding: 7px; } "
     " QToolButton#" + button_name + ":checked {         image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "

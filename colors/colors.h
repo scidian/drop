@@ -15,7 +15,7 @@
 //##    Palette options for windows
 //############################
 enum class Color_Scheme {
-    Dark,       Light,      Blue,       Autumn
+    Dark,       Light,      Navy,       Rust
 };
 
 enum class Window_Colors {
@@ -26,6 +26,7 @@ enum class Window_Colors {
     Text_Dark,          Text_Light,             Text,
     Icon_Dark,          Icon_Light,
     Seperator,
+    Header_Text,        Header_Fade,
 };
 
 enum class Color_Palettes {

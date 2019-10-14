@@ -102,7 +102,7 @@ QString CustomStyleSheetFormatting() {
         " QScrollBar::handle:vertical { margin: 2px; border-radius: 3px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
-        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Header_Fade).name() + "); } "
         " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
         " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
 
@@ -111,7 +111,7 @@ QString CustomStyleSheetFormatting() {
         " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 3px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark).name() + ", "
-        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Header_Fade).name() + "); } "
         " QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; } "
         " QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { width: 0px; } "
 
@@ -154,12 +154,12 @@ QString CustomStyleSheetFormatting() {
         //##    Dock Widgets - Stacked Dock TabBars
         //################################################################################
         " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
-        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; } "
+        "               color: " + Dr::GetColor(Window_Colors::Header_Text).name() + "; } "
         " QDockWidget::title { "
         "       text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
-        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Dark).name() + "); } "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Header_Fade).name() + "); } "
 
         // Tab bar that appears when you stack multiple DockWidgets
         " QTabBar { "
@@ -192,14 +192,14 @@ QString CustomStyleSheetFormatting() {
         "               border-style: solid; "
         "               border-top-width: " + Dr::BorderWidth() + "; "
         "               border-bottom-width: " + Dr::BorderWidth() + "; "
-        "               border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "               border-color: " + Dr::GetColor(Window_Colors::Header_Fade).name() + "; "
         "               background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-        "                           stop:0.00 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
-        "                           stop:0.05 " + Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+        "                           stop:0.00 " + Dr::GetColor(Window_Colors::Midlight).name() +        ///Button_Light).lighter(150).name() +
+        "                           stop:0.05 " + Dr::GetColor(Window_Colors::Midlight).name() +        ///Button_Light).lighter(150).name() +
         "                           stop:0.10 " + Dr::GetColor(Window_Colors::Button_Light).name() +
-        "                         , stop:0.90 " + Dr::GetColor(Window_Colors::Button_Light).darker(200).name() +
-        "                         , stop:0.95 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() +
-        "                         , stop:1.00 " + Dr::GetColor(Window_Colors::Button_Light).darker(400).name() + "); } "
+        "                         , stop:0.90 " + Dr::GetColor(Window_Colors::Background_Light).name() +///Button_Light).darker(200).name() +
+        "                         , stop:0.95 " + Dr::GetColor(Window_Colors::Background_Light).name() +///Button_Light).darker(400).name() +
+        "                         , stop:1.00 " + Dr::GetColor(Window_Colors::Shadow).name() + "); }"   ///Window_Colors::Button_Light).darker(400).name() + "); } "
         " QPushButton#buttonAssetCategory:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
         " QPushButton#buttonAssetCategory:pressed  { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
         " QPushButton#buttonAssetCategory:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
@@ -428,7 +428,7 @@ QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, 
            "            stop:1 " +      Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + "); "
            "          border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
                                         Dr::GetColor(Window_Colors::Background_Dark).darker(150).name()+ " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + " " +
+                                        Dr::GetColor(Window_Colors::Background_Light).name() + " " +
                                         Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + "; ";
 }
 
@@ -444,8 +444,8 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
     if (!highlight) middle = background_color;
     else            middle = background_color;
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-           "            stop:0 " +      background_color.lighter(200).name() + ", "
-           "            stop:" + top1 + background_color.lighter(200).name() + ", "
+           "            stop:0 " +      background_color.lighter(175).name() + ", "
+           "            stop:" + top1 + background_color.lighter(175).name() + ", "
            "            stop:" + top2 + middle.name() + ", "
            "            stop:" + bot1 + middle.name() + ", "
            "            stop:" + bot2 + background_color.darker(250).name() + ", "

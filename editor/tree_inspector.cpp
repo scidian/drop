@@ -160,7 +160,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool rebuild_on
                                                         " border-style: solid; "
                                                         " border-top-width: " + Dr::BorderWidth() + "; "
                                                         " border-bottom-width: " + Dr::BorderWidth() + "; "
-                                                        " border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+                                                        " border-color: " + Dr::GetColor(Window_Colors::Header_Fade).name() + "; "
                                                         " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
                                                         "   stop:0.00 " + component->getColor().lighter(120).name() +
                                                         "   stop:0.05 " + component->getColor().lighter(120).name() +
