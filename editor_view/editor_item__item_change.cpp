@@ -122,7 +122,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         QPointF new_center = mapToScene( boundingRect().center() );
         m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, new_center);
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_thing }, { Properties::Thing_Position });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { Properties::Thing_Position });
 
         return new_pos;
     }
@@ -139,7 +139,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale );
         m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, QPointF(size_x, size_y));
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_thing }, { Properties::Thing_Size,
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { Properties::Thing_Size,
                                                                                                       Properties::Thing_Scale,
                                                                                                       Properties::Thing_Rotation });
         return new_transform;
@@ -151,7 +151,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         double new_z = value.toDouble();
         m_thing->setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, new_z);
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { m_thing }, { Properties::Thing_Z_Order });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { Properties::Thing_Z_Order });
         return new_z;
     }
 

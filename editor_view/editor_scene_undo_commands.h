@@ -17,7 +17,7 @@ class DrScene;
 class DrThing;
 
 //####################################################################################
-//##    Change Stage in SceneView
+//##    Change Stage in StageView
 //############################
 class UndoCommandChangeStage : public QUndoCommand
 {

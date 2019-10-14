@@ -87,14 +87,14 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Hidden_Hide_From_Trees:
                 if (new_value == true) {
                     thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked, true);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Hidden_Item_Locked });
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Item_Locked });
                 }
                 break;
             case Properties::Hidden_Item_Locked:
                 if (new_value == false) {
                     if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool() == true) {
                         thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, false);
-                        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Hidden_Hide_From_Trees });
+                        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Hide_From_Trees });
                     }
                 }
                 break;
@@ -107,7 +107,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_Y)->setEditable(test);
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Spin_Velocity)->setEditable(test);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } ,
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
                                     { Properties::Thing_Velocity_X, Properties::Thing_Velocity_Y, Properties::Thing_Spin_Velocity });
                 }
 
@@ -115,7 +115,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 test = (type == Body_Type::Kinematic) ? true : false;
                 if (test != pretest) {
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->setEditable(test);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Angle_Velocity });
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Angle_Velocity });
                 }
                 break;
             }
@@ -178,11 +178,11 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                 // ***** If size or scale was changed, update the other and update the widgets in the Inspector
                 if (property == Properties::Thing_Size || pretest) {
                     thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Scale });
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Scale });
                 }
                 if (property == Properties::Thing_Scale || pretest) {
                     thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, size);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Scene_View, { thing } , { Properties::Thing_Size });
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Size });
                 }
 
                 break;

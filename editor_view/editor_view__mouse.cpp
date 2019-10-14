@@ -122,7 +122,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 
                     if (my_scene->getSelectionItems().count() <= 1) {
                         m_editor_relay->buildInspector( { origin_item_key } );
-                        m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { origin_item_key } );
+                        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { origin_item_key } );
                     }
                 }
 
@@ -195,7 +195,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
                 m_editor_relay->buildInspector( { static_cast<long>(my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong()) } );
             else
                 m_editor_relay->buildInspector( { } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
+            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
         }
 
         // Clean up temporary item group used for resize routine
@@ -213,7 +213,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
         if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
             m_editor_relay->updateEditorWidgetsAfterItemChange(
-                        Editor_Widgets::Scene_View, Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
+                        Editor_Widgets::Stage_View, Dr::ConvertItemListToSettings(my_scene->getSelectionItems()),
                         { Properties::Thing_Position, Properties::Thing_Size, Properties::Thing_Scale, Properties::Thing_Rotation });
         }
 

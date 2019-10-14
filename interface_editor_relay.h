@@ -28,7 +28,7 @@ class TreeProject;
 class IEditorRelay
 {
 private:
-    Editor_Widgets      m_active_widget = Editor_Widgets::Scene_View;
+    Editor_Widgets      m_active_widget = Editor_Widgets::Stage_View;
 
 public:
     // Constructor / Destructor
@@ -39,7 +39,7 @@ public:
     virtual TreeAssets*     getAssetTree() = 0;
     virtual TreeInspector*  getInspector() = 0;
     virtual TreeProject*    getProjectTree() = 0;
-    virtual DrView*         getSceneView() = 0;
+    virtual DrView*         getStageView() = 0;
 
     // Editor Functions
     virtual void        buildAssetTree() = 0;

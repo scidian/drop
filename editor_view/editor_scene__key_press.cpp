@@ -137,7 +137,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         //######################
         //######################
 
-        m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
     }
 
     //QGraphicsScene::keyPressEvent(event);         // Don't pass on, if we pass on arrow key presses, it moves view sliders

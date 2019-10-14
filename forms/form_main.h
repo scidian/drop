@@ -101,10 +101,10 @@ private:
 
 
     // ***** "Editor" (World Editor) Widget
-    TreeAssets     *treeAssetEditor;                        // Custom classes for Asset Tree
-    TreeProject    *treeProjectEditor;                      // Custom classes for Project Tree
-    DrScene        *sceneEditor;                            // Behind the scene data model that holds the currently selected Stage
-    DrView         *viewEditor;                             // Renders the scene, allows for interaction
+    TreeAssets     *treeAssetEditor;                        // Shows Project Assets
+    TreeProject    *treeProjectEditor;                      // Shows Project Entities
+    DrScene        *sceneEditor;                            // Holds the currently selected Stage
+    DrView         *viewEditor;                             // Renders the StageView
     QDockWidget    *dockAssetsEditor;
     QWidget        *widgetCentralEditor, *widgetAssestEditor, *widgetStage, *widgetStageView;
     QScrollArea    *areaBottom;
@@ -139,7 +139,7 @@ public:
     virtual TreeAssets*     getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*  getInspector() override     { return treeInspector; }
     virtual TreeProject*    getProjectTree() override   { return treeProjectEditor; }
-    virtual DrView*         getSceneView() override     { return viewEditor; }
+    virtual DrView*         getStageView() override     { return viewEditor; }
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> key_list) override;

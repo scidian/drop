@@ -70,7 +70,7 @@ DrView::~DrView() {
 }
 
 void DrView::focusInEvent(QFocusEvent *event) {
-    m_editor_relay->setActiveWidget(Editor_Widgets::Scene_View);
+    m_editor_relay->setActiveWidget(Editor_Widgets::Stage_View);
     QGraphicsView::focusInEvent(event);
 }
 

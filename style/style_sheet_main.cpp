@@ -130,18 +130,18 @@ QString CustomStyleSheetFormatting() {
         "               background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
 
         // Project Tree
-        " QTreeWidget#treeProjectEditor { icon-size: 14px 14px; }"
-        " QTreeWidget#treeProjectEditor { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
+        " QTreeWidget#treeProject { icon-size: 14px 14px; }"
+        " QTreeWidget#treeProject { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       selection-background-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       show-decoration-selected: 1; }"
-        " QTreeWidget#treeProjectEditor::item:selected { "
+        " QTreeWidget#treeProject::item:selected { "
         "       color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
-        " QTreeWidget#treeProjectEditor::item:hover:selected { "
+        " QTreeWidget#treeProject::item:hover:selected { "
         "       color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
-        " QTreeWidget#treeProjectEditor::item:hover:!selected { "
+        " QTreeWidget#treeProject::item:hover:!selected { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
         // Header of Project Tree (where little lock is)

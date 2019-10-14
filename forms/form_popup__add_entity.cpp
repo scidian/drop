@@ -76,7 +76,7 @@ void FormPopup::buildPopupAddEntity() {
             if (editor) {
                 editor->buildProjectTree();
                 editor->buildInspector( { world_key } );
-                editor->updateItemSelection(Editor_Widgets::Scene_View, { world_key } );
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { world_key } );
                 editor->buildScene( m_project->findWorldFromKey(world_key)->getFirstStageKey() );
             }
             this->close();
@@ -87,10 +87,10 @@ void FormPopup::buildPopupAddEntity() {
         connect(buttonStage, &QRadioButton::released, [this]() {
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
-                long stage_key = editor->getSceneView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
+                long stage_key = editor->getStageView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
                 editor->buildProjectTree();
                 editor->buildInspector( { stage_key } );
-                editor->updateItemSelection(Editor_Widgets::Scene_View, { stage_key } );
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { stage_key } );
                 editor->buildScene(stage_key);
             }
             this->close();

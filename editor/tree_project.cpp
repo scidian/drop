@@ -200,7 +200,7 @@ void TreeProject::processLockClick(QCheckBox *from_lock) {
         lock->setCheckState( entity->isLocked() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
     }
 
-    // Update Object Inspector Properties and Update SceneView selected items
+    // Update Object Inspector Properties and Update StageView selected items
     this->m_editor_relay->updateInspectorEnabledProperties();
     this->m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
 }

@@ -44,7 +44,7 @@ void DrScene::selectionChanged() {
         }
 
         m_editor_relay->buildInspector(item_keys);
-        m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
     }
 
     // !!!!! #TEMP: Testing to make sure not running non stop

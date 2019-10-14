@@ -29,7 +29,7 @@
 
 
 //####################################################################################
-//##    Handles Key Event, forwards some keys to SceneView
+//##    Handles Key Event, forwards some keys to StageView
 //####################################################################################
 void TreeProject::keyPressEvent(QKeyEvent *event) {
 
@@ -43,7 +43,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
             // Delete selected Things
             if (type == DrType::Thing) {
-                m_editor_relay->getSceneView()->keyPressEvent(event);
+                m_editor_relay->getStageView()->keyPressEvent(event);
 
             // Delete selected Stages
             } else if (type == DrType::Stage) {
@@ -68,7 +68,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     // Rebuild Project Tree, select new shown Stage
                     buildProjectTree();
                     m_editor_relay->buildInspector( { new_selection->getKey() } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { new_selection->getKey() } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
                 }
 
             // Delete selected Worlds
@@ -102,7 +102,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     // Rebuild Project Tree, select new shown Stage
                     buildProjectTree();
                     m_editor_relay->buildInspector( { new_selection->getKey() } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { new_selection->getKey() } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
                 }
             }
             return;

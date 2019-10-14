@@ -34,7 +34,7 @@ void FormMain::updateToolbar() {
         for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
 
         QString selected = "No Selection";
-        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Scene_View) {
+        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Stage_View) {
             if (sceneEditor->getSelectionCount() > 0) {
                 for (auto button : buttonsGroupLayering->buttons())     if (!button->isEnabled()) button->setEnabled(true);
                 for (auto button : buttonsGroupEdit->buttons())         if (!button->isEnabled()) button->setEnabled(true);
@@ -48,6 +48,8 @@ void FormMain::updateToolbar() {
                 } else if (sceneEditor->getSelectionCount() > 1) {
                     selected = QString::number( sceneEditor->getSelectionCount() ) + " Things";
                 }
+            } else if (treeProjectEditor) {
+
             }
 
         } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != c_no_key) {

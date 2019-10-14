@@ -42,7 +42,7 @@
 //    Asset_Tree,
 //    Inspector_Tree,
 //    Project_Tree,
-//    Scene_View,
+//    Stage_View,
 //  Toolbar?
 
 void FormMain::buildAssetTree() {
@@ -104,7 +104,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
     // ***** This order is semi important, best not to try and change it
-    if (changed_from != Editor_Widgets::Scene_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItemNames(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
@@ -117,9 +117,9 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) {
 
-    if (selected_from == Editor_Widgets::Scene_View || selected_from == Editor_Widgets::Project_Tree) {
+    if (selected_from == Editor_Widgets::Stage_View || selected_from == Editor_Widgets::Project_Tree) {
         // Selects items in Scene View based on new selection in Project Tree
-        if (selected_from != Editor_Widgets::Scene_View) {
+        if (selected_from != Editor_Widgets::Stage_View) {
             sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() );
         }
 
