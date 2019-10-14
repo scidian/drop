@@ -41,7 +41,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             DrSettings *settings =  m_project->findSettingsFromKey( first_key );
             DrType      type =      settings->getType();
 
-            // Delete selected Ts
+            // Delete selected Things
             if (type == DrType::Thing) {
                 m_editor_relay->getSceneView()->keyPressEvent(event);
 
@@ -58,7 +58,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     DrStage *new_selection = (--it)->second;
                     m_editor_relay->buildScene(new_selection->getKey());
 
-                    // Delete selected stages
+                    // Delete selected Stages
                     for (auto item : selectedItems()) {
                         DrStage *stage = m_project->findStageFromKey( item->data(0, User_Roles::Key).toLongLong() );
                         DrWorld *world = stage->getParentWorld();
@@ -73,7 +73,37 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
             // Delete selected Worlds
             } else if (type == DrType::World) {
+                if ((m_project->getWorldMap().size() > 1) && (static_cast<int>(m_project->getWorldMap().size()) > selectedItems().count())) {
+                    // Build list of selected keys
+                    QList<long> selected_world_keys;
+                    for (auto item : selectedItems()) {
+                        selected_world_keys.append( item->data(0, User_Roles::Key).toLongLong() );
+                    }
 
+                    // Find a new world to select, going from back to front
+                    DrWorld *new_selection = nullptr;
+                    WorldMap::reverse_iterator it;
+                    for (it = m_project->getWorldMap().rbegin(); it != m_project->getWorldMap().rend(); it++) {
+                        auto world_pair = it;
+                        if (selected_world_keys.contains(world_pair->first) == false) {
+                            new_selection = world_pair->second;
+                            break;
+                        }
+                    }
+                    if (new_selection == nullptr) return;
+                    m_editor_relay->buildScene(new_selection->getStartStageKey());
+
+                    // Delete selected Worlds
+                    for (auto item : selectedItems()) {
+                        DrWorld *world = m_project->findWorldFromKey( item->data(0, User_Roles::Key).toLongLong() );
+                        m_project->deleteWorld(world);
+                    }
+
+                    // Rebuild Project Tree, select new shown Stage
+                    buildProjectTree();
+                    m_editor_relay->buildInspector( { new_selection->getKey() } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Scene_View, { new_selection->getKey() } );
+                }
             }
             return;
         }

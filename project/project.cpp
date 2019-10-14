@@ -53,6 +53,12 @@ void DrProject::clearProject() {
     m_key_generator = c_key_starting_number;                        // starts at 100
 }
 
+// Removes a World from the Project
+void DrProject::deleteWorld(DrWorld *world) {
+    m_worlds.erase(world->getKey());
+    delete world;
+}
+
 
 //####################################################################################
 //##

@@ -111,6 +111,7 @@ public:
     // Building
     void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
     void            clearProject();
+    void            deleteWorld(DrWorld *world);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);
     void            openProjectFromFile(QString open_file);
