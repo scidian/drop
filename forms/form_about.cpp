@@ -58,46 +58,57 @@ void FormAbout::resizeEvent(QResizeEvent *event) {
 //####################################################################################
 void FormAbout::buildForm() {
     // ***** About Text
-    QString about_txt = "<center>"
-                        "<font size=+3>Drop Creator</font><br>"
-                        "A Drag and Drop Game Maker<br><br>"
-                        "by<br>"
-                        "Stephens Nunnally<br>"
-                        "Julie Machamer"
-                        "</center>";
-
+    QString about_txt_1 =   "<center>"
+                            "<b><font size=+4>Drop Creator</font></b><br>"
+                            "<font size=+1>A Drag and Drop Game Maker</font><br><br>"
+                            "by<br><br>"
+                            "<b><font size=+1>Stephens Nunnally &nbsp; · &nbsp; Julie Machamer</b></font><br>"
+                            "</center>";
+    QString about_txt_2 =   "<center><font size=-1>"
+                            "Copyright © 2018-2019 Scidian™ Software<br>"
+                            "Drop™, Scidian™ and the Scidian Blob™ are trademarks of Scidian™ Software<br>"
+                            "All Rights Reserved"
+                            "</font></center>";
     // ***** Build Form
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
 
     m_inner_widget = new QWidget();
     m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
-    QHBoxLayout *inner_layout = new QHBoxLayout(m_inner_widget);
+    m_inner_widget->setMinimumWidth(400);
+    QVBoxLayout *inner_layout = new QVBoxLayout(m_inner_widget);
+    inner_layout->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
         QLabel *drop = new QLabel();
-        drop->setPixmap(QPixmap(":/assets/icon/icon256.png").scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        drop->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        drop->setPixmap(QPixmap(":/assets/icon/icon256.png").scaled(120, 120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        drop->setAttribute(Qt::WidgetAttribute::WA_TransparentForMouseEvents, true);
         inner_layout->addWidget(drop);
 
-        QWidget *right_side = new QWidget();
-        QVBoxLayout *right_layout = new QVBoxLayout(right_side);
-        right_layout->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        QLabel *about_1 = new QLabel(about_txt_1);
+        about_1->setAttribute(Qt::WidgetAttribute::WA_TransparentForMouseEvents, true);
+        inner_layout->addWidget(about_1);
 
-            QLabel *about = new QLabel(about_txt);
-            about->setMinimumWidth(250);
-            about->setMinimumHeight(150);
-            about->setAttribute(Qt::WidgetAttribute::WA_TransparentForMouseEvents, true);
-            right_layout->addWidget(about);
+        QLabel *scidian = new QLabel();
+        scidian->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        ///scidian->setPixmap(QPixmap(":/assets/icon/logo_splash.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        scidian->setText("<a href=\"http://scidian.com/\"><img src=\":/assets/icon/logo_splash_small.png\"></a>");
+        scidian->setTextFormat(Qt::RichText);
+        scidian->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        scidian->setOpenExternalLinks(true);
+        scidian->setFocusPolicy(Qt::NoFocus);
+        inner_layout->addWidget(scidian);
 
-            QPushButton *exit = new QPushButton("  Okay  ");
-            Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
-            exit->setObjectName(QStringLiteral("button"));
-            right_layout->addWidget(exit);
+        QLabel *about_2 = new QLabel(about_txt_2);
+        about_2->setAttribute(Qt::WidgetAttribute::WA_TransparentForMouseEvents, true);
+        inner_layout->addWidget(about_2);
 
-            // Connect a lambda function to the "exit" button to close the form
-            connect(exit, &QPushButton::clicked, [this] () {
-                this->close();
-            });
-        inner_layout->addWidget(right_side);
+        QPushButton *exit = new QPushButton("  Okay  ");
+        Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
+        exit->setObjectName(QStringLiteral("button"));
+        //exit->setMaximumWidth(250);
+        connect(exit, &QPushButton::clicked, [this] () { this->close(); });
+        inner_layout->addWidget(exit);
 
     layout->addWidget(m_inner_widget);
 }

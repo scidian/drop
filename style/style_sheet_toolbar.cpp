@@ -71,6 +71,7 @@ QString StyleSheetToolBar() {
     StyleSheetToolBarButtons("buttonSendToFront",       "sendtofront.png",      "sendtofront.png",      "sendtofront_gray.png",  4, 0, 4, 0, 4, false) +
 
     StyleSheetToolBarButtons("buttonDeleteThing",       "trash.png",            "trash.png",            "trash_gray.png",        4, 4, 4, 4, 4, false) +
+            " QToolButton#buttonDeleteThing                 { padding-right: 5px; } " +
 
     StyleSheetToolBarButtons("buttonResetObject",       "reset.png",            "reset.png",            "reset_gray.png",        4, 4, 0, 4, 0, false) +
     StyleSheetToolBarButtons("buttonTransformFlipH",    "flip_h.png",           "flip_h.png",           "flip_h_gray.png",       4, 0, 0, 0, 0, false) +
