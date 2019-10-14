@@ -9,7 +9,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
-#include "editor/editor_tree_assets.h"
+#include "editor/tree_assets.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"

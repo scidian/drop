@@ -13,10 +13,10 @@
 #include "colors/colors.h"
 #include "debug.h"
 #include "enums.h"
-#include "editor/editor_tree_advisor.h"
-#include "editor/editor_tree_assets.h"
-#include "editor/editor_tree_inspector.h"
-#include "editor/editor_tree_project.h"
+#include "editor/tree_advisor.h"
+#include "editor/tree_assets.h"
+#include "editor/tree_inspector.h"
+#include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
@@ -119,18 +119,6 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 //##    FormMain Wide Event Filter, catches all events
 //####################################################################################
 bool FormMain::eventFilter(QObject *obj, QEvent *event) {
-    // ***** Some event numbers we know, we can use this to find more
-    //int t = event->type();
-    //   1 = Timer
-    //  11 = Leave            12 = Paint
-    //  13 = Move             14 = Resize
-    //  17 = Show             24 = Window Activate
-    //  74 = Polish Request   78 = Update Later
-    // 128 = Hover Leave     129 = Hover Move
-    //
-    //if (t != 1 && t != 11 && t != 12 && t != 13 && t != 14 && t != 17 && t != 24 && t != 74 && t != 78 && t != 128 && t != 129)
-    //    Dr::SetLabelText(Label_Names::Label_2, QString::number(event->type()));
-
 
     // ********** Catch space bar for view to make sure we can drag even if view didnt have focus
     if (event->type() == QEvent::KeyPress)
@@ -147,7 +135,6 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
             if (viewEditor->hasFocus() == false)
                 viewEditor->spaceBarUp();
     }
-
 
     return QObject::eventFilter(obj, event);
 }

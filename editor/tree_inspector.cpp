@@ -16,14 +16,14 @@
 
 #include "colors/colors.h"
 #include "debug.h"
+#include "editor/tree_inspector.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
-#include "editor_tree_inspector.h"
 #include "globals.h"
-#include "imaging/imaging.h"
-#include "interface_editor_relay.h"
 #include "helper.h"
 #include "helper_qt.h"
+#include "imaging/imaging.h"
+#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"
@@ -257,6 +257,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool rebuild_on
                 //################ !!!!!!!!!!!!!!!!!!!!!!!
                 case Property_Type::Image:
                     new_widget = createImageFrame(          prop, fp, sp_right);
+                    new_widget->installEventFilter(new DrFilterInspectorImage(single_row, m_editor_relay));
                     break;
 
 

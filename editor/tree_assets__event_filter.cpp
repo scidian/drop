@@ -15,13 +15,13 @@
 
 #include "colors/colors.h"
 #include "constants.h"
-#include "editor_tree_assets.h"
+#include "editor/tree_assets.h"
 #include "enums.h"
 #include "globals.h"
-#include "imaging/imaging.h"
-#include "interface_editor_relay.h"
 #include "helper.h"
 #include "helper_qt.h"
+#include "imaging/imaging.h"
+#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"
@@ -148,6 +148,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     return QObject::eventFilter(object, event);
 }
+
 
 //####################################################################################
 //##    Asset Name Label Scrolling for long names

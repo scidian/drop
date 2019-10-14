@@ -12,7 +12,7 @@
 #include <QPainter>
 
 #include "debug.h"
-#include "editor_tree_project.h"
+#include "editor/tree_project.h"
 #include "globals.h"
 #include "project/project.h"
 #include "settings/settings.h"

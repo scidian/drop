@@ -10,7 +10,7 @@
 #include <QLabel>
 #include <QSpinBox>
 
-#include "editor_tree_inspector.h"
+#include "editor/tree_inspector.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "settings/settings_component_property.h"

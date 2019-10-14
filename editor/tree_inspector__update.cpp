@@ -12,10 +12,10 @@
 #include <QMenu>
 
 #include "colors/colors.h"
-#include "editor_tree_inspector.h"
+#include "editor/tree_inspector.h"
 #include "enums.h"
-#include "interface_editor_relay.h"
 #include "helper.h"
+#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"

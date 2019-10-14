@@ -10,7 +10,7 @@
 #include <QMimeData>
 #include <QScreen>
 
-#include "editor/editor_tree_assets.h"
+#include "editor/tree_assets.h"
 #include "enums.h"
 #include "helper.h"
 #include "imaging/imaging.h"

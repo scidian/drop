@@ -8,7 +8,7 @@
 #include <QLabel>
 
 #include "colors/colors.h"
-#include "editor_tree_advisor.h"
+#include "editor/tree_advisor.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "interface_editor_relay.h"

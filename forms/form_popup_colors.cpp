@@ -7,7 +7,7 @@
 //
 #include <QButtonGroup>
 
-#include "editor/editor_tree_inspector.h"
+#include "editor/tree_inspector.h"
 #include "form_main.h"
 #include "form_popup.h"
 #include "globals.h"

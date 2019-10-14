@@ -13,7 +13,7 @@
 #include <QStatusBar>
 #include <QVBoxLayout>
 
-#include "editor/editor_tree_inspector.h"
+#include "editor/tree_inspector.h"
 #include "form_playground.h"
 #include "globals.h"
 #include "helper.h"

@@ -10,9 +10,9 @@
 #include <QOpenGLWidget>
 
 #include "debug.h"
-#include "editor/editor_tree_assets.h"
-#include "editor/editor_tree_inspector.h"
-#include "editor/editor_tree_project.h"
+#include "editor/tree_assets.h"
+#include "editor/tree_inspector.h"
+#include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"

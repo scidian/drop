@@ -10,9 +10,11 @@
 #include <QPainter>
 
 #include "colors/colors.h"
-#include "editor_tree_inspector.h"
+#include "editor/tree_inspector.h"
 #include "forms/form_popup.h"
+#include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
@@ -36,7 +38,6 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     image_frame->setProperty(User_Property::Mouse_Over, false);                                     // Initialize mouse user data, event filter updates this info
     image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                               // Used to track when the mouse
     image_frame->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    //image_frame->installEventFilter(new DrFilterAssetMouseHandler(single_asset, m_editor_relay));
     m_filter_hover->attachToHoverHandler(image_frame, property);
     addToWidgetList(image_frame);
 
@@ -55,6 +56,47 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
 
     return image_frame;
 }
+
+
+//####################################################################################
+//##
+//##    DrFilterInspectorImage Event Filter
+//##
+//####################################################################################
+DrFilterInspectorImage::DrFilterInspectorImage(QObject *parent, IEditorRelay *editor_relay) : QObject(parent), m_editor_relay(editor_relay) {
+
+}
+
+
+bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
+
+    if (event->type() == QEvent::MouseButtonPress) {
+
+    }
+
+    // ***** Event Debugging
+    if (event->type() != QEvent::MouseButtonPress &&        //   2
+        event->type() != QEvent::MouseButtonRelease &&      //   3
+        event->type() != QEvent::MouseMove &&               //   5
+        event->type() != QEvent::Enter &&                   //  10
+        event->type() != QEvent::Paint &&                   //  12
+        event->type() != QEvent::WindowActivate &&          //  24
+        event->type() != QEvent::WindowDeactivate &&        //  25
+        event->type() != QEvent::UpdateLater &&             //  78
+        event->type() != QEvent::ToolTip &&                 // 110
+        event->type() != QEvent::HoverEnter &&              // 127
+        event->type() != QEvent::HoverMove &&               // 129
+        event->type() != QEvent::DynamicPropertyChange      // 170
+        ) {
+
+        Dr::SetLabelText(Label_Names::Label_1, "Event: " + QString::number(event->type()) + ", " + Dr::CurrentTimeAsString());
+
+    }
+
+    return QObject::eventFilter(object, event);
+}
+
+
 
 
 

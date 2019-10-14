@@ -66,22 +66,25 @@ SOURCES += \
     colors/colors_palette_material.cpp \
     colors/colors_palette_rocky_rover.cpp \
     colors/colors_palette_window_themes.cpp \
-    editor/editor_tree_advisor.cpp \
-    editor/editor_tree_assets.cpp \
-    editor/editor_tree_assets__drag_drop.cpp \
-    editor/editor_tree_assets__event_filter.cpp \
-    editor/editor_tree_assets__key_press.cpp \
-    editor/editor_tree_assets__update.cpp \
-    editor/editor_tree_inspector.cpp \
-    editor/editor_tree_inspector__update.cpp \
-    editor/editor_tree_inspector__widgets.cpp \
-    editor/editor_tree_inspector__widgets2.cpp \
-    editor/editor_tree_inspector__widgets3.cpp \
-    editor/editor_tree_project.cpp \
-    editor/editor_tree_project__drag_drop.cpp \
-    editor/editor_tree_project__key_press.cpp \
-    editor/editor_tree_project__selection.cpp \
-    editor/editor_tree_project__update.cpp \
+    editor/tree_advisor.cpp \
+    editor/tree_assets.cpp \
+    editor/tree_assets__drag_drop.cpp \
+    editor/tree_assets__event_filter.cpp \
+    editor/tree_assets__key_press.cpp \
+    editor/tree_assets__update.cpp \
+    editor/tree_inspector.cpp \
+    editor/tree_inspector__update.cpp \
+    editor/tree_inspector__widgets_checkbox.cpp \
+    editor/tree_inspector__widgets_color.cpp \
+    editor/tree_inspector__widgets_image.cpp \
+    editor/tree_inspector__widgets_line_edit.cpp \
+    editor/tree_inspector__widgets_list.cpp \
+    editor/tree_inspector__widgets_spinbox.cpp \
+    editor/tree_project.cpp \
+    editor/tree_project__drag_drop.cpp \
+    editor/tree_project__key_press.cpp \
+    editor/tree_project__selection.cpp \
+    editor/tree_project__update.cpp \
     editor_view/editor_item.cpp \
     editor_view/editor_item__item_change.cpp \
     editor_view/editor_item__paint.cpp \
@@ -244,10 +247,10 @@ HEADERS += \
     3rd_party_chipmunk/cpVect.h \
     3rd_party_chipmunk/prime.h \
     colors/colors.h \
-    editor/editor_tree_advisor.h \
-    editor/editor_tree_assets.h \
-    editor/editor_tree_inspector.h \
-    editor/editor_tree_project.h \
+    editor/tree_advisor.h \
+    editor/tree_assets.h \
+    editor/tree_inspector.h \
+    editor/tree_project.h \
     editor_view/editor_item.h \
     editor_view/editor_scene.h \
     editor_view/editor_scene_undo_commands.h \

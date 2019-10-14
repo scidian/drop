@@ -145,6 +145,28 @@ protected:
 
 
 
+//####################################################################################
+//##    DrFilterInspectorImage
+//##        Event filter handler for image properties
+//####################################################################################
+class DrFilterInspectorImage : public QObject
+{
+    Q_OBJECT
+
+private:
+    // External Borrowed Pointers
+    IEditorRelay      *m_editor_relay;                  // Pointer to IEditorRelay class of parent form
+
+public:
+    explicit        DrFilterInspectorImage(QObject *parent, IEditorRelay *editor_relay);
+
+    // Event Overrides
+    bool            eventFilter(QObject* object, QEvent* event) override;
+};
+
+
+
+
 #endif // EDITOR_TREE_INSPECTOR_H
 
 
