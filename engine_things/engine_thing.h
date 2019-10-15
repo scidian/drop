@@ -113,12 +113,12 @@ public:
 
     virtual void            setAngle(double new_angle) {        m_angle_z = new_angle; }
     virtual void            setOpacity(float new_opacity) {     m_opacity = new_opacity; }
-    virtual void            setPosition(DrPointF position) {     m_position = position; }
+    virtual void            setPosition(DrPointF position) {    m_position = position; }
     void                    setScaleX(float new_scale_x)  {     m_scale_x = new_scale_x; }
     void                    setScaleX(double new_scale_x) {     m_scale_x = static_cast<float>(new_scale_x); }
     void                    setScaleY(float new_scale_y)  {     m_scale_y = new_scale_y; }
     void                    setScaleY(double new_scale_y) {     m_scale_y = static_cast<float>(new_scale_y); }
-    virtual void            setSize(DrPointF size) {             m_size = size; }
+    virtual void            setSize(DrPointF size) {            m_size = size; }
     void                    setWorld(DrEngineWorld *world) {    m_world = world; }
 
     // 3D Properties

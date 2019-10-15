@@ -59,7 +59,7 @@ void FormAbout::resizeEvent(QResizeEvent *event) {
 void FormAbout::buildForm() {
     // ***** About Text
     QString about_txt_1 =   "<center>"
-                            "<b><font size=+4>Drop Creator</font></b><br>"
+                            "<b><font size=+4>Drop™ Creator</font></b><br>"
                             "<font size=+1>A Drag and Drop Game Maker</font><br><br>"
                             "by<br><br>"
                             "<b><font size=+1>Stephens Nunnally &nbsp; · &nbsp; Julie Machamer</b></font><br>"

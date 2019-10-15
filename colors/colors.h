@@ -17,10 +17,12 @@
 enum class Color_Scheme {
     Dark,
     Light,
+
     Navy,
+    Grape,
     Rust,
-    Forest,
-    Royal,
+    Coffee,
+    Emerald,
 };
 
 enum class Window_Colors {

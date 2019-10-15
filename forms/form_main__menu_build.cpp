@@ -82,53 +82,60 @@ void FormMain::buildMenu() {
     QMenu *menuColor_Schemes;
     menuColor_Schemes = new QMenu(menuBar);
     menuColor_Schemes->setObjectName(QStringLiteral("menuColor_Schemes"));
-    QAction *actionDark, *actionLight, *actionNavy, *actionRust, *actionForest, *actionRoyal;
+    QAction *actionDark, *actionLight, *actionNavy, *actionGrape, *actionRust, *actionCoffee, *actionEmerald;
     actionDark =    new QAction(this);  actionDark->setObjectName(QStringLiteral("actionDark"));
     actionLight =   new QAction(this);  actionLight->setObjectName(QStringLiteral("actionLight"));
     actionNavy =    new QAction(this);  actionNavy->setObjectName(QStringLiteral("actionNavy"));
+    actionGrape =   new QAction(this);  actionGrape->setObjectName(QStringLiteral("actionGrape"));
     actionRust =    new QAction(this);  actionRust->setObjectName(QStringLiteral("actionRust"));
-    actionForest =  new QAction(this);  actionForest->setObjectName(QStringLiteral("actionForest"));
-    actionRoyal =   new QAction(this);  actionRoyal->setObjectName(QStringLiteral("actionRoyal"));
+    actionCoffee =  new QAction(this);  actionCoffee->setObjectName(QStringLiteral("actionCoffee"));
+    actionEmerald = new QAction(this);  actionEmerald->setObjectName(QStringLiteral("actionEmerald"));
         QActionGroup *alignmentGroup;
         alignmentGroup = new QActionGroup(this);
         alignmentGroup->addAction(actionDark);
         alignmentGroup->addAction(actionLight);
         alignmentGroup->addAction(actionNavy);
+        alignmentGroup->addAction(actionGrape);
         alignmentGroup->addAction(actionRust);
-        alignmentGroup->addAction(actionForest);
-        alignmentGroup->addAction(actionRoyal);
+        alignmentGroup->addAction(actionCoffee);
+        alignmentGroup->addAction(actionEmerald);
         alignmentGroup->setExclusive(true);
         actionDark->setCheckable(true);
         actionLight->setCheckable(true);
         actionNavy->setCheckable(true);
+        actionGrape->setCheckable(true);
         actionRust->setCheckable(true);
-        actionForest->setCheckable(true);
-        actionRoyal->setCheckable(true);
+        actionCoffee->setCheckable(true);
+        actionEmerald->setCheckable(true);
         switch (Dr::GetColorScheme()) {
-            case Color_Scheme::Dark:    actionDark->setChecked(true);   break;
-            case Color_Scheme::Light:   actionLight->setChecked(true);  break;
-            case Color_Scheme::Navy:    actionNavy->setChecked(true);   break;
-            case Color_Scheme::Rust:    actionRust->setChecked(true);   break;
-            case Color_Scheme::Forest:  actionForest->setChecked(true); break;
-            case Color_Scheme::Royal:   actionRoyal->setChecked(true);  break;
+            case Color_Scheme::Dark:    actionDark->setChecked(true);       break;
+            case Color_Scheme::Light:   actionLight->setChecked(true);      break;
+            case Color_Scheme::Navy:    actionNavy->setChecked(true);       break;
+            case Color_Scheme::Grape:   actionGrape->setChecked(true);      break;
+            case Color_Scheme::Rust:    actionRust->setChecked(true);       break;
+            case Color_Scheme::Coffee:  actionCoffee->setChecked(true);     break;
+            case Color_Scheme::Emerald: actionEmerald->setChecked(true);    break;
         }
     // Instead of traditional SIGNAL to SLOT connect, we can "connect" inline lamda functions directly
     //      to signals. This allows for passing of variables not included in the SIGNAL that was fired.
     // Such as in this instance, passing a new Color_Scheme to FormMain::changePalette)
-    connect(actionDark,     &QAction::triggered, [this]() { changePalette(Color_Scheme::Dark); });
-    connect(actionLight,    &QAction::triggered, [this]() { changePalette(Color_Scheme::Light); });
-    connect(actionNavy,     &QAction::triggered, [this]() { changePalette(Color_Scheme::Navy); });
-    connect(actionRust,     &QAction::triggered, [this]() { changePalette(Color_Scheme::Rust); });
-    connect(actionForest,   &QAction::triggered, [this]() { changePalette(Color_Scheme::Forest); });
-    connect(actionRoyal,    &QAction::triggered, [this]() { changePalette(Color_Scheme::Royal); });
+    connect(actionDark,     &QAction::triggered, [this]() {     changePalette(Color_Scheme::Dark);      });
+    connect(actionLight,    &QAction::triggered, [this]() {     changePalette(Color_Scheme::Light);     });
+    connect(actionNavy,     &QAction::triggered, [this]() {     changePalette(Color_Scheme::Navy);      });
+    connect(actionGrape,    &QAction::triggered, [this]() {     changePalette(Color_Scheme::Grape);     });
+    connect(actionRust,     &QAction::triggered, [this]() {     changePalette(Color_Scheme::Rust);      });
+    connect(actionCoffee,   &QAction::triggered, [this]() {     changePalette(Color_Scheme::Coffee);    });
+    connect(actionEmerald,  &QAction::triggered, [this]() {     changePalette(Color_Scheme::Emerald);   });
 
     menuBar->addAction(menuColor_Schemes->menuAction());
     menuColor_Schemes->addAction(actionDark);
     menuColor_Schemes->addAction(actionLight);
+    menuColor_Schemes->addSeparator();
     menuColor_Schemes->addAction(actionNavy);
+    menuColor_Schemes->addAction(actionGrape);
     menuColor_Schemes->addAction(actionRust);
-    menuColor_Schemes->addAction(actionForest);
-    menuColor_Schemes->addAction(actionRoyal);
+    menuColor_Schemes->addAction(actionCoffee);
+    menuColor_Schemes->addAction(actionEmerald);
 
     QMenu *menuHelp;
     QAction *actionAbout;
@@ -194,9 +201,10 @@ void FormMain::buildMenu() {
     actionDark->setText(QApplication::translate("MainWindow",               "Dark", nullptr));
     actionLight->setText(QApplication::translate("MainWindow",              "Light", nullptr));
     actionNavy->setText(QApplication::translate("MainWindow",               "Navy", nullptr));
+    actionGrape->setText(QApplication::translate("MainWindow",              "Grape", nullptr));
     actionRust->setText(QApplication::translate("MainWindow",               "Rust", nullptr));
-    actionForest->setText(QApplication::translate("MainWindow",             "Forest", nullptr));
-    actionRoyal->setText(QApplication::translate("MainWindow",              "Royal", nullptr));
+    actionCoffee->setText(QApplication::translate("MainWindow",             "Coffee", nullptr));
+    actionEmerald->setText(QApplication::translate("MainWindow",            "Emerald", nullptr));
 
     menuHelp->setTitle(QApplication::translate("MainWindow",            "&Help", nullptr));
     actionAbout->setText(QApplication::translate("MainWindow",              "&About", nullptr));

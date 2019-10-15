@@ -141,14 +141,18 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Scale
-    bool model_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube);
-    if (model_2d)
+    bool  model_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube);
+    float add_pixel_x = 0.0;
+    float add_pixel_y = 0.0;
+    if (model_2d) {
         model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
-    // Add an extra pixel on 3d objects to reduce blockiness of world
-    float add_pixel_x = model_2d ? 0.0 : 1.f / static_cast<float>(object->getSize().x);
-    float add_pixel_y = model_2d ? 0.0 : 1.f / static_cast<float>(object->getSize().y);
+    } else {
+        // Add an extra pixel on 3d objects to reduce blockiness of world
+        float pixels_to_add = 2.f;
+        add_pixel_x = (pixels_to_add * object->getScaleX()) / (static_cast<float>(object->getSize().x));
+        add_pixel_y = (pixels_to_add * object->getScaleY()) / (static_cast<float>(object->getSize().y));
+    }
     model.scale( object->getScaleX() + add_pixel_x, object->getScaleY() + add_pixel_y, static_cast<float>(object->getDepth()) );
-
     m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
     m_default_shader.setUniformValue( u_default_matrix_object,  model );
 
