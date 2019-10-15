@@ -141,9 +141,13 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Scale
-    if (draw2D || object->get3DType() == Convert_3D_Type::Cube)
+    bool model_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube);
+    if (model_2d)
         model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
-    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
+    // Add an extra pixel on 3d objects to reduce blockiness of world
+    float add_pixel_x = model_2d ? 0.0 : 1.f / static_cast<float>(object->getSize().x);
+    float add_pixel_y = model_2d ? 0.0 : 1.f / static_cast<float>(object->getSize().y);
+    model.scale( object->getScaleX() + add_pixel_x, object->getScaleY() + add_pixel_y, static_cast<float>(object->getDepth()) );
 
     m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
     m_default_shader.setUniformValue( u_default_matrix_object,  model );
