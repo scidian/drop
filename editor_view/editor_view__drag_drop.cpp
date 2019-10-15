@@ -92,7 +92,7 @@ void DrView::dropEvent(QDropEvent *event) {
         DrEffect *effect;
         switch (asset->getAssetType()) {
             case DrAssetType::Character:
-                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 0);                 // !!!!! #FIX: z order
+                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 5);                 // !!!!! #FIX: z order
                 my_scene->addItemToSceneFromThing( thing );
                 break;
             case DrAssetType::Object:
@@ -111,7 +111,7 @@ void DrView::dropEvent(QDropEvent *event) {
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Fisheye:
-                        thing = stage->addThing(DrThingType::Fisheye, asset_key, position.x(), -position.y(), 5);           // !!!!! #FIX: z order
+                        thing = stage->addThing(DrThingType::Fisheye, asset_key, position.x(), -position.y(), 10);           // !!!!! #FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Light:
@@ -119,11 +119,11 @@ void DrView::dropEvent(QDropEvent *event) {
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Mirror:
-                        thing = stage->addThing(DrThingType::Mirror, asset_key, position.x(), -position.y(), 5);            // !!!!! #FIX: z order
+                        thing = stage->addThing(DrThingType::Mirror, asset_key, position.x(), -position.y(), 10);            // !!!!! #FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Swirl:
-                        thing = stage->addThing(DrThingType::Swirl, asset_key, position.x(), -position.y(), 5);             // !!!!! #FIX: z order
+                        thing = stage->addThing(DrThingType::Swirl, asset_key, position.x(), -position.y(), 10);             // !!!!! #FIX: z order
                         my_scene->addItemToSceneFromThing( thing );
                         break;
                     case DrEffectType::Water:

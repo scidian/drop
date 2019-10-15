@@ -2,19 +2,25 @@
 //      Created by Stephens Nunnally on 8/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      More non-numerical property row building functions
-//          - Image Frame
+//      Object Inspector Image Frame
 //
 #include <QApplication>
+#include <QDropEvent>
 #include <QHBoxLayout>
+#include <QMimeData>
 #include <QPainter>
 
 #include "colors/colors.h"
 #include "editor/tree_inspector.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
 #include "forms/form_popup.h"
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
+#include "interface_editor_relay.h"
+#include "project/project.h"
+#include "project/project_asset.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
@@ -68,51 +74,101 @@ DrFilterInspectorImage::DrFilterInspectorImage(QObject *parent, IEditorRelay *ed
 
 bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
 
-    //DragEnter = 60,                         // drag moves into widget
-    //DragMove = 61,                          // drag moves in widget
-    //DragLeave = 62,                         // drag leaves or is cancelled
-    //Drop = 63,                              // actual drop
-
-    if (event->type() == QEvent::DragEnter) {
-        Dr::SetLabelText(Label_Names::Label_1, "Drag Enter Event: 60, " + Dr::CurrentTimeAsString());
-        event->accept();
-    }
-
-    if (event->type() == QEvent::DragMove ||
-        event->type() == QEvent::DragLeave ||
-        event->type() == QEvent::Drop) {
-        Dr::SetLabelText(Label_Names::Label_1, "Event: " + QString::number(event->type()) + ", " + Dr::CurrentTimeAsString());
-        event->accept();
-    }
+    // ***** Grab properties from Image Frame
+    QFrame *frame = dynamic_cast<QFrame*>(object);
+    if (frame == nullptr) return QObject::eventFilter(object, event);
+    long settings_key = m_editor_relay->getInspector()->getSelectedKey();
+    long property_key = frame->property(User_Property::Key).toLongLong();
+    if (settings_key <= 0 || property_key <= 0) return QObject::eventFilter(object, event);
+    DrProject *project =    m_editor_relay->currentProject();
+    DrSettings *settings =  project->findSettingsFromKey(settings_key);
+    if (settings == nullptr) return QObject::eventFilter(object, event);
 
     // ***** Event Debugging
-//    if (event->type() != QEvent::MouseButtonPress &&        //   2
-//        event->type() != QEvent::MouseButtonRelease &&      //   3
-//        event->type() != QEvent::MouseMove &&               //   5
-//        event->type() != QEvent::Enter &&                   //  10
-//        event->type() != QEvent::Leave &&                   //  11
-//        event->type() != QEvent::Paint &&                   //  12
-//        event->type() != QEvent::Move &&                    //  13
-//        event->type() != QEvent::Resize &&                  //  14
-//        event->type() != QEvent::Show &&                    //  17
-//        event->type() != QEvent::Hide &&                    //  18
-//        event->type() != QEvent::WindowActivate &&          //  24
-//        event->type() != QEvent::WindowDeactivate &&        //  25
-//        event->type() != QEvent::ShowToParent &&            //  26
-//        event->type() != QEvent::Wheel &&                   //  31
-//        event->type() != QEvent::PaletteChange &&           //  39
-//        event->type() != QEvent::ChildPolished &&           //  69
-//        event->type() != QEvent::PolishRequest &&           //  74
-//        event->type() != QEvent::LayoutRequest &&           //  76
-//        event->type() != QEvent::UpdateLater &&             //  78
-//        event->type() != QEvent::ToolTip &&                 // 110
-//        event->type() != QEvent::HoverEnter &&              // 127
-//        event->type() != QEvent::HoverLeave &&              // 128
-//        event->type() != QEvent::HoverMove &&               // 129
-//        event->type() != QEvent::DynamicPropertyChange      // 170
-//        ) {
-//        Dr::SetLabelText(Label_Names::Label_1, "Event: " + QString::number(event->type()) + ", " + Dr::CurrentTimeAsString());
-//    }
+    /**
+    if (event->type() != QEvent::MouseButtonPress &&        //   2
+        event->type() != QEvent::MouseButtonRelease &&      //   3
+        event->type() != QEvent::MouseMove &&               //   5
+        event->type() != QEvent::Enter &&                   //  10
+        event->type() != QEvent::Leave &&                   //  11
+        event->type() != QEvent::Paint &&                   //  12
+        event->type() != QEvent::Move &&                    //  13
+        event->type() != QEvent::Resize &&                  //  14
+        event->type() != QEvent::Show &&                    //  17
+        event->type() != QEvent::Hide &&                    //  18
+        event->type() != QEvent::Wheel &&                   //  31
+        event->type() != QEvent::HoverEnter &&              // 127
+        event->type() != QEvent::HoverLeave &&              // 128
+        event->type() != QEvent::HoverMove &&               // 129
+        event->type() != QEvent::DynamicPropertyChange      // 170
+        ) {
+        Dr::SetLabelText(Label_Names::Label_1, "Event: " + QString::number(event->type()) + ", " + Dr::CurrentTimeAsString());
+    } */
+    // QEvent::DragEnter =  60,                             // drag moves into widget
+    // QEvent::DragMove =   61,                             // drag moves in widget
+    // QEvent::DragLeave =  62,                             // drag leaves or is cancelled
+    // QEvent::Drop =       63,                             // actual drop
+
+    if (event->type() == QEvent::DragEnter) {
+        event->accept();
+    }
+
+    // ***** Handle Drop Event
+    if (event->type() == QEvent::Drop) {
+        QDropEvent *drop_event = dynamic_cast<QDropEvent*>(event);
+
+        // Extract the local paths of the files
+        QStringList path_list;
+        QList<QUrl> url_list = drop_event->mimeData()->urls();
+        for (auto url : url_list)
+            path_list.append( url.toLocalFile() );
+
+        // Try to load the first image, if it doesnt load, exit. If it does, make sure it is #AARRGGBB and convert to pixmap
+        QString file_path = path_list[0];
+        QImage image(file_path);
+        if (image.isNull()) {
+            event->ignore();
+            return QObject::eventFilter(object, event);
+        }
+        if ( image.format() != QImage::Format::Format_ARGB32 )
+            image = image.convertToFormat( QImage::Format_ARGB32 );
+        QPixmap pixmap = QPixmap::fromImage( image );
+
+        // ********** Dropped on to Asset Property
+        if (settings->getType() == DrType::Asset) {
+            DrAsset *asset = dynamic_cast<DrAsset*>(settings);
+
+            // ***** Dropped on to Animation Property
+            if (property_key == static_cast<int>(Properties::Asset_Animation_Default)) {
+                long old_image_key = asset->getSourceKey();
+                bool delete_after =  asset->canDeleteSource();
+                long new_image_key = m_editor_relay->currentProject()->addImage(file_path);
+
+                asset->updateAnimationProperty(new_image_key);
+
+                // !!!!!
+                // !!!!!
+                // !!!!!
+
+
+                // NEED TO UPDATE ALL THINGS HERE (size, scale, etc?)
+
+
+                // !!!!!
+                // !!!!!
+                // !!!!!
+
+                m_editor_relay->buildAssetTree();
+                m_editor_relay->buildInspector( { settings_key }, true );
+                m_editor_relay->buildScene( c_same_key );
+
+                if (delete_after) asset->deleteSource(old_image_key);
+                drop_event->acceptProposedAction();
+            }
+        }
+
+
+    }
 
     return QObject::eventFilter(object, event);
 }

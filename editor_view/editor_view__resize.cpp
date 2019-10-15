@@ -31,7 +31,7 @@
 //####################################################################################
 void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip) {
     // Figure out starting orientation
-    m_pre_resize_scale =  QPointF(1, 1);
+    m_pre_resize_scale = QPointF(1, 1);
     if (my_scene->getSelectionScale().x() < 0) m_pre_resize_scale.setX(-1);
     if (my_scene->getSelectionScale().y() < 0) m_pre_resize_scale.setY(-1);
 
@@ -307,8 +307,8 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     if (clone == nullptr) return;
 
     // Calculate a transform that includes rotation and new scale
-    double  angle = original->data(User_Roles::Rotation).toDouble();
-    QPointF start_scale = original->data(User_Roles::Pre_Resize_Scale).toPointF();
+    double  angle =         original->data(User_Roles::Rotation).toDouble();
+    QPointF start_scale =   original->data(User_Roles::Pre_Resize_Scale).toPointF();
 
     // If item is roated closer to a vertical orientation swap the x and y scaling factor we calculated for the group resize
     double new_scale_x;

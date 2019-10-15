@@ -153,9 +153,80 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
 
 
 //####################################################################################
+//##    Check if built in Asset Source, or if used by another Asset,
+//##        Otherwise can delete source if desired
+//####################################################################################
+bool DrAsset::canDeleteSource() {
+    bool can_delete = true;
+    if (getSourceKey() < c_key_starting_number) {
+        can_delete = false;
+    } else {
+        // Check all Assets for use of the same Source
+        for (auto asset_pair : m_parent_project->getAssetMap()) {
+            DrAsset *asset_to_check = asset_pair.second;
+            if ((asset_pair.first != getKey()) && (asset_to_check->getSourceKey() == getSourceKey())) {
+                can_delete = false;
+                break;
+            }
+        }
+    }
+    return can_delete;
+}
+
+// Delete underlying source to Asset
+void DrAsset::deleteSource(long source_key) {
+    if (canDeleteSource() == false) return;
+
+    long source_to_delete = (source_key == c_no_key) ? getSourceKey() : source_key;
+
+    switch (getAssetType()) {
+        case DrAssetType::Character:
+        case DrAssetType::Object: {
+            DrImage *image = m_parent_project->getImageMap()[source_to_delete];
+            if (!image) break;
+            m_parent_project->getImageMap().erase( source_to_delete );
+            delete image;
+            break;
+        }
+        case DrAssetType::Effect: {
+            DrEffect *effect = m_parent_project->getEffectMap()[source_to_delete];
+            if (!effect) break;
+            m_parent_project->getEffectMap().erase( source_to_delete );
+            delete effect;
+            break;
+        }
+        case DrAssetType::Text: {
+            DrFont *font = m_parent_project->getFontMap()[source_to_delete];
+            if (!font) break;
+            m_parent_project->getFontMap().erase( source_to_delete );
+            delete font;
+            break;
+        }
+    } // end switch
+}
+
+
+//####################################################################################
+//##    Updates Default Animation Image / Collsion Shape
+//####################################################################################
+void DrAsset::updateAnimationProperty(long source_key) {
+    if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
+
+    m_source_key = source_key;
+    QPixmap     new_pixmap = m_parent_project->getImage(source_key)->getPixmapFromImage();
+    setComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Default, QVariant(new_pixmap));
+
+    DrShapeList shape = autoCollisionShape(new_pixmap);
+    setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape, QVariant::fromValue<DrShapeList>(shape));
+
+    m_width =  new_pixmap.width();
+    m_height = new_pixmap.height();
+}
+
+
+//####################################################################################
 //##    Property loading - initializeAssetSettings
 //####################################################################################
-
 void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap, DrShapeList &shape) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");

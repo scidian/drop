@@ -56,8 +56,12 @@ public:
     void            setSourceKey(long key)          { m_source_key = key; }
     void            setListOrder(long order)        { m_list_order = order; }
 
-
     // Function Calls
+    bool        canDeleteSource();
+    void        deleteSource(long source_key = c_no_key);
+    void        updateAnimationProperty(long source_key);
+
+    // Initialize Calls
     void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap, DrShapeList &shape);
     void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap, DrShapeList &shape);
     void        initializeAssetSettingsEffect(QString new_name);

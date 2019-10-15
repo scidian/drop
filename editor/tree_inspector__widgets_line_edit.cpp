@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 10/14/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Object Inspector Line Edits
 //
 //
 #include <QApplication>

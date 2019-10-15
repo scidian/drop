@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 1/26/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Numerical Property Row Building Functions
+//      Object Inspector Spin Boxes
 //
 //
 #include <QDoubleSpinBox>

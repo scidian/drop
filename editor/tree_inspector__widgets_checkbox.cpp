@@ -2,11 +2,7 @@
 //      Created by Stephens Nunnally on 4/3/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Non-numerical property row building functions
-//          - CheckBox
-//          - Line Edit
-//          - Pushbutton with a popup menu instead of a QComboBox
-//          - Colorful button used to represent a Color property
+//      Object Inspector CheckBox
 //
 #include <QApplication>
 #include <QCheckBox>

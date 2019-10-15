@@ -173,45 +173,8 @@ void TreeAssets::removeAsset(long asset_key) {
         }
     }
 
-    // ***** Check if built in Asset Source, or if used by another Asset, otherwise delete source
-    bool should_delete = true;
-    if (asset->getSourceKey() < c_key_starting_number) {
-        should_delete = false;
-    } else {
-        // Check all Assets for use of the same Source
-        for (auto asset_pair : m_project->getAssetMap()) {
-            DrAsset *asset_to_check = asset_pair.second;
-            if ((asset_pair.first != asset_key) && (asset_to_check->getSourceKey() == asset->getSourceKey())) {
-                should_delete = false;
-                break;
-            }
-        }
-    }
-
     // ***** Delete underlying source to Asset
-    if (should_delete) {
-        switch (asset->getAssetType()) {
-            case DrAssetType::Character:
-            case DrAssetType::Object: {
-                DrImage *image = m_project->getImageMap()[asset->getSourceKey()];
-                m_project->getImageMap().erase( asset->getSourceKey() );
-                delete image;
-                break;
-            }
-            case DrAssetType::Effect: {
-                DrEffect *effect = m_project->getEffectMap()[asset->getSourceKey()];
-                m_project->getEffectMap().erase( asset->getSourceKey() );
-                delete effect;
-                break;
-            }
-            case DrAssetType::Text: {
-                DrFont *font = m_project->getFontMap()[asset->getSourceKey()];
-                m_project->getFontMap().erase( asset->getSourceKey() );
-                delete font;
-                break;
-            }
-        } // end switch
-    } // end should_delete
+    asset->deleteSource();
 
     // ***** Delete Asset
     m_project->getAssetMap().erase( asset_key );

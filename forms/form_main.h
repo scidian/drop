@@ -142,7 +142,7 @@ public:
     virtual DrView*         getStageView() override     { return viewEditor; }
 
     virtual void        buildAssetTree() override;
-    virtual void        buildInspector(QList<long> key_list) override;
+    virtual void        buildInspector(QList<long> key_list, bool rebuild_only = false) override;
     virtual void        buildProjectTree() override;
     virtual void        buildScene(long stage_key) override;
 
