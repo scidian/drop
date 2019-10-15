@@ -179,10 +179,15 @@ void LoadPalettes() {
     g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Text,            QColor(144, 199, 140)));
     g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Text_Light,      QColor(159, 220, 155)));
     g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Highlight,       QColor(183, 253, 178)));
+    // Brown Highlights
+    ///g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Header_Text,     QColor(183, 253, 178)));
+    ///g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Header_Fade,     QColor( 65,  48,  26)));
+    ///g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Icon_Dark,       QColor(160, 121,  67)));
+    ///g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Icon_Light,      QColor(187, 143,  79)));
     g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Header_Text,     QColor(183, 253, 178)));
-    g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Header_Fade,     QColor( 65,  48,  26)));
-    g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Icon_Dark,       QColor(160, 121,  67)));
-    g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Icon_Light,      QColor(187, 143,  79)));
+    g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Header_Fade,     QColor(  6,  52,   8)));
+    g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Icon_Dark,       QColor( 22, 176,  29)));
+    g_color_schemes[Color_Scheme::Forest].insert(std::make_pair(Window_Colors::Icon_Light,      QColor( 26, 202,  34)));
 
     g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Shadow,           QColor(  6,   5,   7)));
     g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Seperator,        QColor( 19,  15,  22)));
@@ -195,10 +200,16 @@ void LoadPalettes() {
     g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Text,             QColor(172, 139, 198)));
     g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Text_Light,       QColor(191, 154, 220)));
     g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Highlight,        QColor(221, 178, 255)));
-    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Header_Text,      QColor(  6,   5,   7)));
-    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Header_Fade,      QColor( 61,  50,  17)));
-    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Icon_Dark,        QColor(224, 185,   1)));
-    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Icon_Light,       QColor(249, 206,   1)));
+    // Gold highlights
+    ///g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Header_Text,      QColor(  6,   5,   7)));
+    ///g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Header_Fade,      QColor( 61,  50,  17)));
+    ///g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Icon_Dark,        QColor(224, 185,   1)));
+    ///g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Icon_Light,       QColor(249, 206,   1)));
+    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Header_Text,      QColor(221, 178, 255)));
+    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Header_Fade,      QColor( 39,   3,  64)));
+    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Icon_Dark,        QColor(134,  12, 218)));
+    g_color_schemes[Color_Scheme::Royal].insert(std::make_pair(Window_Colors::Icon_Light,       QColor(150,  14, 244)));
+
 }
 
 void LoadPaletteBasic(Palette_Info &palette) {
