@@ -10,7 +10,8 @@
 
 #include "colors/colors.h"
 #include "debug.h"
-#include "editor_item.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_view.h"
 #include "enums.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
@@ -20,7 +21,7 @@
 //####################################################################################
 //##    Custom Paint Handling
 //####################################################################################
-void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
 
@@ -36,8 +37,8 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     if (bounds.width() < .5 || bounds.height() < .5) return;
 
     // Set paint option to "not selected" or paint routine will draw dotted lines around item
-    QStyleOptionGraphicsItem my_option(*option);
-    my_option.state &= ~QStyle::State_Selected;
+    ///QStyleOptionGraphicsItem my_option(*option);
+    ///my_option.state &= ~QStyle::State_Selected;
 
     // Check opacity of current item
     double transparency = 0.01;
@@ -46,10 +47,21 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         transparency = Dr::Clamp(transparency, 0.0, 1.0);
     }
 
-    // Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
+    // ***** Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
     if (transparency > 0) {
         if (Dr::FuzzyCompare(painter->opacity(), transparency) == false) painter->setOpacity(transparency);
-        QGraphicsPixmapItem::paint(painter, &my_option, widget);
+
+        // Our custom pixmap painting to draw slightly larger and reduce black lines between images
+        painter->setRenderHint(QPainter::SmoothPixmapTransform, (this->transformationMode() == Qt::SmoothTransformation));
+        double adjust = 0.5 / m_editor_relay->getStageView()->currentZoomLevel();
+        QRectF dest = this->pixmap().rect();
+               dest.adjust(-adjust, -adjust, adjust, adjust);
+        painter->drawPixmap(dest, this->pixmap(), this->pixmap().rect());
+
+        // Original drawing using QtSource
+        ///QGraphicsPixmapItem::paint(painter, &my_option, widget);
+
+    // ***** Draw crooss hatch image mask for transparent items
     } else {
         if (Dr::FuzzyCompare(painter->opacity(), 1.0) == false) painter->setOpacity(1);
 
