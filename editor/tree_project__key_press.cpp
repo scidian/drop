@@ -50,8 +50,19 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                 DrStage *first_stage_selected = dynamic_cast<DrStage*>(settings);
                 DrWorld *first_world_selected = first_stage_selected->getParentWorld();
 
+                // Check if any Stages trying to be deleted are StartStages
+                bool are_start_stages = false;
+                for (auto item : selectedItems()) {
+                    DrStage *stage = m_project->findStageFromKey( item->data(0, User_Roles::Key).toLongLong() );
+                    if (stage->isStartStage()) are_start_stages = true;
+                }
+
                 // If not trying to delete a StartStage, continue deletion
-                if (first_stage_selected->isStartStage() == false) {
+                if (!are_start_stages) {
+                    QMessageBox::StandardButton proceed;
+                    proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected Stage(s)?", QMessageBox::Question,
+                                                 "Delete Stage(s)?", this, QMessageBox::Yes | QMessageBox::No);
+                    if (proceed == QMessageBox::StandardButton::No) return;
 
                     // Select stage before the selected stage
                     auto it = first_world_selected->getStageMap().find(first_key);
@@ -69,11 +80,19 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     buildProjectTree();
                     m_editor_relay->buildInspector( { new_selection->getKey() } );
                     m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
+
+                } else {
+                    Dr::ShowMessageBox("Cannot delete Start Stages!", QMessageBox::Icon::Information, "Cannot Delete", this);
                 }
 
             // Delete selected Worlds
             } else if (type == DrType::World) {
                 if ((m_project->getWorldMap().size() > 1) && (static_cast<int>(m_project->getWorldMap().size()) > selectedItems().count())) {
+                    QMessageBox::StandardButton proceed;
+                    proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected World(s)?", QMessageBox::Question,
+                                                 "Delete World(s)?", this, QMessageBox::Yes | QMessageBox::No);
+                    if (proceed == QMessageBox::StandardButton::No) return;
+
                     // Build list of selected keys
                     QList<long> selected_world_keys;
                     for (auto item : selectedItems()) {
@@ -103,6 +122,9 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     buildProjectTree();
                     m_editor_relay->buildInspector( { new_selection->getKey() } );
                     m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
+                } else {
+                    Dr::ShowMessageBox("Cannot delete World(s)! <br><br> Project must have at least one World.",
+                                       QMessageBox::Icon::Information, "Cannot Delete", this);
                 }
             }
             return;

@@ -94,15 +94,15 @@ void DrOpenGL::bindOccluderMapBuffer() {
     int desired_x, desired_y;
 
     // Orthographic we can use a larger buffer size
-    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-        desired_x = g_max_occluder_fbo_size;
-        desired_y = g_max_occluder_fbo_size;
+    ///if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+    ///    desired_x = g_max_occluder_fbo_size;
+    ///    desired_y = g_max_occluder_fbo_size;
 
     // Perspective uses same size as off screen buffer to match view angles
-    } else {
+    ///} else {
         desired_x = width()* devicePixelRatio();
         desired_y = height()*devicePixelRatio();
-    }
+    ///}
 
     if (!m_occluder_fbo || (m_occluder_fbo->width() != desired_x || m_occluder_fbo->height() != desired_y)) {
         delete m_occluder_fbo;

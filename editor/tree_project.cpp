@@ -78,16 +78,16 @@ void TreeProject::buildProjectTree() {
 
                 QTreeWidgetItem *thing_item = new QTreeWidgetItem(stage_item);                             // Create new item and add as child item
                 switch (thing->getThingType()) {
-                    case DrThingType::None:      Dr::ShowErrorMessage("buildProjectTree", "No Icon for DrThingType::None");     break;
-                    case DrThingType::Character: icon_image = QPixmap(":/assets/tree_icons/tree_character.png").toImage();      break;
-                    case DrThingType::Object:    icon_image = QPixmap(":/assets/tree_icons/tree_object.png").toImage();         break;
-                    case DrThingType::Text:      icon_image = QPixmap(":/assets/tree_icons/tree_text.png").toImage();           break;
-                    case DrThingType::Fire:      icon_image = QPixmap(":/assets/tree_icons/tree_fire.png").toImage();           break;
-                    case DrThingType::Fisheye:   icon_image = QPixmap(":/assets/tree_icons/tree_fisheye.png").toImage();        break;
-                    case DrThingType::Light:     icon_image = QPixmap(":/assets/tree_icons/tree_light.png").toImage();          break;
-                    case DrThingType::Mirror:    icon_image = QPixmap(":/assets/tree_icons/tree_mirror.png").toImage();         break;
-                    case DrThingType::Swirl:     icon_image = QPixmap(":/assets/tree_icons/tree_swirl.png").toImage();          break;
-                    case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();          break;
+                    case DrThingType::None:      Dr::ShowErrorMessage("buildProjectTree", "No Icon for DrThingType::None", this);   break;
+                    case DrThingType::Character: icon_image = QPixmap(":/assets/tree_icons/tree_character.png").toImage();          break;
+                    case DrThingType::Object:    icon_image = QPixmap(":/assets/tree_icons/tree_object.png").toImage();             break;
+                    case DrThingType::Text:      icon_image = QPixmap(":/assets/tree_icons/tree_text.png").toImage();               break;
+                    case DrThingType::Fire:      icon_image = QPixmap(":/assets/tree_icons/tree_fire.png").toImage();               break;
+                    case DrThingType::Fisheye:   icon_image = QPixmap(":/assets/tree_icons/tree_fisheye.png").toImage();            break;
+                    case DrThingType::Light:     icon_image = QPixmap(":/assets/tree_icons/tree_light.png").toImage();              break;
+                    case DrThingType::Mirror:    icon_image = QPixmap(":/assets/tree_icons/tree_mirror.png").toImage();             break;
+                    case DrThingType::Swirl:     icon_image = QPixmap(":/assets/tree_icons/tree_swirl.png").toImage();              break;
+                    case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();              break;
                 }
                 thing_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
                 thing_item->setText(0, thing->getName());                                                   // Set text for item

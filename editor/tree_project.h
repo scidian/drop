@@ -35,7 +35,7 @@ private:
     IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    long            m_selected_key = c_no_key;          // Holds first selected item in QTreeWidget (treeProject)
+    long            m_selected_key = c_no_key;          // Holds first selected item in QTreeWidget (treeProjectEditor)
     bool            m_allow_selection_event = true;     // When false, stops selectionChanged event from propagating changes to editor
 
     QStringList     m_drag_formats;

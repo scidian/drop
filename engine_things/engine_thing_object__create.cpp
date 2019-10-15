@@ -13,6 +13,8 @@
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
 #include "engine_thing_object.h"
+#include "forms/form_main.h"
+#include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
 
@@ -103,7 +105,7 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
     // !!!!! #NOTE: For Chipmunk Polygon Shapes, points must be in Counter-Clockwise Winding !!!!!
     // Shape is convex or could not determine convex hull
     if (new_point_count == 0) {
-        Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!");
+        Dr::ShowMessageBox("Warning! From addShapePolygon()... Could not form convex hull!", QMessageBox::Icon::Warning, "", Dr::GetActiveFormMain());
     }
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius );

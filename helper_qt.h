@@ -10,6 +10,7 @@
 
 #include <QBitmap>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPainter>
 #include <QScreen>
 #include <QWidget>
@@ -39,11 +40,17 @@ QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 
 QString     StringFromBool(bool boolean);
 
 // User Interaction
-void        ShowErrorMessage(QString function_name, QString error_message);
-void        ShowMessageBox(QString new_message, QPixmap pixmap = QPixmap(), bool modal = true);
-
-
+void                        ShowErrorMessage(QString function_name, QString error_message, QWidget *parent = nullptr);
+QMessageBox::StandardButton ShowMessageBox(QString message, QPixmap pixmap, QString title = "", QWidget *parent = nullptr,
+                                           QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
+QMessageBox::StandardButton ShowMessageBox(QString message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, QString title = "", QWidget *parent = nullptr,
+                                           QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
 }
 
 
 #endif // HELPER_QT_H
+
+
+
+
+

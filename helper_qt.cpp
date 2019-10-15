@@ -129,27 +129,33 @@ QString StringFromBool(bool boolean) { return boolean? "True" : "False"; }
 
 
 //####################################################################################
-//##    Used to show a modal error message
+//##    Shows a modal Error Message
 //####################################################################################
-void ShowErrorMessage(QString function_name, QString error_message) {
-    QMessageBox::warning(nullptr, "Error", "Error from " + function_name + "(): " + error_message);
+void ShowErrorMessage(QString function_name, QString error_message, QWidget *parent) {
+    QString error = "Error from " + function_name + "(): " + error_message;
+    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", error, QMessageBox::Ok, parent);
+    msg_box.exec();
 }
 
 
 //####################################################################################
-//##    Used to show a modal messagebox
+//##    Show a Modal Message Box with Icon or Pixmap
 //####################################################################################
-void ShowMessageBox(QString new_message, QPixmap pixmap, bool modal) {
-    QMessageBox *msg_box = new QMessageBox(nullptr);
-
-    msg_box->setModal(modal);
-    msg_box->setText(new_message);
-    msg_box->setIconPixmap(pixmap);
-    msg_box->exec();
-
-    delete msg_box;
-    ///QMessageBox::about(nullptr, "Sample Box", "Shows a message box");
+QMessageBox::StandardButton ShowMessageBox(QString message, QPixmap pixmap, QString title, QWidget *parent,
+                                           QMessageBox::StandardButtons buttons) {
+    QMessageBox msg_box(QMessageBox::Icon::NoIcon, title, message, buttons, parent);
+    msg_box.setIconPixmap(pixmap);
+    return static_cast<QMessageBox::StandardButton>(msg_box.exec());
 }
+
+QMessageBox::StandardButton ShowMessageBox(QString message, QMessageBox::Icon icon, QString title, QWidget *parent,
+                                           QMessageBox::StandardButtons buttons) {
+    QMessageBox msg_box(icon, title, message, buttons, parent);
+    return static_cast<QMessageBox::StandardButton>(msg_box.exec());
+}
+
+
+
 
 
 }   // namespace Dr

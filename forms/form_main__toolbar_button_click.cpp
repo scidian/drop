@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "editor/tree_assets.h"
+#include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
@@ -86,7 +87,11 @@ void FormMain::buttonGroupEditClicked(int id) {
     if (clicked == Buttons_Edit::Delete) {
         QKeyEvent *event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
 
-        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Stage_View) {
+        if (getActiveWidget() == Editor_Widgets::Project_Tree) {
+            treeProjectEditor->keyPressEvent(event);
+            delete event;
+
+        } else if (getActiveWidget() == Editor_Widgets::Stage_View) {
             sceneEditor->keyPressEvent(event);
             delete event;
 

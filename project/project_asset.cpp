@@ -11,6 +11,8 @@
 #include "3rd_party/polyline_simplification.h"
 #include "debug.h"
 #include "engine_mesh/engine_vertex_data.h"
+#include "forms/form_main.h"
+#include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "imaging/imaging.h"
@@ -58,7 +60,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
         }
         case DrAssetType::Effect: {
             DrEffect *effect = m_parent_project->getEffect(source_image_key);
-            if (effect == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Effect with key: " + QString::number(source_image_key));
+            if (effect == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Effect with key: " +
+                                                        QString::number(source_image_key), Dr::GetActiveFormMain());
             my_starting_pixmap = effect->getPixmap();
             initializeAssetSettingsEffect(Dr::StringFromEffectType(effect->getEffectType()));
             break;

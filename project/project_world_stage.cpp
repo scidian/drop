@@ -7,6 +7,8 @@
 //
 #include "colors/colors.h"
 #include "debug.h"
+#include "forms/form_main.h"
+#include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "project.h"
@@ -77,7 +79,8 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         ///    break;
 
         default:
-            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! Type: " + Dr::StringFromThingType(new_type));
+            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! Type: " + Dr::StringFromThingType(new_type),
+                               QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 
     long new_thing_key = (key == c_no_key) ? m_parent_project->getNextKey() : key;

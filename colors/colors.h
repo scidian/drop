@@ -15,7 +15,12 @@
 //##    Palette options for windows
 //############################
 enum class Color_Scheme {
-    Dark,       Light,      Navy,       Rust,       Forest,     Royal,
+    Dark,
+    Light,
+    Navy,
+    Rust,
+    Forest,
+    Royal,
 };
 
 enum class Window_Colors {

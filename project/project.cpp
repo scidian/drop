@@ -9,6 +9,8 @@
 #include <QRandomGenerator>
 #include <QTime>
 
+#include "forms/form_main.h"
+#include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "project.h"
@@ -157,7 +159,8 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning) {
         Dr::ShowMessageBox("WARNING: Did not find key (" + QString::number(check_key) +
                            ") in project! \n"
                            "Last key used in project: " + QString::number(m_key_generator - 1) + "!\n\n"
-                           "This warning called from \"DrProject::findChildSettingsFromKey\"");
+                           "This warning called from \"DrProject::findChildSettingsFromKey\"", QMessageBox::Icon::Warning, "Warning!",
+                           Dr::GetActiveFormMain());
     }
     return nullptr;
 }

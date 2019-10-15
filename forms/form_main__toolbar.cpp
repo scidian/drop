@@ -10,6 +10,7 @@
 #include <QToolButton>
 
 #include "editor/tree_assets.h"
+#include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
@@ -35,6 +36,7 @@ void FormMain::updateToolbar() {
 
         QString selected = "No Selection";
         if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Stage_View) {
+            // ***** Things are selected
             if (sceneEditor->getSelectionCount() > 0) {
                 for (auto button : buttonsGroupLayering->buttons())     if (!button->isEnabled()) button->setEnabled(true);
                 for (auto button : buttonsGroupEdit->buttons())         if (!button->isEnabled()) button->setEnabled(true);
@@ -42,18 +44,36 @@ void FormMain::updateToolbar() {
 
                 if (sceneEditor->getSelectionCount() == 1) {
                     DrThing *thing = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing();
-                    if (dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing())
+                    if (thing != nullptr) {
                         selected = m_project->findSettingsFromKey(thing->getAssetKey())->getName();
+                    }
 
                 } else if (sceneEditor->getSelectionCount() > 1) {
                     selected = QString::number( sceneEditor->getSelectionCount() ) + " Things";
                 }
-            } else if (treeProjectEditor) {
 
+            // ***** World or Stage is selected
+            } else if (treeProjectEditor->selectedItems().count() > 0) {
+                long first_key = treeProjectEditor->selectedItems().first()->data(0, User_Roles::Key).toLongLong();
+                DrSettings *settings = m_project->findSettingsFromKey(first_key);
+                if (settings) {
+                    int selection_count = treeProjectEditor->selectedItems().count();
+                    if (settings->getType() == DrType::Stage || settings->getType() == DrType::World) {
+                        for (auto button : buttonsGroupEdit->buttons())     if (!button->isEnabled()) button->setEnabled(true);
+
+                        if (selection_count == 1) {
+                            if (settings->getType() == DrType::Stage) selected = "Stage: " + settings->getName();
+                            if (settings->getType() == DrType::World) selected = "World: " + settings->getName();
+                        } else {
+                            if (settings->getType() == DrType::Stage) selected = QString::number( selection_count ) + " Stages";
+                            if (settings->getType() == DrType::World) selected = QString::number( selection_count ) + " Worlds";
+                        }
+                    }
+                }
             }
 
         } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != c_no_key) {
-            // Enable Trash Can
+            // ***** Asset is selected
             DrAsset *asset = m_project->findAssetFromKey(treeAssetEditor->getSelectedKey());
             if (asset != nullptr) {
                 if (asset->getAssetType() != DrAssetType::Effect) {

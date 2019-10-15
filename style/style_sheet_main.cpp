@@ -120,7 +120,21 @@ QString CustomStyleSheetFormatting() {
         //##    Message Box / About Box Coloring
         //################################################################################
         " QMessageBox { background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; } "
+        " QMessageBox QAbstractButton { color: #FF0000; }"
 
+        " QMessageBox QAbstractButton { "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border-radius: 4px; "
+        "       padding-left: 20px; padding-right:  20px; "
+        "       padding-top:   6px; padding-bottom:  6px; }"
+        " QMessageBox QAbstractButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QMessageBox QAbstractButton:pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+        " QMessageBox QAbstractButton:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         //################################################################################
         //##    Asset, Stage, Inspector Trees
@@ -130,18 +144,18 @@ QString CustomStyleSheetFormatting() {
         "               background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
 
         // Project Tree
-        " QTreeWidget#treeProject { icon-size: 14px 14px; }"
-        " QTreeWidget#treeProject { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
+        " QTreeWidget#treeProjectEditor { icon-size: 14px 14px; }"
+        " QTreeWidget#treeProjectEditor { color: " + Dr::GetColor(Window_Colors::Text).name() + ";  "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       selection-background-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       show-decoration-selected: 1; }"
-        " QTreeWidget#treeProject::item:selected { "
+        " QTreeWidget#treeProjectEditor::item:selected { "
         "       color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
-        " QTreeWidget#treeProject::item:hover:selected { "
+        " QTreeWidget#treeProjectEditor::item:hover:selected { "
         "       color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
-        " QTreeWidget#treeProject::item:hover:!selected { "
+        " QTreeWidget#treeProjectEditor::item:hover:!selected { "
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
         // Header of Project Tree (where little lock is)
