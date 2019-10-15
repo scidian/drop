@@ -132,8 +132,8 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         // Value is new item QTransform
         QTransform new_transform = value.value<QTransform>();
 
-        double size_x = m_asset_width *  scale.x();
-        double size_y = m_asset_height * scale.y();
+        double size_x = m_asset_width *  (scale.x());
+        double size_y = m_asset_height * (scale.y());
 
         m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation, angle);
         m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale );

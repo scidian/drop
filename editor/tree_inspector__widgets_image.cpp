@@ -21,6 +21,9 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_world.h"
+#include "project/project_world_stage.h"
+#include "project/project_world_stage_thing.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
@@ -142,21 +145,24 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             if (property_key == static_cast<int>(Properties::Asset_Animation_Default)) {
                 long old_image_key = asset->getSourceKey();
                 bool delete_after =  asset->canDeleteSource();
-                long new_image_key = m_editor_relay->currentProject()->addImage(file_path);
+                long new_image_key = project->addImage(file_path);
 
                 asset->updateAnimationProperty(new_image_key);
 
-                // !!!!!
-                // !!!!!
-                // !!!!!
+                // Update all Things, Thing_Size that use Asset
+                for (auto world_pair : project->getWorldMap()) {
+                    for (auto stage_pair : world_pair.second->getStageMap()) {
+                        for (auto thing_pair : stage_pair.second->getThingMap()) {
+                            DrThing *thing = thing_pair.second;
+                            if (thing->getAssetKey() == settings_key) {
+                                QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+                                QPointF new_size(pixmap.width() * scale.x(), pixmap.height() * scale.y());
+                                thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, new_size);
+                            }
+                        }
+                    }
 
-
-                // NEED TO UPDATE ALL THINGS HERE (size, scale, etc?)
-
-
-                // !!!!!
-                // !!!!!
-                // !!!!!
+                }
 
                 m_editor_relay->buildAssetTree();
                 m_editor_relay->buildInspector( { settings_key }, true );
