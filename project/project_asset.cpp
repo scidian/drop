@@ -107,10 +107,18 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
 
             // Trace edge of image
             QVector<DrPointF> points = DrImaging::traceImageOutline(image);
+            double plus_one_pixel_percent_x = 1.0 + (1.20 / image.width());
+            double plus_one_pixel_percent_y = 1.0 + (1.20 / image.height());
+            for (auto &point : points) {
+                point.x = point.x * plus_one_pixel_percent_x;
+                point.y = point.y * plus_one_pixel_percent_y;
+            }
 
             // Run Polyline Simplification algorithm
             QVector<DrPointF> simple_points;
             simple_points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
+
+            // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
             if ((simple_points.count() < 4)) {
                 ///points = HullFinder::FindConcaveHull(points, 5.0);
                 points.clear();
@@ -119,7 +127,7 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
                 points.push_back( DrPointF(rects[image_number].bottomRight().x(),    rects[image_number].bottomRight().y()) );
                 points.push_back( DrPointF(rects[image_number].bottomLeft().x(),     rects[image_number].bottomLeft().y()) );
                 points.push_back( DrPointF(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
-            } else{
+            } else {
                 points = simple_points;
             }
 
@@ -135,12 +143,12 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
         }
     }
 
-    // If we have to polygons by this point, just add a simple box
+    // If we don't have polygons by this point, just add a simple box
     if (shapes.getPolygons().size() < 1) {
         shapes.addPolygon( box.toStdVector() );
     }
 
-    // Adjust points in Polygons so that (0, 0) is the center of the image
+    // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image
     for (auto &shape : shapes.getPolygons()) {
         for (auto &point : shape) {
             point.x = point.x - (pixmap.width() / 2.0);

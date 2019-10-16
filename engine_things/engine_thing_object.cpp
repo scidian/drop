@@ -34,7 +34,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
     this->setOpacity(opacity);
     this->setScaleX(scale.x);                                                   // Save x scale for later
     this->setScaleY(scale.y);                                                   // Save y scale for later
-    this->z_order = z;
+    this->setZOrder(z);
 
     // Object Basics                 !!!!! #NOTE: texture_number == Asset Key
     if (texture_number != 0) {

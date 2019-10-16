@@ -21,36 +21,36 @@ DrEngineWater::DrEngineWater(DrEngineWorld *world, long unique_key, double x, do
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);
-    this->setOpacity( opacity );
-    this->setPosition( DrPointF(x, y) );
+    this->setOpacity(opacity);
+    this->setPosition(DrPointF(x, y));
     this->setSize(size);
-    this->z_order = z;
+    this->setZOrder(z);
 
-    this->water_texture = texture;
-    this->start_color = start_color;
-    this->end_color = end_color;
-    this->water_tint = tint;
-    this->reflection_opacity = reflection;
+    this->water_texture =       texture;
+    this->start_color =         start_color;
+    this->end_color =           end_color;
+    this->water_tint =          tint;
+    this->reflection_opacity =  reflection;
 
-    this->ripple_frequency = rip_frequency;
-    this->ripple_speed = rip_speed;
-    this->ripple_amplitude = rip_amplitude;
-    this->ripple_stretch = rip_stretch;
+    this->ripple_frequency =    rip_frequency;
+    this->ripple_speed =        rip_speed;
+    this->ripple_amplitude =    rip_amplitude;
+    this->ripple_stretch =      rip_stretch;
 
-    this->wave_frequency = w_length;
-    this->wave_speed = w_speed;
-    this->wave_amplitude = w_amplitude;
+    this->wave_frequency =      w_length;
+    this->wave_speed =          w_speed;
+    this->wave_amplitude =      w_amplitude;
 
-    this->surface_color = foam_color;
-    this->surface_tint = foam_tint;
-    this->surface_height = foam_height;
-    this->surface_keep_flat = foam_flat;
+    this->surface_color =       foam_color;
+    this->surface_tint =        foam_tint;
+    this->surface_height =      foam_height;
+    this->surface_keep_flat =   foam_flat;
 
-    this->refract_reflection = r_reflection;
-    this->refract_underwater = r_underwater;
-    this->refract_texture = r_texture;
-    this->refract_foam = r_foam;
-    this->movement_speed = texture_movement;
+    this->refract_reflection =  r_reflection;
+    this->refract_underwater =  r_underwater;
+    this->refract_texture =     r_texture;
+    this->refract_foam =        r_foam;
+    this->movement_speed =      texture_movement;
 }
 
 DrEngineWater::~DrEngineWater() {

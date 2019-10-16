@@ -29,7 +29,7 @@ public:
 public:
     // Constructor / Destructor
     DrEngineFisheye(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPointF size,
-                    QColor start_color, float tint, float zoom);
+                    QColor start_color_, float tint_, float zoom_);
     virtual ~DrEngineFisheye() override;
 
     // Abstract Engine Thing Overrides

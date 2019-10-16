@@ -15,6 +15,7 @@
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_world_stage.h"
@@ -55,8 +56,9 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
     // ********** Calculate angle between starting mouse coordinate and latest mouse coordinate
     double angle, angle1, angle2;
     if (!use_exact_angle) {
-        angle1 = calcRotationAngleInDegrees( mapFromScene( m_selection_points[Position_Flags::Center] ), m_origin);
-        angle2 = calcRotationAngleInDegrees( mapFromScene( m_selection_points[Position_Flags::Center] ), mouse_in_view);
+        QPointF  center_point = mapFromScene( m_selection_points[Position_Flags::Center] );
+        angle1 = Dr::CalcRotationAngleInDegrees( DrPointF(center_point.x(), center_point.y()), DrPointF(m_origin.x(), m_origin.y() ));
+        angle2 = Dr::CalcRotationAngleInDegrees( DrPointF(center_point.x(), center_point.y()), DrPointF(mouse_in_view.x(), mouse_in_view.y() ));
     } else {
         angle1 = 0;
         angle2 = angle_to_use;
@@ -193,38 +195,6 @@ Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_ty
 
     return transform;
 }
-
-
-//####################################################################################
-//##    Calculates angle from a center point to any target point, 0 = Up
-//##        #KEYWORD: "angleTo", "angleFrom", "angle between", "angleBetween"
-//##              0
-//##              |
-//##        270 --+-- 90
-//##              |
-//##             180
-//####################################################################################
-double DrView::calcRotationAngleInDegrees(QPointF center_point, QPointF target_point) {
-    // Calculate the angle theta from the deltaY and deltaX values (atan2 returns radians values from [-PI, PI])
-    // 0 currently points EAST
-    // #NOTE: By preserving Y and X param order to atan2, we are expecting a CLOCKWISE angle direction
-    double theta = qAtan2(target_point.y() - center_point.y(), target_point.x() - center_point.x());
-
-    // Rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
-    // #NOTE: adding to an angle rotates it clockwise, subtracting would rotate it counter-clockwise
-    theta += 3.141592653589793238463 / 2.0;
-
-    // Convert from radians to degrees this will give you an angle from [0->270], [-180,0]
-    double angle = theta * (180.0 / 3.141592653589793238463);
-
-    // Convert to positive range (0-360) since we want to prevent negative angles, adjust them now
-    // We can assume that atan2 will not return a negative value greater than one partial rotation
-    if (angle < 0) { angle += 360; }
-
-    return angle;
-}
-
-
 
 
 

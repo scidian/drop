@@ -51,7 +51,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         QVector<DrPointF> points = DrImaging::traceImageOutline(image);
 
         // Smooth point list
-        points =  smoothPoints( points, 5, 5.0, 0.5 );
+        points = smoothPoints( points, 5, 5.0, 0.5 );
 
         // Run Polyline Simplification algorithm
         points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
@@ -61,8 +61,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
         // Old Way of Simplifying Points on Similar Slopes
         ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
-        ///points =  simplifyPoints(points, 0.030,     5, true);            // First run with averaging points to reduce triangles among similar slopes
-        ///points =  simplifyPoints(points, 0.001, split, false);           // Run again with smaller tolerance to reduce triangles along straight lines
+        ///points = simplifyPoints(points, 0.030,     5, true);             // First run with averaging points to reduce triangles among similar slopes
+        ///points = simplifyPoints(points, 0.001, split, false);            // Run again with smaller tolerance to reduce triangles along straight lines
 
         // ***** Copy image and finds holes as seperate outlines
         QImage holes = image.copy(rects[image_number]);
@@ -224,28 +224,65 @@ QVector<DrPointF> DrEngineVertexData::smoothPoints(const QVector<DrPointF> &outl
 
     // If not enough neighbors, just return starting polygon
     if (outline_points.count() <= neighbors) {
-        for (int i = 0; i < outline_points.count(); ++i) smooth_points.push_back(outline_points[i]);
+        for (int i = 0; i < outline_points.count(); ++i)
+            smooth_points.push_back(outline_points[i]);
         return smooth_points;
     }
 
     // Go through and smooth the points (simple average)
-    for (int i = 0; i < outline_points.count(); i++) {
-        DrPointF this_point = outline_points[i];
-        double total_used = 0;
-        double x = 0, y = 0;
-        for (int j = i - neighbors; j <= i + neighbors; j++) {
-            DrPointF check_point = pointAt(outline_points, j);
-            if (j == i) {
-                x += check_point.x;
-                y += check_point.y;
-                ++total_used;
+    const double c_sharp_angle = 120.0;
 
-            } else if (QLineF(this_point.x, this_point.y, check_point.x, check_point.y).length() < neighbor_distance) {
-                x += (check_point.x * weight);
-                y += (check_point.y * weight);
-                total_used += weight;
+    for (int i = 0; i < outline_points.count(); i++) {
+        // Current Point
+        DrPointF this_point = outline_points[i];
+        double total_used = 1.0;
+        double x = this_point.x;
+        double y = this_point.y;
+        double angle_reduction = 1.0;
+
+        // Check if current point is a sharp angle, if so add to list and continue
+        DrPointF start_check_point =   pointAt(outline_points, i);
+        double   start_check_angle_1 = Dr::CalcRotationAngleInDegrees(start_check_point, pointAt(outline_points, i - 1));
+        double   start_check_angle_2 = Dr::CalcRotationAngleInDegrees(start_check_point, pointAt(outline_points, i + 1));
+        double   start_diff =          Dr::DifferenceBetween2Angles(start_check_angle_1, start_check_angle_2);
+        if (start_diff <= c_sharp_angle) {
+            smooth_points.push_back( this_point );
+            continue;
+        }
+
+        // Check neighbors in both directions for sharp angles, don't include these neighbors for averaging,
+        // This allows us to keep sharper corners on square objects
+        int average_from = i - neighbors;
+        int average_to =   i + neighbors;
+        for (int j = i - 1; j >= i - neighbors; j--) {
+            DrPointF check_point = pointAt(outline_points, j);
+            double check_angle_1 = Dr::CalcRotationAngleInDegrees(check_point, pointAt(outline_points, j - 1));
+            double check_angle_2 = Dr::CalcRotationAngleInDegrees(check_point, pointAt(outline_points, j + 1));
+            double diff =          Dr::DifferenceBetween2Angles(check_angle_1, check_angle_2);
+            if (diff <= c_sharp_angle) { average_from = j + 0 /*1*/; break; }
+        }
+        for (int j = i + 1; j <= i + neighbors; j++) {
+            DrPointF check_point = pointAt(outline_points, j);
+            double check_angle_1 = Dr::CalcRotationAngleInDegrees(check_point, pointAt(outline_points, j - 1));
+            double check_angle_2 = Dr::CalcRotationAngleInDegrees(check_point, pointAt(outline_points, j + 1));
+            double diff =          Dr::DifferenceBetween2Angles(check_angle_1, check_angle_2);
+            if (diff <= c_sharp_angle) { average_to =   j - 0 /*1*/; break; }
+        }
+
+        // Smooth point
+        for (int j = average_from; j <= average_to; j++) {
+            // Skip point we're on from adding into average, already added it
+            if (j != i) {
+                DrPointF check_point = pointAt(outline_points, j);
+                if (QLineF(this_point.x, this_point.y, check_point.x, check_point.y).length() < neighbor_distance) {
+                    x += (check_point.x * weight * angle_reduction);
+                    y += (check_point.y * weight * angle_reduction);
+                    total_used +=        (weight * angle_reduction);
+                }
             }
         }
+
+        // Add to array
         smooth_points.push_back(DrPointF(x / total_used, y / total_used));
     }
     return smooth_points;

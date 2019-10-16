@@ -241,7 +241,6 @@ public:
     // Rotation Functions
     void            startRotate(QPoint mouse_in_view, bool use_tool_tip = true);
     void            rotateSelection(QPointF mouse_in_view, bool use_exact_angle = false, double angle_to_use = 0.0);
-    static double   calcRotationAngleInDegrees(QPointF center_point, QPointF target_point);
 
     // Resize functions
     bool            containsSquareItem(QGraphicsItem *item);

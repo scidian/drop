@@ -239,9 +239,13 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
                         painter.drawLine( l1, l2 );
                     } else {
 
-//                        object_poly = object_poly.united( mapped );
-
-                        painter.drawPolygon( mapped );
+                        // If shape doesnt touch another shape, draw shapes we combined so far and reset to new shape
+                        if (mapped.intersects(object_poly) == false) {
+                            painter.drawPolygon( object_poly );
+                            object_poly = mapped;
+                        } else {
+                            object_poly = object_poly.united( mapped );
+                        }
 
                     }
                 }
@@ -250,10 +254,10 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
 
         }   // End For shape
 
-
-//        // ***** Draw a multi shape Shape_Type::Polygon
-//        if (!object_poly.isEmpty())
-//            painter.drawPolygon( object_poly );
+        // ***** Draw a multi shape Shape_Type::Polygon
+        if (!object_poly.isEmpty()) {
+            painter.drawPolygon( object_poly );
+        }
 
     }   // End For object
 }

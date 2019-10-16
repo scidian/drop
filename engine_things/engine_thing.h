@@ -29,10 +29,6 @@ typedef std::map<cpShape*, Shape_Type> ShapeMap;
 //############################
 class DrEngineThing
 {
-public:
-    // Layout Variable
-    double          z_order = 0.0;                      // Used for layering, needs to be public for use with std::sort
-
 private:
     // External Borrowed Pointers
     DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
@@ -44,6 +40,7 @@ private:
     double          m_angle_z = 0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
     float           m_opacity = 1.0f;                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
     DrPointF        m_position;                         // Current center posiiton
+    double          m_z_order = 0.0;                    // Used for layering, used for distance sorting
     float           m_scale_x = 1.0f;                   // Scale of Thing in world
     float           m_scale_y = 1.0f;                   // Scale of Thing in world
     DrPointF        m_size;                             // Original size of Thing
@@ -106,6 +103,7 @@ public:
     virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)
     virtual const float&    getOpacity() {  return m_opacity; }                             // Returns Opacity (alpha 0.0 to 1.0) of Thing
     virtual DrPointF        getPosition() { return m_position; }                            // Returns Thing center position in world coordinates
+    virtual const double&   getZOrder() {   return m_z_order; }
     virtual const float&    getScaleX() {   return m_scale_x; }
     virtual const float&    getScaleY() {   return m_scale_y; }
     virtual DrPointF        getSize() {     return m_size; }                                // Returns original Thing size
@@ -119,6 +117,7 @@ public:
     void                    setScaleY(float new_scale_y)  {     m_scale_y = new_scale_y; }
     void                    setScaleY(double new_scale_y) {     m_scale_y = static_cast<float>(new_scale_y); }
     virtual void            setSize(DrPointF size) {            m_size = size; }
+    virtual void            setZOrder(double z_order) {         m_z_order = z_order; }
     void                    setWorld(DrEngineWorld *world) {    m_world = world; }
 
     // 3D Properties

@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QDebug>
 
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
@@ -41,6 +42,11 @@ void DrEngineObject::addShapeBox(double width, double height) {
     double    area = (width * height);
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
+void DrEngineObject::addShapeBox(cpBB box) {
+    cpShape *shape = cpBoxShapeNew2(this->body, box, 14);//c_extra_radius);
+    double    area = ((box.r - box.l) * (box.t - box.b));
+    applyShapeSettings(shape, area, Shape_Type::Box);
+}
 void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
     double width =  getWorld()->getTexture(texture_number)->width();
     double height = getWorld()->getTexture(texture_number)->height();
@@ -54,7 +60,7 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset)
         addShapePolygon(points);
     } else {
         double  radius = circle_radius * static_cast<double>(this->getScaleX());
-        cpVect  offset = cpv(shape_offset.x, shape_offset.y);                               // Offset of collision shape
+        cpVect  offset = cpv(shape_offset.x, shape_offset.y);                                       // Offset of collision shape
         cpShape *shape = cpCircleShapeNew(this->body, radius, offset);
         double    area = cpAreaForCircle( 0, circle_radius );
         applyShapeSettings(shape, area, Shape_Type::Circle);
@@ -99,7 +105,7 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
     // where the first vertex in the hull came from (i.e. verts[first] == result[0]). Tolerance (tol) is the allowed amount to shrink the hull when
     // simplifying it. A tolerance of 0.0 creates an exact hull.
     int first = 0;
-    std::vector<cpVect> hull;   hull.clear();   hull.resize(  static_cast<size_t>(old_point_count) );       // Temporary array for ConvexHull call below
+    std::vector<cpVect> hull {};    hull.resize(  static_cast<size_t>(old_point_count) );           // Temporary array for ConvexHull call below
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
     // !!!!! #NOTE: For Chipmunk Polygon Shapes, points must be in Counter-Clockwise Winding !!!!!
@@ -122,8 +128,7 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
         ///pp.ConvexPartition_HM(&testpolys, &result);
 
         for (auto poly : result) {
-            std::vector<cpVect> verts;
-            verts.clear();
+            std::vector<cpVect> verts {};
             verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
             for (int i = 0; i < poly.GetNumPoints(); i++) {
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );

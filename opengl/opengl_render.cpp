@@ -36,7 +36,9 @@ void DrOpenGL::paintGL() {
 
     // ***** Make sure Things vector is sorted by depth
     EngineThings &things = m_engine->getCurrentWorld()->getThings();
-    std::sort(things.begin(), things.end(), [] (const DrEngineThing *a, const DrEngineThing *b) { return a->z_order < b->z_order; });
+    std::sort(things.begin(), things.end(), [] (DrEngineThing *a, DrEngineThing *b) {
+        return a->getZOrder() < b->getZOrder();
+    });
 
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps, Draw Glow Lights
     process2DLights();
@@ -112,7 +114,7 @@ void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing
     float   half_width, half_height;
     x = static_cast<float>(center.x);
     y = static_cast<float>(center.y);
-    z = static_cast<float>(thing->z_order);
+    z = static_cast<float>(thing->getZOrder());
     half_width =  static_cast<float>(thing->getSize().x) * thing->getScaleX() / 2.0f;
     half_height = static_cast<float>(thing->getSize().y) * thing->getScaleY() / 2.0f;
 

@@ -18,8 +18,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
-                             double x_, double y_, double z_,
-                             float  opacity_,
+                             double x, double y, double z, float  opacity,
                              Light_Type type_,
                              QColor     color_,
                              float      diameter_,
@@ -32,21 +31,20 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              float pulse_speed_)
     : DrEngineThing(world, unique_key) {
 
-    this->setOpacity( opacity_ );
-    this->setPosition( DrPointF(x_, y_) );
-    this->z_order = z_;
+    this->setOpacity(opacity);
+    this->setPosition(DrPointF(x, y));
+    this->setZOrder(z);
 
-    this->light_type = type_;
-    this->color = color_;
-    this->light_size = abs(diameter_);
-    this->cone = this->m_rotated_cone = cone_;
-    this->intensity = intensity_;
-    this->setStartIntensity( intensity );
-    this->shadows = shadows_;
-    this->draw_shadows = draw_shadows_;
-    this->blur = blur_;
-    this->pulse = pulse_;
-    this->pulse_speed = pulse_speed_;
+    this->light_type =      type_;
+    this->color =           color_;
+    this->light_size =      abs(diameter_);
+    this->cone =            this->m_rotated_cone =      cone_;
+    this->intensity =       this->m_start_intensity =   intensity_;
+    this->shadows =         shadows_;
+    this->draw_shadows =    draw_shadows_;
+    this->blur =            blur_;
+    this->pulse =           pulse_;
+    this->pulse_speed =     pulse_speed_;
 }
 
 

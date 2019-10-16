@@ -50,6 +50,12 @@ DrPointF DrPointF::operator/(double k) const {
     return DrPointF(x / k, y / k);
 }
 
+DrPointF& DrPointF::operator*=(double k) {
+    x *= k;
+    y *= k;
+    return *this;
+}
+
 bool DrPointF::operator==(const DrPointF &other) const {
     return Dr::FuzzyCompare(x, other.x) && Dr::FuzzyCompare(y, other.y);
 }

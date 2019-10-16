@@ -16,17 +16,17 @@ DrEngineMirror::DrEngineMirror(DrEngineWorld *world, long unique_key, double x, 
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);
-    this->setOpacity( opacity );
-    this->setPosition( DrPointF(x, y) );
+    this->setOpacity(opacity);
+    this->setPosition(DrPointF(x, y));
     this->setSize(size);
-    this->z_order = z;
+    this->setZOrder(z);
 
-    this->start_color = color_1;
-    this->end_color = color_2;
-    this->tint_percent = tint_amount;
-    this->blur = blur;
-    this->blur_stretch = blur_stretch;
-    this->scale = scale;
+    this->start_color =     color_1;
+    this->end_color =       color_2;
+    this->tint_percent =    tint_amount;
+    this->blur =            blur;
+    this->blur_stretch =    blur_stretch;
+    this->scale =           scale;
 }
 
 DrEngineMirror::~DrEngineMirror() {

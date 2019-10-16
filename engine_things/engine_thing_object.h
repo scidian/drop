@@ -36,7 +36,7 @@ const       bool        c_collide_true = true;                  // Constant for 
 const       bool        c_collide_false = false;                // Constant for collision false
 
 // Constants for Object Body / Shape Creation
-constexpr   double      c_extra_radius =    0.010;              // Radius added on to block and polygon shapes for better collisions
+constexpr   double      c_extra_radius =    0.50;               // Radius added on to block and polygon shapes for better collisions
 constexpr   double      c_mass_multiplier = 0.002;              // Shapes Area times this multiplier = shape mass
 
 //####################################################################################
@@ -170,6 +170,7 @@ public:
 
     // Shape Creation
     void                addShapeBox(double width, double height);
+    void                addShapeBox(cpBB box);
     void                addShapeBoxFromTexture(long texture_number);
     void                addShapeCircle(double circle_radius, DrPointF shape_offset);
     void                addShapeCircleFromTexture(long texture_number);

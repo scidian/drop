@@ -110,7 +110,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x);
     float y =   static_cast<float>(thing->getPosition().y);
-    float z =   static_cast<float>(thing->z_order + m_add_z);
+    float z =   static_cast<float>(thing->getZOrder() + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
@@ -147,8 +147,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     if (model_2d) {
         model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
     } else {
-        // Add an extra pixel on 3d objects to reduce blockiness of world
-        float pixels_to_add = 2.f;
+        // Add an extra pixel on 3D objects to reduce blockiness of world
+        float pixels_to_add = 1.5f;
         add_pixel_x = (pixels_to_add * object->getScaleX()) / (static_cast<float>(object->getSize().x));
         add_pixel_y = (pixels_to_add * object->getScaleY()) / (static_cast<float>(object->getSize().y));
     }
@@ -309,7 +309,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x);
     float y =   static_cast<float>(thing->getPosition().y);
-    float z =   static_cast<float>(thing->z_order + m_add_z);
+    float z =   static_cast<float>(thing->getZOrder() + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
@@ -412,7 +412,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
         alpha *= static_cast<float>(fade_percent);
     }
     m_occluder_shader.setUniformValue( u_occluder_alpha,      alpha );
-    m_occluder_shader.setUniformValue( u_occluder_depth,      static_cast<float>(object->z_order) );
+    m_occluder_shader.setUniformValue( u_occluder_depth,      static_cast<float>(object->getZOrder()) );
     m_occluder_shader.setUniformValue( u_occluder_near_plane, c_near_plane );
     m_occluder_shader.setUniformValue( u_occluder_far_plane,  c_far_plane );
 

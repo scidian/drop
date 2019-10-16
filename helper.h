@@ -11,10 +11,15 @@
 #include <chrono>
 #include <string>
 
+#include "types/pointf.h"
+
+// Type Definitions
 typedef std::chrono::high_resolution_clock Clock;
 typedef Clock::time_point DrTime;
 
+// Local Defines
 #define EPSILON 0.00001
+
 
 //####################################################################################
 //##    A library of helpful functions within the global Dr namespace
@@ -64,11 +69,16 @@ void                    ResetTimer(DrTime &timer);
 
 
 // Angle Functions
-template<class T> T     RadiansToDegrees(const T& rad) { return (rad * 57.295779513082321); }
+template<class T> T     RadiansToDegrees(const T& rad) { return (rad * 57.295779513082321); }           // == (180.0 / 3.141592653589793238463);
+double                  CalcRotationAngleInDegrees(DrPointF center_point, DrPointF target_point);
 double                  Closest90DegreeAngle(double angle, double angle_to_find);
+double                  DifferenceBetween2Angles(double angle1, double angle2);
 bool                    IsSimilarAngle(double angle1, double angle2, double tolerance = .001);
 bool                    IsSquare(double check_angle);
+bool                    IsRectangle(DrPointF p1, DrPointF p2, DrPointF p3, DrPointF p4);
 
+
+// Shape Functions
 
 
 }

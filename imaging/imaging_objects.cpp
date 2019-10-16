@@ -15,10 +15,9 @@
 #include <QVector2D>
 
 #include "colors/colors.h"
-#include "editor_view/editor_view.h"
 #include "globals.h"
-#include "imaging.h"
 #include "helper.h"
+#include "imaging.h"
 #include "types/point.h"
 #include "types/pointf.h"
 
@@ -218,7 +217,7 @@ int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
                 QRect  rect;
                 int    flood_pixel_count;
                 QImage flood_fill = floodFill(black_white, x, y, c_color_white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
-                if (flood_pixel_count > 0) {
+                if (flood_pixel_count > 1) {
                     rects.push_back( rect );
                     images.push_back( flood_fill );
                     ++object_count;
@@ -322,13 +321,13 @@ QVector<DrPointF> traceImageOutline(const QImage &from_image) {
         }
 
         // Compare surrounding points to see which one has the greatest angle measured clockwise from the last set of points
-        double   last_point_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(last_point.x, last_point.y));
+        double   last_point_angle = Dr::CalcRotationAngleInDegrees(current_point.toPointF(), last_point.toPointF());
         double   angle_diff = 0;
         bool     first = true;
         DrPoint  next_point;
         for (auto point : surround) {
             // Find angle of point
-            double check_angle = DrView::calcRotationAngleInDegrees(QPointF(current_point.x, current_point.y), QPointF(point.x, point.y));
+            double check_angle = Dr::CalcRotationAngleInDegrees(current_point.toPointF(), point.toPointF());
             while (check_angle > 0) {                 check_angle -= 360.0; }
             while (check_angle <= last_point_angle) { check_angle += 360.0; }
 

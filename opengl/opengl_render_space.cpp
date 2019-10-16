@@ -64,12 +64,12 @@ void DrOpenGL::drawSpace() {
     double last_z; m_add_z = 0.0;                                       // Used to stop z fighting (a.k.a z-fighting, stitching)
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
-        if (thing_count == 0) last_z = thing->z_order - 1000.0;
-        if (Dr::IsCloseTo(last_z, thing->z_order, 0.01)) m_add_z += 0.1; else m_add_z = 0.0;
-        last_z = thing->z_order;
+        if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
+        if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.1; else m_add_z = 0.0;
+        last_z = thing->getZOrder();
 
         // ***** When we have gone past glow z_order, draw the lights to the scene
-        if (!has_rendered_glow_lights && (thing->z_order > m_engine->getCurrentWorld()->getGlowZOrder())) {
+        if (!has_rendered_glow_lights && (thing->getZOrder() > m_engine->getCurrentWorld()->getGlowZOrder())) {
             has_rendered_glow_lights = drawGlowBuffer();
             last_thing = DrThingType::None;
         }      

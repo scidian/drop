@@ -16,14 +16,14 @@ DrEngineSwirl::DrEngineSwirl(DrEngineWorld *world, long unique_key, double x, do
     DrEngineThing(world, unique_key) {
 
     this->setAngle(angle);
-    this->setOpacity( opacity );
-    this->setPosition( DrPointF(x, y) );
+    this->setOpacity(opacity);
+    this->setPosition(DrPointF(x, y));
     this->setSize(size);
-    this->z_order = z;
+    this->setZOrder(z);
 
     this->start_color = color;
-    this->color_tint = tint;
-    this->rotation = rotation_amount;
+    this->color_tint =  tint;
+    this->rotation =    rotation_amount;
 }
 
 DrEngineSwirl::~DrEngineSwirl() {

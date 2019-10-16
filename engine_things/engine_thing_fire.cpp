@@ -21,15 +21,15 @@ DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, double x, doub
     this->setScaleX(scale.x);                                                   // Save x scale for later
     this->setScaleY(scale.y);                                                   // Save y scale for later
     this->setSize(size);
-    this->z_order = z;
+    this->setZOrder(z);
 
-    this->fire_mask = mask;
+    this->fire_mask =   mask;
     this->start_color = color_1;
-    this->end_color = color_2;
+    this->end_color =   color_2;
     this->smoke_color = smoke;
-    this->intensity = color_intensity;
-    this->smoothness = smooth;
-    this->wavy = wave;
+    this->intensity =   color_intensity;
+    this->smoothness =  smooth;
+    this->wavy =        wave;
     this->flame_speed = speed;
 }
 
