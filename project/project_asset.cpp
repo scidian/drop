@@ -107,8 +107,8 @@ DrShapeList autoCollisionShape(QPixmap pixmap) {
 
             // Trace edge of image
             QVector<DrPointF> points = DrImaging::traceImageOutline(image);
-            double plus_one_pixel_percent_x = 1.0 + (1.20 / image.width());
-            double plus_one_pixel_percent_y = 1.0 + (1.20 / image.height());
+            double plus_one_pixel_percent_x = 1.0 + (1.50 / image.width());
+            double plus_one_pixel_percent_y = 1.0 + (1.50 / image.height());
             for (auto &point : points) {
                 point.x = point.x * plus_one_pixel_percent_x;
                 point.y = point.y * plus_one_pixel_percent_y;

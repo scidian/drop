@@ -59,8 +59,7 @@ void FormAbout::resizeEvent(QResizeEvent *event) {
 void FormAbout::buildForm() {
     // ***** About Text
     QString about_txt_1 =   "<center>"
-                            "<b><font size=+4>Drop™ Creator</font></b><br>"
-                            "<font size=+1>A Drag and Drop Game Maker</font><br><br>"
+                            "<font size=+1>A Drag and Drop Game Creator</font><br><br>"
                             "by<br><br>"
                             "<b><font size=+1>Stephens Nunnally &nbsp; · &nbsp; Julie Machamer</b></font><br>"
                             "</center>";
@@ -81,7 +80,8 @@ void FormAbout::buildForm() {
 
         QLabel *drop = new QLabel();
         drop->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        drop->setPixmap(QPixmap(":/assets/icon/icon256.png").scaled(120, 120, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        drop->setPixmap(QPixmap(":/assets/icon/drop_logo.png"));///.scaled(256, 256, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        drop->setStyleSheet( " padding-left: 14px; ");
         drop->setAttribute(Qt::WidgetAttribute::WA_TransparentForMouseEvents, true);
         inner_layout->addWidget(drop);
 
