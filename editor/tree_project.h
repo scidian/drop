@@ -50,8 +50,8 @@ public:
 
     // Function calls
     void                        buildProjectTree();
-    QList <QTreeWidgetItem*>    getListOfAllTreeWidgetItems();
-    QList <QTreeWidgetItem*>    getListOfChildrenFromItem( QTreeWidgetItem *item);
+    QList<QTreeWidgetItem*>     getListOfAllTreeWidgetItems();
+    QList<QTreeWidgetItem*>     getListOfChildrenFromItem( QTreeWidgetItem *item);
     void                        processLockClick(QCheckBox *from_lock);
     void                        updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys);
     void                        updateSelectionFromKeyList(QList<long> key_list);

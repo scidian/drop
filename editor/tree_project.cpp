@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QScrollBar>
 
 #include "colors/colors.h"
 #include "debug.h"
@@ -32,25 +33,64 @@
 
 
 //####################################################################################
+//##    Item_Data used to reset Tree back to how it was before it was rebuilt
+//####################################################################################
+struct Item_Data {
+    QTreeWidgetItem* item;
+    bool existed =  false;
+    bool expanded = true;
+    bool selected = true;
+};
+
+void SetItemData(Item_Data data, QTreeWidgetItem *item) {
+    if (data.existed) {
+        item->setExpanded(data.expanded);
+        item->setSelected(data.selected);
+    } else {
+        data.item = item;
+        item->setExpanded(true);
+    }
+}
+
+//####################################################################################
 //##    Populates Tree Project List based on project data
 //####################################################################################
 void TreeProject::buildProjectTree() {
 
-    setAllowSelectionEvent(false);
-    this->clear();
+    // ********** Store some data about the tree so we can restore after its rebuilt
+    int scroll_position =     this->verticalScrollBar()->value();
+    std::map<long, Item_Data> item_data;
+    QList<QTreeWidgetItem*>   item_list = getListOfAllTreeWidgetItems();
+    bool started_empty =     (item_list.count() < 1);
+    for (auto item : getListOfAllTreeWidgetItems() ) {
+        long key = item->data(0, User_Roles::Key).toLongLong();
+        if (key > 0) {
+            item_data[key].existed =  true;
+            item_data[key].expanded = item->isExpanded();
+            item_data[key].selected = item->isSelected();
+        }
+    }
 
+
+    // ********** Turn off selection event during build, clear tree and start building
     QColor icon_color = Dr::GetColor(Window_Colors::Icon_Dark);
     QImage icon_image;
 
+    setAllowSelectionEvent(false);
+    ///this->clear();
+
     for (auto world_pair: m_project->getWorldMap()) {
+
+        DrWorld *world =     world_pair.second;
+        long     world_key = world_pair.first;
 
         QTreeWidgetItem *world_item = new QTreeWidgetItem(this);                                            // Create new item (top level item)
 
-        DrWorld *world = world_pair.second;
         icon_image = QPixmap(":/assets/tree_icons/tree_world.png").toImage();
         world_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
         world_item->setText(0, "World: " + world->getName());                                               // Set text for item
         world_item->setData(0, User_Roles::Key, QVariant::fromValue(world->getKey()));
+        SetItemData(item_data[world->getKey()], world_item);
         this->addTopLevelItem(world_item);                                                                  // Add it on our tree as the top item.
 
         for (auto stage_pair: world->getStageMap()) {
@@ -62,7 +102,7 @@ void TreeProject::buildProjectTree() {
             stage_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
             stage_item->setText(0, "Stage: " + stage->getName());                                           // Set text for item
             stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage->getKey()));
-
+            SetItemData(item_data[stage->getKey()], stage_item);
 
             // ***** Iterates through Things based on z-order of each Thing
             ThingMap &things = stage->getThingMap();
@@ -92,6 +132,7 @@ void TreeProject::buildProjectTree() {
                 thing_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
                 thing_item->setText(0, thing->getName());                                                   // Set text for item
                 thing_item->setData(0, User_Roles::Key, QVariant::fromValue(thing->getKey()));              // Store item key in user data
+                SetItemData(item_data[thing->getKey()], thing_item);
 
                 stage_item->addChild(thing_item);
 
@@ -117,7 +158,11 @@ void TreeProject::buildProjectTree() {
         }
     }
 
-    this->expandAll();                                             // Expand all items
+    if (started_empty) {
+        this->expandAll();
+    } else {
+        this->verticalScrollBar()->setValue(scroll_position);
+    }
     this->update();
     setAllowSelectionEvent(true);
 }
@@ -139,11 +184,11 @@ void TreeProject::focusInEvent(QFocusEvent *event) {
 //####################################################################################
 //##    Returns a list of the items contained within the tree
 //####################################################################################
-QList <QTreeWidgetItem*> TreeProject::getListOfAllTreeWidgetItems() {
+QList<QTreeWidgetItem*> TreeProject::getListOfAllTreeWidgetItems() {
     return getListOfChildrenFromItem( this->invisibleRootItem() );
 }
 
-QList <QTreeWidgetItem*> TreeProject::getListOfChildrenFromItem( QTreeWidgetItem *item ) {
+QList<QTreeWidgetItem*> TreeProject::getListOfChildrenFromItem( QTreeWidgetItem *item ) {
     QList <QTreeWidgetItem*> items;
 
     for (int i = 0; i < item->childCount(); ++i) {

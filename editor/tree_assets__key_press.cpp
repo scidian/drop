@@ -114,18 +114,13 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
             new_key = new_frame->property(User_Property::Key).toLongLong();
         }
 
-        //######################
-        //######################
-        //######################
-        // !!!!! #FIX: Don't want to rebuild them, only update them
+        // ***** Update Editor Widgets
         m_editor_relay->buildAssetTree();
         m_editor_relay->buildProjectTree();
         m_editor_relay->buildScene( c_same_key );
         m_editor_relay->buildInspector( { new_key } );
-        //######################
-        //######################
-        //######################
 
+        // ***** Update Selected Key
         setSelectedKey(new_key);
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
     }

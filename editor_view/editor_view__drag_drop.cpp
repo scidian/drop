@@ -182,16 +182,8 @@ void DrView::dropEvent(QDropEvent *event) {
         return;
     }
 
-
-    //######################
-    //######################
-    //######################
-    // !! Don't want to rebuild it, only update it
+    // ***** Update Editor Widgets
     m_editor_relay->buildProjectTree();
-    //######################
-    //######################
-    //######################
-
 
     // ***** Selects the newly dropped Thing, loads to Object Inspector
     if (thing != nullptr) {

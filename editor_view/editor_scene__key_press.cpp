@@ -61,7 +61,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
     if (scene_mutex.tryLock(10) == false) return;
 
 
-    // Go through any items selected and make copies of them if the copy keys (wasd) were pressed
+    // ***** Go through any items selected and make copies of them if the copy keys (wasd) were pressed
     QList<QGraphicsItem*>  list_old_items = getSelectionItems();
     QList<QGraphicsItem*>  list_new_items { };
 
@@ -74,7 +74,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         double  new_x, new_y, new_z;
 
         switch (event->key()) {
-            // Clone selected items
+            // ***** Clone selected items
             case Qt::Key::Key_W:
             case Qt::Key::Key_A:
             case Qt::Key::Key_S:
@@ -97,7 +97,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                 break;
 
 
-            // Delete selected items
+            // ***** Delete selected items
             case Qt::Key::Key_Delete:
             case Qt::Key::Key_Backspace:
                 blockSignals(true);
@@ -111,7 +111,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         }
     }
 
-    // If we added (copied) new items to scene, select those items
+    // ***** If we added (copied) new items to scene, select those items
     if (list_new_items.count() > 0 || list_old_items.count() == 0) {
         blockSignals(true);
         this->clearSelection();
@@ -125,18 +125,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
     scene_mutex.unlock();
 
-    // Update Editor Widgets
+    // ***** Update Editor Widgets
     if (update_widgets_when_done) {
-
-        //######################
-        //######################
-        //######################
-        // !!!!! #FIX: Don't want to rebuild it, only update it
         m_editor_relay->buildProjectTree();
-        //######################
-        //######################
-        //######################
-
         m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
     }
 
