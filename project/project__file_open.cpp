@@ -41,6 +41,9 @@ void DrProject::openProjectFromFile(QString open_file) {
     settings.beginReadArray("options");
     settings.setArrayIndex(0);
     QVariantMap options = settings.value("options").value<QVariantMap>();
+    QString version_major = options["version_major"].toString();
+    QString version_minor = options["version_minor"].toString();
+    QString version_build = options["version_build"].toString();
     m_key_generator =                           options["key_generator"].toLongLong();
     setOption(Project_Options::Name,            options["name"]);
     setOption(Project_Options::File_Name_Path,  options["file_path"]);

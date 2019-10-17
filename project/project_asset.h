@@ -28,8 +28,9 @@ private:
 
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
-    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, DrEffect, etc.)
     long            m_list_order = -1;                  // Keeps track of what order to be in on the asset list tree
+
+    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, DrEffect, etc.)
 
     long            m_width;
     long            m_height;

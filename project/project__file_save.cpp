@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QSettings>
 
+#include "globals.h"
 #include "helper.h"
 #include "project.h"
 #include "project_asset.h"
@@ -54,6 +55,9 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Options
     QVariantMap options;
+    options["version_major"] =  Dr::GetPreference(Preferences::Version_Major);
+    options["version_minor"] =  Dr::GetPreference(Preferences::Version_Minor);
+    options["version_build"] =  Dr::GetPreference(Preferences::Version_Build);
     options["key_generator"] =  QVariant::fromValue(m_key_generator);
     options["name"] =           getOption(Project_Options::Name);
     options["file_path"] =      getOption(Project_Options::File_Name_Path);

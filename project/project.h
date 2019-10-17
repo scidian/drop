@@ -47,10 +47,12 @@ typedef std::map<Project_Options, QVariant>  OptionMap;
 
 
 // Constants
-constexpr long c_key_starting_number = 1001;        // First 1001 keys or so are reserved for built in Entities in DrProject (like default images, etc)
+constexpr long c_key_starting_number =  1001;       // First 1001 keys or so are reserved for built in Entities in DrProject (like default images, etc)
                                                     // ....."1001" is an easily searchable number
-constexpr long c_key_character_asset = 1;
-constexpr long c_key_object_asset =    2;
+
+constexpr long c_key_empty_asset =      1;          //  32 x  32    Alpha value 0 square
+constexpr long c_key_character_asset =  2;          // 256 x 256    Gray Circle
+constexpr long c_key_object_asset =     3;          // 256 x 256    Gray Box
 
 
 //####################################################################################

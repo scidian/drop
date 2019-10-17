@@ -167,8 +167,11 @@
         <file>assets/tree_icons/tree_lock_disable.png</file>
         <file>assets/toolbar_icons/toolbar_add_gray.png</file>
         <file>assets/toolbar_icons/toolbar_add.png</file>
-        <file>assets/icon/logo_splash.png</file>
-        <file>assets/icon/logo_splash_small.png</file>
         <file>assets/icon/drop_logo.png</file>
+        <file>assets/icon/scidian_logo_small.png</file>
+        <file>assets/icon/scidian_logo.png</file>
+        <file>assets/dr_images/box.png</file>
+        <file>assets/dr_images/circle.png</file>
+        <file>assets/dr_images/empty.png</file>
     </qresource>
 </RCC>

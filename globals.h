@@ -20,6 +20,10 @@ class IEditorRelay;
 //##    Program Wide Options / Settings / Preferences)
 //############################
 enum class Preferences {
+    Version_Major,                                  // string (should be convertible to int)
+    Version_Minor,                                  // string (should be convertible to int)
+    Version_Build,                                  // string (should be convertible to int)
+
     World_Editor_Lock_Backgrounds,                  // bool
     World_Editor_Show_Collision_Shapes,             // bool
     World_Editor_Show_Connections,                  // bool

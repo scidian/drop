@@ -76,6 +76,7 @@
 //
 //
 //  Future:
+//      FormNewObject               Choose from different square / circle types with various bevels, coloring, corners, etc
 //      FormStartup                 Pick Recent Project, News, Create New Project / Select Template
 //      FormImageEditor             Draw shapes, objects for use in Assets, vectors, custom format, export
 //      FormParticleEditor          Make custom particles
@@ -84,7 +85,6 @@
 //
 //
 #include <QApplication>
-#include <QMetaType>
 #include <QSurfaceFormat>
 
 #include "colors/colors.h"
@@ -93,11 +93,15 @@
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
-#include "project/thing_shape_list.h"
 
 
 // ********** MAIN **********
 int main(int argc, char *argv[]) {
+
+    // ***** Version
+    Dr::SetPreference(Preferences::Version_Major, "1");
+    Dr::SetPreference(Preferences::Version_Minor, "0");
+    Dr::SetPreference(Preferences::Version_Build, "0001");
 
     // ***** Initiliaze application
     QApplication drop(argc, argv);                              // Declare application

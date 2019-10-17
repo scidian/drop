@@ -91,8 +91,8 @@ void FormAbout::buildForm() {
 
         QLabel *scidian = new QLabel();
         scidian->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        ///scidian->setPixmap(QPixmap(":/assets/icon/logo_splash.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        scidian->setText("<a href=\"http://scidian.com/\"><img src=\":/assets/icon/logo_splash_small.png\"></a>");
+        ///scidian->setPixmap(QPixmap(":/assets/icon/scidian_logo.png").scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        scidian->setText("<a href=\"http://scidian.com/\"><img src=\":/assets/icon/scidian_logo_small.png\"></a>");
         scidian->setTextFormat(Qt::RichText);
         scidian->setTextInteractionFlags(Qt::TextBrowserInteraction);
         scidian->setOpenExternalLinks(true);

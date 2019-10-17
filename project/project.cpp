@@ -41,18 +41,22 @@ void DrProject::clearProject() {
     for (auto it = m_images.begin();    it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_effects.begin();   it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
 
-    // Add this Image to every project for use with New Assets,     Key == c_key_character_asset == 1
-    QString ball_path =     ":/assets/test_images/ball_1.png";
-    QImage  ball =          QImage(ball_path).convertToFormat(QImage::Format::Format_ARGB32);
-    this->addImage(c_key_character_asset, ball_path, "ball_1.png", "Ball", ball);
+    // Add these Imagea to every project for use with New Assets
+    QString path;
+    QImage image;
 
-    // Add this Image to every project for use with New Assets,     Key == c_key_object_asset ==    2
-    QString block_path =    ":/assets/test_images/metal_block.png";
-    QImage  block =         QImage(block_path).convertToFormat(QImage::Format::Format_ARGB32);
-    this->addImage(c_key_object_asset, block_path, "metal_block.png", "Block", block);
+    path =  ":/assets/dr_images/empty.png";     image = QImage(path).convertToFormat(QImage::Format::Format_ARGB32);
+    this->addImage(c_key_empty_asset,       path, "empty.png",  "Empty",    image);
+
+    path =  ":/assets/dr_images/circle.png";    image = QImage(path).convertToFormat(QImage::Format::Format_ARGB32);
+    this->addImage(c_key_character_asset,   path, "circle.png", "Ball",     image);
+
+    path =  ":/assets/dr_images/box.png";       image = QImage(path).convertToFormat(QImage::Format::Format_ARGB32);
+    this->addImage(c_key_object_asset,      path, "box.png",    "Block",    image);
 
     // !!!!! #NOTE: Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
-    m_key_generator = c_key_starting_number;                        // starts at 100
+    //              (starts at 1001)
+    m_key_generator = c_key_starting_number;
 }
 
 // Removes a World from the Project
