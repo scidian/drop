@@ -59,7 +59,7 @@ public:
     explicit        TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function Calls
-    void            buildInspectorFromKeys(QList<long> key_list, bool rebuild_only = false);
+    void            buildInspectorFromKeys(QList<long> key_list, bool force_rebuild = false);
     void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
     void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
     void            updateLockedSettings();

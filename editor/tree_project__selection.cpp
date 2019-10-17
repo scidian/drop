@@ -18,7 +18,7 @@
 //##        Checks to make sure if more than one item is selected all new items
 //##        not matching original type are not selected
 //####################################################################################
-void TreeProject::selectionChanged (const QItemSelection &selected, const QItemSelection &deselected) {
+void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
 
     // If we're updating selection from outside source this function has been turned off from that source (i.e. updateSelection in IEditorRelay)
     if (!m_allow_selection_event) {
@@ -114,9 +114,11 @@ void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
     setAllowSelectionEvent(false);
     clearSelection();
 
+    QList<QTreeWidgetItem*> all_items = getListOfAllTreeWidgetItems();
+
     long items_selected = 0;
     for (auto key : key_list) {
-        for (auto row : getListOfAllTreeWidgetItems()) {
+        for (auto row : all_items) {
             long row_key = row->data(0, User_Roles::Key).toLongLong();
 
             if (key == row_key) {
@@ -128,6 +130,11 @@ void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
                 }
             }
         }
+    }
+
+    // Ensure selection visible
+    if (selectedItems().count() > 0) {
+        this->scrollToItem(selectedItems().last());
     }
 
     update();

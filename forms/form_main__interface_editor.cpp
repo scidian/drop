@@ -106,7 +106,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     // ***** This order is semi important, best not to try and change it
     if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItemNames(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItems(changed_items, property_keys_as_long);
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
 
     // !!!!! #TEMP: Testing to make sure not running non stop

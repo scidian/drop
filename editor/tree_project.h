@@ -20,6 +20,12 @@ class IEditorRelay;
 class DrScene;
 class DrProject;
 class DrSettings;
+class DrThing;
+
+// Local Defines
+#define COLUMN_TITLE    0
+#define COLUMN_LOCK     1
+
 
 //####################################################################################
 //##    TreeProject
@@ -52,8 +58,9 @@ public:
     void                        buildProjectTree();
     QList<QTreeWidgetItem*>     getListOfAllTreeWidgetItems();
     QList<QTreeWidgetItem*>     getListOfChildrenFromItem( QTreeWidgetItem *item);
+    void                        installLockBox(DrSettings *entity, QTreeWidgetItem *thing_item);
     void                        processLockClick(QCheckBox *from_lock);
-    void                        updateItemNames(QList<DrSettings*> changed_items, QList<long> property_keys);
+    void                        updateItems(QList<DrSettings*> changed_entities, QList<long> property_keys);
     void                        updateSelectionFromKeyList(QList<long> key_list);
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 

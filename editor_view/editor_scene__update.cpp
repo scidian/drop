@@ -87,16 +87,16 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Hidden_Hide_From_Trees:
                 if (new_value == true) {
                     thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked, true);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Item_Locked });
                 }
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Item_Locked });
                 break;
             case Properties::Hidden_Item_Locked:
                 if (new_value == false) {
                     if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool() == true) {
                         thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, false);
-                        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Hide_From_Trees });
                     }
                 }
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Hide_From_Trees });
                 break;
 
             case Properties::Thing_Object_Physics_Type: {
