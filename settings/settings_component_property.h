@@ -69,9 +69,18 @@ public:
     void setDescription(QString new_description) { m_description = new_description; }
     void setPropertyType(Property_Type new_type) { m_preferred_type = new_type; }
 
-    // Function template allows any type to be passed in and assigned to QVariant
+
+    //####################################################################################
+    //##    Function template allows any type to be passed in and assigned to QVariant
+    //##
+    //##    !!!!! #NOTE: Setting a value here means the data model has changed !!!!!
+    //##                 This implies we need to save if closing Drop,
+    //##                 or store change in Undo / Redo stack !!!!!
+    //####################################################################################
     template <class T>
-    void setValue(T new_value) { m_value = new_value; }
+    void setValue(T new_value) {
+        m_value = new_value;
+    }
 
 
 };

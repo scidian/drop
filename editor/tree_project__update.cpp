@@ -16,12 +16,12 @@
 //####################################################################################
 //##    Updates item names if they have been changed
 //####################################################################################
-void TreeProject::updateItems(QList<DrSettings*> changed_entities, QList<long> property_keys) {
-    if (changed_entities.isEmpty()) return;
+void TreeProject::updateItems(QList<DrSettings*> changed_items, QList<long> property_keys) {
+    if (changed_items.isEmpty()) return;
 
     setAllowSelectionEvent(false);
 
-    for (auto entity : changed_entities) {
+    for (auto entity : changed_items) {
         long item_key = entity->getKey();
         for (auto row : getListOfAllTreeWidgetItems()) {
             long row_key = row->data(0, User_Roles::Key).toLongLong();

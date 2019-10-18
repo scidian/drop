@@ -25,7 +25,7 @@ struct Triangle {
 
 struct Mesh {
     std::vector<Triangle>   m_triangles;
-    unsigned long triangle_count() const { return m_triangles.size(); }
+    size_t                  triangle_count() const { return m_triangles.size(); }
 };
 
 

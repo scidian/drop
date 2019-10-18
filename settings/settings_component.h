@@ -46,33 +46,28 @@ public:
     DrComponent(DrSettings *parent_settings, QString new_display_name, QString new_description, QColor new_color, long new_key, bool new_turned_on);
     ~DrComponent();
 
-
     // Getters and Setters
-    QString         getDisplayName() { return m_display_name; }
-    QString         getDisplayNameQString() { return m_display_name; }
-    QString         getDescription() { return m_description; }
-    QString         getIcon() { return m_icon; }
-    QColor          getColor() { return m_color; }
-    bool            isTurnedOn() { return m_turned_on; }
-    long            getComponentKey() { return m_component_key; }
     DrSettings*     getParentSettings() { return m_parent_settings; }
 
     PropertyMap&    getPropertyMap() { return m_properties; }
     DrProperty*     getProperty(long setting);
     DrProperty*     getProperty(Properties setting);
 
-    void    setProperty(long setting, QVariant value);
-    void    setProperty(Properties setting, QVariant value);
+    QString     getDisplayName() { return m_display_name; }
+    QString     getDisplayNameQString() { return m_display_name; }
+    QString     getDescription() { return m_description; }
+    QString     getIcon() { return m_icon; }
+    QColor      getColor() { return m_color; }
+    bool        isTurnedOn() { return m_turned_on; }
+    long        getComponentKey() { return m_component_key; }
 
-
-    void    setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
-    void    setDescription(QString new_description) { m_description = new_description; }
-    void    setIcon(QString new_icon) { m_icon = new_icon; }
-    void    setColor(QColor new_color) { m_color = new_color; }
-    void    setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
-    void    turnOn() { m_turned_on = true; }
-    void    turnOff() { m_turned_on = false; }
-
+    void        setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
+    void        setDescription(QString new_description) { m_description = new_description; }
+    void        setIcon(QString new_icon) { m_icon = new_icon; }
+    void        setColor(QColor new_color) { m_color = new_color; }
+    void        setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
+    void        turnOn() { m_turned_on = true; }
+    void        turnOff() { m_turned_on = false; }
 
 
     // Function Calls

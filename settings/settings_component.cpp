@@ -37,11 +37,8 @@ DrComponent::~DrComponent() {
 
 
 //####################################################################################
-//##    Get / Set Property
+//##    Get Property
 //####################################################################################
-void DrComponent::setProperty(long setting, QVariant value) { m_properties[setting]->setValue(value); }
-void DrComponent::setProperty(Properties setting, QVariant value) { m_properties[static_cast<int>(setting)]->setValue(value); }
-
 DrProperty* DrComponent::getProperty(Properties setting) { return getProperty(static_cast<long>(setting)); }
 DrProperty* DrComponent::getProperty(long setting) {
     auto it = m_properties.find(setting);
