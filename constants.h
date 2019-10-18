@@ -93,14 +93,15 @@ typedef QList<QString> HeaderBodyList;
 namespace Advisor_Info {
 
     // Toolbar Buttons
-    const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your project and how the worlds and "
-                                                               "user interfaces in your project connect to each other." };
+    const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your Project and how the worlds and "
+                                                               "user interfaces in your Project connect to each other." };
     const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each physics world. It is where "
                                                                        "you can design each Stage and lay out your worlds / levels." };
-    const HeaderBodyList Mode_UI                { "UI Editor Mode", "This mode will allow you to edit the user interface layer of your project." };
+    const HeaderBodyList Mode_UI                { "UI Editor Mode",     "This mode will allow you to edit the user interface layer of your Project." };
     const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about physics properties." };
-    const HeaderBodyList Settings_Font_Builder  { "Font Builder", "Create and edit fonts usued for Text Boxes." };
-    const HeaderBodyList Settings_Manager       { "Settings Manager", "View and edit project settings." };
+    const HeaderBodyList Settings_Image_Viewer  { "Image Viewer",       "View / manage Images used in this Project." };
+    const HeaderBodyList Settings_Font_Builder  { "Font Builder",       "Create and edit fonts used for Text Boxes." };
+    const HeaderBodyList Settings_Manager       { "Settings Manager",   "View and edit Project settings." };
 
     const HeaderBodyList Send_to_Back           { "Send to Back",  "Send selected item(s) to the back." };
     const HeaderBodyList Send_to_Front          { "Send to Font",  "Send selected item(s) to the front." };
@@ -138,8 +139,8 @@ namespace Advisor_Info {
     const HeaderBodyList ColorDialog            { "Color Dialog", "Opens the system color dialog toolbox." };
 
     // Editor Widgets
-    const HeaderBodyList Asset_List             { "Asset List", "These are items that can be dragged into your project. Changing the properties "
-                                                                "of these items will affect all instances of those items project wide." };
+    const HeaderBodyList Asset_List             { "Asset List", "These are items that can be dragged into your Project. Changing the properties "
+                                                                "of these items will affect all instances of those items Project wide." };
     const HeaderBodyList Asset_Search           { "Asset Search", "Type the name of an asset here to help find it in the Asset List." };
     const HeaderBodyList Stage_View             { "Stage View", "Shows objects and layout of currently selected Stage. Drop assets into Stage "
                                                                 "View to add to Stage." };
@@ -147,8 +148,8 @@ namespace Advisor_Info {
                                                                   "to view / adjust properties for each item." };
 
     // Project Types
-    const HeaderBodyList Asset_Description      { "Asset", "This is an item that can be dragged into your project. Changing the properties "
-                                                           "of this item will affect all instances of this item project wide." };
+    const HeaderBodyList Asset_Description      { "Asset", "This is an item that can be dragged into your Project. Changing the properties "
+                                                           "of this item will affect all instances of this item Project wide." };
     const HeaderBodyList World_Description      { "World", "A World is a container of Stages." };
     const HeaderBodyList Stage_Description      { "Stage", "A Stage is a container of Things." };
     const HeaderBodyList Camera_Thing           { "Camera", "This is a Camera. This will decide what the player sees." };
@@ -210,7 +211,7 @@ namespace Error_Code {
 
 
 //####################################################################################
-//##    Mouse cursors to use throughout project, defined in constants.cpp
+//##    Mouse cursors to use throughout Project, defined in constants.cpp
 //############################
 namespace Mouse_Cursors {
     QCursor sizeVertical();

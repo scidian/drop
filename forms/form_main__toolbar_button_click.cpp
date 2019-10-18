@@ -22,6 +22,7 @@
 #include "project/project.h"
 #include "project/project_world_stage_thing.h"
 
+
 //####################################################################################
 //##    buttonGroupMode SLOT and functions
 //####################################################################################
@@ -51,20 +52,6 @@ void FormMain::buttonGroupModeSetChecked(int id) {
 
 
 //####################################################################################
-//##    buttonGroupAddClicked SLOT and functions
-//####################################################################################
-void FormMain::buttonGroupAddClicked(int id) {
-    Buttons_Add clicked = static_cast<Buttons_Add>(id);
-
-    if (clicked == Buttons_Add::Add) {
-        FormPopup *popupAdd = new FormPopup(buttonsGroupAdd->button(id), m_project, widgetGroupAdd);
-        popupAdd->buildPopupAddEntity();
-        popupAdd->show();
-    }
-}
-
-
-//####################################################################################
 //##    buttonGroupLayering SLOT and functions
 //####################################################################################
 void FormMain::buttonGroupLayeringClicked(int id) {
@@ -84,7 +71,12 @@ void FormMain::buttonGroupLayeringClicked(int id) {
 void FormMain::buttonGroupEditClicked(int id) {
     Buttons_Edit clicked = static_cast<Buttons_Edit>(id);
 
-    if (clicked == Buttons_Edit::Delete) {
+    if (clicked == Buttons_Edit::Add) {
+        FormPopup *popupAdd = new FormPopup(buttonsGroupEdit->button(id), m_project, widgetGroupEdit);
+        popupAdd->buildPopupAddEntity();
+        popupAdd->show();
+
+    } else if (clicked == Buttons_Edit::Delete) {
         QKeyEvent *event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
 
         if (getActiveWidget() == Editor_Widgets::Project_Tree) {

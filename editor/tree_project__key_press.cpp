@@ -33,13 +33,24 @@
 //####################################################################################
 void TreeProject::keyPressEvent(QKeyEvent *event) {
 
+    // ***** If we dont have selected items exit, otherwise get type of selected items
+    if (selectedItems().count() < 1) { QTreeWidget::keyPressEvent(event); return; }
+    long        first_key = selectedItems().first()->data(0, User_Roles::Key).toLongLong();
+    DrSettings *settings =  m_project->findSettingsFromKey( first_key, false );
+    if (settings == nullptr)         { QTreeWidget::keyPressEvent(event); return; }
+    DrType      type =      settings->getType();
+
+    // ***** Duplication Keys
+    if (event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D) {
+        if (type == DrType::Thing) {
+            m_editor_relay->getStageView()->keyPressEvent(event);
+            return;
+        }
+    }
+
     // ***** Delete Key
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
         if (selectedItems().count() > 0) {
-            // Get type of selected items
-            long        first_key = selectedItems().first()->data(0, User_Roles::Key).toLongLong();
-            DrSettings *settings =  m_project->findSettingsFromKey( first_key );
-            DrType      type =      settings->getType();
 
             // Delete selected Things
             if (type == DrType::Thing) {

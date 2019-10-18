@@ -12,6 +12,7 @@
 #include <QToolButton>
 
 #include "enums_form_main.h"
+#include "form_blank.h"
 #include "form_fonts.h"
 #include "form_main.h"
 #include "form_popup.h"
@@ -75,22 +76,26 @@ void FormMain::buildToolBar() {
         toolbarLayoutMode->addWidget(tool);
 
 
-    // ***** Mode "Editor" Add-On, Add: Adds Entity to Project
-    widgetGroupAdd = new QWidget(widgetToolbar);
-    widgetGroupAdd->hide();
-    widgetGroupAdd->setObjectName(QStringLiteral("widgetGroupAdd"));
-    widgetGroupAdd->setFixedHeight(46);
-        QHBoxLayout *toolbarLayoutAdd = new QHBoxLayout(widgetGroupAdd);
-        toolbarLayoutAdd->setSpacing(1);
-        toolbarLayoutAdd->setContentsMargins(0, 0, 0, 0);
+    // ***** Mode "Editor" Add-On, Edit: Holds Add , Delete, future Cut / Copy / Paste
+    widgetGroupEdit = new QWidget(widgetToolbar);
+    widgetGroupEdit->hide();
+    widgetGroupEdit->setObjectName(QStringLiteral("widgetGroupEdit"));
+    widgetGroupEdit->setFixedHeight(46);
+        QHBoxLayout *toolbarLayoutEdit = new QHBoxLayout(widgetGroupEdit);
+        toolbarLayoutEdit->setSpacing(5);
+        toolbarLayoutEdit->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupAdd = new QButtonGroup();
-        buttonsGroupAdd->setExclusive(false);
-        connect(buttonsGroupAdd, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupAddClicked(int)));
+        buttonsGroupEdit = new QButtonGroup();
+        buttonsGroupEdit->setExclusive(false);
+        connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, 48, 26, false, true);
-        buttonsGroupAdd->addButton(tool, int(Buttons_Add::Add));
-        toolbarLayoutAdd->addWidget(tool);
+        buttonsGroupEdit->addButton(tool, int(Buttons_Add::Add));
+        toolbarLayoutEdit->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, 34, 26, false, false);
+        buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));
+        toolbarLayoutEdit->addWidget(tool);
 
 
     // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to Front / Back
@@ -121,25 +126,6 @@ void FormMain::buildToolBar() {
         tool = createToolbarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Send_to_Front, 34, 26, false, false);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
         toolbarLayoutLayering->addWidget(tool);
-
-
-    // ***** Mode "Editor" Add-On, Edit: Holds Delete button, future Cut / Copy / Paste
-    widgetGroupEdit = new QWidget(widgetToolbar);
-    widgetGroupEdit->hide();
-    widgetGroupEdit->setObjectName(QStringLiteral("widgetGroupEdit"));
-    widgetGroupEdit->setFixedHeight(46);
-        QHBoxLayout *toolbarLayoutEdit = new QHBoxLayout(widgetGroupEdit);
-        toolbarLayoutEdit->setSpacing(1);
-        toolbarLayoutEdit->setContentsMargins(0, 0, 0, 0);
-
-        buttonsGroupEdit = new QButtonGroup();
-        buttonsGroupEdit->setExclusive(false);
-        connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
-
-        tool = createToolbarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, 34, 26, false, false);
-        buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));
-        toolbarLayoutEdit->addWidget(tool);
-
 
     // ***** Mode "Editor" Add-On, Transform: Holds buttons that Flip / Rotate things
     widgetGroupTransform = new QWidget(widgetToolbar);
@@ -238,11 +224,19 @@ void FormMain::buildToolBar() {
         toolbarLayoutSettings->setSpacing(5);
         toolbarLayoutSettings->setContentsMargins(0, 0, 0, 0);
 
-        tool = createToolbarButton(QStringLiteral("buttonPlayground"), Advisor_Info::Settings_Playground, 34, 26, false);
+        // Physics Playground
+        ///tool = createToolbarButton(QStringLiteral("buttonPlayground"), Advisor_Info::Settings_Playground, 34, 26, false);
+        ///toolbarLayoutSettings->addWidget(tool);
+        ///connect(tool, &QPushButton::clicked, [this] () {
+        ///    FormPlayground *playground = new FormPlayground(this);
+        ///    playground->show();
+        ///});
+
+        tool = createToolbarButton(QStringLiteral("buttonImageViewer"), Advisor_Info::Settings_Image_Viewer, 34, 26, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormPlayground *playground = new FormPlayground(this);
-            playground->show();
+            FormBlank *blank_form = new FormBlank(m_project, this);
+            blank_form->show();
         });
 
         tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), Advisor_Info::Settings_Font_Builder, 34, 26, false);

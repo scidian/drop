@@ -84,7 +84,6 @@ private:
     QWidget     *widgetToolbar;         QHBoxLayout     *widgetToolbarLayout;
 
     QWidget     *widgetGroupMode;       QButtonGroup    *buttonsGroupMode;
-    QWidget     *widgetGroupAdd;        QButtonGroup    *buttonsGroupAdd;
     QWidget     *widgetGroupEdit;       QButtonGroup    *buttonsGroupEdit;
     QWidget     *widgetGroupLayering;   QButtonGroup    *buttonsGroupLayering;
     QWidget     *widgetGroupTransform;  QButtonGroup    *buttonsGroupTransform;
@@ -204,7 +203,6 @@ private:
     void            updateToolbar();
 
 private slots:
-    void            buttonGroupAddClicked(int id);
     void            buttonGroupEditClicked(int id);
     void            buttonGroupGridClicked(int id);
     void            buttonGroupLayeringClicked(int id);
