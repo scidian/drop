@@ -28,8 +28,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
                  long new_thing_key, QString new_thing_name, DrThingType new_thing_type,
                  long from_asset_key,
                  double x, double y, double z,
-                 bool should_collide) {
-    m_parent_project = parent_project;              // pointer to parent Project
+                 bool should_collide) : DrSettings(parent_project) {
     m_parent_world = parent_world;                  // pointer to parent World
     m_parent_stage = parent_stage;                  // pointer to parent Stage
 
@@ -42,7 +41,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
                            "Asset Key", "ID Key of Asset this item represents.", false, false);
 
-    DrAsset *asset = m_parent_project->findAssetFromKey(from_asset_key);
+    DrAsset *asset = getParentProject()->findAssetFromKey(from_asset_key);
 
 
     // Call to load in all the components / properties for this Stage thing

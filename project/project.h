@@ -62,6 +62,10 @@ constexpr long c_key_object_asset =     3;          // 256 x 256    Gray Box
 class DrProject
 {
 private:
+    // Usage Variables
+    bool        m_has_saved = false;                            // If project is edited at all, turns to false until user saves
+    bool        m_test_only = false;                            // For debugging purposes, stops Drop from asking to save when exiting
+
     // Project Variables
     long        m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children items
     OptionMap   m_options;                                      // Map holding DrProject Wide options
@@ -86,6 +90,11 @@ public:
     // Getters and Setters
     long        getNextKey()            { return m_key_generator++; }
     void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
+
+    bool        hasSaved()              { return m_has_saved; }
+    bool        isTestOnly()            { return m_test_only; }
+    void        setHasSaved(bool saved) { m_has_saved = saved; }
+    void        setTestOnly(bool test)  { m_test_only = test; }
 
     long        getFirstWorldKey()      { return m_worlds.begin()->first; }
     long        getNumberOfWorlds()     { return static_cast<long>(m_worlds.size()); }
@@ -112,7 +121,7 @@ public:
 
     // Building
     void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
-    void            clearProject();
+    void            clearProject(bool add_built_in_items = true);
     void            deleteWorld(DrWorld *world);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);

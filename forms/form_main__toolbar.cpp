@@ -82,6 +82,7 @@ void FormMain::updateToolbar() {
             }
         }
 
+        buttonAdd->setEnabled(true);
         labelSelected->setText(selected);
     }
 }

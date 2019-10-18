@@ -15,6 +15,7 @@
 //##    Creates skeleton of a new Project
 //####################################################################################
 void DrProject::initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test) {
+    m_test_only = false;
 
     // ***** Set Project Options
     this->setOption(Project_Options::Name,              project_name);
@@ -59,6 +60,7 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
     // ***** Build Test Project
     if (test) {
+        setTestOnly(true);
 
         long image_1  = this->addImage(":/assets/test_images/test_square.png");
         long image_2  = this->addImage(":/assets/test_images/ground_fill.png");
@@ -166,6 +168,9 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
         this->setOption(Project_Options::Current_World, QVariant::fromValue(current_stage->getParentWorld()->getKey()) );
     }   // End Test Project
 
+
+    // ***** Important! Signify we don't need to save at this point!
+    setHasSaved(true);
 }
 
 

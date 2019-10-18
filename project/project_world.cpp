@@ -18,8 +18,7 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage) {
-    m_parent_project = parent_project;
+DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage) : DrSettings(parent_project) {
     this->setKey(key);
 
     initializeWorldSettings(new_world_name);
@@ -56,14 +55,14 @@ long DrWorld::addStage(QString new_stage_name) {
         new_stage_name = QString::number(static_cast<long>(m_stages.size() + 1));
     }
 
-    long new_stage_key = m_parent_project->getNextKey();
+    long new_stage_key = getParentProject()->getNextKey();
 
-    m_stages[new_stage_key] = new DrStage(m_parent_project, this, new_stage_key, new_stage_name, need_start_stage);    
+    m_stages[new_stage_key] = new DrStage(getParentProject(), this, new_stage_key, new_stage_name, need_start_stage);
     return new_stage_key;
 }
 
 void DrWorld::addStage(long stage_key, bool is_start_stage, QPointF center_point) {
-    m_stages[stage_key] = new DrStage(m_parent_project, this, stage_key, "TEMP", false);
+    m_stages[stage_key] = new DrStage(getParentProject(), this, stage_key, "TEMP", false);
     m_stages[stage_key]->setIsStartStage(is_start_stage);
     m_stages[stage_key]->setViewCenterPoint(center_point);
 }

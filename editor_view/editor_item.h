@@ -47,6 +47,8 @@ private:
     bool            m_temp_only = false;                    // If this is set to true when item is created, changes to this item are ignored
                                                             // and not processed into the undo stack, nor do changes have an effect on the associated
                                                             // Thing in the project data model
+    bool            m_item_change_flags_enabled = false;    // Lets us know if we've enabled or disabled ItemChangeFlags
+
 
 public:
     // Constructor
@@ -64,13 +66,13 @@ public:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void            hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
-    // Function Calls
+    // Item Change Flags
     void                    disableItemChangeFlags();
     void                    enableItemChangeFlags();
+    bool                    itemChangeFlagsEnabled()                { return m_item_change_flags_enabled; }
 
     // Pixmap Filters
     void                    applyFilters();
-
 
 
     // Getters and Setters

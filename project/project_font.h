@@ -23,9 +23,6 @@ class DrProject;
 class DrFont : public DrSettings
 {
 private:
-    // External Borrowed Pointers
-    DrProject              *m_parent_project;               // Holds reference to parent Project class that handles key generation for project
-
     // Local Variables
     QPixmap                 m_pixmap;                       // Stored font pixmap
     std::map<char, QRect>   m_positions;                    // Holds rects for each character in the pixmap
@@ -60,9 +57,8 @@ public:
 
     // Getters and Setters
     virtual DrType  getType() override      { return DrType::Font; }
-
-    DrProject*      getParentProject()      { return m_parent_project; }
     QString         getName() override      { return m_name; }
+
     QPixmap         getPixmap()             { return m_pixmap; }
 
     QRect           getCharRect(char character)     { return m_positions[character]; }

@@ -50,6 +50,7 @@ void DrProject::saveProjectToFile() {
     // ***** Open File for Writing
     QString   filename = getOption(Project_Options::File_Name_Path).toString();
     QSettings settings(filename, QSettings::Format::IniFormat);
+              ///if (settings.isWritable() == false) return;
               settings.clear();
 
 
@@ -191,7 +192,8 @@ void DrProject::saveProjectToFile() {
         } // end stage
     } // end world
 
-
+    // ***** Important! Signify we don't need to save at this point!
+    setHasSaved(true);
 }
 
 

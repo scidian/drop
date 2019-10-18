@@ -12,8 +12,7 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type) {
-    m_parent_project = parent_project;
+DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type) : DrSettings(parent_project) {
     this->setKey(key);
 
     m_effect_type = effect_type;

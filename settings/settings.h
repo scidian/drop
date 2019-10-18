@@ -13,6 +13,7 @@
 #include "enums_dr_settings.h"
 
 // Forward declarations
+class DrProject;
 class DrProperty;
 class DrComponent;
 
@@ -27,6 +28,9 @@ typedef std::map<long, DrComponent*> ComponentMap;
 class DrSettings
 {
 private:
+    // External Borrowed Pointers
+    DrProject   *m_parent_project;                      // Holds reference to parent Project
+
     // Local Variables
     ComponentMap m_components;                          // Map of pointers to DrComponent classes
 
@@ -39,15 +43,15 @@ protected:       // so derived classes can access
 
 public:
     // Constructor and Destructor
-    DrSettings();
+    DrSettings(DrProject *parent_project);
     virtual ~DrSettings();
 
 
     // Getters and Setters
+    DrProject*      getParentProject()      { return m_parent_project; }
+
     long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLongLong(); }
     virtual DrType  getType()               { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
-
-    DrSettings*     getSettings()           { return this; }
     virtual QString getName();                                                  // Returns Name from shared "Entity_Name" component
     virtual bool    setName(QString new_name);                                  // Returns true if successful
 

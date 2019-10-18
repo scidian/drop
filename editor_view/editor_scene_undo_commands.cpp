@@ -144,6 +144,7 @@ DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
     DrItem *item = new DrItem(m_project, this->getRelay(), thing);
 
     // Temporarily disable geometry signal itemChange updates
+    bool flags_enabled_before = item->itemChangeFlagsEnabled();
     item->disableItemChangeFlags();
 
     // Add item to scene, set starting position
@@ -156,7 +157,7 @@ DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
     this->destroyItemGroup(group);
 
     // Re enable geometry signal itemChange() updates
-    item->enableItemChangeFlags();
+    if (flags_enabled_before) item->enableItemChangeFlags();
 
     // Assign this QGraphicsItem we just made to the Thing in the project so it can reference it later
     thing->setDrItem(item);

@@ -64,8 +64,10 @@
 //####################################################################################
 QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     // If this is a temporary item, or not attached to a scene, do not process change
-    if (m_temp_only || !m_editor_relay)
-        return QGraphicsPixmapItem::itemChange(change, value);
+    if (m_temp_only || !m_editor_relay)         return QGraphicsPixmapItem::itemChange(change, value);
+
+    // If havent implicitly turned on changes, do not process
+    if (m_item_change_flags_enabled == false)   return QGraphicsPixmapItem::itemChange(change, value);
 
     // Load any new data stored in item
     double  angle = data(User_Roles::Rotation).toDouble();

@@ -6,6 +6,13 @@
 //
 //      !!!!! #TODO: Replace 'QVariant' value with our own 'void *' value to use outside of Qt Framework
 //
+
+// TEMP
+#include <QDebug>
+#include "helper.h"
+
+
+#include "project/project.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
@@ -35,6 +42,21 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
     m_is_hidden = is_hidden;
     m_is_editable = is_editable;
 }
+
+
+//####################################################################################
+//##    Called when template function setValue() is called
+//####################################################################################
+void DrProperty::setValueInternal() {
+    m_parent_settings->getParentProject()->setHasSaved(false);
+
+    // Debug Logging
+    ///qDebug() << "Entity: " << getParentSettings()->getName() << ", Comp: " << m_parent_component->getDisplayName() <<
+    ///            ", Prop: " << getDisplayName() << ", Value: " << getValue();
+}
+
+
+
 
 
 

@@ -24,9 +24,6 @@ enum class DrEffectType;
 class DrEffect : public DrSettings
 {
 private:
-    // External Borrowed Pointers
-    DrProject       *m_parent_project;                  // Holds reference to parent Project class that handles key generation for project
-
     // Local Variables
     DrEffectType     m_effect_type;                     // Effect Type as DrEffectType
 

@@ -31,10 +31,12 @@ DrProject::DrProject() {
 }
 
 DrProject::~DrProject() {
-    clearProject();
+    clearProject(false);
 }
 
-void DrProject::clearProject() {
+void DrProject::clearProject(bool add_built_in_items) {
+    m_test_only = false;
+
     for (auto it = m_worlds.begin();    it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
     for (auto it = m_assets.begin();    it != m_assets.end(); )     {   delete it->second; it = m_assets.erase(it);     }
     for (auto it = m_fonts.begin();     it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
@@ -42,17 +44,17 @@ void DrProject::clearProject() {
     for (auto it = m_effects.begin();   it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
 
     // Add these Imagea to every project for use with New Assets
-    QString path;
-    QImage image;
+    if (add_built_in_items) {
+        QImage::Format format = QImage::Format::Format_ARGB32;
 
-    path =  ":/assets/dr_images/empty.png";     image = QImage(path).convertToFormat(QImage::Format::Format_ARGB32);
-    this->addImage(c_key_empty_asset,       path, "empty.png",  "Empty",    image);
+        QString path_empty =     ":/assets/dr_images/empty.png";        QImage image_empty =        QImage(path_empty).convertToFormat(format);
+        QString path_character = ":/assets/dr_images/circle.png";       QImage image_character =    QImage(path_character).convertToFormat(format);
+        QString path_object =    ":/assets/dr_images/box.png";          QImage image_object =       QImage(path_object).convertToFormat(format);
 
-    path =  ":/assets/dr_images/circle.png";    image = QImage(path).convertToFormat(QImage::Format::Format_ARGB32);
-    this->addImage(c_key_character_asset,   path, "circle.png", "Ball",     image);
-
-    path =  ":/assets/dr_images/box.png";       image = QImage(path).convertToFormat(QImage::Format::Format_ARGB32);
-    this->addImage(c_key_object_asset,      path, "box.png",    "Block",    image);
+        this->addImage(c_key_empty_asset,       path_empty,     "empty.png",  "Empty",    image_empty);
+        this->addImage(c_key_character_asset,   path_character, "circle.png", "Ball",     image_character);
+        this->addImage(c_key_object_asset,      path_object,    "box.png",    "Block",    image_object);
+    }
 
     // !!!!! #NOTE: Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
     //              (starts at 1001)

@@ -24,8 +24,8 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, QString new_stage_name, bool is_start_stage) {
-    m_parent_project = parent_project;              // pointer to parent Project
+DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
+                 long new_stage_key, QString new_stage_name, bool is_start_stage) : DrSettings(parent_project) {
     m_parent_world = parent_world;                  // pointer to parent World
 
     this->setKey(new_stage_key);                    // assign key passed in from key generator, this key matches key in parent World map container
@@ -54,7 +54,7 @@ DrStage::~DrStage() {
 //##
 //####################################################################################
 DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide, long key) {
-    DrAsset *asset = m_parent_project->getAsset(from_asset_key);
+    DrAsset *asset = getParentProject()->getAsset(from_asset_key);
 
     // Figure out name for Thing
     QString new_name;
@@ -83,8 +83,8 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
                                QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 
-    long new_thing_key = (key == c_no_key) ? m_parent_project->getNextKey() : key;
-    m_things[new_thing_key] = new DrThing(m_parent_project, m_parent_world, this, new_thing_key,
+    long new_thing_key = (key == c_no_key) ? getParentProject()->getNextKey() : key;
+    m_things[new_thing_key] = new DrThing(getParentProject(), m_parent_world, this, new_thing_key,
                                           new_name, new_type, from_asset_key, x, y, z, should_collide);
     return m_things[new_thing_key];
 }

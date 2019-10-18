@@ -23,9 +23,6 @@ class DrShapeList;
 class DrAsset : public DrSettings
 {
 private:
-    // External Borrowed Pointers
-    DrProject      *m_parent_project;                   // Holds reference to parent Project class that handles key generation for project
-
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
     long            m_list_order = -1;                  // Keeps track of what order to be in on the asset list tree
@@ -45,7 +42,6 @@ public:
     virtual DrType  getType() override      { return DrType::Asset; }
 
     // Getters / Setters
-    DrProject*      getParentProject()      { return m_parent_project; }
     DrAssetType     getAssetType()          { return m_asset_type; }
     long            getSourceKey()          { return m_source_key; }
     long            getListOrder()          { return m_list_order; }

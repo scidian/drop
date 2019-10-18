@@ -80,8 +80,9 @@ public:
     template <class T>
     void setValue(T new_value) {
         m_value = new_value;
+        setValueInternal();
     }
-
+    void setValueInternal();
 
 };
 

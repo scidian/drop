@@ -26,9 +26,6 @@ typedef std::map<long, DrStage*> StageMap;
 class DrWorld : public DrSettings
 {
 private:
-    // External Borrowed Pointers
-    DrProject  *m_parent_project;                       // Holds reference to parent Project class that handles key generation for project
-
     // Local variables
     StageMap    m_stages;                               // Map of pointers to DrStage classes       (holds the stages for current world)
 
@@ -43,7 +40,6 @@ public:
 
     // Getters and Setters
     virtual DrType  getType() override                  { return DrType::World; }
-    DrProject*      getParentProject()                  { return m_parent_project; }
     StageMap&       getStageMap()                       { return m_stages; }
 
     long            getStartStageKey()                  { return m_start_stage_key; }

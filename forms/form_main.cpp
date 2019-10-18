@@ -141,6 +141,13 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
 
 // Overrides close event to make sure all rogue windows are closed
 void FormMain::closeEvent(QCloseEvent *event) {
+    // Ask to save
+    if (!askShouldSave("closing the application")) {
+        event->ignore();
+        return;
+    }
+
+    // Close everything
     qApp->closeAllWindows();
     event->accept();
 }

@@ -7,6 +7,7 @@
 //
 #include <QApplication>
 #include <QActionGroup>
+#include <QDebug>
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -32,6 +33,12 @@
 //##    File Menu Functions
 //####################################################################################
 void FormMain::menuNew() {
+    // Ask to save
+    if (!askShouldSave("creating a new project")) {
+        return;
+    }
+
+    // Set up new Project
     setFormMainMode( Form_Main_Mode::Clear );
     m_project->clearProject();
     m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600);
@@ -40,6 +47,11 @@ void FormMain::menuNew() {
 
 
 void FormMain::menuOpen() {
+    // Ask to save
+    if (!askShouldSave("opening a different project")) {
+        return;
+    }
+
     // Grab directory from current save file, if no save file yet, use Desktop location
     QString directory = m_project->getOption(Project_Options::File_Name_Path).toString();
     if (directory == "") {
@@ -61,6 +73,18 @@ void FormMain::menuOpen() {
     }
 }
 
+// Returns true if we should continue doing what we were doing, false if we need to cancel
+bool FormMain::askShouldSave(QString before_what) {
+    if (m_project == nullptr) return true;
+    if (m_project->hasSaved() == false && m_project->isTestOnly() == false) {
+        QMessageBox::StandardButton ask = Dr::ShowMessageBox("Project has changed, would you like to save the changes before " + before_what + "?",
+                                                             QMessageBox::Icon::Warning, "Save Changes?", this,
+                                                             QMessageBox::Button::Cancel | QMessageBox::No | QMessageBox::Yes);
+        if (ask == QMessageBox::StandardButton::Cancel) return false;
+        if (ask == QMessageBox::StandardButton::Yes) menuSave();
+    }
+    return true;
+}
 
 void FormMain::menuSave(bool save_as) {
     // Grab Filename from Project Settings, if is empty need Save As dialog anyways

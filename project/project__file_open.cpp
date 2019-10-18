@@ -173,6 +173,9 @@ void DrProject::openProjectFromFile(QString open_file) {
             }
         }
     }
+
+    // ***** Important! Signify we don't need to save at this point!
+    setHasSaved(true);
 }
 
 

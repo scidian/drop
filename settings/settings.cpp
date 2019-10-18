@@ -9,6 +9,7 @@
 #include "enums.h"
 #include "helper.h"
 #include "helper_qt.h"
+#include "project/project.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
@@ -17,12 +18,16 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrSettings::DrSettings() {
+DrSettings::DrSettings(DrProject *parent_project) : m_parent_project(parent_project) {
+    getParentProject()->setHasSaved(false);
+
     addComponentEntitySettings();
     addComponentHiddenSettings();
 }
 
 DrSettings::~DrSettings() {
+    getParentProject()->setHasSaved(false);
+
     for (auto i: m_components) { delete i.second; }
 }
 

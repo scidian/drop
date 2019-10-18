@@ -65,8 +65,8 @@ class FormMain : public QMainWindow, public IEditorRelay
 
 private:
     // ***** Local Variables
-    DrProject              *m_project;                                              // BASE DEFINITION of DrProject!!!!! Holds current open game project
-    DrFilterHoverHandler   *m_filter_hover;                                         // Pointer to an event filter hover handler
+    DrProject              *m_project = nullptr;                                    // BASE DEFINITION of DrProject!!!!! Holds current open game project
+    DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
 
     Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what Form_Main_Mode state formMain is in
 
@@ -84,7 +84,7 @@ private:
     QWidget     *widgetToolbar;         QHBoxLayout     *widgetToolbarLayout;
 
     QWidget     *widgetGroupMode;       QButtonGroup    *buttonsGroupMode;
-    QWidget     *widgetGroupEdit;       QButtonGroup    *buttonsGroupEdit;
+    QWidget     *widgetGroupEdit;       QButtonGroup    *buttonsGroupEdit;          QToolButton *buttonAdd;
     QWidget     *widgetGroupLayering;   QButtonGroup    *buttonsGroupLayering;
     QWidget     *widgetGroupTransform;  QButtonGroup    *buttonsGroupTransform;
     QWidget     *widgetGroupGrid;       QButtonGroup    *buttonsGroupGrid;
@@ -180,6 +180,7 @@ private:
     void        unlockDockWidth(QDockWidget *dock);
 
     // File Menu Functions
+    bool        askShouldSave(QString before_what);
     void        menuNew();
     void        menuOpen();
     void        menuSave(bool save_as = false);

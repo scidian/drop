@@ -37,7 +37,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     m_asset_key  = m_thing->getAssetKey();
     m_asset      = project->getAsset(m_asset_key);
 
-    m_temp_only  = is_temp_only;
+    m_temp_only  = is_temp_only;                            // Used for interactive resizing in QGraphicsView
 
     // Load image from asset
     switch (m_asset->getAssetType()) {
@@ -166,10 +166,12 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 void DrItem::disableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, false);
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
+    m_item_change_flags_enabled = false;
 }
 void DrItem::enableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, true);
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
+    m_item_change_flags_enabled = true;
 }
 
 //####################################################################################

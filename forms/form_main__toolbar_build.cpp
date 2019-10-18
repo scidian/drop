@@ -89,9 +89,9 @@ void FormMain::buildToolBar() {
         buttonsGroupEdit->setExclusive(false);
         connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
 
-        tool = createToolbarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, 48, 26, false, true);
-        buttonsGroupEdit->addButton(tool, int(Buttons_Add::Add));
-        toolbarLayoutEdit->addWidget(tool);
+        buttonAdd = createToolbarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, 48, 26, false, true);
+        buttonsGroupEdit->addButton(buttonAdd, int(Buttons_Add::Add));
+        toolbarLayoutEdit->addWidget(buttonAdd);
 
         tool = createToolbarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, 34, 26, false, false);
         buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));

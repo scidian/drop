@@ -29,7 +29,6 @@ class DrStage : public DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrProject  *m_parent_project;                           // Holds reference to parent Project class that handles key generation for project
     DrWorld    *m_parent_world;                             // Holds reference to parent World class
 
     // Local variables
@@ -46,7 +45,6 @@ public:
 
     // Getters and setters
     virtual DrType  getType() override  { return DrType::Stage; }
-    DrProject*      getParentProject()  { return m_parent_project; }
     DrWorld*        getParentWorld()    { return m_parent_world; }
     ThingMap&       getThingMap()       { return m_things; }
     DrThing*        getThing(long key)  { return m_things[key]; }

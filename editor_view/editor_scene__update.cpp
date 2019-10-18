@@ -73,6 +73,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
     QString text;
 
     // ***** Turn off itemChange() signals to stop recursive calling
+    bool flags_enabled_before = item->itemChangeFlagsEnabled();
     item->disableItemChangeFlags();
 
     // ***** Go through each property that we have been notified has changed and update as appropriately
@@ -303,7 +304,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
 
     // ***** Turn back on itemChange() signals
-    item->enableItemChangeFlags();
+    if (flags_enabled_before) item->enableItemChangeFlags();
 }
 
 

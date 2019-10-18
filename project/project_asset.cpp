@@ -37,8 +37,7 @@ DrShapeList autoCollisionShape(QPixmap pixmap);
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key) {
-    m_parent_project = parent_project;
+DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key) : DrSettings(parent_project) {
     this->setKey(key);
 
     m_asset_type = new_asset_type;
@@ -49,17 +48,17 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
     switch (new_asset_type) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
-            my_starting_pixmap = m_parent_project->getImage(source_image_key)->getPixmapFromImage();
+            my_starting_pixmap = getParentProject()->getImage(source_image_key)->getPixmapFromImage();
             shape = autoCollisionShape(my_starting_pixmap);
             if (new_asset_type == DrAssetType::Character) {
-                initializeAssetSettingsCharacter(m_parent_project->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsCharacter(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
             } else if (new_asset_type == DrAssetType::Object) {
-                initializeAssetSettingsObject(m_parent_project->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsObject(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
             }
             break;
         }
         case DrAssetType::Effect: {
-            DrEffect *effect = m_parent_project->getEffect(source_image_key);
+            DrEffect *effect = getParentProject()->getEffect(source_image_key);
             if (effect == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Effect with key: " +
                                                         QString::number(source_image_key), Dr::GetActiveFormMain());
             my_starting_pixmap = effect->getPixmap();
@@ -67,8 +66,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             break;
         }
         case DrAssetType::Text: {
-            my_starting_pixmap = m_parent_project->getFont(source_image_key)->getPixmap();
-            initializeAssetSettingsFont(m_parent_project->getFont(source_image_key));
+            my_starting_pixmap = getParentProject()->getFont(source_image_key)->getPixmap();
+            initializeAssetSettingsFont(getParentProject()->getFont(source_image_key));
             break;
         }
     }
@@ -170,7 +169,7 @@ bool DrAsset::canDeleteSource() {
         can_delete = false;
     } else {
         // Check all Assets for use of the same Source
-        for (auto asset_pair : m_parent_project->getAssetMap()) {
+        for (auto asset_pair : getParentProject()->getAssetMap()) {
             DrAsset *asset_to_check = asset_pair.second;
             if ((asset_pair.first != getKey()) && (asset_to_check->getSourceKey() == getSourceKey())) {
                 can_delete = false;
@@ -190,23 +189,23 @@ void DrAsset::deleteSource(long source_key) {
     switch (getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
-            DrImage *image = m_parent_project->getImageMap()[source_to_delete];
+            DrImage *image = getParentProject()->getImageMap()[source_to_delete];
             if (!image) break;
-            m_parent_project->getImageMap().erase( source_to_delete );
+            getParentProject()->getImageMap().erase( source_to_delete );
             delete image;
             break;
         }
         case DrAssetType::Effect: {
-            DrEffect *effect = m_parent_project->getEffectMap()[source_to_delete];
+            DrEffect *effect = getParentProject()->getEffectMap()[source_to_delete];
             if (!effect) break;
-            m_parent_project->getEffectMap().erase( source_to_delete );
+            getParentProject()->getEffectMap().erase( source_to_delete );
             delete effect;
             break;
         }
         case DrAssetType::Text: {
-            DrFont *font = m_parent_project->getFontMap()[source_to_delete];
+            DrFont *font = getParentProject()->getFontMap()[source_to_delete];
             if (!font) break;
-            m_parent_project->getFontMap().erase( source_to_delete );
+            getParentProject()->getFontMap().erase( source_to_delete );
             delete font;
             break;
         }
@@ -221,7 +220,7 @@ void DrAsset::updateAnimationProperty(long source_key) {
     if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
 
     m_source_key = source_key;
-    QPixmap     new_pixmap = m_parent_project->getImage(source_key)->getPixmapFromImage();
+    QPixmap     new_pixmap = getParentProject()->getImage(source_key)->getPixmapFromImage();
     setComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Default, QVariant(new_pixmap));
 
     DrShapeList shape = autoCollisionShape(new_pixmap);
