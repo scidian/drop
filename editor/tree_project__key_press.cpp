@@ -35,7 +35,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
     // ***** If we dont have selected items exit, otherwise get type of selected items
     if (selectedItems().count() < 1) { QTreeWidget::keyPressEvent(event); return; }
-    long        first_key = selectedItems().first()->data(0, User_Roles::Key).toLongLong();
+    long        first_key = selectedItems().first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
     DrSettings *settings =  m_project->findSettingsFromKey( first_key, false );
     if (settings == nullptr)         { QTreeWidget::keyPressEvent(event); return; }
     DrType      type =      settings->getType();
@@ -82,7 +82,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
                     // Delete selected Stages
                     for (auto item : selectedItems()) {
-                        DrStage *stage = m_project->findStageFromKey( item->data(0, User_Roles::Key).toLongLong() );
+                        DrStage *stage = m_project->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                         DrWorld *world = stage->getParentWorld();
                         world->deleteStage(stage);
                     }
@@ -107,7 +107,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     // Build list of selected keys
                     QList<long> selected_world_keys;
                     for (auto item : selectedItems()) {
-                        selected_world_keys.append( item->data(0, User_Roles::Key).toLongLong() );
+                        selected_world_keys.append( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                     }
 
                     // Find a new world to select, going from back to front
@@ -125,7 +125,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
                     // Delete selected Worlds
                     for (auto item : selectedItems()) {
-                        DrWorld *world = m_project->findWorldFromKey( item->data(0, User_Roles::Key).toLongLong() );
+                        DrWorld *world = m_project->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                         m_project->deleteWorld(world);
                     }
 

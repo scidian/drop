@@ -37,7 +37,7 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
 
     // ***** If size is one, reset first selected item
     if (item_list.size() == 1) {
-        long selected_key = item_list.first()->data(0, User_Roles::Key).toLongLong();       // grab stored key from QTreeWidgetItem user data
+        long selected_key = item_list.first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();       // grab stored key from QTreeWidgetItem user data
         this->setSelectedKey(selected_key);
 
         //******************************************************
@@ -60,7 +60,7 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
                 change_to_key = as_thing->getParentStage()->getKey();
             }
             if (change_to_key != c_no_key) {
-                m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);          // selects none in scene before rebuilding scene
+                m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);                      // selects none in scene before rebuilding scene
                 m_editor_relay->buildScene( change_to_key );
             }
         }
@@ -77,7 +77,7 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
         // Check if newly selected items are same type, if not, do not allow select
         for (auto check_item: item_list) {
             // Get key from each item so we can compare it to first selected item
-            long    check_key = check_item->data(0, User_Roles::Key).toLongLong();
+            long    check_key = check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
             DrType  check_type = m_project->findChildTypeFromKey(check_key);
 
             // If we are over item that was first selected, skip to next
@@ -91,7 +91,7 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
     // Call to outside update functions to update selection in scene view
     m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
 
-    QTreeWidget::selectionChanged(selected, deselected);                                    // pass event to parent
+    QTreeWidget::selectionChanged(selected, deselected);                                                // pass event to parent
 }
 
 

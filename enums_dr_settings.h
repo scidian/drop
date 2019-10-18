@@ -289,8 +289,8 @@ enum class Properties {
 
     // Light Settings
     Thing_Light_Type                    = 99,       // list, enum class Light_Type (Opaque, Glow)
-    Thing_Light_Color                   = 100,       // color
-    Thing_Light_Cone_Start              = 101,       // slider, 0 to 360
+    Thing_Light_Color                   = 100,      // color
+    Thing_Light_Cone_Start              = 101,      // slider, 0 to 360
     Thing_Light_Cone_End                = 102,      // slider, 0 to 360
     Thing_Light_Intensity               = 103,      // percent, 0 to 100
     Thing_Light_Blur                    = 104,      // percent, 0 to 100

@@ -84,9 +84,11 @@ void FormMain::buildWidgetsEditor() {
                         header_item_stage->setIcon(1, QIcon(":/assets/tree_icons/tree_lock_header.png"));
                         treeProjectEditor->setHeaderItem(header_item_stage);
                     treeProjectEditor->setObjectName(QStringLiteral("treeProjectEditor"));
-                    treeProjectEditor->setColumnCount(2);
-                    treeProjectEditor->setColumnWidth(0, 150);
-                    treeProjectEditor->setColumnWidth(1, 16);
+                    treeProjectEditor->setColumnCount(3);
+                    treeProjectEditor->setColumnWidth(COLUMN_TITLE,     150);
+                    treeProjectEditor->setColumnWidth(COLUMN_LOCK,       16);
+                    treeProjectEditor->setColumnWidth(COLUMN_Z_ORDER,    30);
+                    treeProjectEditor->setColumnHidden(COLUMN_Z_ORDER, true);
                     treeProjectEditor->setMinimumSize(QSize(190, 0));
                     treeProjectEditor->setMaximumWidth(400);
                     treeProjectEditor->setFont(font);

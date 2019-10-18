@@ -25,7 +25,7 @@ class DrThing;
 // Local Defines
 #define COLUMN_TITLE    0
 #define COLUMN_LOCK     1
-
+#define COLUMN_Z_ORDER  2
 
 //####################################################################################
 //##    TreeProject
@@ -56,6 +56,7 @@ public:
 
     // Function calls
     void                        buildProjectTree();
+    QTreeWidgetItem*            findItemWithProjectKey(long key);
     QList<QTreeWidgetItem*>     getListOfAllTreeWidgetItems();
     QList<QTreeWidgetItem*>     getListOfChildrenFromItem( QTreeWidgetItem *item);
     void                        installLockBox(DrSettings *entity, QTreeWidgetItem *thing_item);

@@ -83,6 +83,9 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
     return m_components[component]->getProperty(property);
 }
 
+DrProperty* DrSettings::findPropertyFromPropertyKey(Properties property_key_to_find) {
+    return findPropertyFromPropertyKey(static_cast<long>(property_key_to_find));
+}
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
     for (auto component: m_components) {
         for (auto property: component.second->getPropertyMap()) {
@@ -94,6 +97,9 @@ DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
     return nullptr;
 }
 
+DrComponent* DrSettings::findComponentFromPropertyKey(Components property_key_to_find) {
+    return findComponentFromPropertyKey(static_cast<long>(property_key_to_find));
+}
 DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find) {
     return findPropertyFromPropertyKey(property_key_to_find)->getParentComponent();
 }

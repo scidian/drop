@@ -83,6 +83,7 @@ SOURCES += \
     editor/tree_project.cpp \
     editor/tree_project__drag_drop.cpp \
     editor/tree_project__key_press.cpp \
+    editor/tree_project__lock_box.cpp \
     editor/tree_project__selection.cpp \
     editor/tree_project__update.cpp \
     editor_view/editor_item.cpp \

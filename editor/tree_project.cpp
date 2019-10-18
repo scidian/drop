@@ -43,9 +43,9 @@ void TreeProject::buildProjectTree() {
     QTreeWidgetItem             *last_added = nullptr;
 
     // ***** Gets list of items in tree, if keys have been removed from project, removes items
-    for (auto item : getListOfAllTreeWidgetItems() ) {
+    for (auto item : item_list) {
         // Check if item source key is still in project, if so add to map
-        long key = item->data(0, User_Roles::Key).toLongLong();
+        long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
         DrSettings *settings = m_project->findSettingsFromKey(key, false);
         if (settings != nullptr) {
             item_map[key] = item;
@@ -57,7 +57,7 @@ void TreeProject::buildProjectTree() {
         if (index > -1) {
             this->takeTopLevelItem(index);
         } else {
-            QTreeWidgetItem *parent = item->parent();
+            QTreeWidgetItem *parent = dynamic_cast<QTreeWidgetItem*>(item->parent());
             if (parent) parent->takeChild(parent->indexOfChild(item));
         }
     }
@@ -77,9 +77,9 @@ void TreeProject::buildProjectTree() {
             world_item = new QTreeWidgetItem(this);
             last_added = world_item;
             icon_image = QPixmap(":/assets/tree_icons/tree_world.png").toImage();
-            world_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
-            world_item->setText(0, "World: " + world->getName());
-            world_item->setData(0, User_Roles::Key, QVariant::fromValue(world->getKey()));
+            world_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
+            world_item->setText(COLUMN_TITLE, "World: " + world->getName());
+            world_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(world->getKey()));
             world_item->setExpanded(true);
             this->addTopLevelItem(world_item);
         }
@@ -94,9 +94,9 @@ void TreeProject::buildProjectTree() {
                 stage_item = new QTreeWidgetItem(world_item);
                 last_added = stage_item;
                 icon_image = QPixmap(":/assets/tree_icons/tree_stage.png").toImage();
-                stage_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
-                stage_item->setText(0, "Stage: " + stage->getName());
-                stage_item->setData(0, User_Roles::Key, QVariant::fromValue(stage->getKey()));
+                stage_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
+                stage_item->setText(COLUMN_TITLE, "Stage: " + stage->getName());
+                stage_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(stage->getKey()));
                 stage_item->setExpanded(true);
             }
 
@@ -126,11 +126,14 @@ void TreeProject::buildProjectTree() {
                         case DrThingType::Swirl:     icon_image = QPixmap(":/assets/tree_icons/tree_swirl.png").toImage();              break;
                         case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();              break;
                     }
-                    thing_item->setIcon(0, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
-                    thing_item->setText(0, thing->getName());
-                    thing_item->setData(0, User_Roles::Key, QVariant::fromValue(thing->getKey()));
-
+                    thing_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
+                    thing_item->setText(COLUMN_TITLE, thing->getName());
+                    thing_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(thing->getKey()));
                 }
+
+                // ***** Update Z Order
+                double z_order = thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
+                thing_item->setData(COLUMN_Z_ORDER, Qt::DisplayRole, z_order);
 
                 // ***** Install / update lock box
                 installLockBox(thing, thing_item);
@@ -142,6 +145,9 @@ void TreeProject::buildProjectTree() {
                 }
                 if (should_hide) thing_item->setHidden(should_hide);
             }
+
+            // ***** Sort Stage Items by Z Order
+            stage_item->sortChildren(COLUMN_Z_ORDER, Qt::SortOrder::DescendingOrder);
         }
     }
 
@@ -188,58 +194,15 @@ QList<QTreeWidgetItem*> TreeProject::getListOfChildrenFromItem( QTreeWidgetItem 
     return items;
 }
 
-
-//####################################################################################
-//##    Handles click on little Lock Button
-//####################################################################################
-void TreeProject::processLockClick(QCheckBox *from_lock) {
-    // Check if currently locked
-    bool locked = (from_lock->checkState() == Qt::CheckState::Checked) ? true : false;
-
-    // Find entity key attached to lock box
-    long lock_key = from_lock->property(User_Property::Key).toLongLong();
-
-    // See if item is selected
-    QList<QTreeWidgetItem*> item_list = this->selectedItems();
-    bool selected = false;
-    for (auto item : item_list) {
-        if (lock_key == item->data(0, User_Roles::Key).toLongLong()) {                  // grab stored key from QTreeWidgetItem user data
-            selected = true;
-            break;
-        }
+// Returns item from getListOfAllTreeWidgetItems with the desired Project Key, or nullptr
+QTreeWidgetItem* TreeProject::findItemWithProjectKey(long key) {
+    if (key <= 0) return nullptr;
+    for (auto item : getListOfAllTreeWidgetItems()) {
+        long check_key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+        if (check_key == key) return item;
     }
-
-    // Make a list of locks to process, either just the one, or all items that are selected
-    QList<QCheckBox*> locks;
-    if (selected == false) {
-        locks.append(from_lock);
-    } else {
-        for (auto item : item_list) {
-            QCheckBox *check_box = dynamic_cast<QCheckBox*>( this->itemWidget(item, COLUMN_LOCK) );
-            if (check_box) locks.append(check_box);
-        }
-    }
-
-    // Process locks
-    for (auto lock : locks) {
-        long key = lock->property(User_Property::Key).toLongLong();
-        DrSettings *entity = m_project->findSettingsFromKey( key );                     // grab stored key from QCheckBox property
-        if (!entity) continue;
-
-        if (entity->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {
-            lock->setCheckState( Qt::CheckState::Checked );
-        } else {
-            entity->setLocked( locked );
-        }
-        lock->setCheckState( entity->isLocked() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
-    }
-
-    // Update Object Inspector Properties and Update StageView selected items
-    this->m_editor_relay->updateInspectorEnabledProperties();
-    this->m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
+    return nullptr;
 }
-
-
 
 
 

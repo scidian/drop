@@ -74,7 +74,9 @@ public:
 
     // Component / Property Searching
     DrComponent*    findComponentFromPropertyKey(long property_key_to_find);
+    DrComponent*    findComponentFromPropertyKey(Components property_key_to_find);
     DrProperty*     findPropertyFromPropertyKey(long property_key_to_find);
+    DrProperty*     findPropertyFromPropertyKey(Properties property_key_to_find);
 
     // Component / Property Building
     void            addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);

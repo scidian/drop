@@ -80,7 +80,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setDecimals(3);
     spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
     switch (spin_type) {
-        case Property_Type::Double:         spin->setRange(-100000000, 100000000);              spin->setSingleStep(5);     break;
+        case Property_Type::Double:         spin->setRange(-100000000, 100000000);              spin->setSingleStep(1.0);   break;
         case Property_Type::PositiveDouble: spin->setRange(0, 100000000);                       spin->setSingleStep(0.1);   break;
         case Property_Type::Percent:        spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
         case Property_Type::Angle:          spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
