@@ -69,6 +69,8 @@ void FormMain::menuOpen() {
         setFormMainMode( Form_Main_Mode::Clear );
         m_project->clearProject();
         m_project->openProjectFromFile(open_file);
+        treeAssetEditor->clear();
+        treeProjectEditor->clear();
         setFormMainMode( Form_Main_Mode::World_Editor );
     }
 }
