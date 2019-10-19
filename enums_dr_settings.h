@@ -118,7 +118,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  139
+//##    !!!!! NEXT AVAILABLE NUMBER:  141
 //##
 //############################
 enum class Properties {
@@ -225,7 +225,8 @@ enum class Properties {
 
     // Layering
     Thing_Z_Order                       = 60,       // double
-    Thing_Opacity                       = 61,       // percent
+    Thing_Sub_Z_Order                   = 139,      // int
+    Thing_Opacity                       = 140,      // percent
 
     // Movement
     Thing_Velocity_X                    = 62,       // variable

@@ -132,6 +132,7 @@ void DrProject::openProjectFromFile(QString open_file) {
         addWorld(world_key, start_stage_key, editor_stage_key);
         // Load World Settings, Variables
         DrWorld *world = findWorldFromKey(world_key);
+        if (world == nullptr) continue;
         loadSettingsFromMap(world, world_data);
         settings.endArray();
 
@@ -150,6 +151,7 @@ void DrProject::openProjectFromFile(QString open_file) {
             world->addStage(stage_key, start_stage, center_point);
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
+            if (stage == nullptr) continue;
             loadSettingsFromMap(stage, stage_data);
             settings.endArray();
 
@@ -168,6 +170,7 @@ void DrProject::openProjectFromFile(QString open_file) {
                 stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
                 // Load Thing Settings, Variables
                 DrThing *thing = findThingFromKey(thing_key);
+                if (thing == nullptr) continue;
                 loadSettingsFromMap(thing, thing_data);
                 settings.endArray();
             }

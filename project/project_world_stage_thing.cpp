@@ -120,6 +120,43 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 DrThing::~DrThing() { }
 
 
+//####################################################################################
+//##    Sets Z-Order and appropriate Sub Order
+//####################################################################################
+void DrThing::setZOrder(double z_order, Z_Insert insert, int position) {
+    setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, QVariant::fromValue(z_order));
+
+    int sub_order = 1;
+    if (insert == Z_Insert::Back) {
+        for (auto &thing : m_parent_stage->getThingMap()) {
+            if (thing.first == getKey()) continue;
+            double thing_z =   thing.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
+            int    thing_sub = thing.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
+            if (Dr::IsCloseTo(thing_z, z_order, 0.001)) {
+                if (sub_order <= thing_sub) sub_order = thing_sub + 1;
+            }
+        }
+
+    } else if (insert == Z_Insert::Front) {
+        QList<int> sub_orders;
+        for (auto &thing : m_parent_stage->getThingMap()) {
+            if (thing.first == getKey()) continue;
+            double thing_z =   thing.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
+            int    thing_sub = thing.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
+            if (Dr::IsCloseTo(thing_z, z_order, 0.001)) {
+                sub_orders.append(thing_sub);
+            }
+        }
+        if (sub_orders.count() > 0) {
+
+        }
+    }
+
+
+
+    setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, QVariant(sub_order));
+}
+
 
 //####################################################################################
 //####################################################################################
@@ -148,13 +185,16 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
 
 void DrThing::addComponentLayering(double z, double opacity) {
     addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
-                                                           "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
+                                                         "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
-    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, QVariant::fromValue(z),
-                           "Z Order", "Arrangement of item along the z axis in the stage. Should be between " +
-                                      QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
+    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
+                           "Z Order", "Arrangement of item along the z axis in the stage. Should be between the near and far clipping planes (" +
+                                      QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + ") to be visible.");
+    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,
+                           "Sub Order", "Arrangement of item compared to other items within the same Z Order.", false, false);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
+    setZOrder(z);
 }
 
 void DrThing::addComponentMovement() {

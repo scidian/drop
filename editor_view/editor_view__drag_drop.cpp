@@ -86,54 +86,32 @@ void DrView::dropEvent(QDropEvent *event) {
         else
             position = m_drop_location;
 
-        // Create new Thing from drop data
+        // Create new Thing from drop data,                                                                 !!!!! #NOTE: Sets initial Z value of Thing
         long      asset_key = variant_key.toInt();
         DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
         DrEffect *effect;
         switch (asset->getAssetType()) {
-            case DrAssetType::Character:
-                thing = stage->addThing(DrThingType::Character, asset_key, position.x(), -position.y(), 5);                 // !!!!! #FIX: z order
-                my_scene->addItemToSceneFromThing( thing );
-                break;
-            case DrAssetType::Object:
-                thing = stage->addThing(DrThingType::Object,    asset_key, position.x(), -position.y(), 0);                 // !!!!! #FIX: z order
-                my_scene->addItemToSceneFromThing( thing );
-                break;
-            case DrAssetType::Text:
-                thing = stage->addThing(DrThingType::Text,      asset_key, position.x(), -position.y(), 0);                 // !!!!! #FIX: z order
-                my_scene->addItemToSceneFromThing( thing );
-                break;
+            case DrAssetType::Character:    thing = stage->addThing(DrThingType::Character,     asset_key, position.x(), -position.y(),   5);   break;
+            case DrAssetType::Object:       thing = stage->addThing(DrThingType::Object,        asset_key, position.x(), -position.y(),   0);   break;
+            case DrAssetType::Text:         thing = stage->addThing(DrThingType::Text,          asset_key, position.x(), -position.y(),   0);   break;
             case DrAssetType::Effect:
                 effect = m_project->getEffect( asset->getSourceKey() );
                 switch (effect->getEffectType()) {
-                    case DrEffectType::Fire:
-                        thing = stage->addThing(DrThingType::Fire, asset_key, position.x(), -position.y(), -5);             // !!!!! #FIX: z order
-                        my_scene->addItemToSceneFromThing( thing );
-                        break;
-                    case DrEffectType::Fisheye:
-                        thing = stage->addThing(DrThingType::Fisheye, asset_key, position.x(), -position.y(), 10);           // !!!!! #FIX: z order
-                        my_scene->addItemToSceneFromThing( thing );
-                        break;
-                    case DrEffectType::Light:
-                        thing = stage->addThing(DrThingType::Light, asset_key, position.x(), -position.y(), -10);           // !!!!! #FIX: z order
-                        my_scene->addItemToSceneFromThing( thing );
-                        break;
-                    case DrEffectType::Mirror:
-                        thing = stage->addThing(DrThingType::Mirror, asset_key, position.x(), -position.y(), 10);            // !!!!! #FIX: z order
-                        my_scene->addItemToSceneFromThing( thing );
-                        break;
-                    case DrEffectType::Swirl:
-                        thing = stage->addThing(DrThingType::Swirl, asset_key, position.x(), -position.y(), 10);             // !!!!! #FIX: z order
-                        my_scene->addItemToSceneFromThing( thing );
-                        break;
-                    case DrEffectType::Water:
-                        thing = stage->addThing(DrThingType::Water, asset_key, position.x(), -position.y(), 10);            // !!!!! #FIX: z order
-                        my_scene->addItemToSceneFromThing( thing );
-                        break;
+                    case DrEffectType::Fire:    thing = stage->addThing(DrThingType::Fire,      asset_key, position.x(), -position.y(), -10);   break;
+                    case DrEffectType::Fisheye: thing = stage->addThing(DrThingType::Fisheye,   asset_key, position.x(), -position.y(),  10);   break;
+                    case DrEffectType::Light:   thing = stage->addThing(DrThingType::Light,     asset_key, position.x(), -position.y(), -10);   break;
+                    case DrEffectType::Mirror:  thing = stage->addThing(DrThingType::Mirror,    asset_key, position.x(), -position.y(),  10);   break;
+                    case DrEffectType::Swirl:   thing = stage->addThing(DrThingType::Swirl,     asset_key, position.x(), -position.y(),  10);   break;
+                    case DrEffectType::Water:   thing = stage->addThing(DrThingType::Water,     asset_key, position.x(), -position.y(),  10);   break;
+                    case DrEffectType::Flag:    break;
+                    case DrEffectType::Rain:    break;
+                    case DrEffectType::Snow:    break;
+                    case DrEffectType::Clouds:  break;
+                    case DrEffectType::Fog:     break;
                 }
                 break;
         }
-
+        my_scene->addItemToSceneFromThing( thing );
         event->acceptProposedAction();
 
     // ********** External Files
@@ -165,15 +143,10 @@ void DrView::dropEvent(QDropEvent *event) {
         thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
         my_scene->addItemToSceneFromThing( thing );
 
-        //######################
-        //######################
-        //######################
-        // !! Don't want to rebuild it, only update it
+        // Update Asst Tree
         m_editor_relay->buildAssetTree();
-        //######################
-        //######################
-        //######################
 
+        // Mark event as accepted
         event->acceptProposedAction();
 
     // ***** Unknown drag n drop type, exit

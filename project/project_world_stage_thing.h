@@ -18,6 +18,11 @@ class DrAsset;
 class DrWorld;
 class DrStage;
 
+enum class Z_Insert {
+    Back,
+    Front,
+    At_Position,
+};
 
 //####################################################################################
 //##    DrThing
@@ -56,6 +61,8 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
     void            setThingType(DrThingType type) { m_thing_type = type; }
 
+    void            setZOrder(double z_order, Z_Insert insert, int position = 0);
+
     // Thing Components
     void    addComponent3D();
     void    addComponentAppearance(bool bitrate_and_pixel_only = false);
@@ -83,8 +90,6 @@ public:
 
 
 #endif // DRTHING_H
-
-
 
 
 

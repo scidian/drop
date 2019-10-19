@@ -7,6 +7,7 @@
 //
 #include <QApplication>
 #include <QActionGroup>
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -138,15 +139,17 @@ void FormMain::buildMenu() {
     menuColor_Schemes->addAction(actionEmerald);
 
     QMenu *menuHelp;
-    QAction *actionAbout;
+    QAction *actionHelp, *actionAbout;
     menuHelp = new QMenu(menuBar);
     menuHelp->setObjectName(QStringLiteral("menuHelp"));
-    actionAbout = new QAction(this);    actionAbout->setObjectName(QStringLiteral("actionAbout"));
-    QList<QKeySequence> aboutShortcuts;
-    aboutShortcuts << tr("Ctrl+A") << tr("Ctrl+B");
-    actionAbout->setShortcuts(aboutShortcuts);
+    actionHelp =    new QAction(this);  actionHelp->setObjectName(QStringLiteral("actionHelp"));
+    actionAbout =   new QAction(this);  actionAbout->setObjectName(QStringLiteral("actionAbout"));
+    actionHelp->setShortcut(QKeySequence::HelpContents);
+    actionAbout->setShortcuts( { QKeySequence("Ctrl+A"), QKeySequence("Ctrl+B") } );
+    connect(actionHelp, &QAction::triggered, []() { QDesktopServices::openUrl(QUrl("http://docs.drop.scidian.com")); });
     connect(actionAbout, &QAction::triggered, [this]() { this->menuAbout(); });
     menuBar->addAction(menuHelp->menuAction());
+    menuHelp->addAction(actionHelp);
     menuHelp->addAction(actionAbout);
 
     // !!!!! #DEBUG:    Load hidden debug menu into menu bar
@@ -207,6 +210,7 @@ void FormMain::buildMenu() {
     actionEmerald->setText(QApplication::translate("MainWindow",            "Emerald", nullptr));
 
     menuHelp->setTitle(QApplication::translate("MainWindow",            "&Help", nullptr));
+    actionHelp->setText(QApplication::translate("MainWindow",               "&Drop Documentation", nullptr));
     actionAbout->setText(QApplication::translate("MainWindow",              "&About", nullptr));
 
     this->setMenuBar(menuBar);

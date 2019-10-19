@@ -160,6 +160,7 @@ QString CustomStyleSheetFormatting() {
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
         // Header of Project Tree (where little lock is)
         " QHeaderView::section { "
+        "       color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       background-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border: 0px; } "
 

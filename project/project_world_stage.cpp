@@ -128,14 +128,15 @@ QList<long> DrStage::thingKeysSortedByZOrder() {
     std::vector<std::pair<long, long>> zorder_key_pair;
 
     for (auto thing : m_things) {
-        long z_order = thing.second->getComponentProperty(Components::Thing_Layering, Properties::Thing_Z_Order)->getValue().toInt();
+        double z_order = thing.second->getComponentProperty(Components::Thing_Layering, Properties::Thing_Z_Order)->getValue().toDouble();
+        int  sub_order = thing.second->getComponentProperty(Components::Thing_Layering, Properties::Thing_Sub_Z_Order)->getValue().toInt();
+        z_order += static_cast<double>(sub_order) / 100000.0;
         zorder_key_pair.push_back(std::make_pair(z_order, thing.first));
     }
 
     std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
 
     QList<long> z_ordered_keys;
-
     for (auto one_pair : zorder_key_pair)
         z_ordered_keys.push_front(one_pair.second);
 
