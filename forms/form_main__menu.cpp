@@ -42,6 +42,8 @@ void FormMain::menuNew() {
     setFormMainMode( Form_Main_Mode::Clear );
     m_project->clearProject();
     m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600);
+    treeAssetEditor->clear();
+    treeProjectEditor->clear();
     setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself
 }
 
