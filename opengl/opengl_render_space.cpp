@@ -64,9 +64,12 @@ void DrOpenGL::drawSpace() {
     double last_z; m_add_z = 0.0;                                       // Used to stop z fighting (a.k.a z-fighting, stitching)
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
-        if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
-        if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.1; else m_add_z = 0.0;
-        last_z = thing->getZOrder();
+        // ***** Trying to stop z-fighting in perspective mode
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
+            if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
+            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.1; else m_add_z = 0.0;
+            last_z = thing->getZOrder();
+        }
 
         // ***** When we have gone past glow z_order, draw the lights to the scene
         if (!has_rendered_glow_lights && (thing->getZOrder() > m_engine->getCurrentWorld()->getGlowZOrder())) {
@@ -86,10 +89,10 @@ void DrOpenGL::drawSpace() {
                           Dr::FuzzyCompare(thing->getRotateSpeedX(), 0.0) && Dr::FuzzyCompare(thing->getRotateSpeedY(), 0.0) &&
                           !thing->wireframe);
                 if (draw2D) {
-                    glEnable(GL_DEPTH_TEST);
+                    ///glEnable(GL_DEPTH_TEST);
                     drawObject(thing, last_thing, draw2D);
                     ///drawObjectSimple(thing, last_thing, draw2D);
-                    glDisable(GL_DEPTH_TEST);
+                    ///glDisable(GL_DEPTH_TEST);
 
                 } else {
                     ///cullingOn();

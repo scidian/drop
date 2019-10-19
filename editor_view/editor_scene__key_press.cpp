@@ -26,7 +26,7 @@
 
 
 //####################################################################################
-//##    Key Events
+//##    Key Release
 //####################################################################################
 void DrScene::keyReleaseEvent(QKeyEvent *event) {
     // Reset key timer
@@ -36,27 +36,14 @@ void DrScene::keyReleaseEvent(QKeyEvent *event) {
     QGraphicsScene::keyReleaseEvent(event);
 }
 
+
+//####################################################################################
+//##    Key Press
+//####################################################################################
 void DrScene::keyPressEvent(QKeyEvent *event) {
     bool update_widgets_when_done = false;
 
-    // Start tracking time key has been pressed
-    Qt::Key key_pressed = static_cast<Qt::Key>(event->key());
-    if (m_key_down[key_pressed] == false) {
-        m_key_timers[key_pressed] = QTime();
-        m_key_timers[key_pressed].restart();
-        m_key_down[key_pressed] = true;
-    }
-
-    // Amount to move items when arrow keys are pressed
-    QPointF move_by = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
-    if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) {
-        if        (m_key_timers[key_pressed].elapsed() <  500) {    move_by.setX(   1.0 );  move_by.setY(   1.0 );
-        } else if (m_key_timers[key_pressed].elapsed() < 1000) {    move_by.setX(   5.0 );  move_by.setY(   5.0 );
-        } else if (m_key_timers[key_pressed].elapsed() < 1500) {    move_by.setX(  25.0 );  move_by.setY(  25.0 );
-        } else {                                                    move_by.setX( 100.0 );  move_by.setY( 100.0 ); }
-    }
-
-    // If no selected items, pass on key press event and exit
+    // ***** If no selected items, pass on key press event and exit
     if (getSelectionCount() < 1) {
         QGraphicsScene::keyPressEvent(event);
         return;
@@ -65,30 +52,59 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
     // Find total bounding box of all selected items
     QRectF source_rect = totalSelectionSceneRect();
 
-    // ***** Process movement key press
-    for (auto item : getSelectionItems()) {
 
-        // Arrow Keys
+    // ***** Start tracking time key has been pressed
+    Qt::Key key_pressed = static_cast<Qt::Key>(event->key());
+    if (m_key_down[key_pressed] == false) {
+        m_key_timers[key_pressed] = QTime();
+        m_key_timers[key_pressed].restart();
+        m_key_down[key_pressed] = true;
+    }
+
+    // ***** Amount to move items when arrow keys are pressed
+    QPointF grid_scale = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
+    QPointF grid_size =  m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+    QPointF move_by (grid_size.x() * grid_scale.x(), grid_size.y() * grid_scale.y());
+
+    if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) {
+        if        (m_key_timers[key_pressed].elapsed() <  750) {    move_by.setX(   1.0 );  move_by.setY(   1.0 );
+        } else if (m_key_timers[key_pressed].elapsed() < 1500) {    move_by.setX(   5.0 );  move_by.setY(   5.0 );
+        } else if (m_key_timers[key_pressed].elapsed() < 2250) {    move_by.setX(  25.0 );  move_by.setY(  25.0 );
+        } else {                                                    move_by.setX( 100.0 );  move_by.setY( 100.0 ); }
+    }
+
+    // ********** Process movement key press on all selected items
+    for (auto item : getSelectionItems()) {
         double move_x = 0.0;
         double move_y = 0.0;
-        if (key_pressed == Qt::Key_Up)     move_y = -move_by.x();
-        if (key_pressed == Qt::Key_Down)   move_y =  move_by.x();
-        if (key_pressed == Qt::Key_Left)   move_x = -move_by.y();
-        if (key_pressed == Qt::Key_Right)  move_x =  move_by.y();
+        if (key_pressed == Qt::Key_Up)     move_y = -move_by.y();
+        if (key_pressed == Qt::Key_Down)   move_y =  move_by.y();
+        if (key_pressed == Qt::Key_Left)   move_x = -move_by.x();
+        if (key_pressed == Qt::Key_Right)  move_x =  move_by.x();
         if (Dr::FuzzyCompare(0.0, move_x) == false || Dr::FuzzyCompare(0.0, move_y) == false) {
+            // Store current settings and prepare for ItemChange Event
+            View_Mode before_mode = m_editor_relay->currentViewMode();
+            bool      snap_center = Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool();
+            Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
+            if (m_editor_relay->getStageView()) m_editor_relay->getStageView()->setViewMode(View_Mode::Holding_Keys);
+
+            // Move Item, ItemChange Event is activated for snapping to grid
             item->moveBy( move_x, move_y);
+
+            // Restore settings after ItemChange Event is over
+            if (m_editor_relay->getStageView()) m_editor_relay->getStageView()->setViewMode(before_mode);
+            Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, snap_center);
         }
 
-        // Layering Keys
         if (key_pressed == Qt::Key_Comma)  item->setZValue(selectedItems().first()->zValue() - 1);
         if (key_pressed == Qt::Key_Period) item->setZValue(selectedItems().first()->zValue() + 1);
 
     }
     updateSelectionBox();
 
-    // Perform key press event on all items in selection group
-    if (scene_mutex.tryLock(10) == false) return;
 
+    // ********** Perform key press event on all items in selection group
+    if (scene_mutex.tryLock(10) == false) return;
 
     // ***** Go through any items selected and make copies of them if the copy keys (wasd) were pressed
     QList<QGraphicsItem*>  list_old_items = getSelectionItems();
@@ -125,7 +141,6 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                 list_new_items.append( this->addItemToSceneFromThing(new_object) );
                 break;
 
-
             // ***** Delete selected items
             case Qt::Key::Key_Delete:
             case Qt::Key::Key_Backspace:
@@ -153,6 +168,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         selectionChanged();
     }
 
+    // ***** Unlock Scene Mutex
     scene_mutex.unlock();
 
     // ***** Update Editor Widgets
@@ -161,7 +177,8 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
     }
 
-    //QGraphicsScene::keyPressEvent(event);         // !!!!! #NOTE: Don't pass on, if we pass on arrow key presses, it moves view sliders
+    // !!!!! #NOTE: Don't pass on, if we pass on arrow key presses, it moves view sliders
+    ///QGraphicsScene::keyPressEvent(event);
 }
 
 

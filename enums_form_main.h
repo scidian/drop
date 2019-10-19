@@ -53,6 +53,7 @@ enum class View_Mode {
     Translating,        // Moving item(s) around
     Dragging,           // Moving scene with space bar
     Zooming,            // Zooming in / out of view
+    Holding_Keys,       // Holding arrow keys to move or layering keys
 };
 
 

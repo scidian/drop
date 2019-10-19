@@ -79,11 +79,14 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange) {
 
         QPointF new_pos = value.toPointF();
-        if (m_editor_relay->currentViewMode() != View_Mode::Translating) return new_pos;
+        if (m_editor_relay->currentViewMode() != View_Mode::Translating &&
+            m_editor_relay->currentViewMode() != View_Mode::Holding_Keys) {
+            return new_pos;
+        }
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
         // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos
-        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool()) {
+        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool() == true) {
             DrScene *drscene = dynamic_cast<DrScene*>(this->scene());
             QPointF old_select_center, new_select_center, rounded_select_center;
             QPointF adjust_by;
