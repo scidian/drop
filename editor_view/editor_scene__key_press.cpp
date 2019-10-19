@@ -105,7 +105,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
     // ********** Process Layering key press on all selected items
     if (key_pressed == Qt::Key_Comma || key_pressed == Qt::Key_Period) {
-        QList<long> sorted_keys = m_current_stage->thingKeysSortedByZOrder();
+        QList<long> sorted_keys = m_current_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
 
         for (auto item : getSelectionItems()) {
             if (key_pressed == Qt::Key_Comma) {

@@ -69,6 +69,7 @@ public:
     void            setThingType(DrThingType type) { m_thing_type = type; }
 
     // Z Ordering
+    void            moveBackward();
     void            moveForward();
     double          getZOrderWithSub();
     void            setZOrderWithSub(double z_order, Z_Insert insert, int position = 0);

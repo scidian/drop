@@ -75,7 +75,7 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
 
     // ***** Fill in any empty spaces
     QList<DrThing*> things_sorted;
-    for (auto thing : m_parent_stage->thingsSortedByZOrder()) {
+    for (auto thing : m_parent_stage->thingsSortedByZOrder(Qt::DescendingOrder)) {
         double thing_z = thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
         if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { things_sorted.append(thing); }
     }
@@ -90,8 +90,29 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
 //####################################################################################
 //##    Move Z-Order / Sub Order
 //####################################################################################
+void DrThing::moveBackward() {
+    QList<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+
+    // Find Things position within the Stage
+    int my_position = 0;
+    for (int i = 0; i < list.count(); i++) {
+        if (list[i] == getKey()) my_position = i;
+    }
+    if (my_position == (list.count() - 1)) return;      // Already in the back
+
+    // Find out Z Info on next lowest Thing
+    long back_of_key =  list[my_position + 1];
+    DrThing *thing =    getParentProject()->findThingFromKey(back_of_key);
+    if (thing == nullptr) return;
+
+    double z_order =    thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
+    int  sub_order =    thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
+
+    setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
+}
+
 void DrThing::moveForward() {
-    QList<long> list = m_parent_stage->thingKeysSortedByZOrder();
+    QList<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
 
     // Find Things position within the Stage
     int my_position = 0;
@@ -109,8 +130,6 @@ void DrThing::moveForward() {
     int  sub_order =    thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt() + 1;
 
     setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
-
-
 }
 
 

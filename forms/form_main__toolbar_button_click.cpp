@@ -21,6 +21,7 @@
 #include "helper.h"
 #include "helper_qt.h"
 #include "project/project.h"
+#include "project/project_stage.h"
 #include "project/project_thing.h"
 
 
@@ -58,17 +59,55 @@ void FormMain::buttonGroupModeSetChecked(int id) {
 void FormMain::buttonGroupLayeringClicked(int id) {
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
 
-    QList<DrSettings*> settings;
-    QList<Properties>  properties { Properties::Thing_Z_Order };
+    DrStage *stage = sceneEditor->getCurrentStageShown();
+    if (!stage) return;
+
+    // Get selected Scene items as list of Things
+    QList<DrThing*> selected_things;
     for (auto item : sceneEditor->getSelectionItems()) {
         DrItem   *dritem = dynamic_cast<DrItem*>(item);
         DrThing  *thing = dritem->getThing();
         if (!thing) continue;
+        selected_things.append(thing);
+    }
 
-        settings.append(thing);
+    if (clicked == Buttons_Layering::Send_To_Front) {
+        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+        for (auto &thing : things) {
+            while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).first() != thing->getKey()) {
+                thing->moveForward();
+            }
+        }
+    }
 
-        if (clicked == Buttons_Layering::Send_Forward) {
-            thing->moveForward();
+    if (clicked == Buttons_Layering::Send_To_Back) {
+        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+        for (auto &thing : things) {
+            while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).last() != thing->getKey()) {
+                thing->moveBackward();
+            }
+        }
+    }
+
+    if (clicked == Buttons_Layering::Send_Forward) {
+        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+        int i = 0;
+        for (auto thing : things) {
+            if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
+                thing->moveForward();
+            }
+            i++;
+        }
+    }
+
+    if (clicked == Buttons_Layering::Send_Backward) {
+        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+        int i = stage->thingKeysSortedByZOrder(Qt::DescendingOrder).count() - 1;
+        for (auto thing : things) {
+            if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
+                thing->moveBackward();
+            }
+            i--;
         }
     }
 

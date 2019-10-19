@@ -115,7 +115,7 @@ void TreeProject::buildProjectTree() {
 
             // ***** Iterates through Things based on z-order of each Thing
             ThingMap &things = stage->getThingMap();
-            QList<long> keys = stage->thingKeysSortedByZOrder();
+            QList<long> keys = stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
 
             for (auto key: keys) {
                 DrThing         *thing =        things[key];

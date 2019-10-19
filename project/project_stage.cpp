@@ -124,9 +124,9 @@ void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
 //####################################################################################
 //##    Returns a list of Thing keys contained in stage, sorted from high z value to low
 //####################################################################################
-QList<long> DrStage::thingKeysSortedByZOrder() {
+QList<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {
     QList<long> z_ordered_keys;
-    for (auto thing : thingsSortedByZOrder())
+    for (auto thing : thingsSortedByZOrder(sort_order))
         z_ordered_keys.push_back(thing->getKey());
     return z_ordered_keys;
 }
@@ -134,19 +134,28 @@ QList<long> DrStage::thingKeysSortedByZOrder() {
 //####################################################################################
 //##    Returns a list of Things contained in stage, sorted from high z value to low
 //####################################################################################
-QList<DrThing*> DrStage::thingsSortedByZOrder() {
+QList<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things, QList<DrThing*> just_these_things) {
+    // Make a Vector of pairs for sorting
     std::vector<std::pair<double, DrThing*>> zorder_key_pair;
-
-    for (auto &thing_pair : m_things) {
-        zorder_key_pair.push_back(std::make_pair(thing_pair.second->getZOrderWithSub(), thing_pair.second));
+    if (all_things) {
+        for (auto &thing_pair : m_things)
+            zorder_key_pair.push_back(std::make_pair(thing_pair.second->getZOrderWithSub(), thing_pair.second));
+    } else {
+        for (auto &thing : just_these_things)
+            zorder_key_pair.push_back(std::make_pair(thing->getZOrderWithSub(), thing));
     }
 
+    // Sort!
     std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
 
+    // Copy sorted Map into List
     QList<DrThing*> z_ordered_things;
-    for (auto one_pair : zorder_key_pair) {
+    for (auto one_pair : zorder_key_pair)
         z_ordered_things.push_front(one_pair.second);
-    }
+
+    // Reverse if Ascending
+    if (sort_order == Qt::SortOrder::AscendingOrder)
+        std::reverse(z_ordered_things.begin(), z_ordered_things.end());
 
     return z_ordered_things;
 }
