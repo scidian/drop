@@ -6,16 +6,14 @@
 //
 //      !!!!! #TODO: Replace 'QVariant' value with our own 'void *' value to use outside of Qt Framework
 //
-
-// TEMP
 #include <QDebug>
+
 #include "helper.h"
-
-
 #include "project/project.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
+
 
 //####################################################################################
 //##    Constructor

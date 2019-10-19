@@ -46,6 +46,7 @@
     ItemScenePositionHasChanged
 
 ---------- */
+#include <QDebug>
 
 #include "colors/colors.h"
 #include "debug.h"
@@ -72,6 +73,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     // Load any new data stored in item
     double  angle = data(User_Roles::Rotation).toDouble();
     QPointF scale = data(User_Roles::Scale).toPointF();
+
 
     // ********** Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {

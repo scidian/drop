@@ -257,6 +257,7 @@ public:
     bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
     DrScene*        getDrScene() { return my_scene; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
+    void            setViewMode(View_Mode mode) { m_view_mode = mode; }
     void            spaceBarDown();
     void            spaceBarUp();
 

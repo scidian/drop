@@ -9,9 +9,10 @@
 #define EDITOR_SCENE_H
 
 #include <QGraphicsScene>
+#include <QMutex>
+#include <QTime>
 #include <QTreeWidgetItem>
 #include <QUndoStack>
-#include <QMutex>
 
 #include "enums.h"
 #include "interface_editor_relay.h"
@@ -51,6 +52,10 @@ private:
     bool                    m_calculated_adjust;            // If an item has already recalculated new center, use that
     QPointF                 m_pre_move_center;              // Stores a premove center for group grid snapping
     QPointF                 m_move_adjustment;              // Amount to move items by during translation
+
+    // Timers for holding keys down
+    QMap<Qt::Key, QTime>    m_key_timers;
+    QMap<Qt::Key, bool>     m_key_down;
 
 
 public:
