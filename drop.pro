@@ -189,9 +189,11 @@ SOURCES += \
     project/project_effect.cpp \
     project/project_font.cpp \
     project/project_image.cpp \
+    project/project_stage.cpp \
+    project/project_thing.cpp \
+    project/project_thing__effects.cpp \
+    project/project_thing__z_order.cpp \
     project/project_world.cpp \
-    project/project_world_stage.cpp \
-    project/project_world_stage_thing.cpp \
     project/thing_shape_list.cpp \
     settings/settings.cpp \
     settings/settings_component.cpp \
@@ -293,9 +295,9 @@ HEADERS += \
     project/project_effect.h \
     project/project_font.h \
     project/project_image.h \
+    project/project_stage.h \
+    project/project_thing.h \
     project/project_world.h \
-    project/project_world_stage.h \
-    project/project_world_stage_thing.h \
     project/thing_shape_list.h \
     settings/settings.h \
     settings/settings_component.h \

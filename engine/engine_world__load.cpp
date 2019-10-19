@@ -20,8 +20,8 @@
 #include "engine_world.h"
 #include "project/project.h"
 #include "project/project_asset.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "project/thing_shape_list.h"
 
 // Internal Constants
@@ -78,7 +78,7 @@ ThingInfo DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
     info.scale =    DrPointF(scale.x(), scale.y());
     info.size =     DrPointF(size.x(), size.y());
     info.opacity =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
-    info.z_order =  thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+    info.z_order =  thing->getZOrderWithSub();
     return info;
 }
 

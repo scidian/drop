@@ -22,7 +22,7 @@
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
+#include "project/project_stage.h"
 #include "settings/settings.h"
 
 

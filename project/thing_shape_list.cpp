@@ -11,7 +11,7 @@
 //####################################################################################
 //##    Adds a Polygon to the list of Polygons (m_polygons)
 //####################################################################################
-void  DrShapeList::addPolygon(std::vector<DrPointF> point_list) {
+void DrShapeList::addPolygon(std::vector<DrPointF> point_list) {
     m_polygons.push_back( point_list );
 }
 

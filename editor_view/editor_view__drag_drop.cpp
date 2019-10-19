@@ -18,8 +18,8 @@
 #include "project/project_asset.h"
 #include "project/project_effect.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 
 //####################################################################################
 //##    Drag Handling

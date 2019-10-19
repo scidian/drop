@@ -19,8 +19,8 @@
 #include "project_font.h"
 #include "project_image.h"
 #include "project_world.h"
-#include "project_world_stage.h"
-#include "project_world_stage_thing.h"
+#include "project_stage.h"
+#include "project_thing.h"
 
 
 //####################################################################################

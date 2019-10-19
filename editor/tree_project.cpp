@@ -22,8 +22,8 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -145,8 +145,7 @@ void TreeProject::buildProjectTree() {
                 }
 
                 // ***** Update Z Order
-                double z_order = thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
-                thing_item->setData(COLUMN_Z_ORDER, Qt::DisplayRole, z_order);
+                thing_item->setData(COLUMN_Z_ORDER, Qt::DisplayRole, thing->getZOrderWithSub());
 
                 // ***** Install / update lock box
                 installLockBox(thing, thing_item);

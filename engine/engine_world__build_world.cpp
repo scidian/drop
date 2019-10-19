@@ -21,8 +21,8 @@
 #include "project/project_font.h"
 #include "project/project_image.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "project/thing_shape_list.h"
 
 

@@ -56,8 +56,8 @@
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 
 
 //####################################################################################
@@ -156,7 +156,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     if (change == ItemZValueHasChanged) {
         // Value is new double z value
         double new_z = value.toDouble();
-        m_thing->setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, new_z);
+        m_thing->setZOrderWithSub(new_z, Z_Insert::Front);
 
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { Properties::Thing_Z_Order });
         return new_z;

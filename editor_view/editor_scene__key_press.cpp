@@ -18,8 +18,8 @@
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -138,6 +138,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             DrThing  *new_object;
 
             double  new_x, new_y, new_z;
+            int     sub_z;
 
             switch (key_pressed) {
                 // ***** Clone selected items
@@ -148,6 +149,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                     new_x = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().x();
                     new_y = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().y();
                     new_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
+                    sub_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Sub_Z_Order).toInt();
 
                     if (key_pressed == Qt::Key::Key_W) new_y = new_y - source_rect.height();
                     if (key_pressed == Qt::Key::Key_A) new_x = new_x - source_rect.width();
@@ -157,7 +159,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                     new_object = drstage->addThing(drthing->getThingType(), drthing->getAssetKey(), new_x, new_y, new_z);
                     drstage->copyThingSettings(drthing, new_object);
                     new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, QPointF(new_x, new_y));
-                    new_object->setComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order, new_z);
+                    new_object->setZOrderWithSub(new_z, Z_Insert::At_Position, sub_z + 1);
 
                     list_new_items.append( this->addItemToSceneFromThing(new_object) );
                     break;

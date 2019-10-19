@@ -20,7 +20,7 @@
 #include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_thing.h"
 #include "widgets/widgets_event_filters.h"
 
 

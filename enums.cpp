@@ -9,7 +9,7 @@
 #include "enums_engine.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_thing.h"
 #include "settings/settings.h"
 
 

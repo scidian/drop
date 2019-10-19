@@ -14,8 +14,8 @@
 #include "project.h"
 #include "project_asset.h"
 #include "project_world.h"
-#include "project_world_stage.h"
-#include "project_world_stage_thing.h"
+#include "project_stage.h"
+#include "project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -125,22 +125,30 @@ void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
 //##    Returns a list of Thing keys contained in stage, sorted from high z value to low
 //####################################################################################
 QList<long> DrStage::thingKeysSortedByZOrder() {
-    std::vector<std::pair<long, long>> zorder_key_pair;
+    QList<long> z_ordered_keys;
+    for (auto thing : thingsSortedByZOrder())
+        z_ordered_keys.push_back(thing->getKey());
+    return z_ordered_keys;
+}
 
-    for (auto thing : m_things) {
-        double z_order = thing.second->getComponentProperty(Components::Thing_Layering, Properties::Thing_Z_Order)->getValue().toDouble();
-        int  sub_order = thing.second->getComponentProperty(Components::Thing_Layering, Properties::Thing_Sub_Z_Order)->getValue().toInt();
-        z_order += static_cast<double>(sub_order) / 100000.0;
-        zorder_key_pair.push_back(std::make_pair(z_order, thing.first));
+//####################################################################################
+//##    Returns a list of Things contained in stage, sorted from high z value to low
+//####################################################################################
+QList<DrThing*> DrStage::thingsSortedByZOrder() {
+    std::vector<std::pair<double, DrThing*>> zorder_key_pair;
+
+    for (auto &thing_pair : m_things) {
+        zorder_key_pair.push_back(std::make_pair(thing_pair.second->getZOrderWithSub(), thing_pair.second));
     }
 
     std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
 
-    QList<long> z_ordered_keys;
-    for (auto one_pair : zorder_key_pair)
-        z_ordered_keys.push_front(one_pair.second);
+    QList<DrThing*> z_ordered_things;
+    for (auto one_pair : zorder_key_pair) {
+        z_ordered_things.push_front(one_pair.second);
+    }
 
-    return z_ordered_keys;
+    return z_ordered_things;
 }
 
 

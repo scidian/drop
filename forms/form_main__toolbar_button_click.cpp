@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "editor/tree_assets.h"
+#include "editor/tree_inspector.h"
 #include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
@@ -20,7 +21,7 @@
 #include "helper.h"
 #include "helper_qt.h"
 #include "project/project.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_thing.h"
 
 
 //####################################################################################
@@ -57,11 +58,24 @@ void FormMain::buttonGroupModeSetChecked(int id) {
 void FormMain::buttonGroupLayeringClicked(int id) {
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
 
-    if (clicked == Buttons_Layering::Send_To_Back) {
-        // !!!!! #TEMP: Map speed testing
-        ///Dr::ShowMessageBox( m_project->testSpeedFindSettings(1000) );
+    QList<DrSettings*> settings;
+    QList<Properties>  properties { Properties::Thing_Z_Order };
+    for (auto item : sceneEditor->getSelectionItems()) {
+        DrItem   *dritem = dynamic_cast<DrItem*>(item);
+        DrThing  *thing = dritem->getThing();
+        if (!thing) continue;
 
+        settings.append(thing);
+
+        if (clicked == Buttons_Layering::Send_Forward) {
+            thing->moveForward();
+        }
     }
+
+    sceneEditor->updateItemZValues();
+    treeProjectEditor->buildProjectTree();
+    treeInspector->updateInspectorPropertyBoxes( { m_project->findSettingsFromKey(treeInspector->getSelectedKey()) },
+                                                 { static_cast<int>(Properties::Thing_Z_Order), static_cast<int>(Properties::Thing_Sub_Z_Order) } );
 }
 
 
@@ -108,6 +122,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);
             DrThing  *thing = dritem->getThing();
+            if (!thing) continue;
 
             settings.append(thing);
             thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, QPointF(1, 1));

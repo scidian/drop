@@ -17,6 +17,13 @@ class DrProject;
 class DrAsset;
 class DrWorld;
 class DrStage;
+class DrThing;
+
+struct OrderInfo {
+    long     key;
+    DrThing *thing;
+    int      sub_order;
+};
 
 enum class Z_Insert {
     Back,
@@ -61,7 +68,11 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
     void            setThingType(DrThingType type) { m_thing_type = type; }
 
-    void            setZOrder(double z_order, Z_Insert insert, int position = 0);
+    // Z Ordering
+    void            moveForward();
+    double          getZOrderWithSub();
+    void            setZOrderWithSub(double z_order, Z_Insert insert, int position = 0);
+    void            shiftOrder(QList<OrderInfo> &order_info, int needs_to_be_empty);
 
     // Thing Components
     void    addComponent3D();

@@ -95,6 +95,8 @@ public:
     double                  startX() { return m_start_x; }
     double                  startY() { return m_start_y; }
 
+    bool                    isTempOnly() { return m_temp_only; }
+
 };
 
 #endif // DRITEM_H

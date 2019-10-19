@@ -19,8 +19,8 @@
 #include "project/project_asset.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -125,7 +125,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     double  angle =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Rotation)->getValue().toDouble();
     QPointF scale =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Scale)->getValue().toPointF();
-    double  z_order = m_thing->getComponentProperty(Components::Thing_Layering,  Properties::Thing_Z_Order)->getValue().toDouble();
+    double  z_order = m_thing->getZOrderWithSub();
     double  opacity = m_thing->getComponentProperty(Components::Thing_Layering,  Properties::Thing_Opacity)->getValue().toDouble();
     setData(User_Roles::Rotation, angle);
     setData(User_Roles::Scale,    scale);

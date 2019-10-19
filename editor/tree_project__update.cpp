@@ -9,8 +9,8 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "settings/settings_component_property.h"
 
 
@@ -45,9 +45,11 @@ void TreeProject::updateItems(QList<DrSettings*> changed_items, QList<long> prop
             }
 
             if (check_property == Properties::Thing_Z_Order) {
-                double z_order = entity->findPropertyFromPropertyKey(property)->getValue().toDouble();
-                item_in_tree->setData(COLUMN_Z_ORDER, Qt::DisplayRole, z_order);
-                item_in_tree->parent()->sortChildren(COLUMN_Z_ORDER, Qt::SortOrder::DescendingOrder);
+                DrThing *thing = dynamic_cast<DrThing*>(entity);
+                if (thing) {
+                    item_in_tree->setData(COLUMN_Z_ORDER, Qt::DisplayRole, thing->getZOrderWithSub());
+                    item_in_tree->parent()->sortChildren(COLUMN_Z_ORDER, Qt::SortOrder::DescendingOrder);
+                }
             }
         }
     }

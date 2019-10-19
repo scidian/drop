@@ -18,8 +18,8 @@
 #include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -53,6 +53,27 @@ void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long>
     updateSelectionBox();
 }
 
+
+// Updates all items Z Values
+void DrScene::updateItemZValues() {
+    for (auto &item : items()) {
+        DrItem *dritem = dynamic_cast<DrItem*>(item);
+        if (!dritem) continue;
+        if (dritem->isTempOnly()) continue;
+
+        DrThing *thing = dritem->getThing();
+        if (!thing) continue;
+
+        // ***** Turn off itemChange() signals to stop recursive calling
+        bool flags_enabled_before = dritem->itemChangeFlagsEnabled();
+        dritem->disableItemChangeFlags();
+
+        dritem->setZValue( thing->getZOrderWithSub() );
+
+        // ***** Turn back on itemChange() signals
+        if (flags_enabled_before) dritem->enableItemChangeFlags();
+    }
+}
 
 // Updates the item in the scene based on the new property_keys
 void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_keys) {
@@ -190,7 +211,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             }
 
             case Properties::Thing_Z_Order:
-                item->setZValue(new_value.toDouble());
+                item->setZValue( thing->getZOrderWithSub() );
                 break;
 
 

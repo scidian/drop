@@ -15,7 +15,7 @@
 #include "enums.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_thing.h"
 
 
 //####################################################################################

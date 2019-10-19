@@ -9,8 +9,8 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_world.h"
-#include "project/project_world_stage.h"
-#include "project/project_world_stage_thing.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 
 
 //####################################################################################

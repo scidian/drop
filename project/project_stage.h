@@ -64,6 +64,7 @@ public:
     void            deleteThing(DrThing *thing) ;
 
     QList<long>     thingKeysSortedByZOrder();
+    QList<DrThing*> thingsSortedByZOrder();
     void            initializeStageSettings(QString new_name);
     void            removeGraphicsItemReferences();
 

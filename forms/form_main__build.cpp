@@ -23,7 +23,7 @@
 #include "helper.h"
 #include "helper_qt.h"
 #include "project/project.h"
-#include "project/project_world_stage.h"
+#include "project/project_stage.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
 
