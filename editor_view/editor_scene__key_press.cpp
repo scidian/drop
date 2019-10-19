@@ -70,6 +70,11 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             } else if (m_key_timers[key_pressed].elapsed() < 1500) {    move_by.setX(   5.0 );  move_by.setY(   5.0 );
             } else if (m_key_timers[key_pressed].elapsed() < 2250) {    move_by.setX(  25.0 );  move_by.setY(  25.0 );
             } else {                                                    move_by.setX( 100.0 );  move_by.setY( 100.0 ); }
+        } else {
+            if        (m_key_timers[key_pressed].elapsed() < 1000) {    move_by.setX( move_by.x() *  1.0 );  move_by.setY( move_by.y() *  1.0 );
+            } else if (m_key_timers[key_pressed].elapsed() < 2000) {    move_by.setX( move_by.x() *  2.0 );  move_by.setY( move_by.y() *  2.0 );
+            } else if (m_key_timers[key_pressed].elapsed() < 3000) {    move_by.setX( move_by.x() *  5.0 );  move_by.setY( move_by.y() *  5.0 );
+            } else {                                                    move_by.setX( move_by.x() * 10.0 );  move_by.setY( move_by.y() * 10.0 ); }
         }
 
         for (auto item : getSelectionItems()) {
