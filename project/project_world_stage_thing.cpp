@@ -194,7 +194,7 @@ void DrThing::addComponentLayering(double z, double opacity) {
                            "Sub Order", "Arrangement of item compared to other items within the same Z Order.", false, false);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
-    setZOrder(z);
+    setZOrder(z, Z_Insert::Back);
 }
 
 void DrThing::addComponentMovement() {

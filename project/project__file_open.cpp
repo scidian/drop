@@ -112,6 +112,7 @@ void DrProject::openProjectFromFile(QString open_file) {
         addAsset(asset_type, source_key, key);
         // Load Asset Settings, Variables
         DrAsset *asset = findAssetFromKey(key);
+        if (asset == nullptr) continue;
         loadSettingsFromMap(asset, asset_data);
         asset->setListOrder(        asset_data["list_order"].toLongLong() );
     }
