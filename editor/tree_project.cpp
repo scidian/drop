@@ -71,6 +71,7 @@ void TreeProject::buildProjectTree() {
 
         // ***** Create new Item for World if necessary
         DrWorld         *world =        world_pair.second;
+        if (world->getType() != DrType::World) continue;
         long             world_key =    world_pair.first;
         QTreeWidgetItem *world_item =   item_map[world_key];
         if (world_item == nullptr) {

@@ -61,9 +61,10 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.setArrayIndex(i);
         // Load Effect, Initialize
         QVariantMap  effect_data =  settings.value("effect").value<QVariantMap>();
-        long         key =          effect_data["key"].toLongLong();
+        long         effect_key =   effect_data["key"].toLongLong();
         DrEffectType effect_type =  static_cast<DrEffectType>(effect_data["type"].toInt());
-        addEffect(effect_type, key);
+        if (findSettingsFromKey(effect_key, false) != nullptr) continue;
+        addEffect(effect_type, effect_key);
     }
     settings.endArray();
 
@@ -74,12 +75,13 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.setArrayIndex(i);
         // Load Image, Initialize
         QVariantMap image_data =    settings.value("image").value<QVariantMap>();
-        long        key =           image_data["key"].toLongLong();
+        long        image_key =     image_data["key"].toLongLong();
         QString     full_path =     image_data["full_path"].toString();
         QString     filename =      image_data["filename"].toString();
         QString     simple_name =   image_data["simple_name"].toString();
         QImage      image =         image_data["image"].value<QPixmap>().toImage().convertToFormat(QImage::Format_ARGB32);
-        addImage(key, full_path, filename, simple_name, image);
+        if (findSettingsFromKey(image_key, false) != nullptr) continue;
+        addImage(image_key, full_path, filename, simple_name, image);
     }
     settings.endArray();
 
@@ -90,12 +92,13 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.setArrayIndex(i);
         // Load Font, Initialize
         QVariantMap font_data =     settings.value("font").value<QVariantMap>();
-        long        key =           font_data["key"].toLongLong();
+        long        font_key =      font_data["key"].toLongLong();
         QString     name =          font_data["font_name"].toString();
         QString     family =        font_data["font_family"].toString();
         int         font_size =     font_data["font_size"].toInt();
         QPixmap     pix =           font_data["image"].value<QPixmap>();
-        addFont(name, pix, family, font_size, true, key);
+        if (findSettingsFromKey(font_key, false) != nullptr) continue;
+        addFont(name, pix, family, font_size, true, font_key);
     }
     settings.endArray();
 
@@ -106,13 +109,13 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.setArrayIndex(i);
         // Load Asset, Initialize
         QVariantMap asset_data =    settings.value("asset").value<QVariantMap>();
-        long        key =           asset_data["key"].toLongLong();
+        long        asset_key =     asset_data["key"].toLongLong();
         long        source_key =    asset_data["source_key"].toLongLong();
         DrAssetType asset_type =    static_cast<DrAssetType>(asset_data["type"].toInt());
-        addAsset(asset_type, source_key, key);
+        if (findSettingsFromKey(asset_key, false) != nullptr) continue;
+        addAsset(asset_type, source_key, asset_key);
         // Load Asset Settings, Variables
-        DrAsset *asset = findAssetFromKey(key);
-        if (asset == nullptr) continue;
+        DrAsset *asset = findAssetFromKey(asset_key);
         loadSettingsFromMap(asset, asset_data);
         asset->setListOrder(        asset_data["list_order"].toLongLong() );
     }
@@ -130,10 +133,10 @@ void DrProject::openProjectFromFile(QString open_file) {
         long        world_key =         world_data["key"].toLongLong();
         long        start_stage_key =   world_data["start_stage"].toLongLong();
         long        editor_stage_key =  world_data["editor_stage"].toLongLong();
+        if (findSettingsFromKey(world_key, false) != nullptr) continue;
         addWorld(world_key, start_stage_key, editor_stage_key);
         // Load World Settings, Variables
         DrWorld *world = findWorldFromKey(world_key);
-        if (world == nullptr) continue;
         loadSettingsFromMap(world, world_data);
         settings.endArray();
 
@@ -149,10 +152,10 @@ void DrProject::openProjectFromFile(QString open_file) {
             long        stage_key =         stage_data["key"].toLongLong();
             bool        start_stage =       stage_data["is_start_stage"].toBool();
             QPointF     center_point =      stage_data["center_point"].toPointF();
+            if (findSettingsFromKey(stage_key, false) != nullptr) continue;
             world->addStage(stage_key, start_stage, center_point);
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
-            if (stage == nullptr) continue;
             loadSettingsFromMap(stage, stage_data);
             settings.endArray();
 
@@ -168,10 +171,10 @@ void DrProject::openProjectFromFile(QString open_file) {
                 long thing_key =            thing_data["key"].toLongLong();
                 long asset_key =            thing_data["asset_key"].toLongLong();
                 DrThingType thing_type =    static_cast<DrThingType>(thing_data["type"].toInt());
+                if (findSettingsFromKey(thing_key, false) != nullptr) continue;
                 stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
                 // Load Thing Settings, Variables
                 DrThing *thing = findThingFromKey(thing_key);
-                if (thing == nullptr) continue;
                 loadSettingsFromMap(thing, thing_data);
                 settings.endArray();
             }
