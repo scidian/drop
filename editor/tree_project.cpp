@@ -30,11 +30,24 @@
 
 
 //####################################################################################
-//##    Populates Tree Project List based on project data
+//##    Constructor
+//####################################################################################
+TreeProject::TreeProject(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) : QTreeWidget (parent) {
+    m_editor_relay = editor_relay;
+    m_project = project;
+
+    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem *)), this, SLOT(handleCollapsed(QTreeWidgetItem *)));
+    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem *)),  this, SLOT(handleExpanded(QTreeWidgetItem *)));
+}
+
+
+//####################################################################################
+//##    Populates Tree Project List based on Project data
 //####################################################################################
 void TreeProject::buildProjectTree() {
 
     // ********** Turn off selection event during build
+    bool started_empty = this->invisibleRootItem()->childCount() < 1;
     setAllowSelectionEvent(false);
 
     // ********** Store some data about the tree so we can restore after its rebuilt
@@ -96,8 +109,8 @@ void TreeProject::buildProjectTree() {
                 icon_image = QPixmap(":/assets/tree_icons/tree_stage.png").toImage();
                 stage_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
                 stage_item->setText(COLUMN_TITLE, "Stage: " + stage->getName());
-                stage_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(stage->getKey()));
-                stage_item->setExpanded(true);
+                stage_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(stage->getKey()));                
+                stage_item->setExpanded( stage->getExpanded() );
             }
 
             // ***** Iterates through Things based on z-order of each Thing
@@ -152,7 +165,7 @@ void TreeProject::buildProjectTree() {
     }
 
     // ***** If we added new item(s), make sure visible
-    if (last_added != nullptr) {
+    if (last_added != nullptr && !started_empty) {
         this->scrollToItem(last_added);
         ///this->verticalScrollBar()->setValue(scroll_position);
     }

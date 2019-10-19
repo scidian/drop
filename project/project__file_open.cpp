@@ -25,6 +25,15 @@
 
 
 //####################################################################################
+//##    Checks if map has Key
+//####################################################################################
+bool checkMapHasKey(QVariantMap &map, QString key) {
+    QVariantMap::iterator it = map.find(key);
+    return (it != map.end());
+}
+
+
+//####################################################################################
 //##    Save all Settings Component Properties to a File
 //####################################################################################
 void DrProject::openProjectFromFile(QString open_file) {
@@ -116,7 +125,7 @@ void DrProject::openProjectFromFile(QString open_file) {
         addAsset(asset_type, source_key, asset_key);
         // Load Asset Settings, Variables
         DrAsset *asset = findAssetFromKey(asset_key);
-        loadSettingsFromMap(asset, asset_data);
+        loadSettingsFromMap(asset,  asset_data);
         asset->setListOrder(        asset_data["list_order"].toLongLong() );
     }
     settings.endArray();
@@ -130,9 +139,9 @@ void DrProject::openProjectFromFile(QString open_file) {
         settings.setArrayIndex(i);
         // Load World, Initialize
         QVariantMap world_data =        settings.value("world").value<QVariantMap>();
-        long        world_key =         world_data["key"].toLongLong();
-        long        start_stage_key =   world_data["start_stage"].toLongLong();
-        long        editor_stage_key =  world_data["editor_stage"].toLongLong();
+        long        world_key =         checkMapHasKey(world_data, "key")               ? world_data["key"].toLongLong()            : c_no_key;
+        long        start_stage_key =   checkMapHasKey(world_data, "start_stage")       ? world_data["start_stage"].toLongLong()    : c_no_key;
+        long        editor_stage_key =  checkMapHasKey(world_data, "editor_stage")      ? world_data["editor_stage"].toLongLong()   : c_no_key;
         if (findSettingsFromKey(world_key, false) != nullptr) continue;
         addWorld(world_key, start_stage_key, editor_stage_key);
         // Load World Settings, Variables
@@ -149,14 +158,16 @@ void DrProject::openProjectFromFile(QString open_file) {
             settings.setArrayIndex(j);
             // Load Stage, Initialize
             QVariantMap stage_data =        settings.value("stage").value<QVariantMap>();
-            long        stage_key =         stage_data["key"].toLongLong();
-            bool        start_stage =       stage_data["is_start_stage"].toBool();
-            QPointF     center_point =      stage_data["center_point"].toPointF();
+            long        stage_key =         checkMapHasKey(stage_data, "key")            ? stage_data["key"].toLongLong()        : c_no_key;
+            bool        start_stage =       checkMapHasKey(stage_data, "is_start_stage") ? stage_data["is_start_stage"].toBool() : false;
+            QPointF     center_point =      checkMapHasKey(stage_data, "center_point")   ? stage_data["center_point"].toPointF() : QPointF(0, 0);
+            bool        tree_expanded =     checkMapHasKey(stage_data, "tree_expanded")  ? stage_data["tree_expanded"].toBool()  : true;
             if (findSettingsFromKey(stage_key, false) != nullptr) continue;
             world->addStage(stage_key, start_stage, center_point);
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
             loadSettingsFromMap(stage, stage_data);
+            stage->setExpanded(tree_expanded);
             settings.endArray();
 
             // ***** Read Things
@@ -168,10 +179,11 @@ void DrProject::openProjectFromFile(QString open_file) {
                 settings.setArrayIndex(t);
                 // Load Thing, Initialize
                 QVariantMap thing_data =    settings.value("thing").value<QVariantMap>();
-                long thing_key =            thing_data["key"].toLongLong();
-                long asset_key =            thing_data["asset_key"].toLongLong();
-                DrThingType thing_type =    static_cast<DrThingType>(thing_data["type"].toInt());
-                if (findSettingsFromKey(thing_key, false) != nullptr) continue;
+                long thing_key =            checkMapHasKey(thing_data, "key")            ? thing_data["key"].toLongLong()        : c_no_key;
+                long asset_key =            checkMapHasKey(thing_data, "asset_key")      ? thing_data["asset_key"].toLongLong()  : c_no_key;
+                DrThingType thing_type =    checkMapHasKey(thing_data, "type")           ? static_cast<DrThingType>(thing_data["type"].toInt()) : DrThingType::Object;
+                if (findSettingsFromKey(thing_key, false) != nullptr) continue;             // Project already contains this Key
+                if (findAssetFromKey(asset_key) == nullptr)           continue;             // Cannot find Asset
                 stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
                 // Load Thing Settings, Variables
                 DrThing *thing = findThingFromKey(thing_key);
@@ -189,11 +201,6 @@ void DrProject::openProjectFromFile(QString open_file) {
 //####################################################################################
 //##    Load all Components / Properties Settings
 //####################################################################################
-bool checkMapHasKey(QVariantMap &map, QString key) {
-    QVariantMap::iterator it = map.find(key);
-    return (it != map.end());
-}
-
 void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     entity->setLocked(  map["locked"].toBool() );
     entity->setVisible( map["visible"].toBool() );

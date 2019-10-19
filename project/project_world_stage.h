@@ -36,6 +36,7 @@ private:
 
     bool        m_is_start_stage;                           // True if this is the first stage in a world
     QPointF     m_center_view_point {0, 0};                 // Holds the center point the view was on last time this stage was shown
+    bool        m_expanded = true;                          // Wether or not this is expanded in the Project Tree
 
 public:
     // Constructor & destructor
@@ -49,6 +50,8 @@ public:
     ThingMap&       getThingMap()       { return m_things; }
     DrThing*        getThing(long key)  { return m_things[key]; }
 
+    bool            getExpanded()       { return m_expanded; }
+    void            setExpanded(bool expanded) { m_expanded = expanded; }
     QPointF         getViewCenterPoint(){ return m_center_view_point; }
     void            setViewCenterPoint(QPointF new_point) { m_center_view_point = new_point; }
 

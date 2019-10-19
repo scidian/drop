@@ -51,8 +51,7 @@ private:
     int             m_mouse_y;
 
 public:
-    explicit        TreeProject(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                                QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) { }
+    explicit        TreeProject(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function calls
     void                        buildProjectTree();
@@ -86,6 +85,10 @@ public:
     bool            canWeDrop() { return m_can_drop; }
     int             getMouseX() { return m_mouse_x; }
     int             getMouseY() { return m_mouse_y; }
+
+public slots:
+    void handleCollapsed(QTreeWidgetItem *item);
+    void handleExpanded(QTreeWidgetItem *item);
 
 };
 

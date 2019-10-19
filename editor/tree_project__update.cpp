@@ -57,7 +57,30 @@ void TreeProject::updateItems(QList<DrSettings*> changed_items, QList<long> prop
 }
 
 
+//####################################################################################
+//##    Handles Expand / Collapse of QTreeWidgetItems
+//####################################################################################
+void TreeProject::handleCollapsed(QTreeWidgetItem *item) {
+    long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+    DrSettings *settings = m_project->findSettingsFromKey(key, false);
+    if (settings != nullptr) {
+        if (settings->getType() == DrType::Stage) {
+            DrStage *stage = dynamic_cast<DrStage*>(settings);
+            if (stage) stage->setExpanded(false);
+        }
+    }
+}
 
+void TreeProject::handleExpanded(QTreeWidgetItem *item) {
+    long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+    DrSettings *settings = m_project->findSettingsFromKey(key, false);
+    if (settings != nullptr) {
+        if (settings->getType() == DrType::Stage) {
+            DrStage *stage = dynamic_cast<DrStage*>(settings);
+            if (stage) stage->setExpanded(true);
+        }
+    }
+}
 
 
 
