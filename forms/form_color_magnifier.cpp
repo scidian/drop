@@ -48,7 +48,9 @@ FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int wi
     this->move(mouse_pos.x() - width / 2 - c_form_x_offset, mouse_pos.y() - height / 2 - c_form_y_offset);
 
     // Take initial screenshot of desktop
-    grabScreen( QGuiApplication::screenAt(mouse_pos) );
+    m_image = QImage(1024, 1024, QImage::Format::Format_ARGB32);
+    QScreen *screen = QGuiApplication::screenAt(mouse_pos);
+    if (screen != nullptr) grabScreen(screen);
 
     // Create a label to show the zoomies
     QGridLayout *layout = new QGridLayout(this);

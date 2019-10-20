@@ -118,7 +118,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  141
+//##    !!!!! NEXT AVAILABLE NUMBER:  143
 //##
 //############################
 enum class Properties {
@@ -152,6 +152,12 @@ enum class Properties {
 
     Asset_Character_Can_Rotate          = 17,       // bool
     Asset_Character_Feels_Gravity       = 18,       // bool
+
+
+    // Asset_Settings_Character
+    Asset_Object_One_Way_Type           = 141,      // list
+    Asset_Object_One_Way_Direction      = 142,      // point
+
 
 
     // Asset_Settings_Font

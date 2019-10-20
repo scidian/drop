@@ -263,9 +263,9 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap,
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall, Property_Type::Bool, true,
                            "Wall Jump?", "Can this Character jump off of walls?");
 
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag, Property_Type::PositiveDouble, 0.50,
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag, Property_Type::PositiveDouble, 1.0,
                            "Air Drag", "Affects acceleration and decceleration in air. Usually ranging from 0.0 to 1.0 or higher.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag, Property_Type::PositiveDouble, 0.25,
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag, Property_Type::PositiveDouble, 1.0,
                            "Ground Drag", "Affects acceleration and decceleration on the ground. Usually ranging from 0.0 to 1.0 or higher.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag, Property_Type::PositiveDouble, 0.25,
                            "Rotate Drag", "Affects rotation acceleration and decceleration. Usually ranging from 0.0 to 1.0 or higher.");
@@ -294,6 +294,15 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, Dr
     property_name->setDisplayName("Object Name");
     property_name->setDescription("Name of the current Object Asset.");
     property_name->setValue(new_name);
+
+//    addComponent(Components::Asset_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
+//    getComponent(Components::Asset_Settings_Object)->setIcon(Component_Icons::Object);
+
+//    addPropertyToComponent(Components::Asset_Settings_Object, Properties::Asset_Object_One_Way_Type, Property_Type::List, 0,
+//                           "One Way Type", "Type of One Way collision for this object. <b></b>");
+
+
+
 
     addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);

@@ -186,8 +186,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpVect  body_v = cpBodyGetVelocity( object->body );
 
     // Calculate target velocity, includes any Forced Movement
-    cpFloat target_vx = (object->getMoveSpeedX() * key_x);// + object->getForcedSpeedX();
-    cpFloat target_vy = (object->getMoveSpeedY() * key_y);// + object->getForcedSpeedY();
+    cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
+    cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
@@ -218,13 +218,23 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         c_drag_ground = (c_drag_ground * object->getTempGravityMultiplier()) + 0.0001;
     }
 
-    // Calculate air / ground acceleration
+
+    // Air / Ground Drag
     double air_drag =       object->getAirDrag();
     double ground_drag =    object->getGroundDrag();
-    double air_accel_x =    object->getMoveSpeedX() / (air_drag + c_buffer);
-    double air_accel_y =    object->getMoveSpeedY() / (air_drag + c_buffer);
-    double ground_accel_x = object->getMoveSpeedX() / (ground_drag + c_buffer);
-    double ground_accel_y = object->getMoveSpeedY() / (ground_drag + c_buffer);
+
+    // Air Acceleration
+    double air_x_multiplier = (target_vx > 0 || target_vx < 0) ? 0.2 : 1.0;
+    double air_y_multiplier = (target_vy > 0 || target_vy < 0) ? 0.2 : 1.0;
+    double air_accel_x =    object->getMoveSpeedX() / (sqrt(air_drag)*air_x_multiplier + c_buffer);
+    double air_accel_y =    object->getMoveSpeedY() / (sqrt(air_drag)*air_y_multiplier + c_buffer);
+
+    // Ground Acceleration
+    double grd_x_multiplier = (target_vx > 0 || target_vx < 0) ? 0.2 : 1.0;
+    double grd_y_multiplier = (target_vy > 0 || target_vy < 0) ? 0.2 : 1.0;
+    double ground_accel_x = object->getMoveSpeedX() / (sqrt(ground_drag)*grd_x_multiplier + c_buffer);
+    double ground_accel_y = object->getMoveSpeedY() / (sqrt(ground_drag)*grd_y_multiplier + c_buffer);
+
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
@@ -254,10 +264,6 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double body_r = cpBodyGetAngularVelocity( body );
     body_r = cpflerpconst( body_r, 0, object->getRotateDrag() / c_drag_rotate * dt);
     cpBodySetAngularVelocity( body, body_r );
-
-
-    body_v.x += object->getForcedSpeedX();
-    body_v.y += object->getForcedSpeedY();
 
 
     // ***** Max Speed - Limit Velocity

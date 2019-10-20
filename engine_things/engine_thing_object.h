@@ -112,8 +112,8 @@ private:
     long            m_jump_timeout =  800;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
     int             m_jump_count =      0;          // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
-    double          m_air_drag =       0.50;        // Affects acceleration and decceleration in air (0 to 1+)
-    double          m_ground_drag =    0.25;        // Affects acceleration and decceleration on the ground (0 to 1+)
+    double          m_air_drag =       1.00;        // Affects acceleration and decceleration in air (0 to 1+)
+    double          m_ground_drag =    1.00;        // Affects acceleration and decceleration on the ground (0 to 1+)
     double          m_rotate_drag =    0.25;        // Affects rotation acceleration and decceleration (0 to 1+)
 
     bool            m_air_jump = true;              // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)

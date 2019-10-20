@@ -18,13 +18,15 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name) : DrSettings(parent_project) {
+DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage) : DrSettings(parent_project) {
     this->setKey(key);
 
     initializeWorldSettings(new_world_name);
 
     // Adds the initial "Start Stage"
-    m_start_stage_key = addStage()->getKey();
+    if (add_start_stage) {
+        m_start_stage_key = addStage()->getKey();
+    }
 
     m_last_stage_shown_in_editor = m_start_stage_key;
 }

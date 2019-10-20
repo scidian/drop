@@ -52,8 +52,15 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
     pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Opacity, pixmap, -64);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
     int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );
-    scaled_x = Dr::Clamp(scaled_x, 5, QGuiApplication::screenAt( QCursor::pos() )->geometry().width()  * 1);
-    scaled_y = Dr::Clamp(scaled_y, 5, QGuiApplication::screenAt( QCursor::pos() )->geometry().height() * 1);
+    int max_width =  2048;
+    int max_height = 2048;
+    QScreen *screen = QGuiApplication::screenAt(QCursor::pos());
+    if (screen != nullptr) {
+        max_width =  screen->geometry().width();
+        max_height = screen->geometry().height();
+    }
+    scaled_x = Dr::Clamp(scaled_x, 5, max_width);
+    scaled_y = Dr::Clamp(scaled_y, 5, max_height);
     pixmap = pixmap.scaled(scaled_x, scaled_y, Qt::AspectRatioMode::KeepAspectRatio, Qt::TransformationMode::SmoothTransformation);
 
     // Use center of pixmap as the hot spot

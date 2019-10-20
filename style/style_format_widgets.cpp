@@ -32,9 +32,9 @@ void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_ce
     screen = FindScreenFromWidget(parent_to_find_screen_from);
 
     // If couldnt find screen from parent, try to grab screen from cursor position, else default to primary or first screen
-    if (!screen) screen = QGuiApplication::screenAt( QCursor::pos() );
-    if (!screen) screen = QGuiApplication::primaryScreen();
-    if (!screen) screen = QGuiApplication::screens().first();
+    if (screen == nullptr) screen = QGuiApplication::screenAt( QCursor::pos() );
+    if (screen == nullptr) screen = QGuiApplication::primaryScreen();
+    if (screen == nullptr) screen = QGuiApplication::screens().first();
     screen_geometry = screen->availableGeometry();
 
     QSize new_size = form_to_center->size();
@@ -46,9 +46,9 @@ void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_ce
 }
 
 QScreen* FindScreenFromWidget(QWidget *widget) {
-    if (!widget)                            return nullptr;
-    if (!widget->window())                  return nullptr;
-    if (!widget->window()->windowHandle())  return nullptr;
+    if (widget == nullptr)                              return nullptr;
+    if (widget->window() == nullptr)                    return nullptr;
+    if (widget->window()->windowHandle() == nullptr)    return nullptr;
     return widget->window()->windowHandle()->screen();
 }
 

@@ -126,10 +126,10 @@ void FormPopup::showEvent(QShowEvent *event) {
     int y = bot_left.y() + m_offset.y();
 
     // Make sure it is within the screen
-    if (!QGuiApplication::screenAt(QPoint(x, y)) && x < 2) x = 2;
+    if (QGuiApplication::screenAt(QPoint(x, y)) == nullptr && x < 2) x = 2;
 
     QScreen *screen = QGuiApplication::screenAt( QCursor::pos() );
-    if (screen) {
+    if (screen != nullptr) {
         if (x + this->geometry().width() +  2 > screen->availableGeometry().right()) {
             x = screen->availableGeometry().right() -  this->geometry().width() - 2;
         }
