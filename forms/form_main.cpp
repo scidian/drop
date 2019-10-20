@@ -99,17 +99,19 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
-    for (auto widget : findChildren<QWidget *>()) {
-        widget->style()->unpolish(widget);
-        widget->style()->polish(widget);
-        widget->update();
-    }
+    for (int i = 0; i < 2; ++i) {
+        for (auto widget : findChildren<QWidget *>()) {
+            widget->style()->unpolish(widget);
+            widget->style()->polish(widget);
+            widget->update();
+        }
 
-    if (m_current_mode == Form_Main_Mode::World_Editor) {
-        buildAssetTree();
-        buildProjectTree();
-        buildInspector( { treeInspector->getSelectedKey() }, true );
-        viewEditor->updateGrid();
+        if (m_current_mode == Form_Main_Mode::World_Editor) {
+            buildAssetTree();
+            treeProjectEditor->buildProjectTree(true);
+            buildInspector( { treeInspector->getSelectedKey() }, true );
+            viewEditor->updateGrid();
+        }
     }
 }
 
