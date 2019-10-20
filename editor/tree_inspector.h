@@ -58,6 +58,9 @@ private:
 public:
     explicit        TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
+    // Event Overrides
+    virtual void    focusInEvent(QFocusEvent *event) override;
+
     // Function Calls
     void            buildInspectorFromKeys(QList<long> key_list, bool force_rebuild = false);
     void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);

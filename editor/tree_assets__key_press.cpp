@@ -95,6 +95,40 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     if (layout_index < 0)               layout_index = 0;
 
 
+    // ***** Duplicate Asset
+    if (event->key() == Qt::Key_D) {
+        DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());
+        if (asset == nullptr) return;
+        if (asset->getAssetType() == DrAssetType::Effect) return;
+
+        // Create new Asset, copy Settings / Components / Properties
+        long copy_asset_key = m_project->addAsset(asset->getAssetType(), asset->getSourceKey());
+        DrAsset *copy_asset = m_project->findAssetFromKey(copy_asset_key);
+        copy_asset->copyEntitySettings(asset);
+
+        // Find a new name for Asset
+        QString new_name;
+        bool    has_name;
+        int     i = 1;
+        do {
+            has_name = false;
+            new_name = (i == 1) ? copy_asset->getName() + " Copy" :  copy_asset->getName() + " Copy (" + QString::number(i) + ")";
+            for (auto &asset_pair : m_project->getAssetMap()) {
+                if (asset_pair.second->getName() == new_name) has_name = true;
+            }
+            i++;
+        } while (has_name != false);
+        copy_asset->setName( new_name );
+
+        // Update EditorRelay widgets
+        m_editor_relay->buildAssetTree();
+        m_editor_relay->buildInspector( { copy_asset_key } );
+        m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
+        setSelectedKey(copy_asset_key);
+        setFocus(Qt::FocusReason::PopupFocusReason);
+    }
+
+
     // ***** Delete Asset
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
         DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());

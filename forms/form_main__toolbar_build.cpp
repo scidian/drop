@@ -90,8 +90,12 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
 
         buttonAdd = createToolbarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, 48, 26, false, true);
-        buttonsGroupEdit->addButton(buttonAdd, int(Buttons_Add::Add));
+        buttonsGroupEdit->addButton(buttonAdd, int(Buttons_Edit::Add));
         toolbarLayoutEdit->addWidget(buttonAdd);
+
+        tool = createToolbarButton(QStringLiteral("buttonDuplicate"), Advisor_Info::Duplicate, 34, 26, false, false);
+        buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Duplicate));
+        toolbarLayoutEdit->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, 34, 26, false, false);
         buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));

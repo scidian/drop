@@ -54,7 +54,10 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *
 // SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
 void TreeInspector::setAdvisorInfo(QString header, QString body) { m_editor_relay->setAdvisorInfo(header, body); }
 
-
+// Focus In Event
+void TreeInspector::focusInEvent(QFocusEvent *) {
+    m_editor_relay->setActiveWidget(Editor_Widgets::Inspector_Tree);
+}
 
 
 
@@ -117,7 +120,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
     // Change Advisor text after new item selection
     switch (m_selected_type) {
-        case DrType::Asset:        m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Description);     break;
+        case DrType::Asset:        break;///m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Description);     break;
         case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
         case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
         case DrType::Thing:

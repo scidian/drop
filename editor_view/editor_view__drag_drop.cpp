@@ -10,8 +10,9 @@
 #include <QDragMoveEvent>
 #include <QMimeData>
 
-#include "editor_scene.h"
-#include "editor_view.h"
+#include "editor/tree_assets.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "project/project.h"
@@ -114,9 +115,9 @@ void DrView::dropEvent(QDropEvent *event) {
         my_scene->addItemToSceneFromThing( thing );
         event->acceptProposedAction();
 
+
     // ********** External Files
     } else if (event->mimeData()->hasUrls()) {
-
         // Extract the local paths of the files
         QStringList path_list;
         QList<QUrl> url_list = event->mimeData()->urls();
@@ -134,22 +135,21 @@ void DrView::dropEvent(QDropEvent *event) {
             image = image.convertToFormat( QImage::Format_ARGB32 );
         QPixmap pixmap = QPixmap::fromImage( image );
 
-        // If it was an image, add it to the project and add the Thing to the scene
+        // If it was an image, add the Image and Asset to the project and add the Thing to the scene
         long image_key = m_editor_relay->currentProject()->addImage(file_path);
         long asset_key = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image_key );
+        m_editor_relay->buildAssetTree();
+        m_editor_relay->getAssetTree()->setSelectedKey(asset_key);
 
         // Add Object Thing at mouse position
         QPointF  position =  mapToScene(event->pos());
-        thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);    // FIX: z order
+        thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);
         my_scene->addItemToSceneFromThing( thing );
-
-        // Update Asst Tree
-        m_editor_relay->buildAssetTree();
 
         // Mark event as accepted
         event->acceptProposedAction();
 
-    // ***** Unknown drag n drop type, exit
+    // ********** Unknown drag n drop type, exit
     } else {
         event->ignore();
         return;

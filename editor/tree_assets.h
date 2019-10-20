@@ -65,6 +65,7 @@ public:
     // Tree Building Functions
     void                    buildAssetTree(QString search_text = "");
     DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info);
+    void                    ensureSelectedKeyVisible();
     void                    removeAsset(long asset_key);
 
     // Function Calls

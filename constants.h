@@ -109,6 +109,7 @@ namespace Advisor_Info {
     const HeaderBodyList Send_Forward           { "Send Forward",  "Send selected item(s) forward by one." };
 
     const HeaderBodyList Add_Entity             { "Add Item",      "Adds an item to the Project." };
+    const HeaderBodyList Duplicate              { "Duplicate",     "Create a copy of selected item(s)." };
     const HeaderBodyList Trash_Can              { "Delete",        "Remove selected item(s)." };
 
     const HeaderBodyList Reset                  { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "

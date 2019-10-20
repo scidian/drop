@@ -49,16 +49,17 @@ DrFilterAssetMouseHandler::DrFilterAssetMouseHandler(QObject *parent, IEditorRel
 bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     // Grab the frame and get some properties from it
     QWidget *asset_frame =  dynamic_cast<QWidget*>(object);
-    if (asset_frame == nullptr)     return false;
+    if (asset_frame == nullptr)     return QObject::eventFilter(object, event);
     long     asset_key =    asset_frame->property(User_Property::Key).toLongLong();
+    if (asset_key <= 0)             return QObject::eventFilter(object, event);
 
     QLabel  *label_name =   asset_frame->findChild<QLabel*>("assetName");
     QLabel  *label_pixmap = asset_frame->findChild<QLabel*>("assetPixmap");
-    if (label_name == nullptr)      return false;
-    if (label_pixmap == nullptr)    return false;
+    if (label_name == nullptr)      return QObject::eventFilter(object, event);
+    if (label_pixmap == nullptr)    return QObject::eventFilter(object, event);
 
     TreeAssets *asset_tree = m_editor_relay->getAssetTree();
-    if (asset_tree == nullptr)      return false;
+    if (asset_tree == nullptr)      return QObject::eventFilter(object, event);
 
     // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
@@ -90,7 +91,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     // Start scrolling name if name is too wide to be shown
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings  *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
-        if (asset == nullptr) return false;
+        if (asset == nullptr) return QObject::eventFilter(object, event);
         QString asset_name = asset->getName();
 
         if (asset_name != label_name->text()) {
@@ -108,7 +109,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Highlights selected Asset Item
     } else if (event->type() == QEvent::Paint) {
-        if (asset_key == asset_tree->getSelectedKey() && asset_tree->hasFocus()) {
+        if ((asset_key == asset_tree->getSelectedKey()) && (m_editor_relay->getActiveWidget() == Editor_Widgets::Asset_Tree)) {
             QPainter painter(asset_frame);
             painter.setRenderHint(QPainter::Antialiasing, true);
             painter.setPen( QPen(Dr::GetColor(Window_Colors::Icon_Dark), 2) );
@@ -117,9 +118,6 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
             box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );
             box.setY( box.y() + 2);     box.setHeight( box.height() - 3 );
             painter.drawRoundedRect(box, 5, 5, Qt::SizeMode::AbsoluteSize);
-            ///asset_frame->setEnabled(false);
-        } else {
-            ///asset_frame->setEnabled(true);
         }
 
     // Reset asset name if it was scrolling
@@ -144,7 +142,6 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
         event->type() != QEvent::HoverMove) {
         ///Dr::SetLabelText(Label_Names::Label_1, "Event: " + QString::number(event->type()) + ", " + Dr::CurrentTimeAsString());
     }
-
 
     return QObject::eventFilter(object, event);
 }

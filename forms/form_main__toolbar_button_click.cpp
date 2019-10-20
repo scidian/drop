@@ -60,21 +60,10 @@ void FormMain::buttonGroupLayeringClicked(int id) {
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
     QKeyEvent *event = nullptr;
 
-    if (clicked == Buttons_Layering::Send_To_Front) {
-        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Greater, { Qt::KeyboardModifier::NoModifier });
-    }
-
-    if (clicked == Buttons_Layering::Send_To_Back) {
-        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Less,    { Qt::KeyboardModifier::NoModifier });
-    }
-
-    if (clicked == Buttons_Layering::Send_Forward) {
-        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Period,  { Qt::KeyboardModifier::NoModifier });
-    }
-
-    if (clicked == Buttons_Layering::Send_Backward) {
-        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Comma,   { Qt::KeyboardModifier::NoModifier });
-    }
+    if (clicked == Buttons_Layering::Send_To_Front) { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Greater, { Qt::KeyboardModifier::NoModifier }); }
+    if (clicked == Buttons_Layering::Send_To_Back) {  event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Less,    { Qt::KeyboardModifier::NoModifier }); }
+    if (clicked == Buttons_Layering::Send_Forward) {  event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Period,  { Qt::KeyboardModifier::NoModifier }); }
+    if (clicked == Buttons_Layering::Send_Backward) { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Comma,   { Qt::KeyboardModifier::NoModifier }); }
 
     if (event) {
         sceneEditor->keyPressEvent(event);
@@ -94,8 +83,10 @@ void FormMain::buttonGroupEditClicked(int id) {
         popupAdd->buildPopupAddEntity();
         popupAdd->show();
 
-    } else if (clicked == Buttons_Edit::Delete) {
-        QKeyEvent *event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
+    } else if (clicked == Buttons_Edit::Delete || clicked == Buttons_Edit::Duplicate) {
+        QKeyEvent *event = nullptr;
+        if (clicked == Buttons_Edit::Delete)    event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
+        if (clicked == Buttons_Edit::Duplicate) event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_D,      { Qt::KeyboardModifier::NoModifier });
 
         if (getActiveWidget() == Editor_Widgets::Project_Tree) {
             treeProjectEditor->keyPressEvent(event);

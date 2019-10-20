@@ -64,7 +64,7 @@ public:
 
     // Getter / Setters
     Editor_Widgets      getActiveWidget() { return m_active_widget; }
-    void                setActiveWidget(Editor_Widgets widget) { m_active_widget = widget; }
+    void                setActiveWidget(Editor_Widgets widget);
 };
 
 

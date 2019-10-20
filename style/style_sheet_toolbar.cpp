@@ -64,14 +64,14 @@ QString StyleSheetToolBar() {
 
     +
     StyleSheetToolBarButtons("buttonAddThing",          "add.png",              "add.png",              "add_gray.png",          4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonDuplicate",         "duplicate.png",        "duplicate.png",        "duplicate_gray.png",    4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonDeleteThing",       "trash.png",            "trash.png",            "trash_gray.png",        4, 4, 4, 4, 4, false) +
+            " QToolButton#buttonDeleteThing                 { padding-right: 5px; } " +
 
     StyleSheetToolBarButtons("buttonSendToBack",        "sendtoback.png",       "sendtoback.png",       "sendtoback_gray.png",   4, 4, 0, 4, 0, false) +
     StyleSheetToolBarButtons("buttonSendBackward",      "sendbackward.png",     "sendbackward.png",     "sendbackward_gray.png", 4, 0, 0, 0, 0, false) +
     StyleSheetToolBarButtons("buttonSendForward",       "sendforward.png",      "sendforward.png",      "sendforward_gray.png",  4, 0, 0, 0, 0, false) +
     StyleSheetToolBarButtons("buttonSendToFront",       "sendtofront.png",      "sendtofront.png",      "sendtofront_gray.png",  4, 0, 4, 0, 4, false) +
-
-    StyleSheetToolBarButtons("buttonDeleteThing",       "trash.png",            "trash.png",            "trash_gray.png",        4, 4, 4, 4, 4, false) +
-            " QToolButton#buttonDeleteThing                 { padding-right: 5px; } " +
 
     StyleSheetToolBarButtons("buttonResetObject",       "reset.png",            "reset.png",            "reset_gray.png",        4, 4, 0, 4, 0, false) +
     StyleSheetToolBarButtons("buttonTransformFlipH",    "flip_h.png",           "flip_h.png",           "flip_h_gray.png",       4, 0, 0, 0, 0, false) +
@@ -85,7 +85,7 @@ QString StyleSheetToolBar() {
     StyleSheetToolBarButtons("buttonSnapToGrid",    "grid_snap_uncheck.png",    "grid_snap.png",        "toolbar_grid_snap_gray.png", 4, 0, 0, 0, 0, true)  +
             " QToolButton#buttonSnapToGrid:checked          { padding-bottom: 3px; } " +
     StyleSheetToolBarButtons("buttonSnapOptions",   "arrow.png",                "arrow.png",            "arrow.png",             2, 0, 4, 0, 4, false) +
-            " QToolButton#buttonSnapOptions                 { margin-left: -1px; } "
+            " QToolButton#buttonSnapOptions                 { padding-left: 3px; } "
             " QToolButton#buttonSnapOptions::menu-indicator { image: none; } " +
 
     StyleSheetToolBarButtons("buttonPlay",              "play.png",             "play.png",             "play.png",              4, 4, 4, 4, 4, false) +

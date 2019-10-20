@@ -69,10 +69,6 @@ enum class Label_Names {
 //####################################################################################
 //##    Toolbar Button Groups
 //############################
-enum class Buttons_Add {
-    Add,
-};
-
 enum class Buttons_Layering {
     Send_To_Back,
     Send_Backward,
@@ -82,6 +78,7 @@ enum class Buttons_Layering {
 
 enum class Buttons_Edit {
     Add,
+    Duplicate,
     Delete,
 };
 

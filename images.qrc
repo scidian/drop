@@ -173,5 +173,7 @@
         <file>assets/dr_images/box.png</file>
         <file>assets/dr_images/circle.png</file>
         <file>assets/dr_images/empty.png</file>
+        <file>assets/toolbar_icons/toolbar_duplicate_gray.png</file>
+        <file>assets/toolbar_icons/toolbar_duplicate.png</file>
     </qresource>
 </RCC>

@@ -11,6 +11,7 @@
 #include <QGraphicsColorizeEffect>
 #include <QLabel>
 #include <QLineEdit>
+#include <QScrollBar>
 #include <QVBoxLayout>
 
 #include "colors/colors.h"
@@ -89,6 +90,9 @@ void TreeAssets::searchTextChanged(QString new_text) {
 //##    Tree Building Functions
 //####################################################################################
 void TreeAssets::buildAssetTree(QString search_text) {
+
+    // Store current scroll bar position
+    int scroll_position = this->verticalScrollBar()->value();
 
     // ***** Initialize some QWidget helper items
     QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -192,11 +196,11 @@ void TreeAssets::buildAssetTree(QString search_text) {
             switch (asset->getAssetType()) {
                 case DrAssetType::Character:
                     pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    if (description == "") description = Advisor_Info::Asset_Character[1];
+                    if (description == "") description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
                     break;
                 case DrAssetType::Object:
                     pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    if (description == "") description = Advisor_Info::Asset_Object[1];
+                    if (description == "") description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
                     break;
                 case DrAssetType::Effect:
                     pix = m_project->getEffect( asset->getSourceKey() )->getPixmap();
@@ -255,6 +259,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
     this->setItemWidget(spacer_item, 0, spacer_label);
 
     this->expandAll();
+    this->verticalScrollBar()->setValue(scroll_position);
+    this->ensureSelectedKeyVisible();
 }
 
 

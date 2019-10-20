@@ -120,6 +120,11 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     if (event->type() == QEvent::Drop) {
         QDropEvent *drop_event = dynamic_cast<QDropEvent*>(event);
 
+        if (drop_event->mimeData()->hasUrls() == false) {
+            event->ignore();
+            return false;
+        }
+
         // Extract the local paths of the files
         QStringList path_list;
         QList<QUrl> url_list = drop_event->mimeData()->urls();

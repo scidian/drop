@@ -157,6 +157,29 @@ void DrSettings::addPropertyToComponent(Components component, Properties propert
 }
 
 
+//####################################################################################
+//##    Copies all component / property settings from one Entity to another Entity of the same type
+//####################################################################################
+void DrSettings::copyEntitySettings(DrSettings *from_entity) {
+    if (from_entity->getType() != getType()) return;
+
+    for (auto component_pair : from_entity->getComponentMap()) {
+        for (auto property_pair : component_pair.second->getPropertyMap()) {
+            DrProperty *from_property = property_pair.second;
+            DrProperty *to_property =   getComponentProperty(component_pair.first, property_pair.first);
+
+            // !!! DO NOT COPY UNIQUE ID KEY !!!
+            if (to_property->getPropertyKey() == static_cast<int>(Properties::Entity_Key)) continue;
+
+            // Copy all other properties
+            to_property->setValue(      from_property->getValue());
+            to_property->setEditable(   from_property->isEditable());
+            to_property->setHidden(     from_property->isHidden());
+            to_property->setDisplayName(from_property->getDisplayName());
+            to_property->setDescription(from_property->getDescription());
+        }
+    }
+}
 
 
 

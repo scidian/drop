@@ -23,10 +23,13 @@
 //####################################################################################
 void TreeAssets::setSelectedKey(long key) {
     m_selected_key = key;
+    ensureSelectedKeyVisible();
+}
 
-    // Scrolls to selected item if necessary
+// Scrolls to selected item if necessary
+void TreeAssets::ensureSelectedKeyVisible() {
     for (auto frame : m_asset_frames) {
-        if (frame->property(User_Property::Key).toLongLong() == key) {
+        if (frame->property(User_Property::Key).toLongLong() == m_selected_key) {
             QFrame *parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());
             int widget_top = frame->geometry().y() + parent_frame->geometry().y();
             int widget_bot = widget_top + frame->geometry().height();
@@ -39,7 +42,6 @@ void TreeAssets::setSelectedKey(long key) {
             break;
         }
     }
-
     this->repaint();
 }
 

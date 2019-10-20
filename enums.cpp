@@ -19,6 +19,16 @@ namespace Dr {
 //####################################################################################
 //##    Returns a QString respresentaiton of the passed DrTypes type
 //####################################################################################
+QString StringFromEditorWidget(Editor_Widgets widget) {
+    switch (widget) {
+        case Editor_Widgets::ToolBar:           return "Toolbar";
+        case Editor_Widgets::Asset_Tree:        return "Asset Tree";
+        case Editor_Widgets::Stage_View:        return "Stage View";
+        case Editor_Widgets::Project_Tree:      return "Project Tree";
+        case Editor_Widgets::Inspector_Tree:    return "Inspector Tree";
+    }
+}
+
 QString StringFromType(DrType type) {
     switch (type) {
         case DrType::Asset:        return "Asset";

@@ -13,6 +13,7 @@
 
 // Forward declarations
 class DrSettings;
+enum class Editor_Widgets;
 enum class Properties;
 
 // Global Enum Constants
@@ -161,6 +162,7 @@ namespace User_Property {
 //##    Some public forward function declarations for some enum functions
 //############################
 namespace Dr {
+    QString     StringFromEditorWidget(Editor_Widgets widget);
     QString     StringFromType(DrType type);
     QString     StringFromAssetType(DrAssetType type);
     QString     StringFromEffectType(DrEffectType type);

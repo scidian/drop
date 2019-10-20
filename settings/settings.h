@@ -89,6 +89,8 @@ public:
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();
 
+    // Setttings Helpers
+    void            copyEntitySettings(DrSettings *from_entity);
 };
 
 
