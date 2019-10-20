@@ -55,6 +55,7 @@ public:
 
     // Function calls
     void                        buildProjectTree();
+    void                        ensureSelectionVisible();
     QTreeWidgetItem*            findItemWithProjectKey(long key);
     QList<QTreeWidgetItem*>     getListOfAllTreeWidgetItems();
     QList<QTreeWidgetItem*>     getListOfChildrenFromItem( QTreeWidgetItem *item);

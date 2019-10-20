@@ -5,11 +5,13 @@
 //
 //
 //
-
+#include <QDebug>
 #include <QKeyEvent>
 #include <QUndoView>
 
 #include "debug.h"
+#include "editor/tree_inspector.h"
+#include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
@@ -41,7 +43,6 @@ void DrScene::keyReleaseEvent(QKeyEvent *event) {
 //##    Key Press
 //####################################################################################
 void DrScene::keyPressEvent(QKeyEvent *event) {
-    bool update_widgets_when_done = false;
 
     // ***** If no selected items, pass on key press event and exit
     if (getSelectionCount() < 1) {
@@ -59,7 +60,10 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
 
     // ********** Process Movement key press on all selected items
-    if (key_pressed == Qt::Key_Up || key_pressed == Qt::Key_Down || key_pressed == Qt::Key_Left || key_pressed == Qt::Key_Right) {
+    if (key_pressed == Qt::Key_Up ||
+        key_pressed == Qt::Key_Down ||
+        key_pressed == Qt::Key_Left ||
+        key_pressed == Qt::Key_Right) {
         QPointF grid_scale = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
         QPointF grid_size =  m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
 
@@ -104,27 +108,75 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
 
     // ********** Process Layering key press on all selected items
-    if (key_pressed == Qt::Key_Comma || key_pressed == Qt::Key_Period) {
-        QList<long> sorted_keys = m_current_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+    if (key_pressed == Qt::Key_Comma ||
+        key_pressed == Qt::Key_Period ||
+        key_pressed == Qt::Key_Less ||
+        key_pressed == Qt::Key_Greater) {
 
-        for (auto item : getSelectionItems()) {
-            if (key_pressed == Qt::Key_Comma) {
-                item->setZValue(selectedItems().first()->zValue() - 1);
+        // Get current Stage selected items as list of Things
+        DrStage *stage = m_current_stage;
+        if (!stage) return;
+        QList<DrThing*> selected_things = getSelectionItemsAsThings();
+
+        // ***** Send to Front
+        if (key_pressed == Qt::Key_Greater) {
+            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+            for (auto &thing : things) {
+                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).first() != thing->getKey()) {
+                    thing->moveForward();
+                }
             }
 
-            if (key_pressed == Qt::Key_Period) {
-                item->setZValue(selectedItems().first()->zValue() + 1);
+        // ***** Send Forward
+        } else if (key_pressed == Qt::Key_Period) {
+            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+            int i = 0;
+            for (auto thing : things) {
+                if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
+                    thing->moveForward();
+                }
+                i++;
+            }
+
+        // ***** Send to Back
+        } else if (key_pressed == Qt::Key_Less) {
+            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+            for (auto &thing : things) {
+                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).last() != thing->getKey()) {
+                    thing->moveBackward();
+                }
+            }
+
+        // ***** Send Backward
+        } else if (key_pressed == Qt::Key_Comma) {
+            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+            int i = stage->thingKeysSortedByZOrder(Qt::DescendingOrder).count() - 1;
+            for (auto thing : things) {
+                if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
+                    thing->moveBackward();
+                }
+                i--;
             }
         }
+
+        updateItemZValues();
+        m_editor_relay->buildProjectTree();
+        m_editor_relay->getProjectTree()->ensureSelectionVisible();
+        m_editor_relay->getInspector()->updateInspectorPropertyBoxesOfSelectedItem( { static_cast<int>(Properties::Thing_Z_Order),
+                                                                                      static_cast<int>(Properties::Thing_Sub_Z_Order) } );
     }
 
 
     // ********** Process Duplicate and Delete key press on all selected items
-    if (key_pressed == Qt::Key_W || key_pressed == Qt::Key_A || key_pressed == Qt::Key_S || key_pressed == Qt::Key_D ||
+    if (key_pressed == Qt::Key_W ||
+        key_pressed == Qt::Key_A ||
+        key_pressed == Qt::Key_S ||
+        key_pressed == Qt::Key_D ||
         key_pressed == Qt::Key_Delete ||
         key_pressed == Qt::Key_Backspace    ) {
 
         // ***** Lock Scene Mutex
+        bool update_widgets_when_done = false;
         if (scene_mutex.tryLock(10) == false) return;
 
         QRectF source_rect =  totalSelectionSceneRect();
@@ -193,14 +245,14 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Unlock Scene Mutex
         scene_mutex.unlock();
+
+        // ********** Update Editor Widgets
+        if (update_widgets_when_done) {
+            m_editor_relay->buildProjectTree();
+            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+        }
     }
 
-
-    // ********** Update Editor Widgets
-    if (update_widgets_when_done) {
-        m_editor_relay->buildProjectTree();
-        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
-    }
 
     // ********** #NOTE: Don't pass on, if we pass on arrow key presses, it moves view sliders
     ///QGraphicsScene::keyPressEvent(event);

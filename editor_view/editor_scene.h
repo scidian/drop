@@ -105,6 +105,7 @@ public:
     QTransform              getSelectionTransform();
 
     QList<QGraphicsItem*>   getSelectionItems()         { return m_selection_items; }
+    QList<DrThing*>         getSelectionItemsAsThings();
     double                  getSelectionAngle()         { return m_selection_angle; }
     QPointF                 getSelectionScale()         { return m_selection_scale; }
     QRectF                  getSelectionBox()           { return m_selection_box; }

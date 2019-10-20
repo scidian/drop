@@ -48,6 +48,14 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
         }
     }
 
+    // ***** Layering Keys
+    if (event->key() == Qt::Key_Comma || event->key() == Qt::Key_Period || event->key() == Qt::Key_Less || event->key() == Qt::Key_Greater) {
+        if (type == DrType::Thing) {
+            m_editor_relay->getStageView()->keyPressEvent(event);
+            return;
+        }
+    }
+
     // ***** Delete Key
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
         if (selectedItems().count() > 0) {

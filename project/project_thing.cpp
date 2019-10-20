@@ -156,7 +156,7 @@ void DrThing::addComponentLayering(double z, double opacity) {
                            "Z Order", "Arrangement of item along the z axis in the stage. Should be between the near and far clipping planes (" +
                                       QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + ") to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,
-                           "Sub Order", "Arrangement of item compared to other items within the same Z Order.", false, false);
+                           "Sub Order", "Arrangement of item compared to other items within the same Z Order.", true, false);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
     setZOrderWithSub(z, Z_Insert::Front);

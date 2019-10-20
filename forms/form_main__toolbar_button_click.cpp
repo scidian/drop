@@ -58,63 +58,28 @@ void FormMain::buttonGroupModeSetChecked(int id) {
 //####################################################################################
 void FormMain::buttonGroupLayeringClicked(int id) {
     Buttons_Layering clicked = static_cast<Buttons_Layering>(id);
-
-    DrStage *stage = sceneEditor->getCurrentStageShown();
-    if (!stage) return;
-
-    // Get selected Scene items as list of Things
-    QList<DrThing*> selected_things;
-    for (auto item : sceneEditor->getSelectionItems()) {
-        DrItem   *dritem = dynamic_cast<DrItem*>(item);
-        DrThing  *thing = dritem->getThing();
-        if (!thing) continue;
-        selected_things.append(thing);
-    }
+    QKeyEvent *event = nullptr;
 
     if (clicked == Buttons_Layering::Send_To_Front) {
-        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
-        for (auto &thing : things) {
-            while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).first() != thing->getKey()) {
-                thing->moveForward();
-            }
-        }
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Greater, { Qt::KeyboardModifier::NoModifier });
     }
 
     if (clicked == Buttons_Layering::Send_To_Back) {
-        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
-        for (auto &thing : things) {
-            while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).last() != thing->getKey()) {
-                thing->moveBackward();
-            }
-        }
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Less,    { Qt::KeyboardModifier::NoModifier });
     }
 
     if (clicked == Buttons_Layering::Send_Forward) {
-        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
-        int i = 0;
-        for (auto thing : things) {
-            if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
-                thing->moveForward();
-            }
-            i++;
-        }
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Period,  { Qt::KeyboardModifier::NoModifier });
     }
 
     if (clicked == Buttons_Layering::Send_Backward) {
-        QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
-        int i = stage->thingKeysSortedByZOrder(Qt::DescendingOrder).count() - 1;
-        for (auto thing : things) {
-            if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
-                thing->moveBackward();
-            }
-            i--;
-        }
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Comma,   { Qt::KeyboardModifier::NoModifier });
     }
 
-    sceneEditor->updateItemZValues();
-    treeProjectEditor->buildProjectTree();
-    treeInspector->updateInspectorPropertyBoxes( { m_project->findSettingsFromKey(treeInspector->getSelectedKey()) },
-                                                 { static_cast<int>(Properties::Thing_Z_Order), static_cast<int>(Properties::Thing_Sub_Z_Order) } );
+    if (event) {
+        sceneEditor->keyPressEvent(event);
+        delete event;
+    }
 }
 
 

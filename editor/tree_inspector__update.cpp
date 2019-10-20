@@ -28,12 +28,17 @@
 //##
 //##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
+void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(QList<long> property_keys_to_update) {
+    updateInspectorPropertyBoxes( { m_project->findSettingsFromKey(m_selected_key) }, property_keys_to_update);
+}
+
 void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update) {
     if (changed_items.isEmpty()) return;
     ///if (property_keys_to_update.isEmpty()) return;   // ********** Don't do this! This function is made so all properties update if none are received
 
     // !!!!! #TEMP: Need to be more than just one item represented in Inspector
     DrSettings* thing = changed_items.first();
+    if (thing == nullptr) return;
     // !!!!!
 
     if (thing->getKey() != m_selected_key) return;

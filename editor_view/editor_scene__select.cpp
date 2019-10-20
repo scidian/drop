@@ -129,6 +129,20 @@ QTransform DrScene::getSelectionTransform() {
     return t;
 }
 
+
+//####################################################################################
+//##    Returns current selection as a list of Things
+//####################################################################################
+QList<DrThing*> DrScene::getSelectionItemsAsThings() {
+    QList<DrThing*> selected_things { };
+    for (auto item : getSelectionItems()) {
+        DrItem   *dritem = dynamic_cast<DrItem*>(item);     if (!dritem) continue;
+        DrThing  *thing = dritem->getThing();               if (!thing)  continue;
+        selected_things.append(thing);
+    }
+    return selected_things;
+}
+
 //####################################################################################
 //##    Creates a temporary item group to extract a new bounding box with
 //##        new location and new shearing removed

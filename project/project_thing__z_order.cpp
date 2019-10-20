@@ -25,10 +25,10 @@
 //####################################################################################
 //##    Sets Z-Order and appropriate Sub Order
 //####################################################################################
-void DrThing::shiftOrder(QList<OrderInfo> &order_info, int needs_to_be_empty) {
+void ShiftOrder(QList<OrderInfo> &order_info, int needs_to_be_empty) {
     for (auto &order : order_info) {
         if (order.sub_order == needs_to_be_empty) {
-            shiftOrder(order_info, needs_to_be_empty + 1);
+            ShiftOrder(order_info, needs_to_be_empty + 1);
             order.sub_order++;
             order.thing->setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, order.sub_order);
         }
@@ -67,7 +67,7 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
 
     // ***** Shift Positions Higher than new Sub Position
     } else {
-        shiftOrder(order_info, sub_z_order);
+        ShiftOrder(order_info, sub_z_order);
     }
 
     // ***** Set this Things sub order

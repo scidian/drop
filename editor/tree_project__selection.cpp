@@ -132,16 +132,18 @@ void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
         }
     }
 
-    // Ensure selection visible
-    if (selectedItems().count() > 0) {
-        this->scrollToItem(selectedItems().last());
-    }
+    ensureSelectionVisible();
 
     update();
     setAllowSelectionEvent(true);
 }
 
-
+// Ensure selection visible
+void TreeProject::ensureSelectionVisible() {
+    if (selectedItems().count() > 0) {
+        this->scrollToItem(selectedItems().last());
+    }
+}
 
 
 
