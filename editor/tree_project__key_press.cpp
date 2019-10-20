@@ -43,9 +43,9 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     DrType      type =      settings->getType();
 
 
-    // ***** Duplication Keys
+    // ********** Duplication Keys
     if (event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D) {
-        // Duplicate Thing
+        // ***** Duplicate Thing
         if (type == DrType::Thing) {
             m_editor_relay->getStageView()->keyPressEvent(event);
             return;
@@ -53,7 +53,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     }
 
     if (event->key() == Qt::Key_D) {
-        // Duplicate Stage
+        // ***** Duplicate Stage
         if (type == DrType::Stage) {
             DrStage *new_selected_stage = nullptr;
             int stage_count = 0;
@@ -73,7 +73,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             m_editor_relay->buildScene( new_selected_stage->getKey() );
             return;
 
-        // Duplicate World
+        // ***** Duplicate World
         } else if (type == DrType::World) {
             DrWorld *new_selected_world = nullptr;
             int world_count = 0;
@@ -96,7 +96,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     }
 
 
-    // ***** Layering Keys
+    // ********** Layering Keys
     if (event->key() == Qt::Key_Comma || event->key() == Qt::Key_Period || event->key() == Qt::Key_Less || event->key() == Qt::Key_Greater) {
         if (type == DrType::Thing) {
             m_editor_relay->getStageView()->keyPressEvent(event);
@@ -105,15 +105,15 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     }
 
 
-    // ***** Delete Key
+    // ********** Delete Keys
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
         if (selectedItems().count() > 0) {
 
-            // Delete selected Things
+            // ***** Delete selected Things
             if (type == DrType::Thing) {
                 m_editor_relay->getStageView()->keyPressEvent(event);
 
-            // Delete selected Stages
+            // ***** Delete selected Stages
             } else if (type == DrType::Stage) {
                 DrStage *first_stage_selected = dynamic_cast<DrStage*>(settings);
                 DrWorld *first_world_selected = first_stage_selected->getParentWorld();
@@ -132,9 +132,24 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                                                  "Delete Stage(s)?", this, QMessageBox::Yes | QMessageBox::No);
                     if (proceed == QMessageBox::StandardButton::No) return;
 
-                    // Select stage before the selected stage
-                    auto it = first_world_selected->getStageMap().find(first_key);
-                    DrStage *new_selection = (--it)->second;
+                    // Select Stage from Tree above the first selected Stage
+                    DrStage *new_selection = nullptr;
+                    QTreeWidgetItem *world_item = selectedItems().first()->parent();
+                    int new_index = world_item->indexOfChild(selectedItems().first()) - 1;
+                    if (new_index >= 0) {
+                        QTreeWidgetItem *stage_item = world_item->child(new_index);
+                        if (stage_item != nullptr) {
+                            if (selectedItems().contains(stage_item) == false) {
+                                long try_stage = stage_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+                                new_selection = m_project->findStageFromKey(try_stage);
+                            }
+                        }
+                    }
+                    // Fall back to trying for next highest Stage in StageMap
+                    if (new_selection == nullptr) {
+                        auto it = first_world_selected->getStageMap().find(first_key);
+                        new_selection = (--it)->second;
+                    }
 
                     // Build the new Stage
                     m_editor_relay->buildScene(new_selection->getKey());
@@ -155,7 +170,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     Dr::ShowMessageBox("Start Stages cannot be deleted.", QMessageBox::Icon::Information, "Cannot Delete", this);
                 }
 
-            // Delete selected Worlds
+            // ***** Delete selected Worlds
             } else if (type == DrType::World) {
                 if ((m_project->getWorldMap().size() > 1) && (static_cast<int>(m_project->getWorldMap().size()) > selectedItems().count())) {
                     QMessageBox::StandardButton proceed;
@@ -169,17 +184,30 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                         selected_world_keys.append( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                     }
 
-                    // Find a new world to select, going from back to front
+                    // Find a new world to select, trying for QTreeWidgetItem above first selected
                     DrWorld *new_selection = nullptr;
-                    WorldMap::reverse_iterator it;
-                    for (it = m_project->getWorldMap().rbegin(); it != m_project->getWorldMap().rend(); it++) {
-                        auto world_pair = it;
-                        if (selected_world_keys.contains(world_pair->first) == false) {
-                            new_selection = world_pair->second;
-                            break;
+                    int new_index = indexOfTopLevelItem(selectedItems().first()) - 1;
+                    if (new_index >= 0) {
+                        QTreeWidgetItem *world_item = topLevelItem(new_index);
+                        if (world_item != nullptr) {
+                            if (selectedItems().contains(world_item) == false) {
+                                long try_world = world_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+                                new_selection = m_project->findWorldFromKey(try_world);
+                            }
                         }
                     }
-                    if (new_selection == nullptr) return;
+                    // Fall back to trying next highest World in WorldMap
+                    if (new_selection == nullptr) {
+                        WorldMap::reverse_iterator it;
+                        for (it = m_project->getWorldMap().rbegin(); it != m_project->getWorldMap().rend(); it++) {
+                            auto world_pair = it;
+                            if (selected_world_keys.contains(world_pair->first) == false) {
+                                new_selection = world_pair->second;
+                                break;
+                            }
+                        }
+                        if (new_selection == nullptr) return;
+                    }
 
                     // Build the new Stage
                     m_editor_relay->buildScene(new_selection->getStartStageKey());
