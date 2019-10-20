@@ -77,24 +77,33 @@ void FormPopup::buildPopupAddEntity() {
                 editor->buildProjectTree();
                 editor->buildInspector( { world_key } );
                 editor->updateItemSelection(Editor_Widgets::Stage_View, { world_key } );
+                editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                 editor->buildScene( m_project->findWorldFromKey(world_key)->getFirstStageKey() );
             }
             this->close();
-            if (editor) editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+            if (editor) {
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { world_key } );
+                editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+            }
         });
 
         // Adds Stage to Project
         connect(buttonStage, &QRadioButton::released, [this]() {
+            long stage_key = c_no_key;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
-                long stage_key = editor->getStageView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
+                stage_key = editor->getStageView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
                 editor->buildProjectTree();
                 editor->buildInspector( { stage_key } );
                 editor->updateItemSelection(Editor_Widgets::Stage_View, { stage_key } );
+                editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                 editor->buildScene(stage_key);
             }
             this->close();
-            if (editor) editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+            if (editor) {
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { stage_key } );
+                editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+            }
         });
 
         // Adds Character / Object Asset to Project
