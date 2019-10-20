@@ -95,7 +95,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
             world_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
             world_item->setText(COLUMN_TITLE, "World: " + world->getName());
             world_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(world->getKey()));
-            world_item->setExpanded(true);
+            world_item->setExpanded( world->getExpanded() );
             this->addTopLevelItem(world_item);
         }
 

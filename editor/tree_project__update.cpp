@@ -66,7 +66,10 @@ void TreeProject::handleCollapsed(QTreeWidgetItem *item) {
     long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
     DrSettings *settings = m_project->findSettingsFromKey(key, false);
     if (settings != nullptr) {
-        if (settings->getType() == DrType::Stage) {
+        if (settings->getType() == DrType::World) {
+            DrWorld *world = dynamic_cast<DrWorld*>(settings);
+            if (world) world->setExpanded(false);
+        } else if (settings->getType() == DrType::Stage) {
             DrStage *stage = dynamic_cast<DrStage*>(settings);
             if (stage) stage->setExpanded(false);
         }
@@ -77,7 +80,10 @@ void TreeProject::handleExpanded(QTreeWidgetItem *item) {
     long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
     DrSettings *settings = m_project->findSettingsFromKey(key, false);
     if (settings != nullptr) {
-        if (settings->getType() == DrType::Stage) {
+        if (settings->getType() == DrType::World) {
+            DrWorld *world = dynamic_cast<DrWorld*>(settings);
+            if (world) world->setExpanded(true);
+        } else if (settings->getType() == DrType::Stage) {
             DrStage *stage = dynamic_cast<DrStage*>(settings);
             if (stage) stage->setExpanded(true);
         }

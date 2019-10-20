@@ -169,9 +169,10 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
 
                 }
 
+
+                m_editor_relay->buildScene( c_same_key );
                 m_editor_relay->buildAssetTree();
                 m_editor_relay->buildInspector( { settings_key }, true );
-                m_editor_relay->buildScene( c_same_key );
 
                 if (delete_after) asset->deleteSource(old_image_key);
                 drop_event->acceptProposedAction();

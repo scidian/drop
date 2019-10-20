@@ -151,6 +151,7 @@ void DrProject::saveProjectToFile() {
         world_data["key"] =             QVariant::fromValue(world->getKey());
         world_data["start_stage"] =     QVariant::fromValue(world->getStartStageKey());
         world_data["editor_stage"] =    QVariant::fromValue(world->getLastStageShownKey());
+        world_data["tree_expanded"] =   QVariant(world->getExpanded());
         addSettingsToMap(world, world_data);
         settings.beginWriteArray("worlds");
         settings.setArrayIndex(world_count++);

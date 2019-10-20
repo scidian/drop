@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
@@ -64,11 +65,28 @@ void DrView::dragMoveEvent(QDragMoveEvent *event) {
 //##    Drop Handling - Accept an asset fropped from the Asset Tree
 //####################################################################################
 void DrView::dropEvent(QDropEvent *event) {
-    // Stop drawing crosshairs under item drop
+    // ***** Stop drawing crosshairs under item drop
     m_drop_might_happen = false;
 
+    // ***** Check for Stage
     DrStage *stage = my_scene->getCurrentStageShown();
     DrThing *thing = nullptr;
+    if (stage == nullptr) return;
+
+    // ***** Find Z Position to insert
+    double z_order = 0.0;
+    int  sub_order = 0;
+    int  thing_count = 0;
+    for (auto test_z : my_scene->getSelectionItemsAsThings()) {
+        double test_z_order = test_z->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
+        int  test_sub_order = test_z->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
+        if (((test_z_order >= z_order) && (test_sub_order >= sub_order)) || thing_count == 0) {
+            z_order =   test_z_order;
+            sub_order = test_sub_order;
+        }
+        thing_count++;
+    }
+    sub_order += 1;
 
     // ********** From Asset Tree
     if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {
@@ -113,6 +131,7 @@ void DrView::dropEvent(QDropEvent *event) {
                 break;
         }
         my_scene->addItemToSceneFromThing( thing );
+        thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
         event->acceptProposedAction();
 
 
@@ -131,9 +150,7 @@ void DrView::dropEvent(QDropEvent *event) {
             event->ignore();
             return;
         }
-        if ( image.format() != QImage::Format::Format_ARGB32 )
-            image = image.convertToFormat( QImage::Format_ARGB32 );
-        QPixmap pixmap = QPixmap::fromImage( image );
+        QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
         long image_key = m_editor_relay->currentProject()->addImage(file_path);
@@ -145,6 +162,7 @@ void DrView::dropEvent(QDropEvent *event) {
         QPointF  position =  mapToScene(event->pos());
         thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);
         my_scene->addItemToSceneFromThing( thing );
+        thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
 
         // Mark event as accepted
         event->acceptProposedAction();

@@ -142,11 +142,13 @@ void DrProject::openProjectFromFile(QString open_file) {
         long        world_key =         checkMapHasKey(world_data, "key")               ? world_data["key"].toLongLong()            : c_no_key;
         long        start_stage_key =   checkMapHasKey(world_data, "start_stage")       ? world_data["start_stage"].toLongLong()    : c_no_key;
         long        editor_stage_key =  checkMapHasKey(world_data, "editor_stage")      ? world_data["editor_stage"].toLongLong()   : c_no_key;
+        bool        world_expanded =    checkMapHasKey(world_data, "tree_expanded")     ? world_data["tree_expanded"].toBool()      : true;
         if (findSettingsFromKey(world_key, false) != nullptr) continue;
         addWorld(world_key, start_stage_key, editor_stage_key);
         // Load World Settings, Variables
         DrWorld *world = findWorldFromKey(world_key);
         loadSettingsFromMap(world, world_data);
+        world->setExpanded(world_expanded);
         settings.endArray();
 
         // ***** Read Stages
@@ -161,13 +163,13 @@ void DrProject::openProjectFromFile(QString open_file) {
             long        stage_key =         checkMapHasKey(stage_data, "key")            ? stage_data["key"].toLongLong()        : c_no_key;
             bool        start_stage =       checkMapHasKey(stage_data, "is_start_stage") ? stage_data["is_start_stage"].toBool() : false;
             QPointF     center_point =      checkMapHasKey(stage_data, "center_point")   ? stage_data["center_point"].toPointF() : QPointF(0, 0);
-            bool        tree_expanded =     checkMapHasKey(stage_data, "tree_expanded")  ? stage_data["tree_expanded"].toBool()  : true;
+            bool        stage_expanded =    checkMapHasKey(stage_data, "tree_expanded")  ? stage_data["tree_expanded"].toBool()  : true;
             if (findSettingsFromKey(stage_key, false) != nullptr) continue;
             world->addStage(stage_key, start_stage, center_point);
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
             loadSettingsFromMap(stage, stage_data);
-            stage->setExpanded(tree_expanded);
+            stage->setExpanded(stage_expanded);
             settings.endArray();
 
             // ***** Read Things

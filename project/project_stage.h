@@ -50,13 +50,14 @@ public:
     ThingMap&       getThingMap()       { return m_things; }
     DrThing*        getThing(long key)  { return m_things[key]; }
 
-    bool            getExpanded()       { return m_expanded; }
-    void            setExpanded(bool expanded) { m_expanded = expanded; }
+    bool            isStartStage()      { return m_is_start_stage; }
+    void            setIsStartStage(bool is_start_stage) { m_is_start_stage = is_start_stage; }
+
     QPointF         getViewCenterPoint(){ return m_center_view_point; }
     void            setViewCenterPoint(QPointF new_point) { m_center_view_point = new_point; }
 
-    bool            isStartStage()      { return m_is_start_stage; }
-    void            setIsStartStage(bool is_start_stage) { m_is_start_stage = is_start_stage; }
+    bool            getExpanded()       { return m_expanded; }
+    void            setExpanded(bool expanded) { m_expanded = expanded; }
 
     // Misc Stage Functions
     DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide = true, long key = c_no_key);

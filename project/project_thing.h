@@ -72,7 +72,7 @@ public:
     void            moveBackward();
     void            moveForward();
     double          getZOrderWithSub();
-    void            setZOrderWithSub(double z_order, Z_Insert insert, int position = 0);
+    void            setZOrderWithSub(double z_order, Z_Insert insert, int position = 1);
 
     // Thing Components
     void    addComponent3D();

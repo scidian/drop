@@ -31,7 +31,7 @@ private:
 
     long        m_start_stage_key;                      // Stores key of StartStage for this World
     long        m_last_stage_shown_in_editor;           // Last Stage shown in editor when this World was selected, set to StartStage on creation
-
+    bool        m_expanded = true;                      // Wether or not this is expanded in the Project Tree
 
 public:
     // Constructor & Destructor
@@ -48,6 +48,8 @@ public:
     long            getLastStageShownKey()              { return m_last_stage_shown_in_editor; }
     void            setLastStageShownKey(long stage)    { m_last_stage_shown_in_editor = stage; }
 
+    bool            getExpanded()       { return m_expanded; }
+    void            setExpanded(bool expanded) { m_expanded = expanded; }
 
     // Function Calls
     DrStage*    addStage(QString new_stage_name = "");
