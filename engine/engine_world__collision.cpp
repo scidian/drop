@@ -46,7 +46,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-    if (!object_a || !object_b) return cpTrue;
+    if (object_a == nullptr || object_b == nullptr) return cpTrue;
 
     // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
     if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
@@ -120,7 +120,7 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
-    if (!object_a || !object_b) return;
+    if (object_a == nullptr || object_b == nullptr) return;
 
     // Stop canceling gravity when seperates
     object_a->setTempGravityMultiplier( 1.0 );

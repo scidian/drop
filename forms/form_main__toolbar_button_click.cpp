@@ -116,8 +116,9 @@ void FormMain::buttonGroupTransformClicked(int id) {
 
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);
+            if (dritem == nullptr) continue;
             DrThing  *thing = dritem->getThing();
-            if (!thing) continue;
+            if (thing == nullptr) continue;
 
             settings.append(thing);
             thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, QPointF(1, 1));

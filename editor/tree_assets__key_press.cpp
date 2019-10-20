@@ -52,7 +52,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
             selected_frame = frame;
             parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());
             flow = dynamic_cast<DrQLayoutFlow*>(parent_frame->layout());
-            if (!flow) continue;
+            if (flow == nullptr) continue;
             layout_index = flow->indexOf(frame);
             break;
         }
@@ -112,7 +112,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         int     i = 1;
         do {
             has_name = false;
-            new_name = (i == 1) ? copy_asset->getName() + " Copy" :  copy_asset->getName() + " Copy (" + QString::number(i) + ")";
+            new_name = (i == 1) ? copy_asset->getName() + " copy" :  copy_asset->getName() + " copy (" + QString::number(i) + ")";
             for (auto &asset_pair : m_project->getAssetMap()) {
                 if (asset_pair.second->getName() == new_name) has_name = true;
             }

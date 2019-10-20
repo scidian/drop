@@ -44,7 +44,11 @@ TreeProject::TreeProject(QWidget *parent, DrProject *project, IEditorRelay *edit
 //####################################################################################
 //##    Populates Tree Project List based on Project data
 //####################################################################################
-void TreeProject::buildProjectTree() {
+void TreeProject::buildProjectTree(bool total_rebuild) {
+
+    // Store current scroll bar position
+    int scroll_position = this->verticalScrollBar()->value();
+    if (total_rebuild) this->clear();
 
     // ********** Turn off selection event during build
     bool started_empty = this->invisibleRootItem()->childCount() < 1;
@@ -59,11 +63,9 @@ void TreeProject::buildProjectTree() {
     for (auto item : item_list) {
         // Check if item source key is still in project, if so add to map
         long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+        if (key <= 0)               { item_map[key] = item; continue; }
         DrSettings *settings = m_project->findSettingsFromKey(key, false);
-        if (settings != nullptr) {
-            item_map[key] = item;
-            continue;
-        }
+        if (settings != nullptr)    { item_map[key] = item; continue; }
 
         // If we made it here, remove item from tree
         int index = this->indexOfTopLevelItem(item);
@@ -71,7 +73,7 @@ void TreeProject::buildProjectTree() {
             this->takeTopLevelItem(index);
         } else {
             QTreeWidgetItem *parent = dynamic_cast<QTreeWidgetItem*>(item->parent());
-            if (parent) parent->takeChild(parent->indexOfChild(item));
+            if (parent != nullptr) parent->takeChild(parent->indexOfChild(item));
         }
     }
 
@@ -119,7 +121,7 @@ void TreeProject::buildProjectTree() {
 
             for (auto key: keys) {
                 DrThing         *thing =        things[key];
-                            if (!thing) continue;
+                             if (thing == nullptr) continue;
                 long             thing_key =    thing->getKey();
                 QTreeWidgetItem *thing_item =   item_map[thing_key];
 
@@ -168,6 +170,9 @@ void TreeProject::buildProjectTree() {
         this->scrollToItem(last_added);
         ///this->verticalScrollBar()->setValue(scroll_position);
     }
+
+    // ***** Restore scroll bar position
+    if (total_rebuild) this->verticalScrollBar()->setValue(scroll_position);
 
     // ***** Update and allow selection again
     this->update();

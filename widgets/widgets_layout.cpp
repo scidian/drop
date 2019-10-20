@@ -147,13 +147,14 @@ int DrQLayoutFlow::doLayout(const QRect &rect, int &row_width, bool test_only) c
 
 int DrQLayoutFlow::smartSpacing(QStyle::PixelMetric pm) const {
     QObject *parent = this->parent();
-    if (!parent) {
+    if (parent == nullptr) {
         return -1;
     } else if (parent->isWidgetType()) {
-        QWidget *pw = static_cast<QWidget *>(parent);
+        QWidget *pw = static_cast<QWidget*>(parent);
+        if (pw == nullptr) return -1;
         return pw->style()->pixelMetric(pm, nullptr, pw);
     } else {
-        return static_cast<QLayout *>(parent)->spacing();
+        return static_cast<QLayout*>(parent)->spacing();
     }
 }
 

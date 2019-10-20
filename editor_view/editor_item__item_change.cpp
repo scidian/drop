@@ -91,7 +91,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
             QPointF old_select_center, new_select_center, rounded_select_center;
             QPointF adjust_by;
 
-            if (!drscene->getHasCalculatedAdjustment()) {
+            if (drscene->getHasCalculatedAdjustment() == false) {
                 old_select_center = drscene->getPreMoveSelectionCenter();
                 new_select_center = old_select_center - (pos() - new_pos);
                 rounded_select_center = m_editor_relay->roundPointToGrid( new_select_center );
@@ -106,7 +106,8 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
 
         // ***** Calculate new center location based on starting center of item and difference between starting pos() and new passed in new_pos
         } else {
-            QPointF old_center = m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+            QPointF old_center = QPointF(0, 0);
+            if (m_thing != nullptr) old_center = m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
             QPointF new_center = old_center - (pos() - new_pos);
             QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );                // Align new desired center to grid
 

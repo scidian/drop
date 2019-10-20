@@ -79,7 +79,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     // ***** Initial type checks
     if (thing->getThingType() != DrThingType::Object) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (!object) return;
+    if (object == nullptr) return;
 
     // Don't draw Segments (lines)
     ///bool skip_object = false;
@@ -292,7 +292,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     // ***** Initial type checks
     if (thing->getThingType() != DrThingType::Object) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (!object) return;
+    if (object == nullptr) return;
 
     // Don't draw Segments (lines)
     if (object->shapes.count() > 0) {
@@ -364,7 +364,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     if ( thing->getThingType() != DrThingType::Object) return false;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (!object) return false;
+    if (object == nullptr) return false;
 
     // ***** Don't draw Segments (lines)
     bool skip_object = false;
@@ -436,7 +436,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 //####################################################################################
 bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     DrEngineFire *fire = dynamic_cast<DrEngineFire*>(thing);
-    if (!fire) return false;
+    if (fire == nullptr) return false;
 
     // ***** Enable shader program
     if (!m_fire_shader.bind()) return false;

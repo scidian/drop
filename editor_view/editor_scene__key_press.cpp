@@ -64,6 +64,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         key_pressed == Qt::Key_Down ||
         key_pressed == Qt::Key_Left ||
         key_pressed == Qt::Key_Right) {
+        if (m_current_stage == nullptr) return;
         QPointF grid_scale = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
         QPointF grid_size =  m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
 
@@ -115,7 +116,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // Get current Stage selected items as list of Things
         DrStage *stage = m_current_stage;
-        if (!stage) return;
+        if (stage == nullptr) return;
         QList<DrThing*> selected_things = getSelectionItemsAsThings();
 
         // ***** Send to Front
@@ -184,8 +185,8 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         QList<QGraphicsItem*> list_new_items { };
 
         for (auto item : list_old_items) {
-            DrItem   *dritem   = dynamic_cast<DrItem*>(item);
-            DrThing  *drthing =  dritem->getThing();
+            DrItem   *dritem   = dynamic_cast<DrItem*>(item);   if (dritem == nullptr)  continue;
+            DrThing  *drthing =  dritem->getThing();            if (drthing == nullptr) continue;
             DrStage  *drstage  = drthing->getParentStage();
             DrThing  *new_object;
 

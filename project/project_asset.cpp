@@ -190,21 +190,21 @@ void DrAsset::deleteSource(long source_key) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
             DrImage *image = getParentProject()->getImageMap()[source_to_delete];
-            if (!image) break;
+            if (image == nullptr) break;
             getParentProject()->getImageMap().erase( source_to_delete );
             delete image;
             break;
         }
         case DrAssetType::Effect: {
             DrEffect *effect = getParentProject()->getEffectMap()[source_to_delete];
-            if (!effect) break;
+            if (effect == nullptr) break;
             getParentProject()->getEffectMap().erase( source_to_delete );
             delete effect;
             break;
         }
         case DrAssetType::Text: {
             DrFont *font = getParentProject()->getFontMap()[source_to_delete];
-            if (!font) break;
+            if (font == nullptr) break;
             getParentProject()->getFontMap().erase( source_to_delete );
             delete font;
             break;

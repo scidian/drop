@@ -30,6 +30,7 @@
 void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key) {
     // Get asset from project
     DrAsset *asset = m_editor_relay->currentProject()->getAsset(asset_key);
+    if (asset == nullptr) return;
 
     // Pull pixmap of asset and scale based on current view zoom level
     QPixmap pre_pixmap = *label_pixmap->pixmap();

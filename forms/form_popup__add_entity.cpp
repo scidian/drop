@@ -71,18 +71,18 @@ void FormPopup::buildPopupAddEntity() {
 
         // Adds World to Project
         connect(buttonWorld, &QRadioButton::released, [this]() {
-            long world_key = m_project->addWorld();
+            DrWorld *world = m_project->addWorld();
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
                 editor->buildProjectTree();
-                editor->buildInspector( { world_key } );
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { world_key } );
+                editor->buildInspector( { world->getKey() } );
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-                editor->buildScene( m_project->findWorldFromKey(world_key)->getFirstStageKey() );
+                editor->buildScene( world->getFirstStageKey() );
             }
             this->close();
             if (editor) {
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { world_key } );
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
         });

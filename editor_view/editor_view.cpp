@@ -114,10 +114,10 @@ void DrView::scrollContentsBy(int dx, int dy) {
 void DrView::resizeEvent(QResizeEvent *event) {
     QGraphicsView::resizeEvent(event);
 
-    if (!Dr::CheckDoneLoading()) return;
-    if (!my_scene) return;
-    if (!my_scene->getCurrentStageShown()) return;
-    if (!hasShownAScene()) return;
+    if (Dr::CheckDoneLoading() == false) return;
+    if (my_scene == nullptr) return;
+    if (my_scene->getCurrentStageShown() == nullptr) return;
+    if (hasShownAScene() == false) return;
 
     m_editor_relay->centerViewOnPoint( my_scene->getCurrentStageShown()->getViewCenterPoint() );
 }

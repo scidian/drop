@@ -69,6 +69,11 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     parent->layout()->addWidget(m_search_widget);
 }
 
+// Focus In Event
+void TreeAssets::focusInEvent(QFocusEvent *) {
+    m_editor_relay->setActiveWidget(Editor_Widgets::Asset_Tree);
+}
+
 // Removes selected key on focus loss
 void TreeAssets::focusOutEvent(QFocusEvent *) {
     m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { } );
@@ -148,7 +153,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     // ********** Loop through each object asset and add it to the component frame
     for (auto asset_pair: list_assets) {
         DrAsset *asset = asset_pair.second;
-        if (!asset) continue;
+        if (asset == nullptr) continue;
 
         if (asset->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;

@@ -23,8 +23,8 @@
 //##    Updates grid based on current stage shown, recalculates points and lines
 //####################################################################################
 void DrView::updateGrid() {
-    if (!scene()) return;
-    if (!my_scene->getCurrentStageShown()) return;
+    if (scene() == nullptr) return;
+    if (my_scene->getCurrentStageShown() == nullptr) return;
 
     DrStage *stage = my_scene->getCurrentStageShown();
     DrWorld *world = stage->getParentWorld();
@@ -38,8 +38,8 @@ void DrView::updateGrid() {
     m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
     m_back_color_use =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool();
 
-    int style =      stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
-    m_grid_style =   static_cast<Grid_Style>(style);
+    int style =         stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
+    m_grid_style =      static_cast<Grid_Style>(style);
     m_grid_should_snap =  Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool();
     m_grid_resize_snap =  Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
     m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();

@@ -30,7 +30,7 @@ void TreeProject::startDrag(Qt::DropActions supportedActions) {
     QModelIndexList indexes = selectedIndexes();
     if (indexes.count() > 0) {
         // Get a list of the supported MIMEs of the selected indexes
-        QMimeData* data = model()->mimeData(indexes);
+        QMimeData *data = model()->mimeData(indexes);
         if (!data) {
             return;
         }
@@ -143,7 +143,7 @@ TreeStageHighlightProxy::~TreeStageHighlightProxy() { }
 
 void TreeStageHighlightProxy::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const {
     if (element == QStyle::PE_IndicatorItemViewItemDrop) {
-        if (!m_parent_tree->canWeDrop()) { return; }
+        if (m_parent_tree->canWeDrop() == false) { return; }
 
         QPalette palette;
         QPen    pen(QColor(0, 180, 175, 200));

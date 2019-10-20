@@ -393,10 +393,10 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 //####################################################################################
 bool DrView::containsSquareItem(QGraphicsItem *item) {
     DrItem *original = dynamic_cast<DrItem*>(item);
-    if (!original) return false;
+    if (original == nullptr) return false;
 
     DrThing *thing = original->getThing();
-    if (!thing) return false;
+    if (thing == nullptr) return false;
 
     return (thing->getThingType() == DrThingType::Light);
 }

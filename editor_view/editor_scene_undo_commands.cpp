@@ -108,15 +108,16 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
         case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
     }
     new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
-    new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());
+    new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());   
+
+    m_scene->clear();
+    m_scene->setSceneRect(new_scene_rect);
 
     m_scene->setCurrentStageShown(new_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage_key);
     m_project->setOption(Project_Options::Current_World, QVariant::fromValue(new_stage->getParentWorld()->getKey()) );
     m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(new_stage->getKey()) );
 
-    m_scene->clear();
-    m_scene->setSceneRect(new_scene_rect);
     emit m_scene->setViewRect(new_view_rect);
     emit m_scene->updateGrid();
 

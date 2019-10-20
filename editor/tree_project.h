@@ -54,7 +54,7 @@ public:
     explicit        TreeProject(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Function calls
-    void                        buildProjectTree();
+    void                        buildProjectTree(bool total_rebuild = false);
     void                        ensureSelectionVisible();
     QTreeWidgetItem*            findItemWithProjectKey(long key);
     QList<QTreeWidgetItem*>     getListOfAllTreeWidgetItems();

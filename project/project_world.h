@@ -35,7 +35,7 @@ private:
 
 public:
     // Constructor & Destructor
-    DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage = true);
+    DrWorld(DrProject *parent_project, long key, QString new_world_name);
     virtual ~DrWorld() override;
 
     // Getters and Setters

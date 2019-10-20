@@ -42,7 +42,7 @@ void TreeAssets::ensureSelectedKeyVisible() {
             break;
         }
     }
-    this->repaint();
+    this->update();
 }
 
 

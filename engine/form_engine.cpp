@@ -240,7 +240,7 @@ void FormEngine::moveCameras() {
 
 // ***** MAIN UPDATE LOOP: Space (Physics), Rendering
 void FormEngine::updateEngine() {
-    if (!m_engine->getCurrentWorld()->has_scene) return;
+    if (m_engine->getCurrentWorld()->has_scene == false) return;
     m_running = true;
 
     // ***** Calculates Render Frames per Second
@@ -320,7 +320,7 @@ void FormEngine::on_pushProject_clicked() { loadDemo(Demo_Space::Project,   demo
 
 
 void FormEngine::on_pushStart_clicked() {
-    if (!m_engine->getCurrentWorld()->has_scene) return;
+    if (m_engine->getCurrentWorld()->has_scene == false) return;
     startTimers();
 }
 void FormEngine::on_pushStop_clicked() {

@@ -84,9 +84,9 @@ void DrView::paintEvent(QPaintEvent *event) {
 
     // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
     DrStage *stage = my_scene->getCurrentStageShown();
-    if (stage && Dr::CheckDoneLoading()) {
-        QRect  viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
-        QRectF visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
+    if (stage != nullptr && Dr::CheckDoneLoading()) {
+        QRect   viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
+        QRectF  visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
         QPointF center_point = visible_scene_rect.center();
         stage->setViewCenterPoint( center_point );
     }
@@ -117,8 +117,9 @@ void DrView::paintEvent(QPaintEvent *event) {
     }
 
     // Draw Stage Boundary
-    if (stage)
+    if (stage != nullptr) {
         paintStageBounds(painter, stage);
+    }
 
     // Draw Crosshairs under potential drag and drop
     if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool()) {
@@ -226,7 +227,6 @@ void DrView::paintGrid(QPainter &painter) {
 //##    PAINT: Paints Game Frame in Scene Coordinates
 //####################################################################################
 void DrView::paintGameFrame(QPainter &painter) {
-
     painter.setBrush(Qt::NoBrush);
     QColor frame_color = Dr::GetColor(Window_Colors::Button_Light);
     frame_color.setAlpha(128);
@@ -247,7 +247,8 @@ void DrView::paintGameFrame(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Paints Stage Bounds in Scene Coordinates
 //####################################################################################
-void DrView::paintStageBounds(QPainter &painter, DrStage* stage) {
+void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
+    if (stage == nullptr) return;
     long stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 
     // Draw start bracket (in Scene coordinates)

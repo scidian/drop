@@ -26,9 +26,9 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
 
     // ***** Add Initial World
-    long world_1 = this->addWorld();
-    DrWorld* current_world = this->findWorldFromKey(world_1);
-    this->setOption(Project_Options::Current_World, QVariant::fromValue(world_1));
+    DrWorld *world_1 = this->addWorld();
+    DrWorld *current_world = world_1;
+    this->setOption(Project_Options::Current_World, QVariant::fromValue(world_1->getKey()));
     this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_world->getFirstStageKey()) );
 
 

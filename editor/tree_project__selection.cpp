@@ -43,7 +43,7 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
         //******************************************************
 
         // Call to undo command to change scene to newly selected Stage or newly selected thing's parent Stage
-        DrSettings *selected_entity = m_project->findSettingsFromKey(selected_key);
+        DrSettings *selected_entity = m_project->findSettingsFromKey(selected_key, true, "Randomitastic");
         if (selected_entity != nullptr) {
             DrType selected_type = selected_entity->getType();
             long change_to_key = c_no_key;

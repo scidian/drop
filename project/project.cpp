@@ -102,7 +102,7 @@ long DrProject::addImage(long key, QString full_path, QString filename, QString 
 }
 
 // Adds a World to the map container, finds next availbable "World xxx" name to assign to World
-long DrProject::addWorld() {
+DrWorld* DrProject::addWorld() {
     int test_num = static_cast<int>(m_worlds.size());
     QString new_name;
     do {
@@ -112,12 +112,12 @@ long DrProject::addWorld() {
 
     long new_world_key = getNextKey();
     m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name);
-    return new_world_key;
+    return m_worlds[new_world_key];
 }
 
 // Adds a World to the map container
 void DrProject::addWorld(long key, long start_stage_key, long last_stage_in_editor_key) {
-    m_worlds[key] = new DrWorld(this, key, "TEMP", false);
+    m_worlds[key] = new DrWorld(this, key, "TEMP");
     m_worlds[key]->setStartStageKey(start_stage_key);
     m_worlds[key]->setLastStageShownKey(last_stage_in_editor_key);
 }
@@ -132,7 +132,7 @@ void DrProject::addWorld(long key, long start_stage_key, long last_stage_in_edit
 //####################################################################################
 
 // Returns a pointer to the Base DrSettings class of the item with the specified key
-DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning) {
+DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, QString custom_error) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);
     if (asset_iter != m_assets.end())   return asset_iter->second;
 
@@ -162,11 +162,12 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning) {
     }
 
     if (show_warning) {
+        if (custom_error == "") custom_error = "No more info available...";
         Dr::ShowMessageBox("WARNING: Did not find key (" + QString::number(check_key) +
                            ") in project! \n"
                            "Last key used in project: " + QString::number(m_key_generator - 1) + "!\n\n"
-                           "This warning called from \"DrProject::findChildSettingsFromKey\"", QMessageBox::Icon::Warning, "Warning!",
-                           Dr::GetActiveFormMain());
+                           "This warning called from \"DrProject::findChildSettingsFromKey\"" + "\n\n" + custom_error,
+                           QMessageBox::Icon::Warning, "Warning!", Dr::GetActiveFormMain());
     }
     return nullptr;
 }

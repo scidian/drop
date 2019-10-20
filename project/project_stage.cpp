@@ -34,8 +34,8 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
 
     initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage thing
 
+    // If start stage, make name hidden to stop user from changing it
     if (m_is_start_stage) {
-        // If start stage, make name hidden to stop user from changing it
         DrProperty *my_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
         my_name->setEditable(false);
     }
@@ -102,8 +102,8 @@ void DrStage::deleteThing(DrThing *thing) {
 void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
     if (from_thing->getThingType() != to_thing->getThingType()) return;
 
-    for (auto component_pair : from_thing->getComponentMap()) {
-        for (auto property_pair : component_pair.second->getPropertyMap()) {
+    for (auto &component_pair : from_thing->getComponentMap()) {
+        for (auto &property_pair : component_pair.second->getPropertyMap()) {
             DrProperty *from_property = property_pair.second;
             DrProperty *to_property =   to_thing->getComponentProperty(component_pair.first, property_pair.first);
 

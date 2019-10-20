@@ -58,11 +58,11 @@ void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long>
 void DrScene::updateItemZValues() {
     for (auto &item : items()) {
         DrItem *dritem = dynamic_cast<DrItem*>(item);
-        if (!dritem) continue;
+        if (dritem == nullptr) continue;
         if (dritem->isTempOnly()) continue;
 
         DrThing *thing = dritem->getThing();
-        if (!thing) continue;
+        if (thing == nullptr) continue;
 
         // ***** Turn off itemChange() signals to stop recursive calling
         bool flags_enabled_before = dritem->itemChangeFlagsEnabled();
@@ -78,7 +78,9 @@ void DrScene::updateItemZValues() {
 // Updates the item in the scene based on the new property_keys
 void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_keys) {
     DrThing *thing = dynamic_cast<DrThing*>(changed_item);
+    if (thing == nullptr) return;
     DrItem  *item =  thing->getDrItem();
+    if (item == nullptr)  return;
 
     // ***** Make sure this object is currently being shown in the DrScene before we try to update it
     if (thing->getParentStage()->getKey() != m_current_stage_key) return;

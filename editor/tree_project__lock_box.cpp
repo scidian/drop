@@ -19,6 +19,7 @@
 void TreeProject::installLockBox(DrSettings *entity, QTreeWidgetItem *thing_item) {
     if (entity->getType() != DrType::Thing) return;
     DrThing *thing = dynamic_cast<DrThing*>(entity);
+    if (thing == nullptr) return;
 
     // Figure out style sheet
     bool forced = thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool();
@@ -81,7 +82,7 @@ void TreeProject::processLockClick(QCheckBox *from_lock) {
     for (auto lock : locks) {
         long key = lock->property(User_Property::Key).toLongLong();
         DrSettings *entity = m_project->findSettingsFromKey( key );
-        if (!entity) continue;
+        if (entity == nullptr) continue;
 
         if (entity->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {
             lock->setCheckState( Qt::CheckState::Checked );

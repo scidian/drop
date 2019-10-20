@@ -65,7 +65,7 @@ void DrScene::resetSelectionGroup() {
 
 // Checks if all selected items are at the current grid angle (to enable snapping)
 bool DrScene::shouldEnableResizeToGrid() {
-    if (!m_editor_relay) return false;
+    if (m_editor_relay == nullptr) return false;
 
     bool   match_angle = true;
     double current_view_grid_angle = m_editor_relay->currentViewGridAngle();
@@ -136,8 +136,8 @@ QTransform DrScene::getSelectionTransform() {
 QList<DrThing*> DrScene::getSelectionItemsAsThings() {
     QList<DrThing*> selected_things { };
     for (auto item : getSelectionItems()) {
-        DrItem   *dritem = dynamic_cast<DrItem*>(item);     if (!dritem) continue;
-        DrThing  *thing = dritem->getThing();               if (!thing)  continue;
+        DrItem   *dritem = dynamic_cast<DrItem*>(item);     if (dritem == nullptr) continue;
+        DrThing  *thing = dritem->getThing();               if (thing == nullptr)  continue;
         selected_things.append(thing);
     }
     return selected_things;

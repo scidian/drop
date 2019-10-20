@@ -200,6 +200,8 @@ QPainterPath DrItem::shape() const {
 void DrItem::applyFilters() {
     QImage new_image = m_pixmap.toImage().copy();
 
+    if (m_thing == nullptr) return;
+
     int     brightness = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toList().first().toInt();
     int     contrast   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toList().first().toInt();
     int     hue        = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt();

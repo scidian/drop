@@ -129,7 +129,7 @@ public:
     void            saveProjectToFile();
 
     // Function Calls
-    DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true);
+    DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, QString custom_error = "");
     DrType          findChildTypeFromKey(long check_key);
 
     DrAsset*        findAssetFromKey(long check_key);
@@ -140,7 +140,7 @@ public:
     QString         testSpeedFindSettings(int test_size);
 
     // Children Creation Calls
-    long            addWorld();
+    DrWorld*        addWorld();
     void            addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     long            addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);

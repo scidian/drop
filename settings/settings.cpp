@@ -121,8 +121,8 @@ QString DrSettings::getName() {
         case DrType::Stage:
         case DrType::Thing:
         case DrType::Asset:
-            name_component = getComponent(Components::Entity_Settings);             if (!name_component) return "No Name Component";
-            name_property  = name_component->getProperty(Properties::Entity_Name);  if (!name_property)  return "No Name Property";
+            name_component = getComponent(Components::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
+            name_property  = name_component->getProperty(Properties::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();
         case DrType::Image:     return "DrImage - Unknown Name";
         case DrType::Font:      return "DrFont - Unknown Name";
@@ -136,8 +136,8 @@ QString DrSettings::getName() {
 bool DrSettings::setName(QString new_name) {
     DrComponent *name_component;
     DrProperty  *name_property;
-    name_component = getComponent(Components::Entity_Settings);                     if (!name_component) return false;
-    name_property  = name_component->getProperty(Properties::Entity_Name);          if (!name_property)  return false;
+    name_component = getComponent(Components::Entity_Settings);                     if (name_component == nullptr) return false;
+    name_property  = name_component->getProperty(Properties::Entity_Name);          if (name_property == nullptr)  return false;
     name_property->setValue(new_name);
     return true;
 }
@@ -163,8 +163,8 @@ void DrSettings::addPropertyToComponent(Components component, Properties propert
 void DrSettings::copyEntitySettings(DrSettings *from_entity) {
     if (from_entity->getType() != getType()) return;
 
-    for (auto component_pair : from_entity->getComponentMap()) {
-        for (auto property_pair : component_pair.second->getPropertyMap()) {
+    for (auto &component_pair : from_entity->getComponentMap()) {
+        for (auto &property_pair : component_pair.second->getPropertyMap()) {
             DrProperty *from_property = property_pair.second;
             DrProperty *to_property =   getComponentProperty(component_pair.first, property_pair.first);
 

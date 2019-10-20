@@ -84,10 +84,9 @@ DrFilterMouseWheelAdjustmentGuard::DrFilterMouseWheelAdjustmentGuard(QObject *pa
 
 bool DrFilterMouseWheelAdjustmentGuard::eventFilter(QObject *obj, QEvent *event) {
     const QWidget* widget = static_cast<QWidget*>(obj);
-    if (!widget) return QObject::eventFilter(obj, event);
+    if (widget == nullptr) return QObject::eventFilter(obj, event);
 
-    if (event->type() == QEvent::Wheel && !widget->hasFocus())
-    {
+    if (event->type() == QEvent::Wheel && !widget->hasFocus()) {
         event->ignore();
         return true;
     }
@@ -106,10 +105,9 @@ DrFilterPopUpMenuRelocater::DrFilterPopUpMenuRelocater(QObject *parent, int top_
 
 bool DrFilterPopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event) {
     QMenu* menu = dynamic_cast<QMenu*>(obj);
-    if (!menu) return QObject::eventFilter(obj, event);
+    if (menu == nullptr) return QObject::eventFilter(obj, event);
 
-    if (event->type() == QEvent::Show)
-    {
+    if (event->type() == QEvent::Show) {
         bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
         qApp->setEffectEnabled(Qt::UI_AnimateCombo, false);
 

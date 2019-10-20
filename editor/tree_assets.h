@@ -59,7 +59,8 @@ public:
     explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Event Overrides
-    virtual void    focusOutEvent(QFocusEvent *event) override;                                         // Inherited from QAbstractItemView
+    virtual void    focusInEvent(QFocusEvent *event) override;
+    virtual void    focusOutEvent(QFocusEvent *event) override;
     virtual void    keyPressEvent(QKeyEvent *event) override;
 
     // Tree Building Functions
