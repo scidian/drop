@@ -131,7 +131,7 @@ void DrView::dropEvent(QDropEvent *event) {
                 break;
         }
         my_scene->addItemToSceneFromThing( thing );
-        thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
+        if (thing_count > 0) thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
         event->acceptProposedAction();
 
 
@@ -162,7 +162,7 @@ void DrView::dropEvent(QDropEvent *event) {
         QPointF  position =  mapToScene(event->pos());
         thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);
         my_scene->addItemToSceneFromThing( thing );
-        thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
+        if (thing_count > 0) thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
 
         // Mark event as accepted
         event->acceptProposedAction();

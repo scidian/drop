@@ -152,9 +152,12 @@ void DrView::paintEvent(QPaintEvent *event) {
 //####################################################################################
 void DrView::paintGrid(QPainter &painter) {
     double point_size = 4;
-    if (m_zoom_scale <= .50) point_size = 3;
-    if (m_zoom_scale >= 2.0) point_size = 6;
+    if (m_zoom_scale <=  .5) point_size = 3;
+    if (m_zoom_scale <= 1.0) point_size = 4;
+    if (m_zoom_scale >= 2.0) point_size = 5;
+    if (m_zoom_scale >= 3.0) point_size = 6.5;
     if (m_zoom_scale >= 4.0) point_size = 8;
+    if (m_zoom_scale >= 6.0) point_size = 10;
     if (m_zoom_scale >= 8.0) point_size = 12;
     QPen dot_pen =  QPen( m_grid_color, point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
     QPen line_pen = QPen( m_grid_color, 1);

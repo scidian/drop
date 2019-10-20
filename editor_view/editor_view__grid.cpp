@@ -121,18 +121,25 @@ void DrView::recalculateGrid() {
     double origin_y = round((viewport_rect.center().y() - m_grid_origin.y()) / m_grid_size.y()) * m_grid_size.y() + m_grid_origin.y();
     m_grid_view_rect = viewport_rect;
 
+
     // Hide dots if too zoomed out
-    bool allow_dots = true;
-    if ((m_zoom_scale <= .50) && (m_grid_size.x() < 10 || m_grid_size.y() < 10)) allow_dots = false;
-    if ((m_zoom_scale <= .25) && (m_grid_size.x() < 25 || m_grid_size.y() < 25)) allow_dots = false;
-    if  (m_zoom_scale <= .10) allow_dots = false;
-    if  (m_grid_style != Grid_Style::Dots) allow_dots = false;
+    bool allow_dots = (m_grid_style == Grid_Style::Dots);
+    ///if ((m_zoom_scale <= .50) && (step_x < 10 || step_y < 10)) allow_dots = false;
+    ///if ((m_zoom_scale <= .25) && (step_x < 25 || step_y < 25)) allow_dots = false;
+    ///if  (m_zoom_scale <= .10) allow_dots = false;
+
+    // Step sizes (affected by zoom)
+    double step_x = m_grid_size.x();
+    double step_y = m_grid_size.y();
+    double min = (m_grid_style == Grid_Style::Dots) ? 10.0 : 4.0;
+    if (step_x * m_zoom_scale * m_grid_scale.x() < min)    step_x = min / (m_zoom_scale * m_grid_scale.x());
+    if (step_y * m_zoom_scale * m_grid_scale.y() < min)    step_y = min / (m_zoom_scale * m_grid_scale.y());
 
 
     // ********** Calculate lines and dots
     QVector<QPointF> new_points;
     QVector<QLineF>  new_lines;
-    double adjust = 2;//1.44;
+    double adjust = 2;///1.44;
 
     // Add in some buffering for rotation, and negate the effects of the scaling
     double smaller_scale = (m_grid_scale.x() < m_grid_scale.y()) ? m_grid_scale.x() : m_grid_scale.y();
@@ -151,31 +158,31 @@ void DrView::recalculateGrid() {
     ///Dr::SetLabelText(Label_Names::Label_2, "Min Y: " + QString::number(min_y) + ", Max Y: " + QString::number(max_y));
 
     // Bottom right -- Right side vertical lines
-    for (double x = origin_x; x <= max_x; x += m_grid_size.x()) {
+    for (double x = origin_x; x <= max_x; x += step_x) {
         new_lines.append( QLineF(x, min_y, x, max_y) );
 
-        if (allow_dots)     for (double y = origin_y; y <= max_y; y += m_grid_size.y())  new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double y = origin_y; y <= max_y; y += step_y)  new_points.append( QPointF(x, y) );
     }
 
     // Bottom left -- Bottom horizontal lines
-    for (double y = origin_y; y <= max_y; y += m_grid_size.y()) {
+    for (double y = origin_y; y <= max_y; y += step_y) {
         new_lines.append( QLineF(min_x, y, max_x, y) );
 
-        if (allow_dots)     for (double x = origin_x; x >= min_x; x -= m_grid_size.x())  new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double x = origin_x; x >= min_x; x -= step_x)  new_points.append( QPointF(x, y) );
     }
 
     // Top right -- Top horizontal lines
-    for (double y = origin_y; y >= min_y; y -= m_grid_size.y()) {
+    for (double y = origin_y; y >= min_y; y -= step_y) {
         new_lines.append( QLineF(min_x, y, max_x, y) );
 
-        if (allow_dots)     for (double x = origin_x; x <= max_x; x += m_grid_size.x())  new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double x = origin_x; x <= max_x; x += step_x)  new_points.append( QPointF(x, y) );
     }
 
     // Top left -- Left side vertical lines
-    for (double x = origin_x; x >= min_x; x -= m_grid_size.x()) {
+    for (double x = origin_x; x >= min_x; x -= step_x) {
         new_lines.append( QLineF(x, min_y, x, max_y) );
 
-        if (allow_dots)     for (double y = origin_y; y >= min_y; y -= m_grid_size.y())  new_points.append( QPointF(x, y) );
+        if (allow_dots)     for (double y = origin_y; y >= min_y; y -= step_y)  new_points.append( QPointF(x, y) );
     }
 
 
