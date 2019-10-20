@@ -89,19 +89,19 @@ void FormPopup::buildPopupAddEntity() {
 
         // Adds Stage to Project
         connect(buttonStage, &QRadioButton::released, [this]() {
-            long stage_key = c_no_key;
+            DrStage *new_stage = nullptr;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
-                stage_key = editor->getStageView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
+                new_stage = editor->getStageView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
                 editor->buildProjectTree();
-                editor->buildInspector( { stage_key } );
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { stage_key } );
+                editor->buildInspector( { new_stage->getKey() } );
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { new_stage->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-                editor->buildScene(stage_key);
+                editor->buildScene(new_stage->getKey());
             }
             this->close();
-            if (editor) {
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { stage_key } );
+            if (editor && new_stage != nullptr) {
+                editor->updateItemSelection(Editor_Widgets::Stage_View, { new_stage->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
         });

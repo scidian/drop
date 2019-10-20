@@ -97,31 +97,6 @@ void DrStage::deleteThing(DrThing *thing) {
 
 
 //####################################################################################
-//##    Copies all component / property settings from one Thing to another Thing of the same type
-//####################################################################################
-void DrStage::copyThingSettings(DrThing *from_thing, DrThing *to_thing) {
-    if (from_thing->getThingType() != to_thing->getThingType()) return;
-
-    for (auto &component_pair : from_thing->getComponentMap()) {
-        for (auto &property_pair : component_pair.second->getPropertyMap()) {
-            DrProperty *from_property = property_pair.second;
-            DrProperty *to_property =   to_thing->getComponentProperty(component_pair.first, property_pair.first);
-
-            // !!! DO NOT COPY UNIQUE ID KEY !!!
-            if (to_property->getPropertyKey() == static_cast<int>(Properties::Entity_Key)) continue;
-
-            // Copy all other properties
-            to_property->setValue(      from_property->getValue());
-            to_property->setEditable(   from_property->isEditable());
-            to_property->setHidden(     from_property->isHidden());
-            to_property->setDisplayName(from_property->getDisplayName());
-            to_property->setDescription(from_property->getDescription());
-        }
-    }
-}
-
-
-//####################################################################################
 //##    Returns a list of Thing keys contained in stage, sorted from high z value to low
 //####################################################################################
 QList<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {

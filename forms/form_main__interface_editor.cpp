@@ -136,8 +136,9 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
         }
 
     } else if (selected_from == Editor_Widgets::Asset_Tree) {
-        sceneEditor->updateSelectionFromKeyList( { } );
-        treeProjectEditor->updateSelectionFromKeyList( { } );
+        // Code commented on purpose, Asset Tree gaining focus should not clear Project Tree / Stage View selection
+        ///sceneEditor->updateSelectionFromKeyList( { } );
+        ///treeProjectEditor->updateSelectionFromKeyList( { } );
     }
 
     // Updates status bar, enables / disables toolbar buttons

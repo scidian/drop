@@ -60,7 +60,6 @@ public:
 
     // Misc Stage Functions
     DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide = true, long key = c_no_key);
-    void            copyThingSettings(DrThing *from_thing, DrThing *to_thing);
     void            deleteThing(DrThing *thing) ;
 
     QList<long>     thingKeysSortedByZOrder(Qt::SortOrder sort_order);

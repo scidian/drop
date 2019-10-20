@@ -10,6 +10,8 @@
 #include "helper.h"
 #include "helper_qt.h"
 #include "project/project.h"
+#include "project/project_asset.h"
+#include "project/project_thing.h"
 #include "settings.h"
 #include "settings_component.h"
 #include "settings_component_property.h"
@@ -157,11 +159,27 @@ void DrSettings::addPropertyToComponent(Components component, Properties propert
 }
 
 
+
 //####################################################################################
 //##    Copies all component / property settings from one Entity to another Entity of the same type
 //####################################################################################
 void DrSettings::copyEntitySettings(DrSettings *from_entity) {
+    // Check same Type
     if (from_entity->getType() != getType()) return;
+
+    // If Asset, check same Asset Type
+    if (from_entity->getType() == DrType::Asset) {
+        DrAsset *from_asset = dynamic_cast<DrAsset*>(from_entity);
+        DrAsset *to_asset   = dynamic_cast<DrAsset*>(this);
+        if (from_asset->getAssetType() != to_asset->getAssetType()) return;
+    }
+
+    // If Thing, check same Thing Type
+    if (from_entity->getType() == DrType::Thing) {
+        DrThing *from_thing = dynamic_cast<DrThing*>(from_entity);
+        DrThing *to_thing   = dynamic_cast<DrThing*>(this);
+        if (from_thing->getThingType() != to_thing->getThingType()) return;
+    }
 
     for (auto &component_pair : from_entity->getComponentMap()) {
         for (auto &property_pair : component_pair.second->getPropertyMap()) {

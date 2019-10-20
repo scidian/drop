@@ -32,7 +32,7 @@
 //##    DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
 void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
-    Q_UNUSED(rect);
+    Q_UNUSED(rect)
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
         QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();

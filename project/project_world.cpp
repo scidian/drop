@@ -24,7 +24,7 @@ DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name) : 
     initializeWorldSettings(new_world_name);
 
     // Adds the initial "Start Stage"
-    m_start_stage_key = addStage();
+    m_start_stage_key = addStage()->getKey();
 
     m_last_stage_shown_in_editor = m_start_stage_key;
 }
@@ -43,8 +43,8 @@ void DrWorld::deleteStage(DrStage *stage) {
 //####################################################################################
 //##    Adds a Stage
 //####################################################################################
-// Adds a Stage to the map container, assins name based on current stage count
-long DrWorld::addStage(QString new_stage_name) {
+// Adds a Stage to the map container, assigns name based on current stage count
+DrStage* DrWorld::addStage(QString new_stage_name) {
     bool need_start_stage = false;
     if (m_stages.size() < 1) {
         need_start_stage = true;
@@ -56,13 +56,48 @@ long DrWorld::addStage(QString new_stage_name) {
     long new_stage_key = getParentProject()->getNextKey();
 
     m_stages[new_stage_key] = new DrStage(getParentProject(), this, new_stage_key, new_stage_name, need_start_stage);
-    return new_stage_key;
+    return m_stages[new_stage_key];
 }
 
-void DrWorld::addStage(long stage_key, bool is_start_stage, QPointF center_point) {
+DrStage* DrWorld::addStage(long stage_key, bool is_start_stage, QPointF center_point) {
     m_stages[stage_key] = new DrStage(getParentProject(), this, stage_key, "TEMP", false);
     m_stages[stage_key]->setIsStartStage(is_start_stage);
     m_stages[stage_key]->setViewCenterPoint(center_point);
+    return m_stages[stage_key];
+}
+
+// Adds a Stage as a copy from another Stage
+DrStage* DrWorld::addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage) {
+    DrStage *copy_stage = (copy_into_start_stage) ? getStageMap()[m_start_stage_key] : addStage();
+    copy_stage->copyEntitySettings(from_stage);
+
+    // No longer a Start Stage, can edit name
+    if (copy_stage->isStartStage() == false) {
+        DrProperty *my_name = copy_stage->getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+        my_name->setEditable(true);
+    }
+
+    // Find a new name for Stage
+    QString new_name;
+    bool    has_name;
+    int     name_count = 1;
+    do {
+        has_name = false;
+        new_name = (name_count == 1) ? from_stage->getName() + " copy" : from_stage->getName() + " copy (" + QString::number(name_count) + ")";
+        for (auto &stage_pair : getStageMap()) {
+            if (stage_pair.second->getName() == new_name) has_name = true;
+        }
+        name_count++;
+    } while (has_name != false);
+    copy_stage->setName( new_name );
+
+    // Copy all Things from From_Stage
+    for (auto &thing_pair : from_stage->getThingMap()) {
+        DrThing *thing = thing_pair.second;
+        DrThing *copy_thing = copy_stage->addThing(thing->getThingType(), thing->getAssetKey(), 0, 0, 0);
+        copy_thing->copyEntitySettings(thing);
+    }
+    return copy_stage;
 }
 
 

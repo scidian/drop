@@ -116,12 +116,42 @@ DrWorld* DrProject::addWorld() {
 }
 
 // Adds a World to the map container
-void DrProject::addWorld(long key, long start_stage_key, long last_stage_in_editor_key) {
+DrWorld* DrProject::addWorld(long key, long start_stage_key, long last_stage_in_editor_key) {
     m_worlds[key] = new DrWorld(this, key, "TEMP");
     m_worlds[key]->setStartStageKey(start_stage_key);
     m_worlds[key]->setLastStageShownKey(last_stage_in_editor_key);
+    return m_worlds[key];
 }
 
+// Adds a new World, copied from another World
+DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world) {
+    DrWorld *copy_world = addWorld();
+    copy_world->copyEntitySettings(from_world);
+
+    // Find name for Copy World
+    QString new_name;
+    bool    has_name;
+    int     i = 1;
+    do {
+        has_name = false;
+        new_name = (i == 1) ? from_world->getName() + " copy" : from_world->getName() + " copy (" + QString::number(i) + ")";
+        for (auto &world_pair : getWorldMap()) {
+            if (world_pair.second->getName() == new_name) has_name = true;
+        }
+        i++;
+    } while (has_name != false);
+    copy_world->setName( new_name );
+
+    // Copy all Stages from World
+    int stage_count = 0;
+    for (auto &stage_pair : from_world->getStageMap()) {
+        DrStage *stage = stage_pair.second;
+        DrStage *copy_stage = copy_world->addStageCopyFromStage(stage, (stage_count == 0));
+        copy_stage->copyEntitySettings(stage);
+        stage_count++;
+    }
+    return copy_world;
+}
 
 
 //####################################################################################
@@ -147,7 +177,7 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, QS
 
     WorldMap &worlds = m_worlds;
     WorldMap::iterator world_iter = worlds.find(check_key);
-    if (world_iter != worlds.end())   return world_iter->second;
+    if (world_iter != worlds.end())     return world_iter->second;
 
     for (auto world_pair : worlds) {
         StageMap &stages = world_pair.second->getStageMap();

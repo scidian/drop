@@ -141,7 +141,8 @@ public:
 
     // Children Creation Calls
     DrWorld*        addWorld();
-    void            addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
+    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
+    DrWorld*        addWorldCopyFromWorld(DrWorld* from_world);
     long            addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false, long key = c_no_key);

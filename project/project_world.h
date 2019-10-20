@@ -50,8 +50,9 @@ public:
 
 
     // Function Calls
-    long        addStage(QString new_stage_name = "");
-    void        addStage(long stage_key, bool is_start_stage, QPointF center_point);
+    DrStage*    addStage(QString new_stage_name = "");
+    DrStage*    addStage(long stage_key, bool is_start_stage, QPointF center_point);
+    DrStage*    addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage = false);
     void        deleteStage(DrStage *stage);
     void        initializeWorldSettings(QString new_name);
 

@@ -210,7 +210,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                     if (key_pressed == Qt::Key::Key_D) new_x = new_x + source_rect.width();
 
                     new_object = drstage->addThing(drthing->getThingType(), drthing->getAssetKey(), new_x, new_y, new_z);
-                    drstage->copyThingSettings(drthing, new_object);
+                    new_object->copyEntitySettings(drthing);
                     new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, QPointF(new_x, new_y));
                     new_object->setZOrderWithSub(new_z, Z_Insert::At_Position, sub_z + 1);
 

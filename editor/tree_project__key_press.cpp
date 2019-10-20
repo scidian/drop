@@ -49,100 +49,49 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
         if (type == DrType::Thing) {
             m_editor_relay->getStageView()->keyPressEvent(event);
             return;
+        }
+    }
 
+    if (event->key() == Qt::Key_D) {
         // Duplicate Stage
-        } else if (type == DrType::Stage) {
-            DrStage *stage = dynamic_cast<DrStage*>(settings);
-            if (stage == nullptr) return;
-
-            // Copy Stage from other Stage
-            long copy_stage_key = stage->getParentWorld()->addStage();
-            DrStage *copy_stage = m_project->findStageFromKey(copy_stage_key);
-            copy_stage->copyEntitySettings(stage);
-
-            // No longer a Start Stage, can edit name
-            if (copy_stage->isStartStage() == false) {
-                DrProperty *my_name = copy_stage->getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-                my_name->setEditable(true);
+        if (type == DrType::Stage) {
+            DrStage *new_selected_stage = nullptr;
+            int stage_count = 0;
+            for (auto item : selectedItems()) {
+                DrStage *stage = m_project->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+                if (stage == nullptr) continue;
+                DrStage *copy_stage = stage->getParentWorld()->addStageCopyFromStage(stage);
+                if (stage_count == 0) new_selected_stage = copy_stage;
+                stage_count++;
             }
-
-            // Find a new name for Stage
-            QString new_name;
-            bool    has_name;
-            int     i = 1;
-            do {
-                has_name = false;
-                new_name = (i == 1) ? copy_stage->getName() + " copy" : copy_stage->getName() + " copy (" + QString::number(i) + ")";
-                for (auto &stage_pair : stage->getParentWorld()->getStageMap()) {
-                    if (stage_pair.second->getName() == new_name) has_name = true;
-                }
-                i++;
-            } while (has_name != false);
-            copy_stage->setName( new_name );
-
-            // Copy all Things from Stage
-            for (auto &thing_pair : stage->getThingMap()) {
-                DrThing *thing = thing_pair.second;
-                DrThing *copy_thing = copy_stage->addThing(thing->getThingType(), thing->getAssetKey(), 0, 0, 0);
-                copy_thing->copyEntitySettings(thing);
-            }
+            if (new_selected_stage == nullptr) return;
 
             // Update Editor Widgets
             m_editor_relay->buildProjectTree();
-            m_editor_relay->buildInspector( { copy_stage->getKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { copy_stage->getKey() } );
-            m_editor_relay->buildScene(copy_stage->getKey());
+            m_editor_relay->buildInspector( { new_selected_stage->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selected_stage->getKey() } );
+            m_editor_relay->buildScene( new_selected_stage->getKey() );
+            return;
 
         // Duplicate World
         } else if (type == DrType::World) {
-            DrWorld *world = dynamic_cast<DrWorld*>(settings);
-            if (world == nullptr) return;
-
-            // Copy World from other World
-            DrWorld *copy_world = m_project->addWorld();
-            copy_world->copyEntitySettings(world);
-
-            // Find name for Copy World
-            QString new_name;
-            bool    has_name;
-            int     i = 1;
-            do {
-                has_name = false;
-                new_name = (i == 1) ? world->getName() + " copy" : world->getName() + " copy (" + QString::number(i) + ")";
-                for (auto &world_pair : m_project->getWorldMap()) {
-                    if (world_pair.second->getName() == new_name) has_name = true;
-                }
-                i++;
-            } while (has_name != false);
-            copy_world->setName( new_name );
-
-            // Copy all Stages from World
-            int s = 1;
-            for (auto &stage_pair : world->getStageMap()) {
-                DrStage *stage = stage_pair.second;
-                long copy_stage_key;
-                if (s == 1) {
-                    copy_stage_key = copy_world->getStartStageKey();
-                } else {
-                    copy_stage_key = copy_world->addStage();
-                }
-                DrStage *copy_stage = m_project->findStageFromKey(copy_stage_key);
-                copy_stage->copyEntitySettings(stage);
-
-                // Copy all Things from Stage
-                for (auto &thing_pair : stage->getThingMap()) {
-                    DrThing *thing = thing_pair.second;
-                    DrThing *copy_thing = copy_stage->addThing(thing->getThingType(), thing->getAssetKey(), 0, 0, 0);
-                    copy_thing->copyEntitySettings(thing);
-                }
-                s++;
+            DrWorld *new_selected_world = nullptr;
+            int world_count = 0;
+            for (auto item : selectedItems()) {
+                DrWorld *world = m_project->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+                if (world == nullptr) continue;
+                DrWorld *copy_world = m_project->addWorldCopyFromWorld(world);
+                if (world_count == 0) new_selected_world = copy_world;
+                world_count++;
             }
+            if (new_selected_world == nullptr) return;
 
             // Update Editor Widgets
             m_editor_relay->buildProjectTree();
-            m_editor_relay->buildInspector( { copy_world->getLastStageShownKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { copy_world->getLastStageShownKey() } );
-            m_editor_relay->buildScene(copy_world->getLastStageShownKey());
+            m_editor_relay->buildInspector( { new_selected_world->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selected_world->getKey() } );
+            m_editor_relay->buildScene( new_selected_world->getLastStageShownKey() );
+            return;
         }
     }
 
@@ -203,7 +152,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
 
                 } else {
-                    Dr::ShowMessageBox("Cannot delete Start Stages!", QMessageBox::Icon::Information, "Cannot Delete", this);
+                    Dr::ShowMessageBox("Start Stages cannot be deleted.", QMessageBox::Icon::Information, "Cannot Delete", this);
                 }
 
             // Delete selected Worlds
