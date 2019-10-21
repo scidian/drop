@@ -75,6 +75,7 @@ private:
     One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
     cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
     double          m_gravity_multiplier = 1.0;     // Use to cancel gravity (0.0) on objects that collide (climbable ladders), or to reduce gravity (sticky wall)
+    cpVect          m_surface_velocity {0, 0};      // Provides surface movement on contact, useful for conveyor belts, etc.
 
     // Object Properties - Health / Damage
     Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
@@ -213,11 +214,13 @@ public:
     One_Way         getOneWay() { return m_one_way; }
     cpVect          getOneWayDirection() { return m_one_way_direction; }
     const double&   getGravityMultiplier() { return m_gravity_multiplier; }
+    cpVect          getSurfaceVelocity() { return m_surface_velocity; }
 
     void            setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
     void            setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
     void            setOneWayDirection(DrPointF direction) { m_one_way_direction = cpv(direction.x, direction.y); }
     void            setGravityMultiplier(double gravity_multiplier) { m_gravity_multiplier = gravity_multiplier; }
+    void            setSurfaceVelocity(cpVect surface_vel);
 
     // Object Properties - Health / Damage
     Collision_Type  getCollisionType() { return m_collision_type; }
@@ -275,8 +278,8 @@ public:
     const bool&     canWallJump() { return m_wall_jump; }
     const bool&     canRotate() { return m_can_rotate; }
     bool            ignoreGravity() { return m_ignore_gravity; }
-    bool            getFlipImageX() { return m_flip_image_x; }
-    bool            getFlipImageY() { return m_flip_image_y; }
+    bool            shouldFlipImageX() { return m_flip_image_x; }
+    bool            shouldFlipImageY() { return m_flip_image_y; }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -330,8 +333,8 @@ public:
     DrTime&         getDeathTimer() { return m_death_timer; }
     DrTime&         getFadeTimer() { return m_fade_timer; }
 
-    bool            isFlippedX() { return m_flipped_x; }
-    bool            isFlippedY() { return m_flipped_y; }
+    bool            isFlippedX() { return (m_flipped_x); }
+    bool            isFlippedY() { return (m_flipped_y); }
     void            setFlipX(bool flipped) { m_flipped_x = flipped; }
     void            setFlipY(bool flipped) { m_flipped_y = flipped; }
 

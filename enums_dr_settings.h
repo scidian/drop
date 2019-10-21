@@ -119,7 +119,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  161
+//##    !!!!! NEXT AVAILABLE NUMBER:  162
 //##
 //############################
 enum class Properties {
@@ -175,6 +175,7 @@ enum class Properties {
     Asset_Collision_Circles             = 156,      // future use storing circles?
     Asset_Collision_Squares             = 157,      // future use storing squares?
     Asset_Collision_Polygons            = 158,      // future use storing polygons?
+    Asset_Collision_Surface_Velocity    = 161,      // future use storing polygons?
 
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image

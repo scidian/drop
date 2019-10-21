@@ -274,14 +274,17 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     }
 
     // ***** Additional Collision Settings
-    int    one_way_type =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type).toInt();
-    double one_way_angle = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction).toDouble();
-    double gravity_multi = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier).toDouble();
+    int     one_way_type =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type).toInt();
+    double  one_way_angle = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction).toDouble();
+    double  gravity_multi = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier).toDouble();
+    QPointF surface_vel =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity).toPointF();
+
     QTransform t; t.rotate(one_way_angle);
     QPointF one_way_point = t.map(QPoint(0.0, 1.0));
     block->setOneWay(static_cast<One_Way>(one_way_type));
     block->setOneWayDirection(DrPointF(one_way_point.x(), one_way_point.y()));
     block->setGravityMultiplier(gravity_multi);
+    block->setSurfaceVelocity(cpv(surface_vel.x(), surface_vel.y()));
 
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, block);

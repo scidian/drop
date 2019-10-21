@@ -24,14 +24,14 @@
 void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
 
-    // Convert mouse click to world coordinates
+    // ***** Convert mouse click to world coordinates
     QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
     double x = static_cast<double>(vec.x());
     double y = static_cast<double>(vec.y());
     double z = static_cast<double>(vec.z());
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) z = 0.0;
 
-    // Process click
+    // ***** Process click
     DrEngineWorld *world = m_engine->getCurrentWorld();
     if (m_form_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {

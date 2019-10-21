@@ -33,7 +33,6 @@ QVector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &center
     return ellipse;
 }
 
-
 //####################################################################################
 //##    Add Shapes to Object
 //####################################################################################

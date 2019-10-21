@@ -196,9 +196,15 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
 //####################################################################################
 void DrEngineObject::setCollisionType(Collision_Type what_should_collide) {
     m_collision_type = what_should_collide;
-    for (auto shape : shapes) {
+    for (auto shape : shapes)
         cpShapeSetCollisionType(shape, static_cast<cpCollisionType>(what_should_collide));
-    }
+}
+
+// Sets Surface Velocity
+void DrEngineObject::setSurfaceVelocity(cpVect surface_vel) {
+    m_surface_velocity = surface_vel;
+    for (auto shape : shapes)
+        cpShapeSetSurfaceVelocity(shape, surface_vel);
 }
 
 bool DrEngineObject::doesDamage() {
