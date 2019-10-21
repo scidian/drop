@@ -66,6 +66,13 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                 dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());
                 break;
 
+            case Property_Type::BoolDouble:
+                if (widget->property(User_Property::Order).toInt() == 0)
+                    dynamic_cast<QCheckBox*>(widget)->setChecked( prop->getValue().toList()[0].toBool() );
+                else
+                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toList()[1].toDouble() );
+                break;
+
             case Property_Type::Int:
             case Property_Type::Positive:
                 dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toInt());
@@ -186,6 +193,13 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::Textbox:
                 property->setValue(new_value);
                 break;
+
+            case Property_Type::BoolDouble: {
+                QList<QVariant> ranged_list = property->getValue().toList();
+                ranged_list[static_cast<int>(sub_order)] = new_value;
+                property->setValue(ranged_list);
+                break;
+            }
 
             case Property_Type::RangedInt:
             case Property_Type::RangedDouble:

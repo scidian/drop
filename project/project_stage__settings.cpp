@@ -32,6 +32,7 @@ void DrStage::initializeStageSettings(QString new_name) {
 
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for current stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
+
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
                            "Start", "Start showing stage at this distance.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, 1200,

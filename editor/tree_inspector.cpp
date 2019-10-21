@@ -242,6 +242,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
             switch (property->getPropertyType()) {
                 case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right);                                break;
+                case Property_Type::BoolDouble:     new_widget = createCheckBoxSpinBoxPair( prop, fp, sp_right);                                break;
                 case Property_Type::String:         new_widget = createLineEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Textbox:        new_widget = createTextEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Int:            new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::Int);            break;
@@ -332,7 +333,16 @@ void TreeInspector::updateLockedSettings() {
         if (prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
             widget->setEnabled( true );
         } else {
-            widget->setEnabled( prop->isEditable() && !(prop->getParentSettings()->isLocked()) );
+            bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());
+
+            if (prop->getPropertyKey() == Dr::EnumToInt(Properties::Asset_Physics_Custom_Friction) ||
+                prop->getPropertyKey() == Dr::EnumToInt(Properties::Asset_Physics_Custom_Bounce)) {
+                if (widget->property(User_Property::Order).toInt() == 1) {
+                    if (prop->getValue().toList().first().toBool() == false) enabled = false;
+                }
+            }
+
+            widget->setEnabled( enabled );
         }
     }
 }

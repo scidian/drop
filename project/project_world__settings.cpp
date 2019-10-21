@@ -27,6 +27,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addComponent(Components::World_Settings, "World Settings", "Settings for current world.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
+
     addPropertyToComponent(Components::World_Settings, Properties::World_Game_Direction, Property_Type::Double, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - up, 180 - left, 270 - down, etc.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Double, 1.0,
@@ -41,6 +42,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all Objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Medium, true);
     getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
+
     addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
                            "Time Warp", "Physics update time multiplier, affects the speed the world changes. Default value of 1.0 is Normal speed. A value of 0.5 "
                                         "will halve the speed, a value of 2.0 will double it. Generally keep this less than 10.");
@@ -53,13 +55,14 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                                       "velocity immediately.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Friction, Property_Type::PositiveDouble, 0.5,
                            "Friction", "Global surface friction setting, greater than or equal to 0.0 (no limit, but generally less than 10.0). Friction can be "
-                                       "overriden on a per object basis.");
+                                       "overriden on a per item basis.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Bounce, Property_Type::PositiveDouble, 0.1,
                            "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
-                                     "overriden on a per object basis.");
+                                     "overriden on a per item basis.");
 
     addComponent(Components::World_Lighting, "Lighting", "Lighting settings for current World.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::World_Lighting)->setIcon(Component_Icons::Light);
+
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 50,
                            "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 50.0,
@@ -72,6 +75,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Brown_Sugar, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
+
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 8 }),
                            "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
@@ -92,6 +96,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Purple_Royal, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
+
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders all the world's objects as outlines.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,

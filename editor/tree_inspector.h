@@ -75,6 +75,7 @@ public:
     // Property Builders
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*          createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*             createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*            createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QFrame*             createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QPushButton*        createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
@@ -138,10 +139,18 @@ protected:
 class DrQCheckBox : public QCheckBox
 {
     Q_OBJECT
+private:
+    int     m_draw_left = 6;
+    int     m_draw_top =  1;
 
 public:
     DrQCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) { }
     virtual ~DrQCheckBox() override { }
+
+    int         getDrawLeft() { return m_draw_left; }
+    int         getDrawTop() { return m_draw_top; }
+    void        setDrawLeft(int left) { m_draw_left = left; }
+    void        setDrawTop(int top) { m_draw_top = top; }
 
 protected:
     virtual void paintEvent(QPaintEvent *) override;

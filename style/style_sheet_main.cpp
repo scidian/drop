@@ -255,8 +255,10 @@ QString CustomStyleSheetFormatting() {
         "       color: " +        Dr::GetColor(Window_Colors::Highlight).name() + "; "
         "       background: " +   Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; }"
-        " QAbstractSpinBox::!enabled { background: transparent; border: none; "
+        " QAbstractSpinBox:!enabled { background: transparent; border: none; "
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
+
+        " QAbstractSpinBox#spinBool:!enabled { color: transparent; }"
 
         // Line Edit, mostly in Inspector
         " QLineEdit {               border: " + Dr::BorderWidth() + " solid; height: 20px; "
@@ -306,7 +308,7 @@ QString CustomStyleSheetFormatting() {
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
-        " QPushButton#buttonDropDown::!enabled { "
+        " QPushButton#buttonDropDown:!enabled { "
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: transparent; border: none; }"
 

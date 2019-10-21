@@ -15,7 +15,7 @@
 enum class Property_Type {
     Bool,                   // bool             True or False
     BoolDouble,             // bool w/double    True or False, and when True shows double spinbox
-                            //                  QList<QVariant> of 4 values: bool, double value, double step size, string spinText
+                            //                  QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
 
     Int,                    // long             Integer
     Positive,               // long             Integer >= 0
@@ -58,7 +58,7 @@ enum class Property_Type {
 //####################################################################################
 //##    Possible components, numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  35
+//##    !!!!! NEXT AVAILABLE NUMBER:  36
 //##
 //############################
 enum class Components {
@@ -75,6 +75,7 @@ enum class Components {
 
     Asset_Collision                     = 5,
     Asset_Animation                     = 6,
+    Asset_Physics                       = 35,
     Asset_Health                        = 34,
 
 
@@ -179,12 +180,12 @@ enum class Properties {
     Asset_Collision_Polygons            = 158,      // future use storing polygons?
     Asset_Collision_Surface_Velocity    = 161,      // future use storing polygons?
 
-    Asset_Collision_Custom_Friction     = 162,
-    Asset_Collision_Custom_Bounce       = 163,
-
-
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image
+
+    // Asset_Physics
+    Asset_Physics_Custom_Friction       = 162,      // bool double combbo
+    Asset_Physics_Custom_Bounce         = 163,      // bool double combo
 
     // Asset_Health
     Asset_Health_Max_Health             = 144,      // double

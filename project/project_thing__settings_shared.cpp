@@ -28,6 +28,7 @@
 void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
     addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
+
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y),
                            "Position", "Location of item within the current stage.");
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0,
@@ -51,6 +52,7 @@ void DrThing::addComponentLayering(double z, double opacity) {
     addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
                                                          "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
+
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
                            "Z Order", "Arrangement of item along the z axis in the stage. Should be between the near and far clipping planes (" +
                                       QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + ") to be visible.");
@@ -70,6 +72,7 @@ void DrThing::addComponentMovement() {
                                                           "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!",
                                                           Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Movement)->setIcon(Component_Icons::Movement);
+
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Velocity_X, Property_Type::Variable, QPointF(0, 0),
                            "Horizontal", "Initial horizontal movement speed of Object, +/- variable amount.  <br><br> "
                                          "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
@@ -93,6 +96,7 @@ void DrThing::addComponent3D() {
     addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images whose pixels are "
                                        "mostly opaque.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
+
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
                            "Type", "How this object is represented in 3D. The texture can be Extruded (pulled) into the 3rd dimension. Or it can be Wrapped "
                                    "onto a Cube.");
@@ -117,6 +121,7 @@ void DrThing::addComponent3D() {
 void DrThing::addComponentLighting() {
     addComponent(Components::Thing_Lighting, "Lighting", "Lighting settings for this item.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::Thing_Lighting)->setIcon(Component_Icons::Light);
+
     addPropertyToComponent(Components::Thing_Lighting, Properties::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
                            "Cast Shadows", "This item will cast shadows when appearing higher on the z axis than a Light.");
 }
@@ -156,6 +161,7 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
 void DrThing::addComponentSpecialEffects() {
     addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Purple_Royal, true);
     getComponent(Components::Thing_Special_Effects)->setIcon(Component_Icons::Effects);
+
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders this item as an 3d outline, item 3D Depth should be greater than 0 for best effect.");
 }

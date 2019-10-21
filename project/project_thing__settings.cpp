@@ -33,6 +33,7 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
     getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
+
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 10,
                            "Zoom Level", "Sets distance away from stage (0 to 1000)");
 }
@@ -58,6 +59,7 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
 
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
+
     addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type, Property_Type::List, 0,
                            "Object Type", "<b>Static</b> - Can not move. <br> "
                                           "<b>Kinematic</b> - Moves at fixed speed. <br> "
@@ -81,6 +83,7 @@ void DrThing::addComponentSettingsText(QString new_name) {
 
     addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for current Text Box.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
+
     addPropertyToComponent(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text, Property_Type::String, "Text",
                            "User Text", "Custom text value to be shown in this Text Box.");
 }

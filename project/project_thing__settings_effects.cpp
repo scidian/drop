@@ -64,6 +64,7 @@ void DrThing::addComponentSettingsFisheye() {
 
     addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
+
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
                            "Color", "Color tint for this Lens.");
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
@@ -83,6 +84,7 @@ void DrThing::addComponentSettingsLight(QColor color) {
 
     addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
+
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
                            "Light Type", "<b>Opaque</b> - Solid texture, does not provide lighting. <br> "
                                          "<b>Glow</b> - Provides diffuse lighting, no z ordering available. ");
@@ -119,6 +121,7 @@ void DrThing::addComponentSettingsMirror() {
 
     addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for current Mirror.", Component_Colors::Silver_Snow, true);
     getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
+
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
                            "Start Color", "Color tint for the top of this Mirror.");
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color, Property_Type::Color, QColor(170, 170, 170, 255).rgba(),
@@ -145,6 +148,7 @@ void DrThing::addComponentSettingsSwirl() {
 
     addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for current Swirl.", Component_Colors::Purple_Pastel, true);
     getComponent(Components::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
+
     addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
                            "Color", "Color tint for this Lens.");
     addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint, Property_Type::Percent, 0.0,
@@ -165,6 +169,7 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
+
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, 1,
                            "Texture", "Defines a texture to use for the water surface, can give the Water several different looks.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, QColor(41, 182, 246, 255).rgba(),
@@ -180,6 +185,7 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water_Ripple, "Ripple Settings", "Settings for this Water's Ripple effect.", Component_Colors::Blue_Drop_2, true);
     getComponent(Components::Thing_Settings_Water_Ripple)->setIcon(Component_Icons::Water_Ripple);
+
     addPropertyToComponent(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
                            "Frequency", "Length of Ripples appearing in Water, lower numbers produce longer period Ripples. "
                                         "Generally, ranging around 0 to 100 will produce nice results.");
@@ -193,6 +199,7 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water_Wave, "Wave Settings", "Settings that this Water's Wave effect.", Component_Colors::Blue_Drop_3, true);
     getComponent(Components::Thing_Settings_Water_Wave)->setIcon(Component_Icons::Water_Wave);
+
     addPropertyToComponent(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
                            "Frequency", "Length of Waves appearing in Water, lower numbers produce longer period waves. "
                                         "Generally, ranging around 0 to 100 will produce nice results.");
@@ -204,6 +211,7 @@ void DrThing::addComponentSettingsWater() {
     addComponent(Components::Thing_Settings_Water_Refract, "Refraction Settings", "Settings that effect refraction (randomness) of different parts of "
                                                                                   "this Water.", Component_Colors::Blue_Drop_4, true);
     getComponent(Components::Thing_Settings_Water_Refract)->setIcon(Component_Icons::Water_Refract);
+
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
                            "Reflection", "How much refraction to apply to the Reflection shown on the Water surface.");
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
@@ -215,6 +223,7 @@ void DrThing::addComponentSettingsWater() {
 
     addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_5, true);
     getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
+
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
                            "Color", "Color tint for the foam on the top of the Water.");
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint, Property_Type::Percent, 75.0,

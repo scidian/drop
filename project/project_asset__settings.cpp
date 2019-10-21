@@ -119,6 +119,7 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
+
     addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
                            "Font Family", "Font used for this text asset.", false, false);
     addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
@@ -139,17 +140,18 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
 //####################################################################################
 void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape) {
     QString    type = "Thing";
-    int start_shape = 0;
+    int start_shape_type = 0;
     if (asset_type == DrAssetType::Character) {
         type = "Character";
-        start_shape = 1;
+        start_shape_type = 1;
     } else if (asset_type == DrAssetType::Object) {
         type = "Object";
     }
 
-    addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current " + type + ".", Component_Colors::White_Snow, true);
+    addComponent(Components::Asset_Collision, "Collision", "Collision settings for current " + type + ".", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, start_shape,
+
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, start_shape_type,
                            "Collision Shape", "Shape of the " + type + " as it interacts with other Assets in the world. Can be calculated "
                                               "automatically from the <b>Image Shape</b>. Characters are best as <b>Circle</b> and ground and platforms "
                                               "work nicely as <b>Square</b>.");
@@ -159,17 +161,6 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
                            "Image Shape", "Stores auto generated Image Shape.", true, false);
 
     if (asset_type == DrAssetType::Object) {
-
-        // BoolDouble QList<QVariant> of 4 values: bool, double value, double step size, string spinText
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Custom_Friction,
-                               Property_Type::BoolDouble, QList<QVariant>({false, 0.0, 0.1, ""}),
-                                "Custom Friction?", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
-                                                    "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Custom_Bounce,
-                               Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.1, ""}),
-                                "Custom Bounce?", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
-                                                  "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
-
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
                                 "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
                                                       "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
@@ -189,14 +180,34 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
 //##    Shared - Animation Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation) {
-    QString type = "";
-    if (asset_type == DrAssetType::Character)   type = "Character";
-    if (asset_type == DrAssetType::Object)      type = "Object";
+    QString type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + " Asset.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
+
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(default_animation),
-                           "Default Animation", "Image shown for this " + type + "Asset.");
+                           "Default Animation", "Image shown for this " + type + ".");
+}
+
+
+//####################################################################################
+//##    Shared - Physics Components
+//####################################################################################
+void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
+    QString type = Dr::StringFromAssetType(asset_type);
+
+    addComponent(Components::Asset_Physics, "Physics", "Physics settings for current " + type + ".", Component_Colors::Orange_Medium, true);
+    getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
+
+    // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
+                            "Custom Friction?", "All Things default to World Friction unless specified otherwise here. Friction usually ranges from "
+                                                "0.0 to 2.0 or higher.");
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
+                            "Custom Bounce?", "All Things default to World Bounce unless specified otherwise here. Bounce usually ranges from "
+                                              "0.0 to 2.0 or higher.");
 }
 
 //####################################################################################
