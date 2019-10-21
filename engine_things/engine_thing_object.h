@@ -80,7 +80,7 @@ private:
     Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
     bool            m_invincible = false;                           // When true this object takes no damage nor damage_recoil force, cannot be killed
     bool            m_death_touch = false;                          // When true kills everything on contact, even unlimited health...but not invincible objects
-    double          m_max_health = 100.0;                           // Maximum object health, c_no_max_health (-1) = no maximum
+    double          m_max_health = 10.0;                            // Maximum object health, c_no_max_health (-1) = no maximum
     double          m_health = 1.0;                                 // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
     double          m_damage = 1.0;                                 // Damage caused to other objects of Type m_collision_type
     long            m_damage_delay = 500;                           // Minimum time in milliseconds that must pass between receiving damage
@@ -105,7 +105,7 @@ private:
     double          m_forced_speed_y =  0.0;        // Forced move speed y of object
 
     double          m_move_speed_x =  400.0;        // Movement speed x
-    double          m_move_speed_y =    0.0;        // Movement speed y
+    double          m_move_speed_y =  400.0;        // Movement speed y
 
     double          m_jump_force_x =    0.0;        // Jump force x
     double          m_jump_force_y =  250.0;        // Jump force y

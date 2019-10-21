@@ -163,7 +163,7 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
     // ***** Auto Damage
     if (getHealth() > c_epsilon) {
         if (getAutoDamage() < -c_epsilon || getAutoDamage() > c_epsilon) {
-            takeDamage( getAutoDamage() * (time_since_last_update / 1000.0), false );
+            takeDamage(getAutoDamage() * (time_since_last_update / 1000.0), false);
         }
     }
 

@@ -74,6 +74,10 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         options << tr("None")
                 << tr("Pass Through")
                 << tr("Weak Spot");
+    } else if   (property_key == static_cast<int>(Properties::Asset_Collision_Shape)) {
+        options << tr("Image Shape")
+                << tr("Circle")
+                << tr("Square");
     } else {
         options << tr("Unknown List");
     }

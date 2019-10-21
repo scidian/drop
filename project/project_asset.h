@@ -65,7 +65,7 @@ public:
     void        initializeAssetSettingsFont(DrFont *font);
 
     void        initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape);
-    void        initializeAssetSettingsHealth(int hit_points = 1);
+    void        initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points = 1);
 
 };
 

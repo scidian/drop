@@ -104,7 +104,7 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
     object->setMaxHealth(max_health);
     object->setHealth(health);
     object->setDamage(damage);
-    object->setDeathDelay(damage_delay);
+    object->setDamageDelay(damage_delay);
     object->setAutoDamage(auto_damage);
     object->setDeathDelay(death_delay);
     object->setFadeOnDeath(fade_on_death);
@@ -119,12 +119,21 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
 //##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingCollisionShape(DrEngineObject *object) {
-    ///block->addShapeBoxFromTexture(asset_key);
-    QVariant shapes = m_project->getAsset(object->getAssetKey())->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape);
-    DrShapeList shape = shapes.value<DrShapeList>();
-    for (auto poly : shape.getPolygons()) {
-        QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
-        object->addShapePolygon(points);
+    DrAsset *asset = m_project->getAsset(object->getAssetKey());
+    if (asset == nullptr) return;
+
+    int shape_type =        asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape).toInt();
+    if (shape_type == 0) {
+        QVariant shapes =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
+        DrShapeList shape = shapes.value<DrShapeList>();
+        for (auto poly : shape.getPolygons()) {
+            QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
+            object->addShapePolygon(points);
+        }
+    } else if (shape_type == 1) {
+        object->addShapeCircleFromTexture( asset->getKey() );
+    } else if (shape_type == 2) {
+        object->addShapeBoxFromTexture( asset->getKey() );
     }
 }
 

@@ -119,7 +119,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  155
+//##    !!!!! NEXT AVAILABLE NUMBER:  159
 //##
 //############################
 enum class Properties {
@@ -165,10 +165,14 @@ enum class Properties {
     Asset_Font_Size                     = 20,
 
     // Asset_Collision
-    Asset_Collision_Shape               = 21,       // DrShapeList (polygons)
+    Asset_Collision_Shape               = 21,       // list, 0 is Image Shape, 1 is Circle, 2 is Square
     Asset_Collision_One_Way_Type        = 141,      // list, enum class One_Way (none, pass_through, weak_spot)
     Asset_Collision_One_Way_Direction   = 142,      // point
-    Asset_Collision_Gravity_Multiplier  = 143,      //
+    Asset_Collision_Gravity_Multiplier  = 143,      // double
+    Asset_Collision_Image_Shape         = 155,      // DrShapeList (polygons)
+    Asset_Collision_Circles             = 156,      // future use storing circles?
+    Asset_Collision_Squares             = 157,      // future use storing squares?
+    Asset_Collision_Polygons            = 158,      // future use storing polygons?
 
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image

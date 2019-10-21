@@ -59,7 +59,7 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
                 hit_points = 1;
             }
             initializeAssetSettingsCollision(getAssetType(), shape);
-            initializeAssetSettingsHealth(hit_points);
+            initializeAssetSettingsHealth(getAssetType(), hit_points);
             break;
         }
         case DrAssetType::Effect: {
