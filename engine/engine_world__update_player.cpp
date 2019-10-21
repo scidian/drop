@@ -294,9 +294,27 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ***** Forcifully move body after update using Forced Speed
     cpVect body_position = cpBodyGetPosition(body);
-    if (fixed_x) body_position.x += object->getForcedSpeedX() / 100.0;
-    if (fixed_y) body_position.y += object->getForcedSpeedY() / 100.0;
-    if (fixed_x || fixed_y) cpBodySetPosition(body, body_position);
+    if (fixed_x) body_position.x += (object->getForcedSpeedX() / 100.0);
+    if (fixed_y) body_position.y += (object->getForcedSpeedY() / 100.0);
+    if (fixed_x || fixed_y) {
+        bool move_good;
+        int count = 0;
+        do {
+            cpVect before_position = cpBodyGetPosition(body);
+            cpBodySetPosition(body, body_position);
+            cpVect after_position =  cpBodyGetPosition(body);
+            move_good = true;
+
+            if (fixed_x) {
+                if (after_position.x - before_position.x < (object->getForcedSpeedX() / 100.0)) {
+                    body_position.x += (object->getForcedSpeedX() / 100.0);
+                    move_good = false;
+                }
+            }
+
+            count++;
+        } while ((move_good == false) && count < 100);
+    }
 
 }
 

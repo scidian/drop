@@ -508,8 +508,10 @@ cpBodyUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	cpAssertSaneBody(body);
 }
 
-void
-cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
+//####################################################################################
+//####################################################################################
+// by Stevinz
+void cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
     // Skip kinematic bodies.
     if(cpBodyGetType(body) == CP_BODY_TYPE_KINEMATIC) return;
@@ -525,6 +527,8 @@ cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpF
 
     cpAssertSaneBody(body);
 }
+//####################################################################################
+//####################################################################################
 
 void
 cpBodyUpdatePosition(cpBody *body, cpFloat dt)

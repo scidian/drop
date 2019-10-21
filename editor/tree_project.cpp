@@ -40,6 +40,22 @@ TreeProject::TreeProject(QWidget *parent, DrProject *project, IEditorRelay *edit
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem *)),  this, SLOT(handleExpanded(QTreeWidgetItem *)));
 }
 
+// Handles changing the Advisor on Mouse Enter
+void TreeProject::enterEvent(QEvent *event) {
+    m_editor_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
+    QTreeWidget::enterEvent(event);
+}
+
+// Sets this as the Active Editor widget
+void TreeProject::focusInEvent(QFocusEvent *event) {
+    m_editor_relay->setActiveWidget(Editor_Widgets::Project_Tree);
+    if (selectedItems().count() > 0) {
+        long selected_key = selectedItems().first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+        if (selected_key > 0) m_editor_relay->buildInspector(QList<long> { selected_key });
+    }
+    QTreeWidget::focusInEvent(event);
+}
+
 
 //####################################################################################
 //##    Populates Tree Project List based on Project data
@@ -178,19 +194,6 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
     this->update();
     setAllowSelectionEvent(true);
 }
-
-// Handles changing the Advisor on Mouse Enter
-void TreeProject::enterEvent(QEvent *event) {
-    m_editor_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
-    QTreeWidget::enterEvent(event);
-}
-
-// Sets this as the Active Editor widget
-void TreeProject::focusInEvent(QFocusEvent *event) {
-    m_editor_relay->setActiveWidget(Editor_Widgets::Project_Tree);
-    QTreeWidget::focusInEvent(event);
-}
-
 
 
 //####################################################################################
