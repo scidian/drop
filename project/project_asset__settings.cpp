@@ -138,13 +138,13 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
 void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape) {
     if (asset_type == DrAssetType::Character) {
         addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Character.", Component_Colors::White_Snow, true);
-        getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
+        getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
                                QVariant::fromValue<DrShapeList>(shape),
                                "Collision Shape", "Shape of the Character as it interacts with other Assets in the world.");
     } else if (asset_type == DrAssetType::Object) {
         addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
-        getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
+        getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
                                QVariant::fromValue<DrShapeList>(shape),
                                 "Collision Shape", "Shape of the Object as it interacts with other Assets in the world.");
@@ -185,7 +185,7 @@ void DrAsset::initializeAssetSettingsHealth(int hit_points) {
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Fade_Delay,       Property_Type::Int, 750,
                            "Fade Delay",    "Time it takes in milliseconds for item to be removed after death (0 = remove immediately).");
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Damage_Recoil,    Property_Type::Double, 200.0,
-                           "Damage Recoil", "How much opposite force to apply when receiving damage.");
+                           "Damage Recoil", "How much opposite force to bounce back when receiving damage from another Thing.");
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Invincible,       Property_Type::Bool, false,
                            "Invincible",    "When true this object takes no damage nor Damage Recoil force and cannot be killed.");
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Touch,      Property_Type::Bool, false,
