@@ -63,6 +63,7 @@ namespace Component_Icons {
     const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };
     const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
     const QString Effects       { QString(":/assets/inspector_icons/comp_effects.png") };
+    const QString Health        { QString(":/assets/inspector_icons/comp_health.png") };
 
     // Thing Components
     const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };

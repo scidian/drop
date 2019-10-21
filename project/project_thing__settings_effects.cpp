@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 10/19/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      Effect Specific Components / Properties
 //
 //
 #include "debug.h"
@@ -21,13 +21,6 @@
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
-//####################################################################################
-//####################################################################################
-//##
-//##    Effect Specific Components / Properties
-//##
-//####################################################################################
-//####################################################################################
 
 //####################################################################################
 //##    Fire Components
@@ -58,6 +51,7 @@ void DrThing::addComponentSettingsFire() {
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed, Property_Type::Percent, 80.0,
                            "Speed", "How fast flames will move.");
 }
+
 
 //####################################################################################
 //##    Fisheye Components
@@ -113,6 +107,7 @@ void DrThing::addComponentSettingsLight(QColor color) {
                            "Pulse Speed", "How fast the light Pulses over time. This value is the total change desired over the course of one second.");
 }
 
+
 //####################################################################################
 //##    Mirror Components
 //####################################################################################
@@ -138,6 +133,7 @@ void DrThing::addComponentSettingsMirror() {
                            "Scatter Scale", "How much to scale the scatter noise. Default is 1.0. Must be greater than 0.");
 }
 
+
 //####################################################################################
 //##    Swirl Components
 //####################################################################################
@@ -156,6 +152,7 @@ void DrThing::addComponentSettingsSwirl() {
     addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle, Property_Type::Double, 100.0,
                            "Intensity", "Amount to swirl images under the Swirl effect.");
 }
+
 
 //####################################################################################
 //##    Water Components
@@ -228,6 +225,13 @@ void DrThing::addComponentSettingsWater() {
                            "Keep Flat?", "Should the top of the water stay completely flat, even with waves and refraction?");
 
 }
+
+
+
+
+
+
+
 
 
 

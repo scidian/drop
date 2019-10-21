@@ -81,7 +81,7 @@ private:
     bool            m_invincible = false;                           // When true this object takes no damage nor damage_recoil force, cannot be killed
     bool            m_death_touch = false;                          // When true kills everything on contact, even unlimited health...but not invincible objects
     double          m_max_health = 100.0;                           // Maximum object health, c_no_max_health (-1) = no maximum
-    double          m_health = 3.0;                                 // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
+    double          m_health = 1.0;                                 // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
     double          m_damage = 1.0;                                 // Damage caused to other objects of Type m_collision_type
     long            m_damage_delay = 500;                           // Minimum time in milliseconds that must pass between receiving damage
     double          m_auto_damage = 0.0;            // Take x damage per second (can be negative, i.e. add health)

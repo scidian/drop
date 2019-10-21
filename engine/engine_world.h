@@ -18,6 +18,7 @@
 #include "types/pointf.h"
 
 // Forward declarations
+class DrAsset;
 class DrEngine;
 class DrEngineLight;
 class DrEngineCamera;
@@ -176,6 +177,7 @@ public:
     void            loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
     ThingInfo       loadThingBasicInfo(DrThing *thing);
     void            loadThingCollisionShape(DrEngineObject *object);
+    void            loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
 
     void            loadCharacterToWorld(DrThing *thing);
     void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);

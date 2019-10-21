@@ -59,11 +59,13 @@ public:
     void        updateAnimationProperty(long source_key);
 
     // Initialize Calls
-    void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap, DrShapeList &shape);
-    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap, DrShapeList &shape);
+    void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
     void        initializeAssetSettingsEffect(QString new_name);
     void        initializeAssetSettingsFont(DrFont *font);
 
+    void        initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape);
+    void        initializeAssetSettingsHealth(int hit_points = 1);
 
 };
 

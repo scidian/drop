@@ -175,5 +175,6 @@
         <file>assets/dr_images/empty.png</file>
         <file>assets/toolbar_icons/toolbar_duplicate_gray.png</file>
         <file>assets/toolbar_icons/toolbar_duplicate.png</file>
+        <file>assets/inspector_icons/comp_health.png</file>
     </qresource>
 </RCC>

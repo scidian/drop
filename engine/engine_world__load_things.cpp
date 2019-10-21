@@ -36,6 +36,7 @@ ThingInfo DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
     return info;
 }
 
+
 //####################################################################################
 //##    Loads 3D Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
@@ -55,6 +56,7 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineObject *object) 
     object->setRotateSpeedX( (x_axis_speed.x() + (QRandomGenerator::global()->bounded(x_axis_speed.y() * 2.0) - x_axis_speed.y())) / 100.0 );
     object->setRotateSpeedY( (y_axis_speed.x() + (QRandomGenerator::global()->bounded(y_axis_speed.y() * 2.0) - y_axis_speed.y())) / 100.0 );
 }
+
 
 //####################################################################################
 //##    Loads Appearance Settings from DrThing in DrProject to DrEngineObject
@@ -82,6 +84,36 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     object->negative =      negative;
     object->wireframe =     wireframe;
 }
+
+
+//####################################################################################
+//##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
+//####################################################################################
+void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *object) {
+    double  max_health =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Max_Health).toDouble();
+    double  health =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Health).toDouble();
+    double  damage =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage).toDouble();
+    int     damage_delay =  asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Delay).toInt();
+    double  auto_damage =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Auto_Damage).toDouble();
+    int     death_delay =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Delay).toInt();
+    bool    fade_on_death = asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Fade_On_Death).toBool();
+    int     fade_delay =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Fade_Delay).toInt();
+    double  damage_recoil = asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Recoil).toDouble();
+    bool    invincible =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Invincible).toBool();
+    bool    death_touch =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Touch).toBool();
+    object->setMaxHealth(max_health);
+    object->setHealth(health);
+    object->setDamage(damage);
+    object->setDeathDelay(damage_delay);
+    object->setAutoDamage(auto_damage);
+    object->setDeathDelay(death_delay);
+    object->setFadeOnDeath(fade_on_death);
+    object->setFadeDelay(fade_delay);
+    object->setDamageRecoil(damage_recoil);
+    object->setInvincible(invincible);
+    object->setDeathTouch(death_touch);
+}
+
 
 //####################################################################################
 //##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
@@ -157,6 +189,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, player);
+
+    // ***** Health / Damage Settings
+    loadThingHealthSettings(asset, player);
 
     // ***** 3D Settings
     loadThing3DSettings(thing, player);
@@ -234,9 +269,11 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     block->setOneWayDirection(DrPointF(one_way_point.x(), one_way_point.y()));
     block->setGravityMultiplier(gravity_multi);
 
-
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, block);
+
+    // ***** Health / Damage Settings
+    loadThingHealthSettings(asset, block);
 
     // ***** 3D Settings
     loadThing3DSettings(thing, block);

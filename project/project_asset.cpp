@@ -45,16 +45,21 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
 
     QPixmap     my_starting_pixmap;
     DrShapeList shape;
-    switch (new_asset_type) {
+    int         hit_points = 1;
+    switch (getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
             my_starting_pixmap = getParentProject()->getImage(source_image_key)->getPixmapFromImage();
             shape = autoCollisionShape(my_starting_pixmap);
             if (new_asset_type == DrAssetType::Character) {
-                initializeAssetSettingsCharacter(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsCharacter(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap);
+                hit_points = 1;
             } else if (new_asset_type == DrAssetType::Object) {
-                initializeAssetSettingsObject(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap, shape);
+                initializeAssetSettingsObject(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap);
+                hit_points = 1;
             }
+            initializeAssetSettingsCollision(getAssetType(), shape);
+            initializeAssetSettingsHealth(hit_points);
             break;
         }
         case DrAssetType::Effect: {
@@ -229,122 +234,6 @@ void DrAsset::updateAnimationProperty(long source_key) {
     m_width =  new_pixmap.width();
     m_height = new_pixmap.height();
 }
-
-
-//####################################################################################
-//##    Property loading - initializeAssetSettings
-//####################################################################################
-void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap, DrShapeList &shape) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Character Name");
-    property_name->setDescription("Name of the current Character Asset.");
-    property_name->setValue(new_name);
-
-    addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
-    getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
-
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, QPointF(1000, 1000),
-                           "Max Speed", "Maximum movement speed of this Character in the x and y direction.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed, Property_Type::PointF, QPointF(0, 0),
-                           "Forced Speed", "Forced movement speed of this Character in the x and y direction.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed, Property_Type::PointF, QPointF(400, 0),
-                           "Move Speed", "Button / Joystick movement speed of this Character in the x and y direction.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, QPointF(0, 250),
-                           "Jump Force", "Force of jump button in the x and y direction");
-
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout, Property_Type::Positive, 800,
-                           "Jump Timeout", "Time, in milliseconds, Character should continue to gain jump force when jump button is held down.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Counter, Property_Type::Int, 1,
-                           "Jump Count", "Number of jumps Character can make before having to touch the ground or wall. For unlimited jumps "
-                                         "use any negative number (like -1). A Jump Count of 0 disables jumping for this Character.");
-
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Air, Property_Type::Bool, true,
-                           "Air Jump?", "Can this Character start jumping while falling in the air? (for example, if the Character fell off a platform)");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall, Property_Type::Bool, true,
-                           "Wall Jump?", "Can this Character jump off of walls?");
-
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag, Property_Type::PositiveDouble, 1.0,
-                           "Air Drag", "Affects acceleration and decceleration in air. Usually ranging from 0.0 to 1.0 or higher.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag, Property_Type::PositiveDouble, 1.0,
-                           "Ground Drag", "Affects acceleration and decceleration on the ground. Usually ranging from 0.0 to 1.0 or higher.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag, Property_Type::PositiveDouble, 0.25,
-                           "Rotate Drag", "Affects rotation acceleration and decceleration. Usually ranging from 0.0 to 1.0 or higher.");
-
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Can_Rotate, Property_Type::Bool, false,
-                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Feels_Gravity, Property_Type::Bool, true,
-                           "Feels Gravity?", "Should this character be affected by gravity?");
-
-
-
-    addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Character.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
-                           QVariant::fromValue<DrShapeList>(shape),
-                           "Collision Shape", "Shape of the Character as it interacts with other Assets in the world.");
-
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
-    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this Asset.");
-}
-
-void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, DrShapeList &shape) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Object Name");
-    property_name->setDescription("Name of the current Object Asset.");
-    property_name->setValue(new_name);
-
-//    addComponent(Components::Asset_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
-//    getComponent(Components::Asset_Settings_Object)->setIcon(Component_Icons::Object);
-
-//    addPropertyToComponent(Components::Asset_Settings_Object, Properties::Asset_Object_One_Way_Type, Property_Type::List, 0,
-//                           "One Way Type", "Type of One Way collision for this object. <b></b>");
-
-
-    addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
-    getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
-                           QVariant::fromValue<DrShapeList>(shape),
-                            "Collision Shape", "Shape of the Object as it interacts with other Assets in the world.");
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
-                            "One Way Type", "Type of One Way collision for this object. <br>"
-                                            "<b>Pass_Through</b> - Objects / Character can pass through in one direction. <br>"
-                                            "<b>Weak_Spot</b> - Only takes damage from one direction.");
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
-                            "One Way Angle", "Direction that affects \"One Way Type\". 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
-                            "Gravity Multiplier", "Use to cancel Gravity (0.0) on items that collide (climbable ladders), or to reduce Gravity (sticky wall)");
-
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
-    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                            "Default Animation", "Image shown for this Asset.");
-}
-
-void DrAsset::initializeAssetSettingsEffect(QString new_name) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect Asset.");
-    property_name->setValue(new_name);
-}
-
-
-void DrAsset::initializeAssetSettingsFont(DrFont *font) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Font Name");
-    property_name->setDescription("Name of the current Font Asset.");
-    property_name->setValue(font->getName());
-
-    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
-                           "Font Family", "Font used for this text asset.", false, false);
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
-                           "Font Size", "Font size of this text asset.", false, false);
-}
-
-
 
 
 

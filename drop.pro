@@ -188,14 +188,19 @@ SOURCES += \
     project/project__file_save.cpp \
     project/project__initialize.cpp \
     project/project_asset.cpp \
+    project/project_asset__settings.cpp \
     project/project_effect.cpp \
     project/project_font.cpp \
     project/project_image.cpp \
     project/project_stage.cpp \
+    project/project_stage__settings.cpp \
     project/project_thing.cpp \
-    project/project_thing__effects.cpp \
+    project/project_thing__settings.cpp \
+    project/project_thing__settings_effects.cpp \
+    project/project_thing__settings_shared.cpp \
     project/project_thing__z_order.cpp \
     project/project_world.cpp \
+    project/project_world__settings.cpp \
     project/thing_shape_list.cpp \
     settings/settings.cpp \
     settings/settings_component.cpp \

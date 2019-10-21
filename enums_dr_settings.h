@@ -56,7 +56,7 @@ enum class Property_Type {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  34
+//##    !!!!! NEXT AVAILABLE NUMBER:  35
 //##
 //############################
 enum class Components {
@@ -73,6 +73,7 @@ enum class Components {
 
     Asset_Collision                     = 5,
     Asset_Animation                     = 6,
+    Asset_Health                        = 34,
 
 
     // ***** DrWorld Components
@@ -118,7 +119,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  143
+//##    !!!!! NEXT AVAILABLE NUMBER:  155
 //##
 //############################
 enum class Properties {
@@ -171,6 +172,19 @@ enum class Properties {
 
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image
+
+    // Asset_Health
+    Asset_Health_Max_Health             = 144,      // double
+    Asset_Health_Health                 = 145,      // double
+    Asset_Health_Damage                 = 146,      // double
+    Asset_Health_Damage_Delay           = 147,      // int
+    Asset_Health_Auto_Damage            = 148,      // double
+    Asset_Health_Death_Delay            = 149,      // int
+    Asset_Health_Fade_On_Death          = 150,      // bool
+    Asset_Health_Fade_Delay             = 151,      // int
+    Asset_Health_Damage_Recoil          = 152,      // double
+    Asset_Health_Invincible             = 153,      // bool
+    Asset_Health_Death_Touch            = 154,      // bool
 
 
     // ******************** DrWorld Component Properties
