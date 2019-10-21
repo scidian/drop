@@ -302,18 +302,24 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap, Dr
 //                           "One Way Type", "Type of One Way collision for this object. <b></b>");
 
 
-
-
     addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::Collision,
                            QVariant::fromValue<DrShapeList>(shape),
-                           "Collision Shape", "Shape of the Object as it interacts with other Assets in the world.");
+                            "Collision Shape", "Shape of the Object as it interacts with other Assets in the world.");
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
+                            "One Way Type", "Type of One Way collision for this object. <br>"
+                                            "<b>Pass_Through</b> - Objects / Character can pass through in one direction. <br>"
+                                            "<b>Weak_Spot</b> - Only takes damage from one direction.");
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
+                            "One Way Angle", "Direction that affects \"One Way Type\". 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
+                            "Gravity Multiplier", "Use to cancel Gravity (0.0) on items that collide (climbable ladders), or to reduce Gravity (sticky wall)");
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this Asset.");
+                            "Default Animation", "Image shown for this Asset.");
 }
 
 void DrAsset::initializeAssetSettingsEffect(QString new_name) {

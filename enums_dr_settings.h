@@ -154,9 +154,8 @@ enum class Properties {
     Asset_Character_Feels_Gravity       = 18,       // bool
 
 
-    // Asset_Settings_Character
-    Asset_Object_One_Way_Type           = 141,      // list
-    Asset_Object_One_Way_Direction      = 142,      // point
+    // Asset_Settings_Object
+
 
 
 
@@ -166,6 +165,9 @@ enum class Properties {
 
     // Asset_Collision
     Asset_Collision_Shape               = 21,       // DrShapeList (polygons)
+    Asset_Collision_One_Way_Type        = 141,      // list, enum class One_Way (none, pass_through, weak_spot)
+    Asset_Collision_One_Way_Direction   = 142,      // point
+    Asset_Collision_Gravity_Multiplier  = 143,      //
 
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image

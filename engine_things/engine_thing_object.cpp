@@ -38,7 +38,12 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
 
     // Object Basics                 !!!!! #NOTE: texture_number == Asset Key
     if (texture_number != 0) {
-        this->setSize( DrPointF(world->getTexture(texture_number)->width(), world->getTexture(texture_number)->height()) );
+        DrEngineTexture *texture = world->getTexture(texture_number);
+        if (texture != nullptr) {
+            this->setSize( DrPointF(texture->width(), texture->height()));
+        } else {
+            this->setSize( DrPointF(100, 100) );
+        }
     }
     this->setTextureNumber(texture_number);                                     // Texture to render from
     this->updateBodyPosition( DrPointF(x, y), true );

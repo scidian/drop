@@ -114,7 +114,9 @@ SOURCES += \
     engine/engine_world__build_world.cpp \
     engine/engine_world__clear.cpp \
     engine/engine_world__collision.cpp \
-    engine/engine_world__load.cpp \
+    engine/engine_world__load_effects.cpp \
+    engine/engine_world__load_stage.cpp \
+    engine/engine_world__load_things.cpp \
     engine/engine_world__update.cpp \
     engine/engine_world__update_player.cpp \
     engine/form_engine.cpp \

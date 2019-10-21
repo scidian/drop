@@ -164,9 +164,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
-    if (!texture->texture()->isBound()) {
-        texture->texture()->bind();
-    }
+    if (texture == nullptr) return;
+    if (!texture->texture()->isBound()) texture->texture()->bind();
     float texture_width =  texture->width();
     float texture_height = texture->height();
 
@@ -331,6 +330,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
+    if (texture == nullptr) return;
     if (!texture->texture()->isBound()) texture->texture()->bind();
 
     // ***** Set Shader Variables
@@ -393,8 +393,8 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
-    if (!texture->texture()->isBound())
-        texture->texture()->bind();  
+    if (texture == nullptr) return true;
+    if (!texture->texture()->isBound()) texture->texture()->bind();
 
     // ***** Load vertices for this object
     QVector<GLfloat> vertices;
