@@ -122,6 +122,8 @@ private:
     bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
     bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
 
+    bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
+    bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
 
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
@@ -146,7 +148,8 @@ private:
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
 
     DrPointF    m_previous_position;                        // Previous frame position, updated every frame by update()
-
+    bool        m_flipped_x = false;                        // True when image is flipped (going left) over the x axis
+    bool        m_flipped_y = false;                        // True when image is flipped (going down) over the y axis
 
 public:
     // ***** Image Post Processing Attributes
@@ -272,6 +275,7 @@ public:
     const bool&     canWallJump() { return m_wall_jump; }
     const bool&     canRotate() { return m_can_rotate; }
     bool            ignoreGravity() { return m_ignore_gravity; }
+    bool            getFlipImageX() { return m_flip_image_x; }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -293,7 +297,7 @@ public:
     void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
     void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
     void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
-
+    void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
 
     // ***** Local Variables - Updated By Engine
     const int&      getRemainingJumps() { return m_remaining_jumps; }
@@ -324,6 +328,8 @@ public:
     DrTime&         getDeathTimer() { return m_death_timer; }
     DrTime&         getFadeTimer() { return m_fade_timer; }
 
+    bool            isFlippedX() { return m_flipped_x; }
+    void            setFlipX(bool flipped) { m_flipped_x = flipped; }
 
     // Object->Body Data - Updated every frame by updateWorld()
     DrPointF        getPreviousPosition() { return m_previous_position; }

@@ -152,7 +152,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         add_pixel_x = (pixels_to_add * object->getScaleX()) / (static_cast<float>(object->getSize().x));
         add_pixel_y = (pixels_to_add * object->getScaleY()) / (static_cast<float>(object->getSize().y));
     }
-    model.scale( object->getScaleX() + add_pixel_x, object->getScaleY() + add_pixel_y, static_cast<float>(object->getDepth()) );
+    float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
+    model.scale( (object->getScaleX() + add_pixel_x) * flip_x, object->getScaleY() + add_pixel_y, static_cast<float>(object->getDepth()) );
     m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
     m_default_shader.setUniformValue( u_default_matrix_object,  model );
 
@@ -323,7 +324,8 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
 
     // Scale
-    model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
+    float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
+    model.scale(static_cast<float>(object->getSize().x) * flip_x, static_cast<float>(object->getSize().y), 1.0f);
     model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
     m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
@@ -397,8 +399,9 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     if (!texture->texture()->isBound()) texture->texture()->bind();
 
     // ***** Load vertices for this object
+    float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     QVector<GLfloat> vertices;
-    getThingVertices(vertices, object);
+    getThingVertices(vertices, object, flip_x);
     m_occluder_shader.setAttributeArray(    a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 

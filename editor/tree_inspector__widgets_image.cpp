@@ -120,6 +120,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     if (event->type() == QEvent::Drop) {
         QDropEvent *drop_event = dynamic_cast<QDropEvent*>(event);
 
+        // ********** Check if Image Format
         if (drop_event->mimeData()->hasUrls() == false) {
             event->ignore();
             return false;
@@ -138,9 +139,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             event->ignore();
             return QObject::eventFilter(object, event);
         }
-        if ( image.format() != QImage::Format::Format_ARGB32 )
-            image = image.convertToFormat( QImage::Format_ARGB32 );
-        QPixmap pixmap = QPixmap::fromImage( image );
+        QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
 
         // ********** Dropped on to Asset Property
         if (settings->getType() == DrType::Asset) {

@@ -166,6 +166,8 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     bool    can_rotate =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Can_Rotate).toBool();
     bool    feels_gravity = asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Feels_Gravity).toBool();
 
+    bool    flip_image_x =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_X).toBool();
+
     // ***** Add the player to the cpSpace
     DrEngineObject *player = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, asset_key,
                                                 info.position.x, -info.position.y, info.z_order,
@@ -195,6 +197,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setRotateDrag( rotate_drag );
 
     player->setIgnoreGravity( !feels_gravity );
+    player->setFlipImageX( flip_image_x );
 
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, player);

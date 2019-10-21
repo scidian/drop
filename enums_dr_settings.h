@@ -119,7 +119,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are save file critical and cannot be changed once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  159
+//##    !!!!! NEXT AVAILABLE NUMBER:  161
 //##
 //############################
 enum class Properties {
@@ -153,6 +153,8 @@ enum class Properties {
 
     Asset_Character_Can_Rotate          = 17,       // bool
     Asset_Character_Feels_Gravity       = 18,       // bool
+    Asset_Character_Flip_Image_X        = 159,      // bool
+    Asset_Character_Flip_Image_Y        = 160,      // bool
 
 
     // Asset_Settings_Object

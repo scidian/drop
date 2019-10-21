@@ -229,7 +229,7 @@ void DrAsset::updateAnimationProperty(long source_key) {
     setComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Default, QVariant(new_pixmap));
 
     DrShapeList shape = autoCollisionShape(new_pixmap);
-    setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape, QVariant::fromValue<DrShapeList>(shape));
+    setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, QVariant::fromValue<DrShapeList>(shape));
 
     m_width =  new_pixmap.width();
     m_height = new_pixmap.height();
