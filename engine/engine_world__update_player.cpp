@@ -188,11 +188,11 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
 
     // ***** Velocity - Target horizontal speed for air / ground control
-    cpVect  body_v = cpBodyGetVelocity( object->body );
+    cpVect  velocity = cpBodyGetVelocity( object->body );
 
     // Calculate target velocity, includes any Forced Movement
-    cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
-    cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
+    cpFloat target_vx = (object->getMoveSpeedX() * key_x);/// + object->getForcedSpeedX();
+    cpFloat target_vy = (object->getMoveSpeedY() * key_y);/// + object->getForcedSpeedY();
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
@@ -243,25 +243,25 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
-        if ((Dr::FuzzyCompare(body_v.x, 0.0) == false && Dr::FuzzyCompare(target_vx, 0.0) == false) ||
-            (body_v.x <= 0 && target_vx > 0) || (body_v.x >= 0 && target_vx < 0))
-                body_v.x = cpflerpconst( body_v.x, target_vx, air_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, 0, air_drag / c_drag_air * dt);
+        if ((Dr::FuzzyCompare(velocity.x, 0.0) == false && Dr::FuzzyCompare(target_vx, 0.0) == false) ||
+            (velocity.x <= 0 && target_vx > 0) || (velocity.x >= 0 && target_vx < 0))
+                velocity.x = cpflerpconst( velocity.x, target_vx, air_accel_x * dt);
+        else    velocity.x = cpflerpconst( velocity.x, 0, air_drag / c_drag_air * dt);
 
-        if ((Dr::FuzzyCompare(body_v.y, 0.0) == false && Dr::FuzzyCompare(target_vy, 0.0) == false) ||
-            (body_v.y <= 0 && target_vy > 0) || (body_v.y >= 0 && target_vy < 0))
-                body_v.y = cpflerpconst( body_v.y, target_vy, air_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, 0, air_drag / c_drag_air * dt);
+        if ((Dr::FuzzyCompare(velocity.y, 0.0) == false && Dr::FuzzyCompare(target_vy, 0.0) == false) ||
+            (velocity.y <= 0 && target_vy > 0) || (velocity.y >= 0 && target_vy < 0))
+                velocity.y = cpflerpconst( velocity.y, target_vy, air_accel_y * dt);
+        else    velocity.y = cpflerpconst( velocity.y, 0, air_drag / c_drag_air * dt);
 
     // Interpolate towards desired velocity if on ground / wall
     } else {
         if (Dr::FuzzyCompare(target_vx, 0.0) == false)
-                body_v.x = cpflerpconst( body_v.x, target_vx, ground_accel_x * dt);
-        else    body_v.x = cpflerpconst( body_v.x, target_vx, ground_drag / c_drag_ground * dt);
+                velocity.x = cpflerpconst( velocity.x, target_vx, ground_accel_x * dt);
+        else    velocity.x = cpflerpconst( velocity.x, target_vx, ground_drag / c_drag_ground * dt);
 
         if (Dr::FuzzyCompare(target_vy, 0.0) == false)
-                body_v.y = cpflerpconst( body_v.y, target_vy, ground_accel_y * dt);
-        else    body_v.y = cpflerpconst( body_v.y, target_vy, ground_drag / c_drag_ground * dt);
+                velocity.y = cpflerpconst( velocity.y, target_vy, ground_accel_y * dt);
+        else    velocity.y = cpflerpconst( velocity.y, target_vy, ground_drag / c_drag_ground * dt);
     }
 
 
@@ -271,10 +271,17 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodySetAngularVelocity( body, body_r );
 
 
+    // ***** Fixed (forced) velocity
+    bool fixed_x = (Dr::FuzzyCompare(object->getForcedSpeedX(), 0.0) == false);
+    bool fixed_y = (Dr::FuzzyCompare(object->getForcedSpeedY(), 0.0) == false);
+    if (fixed_x) velocity.x = 0;
+    if (fixed_y) velocity.y = 0;
+
+
     // ***** Max Speed - Limit Velocity
-    body_v.x = cpfclamp(body_v.x, -object->getMaxSpeedX(), object->getMaxSpeedX());
-    body_v.y = cpfclamp(body_v.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
-    cpBodySetVelocity( object->body, body_v );
+    velocity.x = cpfclamp(velocity.x, -object->getMaxSpeedX(), object->getMaxSpeedX());
+    velocity.y = cpfclamp(velocity.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
+    cpBodySetVelocity( object->body, velocity );
 
 
     // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
@@ -283,6 +290,14 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     } else {
         cpBodyUpdateVelocity(body, cpv(gravity.x * object->getTempGravityMultiplier(), gravity.y * object->getTempGravityMultiplier()), damping, dt);
     }
+
+
+    // ***** Forcifully move body after update using Forced Speed
+    cpVect body_position = cpBodyGetPosition(body);
+    if (fixed_x) body_position.x += object->getForcedSpeedX() / 100.0;
+    if (fixed_y) body_position.y += object->getForcedSpeedY() / 100.0;
+    if (fixed_x || fixed_y) cpBodySetPosition(body, body_position);
+
 }
 
 

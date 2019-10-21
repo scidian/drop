@@ -220,7 +220,6 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             DrProperty *property = property_pair.second;
 
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrShapeList class
-            if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Shape)) continue;
             if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Image_Shape)) continue;
 
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
