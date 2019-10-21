@@ -48,7 +48,7 @@ private:
     DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
 
 public:
-    // Constructor & destructor
+    // Constructor / Destructor
     explicit DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_thing_key,
                      QString new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, double z, bool should_collide = true);
     virtual ~DrThing() override;
@@ -56,7 +56,7 @@ public:
     // DrSettings Base Class Overrides
     virtual DrType  getType() override          { return DrType::Thing; }
 
-    // Getters and setters
+    // Getters / Setters
     DrWorld*        getParentWorld()            { return m_parent_world; }
     DrStage*        getParentStage()            { return m_parent_stage; }
 

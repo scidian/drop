@@ -38,6 +38,7 @@ private:
     double      m_zoom;                         // Level of zoom of magnifier
 
 public:
+    // Constructor / Destructor
     explicit FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int width, int height, double zoom);
     virtual ~FormColorMagnifier() override;
 

@@ -83,11 +83,11 @@ private:
 
 
 public:
-    // Constructor & Destructor
+    // Constructor / Destructor
     DrProject();
     ~DrProject();
 
-    // Getters and Setters
+    // Getters / Setters
     long        getNextKey()            { return m_key_generator++; }
     void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
 

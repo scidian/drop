@@ -27,26 +27,29 @@ class DrComponent
 {
 private:
     // External Borrowed Pointers
-    DrSettings *m_parent_settings;                                  // Point to the DrSettings class that holds this component
+    DrSettings      *m_parent_settings;                                 // Point to the DrSettings class that holds this component
 
     // Local Variables
-    PropertyMap m_properties;                                       // Map of pointers to DrProperty classes
+    PropertyMap     m_properties;                                       // Map of pointers to DrProperty classes
 
     // The 6 Parts of Data for Every Component
-    QString     m_display_name = "Unknown Component";
-    QString     m_description = "No description";
-    QString     m_icon = "";
-    QColor      m_color = QColor(Qt::gray);
-    bool        m_turned_on = false;
-    long        m_component_key;
+    QString         m_display_name = "Unknown Component";
+    QString         m_description = "No description";
+    QString         m_icon = "";
+    QColor          m_color = QColor(Qt::gray);
+    bool            m_turned_on = false;
+    long            m_component_key;
 
+    // For now this is not stored, assignined after creation in void DrComponent::addProperty()
+    // Used for sorting in Object Inspector
+    int             m_list_order = 0;
 
 public:
     // Constructor / Destructor
     DrComponent(DrSettings *parent_settings, QString new_display_name, QString new_description, QColor new_color, long new_key, bool new_turned_on);
     ~DrComponent();
 
-    // Getters and Setters
+    // Getters / Setters
     DrSettings*     getParentSettings() { return m_parent_settings; }
 
     PropertyMap&    getPropertyMap() { return m_properties; }
@@ -69,8 +72,11 @@ public:
     void        turnOn() { m_turned_on = true; }
     void        turnOff() { m_turned_on = false; }
 
+    // Inspector Sorting Variable
+    int         getListOrder() { return m_list_order; }
+    void        setListOrder(int order) { m_list_order = order; }
 
-    // Function Calls
+    // Building Calls
     void addProperty(Properties     property_number,
                      Property_Type  type,
                      QVariant       value,

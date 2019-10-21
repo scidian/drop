@@ -31,7 +31,7 @@ private:
     QString                 m_name;                         // Name of this font within the Project
 
 
-    // Font properties - NEED TO INCORPORATE FOR EDITOR
+    // Font Properties - NEED TO INCORPORATE FOR EDITOR
     QString     p_font_family;              // Font to use
     int         p_font_size;                // Point size
     int         p_font_padding;             // Extra letter spacing
@@ -50,12 +50,13 @@ private:
 
 
 public:
+    // Constructor
     DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);
 
     // Function Calls
     QPixmap         createText(QString text);
 
-    // Getters and Setters
+    // Getters / Setters
     virtual DrType  getType() override      { return DrType::Font; }
     QString         getName() override      { return m_name; }
 

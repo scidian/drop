@@ -52,13 +52,14 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             my_starting_pixmap = getParentProject()->getImage(source_image_key)->getPixmapFromImage();
             shape = autoCollisionShape(my_starting_pixmap);
             if (new_asset_type == DrAssetType::Character) {
-                initializeAssetSettingsCharacter(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap);
+                initializeAssetSettingsCharacter(getParentProject()->getImage(source_image_key)->getSimplifiedName());
                 hit_points = 1;
             } else if (new_asset_type == DrAssetType::Object) {
-                initializeAssetSettingsObject(getParentProject()->getImage(source_image_key)->getSimplifiedName(), my_starting_pixmap);
+                initializeAssetSettingsObject(getParentProject()->getImage(source_image_key)->getSimplifiedName());
                 hit_points = 1;
             }
             initializeAssetSettingsCollision(getAssetType(), shape);
+            initializeAssetSettingsAnimation(getAssetType(), my_starting_pixmap);
             initializeAssetSettingsHealth(getAssetType(), hit_points);
             break;
         }

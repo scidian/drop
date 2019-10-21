@@ -121,7 +121,7 @@ private:
 
 
 public:
-    // Constructor and Destructor
+    // Constructor / Destructor
     explicit FormMain(QWidget *parent = nullptr);
     virtual ~FormMain() override;
 

@@ -39,6 +39,7 @@ private:
     std::list<DrCircle>                 m_circles   { };            // List of circle shapes
 
 public:
+    // Constructor
     DrShapeList() { }
 
     // Shape Functions

@@ -68,6 +68,7 @@ void DrComponent::addProperty(Properties setting,
                               bool is_hidden,
                               bool is_editable) {
     DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, static_cast<int>(setting), is_hidden, is_editable);
+    prop->setListOrder( static_cast<int>(m_properties.size()) );
     m_properties[static_cast<int>(setting)] = prop;
 }
 

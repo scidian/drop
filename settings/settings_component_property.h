@@ -30,14 +30,18 @@ private:
     // The 7 Parts of Data for Every Property
     QString       m_display_name =      "Unknown Property";                     // Name to be displayed in Editor
     QString       m_description =       "No description";                       // Description to be displayed in Editor
-    Property_Type m_preferred_type =    Property_Type::String;                  // m_value Type
+    Property_Type m_property_type =     Property_Type::String;                  // Variable type of 'm_value'
     QVariant      m_value =             QString::fromStdString("0");            // The stored data this property represents
     long          m_property_key =      0;                                      // The unique id of this property within the parent object
     bool          m_is_hidden =         false;                                  // Should this appear in the Inspector
     bool          m_is_editable =       true;                                   // Should this be editable in the Inspector
 
+    // For now this is not stored, assignined after creation in void DrComponent::addProperty()
+    // Used for sorting in Object Inspector
+    int           m_list_order = 0;
+
 public:
-    // Constructor & destructor
+    // Constructor / Destructor
     DrProperty(DrSettings      *parent_settings,
                DrComponent     *parent_component,
                QString          display_name,
@@ -48,26 +52,27 @@ public:
                bool             is_hidden = false,
                bool             is_editable = true);
 
-    // Getters and setters
-    DrSettings*   getParentSettings() { return m_parent_settings; }
-    DrComponent*  getParentComponent() { return m_parent_component; }
+    // Getters / setters
+    DrSettings*     getParentSettings() { return m_parent_settings; }
+    DrComponent*    getParentComponent() { return m_parent_component; }
 
-    QString       getDisplayName() { return m_display_name; }
-    QString       getDescription() { return m_description; }
-    Property_Type getPropertyType() { return m_preferred_type; }
-    QVariant      getValue() { return m_value; }
+    QString         getDisplayName() { return m_display_name; }
+    QString         getDescription() { return m_description; }
+    Property_Type   getPropertyType() { return m_property_type; }
+    QVariant        getValue() { return m_value; }
+    long            getPropertyKey() { return m_property_key; }
+    bool            isHidden() { return m_is_hidden; }
+    bool            isEditable() { return m_is_editable; }
 
-    long          getPropertyKey() { return m_property_key; }
+    void            setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
+    void            setDescription(QString new_description) { m_description = new_description; }
+    void            setPropertyType(Property_Type new_type) { m_property_type = new_type; }
+    void            setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
+    void            setEditable(bool is_editable) { m_is_editable = is_editable; }
 
-    bool          isHidden() { return m_is_hidden; }
-    void          setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
-
-    bool          isEditable() { return m_is_editable; }
-    void          setEditable(bool is_editable) { m_is_editable = is_editable; }
-
-    void setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
-    void setDescription(QString new_description) { m_description = new_description; }
-    void setPropertyType(Property_Type new_type) { m_preferred_type = new_type; }
+    // Inspector Sorting Variable
+    int             getListOrder() { return m_list_order; }
+    void            setListOrder(int order) { m_list_order = order; }
 
 
     //####################################################################################

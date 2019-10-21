@@ -42,12 +42,12 @@ protected:       // so derived classes can access
     void         setKey (long new_key) { setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key, QVariant::fromValue(new_key)); }
 
 public:
-    // Constructor and Destructor
+    // Constructor / Destructor
     DrSettings(DrProject *parent_project);
     virtual ~DrSettings();
 
 
-    // Getters and Setters
+    // Getters / Setters
     DrProject*      getParentProject()      { return m_parent_project; }
 
     long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLongLong(); }

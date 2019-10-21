@@ -126,7 +126,6 @@ void DrProject::openProjectFromFile(QString open_file) {
         // Load Asset Settings, Variables
         DrAsset *asset = findAssetFromKey(asset_key);
         loadSettingsFromMap(asset,  asset_data);
-        asset->setListOrder(        asset_data["list_order"].toLongLong() );
     }
     settings.endArray();
 
@@ -227,10 +226,15 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
             k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString()   );
             k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString()   );
-            k = map_key + "data_type";      if (checkMapHasKey(map, k)) property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
+
+            // Already assigned by Drop
+            ///k = map_key + "data_type";      if (checkMapHasKey(map, k)) property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
+
             k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k]  );
             k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
             k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
+
+            // Alreadt assigned by Drop
             ///k = map_key + "prop_key";       if (checkMapHasKey(map, k)) property->setPropertyKey(   map[k].toLongLong() );
         }
     }

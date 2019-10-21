@@ -32,10 +32,11 @@ private:
     QImage           m_image;                           // Stored image
 
 public:
+    // Constructors
     DrImage(DrProject *parent_project, long key, QString image_path);
     DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image);
 
-    // Getters and setters
+    // Getters / Setters
     virtual DrType  getType() override      { return DrType::Image; }
 
     QString         getFullPath()           { return m_full_path; }

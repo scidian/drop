@@ -27,18 +27,18 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
                        long             new_key,
                        bool             is_hidden,
                        bool             is_editable) {
-    m_parent_settings = parent_settings;
-    m_parent_component = parent_component;
+    m_parent_settings =     parent_settings;
+    m_parent_component =    parent_component;
 
-    m_display_name = display_name;
-    m_description = description;
-    m_preferred_type = type;
-    m_value = value;
+    m_display_name =    display_name;
+    m_description =     description;
+    m_property_type =   type;
+    m_value =           value;
 
-    m_property_key = new_key;
+    m_property_key =    new_key;
 
-    m_is_hidden = is_hidden;
-    m_is_editable = is_editable;
+    m_is_hidden =       is_hidden;
+    m_is_editable =     is_editable;
 }
 
 

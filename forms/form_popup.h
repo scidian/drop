@@ -50,6 +50,7 @@ private:
     QPoint           m_offset;                          // Adjustment to popup location from parent
 
 public:
+    // Constructor
     FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use_for_mapToGlobal, int x_offset = 0, int y_offset = 5);
 
     // Event Overrides

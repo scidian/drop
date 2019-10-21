@@ -34,11 +34,11 @@ private:
     bool        m_expanded = true;                      // Wether or not this is expanded in the Project Tree
 
 public:
-    // Constructor & Destructor
+    // Constructor / Destructor
     DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage = true);
     virtual ~DrWorld() override;
 
-    // Getters and Setters
+    // Getters / Setters
     virtual DrType  getType() override                  { return DrType::World; }
     StageMap&       getStageMap()                       { return m_stages; }
 

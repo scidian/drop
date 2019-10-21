@@ -150,6 +150,7 @@ bool DrSettings::setName(QString new_name) {
 //####################################################################################
 void DrSettings::addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on) {
     DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
+    comp->setListOrder( static_cast<int>(m_components.size()) );
     m_components[static_cast<long>(component)] = comp;
 }
 

@@ -104,7 +104,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     }
     // !!!!! END
 
-    // If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
+    // ***** If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !force_rebuild) {
         DrThing *thing1 = dynamic_cast<DrThing*>(m_project->findSettingsFromKey(m_selected_key));
         DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
@@ -118,7 +118,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     m_selected_key =  new_key;
     m_selected_type = new_type;
 
-    // Change Advisor text after new item selection
+    // ***** Change Advisor text after new item selection
     switch (m_selected_type) {
         case DrType::Asset:        break;///m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Description);     break;
         case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
@@ -129,14 +129,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
+    // ***** Get component map, sort by listOrder
+    std::vector<DrComponent*> components { };
+    for (auto component_pair: new_settings->getComponentMap()) components.push_back(component_pair.second);
+    std::sort(components.begin(), components.end(), [](DrComponent *a, DrComponent *b) {
+        return a->getListOrder() < b->getListOrder();
+    });
 
-    // Loop through each component and add it to the Inspector list
+    // ********** Loop through each component and add it to the Inspector list
     this->clear();
     m_widgets.clear();
 
-    for (auto component_pair: new_settings->getComponentMap()) {
-        DrComponent *component = component_pair.second;
-
+    for (auto component: components) {
         if (component->isTurnedOn() == false) {
             continue;
         } else if (component->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
@@ -201,9 +205,15 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         vertical_layout->setMargin(0);
         vertical_layout->setContentsMargins(6,4,8,4);
 
-        // Loop through each property and add it to the component frame
-        for (auto &property_pair: component->getPropertyMap()) {
-            DrProperty *property = property_pair.second;
+        // ***** Get property map, sort by listOrder
+        std::vector<DrProperty*> properties { };
+        for (auto property_pair: component->getPropertyMap()) properties.push_back(property_pair.second);
+        std::sort(properties.begin(), properties.end(), [](DrProperty *a, DrProperty *b) {
+            return a->getListOrder() < b->getListOrder();
+        });
+
+        // ***** Loop through each property and add it to the component frame
+        for (auto property: properties) {
             if (property->isHidden() && Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) {
                 continue;
             }
@@ -256,12 +266,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 case Property_Type::List:           new_widget = createListBox(             prop, fp, sp_right);                                break;
                 case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                                break;
 
-
-                //################ !!!!!!!!!!!!!!!!!!!!!!!
-                //
-                //      NEEDS MORE WORK, NOT IN UPDATE!!!!
-                //
-                //################ !!!!!!!!!!!!!!!!!!!!!!!
                 case Property_Type::Image:
                     new_widget = createImageFrame(          prop, fp, sp_right);
                     new_widget->installEventFilter(new DrFilterInspectorImage(single_row, m_editor_relay));

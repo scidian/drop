@@ -14,10 +14,12 @@
 //############################
 enum class Property_Type {
     Bool,                   // bool             True or False
+    BoolDouble,             // bool w/double    True or False, and when True shows double spinbox
+                            //                  QList<QVariant> of 4 values: bool, double value, double step size, string spinText
 
     Int,                    // long             Integer
     Positive,               // long             Integer >= 0
-    RangedInt,              // long             QList<QVariant> of 4 values, long, min long value, max long value, long step size
+    RangedInt,              // long             QList<QVariant> of 4 values: long, min long value, max long value, long step size
 
     Double,                 // double           Floating point number
     Angle,                  // double           Floating point for showing degrees, shows degree symbol in spinbox
@@ -54,7 +56,7 @@ enum class Property_Type {
 
 
 //####################################################################################
-//##    Possible components, numbers are save file critical and cannot be changed once set
+//##    Possible components, numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
 //##    !!!!! NEXT AVAILABLE NUMBER:  35
 //##
@@ -117,7 +119,7 @@ enum class Components {
 
 
 //####################################################################################
-//##    Possible components, numbers are save file critical and cannot be changed once set
+//##    Possible components, numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
 //##    !!!!! NEXT AVAILABLE NUMBER:  162
 //##
@@ -176,6 +178,10 @@ enum class Properties {
     Asset_Collision_Squares             = 157,      // future use storing squares?
     Asset_Collision_Polygons            = 158,      // future use storing polygons?
     Asset_Collision_Surface_Velocity    = 161,      // future use storing polygons?
+
+    Asset_Collision_Custom_Friction     = 162,
+    Asset_Collision_Custom_Bounce       = 163,
+
 
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image

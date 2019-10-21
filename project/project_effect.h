@@ -28,6 +28,7 @@ private:
     DrEffectType     m_effect_type;                     // Effect Type as DrEffectType
 
 public:
+    // Constructor
     DrEffect(DrProject *parent_project, long key, DrEffectType effect_type);
 
     // Functions

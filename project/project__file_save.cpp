@@ -133,7 +133,6 @@ void DrProject::saveProjectToFile() {
         asset_data["key"] =         QVariant::fromValue(asset->getKey());
         asset_data["source_key"] =  QVariant::fromValue(asset->getSourceKey());
         asset_data["type"] =        QVariant(Dr::EnumToInt(asset->getAssetType()));
-        asset_data["list_order"] =  QVariant::fromValue(asset->getListOrder());
         addSettingsToMap(asset, asset_data);
         settings.beginWriteArray("assets");
         settings.setArrayIndex(asset_count++);
@@ -194,7 +193,8 @@ void DrProject::saveProjectToFile() {
         } // end stage
     } // end world
 
-    // ***** Important! Signify we don't need to save at this point!
+    // ***** Important! Let Drop know we don't need to save at this point, meaning its safe to close...
+    //                  At least until some changes to the Project are made.
     setHasSaved(true);
 }
 

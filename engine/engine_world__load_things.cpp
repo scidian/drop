@@ -274,6 +274,10 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     }
 
     // ***** Additional Collision Settings
+
+    QList<QVariant> friction = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Custom_Friction).toList();
+    QList<QVariant> bounce =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Custom_Bounce).toList();
+
     int     one_way_type =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type).toInt();
     double  one_way_angle = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction).toDouble();
     double  gravity_multi = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier).toDouble();

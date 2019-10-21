@@ -27,6 +27,7 @@ private:
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
 
 public:
+    // Constructor
     FormFonts(DrProject *project, QWidget *parent = nullptr);
 
     // Event Overrides

@@ -29,6 +29,7 @@ private:
 
 
 public:
+    // Constructor / Destructor
     explicit FormSettings(DrProject *project, QWidget *parent = nullptr);
     virtual ~FormSettings() override;
 

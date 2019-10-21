@@ -25,7 +25,6 @@ class DrAsset : public DrSettings
 private:
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
-    long            m_list_order = -1;                  // Keeps track of what order to be in on the asset list tree
 
     long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, DrEffect, etc.)
 
@@ -34,7 +33,7 @@ private:
 
 
 public:
-    // Constructor & Destructor
+    // Constructor / Destructor
     explicit DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key);
     virtual ~DrAsset() override;
 
@@ -44,14 +43,12 @@ public:
     // Getters / Setters
     DrAssetType     getAssetType()          { return m_asset_type; }
     long            getSourceKey()          { return m_source_key; }
-    long            getListOrder()          { return m_list_order; }
 
     long            getWidth()              { return m_width; }
     long            getHeight()             { return m_height; }
 
     void            setAssetType(DrAssetType type)  { m_asset_type = type; }
     void            setSourceKey(long key)          { m_source_key = key; }
-    void            setListOrder(long order)        { m_list_order = order; }
 
     // Function Calls
     bool        canDeleteSource();
@@ -59,11 +56,12 @@ public:
     void        updateAnimationProperty(long source_key);
 
     // Initialize Calls
-    void        initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap);
-    void        initializeAssetSettingsObject(QString new_name, QPixmap pixmap);
+    void        initializeAssetSettingsCharacter(QString new_name);
+    void        initializeAssetSettingsObject(QString new_name);
     void        initializeAssetSettingsEffect(QString new_name);
     void        initializeAssetSettingsFont(DrFont *font);
 
+    void        initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation);
     void        initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape);
     void        initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points = 1);
 

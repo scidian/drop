@@ -31,7 +31,7 @@
 //####################################################################################
 //##    Character Asset Components
 //####################################################################################
-void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap) {
+void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");
     property_name->setDescription("Name of the current Character Asset.");
@@ -77,18 +77,13 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap)
                            "Flip Image X?", "Should this characters image flip left and right depending on movement?");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y, Property_Type::Bool, false,
                            "Flip Image Y?", "Should this characters image flip up and down depending on movement?");
-
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
-    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                           "Default Animation", "Image shown for this Asset.");
 }
 
 
 //####################################################################################
 //##    Object Asset Components
 //####################################################################################
-void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
+void DrAsset::initializeAssetSettingsObject(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Object Name");
     property_name->setDescription("Name of the current Object Asset.");
@@ -99,12 +94,6 @@ void DrAsset::initializeAssetSettingsObject(QString new_name, QPixmap pixmap) {
 
 //    addPropertyToComponent(Components::Asset_Settings_Object, Properties::Asset_Object_One_Way_Type, Property_Type::List, 0,
 //                           "One Way Type", "Type of One Way collision for this object. <b></b>");
-
-
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
-    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(pixmap),
-                            "Default Animation", "Image shown for this Asset.");
 }
 
 
@@ -138,6 +127,14 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
 
 
 //####################################################################################
+//####################################################################################
+//##
+//##    Shared Components
+//##
+//####################################################################################
+//####################################################################################
+
+//####################################################################################
 //##    Shared - Collision Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape) {
@@ -156,26 +153,51 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
                            "Collision Shape", "Shape of the " + type + " as it interacts with other Assets in the world. Can be calculated "
                                               "automatically from the <b>Image Shape</b>. Characters are best as <b>Circle</b> and ground and platforms "
                                               "work nicely as <b>Square</b>.");
+    // !! Hidden Property
     addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape,
                            Property_Type::Collision, QVariant::fromValue<DrShapeList>(shape),
                            "Image Shape", "Stores auto generated Image Shape.", true, false);
 
     if (asset_type == DrAssetType::Object) {
+
+        // BoolDouble QList<QVariant> of 4 values: bool, double value, double step size, string spinText
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Custom_Friction,
+                               Property_Type::BoolDouble, QList<QVariant>({false, 0.0, 0.1, ""}),
+                                "Custom Friction?", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
+                                                    "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Custom_Bounce,
+                               Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.1, ""}),
+                                "Custom Bounce?", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
+                                                  "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
+
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
+                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
+                                                      "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity, Property_Type::PointF, 0.0,
+                                "Surface Velocity", "Speed given to other Things when touching. Useful for objects like conveyor belts. Works better with "
+                                                    "higher friction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
                                 "One Way Type", "Type of One Way collision for this Object. <br>"
                                                 "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
                                                 "<b>Weak_Spot</b> - Only takes damage from one direction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
                                 "One Way Angle", "Direction that affects <b>One Way Type</b>. 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
-                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
-                                                      "Gravity (0.5 for wall sliding), or to change it completely (-1.0 for handlebars).");
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity, Property_Type::PointF, 0.0,
-                                "Surface Velocity", "Speed given to other Things when touching. Useful for objects like conveyor belts. Works better with "
-                                                    "higher friction.");
     }
 }
 
+//####################################################################################
+//##    Shared - Animation Components
+//####################################################################################
+void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation) {
+    QString type = "";
+    if (asset_type == DrAssetType::Character)   type = "Character";
+    if (asset_type == DrAssetType::Object)      type = "Object";
+
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + " Asset.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
+    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(default_animation),
+                           "Default Animation", "Image shown for this " + type + "Asset.");
+}
 
 //####################################################################################
 //##    Shared - Health Components
