@@ -66,8 +66,21 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset)
     }
 }
 void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
-    double radius = getWorld()->getTexture(texture_number)->width() / 2.0;
-    addShapeCircle(radius, DrPointF(0, 0));
+    double width =  getWorld()->getTexture(texture_number)->width();
+    double height = getWorld()->getTexture(texture_number)->height();
+    double radius = width / 2.0;
+    double ratio =  height / (width + 0.0001);
+    // Is Square, can be a nice circle
+    if (Dr::IsCloseTo(width, height, 0.001)) {
+        addShapeCircle(radius, DrPointF(0, 0));
+    // Image is Rectangular, needs ellipse
+    } else {
+        QVector<DrPointF> points = createEllipseFromCircle(DrPointF(0, 0), radius, 18);
+        for (auto &point : points) {
+            point.y *= ratio;
+        }
+        addShapePolygon(points);
+    }
 }
 
 void DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
