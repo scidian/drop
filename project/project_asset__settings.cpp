@@ -137,35 +137,35 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
 //##    Shared - Collision Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape) {
+    QString    type = "Thing";
+    int start_shape = 0;
     if (asset_type == DrAssetType::Character) {
-        addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Character.", Component_Colors::White_Snow, true);
-        getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, 0,
-                               "Collision Shape", "Shape of the Character as it interacts with other Assets in the world. Can be calculated "
-                                                  "automatically from the <b>Image Shape</b>. Characters are better as <b>Circle</b> and platforms "
-                                                  "work nicely as <Square</b>.");
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape,
-                               Property_Type::Collision, QVariant::fromValue<DrShapeList>(shape),
-                               "Image Shape", "Stores auto generated Image Shape.", true, false);
+        type = "Character";
+        start_shape = 1;
     } else if (asset_type == DrAssetType::Object) {
-        addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current Object.", Component_Colors::White_Snow, true);
-        getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, 0,
-                               "Collision Shape", "Shape of the Character as it interacts with other Assets in the world. Can be calculated "
-                                                  "automatically from the <b>Image Shape</b>. Characters are better as <b>Circle</b> and platforms "
-                                                  "work nicely as <Square</b>.");
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape,
-                               Property_Type::Collision, QVariant::fromValue<DrShapeList>(shape),
-                               "Image Shape", "Stores auto generated Image Shape.", true, false);
+        type = "Object";
+    }
+
+    addComponent(Components::Asset_Collision, "Collision Settings", "Collision settings for current " + type + ".", Component_Colors::White_Snow, true);
+    getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, start_shape,
+                           "Collision Shape", "Shape of the " + type + " as it interacts with other Assets in the world. Can be calculated "
+                                              "automatically from the <b>Image Shape</b>. Characters are best as <b>Circle</b> and ground and platforms "
+                                              "work nicely as <b>Square</b>.");
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape,
+                           Property_Type::Collision, QVariant::fromValue<DrShapeList>(shape),
+                           "Image Shape", "Stores auto generated Image Shape.", true, false);
+
+    if (asset_type == DrAssetType::Object) {
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
-                                "One Way Type", "Type of One Way collision for this object. <br>"
+                                "One Way Type", "Type of One Way collision for this Object. <br>"
                                                 "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
                                                 "<b>Weak_Spot</b> - Only takes damage from one direction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
-                                "One Way Angle", "Direction that affects \"One Way Type\". 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
+                                "One Way Angle", "Direction that affects <b>One Way Type</b>. 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
-                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on items that collide (climbable ladders), or to reduce "
-                                                      "Gravity (sticky wall)");
+                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
+                                                      "Gravity (0.5 for wall sliding), or to change it completely (-1.0 for handlebars).");
     }
 }
 
