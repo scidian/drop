@@ -67,6 +67,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
         if (key_x < 0 && !object->isFlippedX()) object->setFlipX(true);
         if (key_x > 0 &&  object->isFlippedX()) object->setFlipX(false);
+        if (key_y < 0 && !object->isFlippedY()) object->setFlipY(true);
+        if (key_y > 0 &&  object->isFlippedY()) object->setFlipY(false);
     }
 
     // ***** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off m_remaining_boost time

@@ -276,6 +276,7 @@ public:
     const bool&     canRotate() { return m_can_rotate; }
     bool            ignoreGravity() { return m_ignore_gravity; }
     bool            getFlipImageX() { return m_flip_image_x; }
+    bool            getFlipImageY() { return m_flip_image_y; }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -298,6 +299,7 @@ public:
     void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
     void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
     void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
+    void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
 
     // ***** Local Variables - Updated By Engine
     const int&      getRemainingJumps() { return m_remaining_jumps; }
@@ -329,7 +331,9 @@ public:
     DrTime&         getFadeTimer() { return m_fade_timer; }
 
     bool            isFlippedX() { return m_flipped_x; }
+    bool            isFlippedY() { return m_flipped_y; }
     void            setFlipX(bool flipped) { m_flipped_x = flipped; }
+    void            setFlipY(bool flipped) { m_flipped_y = flipped; }
 
     // Object->Body Data - Updated every frame by updateWorld()
     DrPointF        getPreviousPosition() { return m_previous_position; }

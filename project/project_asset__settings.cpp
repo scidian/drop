@@ -75,6 +75,8 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name, QPixmap pixmap)
 
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_X, Property_Type::Bool, false,
                            "Flip Image X", "Should this characters image flip left and right depending on movement?");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y, Property_Type::Bool, false,
+                           "Flip Image Y", "Should this characters image flip up and down depending on movement?");
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this Asset.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
