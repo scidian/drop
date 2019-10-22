@@ -36,7 +36,7 @@ private:
     bool          m_is_hidden =         false;                                  // Should this appear in the Inspector
     bool          m_is_editable =       true;                                   // Should this be editable in the Inspector
 
-    // For now this is not stored, assignined after creation in void DrComponent::addProperty()
+    // For now this is not stored, assignined during creation in void DrComponent::addProperty()
     // Used for sorting in Object Inspector
     int           m_list_order = 0;
 

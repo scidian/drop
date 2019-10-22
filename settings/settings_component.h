@@ -40,7 +40,7 @@ private:
     bool            m_turned_on = false;
     long            m_component_key;
 
-    // For now this is not stored, assignined after creation in void DrComponent::addProperty()
+    // For now this is not stored, assignined during creation in void DrStage::addComponent()
     // Used for sorting in Object Inspector
     int             m_list_order = 0;
 

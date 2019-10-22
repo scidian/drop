@@ -198,6 +198,9 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
             to_property->setDescription(from_property->getDescription());
         }
     }
+
+    m_is_visible = from_entity->isVisible();
+    m_is_locked =  from_entity->isLocked();
 }
 
 
