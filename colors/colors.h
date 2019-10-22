@@ -54,7 +54,7 @@ struct Palette_Info {
 namespace Dr {
 
     // Color Helper Functions
-    bool            IsSameColor(QColor color1, QColor color2, double tolerance);
+    bool            IsSameColor(const QColor &color1, const QColor &color2, double tolerance);
     QColor          RandomColor();
 
     // Style Functions

@@ -20,12 +20,6 @@ enum class Demo_Player {
     Light,
     Player,
 };
-enum class Demo_Space {
-    Lines1,
-    Lines2,
-    Blocks,
-    Project,
-};
 // ########## !!!!! END
 
 

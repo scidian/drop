@@ -34,6 +34,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     this->setAttribute( Qt::WA_DeleteOnClose, true );               // Make sure this form is deleted when it closes
     this->setAttribute( Qt::WA_QuitOnClose, false );                // We don't want Drop to stay open when FormMain is closed and this is still open
     this->setObjectName("Drop Player");
+    this->setWindowIcon(QIcon(":/assets/icon/icon256_play.png"));
+
     this->resize(1200, 900);                                        // !!!!! FIX: Change to Project size options
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
     Dr::CenterFormOnScreen(parent, this);
@@ -49,38 +51,28 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         QWidget *upperWidget = new QWidget();
         upperWidget->setFixedHeight(100);
-        pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("pushSpawn");      pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
-        pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("pushCar");          pushCar->setGeometry(    QRect(  5, 30, 140, 20));
-        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("pushJump");        pushJump->setGeometry(   QRect(  5, 55,  65, 20));
-        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("pushLight");      pushLight->setGeometry(  QRect( 80, 55,  65, 20));
-        pushPlayer =  new QToolButton(upperWidget);     pushPlayer->setObjectName("pushPlayer");    pushPlayer->setGeometry( QRect(  5, 80, 140, 20));
+        pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("engineButton");   pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
+        pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("engineButton");     pushCar->setGeometry(    QRect(  5, 30, 140, 20));
+        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("engineButton");    pushJump->setGeometry(   QRect(  5, 55,  65, 20));
+        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("engineButton");   pushLight->setGeometry(  QRect( 80, 55,  65, 20));
+        pushPlayer =  new QToolButton(upperWidget);     pushPlayer->setObjectName("engineButton");  pushPlayer->setGeometry( QRect(  5, 80, 140, 20));
 
-        pushLine1 =   new QToolButton(upperWidget);     pushLine1->setObjectName("pushLine1");      pushLine1->setGeometry(  QRect(150,  5, 140, 20));
-        pushLine2 =   new QToolButton(upperWidget);     pushLine2->setObjectName("pushLine2");      pushLine2->setGeometry(  QRect(150, 30, 140, 20));
-        pushBlocks =  new QToolButton(upperWidget);     pushBlocks->setObjectName("pushBlocks");    pushBlocks->setGeometry( QRect(150, 55, 140, 20));
-        pushProject = new QToolButton(upperWidget);     pushProject->setObjectName("pushProject");  pushProject->setGeometry(QRect(150, 80, 140, 20));
+        pushStart =  new QToolButton(upperWidget);      pushStart->setObjectName("engineButton");   pushStart->setGeometry(  QRect(300, 24, 140, 20));
+        pushStop =   new QToolButton(upperWidget);      pushStop->setObjectName("engineButton");    pushStop->setGeometry(   QRect(300, 48, 140, 20));
+        pushClose =   new QToolButton(upperWidget);     pushClose->setObjectName("engineButton");   pushClose->setGeometry(  QRect(320, 72, 100, 20));
 
-        pushStart =  new QToolButton(upperWidget);      pushStart->setObjectName("pushStart");      pushStart->setGeometry(  QRect(300, 24, 140, 20));
-        pushStop =   new QToolButton(upperWidget);      pushStop->setObjectName("pushStop");        pushStop->setGeometry(   QRect(300, 48, 140, 20));
-        pushClose =   new QToolButton(upperWidget);     pushClose->setObjectName("pushClose");      pushClose->setGeometry(  QRect(320, 72, 100, 20));
+        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("engineButton");   pushPersp->setGeometry(  QRect(450, 24, 140, 20));
+        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("engineButton");   pushOrtho->setGeometry(  QRect(450, 48, 140, 20));
+        pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("engineButton");  pushCamera->setGeometry( QRect(480, 80,  80, 20));
 
-        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("pushPersp");      pushPersp->setGeometry(  QRect(450, 24, 140, 20));
-        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("pushOrtho");      pushOrtho->setGeometry(  QRect(450, 48, 140, 20));
-        pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("pushCamera");    pushCamera->setGeometry( QRect(480, 80,  80, 20));
-
-        pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("pushDebug1");    pushDebug1->setGeometry( QRect(600,  5, 140, 45));
-        pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("pushDebug2");    pushDebug2->setGeometry( QRect(600, 55, 140, 45));
+        pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("engineButton");  pushDebug1->setGeometry( QRect(600,  5, 140, 45));
+        pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("engineButton");  pushDebug2->setGeometry( QRect(600, 55, 140, 45));
 
         pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
         pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
         pushJump->setText(QApplication::translate(   "MainWindow", "Jump",              nullptr));  pushJump->setStyleSheet("color: white");
         pushLight->setText(QApplication::translate(  "MainWindow", "Light",             nullptr));  pushLight->setStyleSheet("color: white");
         pushPlayer->setText(QApplication::translate( "MainWindow", "Player Demo",       nullptr));  pushPlayer->setStyleSheet("color: white");
-
-        pushLine1->setText(QApplication::translate(  "MainWindow", "Line1 World",       nullptr));  pushLine1->setStyleSheet("color: white");
-        pushLine2->setText(QApplication::translate(  "MainWindow", "Line2 World",       nullptr));  pushLine2->setStyleSheet("color: white");
-        pushBlocks->setText(QApplication::translate( "MainWindow", "Blocks World",      nullptr));  pushBlocks->setStyleSheet("color: white");
-        pushProject->setText(QApplication::translate("MainWindow", "Load Project",      nullptr));  pushProject->setStyleSheet("color: white");
 
         pushStart->setText(QApplication::translate(  "MainWindow", "Start Scene",       nullptr));  pushStart->setStyleSheet("color: white");
         pushStop->setText(QApplication::translate(   "MainWindow", "Stop Scene",        nullptr));  pushStop->setStyleSheet("color: white");
@@ -102,12 +94,6 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         connect(pushJump,       SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
         connect(pushLight,      SIGNAL(clicked()), this, SLOT(on_pushLight_clicked()));
         connect(pushPlayer,     SIGNAL(clicked()), this, SLOT(on_pushPlayer_clicked()));
-
-        connect(pushLine1,      SIGNAL(clicked()), this, SLOT(on_pushLines1_clicked()));
-        connect(pushLine2,      SIGNAL(clicked()), this, SLOT(on_pushLines2_clicked()));
-        connect(pushBlocks,     SIGNAL(clicked()), this, SLOT(on_pushBlocks_clicked()));
-
-        connect(pushProject,    SIGNAL(clicked()), this, SLOT(on_pushProject_clicked()));
 
         connect(pushStart,      SIGNAL(clicked()), this, SLOT(on_pushStart_clicked()));
         connect(pushStop,       SIGNAL(clicked()), this, SLOT(on_pushStop_clicked()));
@@ -137,7 +123,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
     // Load demo after form finishes loading
     QTimer::singleShot( 0, this, [this] {
-        loadDemo( demo_space, demo_player );
+        loadDemo( demo_player );
     } );
 }
 
@@ -174,7 +160,7 @@ bool FormEngine::event(QEvent *event) {
 //####################################################################################
 //##    Loads a Demo
 //####################################################################################
-void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player) {
+void FormEngine::loadDemo(Demo_Player using_player) {
     stopTimers();
 
     // ***** Reset keys
@@ -185,11 +171,10 @@ void FormEngine::loadDemo(Demo_Space using_space, Demo_Player using_player) {
 
     // Save Demo Types
     demo_player = using_player;
-    demo_space = using_space;
 
     // ***** The following are the steps to load a new Space
     m_engine->getCurrentWorld()->clearWorld();
-    m_engine->getCurrentWorld()->buildWorld( using_space, m_engine->getCurrentEditorWorld() );
+    m_engine->getCurrentWorld()->buildWorld( m_engine->getCurrentEditorWorld() );
     m_engine->getCurrentWorld()->addPlayer( using_player );
     m_engine->getCurrentWorld()->updateSpace( 0 );
 
@@ -303,20 +288,15 @@ void FormEngine::aboutToCompose() {
 //####################################################################################
 //##    Button Handling
 //####################################################################################
-void FormEngine::on_pushSpawn_clicked() {   loadDemo(demo_space,  Demo_Player::Spawn ); }
-void FormEngine::on_pushCar_clicked() {     loadDemo(demo_space,  Demo_Player::Car ); }
-void FormEngine::on_pushJump_clicked() {    loadDemo(demo_space,  Demo_Player::Jump ); }
-void FormEngine::on_pushLight_clicked() {   loadDemo(demo_space,  Demo_Player::Light ); }
-void FormEngine::on_pushPlayer_clicked() {  loadDemo(demo_space,  Demo_Player::Player ); }
+void FormEngine::on_pushSpawn_clicked() {   loadDemo( Demo_Player::Spawn ); }
+void FormEngine::on_pushCar_clicked() {     loadDemo( Demo_Player::Car ); }
+void FormEngine::on_pushJump_clicked() {    loadDemo( Demo_Player::Jump ); }
+void FormEngine::on_pushLight_clicked() {   loadDemo( Demo_Player::Light ); }
+void FormEngine::on_pushPlayer_clicked() {  loadDemo( Demo_Player::Player ); }
 
 void FormEngine::on_pushCamera_clicked() {
     m_engine->getCurrentWorld()->switchCameraToNext();
 }
-
-void FormEngine::on_pushLines1_clicked() {  loadDemo(Demo_Space::Lines1,    demo_player ); }
-void FormEngine::on_pushLines2_clicked() {  loadDemo(Demo_Space::Lines2,    demo_player ); }
-void FormEngine::on_pushBlocks_clicked() {  loadDemo(Demo_Space::Blocks,    demo_player ); }
-void FormEngine::on_pushProject_clicked() { loadDemo(Demo_Space::Project,   demo_player ); }
 
 
 void FormEngine::on_pushStart_clicked() {
@@ -358,11 +338,6 @@ void FormEngine::updateCheckedButtons() {
     }
     if (demo_player == Demo_Player::Light)  pushLight->setDown(true);   else pushLight->setDown(false);
     if (demo_player == Demo_Player::Player) pushPlayer->setDown(true);  else pushPlayer->setDown(false);
-
-    if (demo_space == Demo_Space::Lines1)   pushLine1->setDown(true);   else pushLine1->setDown(false);
-    if (demo_space == Demo_Space::Lines2)   pushLine2->setDown(true);   else pushLine2->setDown(false);
-    if (demo_space == Demo_Space::Blocks)   pushBlocks->setDown(true);  else pushBlocks->setDown(false);
-    if (demo_space == Demo_Space::Project)  pushProject->setDown(true); else pushProject->setDown(false);
 
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);

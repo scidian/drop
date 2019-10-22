@@ -139,16 +139,16 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.append( DrPointF(  20.0,  16.0 ));
         points.append( DrPointF(   5.5,  16.0 ));
         points.append( DrPointF(   5.5,  -5.0 ));
-        DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 475, 5, c_scale1x1, 5, 0.1, true);
+        DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true);
         rover->addShapePolygon(points);
         addThing(rover);
         setActiveCamera( addCamera(rover->getKey()) );
 
 
         // Add wheels
-        DrEngineObject *wheel1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  10,  445, 6, c_scale1x1, 3, 0.7);
-        DrEngineObject *wheel2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  50,  445, 6, c_scale1x1, 3, 0.7);
-        DrEngineObject *wheel3 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  90,  445, 6, c_scale1x1, 3, 0.7);
+        DrEngineObject *wheel1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  10,  345, 6, c_scale1x1, 3, 0.7);
+        DrEngineObject *wheel2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  50,  345, 6, c_scale1x1, 3, 0.7);
+        DrEngineObject *wheel3 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Wheel,  90,  345, 6, c_scale1x1, 3, 0.7);
         wheel1->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel2->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel3->addShapeCircleFromTexture(Asset_Textures::Wheel);
@@ -157,12 +157,12 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         wheel2->setRotateSpeed(  60.0 );
         wheel3->setRotateSpeed(  90.0 );
 
-        DrEngineObject *spare1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Spare, -11,  449, 4, c_scale1x1, 4, 0.7);
+        DrEngineObject *spare1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Spare, -11,  349, 4, c_scale1x1, 4, 0.7);
         spare1->addShapeCircleFromTexture(Asset_Textures::Spare);
         addThing(spare1);
 
         // Add Careful Cargo
-        DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 30, 515, 5, c_scale1x1, 0.7, 0);
+        DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 30, 415, 5, c_scale1x1, 0.7, 0);
         cargo->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(cargo);
 
@@ -170,9 +170,9 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel1->body, cpv(-40,  15), cpv(-40, -28), cpvzero));
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel2->body, cpv(  0,  15), cpv(  0, -28), cpvzero));
         cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel3->body, cpv( 40,  15), cpv( 40, -28), cpvzero));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel1->body, cpv(-40, 0), cpvzero, 50.0, 300.0, 50.0));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel2->body, cpv(  0, 0), cpvzero, 50.0, 300.0, 25.0));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel3->body, cpv( 40, 0), cpvzero, 50.0, 300.0, 40.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel1->body, cpv(-40, 0), cpvzero, 50.0, 400.0, 50.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel2->body, cpv(  0, 0), cpvzero, 50.0, 400.0, 25.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel3->body, cpv( 40, 0), cpvzero, 50.0, 400.0, 40.0));
 
         // Old school solid pin joint
         ///cpSpaceAddConstraint( m_space, cpPivotJointNew(wheel1->body, rover->body, cpBodyGetPosition(wheel1->body)) );

@@ -67,7 +67,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Calculate distance and load new stage if we need to
     bool should_add_stage = false;
-    if (demo_space == Demo_Space::Project && has_scene == true) {
+    if (has_scene == true) {
         QTransform t = QTransform().translate(m_game_start.x, m_game_start.y)
                                    .rotate(m_game_direction)
                                    .translate(-m_game_start.x, -m_game_start.y);

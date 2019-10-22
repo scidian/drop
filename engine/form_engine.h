@@ -62,7 +62,6 @@ public:
     // Widgets
     QWidget        *centralWidget;
     QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushLight,     *pushPlayer;
-    QToolButton    *pushLine1,      *pushLine2,     *pushBlocks,                    *pushProject;
     QToolButton    *pushStart,      *pushStop,      *pushClose,     *pushCamera;
     QToolButton    *pushPersp,      *pushOrtho;
     QToolButton    *pushDebug1,     *pushDebug2;
@@ -84,7 +83,6 @@ public:
     bool                debug_collisions =  false;
 
     // Demo Variables
-    Demo_Space          demo_space =  Demo_Space::Project;
     Demo_Player         demo_player = Demo_Player::Player;
 
 public:
@@ -100,7 +98,7 @@ public:
     DrEngine*   getEngine() { return m_engine; }
     DrOpenGL*   getOpenGL() { return m_opengl; }
     double      getTimerMilliseconds(Engine_Timer time_since_last);
-    void        loadDemo(Demo_Space using_space, Demo_Player using_player);
+    void        loadDemo(Demo_Player using_player);
     void        resetTimer(Engine_Timer timer_to_reset);
     void        startTimers();
     void        stopTimers();
@@ -118,11 +116,6 @@ private slots:
     void on_pushJump_clicked();
     void on_pushLight_clicked();
     void on_pushPlayer_clicked();
-
-    void on_pushLines1_clicked();
-    void on_pushLines2_clicked();
-    void on_pushBlocks_clicked();
-    void on_pushProject_clicked();
 
     void on_pushStart_clicked();
     void on_pushStop_clicked();

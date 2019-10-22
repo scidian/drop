@@ -177,5 +177,6 @@
         <file>assets/toolbar_icons/toolbar_duplicate.png</file>
         <file>assets/inspector_icons/comp_health.png</file>
         <file>assets/inspector_icons/comp_collide.png</file>
+        <file>assets/icon/icon256_play.png</file>
     </qresource>
 </RCC>

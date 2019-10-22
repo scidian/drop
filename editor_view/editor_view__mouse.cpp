@@ -46,6 +46,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
     // Get top most unlocked item
     long        origin_item_key = 0;
     DrSettings *origin_item_settings = nullptr;
+    bool        origin_locked = false;
     m_origin_item =  itemAt(event->pos());
     for (auto item : items(event->pos())) {
         origin_item_key = item->data(User_Roles::Key).toLongLong();
@@ -129,6 +130,8 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                         for (auto item : my_scene->getSelectionItems()) {
                             item->moveBy(0, 0);
                         }
+                    } else {
+                        origin_locked = true;
                     }
 
                     if (my_scene->getSelectionItems().count() <= 1) {
@@ -148,7 +151,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 
 
             // ******************* If theres no item under mouse, start selection box
-            if (m_origin_item == nullptr) {
+            if (m_origin_item == nullptr || origin_locked) {
                 m_view_mode = View_Mode::Selecting;
                 startSelect(event);
                 processSelection(event->pos());

@@ -133,7 +133,6 @@ public:
     QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
 
     // !!!!! #TEMP: Variables
-    Demo_Space      demo_space =  Demo_Space::Project;
     Demo_Player     demo_player = Demo_Player::Jump;
     DrEngineObject *ball;
     DrEngineLight  *light1;
@@ -170,7 +169,7 @@ public:
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void            addThing(DrEngineThing *thing);
     void            addThings(QList<DrEngineThing*> things);
-    void            buildWorld(Demo_Space new_space_type, long world_id_to_build);
+    void            buildWorld(long world_id_to_build);
     void            clearWorld();
 
     void            loadThing3DSettings(DrThing *thing, DrEngineObject *object);
