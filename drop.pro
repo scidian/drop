@@ -332,4 +332,5 @@ RESOURCES += \
     images.qrc \
     shaders.qrc
 
-DISTFILES +=
+DISTFILES += \
+    icon256.ico
