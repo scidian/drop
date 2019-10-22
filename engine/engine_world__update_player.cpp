@@ -191,8 +191,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpVect  velocity = cpBodyGetVelocity( object->body );
 
     // Calculate target velocity, includes any Forced Movement
-    cpFloat target_vx = (object->getMoveSpeedX() * key_x);/// + object->getForcedSpeedX();
-    cpFloat target_vy = (object->getMoveSpeedY() * key_y);/// + object->getForcedSpeedY();
+    cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
+    cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
@@ -270,50 +270,25 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     body_r = cpflerpconst( body_r, 0, object->getRotateDrag() / c_drag_rotate * dt);
     cpBodySetAngularVelocity( body, body_r );
 
-
-    // ***** Fixed (forced) velocity
-    bool fixed_x = (Dr::FuzzyCompare(object->getForcedSpeedX(), 0.0) == false);
-    bool fixed_y = (Dr::FuzzyCompare(object->getForcedSpeedY(), 0.0) == false);
-    if (fixed_x) velocity.x = 0;
-    if (fixed_y) velocity.y = 0;
-
-
     // ***** Max Speed - Limit Velocity
     velocity.x = cpfclamp(velocity.x, -object->getMaxSpeedX(), object->getMaxSpeedX());
     velocity.y = cpfclamp(velocity.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
-    cpBodySetVelocity( object->body, velocity );
+
+    // ***** Fixed (Forced) Velocity
+    ///bool fixed_x = (Dr::FuzzyCompare(object->getForcedSpeedX(), 0.0) == false);
+    ///bool fixed_y = (Dr::FuzzyCompare(object->getForcedSpeedY(), 0.0) == false);
+    ///if (fixed_x) velocity.x = object->getForcedSpeedX();
+    ///if (fixed_y) velocity.y = object->getForcedSpeedY();
 
 
     // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
+    cpBodySetVelocity( object->body, velocity );
+
     if (object->ignoreGravity()) {
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
     } else {
-        cpBodyUpdateVelocity(body, cpv(gravity.x * object->getTempGravityMultiplier(), gravity.y * object->getTempGravityMultiplier()), damping, dt);
-    }
-
-
-    // ***** Forcifully move body after update using Forced Speed
-    cpVect body_position = cpBodyGetPosition(body);
-    if (fixed_x) body_position.x += (object->getForcedSpeedX() / 100.0);
-    if (fixed_y) body_position.y += (object->getForcedSpeedY() / 100.0);
-    if (fixed_x || fixed_y) {
-        bool move_good;
-        int count = 0;
-        do {
-            cpVect before_position = cpBodyGetPosition(body);
-            cpBodySetPosition(body, body_position);
-            cpVect after_position =  cpBodyGetPosition(body);
-            move_good = true;
-
-            if (fixed_x) {
-                if (after_position.x - before_position.x < (object->getForcedSpeedX() / 100.0)) {
-                    body_position.x += (object->getForcedSpeedX() / 100.0);
-                    move_good = false;
-                }
-            }
-
-            count++;
-        } while ((move_good == false) && count < 100);
+        cpVect multi_gravity = cpv(gravity.x * object->getTempGravityMultiplier(), gravity.y * object->getTempGravityMultiplier());
+        cpBodyUpdateVelocity(body, multi_gravity, damping, dt);
     }
 
 }

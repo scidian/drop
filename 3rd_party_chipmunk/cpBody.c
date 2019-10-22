@@ -511,11 +511,9 @@ cpBodyUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 //####################################################################################
 //####################################################################################
 // by Stevinz
-void cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
-{
+void cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Skip kinematic bodies.
-    if(cpBodyGetType(body) == CP_BODY_TYPE_KINEMATIC) return;
-
+    if (cpBodyGetType(body) == CP_BODY_TYPE_KINEMATIC) return;
     cpAssertSoft(body->m > 0.0f && body->i > 0.0f, "Body's mass and moment must be positive to simulate. (Mass: %f Moment: %f)", body->m, body->i);
 
     body->v = cpvadd(cpvmult(body->v, damping), cpvmult(cpvadd(cpv(0, 0), cpvmult(body->f, body->m_inv)), dt));
@@ -527,6 +525,7 @@ void cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping
 
     cpAssertSaneBody(body);
 }
+
 //####################################################################################
 //####################################################################################
 

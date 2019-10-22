@@ -152,10 +152,7 @@ private:
     bool        m_flipped_x = false;                        // True when image is flipped (going left) over the x axis
     bool        m_flipped_y = false;                        // True when image is flipped (going down) over the y axis
 
-    int         m_force_x_count = 0;
-    int         m_force_y_count = 0;
-    double      m_force_x_start;
-    double      m_force_y_start;
+
 
 
 public:

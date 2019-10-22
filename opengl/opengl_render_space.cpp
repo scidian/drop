@@ -67,7 +67,7 @@ void DrOpenGL::drawSpace() {
         // ***** Trying to stop z-fighting in perspective mode
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
             if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
-            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.1; else m_add_z = 0.0;
+            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.025; else m_add_z = 0.0;
             last_z = thing->getZOrder();
         }
 
