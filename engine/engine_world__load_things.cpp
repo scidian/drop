@@ -118,10 +118,7 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 //##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThingCollisionShape(DrEngineObject *object) {
-    DrAsset *asset = m_project->getAsset(object->getAssetKey());
-    if (asset == nullptr) return;
-
+void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *object) {
     int shape_type =        asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape).toInt();
     if (shape_type == 0) {
         QVariant shapes =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
@@ -146,6 +143,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     // ***** Load Character Thing Properties
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset = m_project->getAsset(asset_key);
+            if (asset == nullptr) return;
     ThingInfo   info =      loadThingBasicInfo( thing );
 
     // ***** Load Character Settings
@@ -179,7 +177,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.position.x, -info.position.y, info.z_order,
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
-    loadThingCollisionShape(player);                                    // Load collision shape(s)
+    loadThingCollisionShape(asset, player);                                    // Load collision shape(s)
     addThing(player);                                                   // Add to world
     assignPlayerControls(player, true, true, true);
 
@@ -225,6 +223,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset =     m_project->getAsset(asset_key);
+            if (asset == nullptr) return;
     ThingInfo   info =      loadThingBasicInfo( thing );
     bool        collide =   thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
     int         physics =   thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
@@ -244,7 +243,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     // ***** Add the block to the cpSpace
     DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, info.position.x + offset_x, -info.position.y + offset_y,
                                                info.z_order, info.scale, use_friction, use_bounce, collide, true, info.angle, info.opacity);
-    loadThingCollisionShape(block);
+    loadThingCollisionShape(asset, block);
     addThing(block);
 
     // ***** Set collision type
