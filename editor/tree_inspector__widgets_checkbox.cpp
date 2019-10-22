@@ -62,7 +62,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
     horizontal_split->setAlignment(Qt::AlignVCenter);
-    horizontal_split->setSpacing(6);
+    horizontal_split->setSpacing(2);
     horizontal_split->setContentsMargins(0,0,0,0);
 
     DrQCheckBox *check_left = new DrQCheckBox();
@@ -115,7 +115,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 //####################################################################################
 void DrQCheckBox::paintEvent(QPaintEvent *) {
     /// default: m_draw_left = 6, m_draw_top = 1
-    QRect  checkbox_indicator(m_draw_left - 1, m_draw_top - 1, 26, 26);
+    QRect  checkbox_indicator(m_draw_left - 1, m_draw_top - 1, 22, 26);
     QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
 
     QPainter painter(this);
@@ -135,17 +135,17 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
         // Draw bottom highlight
         painter.setPen( QPen(Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt()) );
         painter.setBrush( Qt::NoBrush );
-        painter.drawRoundedRect(m_draw_left, m_draw_top, 20, 20, 4, 4);
+        painter.drawRoundedRect(m_draw_left, m_draw_top, 21, 21, 4, 4);
 
         // Draw main square
-        QLinearGradient gradient(m_draw_left, m_draw_top, m_draw_left, 20);
+        QLinearGradient gradient(m_draw_left, m_draw_top, m_draw_left, 21);
         gradient.setColorAt(0.00, top);
         gradient.setColorAt(0.14, top);
         gradient.setColorAt(0.18, middle);
         gradient.setColorAt(1.00, middle);
         painter.setBrush(gradient);
         painter.setPen( QPen(Dr::GetColor(Window_Colors::Background_Dark).darker(200), Dr::BorderWidthAsInt()) );
-        painter.drawRoundedRect(m_draw_left, m_draw_top, 20, 19, 4, 4);
+        painter.drawRoundedRect(m_draw_left, m_draw_top, 21, 20, 4, 4);
 
         // Draw check mark
         if (checkState()) {

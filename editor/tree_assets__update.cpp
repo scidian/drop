@@ -16,6 +16,7 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
+#include "widgets/widgets_layout.h"
 
 
 //####################################################################################
@@ -106,6 +107,13 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
                 }
             }
         }
+    }
+
+    // Resort Layouts
+    for (auto layout : m_grid_layouts) {
+        DrQLayoutFlow *flow = layout.second;
+        flow->sortItems();
+        flow->update();
     }
     update();
 

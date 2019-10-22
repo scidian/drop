@@ -19,14 +19,16 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrQLayoutFlow::DrQLayoutFlow(QWidget *parent, int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
-    : QLayout(parent), m_hSpace(hSpacing), m_vSpace(vSpacing) {
+DrQLayoutFlow::DrQLayoutFlow(DrProject *project, QWidget *parent,
+                             int margin_left, int margin_right, int margin_top, int margin_bottom,
+                             int hSpacing, int vSpacing) : QLayout(parent), m_project(project), m_hSpace(hSpacing), m_vSpace(vSpacing) {
     this->setObjectName("flowLayout");
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
 
-DrQLayoutFlow::DrQLayoutFlow(int margin_left, int margin_right, int margin_top, int margin_bottom, int hSpacing, int vSpacing)
-    : m_hSpace(hSpacing), m_vSpace(vSpacing) {
+DrQLayoutFlow::DrQLayoutFlow(DrProject *project,
+                             int margin_left, int margin_right, int margin_top, int margin_bottom,
+                             int hSpacing, int vSpacing) : m_project(project), m_hSpace(hSpacing), m_vSpace(vSpacing) {
     setContentsMargins(margin_left, margin_top, margin_right, margin_bottom);
 }
 DrQLayoutFlow::~DrQLayoutFlow() {
@@ -80,6 +82,21 @@ QSize DrQLayoutFlow::minimumSize() const {
         size = size.expandedTo(item->minimumSize());
     size += QSize(2 * margin(), 2 * margin());
     return size;
+}
+
+
+//####################################################################################
+//##    Sort Items by Name
+//####################################################################################
+void DrQLayoutFlow::sortItems() {
+    std::sort(item_list.begin(), item_list.end(), [this](QLayoutItem *a, QLayoutItem *b) {
+        long key_a = a->widget()->property(User_Property::Key).toLongLong();
+        long key_b = b->widget()->property(User_Property::Key).toLongLong();
+        DrAsset *asset_a = this->m_project->findAssetFromKey(key_a);
+        DrAsset *asset_b = this->m_project->findAssetFromKey(key_b);
+        if (asset_a == nullptr || asset_b == nullptr) return false;
+        return asset_a->getName().toLower() < asset_b->getName().toLower();
+    });
 }
 
 

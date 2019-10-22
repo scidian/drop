@@ -22,10 +22,11 @@ class DrProject;
 class DrQLayoutFlow : public QLayout
 {
 private:
-    int     doLayout(const QRect &rect, int &row_width, bool testOnly) const;
-    int     smartSpacing(QStyle::PixelMetric pm) const;
+    // External Borrowed Pointers
+    DrProject           *m_project;                         // Pointer to currently loaded project
 
-    QList<QLayoutItem*>  item_list;                         // Holds a list of items inserted into the layout, so we can delete them in the destuctor
+    // Local Variables
+    QList<QLayoutItem*>  item_list;                         // Holds a list of items inserted into the layout, so we can delete them in the destructor
     int                  m_hSpace;
     int                  m_vSpace;
     QSize                m_last_size;
@@ -34,11 +35,18 @@ private:
 
 public:
     // Constructors / Destructor
-    explicit DrQLayoutFlow(QWidget *parent, int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
-                          int hSpacing = -1, int vSpacing = -1);
-    explicit DrQLayoutFlow(int margin_left = -1, int margin_right = -1, int margin_top = -1, int margin_bottom = -1,
-                          int hSpacing = -1, int vSpacing = -1);
+    explicit DrQLayoutFlow(DrProject *project, QWidget *parent, int margin_left = -1, int margin_right = -1,
+                                                                int margin_top = -1, int margin_bottom = -1,
+                                                                int hSpacing = -1, int vSpacing = -1);
+    explicit DrQLayoutFlow(DrProject *project,  int margin_left = -1, int margin_right = -1,
+                                                int margin_top = -1, int margin_bottom = -1,
+                                                int hSpacing = -1, int vSpacing = -1);
     ~DrQLayoutFlow() override;
+
+    // Main Functions
+    int     doLayout(const QRect &rect, int &row_width, bool testOnly) const;
+    int     smartSpacing(QStyle::PixelMetric pm) const;
+    void    sortItems();
 
     // QLayout Overrides
     void                addItem(QLayoutItem *item) override;
@@ -46,14 +54,13 @@ public:
     QLayoutItem*        itemAt(int index) const override;
     void                setGeometry(const QRect &rect) override;
     QLayoutItem*        takeAt(int index) override;
+    int                 count() const override;
+    bool                hasHeightForWidth() const override;
+    int                 heightForWidth(int) const override;
+    QSize               minimumSize() const override;
+    QSize               sizeHint() const override;
 
-    int     count() const override;
-    bool    hasHeightForWidth() const override;
-    int     heightForWidth(int) const override;
-    QSize   minimumSize() const override;
-    QSize   sizeHint() const override;
-
-    // Function Calls
+    // Size Functions
     int     horizontalSpacing() const;
     int     verticalSpacing() const;
     QSize   lastSize() { return m_last_size; }

@@ -118,7 +118,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
     std::map <DrAssetType, QTreeWidgetItem*>       widget_items;
     std::map <DrAssetType, DrQPushButtonCategory*> category_buttons;
     std::map <DrAssetType, QFrame*>                assets_frames;
-    std::map <DrAssetType, DrQLayoutFlow*>         grid_layouts;
+    ///std::map <DrAssetType, DrQLayoutFlow*>      grid_layouts;
+                                                 m_grid_layouts.clear();
 
     widget_items[DrAssetType::Character] =  new QTreeWidgetItem();
     widget_items[DrAssetType::Object] =     new QTreeWidgetItem();
@@ -144,15 +145,20 @@ void TreeAssets::buildAssetTree(QString search_text) {
         assets_frames[asset_type] = new QFrame();
         assets_frames[asset_type]->setObjectName("assetsContainer");
 
-        grid_layouts[asset_type] = new DrQLayoutFlow(assets_frames[asset_type], 8, 0, 4, 0, 0, 0);
+        m_grid_layouts[asset_type] = new DrQLayoutFlow(m_project, assets_frames[asset_type], 8, 0, 4, 0, 0, 0);
     }
 
 
 
+    // ***** Get component map, sort by listOrder
+    std::vector<DrAsset*> assets { };
+    for (auto asset_pair: list_assets) assets.push_back(asset_pair.second);
+    std::sort(assets.begin(), assets.end(), [](DrAsset *a, DrAsset *b) {
+        return a->getName().toLower() < b->getName().toLower();
+    });
 
     // ********** Loop through each object asset and add it to the component frame
-    for (auto asset_pair: list_assets) {
-        DrAsset *asset = asset_pair.second;
+    for (auto asset: assets) {
         if (asset == nullptr) continue;
 
         if (asset->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
@@ -231,7 +237,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
 
         // ***** Add widget to proper category            
-        grid_layouts[asset->getAssetType()]->addWidget(single_asset);
+        m_grid_layouts[asset->getAssetType()]->addWidget(single_asset);
         category_buttons[asset->getAssetType()]->setEnabled(true);          // Category now has at least one Asset, setEnabled so it will be displayed
 
         rowCount++;

@@ -20,14 +20,15 @@
 class DrProject;
 class DrProperty;
 class DrSettings;
+class DrQLayoutFlow;
 
 class DrQPushButtonCategory;
 class IEditorRelay;
 class DrFilterHoverHandler;
 
 // Class constants
-constexpr int   c_asset_size_left =  3;                 // Size policy width of left column
-constexpr int   c_asset_size_right = 5;                 // Size policy width of right column
+constexpr int   c_asset_size_left =  3;                         // Size policy width of left column
+constexpr int   c_asset_size_right = 5;                         // Size policy width of right column
 
 
 //####################################################################################
@@ -40,19 +41,20 @@ class TreeAssets: public QTreeWidget
 
 private:
     // External Borrowed Pointers
-    DrProject            *m_project;                        // Pointer to currently loaded project
-    IEditorRelay         *m_editor_relay;                   // Pointer to IEditorRelay class of parent form
+    DrProject            *m_project;                            // Pointer to currently loaded project
+    IEditorRelay         *m_editor_relay;                       // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    DrFilterHoverHandler *m_filter_hover;                   // Pointer to an event filter hover handler
+    DrFilterHoverHandler *m_filter_hover;                       // Pointer to an event filter hover handler
 
-    long                  m_selected_key = c_no_key;        // Unique Key of last clicked on Asset
+    long                  m_selected_key = c_no_key;            // Unique Key of last clicked on Asset
 
-    QList<QFrame*>        m_asset_frames;                   // List of the single row frames that contain name and pixmap labels
+    std::map <DrAssetType, DrQLayoutFlow*>  m_grid_layouts;     // List of the layouts so that we can sort without rebuilding
+    QList<QFrame*>                          m_asset_frames;     // List of the single row frames that contain name and pixmap labels
 
     QWidget              *m_search_widget;
     QVBoxLayout          *m_search_layout;
-    QLineEdit            *m_search_bar;                     // Search bar at bottom of asset dock
+    QLineEdit            *m_search_bar;                         // Search bar at bottom of asset dock
 
 public:
     // Constructor

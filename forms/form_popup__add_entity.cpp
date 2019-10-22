@@ -71,9 +71,11 @@ void FormPopup::buildPopupAddEntity() {
 
         // Adds World to Project
         connect(buttonWorld, &QRadioButton::released, [this]() {
-            DrWorld *world = m_project->addWorld();
+            DrWorld *world = nullptr;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
+                editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
+                world = m_project->addWorld();
                 editor->buildProjectTree();
                 editor->buildInspector( { world->getKey() } );
                 editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );
@@ -81,7 +83,7 @@ void FormPopup::buildPopupAddEntity() {
                 editor->buildScene( world->getFirstStageKey() );
             }
             this->close();
-            if (editor) {
+            if (editor && world != nullptr) {
                 editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
@@ -92,6 +94,7 @@ void FormPopup::buildPopupAddEntity() {
             DrStage *new_stage = nullptr;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
+                editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
                 new_stage = editor->getStageView()->getDrScene()->getCurrentStageShown()->getParentWorld()->addStage();
                 editor->buildProjectTree();
                 editor->buildInspector( { new_stage->getKey() } );
@@ -158,6 +161,10 @@ QString findEmptyAssetName(AssetMap &asset_map, DrAssetType type, int count) {
 //##    Adds Asset to Project
 //####################################################################################
 void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
+    IEditorRelay *editor = Dr::GetActiveEditorRelay();
+    if (editor == nullptr) return;
+    editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
+
     long asset_key = m_project->addAsset(asset_type, source_key);
     DrAsset *asset = m_project->findAssetFromKey(asset_key);
 
@@ -172,22 +179,17 @@ void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
     asset->setName( new_name );
 
     // Update EditorRelay widgets
-    IEditorRelay *editor = Dr::GetActiveEditorRelay();
-    if (editor) {
-        editor->buildAssetTree();
-        editor->buildInspector( { asset_key } );
-        editor->updateItemSelection(Editor_Widgets::Asset_Tree);
-        editor->getAssetTree()->setSelectedKey(asset_key);
-        editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-    }
+    editor->buildAssetTree();
+    editor->buildInspector( { asset_key } );
+    editor->updateItemSelection(Editor_Widgets::Asset_Tree);
+    editor->getAssetTree()->setSelectedKey(asset_key);
+    editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
 
     // Close this popup
     this->close();
 
     // Make sure we leave with Asset Tree highlighted and active
-    if (editor) {
-        editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-    }
+    editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
 }
 
 
