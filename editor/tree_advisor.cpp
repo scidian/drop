@@ -28,6 +28,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body) {
 
     this->clear();                                          // Clear / delete all from advisor tree
     m_advisor_header = header;                              // Save Header for reference later
+    m_advisor_body = body;
 
     // Set font sizes
     QFont header_font = Dr::CustomFont();

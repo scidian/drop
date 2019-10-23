@@ -203,26 +203,28 @@ void TreeAssets::buildAssetTree(QString search_text) {
         vertical_split->setMargin(0);
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
-            QString description = asset->getComponentProperty(Components::Hidden_Settings, Properties::Hidden_Advisor_Description)->getValue().toString();
+            QString description;
+            QString hidden_txt = asset->getComponentProperty(Components::Hidden_Settings, Properties::Hidden_Advisor_Description)->getValue().toString();
             switch (asset->getAssetType()) {
                 case DrAssetType::Character:
                     pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    if (description == "") description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
+                    description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
                     break;
                 case DrAssetType::Object:
                     pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                    if (description == "") description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
+                    description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
                     break;
                 case DrAssetType::Effect:
                     pix = m_project->getEffect( asset->getSourceKey() )->getPixmap();
-                    if (description == "") description = Advisor_Info::Asset_Effect[1];
+                    description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Effect[1];
                     break;
                 case DrAssetType::Text:
                     ///pix = m_project->getDrFont( asset->getSourceKey() )->getFontPixmap();
                     pix = m_project->getFont( asset->getSourceKey() )->createText( "Aa" );
-                    if (description == "") description = Advisor_Info::Asset_Text[1];
+                    description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Text[1];
                     break;
             }
+            description += "<br>" + hidden_txt;
             m_filter_hover->attachToHoverHandler(single_asset, asset_name, description);
 
             QLabel *asset_pix = new QLabel(single_asset);

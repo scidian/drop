@@ -180,7 +180,8 @@ void FormMain::setAdvisorInfo(QString header, QString body) {
     if (dockAdvisor == nullptr) return;
     if (treeAdvisor == nullptr) return;
     if (dockAdvisor->isHidden()) return;                                    // If Advisor dock was closed, cancel
-    if (treeAdvisor->getAdvisorHeader() == header) return;                  // If Advisor header is already set to proper info, cancel
+    if (treeAdvisor->getAdvisorHeader() == header &&
+        treeAdvisor->getAdvisorBody() == body) return;                      // If Advisor header and body is already set to proper info, cancel
     treeAdvisor->changeAdvisor(header, body);
 }
 

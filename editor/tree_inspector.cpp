@@ -66,10 +66,10 @@ void TreeInspector::focusInEvent(QFocusEvent *) {
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebuild) {
 
-    // Store current scroll bar position
+    // ***** Store current scroll bar position
     int scroll_position = this->verticalScrollBar()->value();
 
-    // If no keys were passed in, clear Inspector and exit
+    // ***** If no keys were passed in, clear Inspector and exit
     if (key_list.count() == 0) {
         m_selected_key = c_no_key;
         m_selected_type = DrType::NotFound;
@@ -78,15 +78,36 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         return;
     }
 
-    // Retrieve unique key of item clicked in list
-    long new_key = key_list[0];
 
-    // If Inspector already contains this item exit now
-    if (new_key == c_no_key) return;
+    // ***** Retrieve unique key of item clicked in list
+    long new_key = key_list[0];
+    if (new_key == c_no_key) return;                                                // Exit if no key
+    DrSettings *new_settings =  m_project->findSettingsFromKey( new_key );
+            if (new_settings == nullptr) return;                                    // Or if couldnt find Entity
+    DrType      new_type =      new_settings->getType();
+
+
+    // ********** Change Advisor text after new item selection
+    switch (new_type) {
+        case DrType::Asset:        break;///m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Description);     break;
+        case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
+        case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
+        case DrType::Thing: {
+            DrThing *thing = dynamic_cast<DrThing*>(new_settings);
+            if (thing != nullptr) {
+                m_editor_relay->setAdvisorInfo(new_settings->getName(), "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
+                                               Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType()) );
+            } else {
+                m_editor_relay->setAdvisorInfo(new_settings->getName(), Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType()) );
+            }
+            break;
+        }
+        default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+    }
+
+    // ***** If Inspector already contains this item exit now
     if (new_key == m_selected_key && !force_rebuild) return;
 
-    DrSettings *new_settings =  m_project->findSettingsFromKey( new_key );
-    DrType      new_type =      new_settings->getType();
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Inspector_Build)) {
@@ -104,7 +125,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     }
     // !!!!! END
 
-    // ***** If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
+    // ********** If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !force_rebuild) {
         DrThing *thing1 = dynamic_cast<DrThing*>(m_project->findSettingsFromKey(m_selected_key));
         DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
@@ -118,16 +139,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     m_selected_key =  new_key;
     m_selected_type = new_type;
 
-    // ***** Change Advisor text after new item selection
-    switch (m_selected_type) {
-        case DrType::Asset:        break;///m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Description);     break;
-        case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
-        case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
-        case DrType::Thing:
-            m_editor_relay->setAdvisorInfo(new_settings->getName(), Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType()) );
-            break;
-        default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
-    }
 
     // ***** Get component map, sort by listOrder
     std::vector<DrComponent*> components { };

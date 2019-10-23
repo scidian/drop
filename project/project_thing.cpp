@@ -41,7 +41,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
     addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
-                           "Asset Key", "ID Key of Asset this item represents.", false, false);
+                           "Asset ID Key", "ID Key of Asset this item represents.", false, false);
 
     DrAsset *asset = getParentProject()->findAssetFromKey(from_asset_key);
 
