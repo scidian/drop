@@ -204,8 +204,16 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     // ***** If we're not doing anything, update the advisor based on item under the mouse
     if (m_view_mode == View_Mode::None) {
-        if (check_item != nullptr) {
-            m_editor_relay->setAdvisorInfo(check_item->data(User_Roles::Name).toString(), check_item->data(User_Roles::Type).toString());
+        if (check_item != nullptr && m_project != nullptr) {
+            QString header, body;
+
+            long item_key = check_item->data(User_Roles::Key).toLongLong();
+            DrThing *thing = m_project->findThingFromKey(item_key);
+            if (thing != nullptr) {
+                header =    thing->getName();
+                body =      check_item->data(User_Roles::Type).toString();
+                m_editor_relay->setAdvisorInfo(header, body);
+            }
         } else {
             m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_View);
         }

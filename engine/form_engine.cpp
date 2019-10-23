@@ -265,7 +265,9 @@ void FormEngine::updateEngine() {
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
 
     if (Dr::GetPreference(Preferences::Limit_Frames_Rendered).toBool() == false) {
-        processFrame(update_milliseconds);
+        if (update_milliseconds > 4.0) {
+            processFrame(update_milliseconds);
+        }
     } else {
         #if defined (Q_OS_MACOS)
             if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds())
