@@ -205,11 +205,15 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
         // (i.e. after rubber band box mode is over so it's not trying to change a ton and slow thigs down)
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
-            if (my_scene->getSelectionCount() > 0)
+            if (my_scene->getSelectionCount() > 0) {
                 m_editor_relay->buildInspector( { static_cast<long>(my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong()) } );
-            else
-                m_editor_relay->buildInspector( { } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+                m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+            } else {
+                if (itemAt(event->pos()) == nullptr) {
+                    m_editor_relay->buildInspector( { } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+                }
+            }
         }
 
         // Clean up temporary item group used for resize routine
