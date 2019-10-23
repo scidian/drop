@@ -115,24 +115,26 @@ QString StyleSheetToolBar() {
     "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
     // FormEngine Buttons
-    " QToolButton#engineButton {            border: 1px solid; border-radius: 4px;  "
+    " QToolButton#engineButton {            border: 1px solid; border-radius: 4px; "
+    "       color: " +         Dr::GetColor(Window_Colors::Text_Light).name() + "; "
     "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
     "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(130).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
     " QToolButton#engineButton:hover {      border: 1px solid; "
+    "       color: " +         Dr::GetColor(Window_Colors::Highlight).name() + "; "
     "       background: " +    Dr::GetColor(Window_Colors::Midlight).name() + "; "
     "       border-color: " +  Dr::GetColor(Window_Colors::Midlight).lighter(150).name() +
                                Dr::GetColor(Window_Colors::Midlight).name() +
                                Dr::GetColor(Window_Colors::Midlight).name() +
                                Dr::GetColor(Window_Colors::Midlight).name() +"; } "
-    " QToolButton#engineButton:pressed {    border: 1px solid; "
+    " QToolButton#engineButton:pressed {    border: 2px solid; "
+    "       color: " +         Dr::GetColor(Window_Colors::Text).name() + "; "
     "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-    "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
-                               Dr::GetColor(Window_Colors::Background_Dark).name() +
-                               Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
-                               Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
+    "       border-color: " +  Dr::GetColor(Window_Colors::Icon_Light).name() + "; } "
+    " QToolButton#engineButton:disabled {   border: 1px solid; "
+    "       color: " +         Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
 
     "";
 }

@@ -46,3 +46,31 @@ void DrEngineWorld::addThing( DrEngineThing *thing) {
     thing->addToWorld();
     m_things.append(thing);
 }
+
+int DrEngineWorld::countCharacters() {
+    int character_count = 0;
+    for (auto thing : m_things) {
+        if (thing->getThingType() == DrThingType::Object) {
+            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+            if (object == nullptr) continue;
+            if (object->hasKeyControls()) character_count++;
+        }
+    }
+    return character_count;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

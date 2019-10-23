@@ -177,9 +177,17 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.position.x, -info.position.y, info.z_order,
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
-    loadThingCollisionShape(asset, player);                                    // Load collision shape(s)
-    addThing(player);                                                   // Add to world
-    assignPlayerControls(player, true, true, true);
+    // Load collision shape(s)
+    loadThingCollisionShape(asset, player);
+
+    // Add to world
+    addThing(player);
+
+    // Check if there are any active characters, if not, give controls
+    bool should_we_give_control = (countCharacters() == 0);
+    assignPlayerControls(player, should_we_give_control, true, should_we_give_control);
+
+
 
     // ***** Apply Character Settings
     player->setMaxSpeedX( max_speed.x() );

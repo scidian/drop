@@ -51,39 +51,55 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         QWidget *upperWidget = new QWidget();
         upperWidget->setFixedHeight(100);
+
         pushSpawn =   new QToolButton(upperWidget);     pushSpawn->setObjectName("engineButton");   pushSpawn->setGeometry(  QRect(  5,  5, 140, 20));
         pushCar =     new QToolButton(upperWidget);     pushCar->setObjectName("engineButton");     pushCar->setGeometry(    QRect(  5, 30, 140, 20));
-        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("engineButton");    pushJump->setGeometry(   QRect(  5, 55,  65, 20));
-        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("engineButton");   pushLight->setGeometry(  QRect( 80, 55,  65, 20));
-        pushPlayer =  new QToolButton(upperWidget);     pushPlayer->setObjectName("engineButton");  pushPlayer->setGeometry( QRect(  5, 80, 140, 20));
+        pushJump =    new QToolButton(upperWidget);     pushJump->setObjectName("engineButton");    pushJump->setGeometry(   QRect(  5, 55, 140, 20));
+        pushLight =   new QToolButton(upperWidget);     pushLight->setObjectName("engineButton");   pushLight->setGeometry(  QRect(  5, 80, 140, 20));
 
-        pushStart =  new QToolButton(upperWidget);      pushStart->setObjectName("engineButton");   pushStart->setGeometry(  QRect(300, 24, 140, 20));
-        pushStop =   new QToolButton(upperWidget);      pushStop->setObjectName("engineButton");    pushStop->setGeometry(   QRect(300, 48, 140, 20));
-        pushClose =   new QToolButton(upperWidget);     pushClose->setObjectName("engineButton");   pushClose->setGeometry(  QRect(320, 72, 100, 20));
+        pushPlayer =  new QToolButton(upperWidget);     pushPlayer->setObjectName("engineButton");  pushPlayer->setGeometry( QRect(155,  5, 140, 45));
+        pushPause =   new QToolButton(upperWidget);     pushPause->setObjectName("engineButton");   pushPause->setGeometry(  QRect(155, 55,  65, 20));
+        pushRestart = new QToolButton(upperWidget);     pushRestart->setObjectName("engineButton"); pushRestart->setGeometry(QRect(225, 55,  65, 20));
+        pushClose =   new QToolButton(upperWidget);     pushClose->setObjectName("engineButton");   pushClose->setGeometry(  QRect(175, 80, 100, 20));
 
-        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("engineButton");   pushPersp->setGeometry(  QRect(450, 24, 140, 20));
-        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("engineButton");   pushOrtho->setGeometry(  QRect(450, 48, 140, 20));
-        pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("engineButton");  pushCamera->setGeometry( QRect(480, 80,  80, 20));
+        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("engineButton");   pushPersp->setGeometry(  QRect(305, 24, 140, 20));
+        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("engineButton");   pushOrtho->setGeometry(  QRect(305, 48, 140, 20));
+        pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("engineButton");  pushCamera->setGeometry( QRect(335, 80,  80, 20));
 
-        pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("engineButton");  pushDebug1->setGeometry( QRect(600,  5, 140, 45));
-        pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("engineButton");  pushDebug2->setGeometry( QRect(600, 55, 140, 45));
+        pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("engineButton");  pushDebug1->setGeometry( QRect(455,  5, 140, 45));
+        pushDebug2 =  new QToolButton(upperWidget);     pushDebug2->setObjectName("engineButton");  pushDebug2->setGeometry( QRect(455, 55, 140, 45));
 
-        pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));  pushSpawn->setStyleSheet("color: white");
-        pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));  pushCar->setStyleSheet("color: white");
-        pushJump->setText(QApplication::translate(   "MainWindow", "Jump",              nullptr));  pushJump->setStyleSheet("color: white");
-        pushLight->setText(QApplication::translate(  "MainWindow", "Light",             nullptr));  pushLight->setStyleSheet("color: white");
-        pushPlayer->setText(QApplication::translate( "MainWindow", "Player Demo",       nullptr));  pushPlayer->setStyleSheet("color: white");
+        pushSpawn->setText(QApplication::translate(  "MainWindow", "Spawning Demo",     nullptr));
+        pushCar->setText(QApplication::translate(    "MainWindow", "Car Demo",          nullptr));
+        pushJump->setText(QApplication::translate(   "MainWindow", "Jumping Demo",      nullptr));
+        pushLight->setText(QApplication::translate(  "MainWindow", "Flashlight Demo",   nullptr));
 
-        pushStart->setText(QApplication::translate(  "MainWindow", "Start Scene",       nullptr));  pushStart->setStyleSheet("color: white");
-        pushStop->setText(QApplication::translate(   "MainWindow", "Stop Scene",        nullptr));  pushStop->setStyleSheet("color: white");
-        pushClose->setText(QApplication::translate(  "MainWindow", "Close",             nullptr));  pushClose->setStyleSheet("color: white");
+        pushPlayer->setText(QApplication::translate( "MainWindow", "Project Player",    nullptr));
+        pushPause->setText(QApplication::translate(  "MainWindow", "Pause",             nullptr));
+        pushRestart->setText(QApplication::translate("MainWindow", "Restart",           nullptr));
+        pushClose->setText(QApplication::translate(  "MainWindow", "Close",             nullptr));
 
-        pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));  pushPersp->setStyleSheet("color: white");
-        pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));  pushOrtho->setStyleSheet("color: white");
-        pushCamera->setText(QApplication::translate( "MainWindow", "Cam Switch",        nullptr));  pushCamera->setStyleSheet("color: white");
+        pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));
+        pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));
+        pushCamera->setText(QApplication::translate( "MainWindow", "Cam Switch",        nullptr));
 
-        pushDebug1->setText(QApplication::translate( "MainWindow", "Debug Shapes",     nullptr));   pushDebug1->setStyleSheet("color: white");
-        pushDebug2->setText(QApplication::translate( "MainWindow", "Debug Collision",  nullptr));   pushDebug2->setStyleSheet("color: white");
+        QLabel *debug1_label_image = new QLabel(pushDebug1);
+            debug1_label_image->setPixmap(QPixmap(":/assets/form_engine_icons/debug_shape.png").scaled(22, 22, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            debug1_label_image->setGeometry(0, 2, 140, 28);
+            debug1_label_image->setAlignment(Qt::AlignCenter);
+        QLabel *debug1_label_text = new QLabel(pushDebug1);
+            debug1_label_text->setText("Debug Shapes");
+            debug1_label_text->setGeometry(0, 28, 140, 15);
+            debug1_label_text->setAlignment(Qt::AlignCenter);
+
+        QLabel *debug2_label_image = new QLabel(pushDebug2);
+            debug2_label_image->setPixmap(QPixmap(":/assets/form_engine_icons/debug_collide.png").scaled(30, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            debug2_label_image->setGeometry(0, 0, 140, 30);
+            debug2_label_image->setAlignment(Qt::AlignCenter);
+        QLabel *debug2_label_text = new QLabel(pushDebug2);
+            debug2_label_text->setText("Debug Collision");
+            debug2_label_text->setGeometry(0, 28, 140, 15);
+            debug2_label_text->setAlignment(Qt::AlignCenter);
 
         updateCheckedButtons();
         layout->addWidget(upperWidget);
@@ -93,10 +109,10 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         connect(pushCar,        SIGNAL(clicked()), this, SLOT(on_pushCar_clicked()));
         connect(pushJump,       SIGNAL(clicked()), this, SLOT(on_pushJump_clicked()));
         connect(pushLight,      SIGNAL(clicked()), this, SLOT(on_pushLight_clicked()));
-        connect(pushPlayer,     SIGNAL(clicked()), this, SLOT(on_pushPlayer_clicked()));
 
-        connect(pushStart,      SIGNAL(clicked()), this, SLOT(on_pushStart_clicked()));
-        connect(pushStop,       SIGNAL(clicked()), this, SLOT(on_pushStop_clicked()));
+        connect(pushPlayer,     SIGNAL(clicked()), this, SLOT(on_pushPlayer_clicked()));
+        connect(pushPause,      SIGNAL(clicked()), this, SLOT(on_pushPause_clicked()));
+        connect(pushRestart,    SIGNAL(clicked()), this, SLOT(on_pushRestart_clicked()));
         connect(pushClose,      SIGNAL(clicked()), this, SLOT(on_pushClose_clicked()));
 
         connect(pushPersp,      SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
@@ -190,6 +206,7 @@ void FormEngine::loadDemo(Demo_Player using_player) {
 //##    Update Engine
 //####################################################################################
 void FormEngine::startTimers() {
+    pushPause->setText(QApplication::translate(  "MainWindow", "Pause",       nullptr));
     m_time_update =  Clock::now();
     m_time_render =  Clock::now();
     m_time_camera =  Clock::now();
@@ -198,6 +215,7 @@ void FormEngine::startTimers() {
     m_update_timer->start( 0 );                         // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
+    pushPause->setText(QApplication::translate(  "MainWindow", "Resume",       nullptr));
     m_update_timer->stop();
 }
 double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
@@ -235,6 +253,10 @@ void FormEngine::updateEngine() {
         fps_physics = fps_count_physics;        fps_count_physics = 0;
         fps_camera =  fps_count_camera;         fps_count_camera =  0;
         m_time_fps =  Clock::now();
+
+        bool cam_enabled = pushCamera->isEnabled();
+        bool can_enable_cam = (m_engine->getCurrentWorld()->countCharacters() > 1);
+        if (cam_enabled != can_enable_cam) pushCamera->setEnabled( can_enable_cam );
     }
 
     // ***** Update Physics and Render
@@ -295,16 +317,21 @@ void FormEngine::on_pushLight_clicked() {   loadDemo( Demo_Player::Light ); }
 void FormEngine::on_pushPlayer_clicked() {  loadDemo( Demo_Player::Player ); }
 
 void FormEngine::on_pushCamera_clicked() {
-    m_engine->getCurrentWorld()->switchCameraToNext();
+    m_engine->getCurrentWorld()->switchCameraToNext(true, true);
 }
 
 
-void FormEngine::on_pushStart_clicked() {
+void FormEngine::on_pushPause_clicked() {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
-    startTimers();
+    if (m_update_timer->isActive()) {
+        stopTimers();
+    } else {
+        startTimers();
+    }
+
 }
-void FormEngine::on_pushStop_clicked() {
-    stopTimers();
+void FormEngine::on_pushRestart_clicked() {
+    loadDemo(demo_player);
 }
 void FormEngine::on_pushClose_clicked() {
     this->close();
@@ -329,13 +356,7 @@ void FormEngine::on_pushDebug2_clicked() {
 void FormEngine::updateCheckedButtons() {
     if (demo_player == Demo_Player::Spawn)  pushSpawn->setDown(true);   else pushSpawn->setDown(false);
     if (demo_player == Demo_Player::Car)    pushCar->setDown(true);     else pushCar->setDown(false);
-    if (demo_player == Demo_Player::Jump)  {
-        pushJump->setDown(true);
-        pushCamera->setEnabled(true);
-    } else {
-        pushJump->setDown(false);
-        pushCamera->setEnabled(false);
-    }
+    if (demo_player == Demo_Player::Jump)   pushJump->setDown(true);    else pushJump->setDown(false);
     if (demo_player == Demo_Player::Light)  pushLight->setDown(true);   else pushLight->setDown(false);
     if (demo_player == Demo_Player::Player) pushPlayer->setDown(true);  else pushPlayer->setDown(false);
 

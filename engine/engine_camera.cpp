@@ -123,25 +123,45 @@ void DrEngineWorld::switchCameras(long new_camera) {
     m_active_camera = new_camera;
 }
 
-void DrEngineWorld::switchCameraToNext() {
-    auto it = m_cameras.find(m_active_camera);
-    it++;
-    if (it == m_cameras.end()) it = m_cameras.begin();
-    long new_key = (*it).second->getKey();
+void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bool switch_player_controls) {
+    // Only one camera, cancel switching
+    if (m_cameras.size() <= 1) return;
 
+    // Find next available camera
+    auto it = m_cameras.find(m_active_camera);
+    bool found_camera = false;
+    do {
+        it++;
+        if (it == m_cameras.end()) it = m_cameras.begin();              // End of map, loop back around
+        if ((*it).second->getKey() == m_active_camera) return;          // Made it back to active camera, cancel switching
+
+        if (only_switch_to_character_cameras) {
+            if ((*it).second->getThingFollowing() != 0) {
+                DrEngineThing *thing = findThingByKey((*it).second->getThingFollowing());
+                if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
+                    found_camera = true;
+                }
+            }
+        } else {
+            found_camera = true;
+        }
+    } while (found_camera == false);
+
+    // If not active camera already, switch camers
+    long new_key = (*it).second->getKey();
     if (new_key != m_active_camera) {
         if (m_cameras[m_active_camera]->getThingFollowing() != 0) {
             DrEngineThing *thing = findThingByKey(m_cameras[m_active_camera]->getThingFollowing());
-            if (thing && thing->getThingType() == DrThingType::Object) {
+            if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
                 DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                object->setLostControl(true);
+                if (switch_player_controls) object->setLostControl(true);
             }
         }
         if (m_cameras[new_key]->getThingFollowing() != 0) {
             DrEngineThing *thing = findThingByKey(m_cameras[new_key]->getThingFollowing());
-            if (thing && thing->getThingType() == DrThingType::Object) {
+            if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
                 DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                object->setLostControl(false);
+                if (switch_player_controls) object->setLostControl(false);
             }
         }
         switchCameras(new_key);

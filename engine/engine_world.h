@@ -171,6 +171,7 @@ public:
     void            addThings(QList<DrEngineThing*> things);
     void            buildWorld(long world_id_to_build);
     void            clearWorld();
+    int             countCharacters();
 
     void            loadThing3DSettings(DrThing *thing, DrEngineObject *object);
     void            loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
@@ -213,7 +214,7 @@ public:
     double              getCameraRotationY();
     double              getCameraRotationZ();
     void                moveCameras(double milliseconds);
-    void                switchCameraToNext();
+    void                switchCameraToNext(bool only_switch_to_character_cameras, bool switch_player_controls);
     void                switchCameras(long new_camera);
     void                updateCameras();
 
