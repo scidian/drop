@@ -240,11 +240,20 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
             // ***** Copy Saved Property Values
             if (check_property_type == property->getPropertyType()) {
-                k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString()   );
-                k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString()   );
-                k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k]  );
+                k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
+                k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
+                k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k] );
                 k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
                 k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
+
+                // Check that name is disabled for Things
+                if (entity->getType() == DrType::Thing && property->getPropertyKey() == static_cast<long>(Properties::Entity_Name)) {
+                    property->setEditable( false );
+                // Keep Sub Order hidden
+                } else if (property->getPropertyKey() == static_cast<long>(Properties::Thing_Sub_Z_Order)) {
+                    property->setEditable( false );
+                    property->setHidden( true );
+                }
 
                 // Already assigned by Drop
                 ///k = map_key + "prop_key";       if (checkMapHasKey(map, k)) property->setPropertyKey(   map[k].toLongLong() );
