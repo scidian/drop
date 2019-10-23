@@ -339,6 +339,6 @@ DISTFILES += \
     drop_icons.icns
 
 ICON = drop_icons.icns
-RC_ICONS = myappico.ico
+RC_ICONS = drop_icon.ico
 
 

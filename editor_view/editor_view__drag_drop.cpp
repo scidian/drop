@@ -131,7 +131,10 @@ void DrView::dropEvent(QDropEvent *event) {
                 break;
         }
         my_scene->addItemToSceneFromThing( thing );
-        if (thing_count > 0) thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
+        if (thing_count > 0) {
+            thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
+            my_scene->updateItemZValues();
+        }
         event->acceptProposedAction();
 
 

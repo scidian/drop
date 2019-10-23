@@ -121,7 +121,6 @@ private:
     QVector<DrEngineLight*> m_shadow_lights;
     QVector<DrEngineLight*> m_glow_lights;
 
-
 public:
     // Constructor / Destructor
     DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);

@@ -37,7 +37,7 @@ double MillisecondsSinceStartOfDay() {
     date->tm_min =  0;
     date->tm_sec =  0;
     auto midnight = std::chrono::system_clock::from_time_t(std::mktime(date));
-    return std::chrono::duration_cast<std::chrono::milliseconds>(now - midnight).count();
+    return (std::chrono::duration_cast<std::chrono::nanoseconds>(now - midnight).count() / 1000000.0);
 }
 void ResetTimer(DrTime &timer) { timer = Clock::now(); }
 

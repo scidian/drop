@@ -160,7 +160,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             }
         }
 
-        updateItemZValues();
+        this->updateItemZValues();
         m_editor_relay->buildProjectTree();
         m_editor_relay->getProjectTree()->ensureSelectionVisible();
         m_editor_relay->getInspector()->updateInspectorPropertyBoxesOfSelectedItem( { static_cast<int>(Properties::Thing_Z_Order),

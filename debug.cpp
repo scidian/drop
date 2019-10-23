@@ -37,7 +37,6 @@ void SetDebugFlag(Debug_Flags flag) {
 }
 
 void LoadDebugFlags() {
-    ///SetDebugFlag( Debug_Flags::Show_Secret_Menu );
 
     //SetDebugFlag( Debug_Flags::Show_Undo_View );
     //SetDebugFlag( Debug_Flags::Show_Bottom_Debug_Labels );

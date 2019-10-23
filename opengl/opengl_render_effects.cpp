@@ -447,7 +447,15 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
                                                         m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );
     m_water_shader.setUniformValue( u_water_height,     static_cast<float>(fbo->height()) );
-    m_water_shader.setUniformValue( u_water_time,       static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
+
+    // Wave motion (ticking between 60 and 120 hz depending on monitor)
+    static Clock::time_point time_last_frame = Clock::now();
+    static long frame_count = 0;
+    if (Dr::MillisecondsElapsed(time_last_frame) > 8.0) {
+        frame_count++;
+        time_last_frame = Clock::now();
+    }
+    m_water_shader.setUniformValue( u_water_time,       static_cast<float>(frame_count / 60.0) );
     m_water_shader.setUniformValue( u_water_angle,      angle );
 
     m_water_shader.setUniformValue( u_water_pixel_x,    water->pixel_x );

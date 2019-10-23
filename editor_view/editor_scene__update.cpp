@@ -54,7 +54,10 @@ void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long>
 }
 
 
-// Updates all items Z Values
+//####################################################################################
+//##    Updates all items Z Values
+//##        Needs to update them all since the sub ordering can change them all if something moves to back / front
+//####################################################################################
 void DrScene::updateItemZValues() {
     for (auto &item : items()) {
         DrItem *dritem = dynamic_cast<DrItem*>(item);
@@ -75,7 +78,9 @@ void DrScene::updateItemZValues() {
     }
 }
 
-// Updates the item in the scene based on the new property_keys
+//####################################################################################
+//##    Updates the item in the scene based on the new property_keys
+//####################################################################################
 void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_keys) {
     DrThing *thing = dynamic_cast<DrThing*>(changed_item);
     if (thing == nullptr) return;
