@@ -184,7 +184,7 @@ enum class Properties {
     Asset_Animation_Default             = 22,       // image
 
     // Asset_Physics
-    Asset_Physics_Custom_Friction       = 162,      // bool double combbo
+    Asset_Physics_Custom_Friction       = 162,      // bool double combo
     Asset_Physics_Custom_Bounce         = 163,      // bool double combo
 
     // Asset_Health
@@ -232,7 +232,7 @@ enum class Properties {
 
     // Special Effects
     World_Filter_Wireframe              = 43,       // bool
-    World_Filter_Cartoon                = 44,       // bool
+    World_Filter_Cartoon                = 44,       // bool double combo
     World_Filter_Wavy                   = 45,       // bool
 
 

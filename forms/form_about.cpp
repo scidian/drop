@@ -91,7 +91,8 @@ void FormAbout::buildForm() {
         inner_layout->addWidget(about_1);
 
         ///QLabel *version_label = new QLabel("v " + version);
-        QLabel *version_label = new QLabel("----- Educational Version Only -----<br><b>NOT FOR REDISTRIBUTION</b><br>");
+        QLabel *version_label = new QLabel("---------- Educational Version Only ----------<br>"
+                                           "<b>NOT FOR REDISTRIBUTION</b><br>");
         version_label->setAlignment(Qt::AlignmentFlag::AlignCenter);
         version_label->setContentsMargins(0,0,0,0);
         version_label->setAttribute(Qt::WidgetAttribute::WA_TransparentForMouseEvents, true);

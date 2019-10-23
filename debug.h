@@ -13,13 +13,15 @@
 //##    Possible debug options
 //############################
 enum class Debug_Flags {
+    Load_Test_Project,                  // Loads the Test Project into editor when program starts
+
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Show_Undo_View,                     // Shows a window with all undo / redo commands from current DrScene
     Show_Bottom_Debug_Labels,           // Shows Scene View Debug labels
     Show_Hidden_Component,              // Shows hidden custom Entity Advisor component / properties
 
     Turn_On_Antialiasing,               // Turns on antialiasing in the World Editor GraphicsView
-    Turn_On_OpenGL,                     // Turns on opengl optimizations for World Editor GraphicsView
+    Turn_On_OpenGL_in_Editor,           // Turns on opengl optimizations for World Editor GraphicsView
 
     Label_FPS,                          // Show frames per second of DrView
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over DrView
@@ -51,7 +53,7 @@ namespace Dr {
     bool CheckDoneLoading();
     void SetDoneLoading(bool done);
 
-    void InitializeFlags();
+    void LoadDebugFlags();
 
 }   // namespace Dr
 

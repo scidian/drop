@@ -120,14 +120,33 @@ void FormMain::menuSave(bool save_as) {
 //##    Edit Menu Functions
 //####################################################################################
 void FormMain::menuUndo() {
-    sceneEditor->undoAction();
+    // !!!!!!!!!!
+    // !!!!!!!!!! #FIXME: Need to get Undo / Redo working again !!!!!!!!!!
+    // !!!!!!!!!!
+    ///sceneEditor->undoAction();
 }
 void FormMain::menuRedo() {
-    sceneEditor->redoAction();
+    // !!!!!!!!!!
+    // !!!!!!!!!! #FIXME: Need to get Undo / Redo working again !!!!!!!!!!
+    // !!!!!!!!!!
+    ///sceneEditor->redoAction();
 }
 
 // SLOT: Updates Undo / Redo text
 void FormMain::editMenuAboutToShow() {
+
+    actionUndo->setText("Undo Disabled");
+    actionRedo->setText("Redo Disabled");
+    actionUndo->setEnabled(false);
+    actionRedo->setEnabled(false);
+    return;
+
+    // !!!!!!!!!!
+    // !!!!!!!!!!
+    // !!!!!!!!!! #FIXME: Need to get Undo / Redo working again !!!!!!!!!!
+    // !!!!!!!!!!
+    // !!!!!!!!!!
+
     QString undo_text = sceneEditor->getCurrentUndo();
     QString redo_text = sceneEditor->getCurrentRedo();
     actionUndo->setText(undo_text);

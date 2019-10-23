@@ -169,7 +169,7 @@ void DrView::paintItemCenters(QPainter &painter) {
     if (m_allow_movement == false) return;
 
     ///// Paints in NOT mode, doesnt work in OpenGL
-    ///if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
+    ///if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor))
     ///    painter.setCompositionMode(QPainter::CompositionMode::CompositionMode_Source);
     ///else
     ///    painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);

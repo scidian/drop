@@ -151,6 +151,7 @@ public:
 
     bool            wireframe = false;                          // Wireframe        True / False
     bool            cartoon = false;                            // Cartoon          True / False
+    float           cartoon_width = 5.0;                        // Cartoon Width
     bool            wavy = false;                               // Wavy (Ripple)    True / False
 
 

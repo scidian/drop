@@ -335,8 +335,7 @@ void TreeInspector::updateLockedSettings() {
         } else {
             bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());
 
-            if (prop->getPropertyKey() == Dr::EnumToInt(Properties::Asset_Physics_Custom_Friction) ||
-                prop->getPropertyKey() == Dr::EnumToInt(Properties::Asset_Physics_Custom_Bounce)) {
+            if (prop->getPropertyType() == Property_Type::BoolDouble) {
                 if (widget->property(User_Property::Order).toInt() == 1) {
                     if (prop->getValue().toList().first().toBool() == false) enabled = false;
                 }

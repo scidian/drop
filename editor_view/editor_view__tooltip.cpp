@@ -65,7 +65,7 @@ void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant
             break;
     }
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL) == false) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor) == false) {
         Dr::ApplyRoundedCornerMask(this, m_x_radius, m_y_radius);
         Dr::ApplyDropShadowByType(this, Shadow_Types::Tool_Tip_Shadow);
     }

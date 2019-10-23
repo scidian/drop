@@ -34,7 +34,7 @@
 void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect)
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
         QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
         f->glClearColor(static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).redF()),
                         static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).greenF()),
@@ -128,7 +128,7 @@ void DrView::paintEvent(QPaintEvent *event) {
     }
 
     // Draw ToolTip
-    if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL))
+    if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor))
         paintToolTip(painter);
 
     // !!!!! #DEBUG:    Draw frames per second

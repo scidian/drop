@@ -99,7 +99,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders all the world's objects as outlines.");
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon, Property_Type::Bool, false,
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 50.0, 0.0, 100, 1.0, "Intensity: "}),
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");

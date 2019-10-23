@@ -70,6 +70,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_brightness,     m_engine->getCurrentWorld()->brightness );
 
     m_default_shader.setUniformValue( u_default_cartoon,        m_engine->getCurrentWorld()->cartoon );
+    m_default_shader.setUniformValue( u_default_cartoon_width,  m_engine->getCurrentWorld()->cartoon_width );
     m_default_shader.setUniformValue( u_default_wavy,           m_engine->getCurrentWorld()->wavy );
     m_default_shader.setUniformValue( u_default_wireframe,      false );
 

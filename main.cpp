@@ -43,7 +43,7 @@
 //      !!!!! #DEBUG:               Code used for debugging only
 //      !!!!! #TEMP:                Needs to be fixed at some point
 //      !!!!! #TODO:                Needs to be implemented at some point
-//      !!!!! #FIX:                 Needs to be fixed at some point
+//      !!!!! #FIXME:               Needs to be fixed at some point
 //
 //
 //  Main Components
@@ -105,8 +105,9 @@ int main(int argc, char *argv[]) {
     // ***** Initiliaze application
     QApplication drop(argc, argv);                                  // Declare application
 
+
     // ***** Load Global Data
-    Dr::InitializeFlags();                                          // Sets debug flags
+    Dr::LoadDebugFlags();                                           // Sets debug flags
     Dr::LoadCustomFonts();                                          // Loads font from resource file
     Dr::LoadPalettes();                                             // Loads color data into global vector
     Dr::LoadPreferences();                                          // Loads user preferences
@@ -116,7 +117,9 @@ int main(int argc, char *argv[]) {
     Dr::SetPreference(Preferences::Version_Minor, "0");
     Dr::SetPreference(Preferences::Version_Build, "0001");
 
+    // ***** Temporary-ish options
     Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
+    ///Dr::SetDebugFlag(Debug_Flags::Load_Test_Project);            // Turns on Test Project loading into editor upon startup
 
 
     // ***** Set OpenGL surface format of QOpenGLWidgets
@@ -133,13 +136,14 @@ int main(int argc, char *argv[]) {
     QSurfaceFormat::setDefaultFormat(format);
 
 
+    // ***** Declare / Load QMainWindows
+    FormMain     form_main;                                         // FormMain, main editor Form
+    FormExpire   form_expire;                                       // FormExpire used for demo versions that are expired
+
     // ***** Check date for expired versions
     QDateTime now =     QDateTime::currentDateTime();
     QDateTime expire =  QDateTime(QDate(2020, 02, 02));
     long diff_days =    expire.daysTo(now);
-    FormExpire  form_expire;
-    FormMain    form_main;                                          // Declare / Load FormMain, pass Globals helper
-
     if (diff_days > 0) {
         form_expire.show();
 
@@ -154,6 +158,7 @@ int main(int argc, char *argv[]) {
         qApp->processEvents();                                      // Ensure FormMain finishes showing
         Dr::SetDoneLoading(true);                                   // Marks FormMain as finished loading
     }
+
 
     // ***** Run Program
     drop.exec();

@@ -41,7 +41,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
     // ********** Initialize new project, load DrProject options
     m_project = new DrProject();
-    m_project->initializeNewProject("Rocky Rover", Orientation::Portrait, 800, 1600, false);
+    m_project->initializeNewProject("Rocky Rover", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
 
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );

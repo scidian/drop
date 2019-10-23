@@ -226,6 +226,7 @@ void DrOpenGL::loadShaders() {
 
     u_default_bitrate =         m_default_shader.uniformLocation(   "u_bitrate" );
     u_default_cartoon =         m_default_shader.uniformLocation(   "u_cartoon" );
+    u_default_cartoon_width =   m_default_shader.uniformLocation(   "u_cartoon_width" );
     u_default_wavy =            m_default_shader.uniformLocation(   "u_wavy" );
     u_default_wireframe =       m_default_shader.uniformLocation(   "u_wireframe" );
 

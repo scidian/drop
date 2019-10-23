@@ -107,8 +107,7 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
         this->addAsset(DrAssetType::Text, font_2);                                 // "Test Font 2"
         this->addAsset(DrAssetType::Text, font_3);                                 // "Test Font 3"
 
-        // !!!!! #TEMP: New Project
-        // Create a new project and add some stuff to it
+        // Add some Worlds and Stages
         this->addWorld();                                                                  // "World 2"
         this->findWorldWithName("World 2")->addStage();                                    // Stage 2
         this->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");       // Stage 3

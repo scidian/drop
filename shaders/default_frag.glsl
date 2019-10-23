@@ -42,10 +42,11 @@ uniform mediump float   u_brightness;// = 0.0;              // Brightness       
 uniform         bool    u_shade_away;
 uniform highp   vec3    u_camera_pos;
 
-uniform mediump float   u_bitrate;// = 256;                 // Bitrate          Editor:    0 to  256
-uniform         bool    u_cartoon;// = false;               // Cartoon          True / False
-uniform         bool    u_wavy;// = false;                  // Wavy             True / False
-uniform         bool    u_wireframe;// = false;             // Wireframe        True / False
+uniform mediump float   u_bitrate;// = 256;                 // Bitrate              Editor:    0 to  256
+uniform         bool    u_cartoon;// = false;               // Cartoon              True / False
+uniform mediump float   u_cartoon_width;// = 5.0            // Cartoon Edge Width   0.0 to ?
+uniform         bool    u_wavy;// = false;                  // Wavy                 True / False
+uniform         bool    u_wireframe;// = false;             // Wireframe            True / False
 
 // Constants
 const   highp   float   THRESHOLD = 0.75;                   // Alpha threshold for our occlusion map
@@ -91,7 +92,7 @@ float edgeFactor() {
 //##    Cartoon Filter Functions
 //####################################################################################
 float edge_thres  = 0.2;
-float edge_thres2 = 5.0;
+float edge_thres2 = u_cartoon_width;//5.0;
 
 // Averaged pixel intensity from 3 color channels
 float avgIntensity(vec4 pix) {
