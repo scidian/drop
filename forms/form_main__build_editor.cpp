@@ -108,6 +108,7 @@ void FormMain::buildWidgetsEditor() {
                     treeProjectEditor->header()->setStretchLastSection(false);
                     treeProjectEditor->header()->setVisible(true);
                     treeProjectEditor->setFrameShape(QFrame::NoFrame);
+                    treeProjectEditor->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
                 splitterHorizontal->addWidget(treeProjectEditor);
 
@@ -260,6 +261,7 @@ void FormMain::buildWidgetsEditor() {
                 treeAssetEditor->setFrameShape(QFrame::NoFrame);
                 treeAssetEditor->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
                 treeAssetEditor->setUniformRowHeights(false);
+                treeAssetEditor->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
             verticalLayoutAsset->insertWidget(0, treeAssetEditor);
 

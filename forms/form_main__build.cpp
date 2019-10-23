@@ -219,6 +219,7 @@ void FormMain::buildWidgetsShared() {
                 treeInspector->setHeaderHidden(true);
                 treeInspector->setFrameShape(QFrame::NoFrame);
                 treeInspector->setUniformRowHeights(false);
+                treeInspector->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
             verticalLayoutObject->addWidget(treeInspector);
         dockInspector->setWidget(widgetInspector);
