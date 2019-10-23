@@ -151,7 +151,7 @@ float LaplacianPositiveCotanWeight(Vertex vertex_i, Vertex edge_j, Vertex edge_j
 
     // wij = (cot(alpha) + cot(beta))
     float wij = (cotan1 + cotan2) / 2.0f;
-    if (isnan(wij)) wij = 0.0f;
+    if (std::isnan(wij)) wij = 0.0f;
 
     // Compute the cotangent value close to 0.0f, as cotan approaches infinity close to zero we clamp higher values
     const float eps = 1e-6f;

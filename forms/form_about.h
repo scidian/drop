@@ -35,7 +35,8 @@ public:
     virtual void resizeEvent(QResizeEvent *event) override;
 
     // Form Functions
-    void buildForm();
+    void    buildForm();
+    QString licenseText();
 
 };
 

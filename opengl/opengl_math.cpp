@@ -85,15 +85,15 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
         // **********
 
         // Unproject at near and far plane
-        QVector3D near, far;
-        near = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_view, m_projection, viewport);
-        far =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_view, m_projection, viewport);
+        QVector3D near_plane, far_plane;
+        near_plane = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_view, m_projection, viewport);
+        far_plane =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_view, m_projection, viewport);
 
         // Find distance to z plane 0 as a percentage, and interpolate between the two near and far plane mouse points
-        float z_total = abs(near.z()) + abs(far.z());
-        float z_percent = abs(near.z() / z_total);
-        float nx = near.x() + (z_percent * (far.x() - near.x()));
-        float ny = near.y() + (z_percent * (far.y() - near.y()));
+        float z_total = abs(near_plane.z()) + abs(far_plane.z());
+        float z_percent = abs(near_plane.z() / z_total);
+        float nx = near_plane.x() + (z_percent * (far_plane.x() - near_plane.x()));
+        float ny = near_plane.y() + (z_percent * (far_plane.y() - near_plane.y()));
         vec = QVector3D(nx, ny, 0);
 
         ///qDebug() << "Near: " << near << "  -  Far: " << far << "  -  Vec: " << vec;

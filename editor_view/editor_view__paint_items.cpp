@@ -5,6 +5,8 @@
 //      DrView Paint Functions that paint on / around QGraphicsItems
 //
 //
+#include <QDebug>
+
 #include "colors/colors.h"
 #include "debug.h"
 #include "editor_scene.h"
@@ -70,29 +72,6 @@ void DrView::paintBoundingBox(QPainter &painter) {
     painter.drawLine( QLineF( m_handles_centers[Position_Flags::Rotate], m_handles_centers[Position_Flags::Top]) );
     painter.drawPolygon(to_view);
     painter.setRenderHint(QPainter::Antialiasing, antialiasing_before);
-
-    // !!!!! #DEBUG:    Paints unrotated selection box with distance point used for calculating scale
-    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Resize_Calculations)) {
-        painter.setPen(QPen(QBrush(Qt::red), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter.drawPolygon(m_debug_points);
-    }
-    // !!!!! END
-
-    // !!!!! #DEBUG:    Paints un rotated, sheared boxes
-    if (Dr::CheckDebugFlag(Debug_Flags::Paint_Shear_Remove)) {
-        painter.setPen(QPen(QBrush(Qt::red), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        QPolygonF shear_to_view = mapFromScene(m_debug_shear);
-        painter.drawPolygon(shear_to_view);
-
-        painter.setPen(QPen(QBrush(Qt::green), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        QPolygonF shear_to_view2 = mapFromScene(m_debug_shear2);
-        painter.drawPolygon(shear_to_view2);
-
-        painter.setPen(QPen(QBrush(Qt::blue), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        QPolygonF shear_to_view3 = mapFromScene(m_debug_shear3);
-        painter.drawPolygon(shear_to_view3);
-    }
-    // !!!!! END
 }
 
 

@@ -87,11 +87,13 @@
 //
 //
 #include <QApplication>
+#include <QDateTime>
 #include <QSurfaceFormat>
 
 #include "colors/colors.h"
 #include "debug.h"
 #include "forms/form_main.h"
+#include "forms/form_expire.h"
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
@@ -108,11 +110,12 @@ int main(int argc, char *argv[]) {
     // ***** Initiliaze application
     QApplication drop(argc, argv);                              // Declare application
 
+
     // ***** Set OpenGL surface format of QOpenGLWidgets
     QSurfaceFormat format;
     format.setDepthBufferSize(24);                              // Enable Depth Buffer
     #if defined (Q_OS_MACOS)
-        format.setSwapInterval(0);                                  // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS)
+        format.setSwapInterval(0);                              // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS)
     #else
         format.setSwapInterval(1);                                  // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS)
     #endif
@@ -130,17 +133,27 @@ int main(int argc, char *argv[]) {
     Dr::LoadPalettes();                                         // Loads color data into global vector
     Dr::LoadPreferences();                                      // Loads user preferences
 
+    // ***** Check date for expired versions
+    QDateTime now =     QDateTime::currentDateTime();
+    QDateTime expire =  QDateTime(QDate(2020, 02, 02));
+    long diff_days =    expire.daysTo(now);
+    FormExpire  form_expire;
+    FormMain    form_main;                                      // Declare / Load FormMain, pass Globals helper
+
+    if (diff_days > 0) {
+        form_expire.show();
+
     // ***** Create main form
-    FormMain form_main;                                         // Declare / Load FormMain, pass Globals helper
+    } else {
+        Dr::SetActiveFormMain(&form_main);                      // Set main form to active FormMain
+        Dr::SetActiveEditorRelay(&form_main);                   // Set main form to active EditorRelay
+        qApp->installEventFilter(&form_main);                   // Installs an application wide event filter attached to FormMain (acts as key grabber)
+        form_main.show();                                       // Show FormMain
 
-    Dr::SetActiveFormMain(&form_main);                          // Set main form to active FormMain
-    Dr::SetActiveEditorRelay(&form_main);                       // Set main form to active EditorRelay
-    qApp->installEventFilter(&form_main);                       // Installs an application wide event filter attached to FormMain (acts as key grabber)
-    form_main.show();                                           // Show FormMain
-
-    // ***** Process events and mark as loaded
-    qApp->processEvents();                                      // Ensure FormMain finishes showing
-    Dr::SetDoneLoading(true);                                   // Marks FormMain as finished loading
+        // ***** Process events and mark as loaded
+        qApp->processEvents();                                  // Ensure FormMain finishes showing
+        Dr::SetDoneLoading(true);                               // Marks FormMain as finished loading
+    }
 
     // ***** Run Program
     drop.exec();

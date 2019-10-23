@@ -63,7 +63,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Jump) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 10, c_scale1x1, 0.25, 0.5, true, false);
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 10, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
@@ -77,7 +77,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setMoveSpeedY( 300 );
 
 
-        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 800, 50, 10, c_scale1x1, 1, 0.5);
+        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 800, 350, 10, c_scale1x1, 1, 0.5);
         ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball2);
 
@@ -88,7 +88,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Light) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 50, 10, c_scale1x1, 0.25, 0.5, true, false);
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 10, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
@@ -103,8 +103,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         this->setGlowZOrder(100.0);
 
         ball = ball1;
-        light1 = new DrEngineLight(this, getNextKey(), 250, 25, -100, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
-        light2 = new DrEngineLight(this, getNextKey(), 250, 25, -100, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
+        light1 = new DrEngineLight(this, getNextKey(), 250, 325, -100, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
+        light2 = new DrEngineLight(this, getNextKey(), 250, 325, -100, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
         light2->draw_shadows = false;
         addThings( { light1, light2 } );
 
@@ -113,7 +113,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
     } else if (new_player_type == Demo_Player::Spawn) {
         DrEngineObject *ball1;
-        ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Ball, -300, 150, 0, c_scale1x1, 0.7, 0.5);
+        ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Kinematic, Asset_Textures::Ball, -300, 450, 0, c_scale1x1, 0.7, 0.5);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 

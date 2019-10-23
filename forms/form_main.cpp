@@ -41,7 +41,7 @@ FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
 
     // ********** Initialize new project, load DrProject options
     m_project = new DrProject();
-    m_project->initializeNewProject("Rocky Rover", Orientation::Portrait, 800, 1600, true);
+    m_project->initializeNewProject("Rocky Rover", Orientation::Portrait, 800, 1600, false);
 
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
@@ -149,9 +149,12 @@ void FormMain::closeEvent(QCloseEvent *event) {
         return;
     }
 
-    // Close everything
-    qApp->closeAllWindows();
+    // Accept close event
     event->accept();
+
+    // Close everything and terminate app
+    qApp->closeAllWindows();
+    qApp->quit();
 }
 
 // Overrides resize event to keep toolbar proper width

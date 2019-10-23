@@ -166,8 +166,6 @@ private:
     long                            m_debug_fps = 0;         // #DEBUG
     long                            m_debug_fps_last;        // #DEBUG
     QTime                           m_debug_timer;           // #DEBUG
-    QPolygonF                       m_debug_points;
-    QPolygonF                       m_debug_shear, m_debug_shear2, m_debug_shear3;
 
 
 

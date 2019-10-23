@@ -136,6 +136,7 @@ SOURCES += \
     forms/form_about.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
+    forms/form_expire.cpp \
     forms/form_fonts.cpp \
     forms/form_main.cpp \
     forms/form_main__build.cpp \
@@ -286,6 +287,7 @@ HEADERS += \
     forms/form_about.h \
     forms/form_blank.h \
     forms/form_color_magnifier.h \
+    forms/form_expire.h \
     forms/form_fonts.h \
     forms/form_main.h \
     forms/form_popup.h \
@@ -333,4 +335,10 @@ RESOURCES += \
     shaders.qrc
 
 DISTFILES += \
-    icon256.ico
+    drop_icon.ico \
+    drop_icons.icns
+
+ICON = drop_icons.icns
+RC_ICONS = myappico.ico
+
+

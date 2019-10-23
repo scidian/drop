@@ -139,9 +139,16 @@ bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
     QMouseEvent *mouse_event;
     QWidget     *widget;
 
+    if (event->type() == QEvent::Close) {
+        event->accept();
+        return QObject::eventFilter(obj, event);
+    }
+
     if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
         mouse_event = dynamic_cast<QMouseEvent*>(event);
         widget =      dynamic_cast<QWidget*>(obj);
+        if (mouse_event == nullptr || widget == nullptr)
+            return QObject::eventFilter(obj, event);
 
         if (event->type() == QEvent::MouseButtonPress) {
             m_press_pos = mouse_event->pos();
