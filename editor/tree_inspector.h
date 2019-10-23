@@ -140,7 +140,7 @@ class DrQCheckBox : public QCheckBox
 {
     Q_OBJECT
 private:
-    int     m_draw_left = 6;
+    int     m_draw_left = 5;
     int     m_draw_top =  1;
 
 public:

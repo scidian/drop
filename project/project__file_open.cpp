@@ -203,12 +203,15 @@ void DrProject::openProjectFromFile(QString open_file) {
 //##    Load all Components / Properties Settings
 //####################################################################################
 void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
+    // ***** Load class variables
     entity->setLocked(  map["locked"].toBool() );
     entity->setVisible( map["visible"].toBool() );
-    QString k;
+
+    // ***** Go through and load Components
     for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::number(component->getComponentKey()) + ":";
+        QString k;
         k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString()   );
         k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString()   );
         k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString()   );
@@ -216,25 +219,36 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         k = map_key + "turned_on";          if (checkMapHasKey(map, k)) component->setOnOrOff(      map[k].toBool()     );
         ///k = map_key + "comp_key";           if (checkMapHasKey(map, k)) component->setComponentKey( map[k].toLongLong() );
 
+        // ***** Go through and load Properties of each Component
         for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
 
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrShapeList class
             if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Image_Shape)) continue;
 
+            // ***** Check data type is the same as we were expecting
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
-            k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString()   );
-            k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString()   );
+            Property_Type check_property_type;
+            k = map_key + "data_type";
+            if (checkMapHasKey(map, k)) {
+                check_property_type = static_cast<Property_Type>(map[k].toInt());
+                // Already set by Drop
+                ///property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
+            } else {
+                continue;
+            }
 
-            // Already assigned by Drop
-            ///k = map_key + "data_type";      if (checkMapHasKey(map, k)) property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
+            // ***** Copy Saved Property Values
+            if (check_property_type == property->getPropertyType()) {
+                k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString()   );
+                k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString()   );
+                k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k]  );
+                k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
+                k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
 
-            k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k]  );
-            k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
-            k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
-
-            // Alreadt assigned by Drop
-            ///k = map_key + "prop_key";       if (checkMapHasKey(map, k)) property->setPropertyKey(   map[k].toLongLong() );
+                // Already assigned by Drop
+                ///k = map_key + "prop_key";       if (checkMapHasKey(map, k)) property->setPropertyKey(   map[k].toLongLong() );
+            }
         }
     }
 

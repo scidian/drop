@@ -104,7 +104,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
 
     wireframe =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toBool();
     cartoon =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[0].toBool();
-    cartoon_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[1].toFloat() / 10.f;
+    cartoon_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[1].toFloat();
     wavy =          world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
 
     // ***** Load Current Stage to origin position
