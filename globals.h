@@ -24,6 +24,8 @@ enum class Preferences {
     Version_Minor,                                  // string (should be convertible to int)
     Version_Build,                                  // string (should be convertible to int)
 
+    Limit_Frames_Rendered,                          // bool
+
     World_Editor_Lock_Backgrounds,                  // bool
     World_Editor_Show_Collision_Shapes,             // bool
     World_Editor_Show_Connections,                  // bool

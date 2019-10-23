@@ -102,57 +102,57 @@
 // ********** MAIN **********
 int main(int argc, char *argv[]) {
 
+    // ***** Initiliaze application
+    QApplication drop(argc, argv);                                  // Declare application
+
+    // ***** Load Global Data
+    Dr::InitializeFlags();                                          // Sets debug flags
+    Dr::LoadCustomFonts();                                          // Loads font from resource file
+    Dr::LoadPalettes();                                             // Loads color data into global vector
+    Dr::LoadPreferences();                                          // Loads user preferences
+
     // ***** Version
     Dr::SetPreference(Preferences::Version_Major, "1");
     Dr::SetPreference(Preferences::Version_Minor, "0");
     Dr::SetPreference(Preferences::Version_Build, "0001");
 
-    // ***** Initiliaze application
-    QApplication drop(argc, argv);                              // Declare application
+    Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
 
 
     // ***** Set OpenGL surface format of QOpenGLWidgets
     QSurfaceFormat format;
-    format.setDepthBufferSize(24);                              // Enable Depth Buffer
-    #if defined (Q_OS_MACOS)
-        format.setSwapInterval(0);                              // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS)
-    #else
-        format.setSwapInterval(1);                                  // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS)
-    #endif
-    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);    // Use Off Screen Double Buffer
-    ///format.setSamples(4);                                    // Multi-sampling, not needed if rendering to offscreen fbo with its own multisampling
+    format.setDepthBufferSize(24);                                  // Enable Depth Buffer
+    format.setSwapInterval(1);                                      // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS?)
+    ///format.setSwapInterval(0);                                   // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS?)
+    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);        // Use Off Screen Double Buffer
+    ///format.setSamples(4);                                        // Multi-sampling, not needed if rendering to offscreen fbo with its own multisampling
     ///format.setStencilBufferSize(8);
     ///format.setVersion(3,3);
     ///format.setProfile(QSurfaceFormat::CoreProfile);
     format.setVersion(2,0);
     QSurfaceFormat::setDefaultFormat(format);
 
-    // ***** Load some global data
-    Dr::InitializeFlags();                                      // Sets debug flags
-    Dr::LoadCustomFonts();                                      // Loads font from resource file
-    Dr::LoadPalettes();                                         // Loads color data into global vector
-    Dr::LoadPreferences();                                      // Loads user preferences
 
     // ***** Check date for expired versions
     QDateTime now =     QDateTime::currentDateTime();
     QDateTime expire =  QDateTime(QDate(2020, 02, 02));
     long diff_days =    expire.daysTo(now);
     FormExpire  form_expire;
-    FormMain    form_main;                                      // Declare / Load FormMain, pass Globals helper
+    FormMain    form_main;                                          // Declare / Load FormMain, pass Globals helper
 
     if (diff_days > 0) {
         form_expire.show();
 
     // ***** Create main form
     } else {
-        Dr::SetActiveFormMain(&form_main);                      // Set main form to active FormMain
-        Dr::SetActiveEditorRelay(&form_main);                   // Set main form to active EditorRelay
-        qApp->installEventFilter(&form_main);                   // Installs an application wide event filter attached to FormMain (acts as key grabber)
-        form_main.show();                                       // Show FormMain
+        Dr::SetActiveFormMain(&form_main);                          // Set main form to active FormMain
+        Dr::SetActiveEditorRelay(&form_main);                       // Set main form to active EditorRelay
+        qApp->installEventFilter(&form_main);                       // Installs application wide event filter attached to FormMain (acts as key grabber)
+        form_main.show();                                           // Show FormMain
 
         // ***** Process events and mark as loaded
-        qApp->processEvents();                                  // Ensure FormMain finishes showing
-        Dr::SetDoneLoading(true);                               // Marks FormMain as finished loading
+        qApp->processEvents();                                      // Ensure FormMain finishes showing
+        Dr::SetDoneLoading(true);                                   // Marks FormMain as finished loading
     }
 
     // ***** Run Program

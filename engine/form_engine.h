@@ -109,6 +109,7 @@ private slots:
     void aboutToCompose();
     void frameSwapped();
     void moveCameras();
+    void processFrame(double milliseconds);
     void updateEngine();
 
     void on_pushSpawn_clicked();

@@ -22,6 +22,7 @@
 #include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
 #include "form_engine.h"
+#include "globals.h"
 #include "opengl/opengl.h"
 #include "style/style.h"
 
@@ -259,42 +260,43 @@ void FormEngine::updateEngine() {
         if (cam_enabled != can_enable_cam) pushCamera->setEnabled( can_enable_cam );
     }
 
-    // ***** Update Physics and Render
-    #if defined (Q_OS_MACOS)
-        double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
-        if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) {
-            resetTimer(Engine_Timer::Update);
-            m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-            m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
-            ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
-            m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
-            moveCameras();                                                                      // Move Cameras
-            m_opengl->update();                                                                 // Render
-        }
 
-        // Additional render on MacOS (smooths more with vsync being disabled)
-        /** if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->effect_count <= 0) {
-            double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
-            if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
-                resetTimer(Engine_Timer::Render);
-                m_opengl->update();                                                             // Render
-            }
-        } */
-    #else
-        if (m_wait_vsync == false) {
-            m_wait_vsync = true;
-            double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
-            resetTimer(Engine_Timer::Update);
-            m_engine->getCurrentWorld()->updateSpace(update_milliseconds);                      // Physics Engine
-            m_engine->getCurrentWorld()->updateWorld(update_milliseconds);                      // Additional World / Thing Updating
-            ++m_engine->getFormEngine()->fps_count_physics;                                     // Updates Physics Frames per Second
-            m_engine->getCurrentWorld()->updateCameras();                                       // Update Camera Targets
-            moveCameras();                                                                      // Move Cameras
-            m_opengl->update();                                                                 // Render
-        }
-    #endif
+    // ***** Update Physics and Render
+    double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
+
+    if (Dr::GetPreference(Preferences::Limit_Frames_Rendered).toBool() == false) {
+        processFrame(update_milliseconds);
+    } else {
+        #if defined (Q_OS_MACOS)
+            if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds())
+                processFrame(update_milliseconds);
+
+            // Additional render on MacOS (smooths more with vsync being disabled)
+            /** if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->effect_count <= 0) {
+                double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
+                if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
+                    resetTimer(Engine_Timer::Render);
+                    m_opengl->update();
+                }
+            } */
+        #else
+            if (m_wait_vsync == false)
+                processFrame(update_milliseconds);
+        #endif
+    }
 
     m_running = false;
+}
+
+void FormEngine::processFrame(double milliseconds) {
+    m_wait_vsync = true;
+    resetTimer(Engine_Timer::Update);
+    m_engine->getCurrentWorld()->updateSpace(milliseconds);                         // Physics Engine
+    m_engine->getCurrentWorld()->updateWorld(milliseconds);                         // Additional World / Thing Updating
+    ++m_engine->getFormEngine()->fps_count_physics;                                 // Updates Physics Frames per Second
+    m_engine->getCurrentWorld()->updateCameras();                                   // Update Camera Targets
+    moveCameras();                                                                  // Move Cameras
+    m_opengl->update();
 }
 
 // Emitted by QOpenGLWidget when back buffer is swapped to screen
