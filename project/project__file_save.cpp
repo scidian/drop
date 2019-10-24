@@ -165,9 +165,10 @@ void DrProject::saveProjectToFile() {
             DrStage *stage = stage_pair.second;
             QVariantMap stage_data;
             stage_data["key"] =             QVariant::fromValue(stage->getKey());
+            stage_data["tree_expanded"] =   QVariant(stage->getExpanded());
             stage_data["is_start_stage"] =  QVariant(stage->isStartStage());
             stage_data["center_point"] =    QVariant(stage->getViewCenterPoint());
-            stage_data["tree_expanded"] =   QVariant(stage->getExpanded());
+            stage_data["zoom_scale"] =      QVariant(stage->getViewZoomLevel());
             addSettingsToMap(stage, stage_data);
             settings.beginWriteArray(world_array);
             settings.setArrayIndex(stage_count++);

@@ -59,7 +59,9 @@ bool DrProject::openProjectFromFile(QString open_file) {
     m_key_generator =                           options["key_generator"].toLongLong();
 
     // Not a valid save file, return false
-    if (checkMapHasKey(options, "name") == false) return false;
+    if (checkMapHasKey(options, "name") == false) {
+        return false;
+    }
 
     setOption(Project_Options::Name,            options["name"]);
     setOption(Project_Options::File_Name_Path,  QVariant(open_file)); ///options["file_path"]);
@@ -167,11 +169,12 @@ bool DrProject::openProjectFromFile(QString open_file) {
             // Load Stage, Initialize
             QVariantMap stage_data =        settings.value("stage").value<QVariantMap>();
             long        stage_key =         checkMapHasKey(stage_data, "key")            ? stage_data["key"].toLongLong()        : c_no_key;
+            bool        stage_expanded =    checkMapHasKey(stage_data, "tree_expanded")  ? stage_data["tree_expanded"].toBool()  : true;
             bool        start_stage =       checkMapHasKey(stage_data, "is_start_stage") ? stage_data["is_start_stage"].toBool() : false;
             QPointF     center_point =      checkMapHasKey(stage_data, "center_point")   ? stage_data["center_point"].toPointF() : QPointF(0, 0);
-            bool        stage_expanded =    checkMapHasKey(stage_data, "tree_expanded")  ? stage_data["tree_expanded"].toBool()  : true;
+            double      zoom_scale =        checkMapHasKey(stage_data, "zoom_scale")     ? stage_data["zoom_scale"].toDouble()   : 0.5;
             if (findSettingsFromKey(stage_key, false) != nullptr) continue;
-            world->addStage(stage_key, start_stage, center_point);
+            world->addStage(stage_key, start_stage, center_point, zoom_scale);
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
             loadSettingsFromMap(stage, stage_data);

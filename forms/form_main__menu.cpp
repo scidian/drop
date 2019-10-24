@@ -40,7 +40,6 @@ void FormMain::menuNew() {
 
     // Set up new Project
     setFormMainMode( Form_Main_Mode::Clear );
-    m_project->clearProject();
     m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600);
     treeAssetEditor->clear();
     treeProjectEditor->clear();

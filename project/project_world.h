@@ -53,7 +53,7 @@ public:
 
     // Function Calls
     DrStage*    addStage(QString new_stage_name = "");
-    DrStage*    addStage(long stage_key, bool is_start_stage, QPointF center_point);
+    DrStage*    addStage(long stage_key, bool is_start_stage, QPointF center_point, double zoom_scale);
     DrStage*    addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage = false);
     void        deleteStage(DrStage *stage);
     void        initializeWorldSettings(QString new_name);

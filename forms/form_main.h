@@ -151,12 +151,13 @@ public:
     virtual void        updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list = QList<long>{ }) override;
 
     virtual DrProject*  currentProject() override;
-    virtual void        centerViewOnPoint(QPointF center_point) override;
     virtual double      currentViewGridAngle() override;
     virtual QPointF     currentViewGridScale() override;
     virtual View_Mode   currentViewMode() override;
     virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
+    virtual void        viewCenterOnPoint(QPointF center_point) override;
+    virtual void        viewZoomToScale(double zoom_scale) override;
 
 public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;

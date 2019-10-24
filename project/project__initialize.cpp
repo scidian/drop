@@ -15,7 +15,13 @@
 //##    Creates skeleton of a new Project
 //####################################################################################
 void DrProject::initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test) {
-    m_test_only = false;
+
+    // ***** Important! Clear Project / Reset Key Generator / Add Embedded Images
+    this->clearProject();
+
+    // Set if Project is debugging test fiile or not (test files dont ask to be saved when closed)
+    setTestOnly(test);
+
 
     // ***** Set Project Options
     this->setOption(Project_Options::Name,              project_name);
@@ -60,8 +66,6 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
     // ***** Build Test Project
     if (test) {
-        setTestOnly(true);
-
         this->setOption(Project_Options::Name, "Rocky Rover");
 
         long image_1  = this->addImage(":/assets/test_images/test_square.png");

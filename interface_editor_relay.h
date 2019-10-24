@@ -52,12 +52,13 @@ public:
     virtual void        updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list = QList<long>{ }) = 0;
 
     virtual DrProject*  currentProject() = 0;
-    virtual void        centerViewOnPoint(QPointF center_point) = 0;
     virtual double      currentViewGridAngle() = 0;
     virtual QPointF     currentViewGridScale() = 0;
     virtual View_Mode   currentViewMode() = 0;
     virtual double      currentViewZoom() = 0;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) = 0;
+    virtual void        viewCenterOnPoint(QPointF center_point) = 0;
+    virtual void        viewZoomToScale(double zoom_scale) = 0;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;

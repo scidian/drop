@@ -103,9 +103,12 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     QRectF new_view_rect( -4000, -4000, 8000, 8000);
 
     QPointF adjust;
+    int stage_size = new_stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
     switch (m_project->getOptionOrientation()) {
-        case Orientation::Portrait:     adjust = QPointF(400, -800);    break;
-        case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
+        ///case Orientation::Portrait:     adjust = QPointF(400, -800);    break;       // In Drop, our game field is 800 by 1600 units
+        ///case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
+        case Orientation::Portrait:     adjust = QPointF(stage_size / 2.0, -800);       break;
+        case Orientation::Landscape:    adjust = QPointF(800, -(stage_size / 2.0));    break;
     }
     new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
     new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());   
@@ -127,12 +130,14 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     }
 
     // Center the view on the new stage
+    double  new_zoom_scale = new_stage->getViewZoomLevel();
     QPointF new_center = new_stage->getViewCenterPoint();
     if (new_center == QPointF(0, 0)) {
         new_center = new_view_rect.center();
         new_stage->setViewCenterPoint( new_center );
     }
-    m_scene->getRelay()->centerViewOnPoint( new_center );
+    m_scene->getRelay()->viewCenterOnPoint( new_center );
+    m_scene->getRelay()->viewZoomToScale( new_zoom_scale );
     m_scene->getRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 
     // Set Undo / Redo text

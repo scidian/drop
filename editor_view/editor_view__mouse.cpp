@@ -296,9 +296,17 @@ void DrView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;
-    m_zoom_scale = qPow(qreal(2), (m_zoom - 250) / qreal(50));
+    ///Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom);
+    zoomToScale( std::pow(2.0, (m_zoom - 250) / 50.0) );
+}
 
-    ///Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom));
+void DrView::zoomToScale(double scale) {
+    m_zoom_scale = scale;
+
+    double solve_for_zoom  = std::log(m_zoom_scale) / std::log(2);
+           solve_for_zoom *= 50;
+           solve_for_zoom += 250;
+    m_zoom = static_cast<int>(solve_for_zoom);
 
     QMatrix matrix;
     matrix.scale(m_zoom_scale, m_zoom_scale);
@@ -309,8 +317,6 @@ void DrView::zoomInOut(int level) {
     if (horizontalScrollBar()->value() == 0 && verticalScrollBar()->value() == 0)
         updateGrid();
 }
-
-
 
 
 

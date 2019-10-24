@@ -89,6 +89,7 @@ void DrView::paintEvent(QPaintEvent *event) {
         QRectF  visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
         QPointF center_point = visible_scene_rect.center();
         stage->setViewCenterPoint( center_point );
+        stage->setViewZoomLevel( m_zoom_scale );
     }
 
     // Initiate QPainter object

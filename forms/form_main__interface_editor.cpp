@@ -155,22 +155,24 @@ void FormMain::updateInspectorEnabledProperties() {
 
 
 
-DrProject* FormMain::currentProject() { return m_project; }
+DrProject*  FormMain::currentProject()                         { return m_project; }
+double      FormMain::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
+QPointF     FormMain::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
+View_Mode   FormMain::currentViewMode()                        { return viewEditor->currentViewMode(); }
+double      FormMain::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
+QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
+
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
-void FormMain::centerViewOnPoint(QPointF center_point) {
+void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
+void FormMain::viewCenterOnPoint(QPointF center_point) {
     viewEditor->centerOn(center_point);
     QTimer::singleShot(0, this, [this, center_point] {
         this->centerViewTimer(center_point);
         viewEditor->setHasShownAScene(true);
     } );
 }
-void      FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
-double    FormMain::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
-QPointF   FormMain::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
-View_Mode FormMain::currentViewMode()                        { return viewEditor->currentViewMode(); }
-double    FormMain::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
-QPointF   FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
+void FormMain::viewZoomToScale(double zoom_scale) { viewEditor->zoomToScale(zoom_scale); }
 
 
 // Call to change the Advisor

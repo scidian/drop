@@ -119,7 +119,7 @@ void DrView::resizeEvent(QResizeEvent *event) {
     if (my_scene->getCurrentStageShown() == nullptr) return;
     if (hasShownAScene() == false) return;
 
-    m_editor_relay->centerViewOnPoint( my_scene->getCurrentStageShown()->getViewCenterPoint() );
+    m_editor_relay->viewCenterOnPoint( my_scene->getCurrentStageShown()->getViewCenterPoint() );
 }
 
 

@@ -62,10 +62,11 @@ DrStage* DrWorld::addStage(QString new_stage_name) {
     return m_stages[new_stage_key];
 }
 
-DrStage* DrWorld::addStage(long stage_key, bool is_start_stage, QPointF center_point) {
+DrStage* DrWorld::addStage(long stage_key, bool is_start_stage, QPointF center_point, double zoom_scale) {
     m_stages[stage_key] = new DrStage(getParentProject(), this, stage_key, "TEMP", false);
     m_stages[stage_key]->setIsStartStage(is_start_stage);
     m_stages[stage_key]->setViewCenterPoint(center_point);
+    m_stages[stage_key]->setViewZoomLevel(zoom_scale);
     return m_stages[stage_key];
 }
 

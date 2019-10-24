@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
 
     // ***** Temporary-ish options
     Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
-    ///Dr::SetDebugFlag( Debug_Flags::Show_Secret_Menu );
+    Dr::SetDebugFlag( Debug_Flags::Show_Secret_Menu );
     ///Dr::SetDebugFlag(Debug_Flags::Load_Test_Project);            // Turns on Test Project loading into editor upon startup
 
 
@@ -142,7 +142,8 @@ int main(int argc, char *argv[]) {
 
 
     // ***** Declare / Load QMainWindows
-    FormMain     form_main(nullptr, open_file);                     // FormMain, main editor Form
+    ///FormMain     form_main(nullptr, open_file);                  // FormMain, main editor Form, trys to open command line argument as a file
+    FormMain     form_main;                                         // FormMain, main editor Form
     FormExpire   form_expire;                                       // FormExpire used for demo versions that are expired
 
     // ***** Check date for expired versions
