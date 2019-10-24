@@ -23,6 +23,7 @@
 #include "form_main.h"
 #include "globals.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"
@@ -37,11 +38,16 @@
 //####################################################################################
 //##    Constructor / Destructor for Main Window
 //####################################################################################
-FormMain::FormMain(QWidget *parent) : QMainWindow(parent) {
+FormMain::FormMain(QWidget *parent, QString file_to_open) : QMainWindow(parent) {
 
     // ********** Initialize new project, load DrProject options
     m_project = new DrProject();
-    m_project->initializeNewProject("Rocky Rover", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
+
+    // Try to open command line file, otherwise initialize empty Project
+    bool init_new = (file_to_open == "");
+    if (init_new == false) init_new = (m_project->openProjectFromFile(file_to_open) == false);
+    if (init_new) m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
+
 
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );

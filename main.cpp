@@ -105,6 +105,10 @@ int main(int argc, char *argv[]) {
     // ***** Initiliaze application
     QApplication drop(argc, argv);                                  // Declare application
 
+    // Check if we need to open a file (NOT FOR MACOS)
+    QString open_file ="";
+    if (drop.arguments().size() > 0) open_file = drop.arguments().at(0);
+
 
     // ***** Load Global Data
     Dr::LoadDebugFlags();                                           // Sets debug flags
@@ -138,7 +142,7 @@ int main(int argc, char *argv[]) {
 
 
     // ***** Declare / Load QMainWindows
-    FormMain     form_main;                                         // FormMain, main editor Form
+    FormMain     form_main(nullptr, open_file);                     // FormMain, main editor Form
     FormExpire   form_expire;                                       // FormExpire used for demo versions that are expired
 
     // ***** Check date for expired versions

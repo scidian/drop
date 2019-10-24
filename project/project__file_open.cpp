@@ -12,6 +12,7 @@
 #include <QStandardPaths>
 
 #include "helper.h"
+#include "helper_qt.h"
 #include "project.h"
 #include "project_asset.h"
 #include "project_effect.h"
@@ -38,7 +39,7 @@ bool checkMapHasKey(QVariantMap &map, QString key) {
 //####################################################################################
 //##    Save all Settings Component Properties to a File
 //####################################################################################
-void DrProject::openProjectFromFile(QString open_file) {
+bool DrProject::openProjectFromFile(QString open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
     qRegisterMetaTypeStreamOperators<DrShapeList>("DrShapeList");
@@ -56,6 +57,10 @@ void DrProject::openProjectFromFile(QString open_file) {
     QString version_minor = options["version_minor"].toString();
     QString version_build = options["version_build"].toString();
     m_key_generator =                           options["key_generator"].toLongLong();
+
+    // Not a valid save file, return false
+    if (checkMapHasKey(options, "name") == false) return false;
+
     setOption(Project_Options::Name,            options["name"]);
     setOption(Project_Options::File_Name_Path,  QVariant(open_file)); ///options["file_path"]);
     setOption(Project_Options::Current_World,   options["current_world"]);
@@ -198,6 +203,7 @@ void DrProject::openProjectFromFile(QString open_file) {
 
     // ***** Important! Signify we don't need to save at this point!
     setHasSaved(true);
+    return true;
 }
 
 

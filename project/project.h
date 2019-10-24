@@ -125,7 +125,7 @@ public:
     void            deleteWorld(DrWorld *world);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);
-    void            openProjectFromFile(QString open_file);
+    bool            openProjectFromFile(QString open_file);
     void            saveProjectToFile();
 
     // Function Calls

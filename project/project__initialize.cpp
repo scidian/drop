@@ -62,6 +62,8 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
     if (test) {
         setTestOnly(true);
 
+        this->setOption(Project_Options::Name, "Rocky Rover");
+
         long image_1  = this->addImage(":/assets/test_images/test_square.png");
         long image_2  = this->addImage(":/assets/test_images/ground_fill.png");
         long image_3  = this->addImage(":/assets/test_images/ground_top.png");
