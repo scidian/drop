@@ -90,25 +90,25 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
 //##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *object) {
-    double  max_health =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Max_Health).toDouble();
-    double  health =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Health).toDouble();
-    double  damage =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage).toDouble();
-    int     damage_delay =  asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Delay).toInt();
-    double  auto_damage =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Auto_Damage).toDouble();
-    int     death_delay =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Delay).toInt();
-    bool    fade_on_death = asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Fade_On_Death).toBool();
-    int     fade_delay =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Fade_Delay).toInt();
-    double  damage_recoil = asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Recoil).toDouble();
-    bool    invincible =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Invincible).toBool();
-    bool    death_touch =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Touch).toBool();
+    double  max_health =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Max_Health).toDouble();
+    double  health =            asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Health).toDouble();
+    double  damage =            asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage).toDouble();
+    int     damage_delay =      asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Delay).toInt();
+    double  auto_damage =       asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Auto_Damage).toDouble();
+    int     death_delay =       asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Delay).toInt();
+    int     death_animation =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Animation).toInt();
+    int     death_duration =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Duration).toInt();
+    double  damage_recoil =     asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Recoil).toDouble();
+    bool    invincible =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Invincible).toBool();
+    bool    death_touch =       asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Touch).toBool();
     object->setMaxHealth(max_health);
     object->setHealth(health);
     object->setDamage(damage);
     object->setDamageDelay(damage_delay);
     object->setAutoDamage(auto_damage);
     object->setDeathDelay(death_delay);
-    object->setFadeOnDeath(fade_on_death);
-    object->setFadeDelay(fade_delay);
+    object->setDeathAnimation(static_cast<Death_Animation>(death_animation));
+    object->setDeathDuration(death_duration);
     object->setDamageRecoil(damage_recoil);
     object->setInvincible(invincible);
     object->setDeathTouch(death_touch);

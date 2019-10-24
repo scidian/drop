@@ -237,10 +237,11 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Delay,      Property_Type::Int, 100,
                            "Death Delay",   "Time it takes (in milliseconds) for this " + type + " to die after Health becomes zero. " + type + " no "
                                             "longer deals damage while dying, but does continue to provide physics collisions.");
-    addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Fade_On_Death,    Property_Type::Bool, true,
-                           "Fade On Death?","If true, " + type + " is slowly faded over Death Delay time period.");
-    addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Fade_Delay,       Property_Type::Int, 750,
-                           "Fade Delay",    "Time it takes (in milliseconds) for " + type + " to completely fade away after death (0 = remove immediately).");
+    addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Animation,  Property_Type::List, 1,
+                           "Death Animation", "Animation for " + type + " as it dissappears from the game.");
+    addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Duration,   Property_Type::Int, 750,
+                           "Death Duration", "Duration (in milliseconds) of Death Animation, like to fade away, or shrink away, etc. "
+                                             "(0 = remove immediately).");
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Damage_Recoil,    Property_Type::Double, 200.0,
                            "Damage Recoil", "How much opposite force to bounce back when receiving damage from another Thing.");
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Invincible,       Property_Type::Bool, false,

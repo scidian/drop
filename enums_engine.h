@@ -128,6 +128,12 @@ enum class Collision_Type {             // !!!!! Order is important
     Damage_All =            4,
 };
 
+enum class Death_Animation {
+    None,
+    Fade,
+    Shrink,
+};
+
 enum class Light_Type {
     Opaque,
     Glow,

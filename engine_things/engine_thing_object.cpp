@@ -180,7 +180,7 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
             }
         }
         if (!isAlive()) {
-            if (Dr::MillisecondsElapsed(getFadeTimer()) >= getFadeDelay()) {
+            if (Dr::MillisecondsElapsed(getFadeTimer()) >= getDeathDuration()) {
                 remove = true;
             }
         }

@@ -87,8 +87,10 @@ private:
     long            m_damage_delay = 500;                           // Minimum time in milliseconds that must pass between receiving damage
     double          m_auto_damage = 0.0;            // Take x damage per second (can be negative, i.e. add health)
     long            m_death_delay = 100;            // Time it takes for item to die (can't deal damage while dying), in milliseconds
-    bool            m_fade_on_death = true;         // If true, object is slowly faded over death_delay time
-    long            m_fade_delay = 750;             // Time it takes for item to be removed after death, in milliseconds (0 == remove immediately)
+
+    Death_Animation m_death_animation = Death_Animation::Fade;      // If true, object is slowly faded over death_delay time
+    long            m_death_duration = 750;                         // Duration (in milliseconds) of Death Animation (0 = remove immediately)
+
     double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
 
     // Object Movement - Rotation
@@ -235,8 +237,8 @@ public:
     const long&     getDamageDelay() { return m_damage_delay; }
     const double&   getAutoDamage() { return m_auto_damage; }
     const long&     getDeathDelay() { return m_death_delay; }
-    const bool&     getFadeOnDeath() { return m_fade_on_death; }
-    const long&     getFadeDelay() { return m_fade_delay; }
+    Death_Animation getDeathAnimation() { return m_death_animation; }
+    const long&     getDeathDuration() { return m_death_duration; }
     const double&   getDamageRecoil() { return m_damage_recoil; }
 
     void            setCollisionType(Collision_Type what_should_collide);
@@ -248,8 +250,8 @@ public:
     void            setDamageDelay(long new_damage_delay) { m_damage_delay = new_damage_delay; }
     void            setAutoDamage(double new_auto_damage) { m_auto_damage = new_auto_damage; }
     void            setDeathDelay(long new_death_delay_in_milliseconds) { m_death_delay = new_death_delay_in_milliseconds; }
-    void            setFadeOnDeath(bool should_fade) { m_fade_on_death = should_fade; }
-    void            setFadeDelay(long new_fade_dealy_in_milliseconds) { m_fade_delay = new_fade_dealy_in_milliseconds; }
+    void            setDeathAnimation(Death_Animation death_animation) { m_death_animation = death_animation; }
+    void            setDeathDuration(long new_duration_in_milliseconds) { m_death_duration = new_duration_in_milliseconds; }
     void            setDamageRecoil(double new_damage_recoil_force) { m_damage_recoil = new_damage_recoil_force; }
 
     bool            doesDamage();

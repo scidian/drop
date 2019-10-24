@@ -122,7 +122,7 @@ enum class Components {
 //####################################################################################
 //##    Possible components, numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  162
+//##    !!!!! NEXT AVAILABLE NUMBER:  163
 //##
 //############################
 enum class Properties {
@@ -195,7 +195,8 @@ enum class Properties {
     Asset_Health_Auto_Damage            = 148,      // double
     Asset_Health_Death_Delay            = 149,      // int
     Asset_Health_Fade_On_Death          = 150,      // bool
-    Asset_Health_Fade_Delay             = 151,      // int
+    Asset_Health_Death_Animation        = 162,      // list, enum class Death_Animation (none, fade, shrink)
+    Asset_Health_Death_Duration         = 151,      // int (used to be called Asset_Health_Fade_Delay)
     Asset_Health_Damage_Recoil          = 152,      // double
     Asset_Health_Invincible             = 153,      // bool
     Asset_Health_Death_Touch            = 154,      // bool

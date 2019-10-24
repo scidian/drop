@@ -155,6 +155,19 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
     model.scale( (object->getScaleX() + add_pixel_x) * flip_x, (object->getScaleY() + add_pixel_y) * flip_y, static_cast<float>(object->getDepth()) );
+
+    // ***** Fade Away / Shrink Dying Object (Death Animation
+    float alpha = object->getOpacity();                                                 // Start with object alpha
+    if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
+        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
+        if (object->getDeathAnimation() == Death_Animation::Fade) {
+            alpha *= static_cast<float>(fade_percent);
+        } else if (object->getDeathAnimation() == Death_Animation::Shrink) {
+            model.scale( fade_percent, fade_percent );
+        }
+    }
+
+    // Set Model Shader Values
     m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
     m_default_shader.setUniformValue( u_default_matrix_object,  model );
 
@@ -174,6 +187,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // ***** Set Shader Variables
     m_default_shader.setUniformValue( u_default_texture, 0 );                           // Use texture unit 0
+    m_default_shader.setUniformValue( u_default_alpha,          alpha );
     m_default_shader.setUniformValue( u_default_average_color,
                                         static_cast<float>(texture->averageColor().redF()),
                                         static_cast<float>(texture->averageColor().greenF()),
@@ -200,14 +214,6 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_cartoon,        false );
     m_default_shader.setUniformValue( u_default_wavy,           false );
     m_default_shader.setUniformValue( u_default_wireframe,      (m_engine->getCurrentWorld()->wireframe || object->wireframe) );
-
-    // Fade away dying object
-    float alpha = object->getOpacity();                                                 // Start with object alpha
-    if (!object->isAlive() && object->getFadeOnDeath()) {
-        double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
-        alpha *= static_cast<float>(fade_percent);
-    }
-    m_default_shader.setUniformValue( u_default_alpha,          alpha );
 
 
     // ***** Draw triangles using shader program
@@ -330,6 +336,17 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     model.scale(static_cast<float>(object->getSize().x) * flip_x, static_cast<float>(object->getSize().y) * flip_y, 1.0f);
     model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
+    // ***** Fade Away / Shrink Dying Object (Death Animation
+    float alpha = object->getOpacity();                                                 // Start with object alpha
+    if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
+        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
+        if (object->getDeathAnimation() == Death_Animation::Fade) {
+            alpha *= static_cast<float>(fade_percent);
+        } else if (object->getDeathAnimation() == Death_Animation::Shrink) {
+            model.scale( fade_percent, fade_percent );
+        }
+    }
+
     m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
 
     // ***** Get texture to render with, set texture coordinates
@@ -339,13 +356,6 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 
     // ***** Set Shader Variables
     m_simple_shader.setUniformValue( u_simple_texture, 0 );                           // Use texture unit 0
-
-    // Fade away dying object
-    float alpha = object->getOpacity();                                                 // Start with object alpha
-    if (!object->isAlive() && object->getFadeOnDeath()) {
-        double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
-        alpha *= static_cast<float>(fade_percent);
-    }
     m_simple_shader.setUniformValue( u_simple_alpha,          alpha );
 
     // ***** Draw triangles using shader program
@@ -400,9 +410,21 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     if (texture == nullptr) return true;
     if (!texture->texture()->isBound()) texture->texture()->bind();
 
+    // ***** Fade Away / Shrink Dying Object (Death Animation
+    float alpha = object->getOpacity();                                                 // Start with object alpha
+    float animation_scale = 1.0;
+    if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
+        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
+        if (object->getDeathAnimation() == Death_Animation::Fade) {
+            alpha *= static_cast<float>(fade_percent);
+        } else if (object->getDeathAnimation() == Death_Animation::Shrink) {
+            animation_scale = fade_percent;
+        }
+    }
+
     // ***** Load vertices for this object
-    float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
-    float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
+    float flip_x = (object->isFlippedX()) ? -animation_scale : animation_scale;
+    float flip_y = (object->isFlippedY()) ? -animation_scale : animation_scale;
     QVector<GLfloat> vertices;
     getThingVertices(vertices, object, flip_x, flip_y);
     m_occluder_shader.setAttributeArray(    a_occluder_vertex, vertices.data(), 3 );
@@ -410,13 +432,6 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 
     // ***** Set Shader Variables
     m_occluder_shader.setUniformValue( u_occluder_texture, 0 );             // Texture unit 0
-
-    // Fade away dying object, start with object alpha
-    float alpha = object->getOpacity();
-    if (!object->isAlive() && object->getFadeOnDeath()) {
-        double fade_percent = 1.0 - (static_cast<double>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<double>(object->getFadeDelay()));
-        alpha *= static_cast<float>(fade_percent);
-    }
     m_occluder_shader.setUniformValue( u_occluder_alpha,      alpha );
     m_occluder_shader.setUniformValue( u_occluder_depth,      static_cast<float>(object->getZOrder()) );
     m_occluder_shader.setUniformValue( u_occluder_near_plane, c_near_plane );
