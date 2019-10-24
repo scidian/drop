@@ -7,7 +7,9 @@
 //
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QSettings>
+#include <QStandardPaths>
 
 #include "helper.h"
 #include "project.h"
@@ -55,7 +57,7 @@ void DrProject::openProjectFromFile(QString open_file) {
     QString version_build = options["version_build"].toString();
     m_key_generator =                           options["key_generator"].toLongLong();
     setOption(Project_Options::Name,            options["name"]);
-    setOption(Project_Options::File_Name_Path,  options["file_path"]);
+    setOption(Project_Options::File_Name_Path,  QVariant(open_file)); ///options["file_path"]);
     setOption(Project_Options::Current_World,   options["current_world"]);
     setOption(Project_Options::Current_Stage,   options["current_stage"]);
     setOption(Project_Options::Orientation,     options["orientation"]);
