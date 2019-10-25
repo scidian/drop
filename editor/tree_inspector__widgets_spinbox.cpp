@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QVector3D>
 
 #include "editor/tree_inspector.h"
 #include "helper.h"
@@ -191,6 +192,77 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
          this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
 
     return spin_pair;
+}
+
+
+
+//####################################################################################
+//##    Trio of Double Spin Boxes, great for QVector3D
+//####################################################################################
+QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type) {
+    QFrame *spin_trio = new QFrame();
+    spin_trio->setSizePolicy(size_policy);
+
+    QHBoxLayout *horizontal_split = new QHBoxLayout(spin_trio);
+    horizontal_split->setSpacing(6);
+    horizontal_split->setContentsMargins(0,0,0,0);
+
+    QVector3D property_value = property->getValue().value<QVector3D>();
+    double x = static_cast<double>(property_value.x());
+    double y = static_cast<double>(property_value.y());
+    double z = static_cast<double>(property_value.z());
+
+    DrQTripleSpinBox *spin_x = initializeEmptySpinBox(property, font, x);
+    DrQTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, y);
+    DrQTripleSpinBox *spin_z = initializeEmptySpinBox(property, font, z);
+
+    switch (spin_type) {
+        case Property_Type::Point3D:
+            spin_x->setPrefix("X: ");
+            spin_y->setPrefix("Y: ");
+            spin_z->setPrefix("Z: ");
+            spin_x->setRange(-1000000, 1000000);
+            spin_y->setRange(-1000000, 1000000);
+            spin_z->setRange(-1000000, 1000000);
+            spin_x->setSingleStep(5.0);
+            spin_y->setSingleStep(5.0);
+            spin_z->setSingleStep(5.0);
+            break;
+        default: ;
+    }
+
+    horizontal_split->addWidget(spin_x);
+    horizontal_split->addWidget(spin_y);
+    horizontal_split->addWidget(spin_z);
+
+    long property_key = property->getPropertyKey();
+
+    spin_x->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_y->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_z->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_x->setProperty(User_Property::Order, 0);
+    spin_y->setProperty(User_Property::Order, 1);
+    spin_z->setProperty(User_Property::Order, 2);
+    addToWidgetList(spin_x);
+    addToWidgetList(spin_y);
+    addToWidgetList(spin_z);
+
+    // This stops mouse wheel from stealing focus unless user has selected the widget
+    spin_x->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_y->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_z->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_x->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_x));
+    spin_y->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_y));
+    spin_z->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_z));
+
+    connect (spin_x,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+         this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 0); });
+    connect (spin_y,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+         this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
+    connect (spin_z, QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+         this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 2); });
+
+    return spin_trio;
 }
 
 

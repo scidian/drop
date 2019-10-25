@@ -10,6 +10,7 @@
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 #include <QMenu>
+#include <QVector3D>
 
 #include "colors/colors.h"
 #include "editor/tree_inspector.h"
@@ -127,6 +128,18 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                 break;
             }
 
+            case Property_Type::Point3D: {
+                QDoubleSpinBox *doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
+                QVector3D prop_value = prop->getValue().value<QVector3D>();
+                if (doublespin->property(User_Property::Order).toInt() == 0)
+                    doublespin->setValue( static_cast<double>(prop_value.x()) );
+                else if (doublespin->property(User_Property::Order).toInt() == 1)
+                    doublespin->setValue( static_cast<double>(prop_value.y()) );
+                else
+                    doublespin->setValue( static_cast<double>(prop_value.z()) );
+                break;
+            }
+
             case Property_Type::List: {
                 QPushButton *pushbutton = dynamic_cast<QPushButton*>(widget);
                 pushbutton->setText( pushbutton->menu()->actions().at(prop->getValue().toInt())->text() );
@@ -229,6 +242,18 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
                 }
                 property->setValue(temp_pointf);
                 break;
+
+            case Property_Type::Point3D: {
+                QVector3D point = property->getValue().value<QVector3D>();
+                if (sub_order == 0)
+                    point.setX( static_cast<float>(new_value.toDouble()) );
+                else if (sub_order == 1)
+                    point.setY( static_cast<float>(new_value.toDouble()) );
+                else
+                    point.setZ( static_cast<float>(new_value.toDouble()) );
+                property->setValue(point);
+                break;
+            }
 
             case Property_Type::Color:                                  // QColor.rgba()
                 property->setValue(new_value);

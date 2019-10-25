@@ -24,7 +24,7 @@ constexpr   double      c_epsilon = 0.000001;                   // Floating poin
 const       DrPointF    c_center    {0, 0};                     // Default offset in no offset
 const       DrPointF    c_scale1x1  {1, 1};                     // Default scale of 1x1
 const       QVector3D   c_default_camera_pos {0, 0, 800};       // Default camera position if there is no active camera
-const       QVector3D   c_default_camera_rot {-15, 15, 0};      // Default camera rotation if there is no active camera
+const       QVector3D   c_default_camera_rot {-15, 0, 0};       // Default camera rotation if there is no active camera
 constexpr   double      c_norotate =   0;                       // Default rotation amount of zero
 constexpr   double      c_opaque =     1;                       // Default transparency of fully opaque
 constexpr   double      c_friction =  -1;                       // Flag for add**** call to use world friction setting
@@ -128,6 +128,7 @@ private:
     bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
     bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
 
+
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
@@ -197,7 +198,6 @@ public:
 
     void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
-
 
     // Object Properties - Bounce / Friction
     const double&   getCustomFriction() { return m_custom_friction; }

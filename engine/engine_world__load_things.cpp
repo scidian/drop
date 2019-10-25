@@ -147,6 +147,8 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     ThingInfo   info =      loadThingBasicInfo( thing );
 
     // ***** Load Character Settings
+    QVariant cam_rotation = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation);
+
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
     QPointF move_speed =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed).toPointF();
@@ -177,16 +179,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.position.x, -info.position.y, info.z_order,
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
-    // Load collision shape(s)
-    loadThingCollisionShape(asset, player);
-
-    // Add to world
-    addThing(player);
-
-    // Check if there are any active characters, if not, give controls
-    bool should_we_give_control = (countCharacters() == 0);
-    assignPlayerControls(player, should_we_give_control, true, should_we_give_control);
-
+    loadThingCollisionShape(asset, player);                                 // Load collision shape(s)
+    player->setCameraRotation( cam_rotation.value<QVector3D>() );          // Set active camera rotation
+    addThing(player);                                                       // Add to world
 
 
     // ***** Apply Character Settings
@@ -211,6 +206,10 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     player->setFlipImageX( flip_image_x );
     player->setFlipImageY( flip_image_y );
+
+    // Check if there are any active characters, if not, give controls
+    bool should_we_give_control = (countCharacters() == 0);
+    assignPlayerControls(player, should_we_give_control, true, should_we_give_control);
 
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, player);

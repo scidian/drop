@@ -81,17 +81,17 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball2);
 
+        ball2->setCameraRotation( -25, -40, 0 );
         assignPlayerControls(ball2, false, true, false);
         ball2->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeed( 20.0 );
-        m_cameras[ball2->getActiveCameraKey()]->setRotation( -25, -40, 0 );
-
 
     } else if (new_player_type == Demo_Player::Light) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 10, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
+        ball1->setCameraRotation( -15, 15, 0 );
         assignPlayerControls(ball1, true, true, true);
         ball1->setJumpCount( -1 );
         ball1->setMoveSpeedY( 300 );
@@ -142,6 +142,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true);
         rover->addShapePolygon(points);
         addThing(rover);
+        ///rover->setCameraRotation( -15, 15, 0 );
+        rover->setCameraRotation( -15, -25, 0 );
         setActiveCamera( addCamera(rover->getKey()) );
 
 

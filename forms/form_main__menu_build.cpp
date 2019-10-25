@@ -158,13 +158,16 @@ void FormMain::buildMenu() {
         menuDebug = new QMenu(menuBar);
         menuDebug->setObjectName(QStringLiteral("menuDebug"));
 
-        QAction *actionHidden, *actionDebugLabels, *actionListChildren;
+        QAction *actionHidden, *actionTestProject, *actionDebugLabels, *actionListChildren;
         actionHidden =          new QAction(this); actionHidden->setObjectName(QStringLiteral("actionHiddenProperties"));
+        actionTestProject =     new QAction(this); actionTestProject->setObjectName(QStringLiteral("actionTestProject"));
         actionDebugLabels =     new QAction(this); actionDebugLabels->setObjectName(QStringLiteral("actionToggleLabels"));
         actionListChildren =    new QAction(this); actionListChildren->setObjectName(QStringLiteral("actionListChildren"));
 
         menuBar->addAction(menuDebug->menuAction());
         menuDebug->addAction(actionHidden);
+        menuDebug->addSeparator();
+        menuDebug->addAction(actionTestProject);
         menuDebug->addSeparator();
         menuDebug->addAction(actionDebugLabels);
         menuDebug->addAction(actionListChildren);
@@ -175,6 +178,7 @@ void FormMain::buildMenu() {
         actionDebugLabels->setChecked( Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) );
 
         connect(actionHidden, &QAction::triggered, []() { Dr::FlipDebugFlag(Debug_Flags::Show_Hidden_Component); });
+        connect(actionTestProject, &QAction::triggered, [this]() { this->menuNew(true); });
         connect(actionDebugLabels, &QAction::triggered, [this]() {
             Dr::FlipDebugFlag(Debug_Flags::Show_Bottom_Debug_Labels);
             areaBottom->setVisible( Dr::CheckDebugFlag(Debug_Flags::Show_Bottom_Debug_Labels));
@@ -183,6 +187,7 @@ void FormMain::buildMenu() {
 
         menuDebug->setTitle(QApplication::translate("MainWindow",       "Debug", nullptr));
         actionHidden->setText(QApplication::translate("MainWindow",         "Show Hidden Droplet Properties", nullptr));
+        actionTestProject->setText(QApplication::translate("MainWindow",    "Load Test Project", nullptr));
         actionDebugLabels->setText(QApplication::translate("MainWindow",    "Show Scene View Debug Labels", nullptr));
         actionListChildren->setText(QApplication::translate("MainWindow",   "List FormMain Children Widgets", nullptr));
     }

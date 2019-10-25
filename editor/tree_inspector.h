@@ -81,6 +81,7 @@ public:
     QPushButton*        createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QFrame*             createDoubleSpinBoxTrio(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QLineEdit*          createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QTextEdit*          createTextEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);

@@ -182,7 +182,7 @@ private:
 
     // File Menu Functions
     bool        askShouldSave(QString before_what);
-    void        menuNew();
+    void        menuNew(bool test_project = false);
     void        menuOpen();
     void        menuSave(bool save_as = false);
     // Edit Menu Functions

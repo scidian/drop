@@ -37,7 +37,7 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     property_name->setDescription("Name of the current Character Asset.");
     property_name->setValue(new_name);
 
-    addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::Mustard_Yellow, true);
+    addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
 
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, QPointF(1000, 1000),
@@ -148,7 +148,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
         type = "Object";
     }
 
-    addComponent(Components::Asset_Collision, "Collision", "Collision settings for current " + type + ".", Component_Colors::White_Snow, true);
+    addComponent(Components::Asset_Collision, "Collision", "Collision settings for current " + type + ".", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
 
     addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, start_shape_type,
@@ -182,7 +182,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
 void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation) {
     QString type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
 
     addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(default_animation),

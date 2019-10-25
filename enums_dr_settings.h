@@ -11,54 +11,60 @@
 
 //####################################################################################
 //##    Used to track what the QVariant m_value data type really is
+//##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
+//##
+//##    !!!!! NEXT AVAILABLE NUMBER:  28
+//##
 //############################
 enum class Property_Type {
-    Bool,                   // bool             True or False
-    BoolDouble,             // bool w/double    True or False, and when True shows double spinbox
+    Bool            =  0,   // bool             True or False
+    BoolDouble      =  1,   // bool w/double    True or False, and when True shows double spinbox
                             //                  QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
 
-    Int,                    // long             Integer
-    Positive,               // long             Integer >= 0
-    RangedInt,              // long             QList<QVariant> of 4 values: long, min long value, max long value, long step size
+    Int             =  2,   // long             Integer
+    Positive        =  3,   // long             Integer >= 0
+    RangedInt       =  4,   // long             QList<QVariant> of 4 values: long, min long value, max long value, long step size
 
-    Double,                 // double           Floating point number
-    Angle,                  // double           Floating point for showing degrees, shows degree symbol in spinbox
-    PositiveDouble,         // double           Floating point number >= 0.0
-    RangedDouble,           // double           QList<QVariant> of 4 values, double, min double value, max double value, double step size
-    Slider,                 // double w/slider  QList<QVariant> of 5 values, double, min double value, max double value, double step size, string suffix ("%", etc)
-    Percent,                // double w/slider  Floating point from 0.0 to 100.0, shows percent symbol
+    Double          =  5,   // double           Floating point number
+    Angle           =  6,   // double           Floating point for showing degrees, shows degree symbol in spinbox
+    PositiveDouble  =  7,   // double           Floating point number >= 0.0
+    RangedDouble    =  8,   // double           QList<QVariant> of 4 values, double, min double value, max double value, double step size
+    Slider          =  9,   // double w/slider  QList<QVariant> of 5 values, double, min double value, max double value, double step size, string suffix ("%", etc)
+    Percent         = 10,   // double w/slider  Floating point from 0.0 to 100.0, shows percent symbol
 
-    String,                 // QString          Uses QLineEdit
-    Textbox,                // QString          Uses QTextEdit for multi-line htmnl text input
+    String          = 11,   // QString          Uses QLineEdit
+    Textbox         = 12,   // QString          Uses QTextEdit for multi-line htmnl text input
 
-    PointF,                 // QPointF          Floating pair x and y
-    PositionF,              // QPointF          Floating pair x and y, used for object positions in scene
+    PointF          = 13,   // QPointF          Floating pair x and y
+    PositionF       = 14,   // QPointF          Floating pair x and y, used for object positions in scene
                             //                      Y is shown flipped (i.e. * -1), Chipmunk uses different coordinate system than Qt
                             //                      Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
                             //                                    updateInspectorPropertyBoxes(), updateToolTipData()
-    ScaleF,                 // QPointF          Floating pair x and y, has smaller increment step in spin box
-    SizeF,                  // QPointF          Floating pair w and h
-    PositiveSizeF,          // QPointF          Floating pair w and h, both numbers are >= 1.0
+    ScaleF          = 15,   // QPointF          Floating pair x and y, has smaller increment step in spin box
+    SizeF           = 16,   // QPointF          Floating pair w and h
+    PositiveSizeF   = 17,   // QPointF          Floating pair w and h, both numbers are >= 1.0
+    Point3D         = 27,   // QVector3D        Floating point trio, x, y, z
 
-    GridF,                  // QPointF          Floating pair x and y, minimum value of c_minimum_grid_size  for both x and y
-    GridScaleF,             // QPointF          Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable,               // QPointF          Floating point pair, number followed by a +/- number
+    GridF           = 18,   // QPointF          Floating pair x and y, minimum value of c_minimum_grid_size  for both x and y
+    GridScaleF      = 19,   // QPointF          Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
+    Variable        = 20,   // QPointF          Floating point pair, number followed by a +/- number
 
-    List,                   // enum list
+    List            = 21,   // enum list
 
-    Collision,              // DrShapeList      For Collision Shapes
-    Color,                  // QColor.rgba()    For Colors
-    Image,                  // QPixmap
-    Icon,                   // QPixmap
+    Collision       = 22,   // DrShapeList      For Collision Shapes
+    Color           = 23,   // QColor.rgba()    For Colors
+    Image           = 24,   // QPixmap
+    Icon            = 25,   // QPixmap
 
-    Vector3D,               // QVector3D        X, Y, Z
+    Vector3D        = 26,   // QVector3D        X, Y, Z
 };
 
 
 //####################################################################################
-//##    Possible components, numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
+//##    Possible DrComponents for DrSettings
+//##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  36
+//##    !!!!! NEXT AVAILABLE NUMBER:  37
 //##
 //############################
 enum class Components {
@@ -94,6 +100,7 @@ enum class Components {
 
     // ***** DrThing Components
     Thing_Settings_Camera               = 14,
+    Thing_Settings_Character            = 36,
     Thing_Settings_Object               = 15,
     Thing_Settings_Text                 = 16,
 
@@ -120,9 +127,10 @@ enum class Components {
 
 
 //####################################################################################
-//##    Possible components, numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
+//##    Possible DrProperties of DrComponents
+//##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  163
+//##    !!!!! NEXT AVAILABLE NUMBER:  166
 //##
 //############################
 enum class Properties {
@@ -195,7 +203,7 @@ enum class Properties {
     Asset_Health_Auto_Damage            = 148,      // double
     Asset_Health_Death_Delay            = 149,      // int
     Asset_Health_Fade_On_Death          = 150,      // bool
-    Asset_Health_Death_Animation        = 162,      // list, enum class Death_Animation (none, fade, shrink)
+    Asset_Health_Death_Animation        = 164,      // list, enum class Death_Animation (none, fade, shrink)
     Asset_Health_Death_Duration         = 151,      // int (used to be called Asset_Health_Fade_Delay)
     Asset_Health_Damage_Recoil          = 152,      // double
     Asset_Health_Invincible             = 153,      // bool
@@ -300,6 +308,9 @@ enum class Properties {
     // ********** Thing Specific
     // Camera Settings
     Thing_Camera_Zoom                   = 83,       // double
+
+    // Character Settings
+    Thing_Character_Camera_Rotation     = 165,      // point3d
 
     // Object Settings
     Thing_Object_Physics_Type           = 84,       // list, enum class Body_Type (Static, Kinematic, Dynamic)

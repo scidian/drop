@@ -6,6 +6,7 @@
 //
 //
 #include "engine_thing.h"
+#include "engine_thing_object.h"
 #include "helper.h"
 
 //####################################################################################
@@ -14,6 +15,8 @@
 DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key) {
     m_world = world;
     m_key = unique_key;
+
+    m_camera_rotation = c_default_camera_rot;
 }
 
 DrEngineThing::~DrEngineThing() {

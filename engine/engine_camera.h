@@ -30,8 +30,13 @@ private:
     long            m_key;                                      // Unique DrEngineWorld Key of for this camera in the DrEngineWorld EngineCameraMap
 
     QVector3D       m_position = QVector3D(0, 0, 0);            // Current camera position
+
     QVector3D       m_speed =    QVector3D(0, 0, 0);            // Current camera speed
-    QVector3D       m_rotation = QVector3D(0, 0, 0);            // Current camera rotation
+
+    QVector3D       m_rotation = QVector3D(0, 0, 0);            // Current camera rotation, !!!!! Eventually needs to work with orthographic as well...
+                                                                //              X Rotation, controls up / down
+                                                                //              Y Rotation, controls left / right
+                                                                //              Z Rotation, tilts head
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 

@@ -242,7 +242,7 @@ void FormMain::initializeDockWidgets() {
 
 
     // ***** Add QMainWindow Docks, set starting widths
-    dockInspector->setFixedWidth( 270 );
+    dockInspector->setFixedWidth( 300 );
     addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockAdvisor);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockInspector);
     resizeDocks( { dockAdvisor, dockAssetsEditor }, { 160, 900 }, Qt::Vertical);

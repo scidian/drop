@@ -32,7 +32,7 @@
 //####################################################################################
 //##    File Menu Functions
 //####################################################################################
-void FormMain::menuNew() {
+void FormMain::menuNew(bool test_project) {
     // Ask to save
     if (!askShouldSave("creating a new project")) {
         return;
@@ -40,7 +40,7 @@ void FormMain::menuNew() {
 
     // Set up new Project
     setFormMainMode( Form_Main_Mode::Clear );
-    m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600);
+    m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600, test_project);
     treeAssetEditor->clear();
     treeProjectEditor->clear();
     setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself

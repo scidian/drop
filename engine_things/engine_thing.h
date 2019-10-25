@@ -8,6 +8,7 @@
 #ifndef ENGINE_THING_H
 #define ENGINE_THING_H
 
+#include <QVector3D>
 #include <map>
 
 #include "3rd_party_chipmunk/chipmunk.h"
@@ -56,6 +57,7 @@ private:
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
+    QVector3D       m_camera_rotation { 0, 0, 0 };      // X, Y, and Z Camera Rotation for this objects Active (Follow) Camera
 
 
 public:
@@ -98,6 +100,10 @@ public:
     const long&             getActiveCameraKey() { return m_active_camera; }
     bool                    hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
     void                    setActiveCameraKey(const long &new_camera_key) { m_active_camera = new_camera_key; }
+    QVector3D&              getCameraRotation() { return m_camera_rotation; }
+    void                    setCameraRotation(QVector3D rotation) { m_camera_rotation = rotation; }
+    void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
+                                                    m_camera_rotation = QVector3D(x_up_down, y_left_right, z_rotate); }
 
     // Basic Properties
     virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)

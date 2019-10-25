@@ -69,6 +69,7 @@ long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float 
         camera->followObject( thing_key_to_follow );
         camera->setPositionX( static_cast<float>(follow->getPosition().x) );
         camera->setPositionY( static_cast<float>(follow->getPosition().y) );
+        camera->setRotation( follow->getCameraRotation() );
         camera->setTarget( QVector3D(camera->getPosition().x(), camera->getPosition().y(), z));
         follow->setActiveCameraKey(new_key);
     }
@@ -217,13 +218,7 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);          // Zero out average speed vector
     m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);          // Zero out average speed vector
     m_speed = QVector3D(0, 0, 0);
-
-    // !!!!! #TEMP: Give camera some rotation for when using with perspective. Eventually rotation needs to
-    //              work with orthographic as well...
-    //              X Rotation, controls up / down
-    //              Y Rotation, controls left / right
-    //              Z Rotation, tilts head
-    m_rotation = QVector3D(-15, 15, 0);
+    m_rotation = c_default_camera_rot;
 }
 
 //####################################################################################
