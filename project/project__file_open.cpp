@@ -250,7 +250,10 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             }
 
             // ***** Copy Saved Property Values
-            if (check_property_type == property->getPropertyType()) {
+            //          Property is fine if same type...
+            //          Or if was Positive and now is Double...
+            if ( (check_property_type == property->getPropertyType() ||
+                 (check_property_type == Property_Type::Positive && property->getPropertyType() == Property_Type::Double)) ) {
                 k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
                 k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
                 k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k] );

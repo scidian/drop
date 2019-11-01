@@ -49,8 +49,9 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, QPointF(0, 250),
                            "Jump Force", "Force of jump button in the x and y direction");
 
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout, Property_Type::Positive, 800,
-                           "Jump Timeout", "Time, in milliseconds, Character should continue to gain jump force when jump button is held down.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout, Property_Type::Double, 800,
+                           "Jump Timeout", "Time, in milliseconds, Character should continue to gain jump force when jump button is held down. For "
+                                           "jump to never timeout use any negative number (like -1), useful for Character glide ability.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Counter, Property_Type::Int, 1,
                            "Jump Count", "Number of jumps Character can make before having to touch the ground or wall. For unlimited jumps "
                                          "use any negative number (like -1). A Jump Count of 0 disables jumping for this Character.");

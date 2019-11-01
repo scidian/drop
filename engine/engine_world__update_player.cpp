@@ -96,7 +96,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ***** Process Boost - Continues to provide jump velocity, although slowly fades
     if (object->getRemainingBoost() > 0) object->setRemainingBoost( object->getRemainingBoost() - dt );
-    if (key_jump && object->getRemainingBoost() > 0.0) {
+    if (key_jump && (object->getRemainingBoost() > 0.0 || object->getJumpTimeout() < 0.0)) {
         cpVect  player_v = cpBodyGetVelocity( object->body );
         cpFloat jump_vx = object->getJumpForceX() * 2.0 * dt;
         cpFloat jump_vy = object->getJumpForceY() * 2.0 * dt;
