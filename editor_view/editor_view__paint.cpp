@@ -50,7 +50,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
     double h2 = height / 2.0;
     switch (m_project->getOptionOrientation()) {
         case Orientation::Portrait:     m_game_frame = QRectF(-w2, -h2, width, height);     break;
-        case Orientation::Landscape:    m_game_frame = QRectF(-w2, -h2, height,  width);    break;
+        case Orientation::Landscape:    m_game_frame = QRectF(-h2, -w2, height,  width);    break;
     }
 
     if (m_grid_show_on_top == false) {
@@ -266,15 +266,15 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
 
     // Draw start bracket (in Scene coordinates)
     QPainterPath left, right, direction, arrow;
-    left.moveTo(  30,  h2);
-    left.lineTo(   0,  h2);
+    left.moveTo(  30,  h2 );
+    left.lineTo(   0,  h2 );
     left.lineTo(   0, -h2 );
     left.lineTo(  30, -h2 );
     left = t_scene.map(left);
 
     // End Bracket (in Scene Coordinates)
-    right.moveTo(-30,  h2);
-    right.lineTo(  0,  h2);
+    right.moveTo(-30,  h2 );
+    right.lineTo(  0,  h2 );
     right.lineTo(  0, -h2 );
     right.lineTo(-30, -h2 );
     right.translate( stage_size, 0 );
