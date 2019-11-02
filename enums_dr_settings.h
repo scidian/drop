@@ -130,7 +130,7 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  166
+//##    !!!!! NEXT AVAILABLE NUMBER:  167
 //##
 //############################
 enum class Properties {
@@ -214,6 +214,7 @@ enum class Properties {
     // Settings
     World_Game_Direction                = 23,       // double
     World_Score_Multiplier              = 24,       // double
+    World_Deletion_Threshold            = 166,      // positive int
     World_Use_Background_Color          = 25,       // bool
     World_Background_Color              = 26,       // color
 

@@ -16,6 +16,7 @@
 #include "engine_world.h"
 #include "form_engine.h"
 #include "helper.h"
+#include "helper_qt.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_world.h"
@@ -37,10 +38,10 @@ void DrEngineWorld::updateSpace(double time_passed) {
 void DrEngineWorld::updateWorld(double time_passed) {
 
     // Calculate area that if Things are within, they can stay in the Space
-    QRectF threshold(getCameraPositionX() - m_delete_threshold_x,
-                     getCameraPositionY() - m_delete_threshold_y,
-                     m_delete_threshold_x*2.0,
-                     m_delete_threshold_y*2.0);
+    QRectF threshold(getCameraPositionX() - getDeleteThresholdX(),
+                     getCameraPositionY() - getDeleteThresholdY(),
+                     getDeleteThresholdX()*2.0,
+                     getDeleteThresholdY()*2.0);
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
@@ -68,12 +69,14 @@ void DrEngineWorld::updateWorld(double time_passed) {
     // ***** Calculate distance and load new stage if we need to
     bool should_add_stage = false;
     if (has_scene == true) {
-        QTransform t = QTransform().translate(m_game_start.x, m_game_start.y)
-                                   .rotate(m_game_direction)
+        QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
+                                   .rotate(    m_game_direction)
                                    .translate(-m_game_start.x, -m_game_start.y);
         QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
-        m_game_distance = rotated.x() - m_game_start.x;
-        ///info = "Distance: " + QString::number(m_game_distance) + ", Loaded To: " + QString::number(m_loaded_to);
+
+        m_game_distance = QLineF(rotated, QPointF(m_game_start.x, m_game_start.y)).length();
+
+        g_info = "Distance: \t" + QString::number(int(m_game_distance)) + ",  Loaded To: " + QString::number(m_loaded_to);
 
         if (m_loaded_to - m_game_distance < m_load_buffer)
             should_add_stage = true;
@@ -96,7 +99,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
             int stage_count = static_cast<int>(stages.size());
             int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
             DrStage *stage = stages[stage_num];
-            loadStageToWorld( stage, m_loaded_to, 0);
+            loadStageToWorld(stage, m_loaded_to, 0);
         }
     }
 

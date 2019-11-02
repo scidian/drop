@@ -31,15 +31,15 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
         switch (thing->getThingType()) {
             // Load Thing
-            case DrThingType::Object:   loadObjectToWorld(thing, offset_x, offset_y);       break;
+            case DrThingType::Object:   loadObjectToWorld(  thing, offset_x, offset_y);     break;
 
             // Load Thing Effect
-            case DrThingType::Fire:     loadFireToWorld(thing, offset_x, offset_y);         break;
-            case DrThingType::Fisheye:  loadFisheyeToWorld(thing, offset_x, offset_y);      break;
-            case DrThingType::Light:    loadLightToWorld(thing, offset_x, offset_y);        break;
-            case DrThingType::Mirror:   loadMirrorToWorld(thing, offset_x, offset_y);       break;
-            case DrThingType::Swirl:    loadSwirlToWorld(thing, offset_x, offset_y);        break;
-            case DrThingType::Water:    loadWaterToWorld(thing, offset_x, offset_y);        break;
+            case DrThingType::Fire:     loadFireToWorld(    thing, offset_x, offset_y);     break;
+            case DrThingType::Fisheye:  loadFisheyeToWorld( thing, offset_x, offset_y);     break;
+            case DrThingType::Light:    loadLightToWorld(   thing, offset_x, offset_y);     break;
+            case DrThingType::Mirror:   loadMirrorToWorld(  thing, offset_x, offset_y);     break;
+            case DrThingType::Swirl:    loadSwirlToWorld(   thing, offset_x, offset_y);     break;
+            case DrThingType::Water:    loadWaterToWorld(   thing, offset_x, offset_y);     break;
 
         default:
             break;

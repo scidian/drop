@@ -32,6 +32,9 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - up, 180 - left, 270 - down, etc.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Double, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
+    addPropertyToComponent(Components::World_Settings, Properties::World_Deletion_Threshold, Property_Type::Positive, 10000,
+                           "Deletion Threshold", "Distance (in pixels) away from active camera that objects are removed from the World. Keeps game running "
+                                                 "smoothly.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Use_Background_Color, Property_Type::Bool, false,
                            "Use Bg Color?", "Use Background Color? Check this box to use base Background Color for this world, otherwise"
                                             "background defaults to transparent.");

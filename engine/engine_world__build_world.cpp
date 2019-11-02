@@ -67,21 +67,24 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
     DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
     // ***** World Settings
-    m_game_direction += world->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
-    m_game_start = DrPointF(0, 0);      // Set starting load position
-    m_loaded_to = 0;                    // Reset how far we've loaded
+    m_game_direction =      world->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+    m_delete_threshold_x =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Deletion_Threshold).toInt();
+    m_delete_threshold_y =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Deletion_Threshold).toInt();
+    m_game_start = DrPointF(0, 0);                      // Set starting load position
+    m_loaded_to = 0;                                    // Reset how far we've loaded
+
 
     if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool()) {
         m_background_color = QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
     }
 
     // ***** World Physics Properties
-    m_time_warp = world->getComponentPropertyValue(Components::World_Physics, Properties::World_Time_Warp).toDouble();
+    m_time_warp =           world->getComponentPropertyValue(Components::World_Physics, Properties::World_Time_Warp).toDouble();
+    m_damping =             world->getComponentPropertyValue(Components::World_Physics, Properties::World_Drag).toDouble();
+    m_friction =            world->getComponentPropertyValue(Components::World_Physics, Properties::World_Friction).toDouble();
+    m_bounce =              world->getComponentPropertyValue(Components::World_Physics, Properties::World_Bounce).toDouble();
     QPointF get_gravity =   world->getComponentPropertyValue(Components::World_Physics, Properties::World_Gravity).toPointF();
     m_gravity = cpv(get_gravity.x(), get_gravity.y());
-    m_damping =   world->getComponentPropertyValue(Components::World_Physics, Properties::World_Drag).toDouble();
-    m_friction =  world->getComponentPropertyValue(Components::World_Physics, Properties::World_Friction).toDouble();
-    m_bounce =    world->getComponentPropertyValue(Components::World_Physics, Properties::World_Bounce).toDouble();
 
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
