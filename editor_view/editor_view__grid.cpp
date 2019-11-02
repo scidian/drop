@@ -29,6 +29,11 @@ void DrView::updateGrid() {
     DrStage *stage = my_scene->getCurrentStageShown();
     DrWorld *world = stage->getParentWorld();
 
+    // Increase Scene Rect if Stage Rect changed
+    QRectF stage_rect = DrView::stageBoundingRect(m_project, stage).adjusted(-500, -500, 500, 500);
+    scene()->setSceneRect( scene()->sceneRect().united(stage_rect) );
+
+    // Update Grid Properties
     m_grid_origin =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
     m_grid_size =       stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
     m_grid_scale =      stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
@@ -79,6 +84,31 @@ QPointF DrView::roundToGrid(QPointF point_in_scene) {
     rounded_center.setY( rounded_center.y() * m_grid_scale.y() );
 
     return rounded_center;
+}
+
+
+//####################################################################################
+//##    Returns Brounding Box Rect of DrStage (rotated + size)
+//####################################################################################
+QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage) {
+    int    stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
+    double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+    double h2;
+    switch (project->getOptionOrientation()) {
+        case Orientation::Portrait:     h2 = 800;       break;
+        case Orientation::Landscape:    h2 = 400;       break;
+    }
+    QTransform t_scene = QTransform().rotate( game_direction );
+
+    // Create start bracket (in Scene coordinates)
+    QPainterPath rect;
+    rect.lineTo(          0,  h2 );
+    rect.lineTo(          0, -h2 );
+    rect.lineTo( stage_size, -h2 );
+    rect.lineTo( stage_size,  h2 );
+    rect = t_scene.map(rect);
+
+    return rect.boundingRect();
 }
 
 

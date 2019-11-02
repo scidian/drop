@@ -10,6 +10,7 @@
 #include "editor_item.h"
 #include "editor_scene.h"
 #include "editor_scene_undo_commands.h"
+#include "editor_view/editor_view.h"
 #include "globals.h"
 #include "helper.h"
 #include "project/project.h"
@@ -83,7 +84,7 @@ void UndoCommandChangeStage::redo() {
 QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_key, bool is_undo) {
     ///qDebug() << "Old Stage: " << old_stage_key << ", New Stage: " << new_stage_key;
 
-    // Remove any references within the current project stage things to any GraphicsScene items
+    // ***** Remove any references within the current project stage things to any GraphicsScene items
     DrStage *displayed = m_project->findStageFromKey(old_stage_key);
     QString redo_name = "ERROR";
     if (displayed) {
@@ -91,27 +92,17 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
         redo_name = displayed->getName();
     }
 
-    // Load stage we're changing to
+    // ***** Load stage we're changing to
     DrStage *new_stage = m_project->findStageFromKey(new_stage_key);
     if (new_stage == nullptr) {
         return "Redo Select Stage " + redo_name;
     }
     new_stage->getParentWorld()->setLastStageShownKey(new_stage_key);
 
-    // Calculate new scene and view rects, clear scene and set sizes
-    QRectF new_scene_rect(-1000, -1000, 2000, 2000);
-    QRectF new_view_rect( -4000, -4000, 8000, 8000);
 
-    QPointF adjust;
-    int stage_size = new_stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
-    switch (m_project->getOptionOrientation()) {
-        ///case Orientation::Portrait:     adjust = QPointF(400, -800);    break;       // In Drop, our game field is 800 by 1600 units
-        ///case Orientation::Landscape:    adjust = QPointF(800, -400);    break;
-        case Orientation::Portrait:     adjust = QPointF(stage_size / 2.0, -800);       break;
-        case Orientation::Landscape:    adjust = QPointF(800, -(stage_size / 2.0));    break;
-    }
-    new_scene_rect.adjust(adjust.x(), adjust.y(), adjust.x(), adjust.y());
-    new_view_rect.adjust( adjust.x(), adjust.y(), adjust.x(), adjust.y());   
+    // ***** Calculate new scene and view rects, clear scene and set sizes
+    QRectF new_scene_rect = DrView::stageBoundingRect(m_project, new_stage).adjusted(-500, -500, 500, 500);
+    QRectF new_view_rect = new_scene_rect.adjusted(-5000, -5000, 5000, 5000);
 
     m_scene->clear();
     m_scene->setSceneRect(new_scene_rect);
@@ -129,18 +120,19 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
         m_scene->addItemToSceneFromThing(thing_pair.second);
     }
 
-    // Center the view on the new stage
+
+    // ***** Center the view on the new stage
     double  new_zoom_scale = new_stage->getViewZoomLevel();
     QPointF new_center = new_stage->getViewCenterPoint();
     if (new_center == QPointF(0, 0)) {
-        new_center = new_view_rect.center();
+        new_center = DrView::stageBoundingRect(m_project, new_stage).center();
         new_stage->setViewCenterPoint( new_center );
     }
     m_scene->getRelay()->viewCenterOnPoint( new_center );
     m_scene->getRelay()->viewZoomToScale( new_zoom_scale );
     m_scene->getRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 
-    // Set Undo / Redo text
+    // ***** Set Undo / Redo text
     if (is_undo)    return "Redo Select Stage " + redo_name;
     else            return "Undo Select Stage " + new_stage->getName();
 }

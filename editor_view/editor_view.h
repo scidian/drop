@@ -219,6 +219,7 @@ public:
     QPointF         currentGridScale() { return m_grid_scale; }
     void            recalculateGrid();
     QPointF         roundToGrid(QPointF point_in_scene);
+    static QRectF   stageBoundingRect(DrProject *project, DrStage *stage);
     void            updateGrid();
 
     // Paint Functions
