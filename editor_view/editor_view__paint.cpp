@@ -46,9 +46,11 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
     // Calculate Game Frame
     int width =  m_project->getOption(Project_Options::Width).toInt();
     int height = m_project->getOption(Project_Options::Height).toInt();
+    double w2 = width /  2.0;
+    double h2 = height / 2.0;
     switch (m_project->getOptionOrientation()) {
-        case Orientation::Portrait:     m_game_frame = QRectF(0, -height, width, height);       break;
-        case Orientation::Landscape:    m_game_frame = QRectF(0, -width, height,  width);       break;
+        case Orientation::Portrait:     m_game_frame = QRectF(-w2, -h2, width, height);     break;
+        case Orientation::Landscape:    m_game_frame = QRectF(-w2, -h2, height,  width);    break;
     }
 
     if (m_grid_show_on_top == false) {
@@ -66,8 +68,9 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
     // Draw Game Frame
     DrStage *stage = my_scene->getCurrentStageShown();
     if (stage) {
-        if (stage->isStartStage())
+        if (stage->isStartStage()) {
             paintGameFrame(*painter);
+        }
     }
 }
 
@@ -129,8 +132,9 @@ void DrView::paintEvent(QPaintEvent *event) {
     }
 
     // Draw ToolTip
-    if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor))
+    if (m_tool_tip->isHidden() == false && Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
         paintToolTip(painter);
+    }
 
     // !!!!! #DEBUG:    Draw frames per second
     if (Dr::CheckDebugFlag(Debug_Flags::Label_FPS)) {
@@ -253,25 +257,38 @@ void DrView::paintGameFrame(QPainter &painter) {
 //####################################################################################
 void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     if (stage == nullptr) return;
-    long stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
+
+    // Get Stage Size, Game Direction, figure out rotation QGraphicsScene transform
+    long   stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
+    double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+    double h2 = m_game_frame.height() / 2.0;
+    QTransform t_scene = QTransform().rotate( game_direction );
 
     // Draw start bracket (in Scene coordinates)
     QPainterPath left, right, direction, arrow;
-    left.moveTo(  30, 0);
-    left.lineTo(   0, 0);
-    left.lineTo(   0, -m_game_frame.height() );
-    left.lineTo(  30, -m_game_frame.height() );
+    left.moveTo(  30,  h2);
+    left.lineTo(   0,  h2);
+    left.lineTo(   0, -h2 );
+    left.lineTo(  30, -h2 );
+    left = t_scene.map(left);
 
     // End Bracket (in Scene Coordinates)
-    right.moveTo(-30, 0);
-    right.lineTo(  0, 0);
-    right.lineTo(  0, -m_game_frame.height() );
-    right.lineTo(-30, -m_game_frame.height() );
+    right.moveTo(-30,  h2);
+    right.lineTo(  0,  h2);
+    right.lineTo(  0, -h2 );
+    right.lineTo(-30, -h2 );
     right.translate( stage_size, 0 );
+    right = t_scene.map(right);
 
     // Direction Box (in View Coordinates)
-    QPoint middle_right = mapFromScene( QPointF(stage_size, -m_game_frame.height()/2) );
+    QPoint middle_right = mapFromScene( t_scene.map(QPointF(stage_size, 0)) );
     direction.addRect( middle_right.x() - 5, middle_right.y() - 5, 10, 10);
+
+    // Figure out rotation QGraphicsView transform
+    QTransform t_view = QTransform().translate( middle_right.x(),  middle_right.y())
+                                    .rotate(game_direction)
+                                    .translate(-middle_right.x(), -middle_right.y());
+    direction = t_view.map(direction);
 
     // Directional Arrow (in View Coordinates)
     arrow.moveTo( middle_right.x() + 11, middle_right.y());
@@ -280,6 +297,7 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     arrow.lineTo( middle_right.x() + 23, middle_right.y());
     arrow.lineTo( middle_right.x() + 15, middle_right.y() + 5);
     arrow.lineTo( middle_right.x() + 15, middle_right.y());
+    arrow = t_view.map(arrow);
 
     painter.setBrush( Qt::NoBrush );
     QColor line_color = Dr::GetColor(Window_Colors::Background_Dark);

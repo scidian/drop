@@ -63,6 +63,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
     }
     cpBodySetPosition( this->body, cpv(x, y));
     cpBodySetAngle(    this->body, qDegreesToRadians(-angle) );
+    setAngle( -angle );
     cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
 }
 

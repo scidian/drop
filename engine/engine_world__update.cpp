@@ -73,10 +73,10 @@ void DrEngineWorld::updateWorld(double time_passed) {
                                    .rotate(    m_game_direction)
                                    .translate(-m_game_start.x, -m_game_start.y);
         QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
+        m_game_distance = rotated.x() - m_game_start.x;
 
-        m_game_distance = QLineF(rotated, QPointF(m_game_start.x, m_game_start.y)).length();
-
-        g_info = "Distance: \t" + QString::number(int(m_game_distance)) + ",  Loaded To: " + QString::number(m_loaded_to);
+        g_info = "Distance: \t" + QString::number(int(m_game_distance)) +
+               ", Loaded To: " + QString::number(m_loaded_to);
 
         if (m_loaded_to - m_game_distance < m_load_buffer)
             should_add_stage = true;
@@ -99,7 +99,12 @@ void DrEngineWorld::updateWorld(double time_passed) {
             int stage_count = static_cast<int>(stages.size());
             int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
             DrStage *stage = stages[stage_num];
-            loadStageToWorld(stage, m_loaded_to, 0);
+
+            QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
+                                       .rotate(   -m_game_direction)
+                                       .translate(-m_game_start.x, -m_game_start.y);
+            QPointF rotated = t.map( QPointF( m_loaded_to, 0 ));
+            loadStageToWorld(stage, rotated.x(), rotated.y());
         }
     }
 
