@@ -264,6 +264,23 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     double h2 = m_game_frame.height() / 2.0;
     QTransform t_scene = QTransform().rotate( game_direction );
 
+    // Find width of rotated game frame
+    QLineF line_down = t_scene.map( QLineF(0, 0, 0, 5000) );
+    QLineF frame_top(       m_game_frame.topLeft(),     m_game_frame.topRight()     );
+    QLineF frame_bottom(    m_game_frame.bottomLeft(),  m_game_frame.bottomRight()  );
+    QLineF frame_left(      m_game_frame.topLeft(),     m_game_frame.bottomLeft()   );
+    QLineF frame_right(     m_game_frame.topRight(),    m_game_frame.bottomRight()  );
+    QPointF border_intersect;
+    if (       line_down.intersect(frame_top, &border_intersect) ==     QLineF::BoundedIntersection) {
+        h2 = QLineF(QPointF(0, 0), border_intersect).length();
+    } else if (line_down.intersect(frame_bottom, &border_intersect) ==  QLineF::BoundedIntersection) {
+        h2 = QLineF(QPointF(0, 0), border_intersect).length();
+    } else if (line_down.intersect(frame_left, &border_intersect) ==    QLineF::BoundedIntersection) {
+        h2 = QLineF(QPointF(0, 0), border_intersect).length();
+    } else if (line_down.intersect(frame_right, &border_intersect) ==   QLineF::BoundedIntersection) {
+        h2 = QLineF(QPointF(0, 0), border_intersect).length();
+    }
+
     // Draw start bracket (in Scene coordinates)
     QPainterPath left, right, direction, arrow;
     left.moveTo(  30,  h2 );
