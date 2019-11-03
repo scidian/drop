@@ -148,7 +148,7 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
         }
     } while (found_camera == false);
 
-    // If not active camera already, switch camers
+    // If not active camera already, switch cameras
     long new_key = (*it).second->getKey();
     if (new_key != m_active_camera) {
         if (m_cameras[m_active_camera]->getThingFollowing() != 0) {
@@ -243,6 +243,8 @@ void DrEngineCamera::updateCamera() {
     if (follow == nullptr) {                                m_follow_key = 0;   return;     }
     if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return;     }
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
+    if (object->isDying() == true || object->isAlive() == false) return;
+
     DrPointF follow_pos = object->getPosition();
     DrPointF follow_previous_pos = object->getPreviousPosition();
 
