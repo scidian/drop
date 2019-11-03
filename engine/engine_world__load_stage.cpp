@@ -41,8 +41,12 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             case DrThingType::Swirl:    loadSwirlToWorld(   thing, offset_x, offset_y);     break;
             case DrThingType::Water:    loadWaterToWorld(   thing, offset_x, offset_y);     break;
 
-        default:
-            break;
+            // Don't load Character, only on Start Stage for now
+            case DrThingType::Character:
+                break;
+
+            default:
+                break;
         }
 
     }

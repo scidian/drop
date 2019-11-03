@@ -101,7 +101,8 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
 
 
     // ***** Calculate new scene and view rects, clear scene and set sizes
-    QRectF new_scene_rect = DrView::stageBoundingRect(m_project, new_stage).adjusted(-500, -500, 500, 500);
+    double half_height;
+    QRectF new_scene_rect = DrView::stageBoundingRect(m_project, new_stage, half_height).adjusted(-500, -500, 500, 500);
     QRectF new_view_rect = new_scene_rect.adjusted(-5000, -5000, 5000, 5000);
 
     m_scene->clear();
@@ -125,7 +126,8 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     double  new_zoom_scale = new_stage->getViewZoomLevel();
     QPointF new_center = new_stage->getViewCenterPoint();
     if (new_center == QPointF(0, 0)) {
-        new_center = DrView::stageBoundingRect(m_project, new_stage).center();
+        double half_height;
+        new_center = DrView::stageBoundingRect(m_project, new_stage, half_height).center();
         new_stage->setViewCenterPoint( new_center );
     }
     m_scene->getRelay()->viewCenterOnPoint( new_center );

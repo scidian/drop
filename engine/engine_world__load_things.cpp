@@ -180,7 +180,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, player);                                 // Load collision shape(s)
-    player->setCameraRotation( cam_rotation.value<QVector3D>() );          // Set active camera rotation
+    player->setCameraRotation( cam_rotation.value<QVector3D>() );           // Set active camera rotation
     addThing(player);                                                       // Add to world
 
 

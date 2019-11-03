@@ -81,9 +81,6 @@ private:
     QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
     int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
 
-    // Stage Drawing Variables
-    QRectF       m_game_frame;                                      // Used to overlay screen size / draw Stage Boundary
-
     // Grid Drawing Variables
     QVector<QPointF> m_grid_points;                                 // Holds latest calculated grid points
     QVector<QLineF>  m_grid_lines;                                  // Holds latest calculated grid lines
@@ -217,9 +214,10 @@ public:
     // Grid Functions
     double          currentGridAngle() { return m_grid_rotate; }
     QPointF         currentGridScale() { return m_grid_scale; }
+    static QRectF   gameFrame(DrProject *project);
     void            recalculateGrid();
     QPointF         roundToGrid(QPointF point_in_scene);
-    static QRectF   stageBoundingRect(DrProject *project, DrStage *stage);
+    static QRectF   stageBoundingRect(DrProject *project, DrStage *stage, double &half_height);
     void            updateGrid();
 
     // Paint Functions

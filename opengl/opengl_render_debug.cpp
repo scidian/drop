@@ -84,8 +84,8 @@ void DrOpenGL::drawDebug(QPainter &painter) {
     painter.drawText( QPointF(20,  40), "Objects: \t" +     QString::number(m_engine->getCurrentWorld()->getThings().count()) );    // Object count
     painter.drawText( QPointF(20,  60), "Triangles: \t" +   QString::number(getTriangleCount()) );                                  // Triangle count
     painter.drawText( QPointF(20,  80), "Zoom: \t" +        QString::number(double(m_scale)) );                                     // World scale
-    painter.drawText( QPointF(20, 100), "Physics: \t" +     QString::number(m_engine->getFormEngine()->fps_physics) );              // Physics update
-    painter.drawText( QPointF(20, 120), g_info );                                                                                   // Global debug string
+    painter.drawText( QPointF(20, 100), g_info );                                                                                   // Global debug string
+    ///painter.drawText( QPointF(20, 120), "Physics: \t" +     QString::number(m_engine->getFormEngine()->fps_physics) );           // Physics update
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system

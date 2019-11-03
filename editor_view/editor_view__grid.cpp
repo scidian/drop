@@ -30,7 +30,8 @@ void DrView::updateGrid() {
     DrWorld *world = stage->getParentWorld();
 
     // Increase Scene Rect if Stage Rect changed
-    QRectF stage_rect = DrView::stageBoundingRect(m_project, stage).adjusted(-500, -500, 500, 500);
+    double h2;
+    QRectF stage_rect = DrView::stageBoundingRect(m_project, stage, h2).adjusted(-500, -500, 500, 500);
     scene()->setSceneRect( scene()->sceneRect().united(stage_rect) );
 
     // Update Grid Properties
@@ -88,24 +89,60 @@ QPointF DrView::roundToGrid(QPointF point_in_scene) {
 
 
 //####################################################################################
-//##    Returns Brounding Box Rect of DrStage (rotated + size)
+//##    Calculate Game Frame
 //####################################################################################
-QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage) {
+QRectF DrView::gameFrame(DrProject *project) {
+    if (project == nullptr) return QRectF();
+    QRectF game_frame;
+    int width =  project->getOption(Project_Options::Width).toInt();
+    int height = project->getOption(Project_Options::Height).toInt();
+    double w2 = width /  2.0;
+    double h2 = height / 2.0;
+    switch (project->getOptionOrientation()) {
+        case Orientation::Portrait:     game_frame = QRectF(-w2, -h2, width, height);     break;
+        case Orientation::Landscape:    game_frame = QRectF(-h2, -w2, height,  width);    break;
+    }
+    return game_frame;
+}
+
+//####################################################################################
+//##    Returns: - Bounding Box Rect of DrStage (rotated + size)
+//##             - Half height of bracket side of Stage Rect as half_height
+//####################################################################################
+QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage, double &half_height) {
+    if (project == nullptr) return QRectF();
+    if (stage == nullptr)   return QRectF();
+
+    // Calculate Game Frame, Get Stage Size, Game Direction
+    QRectF game_frame = gameFrame(project);
     int    stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
     double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
-    double h2;
-    switch (project->getOptionOrientation()) {
-        case Orientation::Portrait:     h2 = 800;       break;
-        case Orientation::Landscape:    h2 = 400;       break;
-    }
+    half_height = game_frame.height() / 2.0;
     QTransform t_scene = QTransform().rotate( game_direction );
+
+    // Find width of rotated game frame
+    QLineF line_down = t_scene.map( QLineF(0, 0, 0, 5000) );
+    QLineF frame_top(       game_frame.topLeft(),     game_frame.topRight()     );
+    QLineF frame_bottom(    game_frame.bottomLeft(),  game_frame.bottomRight()  );
+    QLineF frame_left(      game_frame.topLeft(),     game_frame.bottomLeft()   );
+    QLineF frame_right(     game_frame.topRight(),    game_frame.bottomRight()  );
+    QPointF border_intersect;
+    if (       line_down.intersect(frame_top, &border_intersect) ==     QLineF::BoundedIntersection) {
+        half_height = QLineF(QPointF(0, 0), border_intersect).length();
+    } else if (line_down.intersect(frame_bottom, &border_intersect) ==  QLineF::BoundedIntersection) {
+        half_height = QLineF(QPointF(0, 0), border_intersect).length();
+    } else if (line_down.intersect(frame_left, &border_intersect) ==    QLineF::BoundedIntersection) {
+        half_height = QLineF(QPointF(0, 0), border_intersect).length();
+    } else if (line_down.intersect(frame_right, &border_intersect) ==   QLineF::BoundedIntersection) {
+        half_height = QLineF(QPointF(0, 0), border_intersect).length();
+    }
 
     // Create start bracket (in Scene coordinates)
     QPainterPath rect;
-    rect.lineTo(          0,  h2 );
-    rect.lineTo(          0, -h2 );
-    rect.lineTo( stage_size, -h2 );
-    rect.lineTo( stage_size,  h2 );
+    rect.lineTo(          0,  half_height );
+    rect.lineTo(          0, -half_height );
+    rect.lineTo( stage_size, -half_height );
+    rect.lineTo( stage_size,  half_height );
     rect = t_scene.map(rect);
 
     return rect.boundingRect();

@@ -41,17 +41,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
                         static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).blueF()),
                         1.0f);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }
-
-    // Calculate Game Frame
-    int width =  m_project->getOption(Project_Options::Width).toInt();
-    int height = m_project->getOption(Project_Options::Height).toInt();
-    double w2 = width /  2.0;
-    double h2 = height / 2.0;
-    switch (m_project->getOptionOrientation()) {
-        case Orientation::Portrait:     m_game_frame = QRectF(-w2, -h2, width, height);     break;
-        case Orientation::Landscape:    m_game_frame = QRectF(-h2, -w2, height,  width);    break;
-    }
+    }   
 
     if (m_grid_show_on_top == false) {
         paintGrid(*painter);
@@ -244,11 +234,41 @@ void DrView::paintGameFrame(QPainter &painter) {
     frame_pen_outline.setCosmetic( true );
     frame_pen_inside.setCosmetic(  true );
 
+    // Calculate Game Frame
+    QRectF   game_frame = gameFrame(m_project);
+    DrStage *stage = my_scene->getCurrentStageShown();
+    QRectF   stage_rect;
+    if (stage != nullptr && Dr::CheckDoneLoading()) {
+        double h2;
+        stage_rect = stageBoundingRect(m_project, stage, h2);
+
+        // Get equalized game direction
+        double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+        while (game_direction < 0)   game_direction += 360.0;
+        while (game_direction > 360) game_direction -= 360.0;
+
+        // Move game frame as needed
+        double side_frame_diff = 0, top_frame_diff = 0;
+        if (game_direction < 270.0 && game_direction > 90.0) {
+            side_frame_diff = stage_rect.right() - game_frame.right();
+        } else {
+            side_frame_diff = stage_rect.left() -  game_frame.left();
+        }
+
+        if (game_direction > 0.0 && game_direction < 180.0) {
+            top_frame_diff  = stage_rect.top() -    game_frame.top();
+        } else {
+            top_frame_diff  = stage_rect.bottom() - game_frame.bottom();
+        }
+
+        game_frame = game_frame.adjusted(side_frame_diff, top_frame_diff, side_frame_diff, top_frame_diff);
+    }
+
     painter.setPen( frame_pen_outline );
-    painter.drawRoundedRect(m_game_frame, 25, 25);
+    painter.drawRoundedRect(game_frame, 25, 25);
 
     painter.setPen( frame_pen_inside );
-    painter.drawRoundedRect(m_game_frame, 25, 25);
+    painter.drawRoundedRect(game_frame, 25, 25);
 }
 
 
@@ -261,25 +281,11 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     // Get Stage Size, Game Direction, figure out rotation QGraphicsScene transform
     long   stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
     double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
-    double h2 = m_game_frame.height() / 2.0;
     QTransform t_scene = QTransform().rotate( game_direction );
 
     // Find width of rotated game frame
-    QLineF line_down = t_scene.map( QLineF(0, 0, 0, 5000) );
-    QLineF frame_top(       m_game_frame.topLeft(),     m_game_frame.topRight()     );
-    QLineF frame_bottom(    m_game_frame.bottomLeft(),  m_game_frame.bottomRight()  );
-    QLineF frame_left(      m_game_frame.topLeft(),     m_game_frame.bottomLeft()   );
-    QLineF frame_right(     m_game_frame.topRight(),    m_game_frame.bottomRight()  );
-    QPointF border_intersect;
-    if (       line_down.intersect(frame_top, &border_intersect) ==     QLineF::BoundedIntersection) {
-        h2 = QLineF(QPointF(0, 0), border_intersect).length();
-    } else if (line_down.intersect(frame_bottom, &border_intersect) ==  QLineF::BoundedIntersection) {
-        h2 = QLineF(QPointF(0, 0), border_intersect).length();
-    } else if (line_down.intersect(frame_left, &border_intersect) ==    QLineF::BoundedIntersection) {
-        h2 = QLineF(QPointF(0, 0), border_intersect).length();
-    } else if (line_down.intersect(frame_right, &border_intersect) ==   QLineF::BoundedIntersection) {
-        h2 = QLineF(QPointF(0, 0), border_intersect).length();
-    }
+    double h2;
+    stageBoundingRect(m_project, stage, h2);
 
     // Draw start bracket (in Scene coordinates)
     QPainterPath left, right, direction, arrow;
