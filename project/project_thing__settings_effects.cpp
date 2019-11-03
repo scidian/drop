@@ -87,7 +87,7 @@ void DrThing::addComponentSettingsLight(QColor color) {
 
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
                            "Light Type", "<b>Opaque</b> - Solid texture, does not provide lighting. <br> "
-                                         "<b>Glow</b> - Provides diffuse lighting, no z ordering available. ");
+                                         "<b>Glow</b> - Provides diffuse lighting, no z-ordering available. ");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
                            "Light Color", "The Color for this Light.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, "°"}),

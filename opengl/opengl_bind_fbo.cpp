@@ -88,7 +88,7 @@ void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
 //####################################################################################
 //##    Allocate / Bind Occluder Map FBO
 //##        Occluder Map FBO is used to draw objects onto a buffer that lights can copy to cast shadows onto.
-//##        The objects are drawn using pixels encoded with their respective z order.
+//##        The objects are drawn using pixels encoded with their respective z-order.
 //####################################################################################
 void DrOpenGL::bindOccluderMapBuffer() {
     int desired_x, desired_y;

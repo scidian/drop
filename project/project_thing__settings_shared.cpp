@@ -49,15 +49,15 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
 //##    Layering Components
 //####################################################################################
 void DrThing::addComponentLayering(double z, double opacity) {
-    addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z Order\", lower numbers are "
+    addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z-Order\", lower numbers are "
                                                          "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
 
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
-                           "Z Order", "Arrangement of item along the z axis in the stage. Should be between the near and far clipping planes (" +
+                           "Z-Order", "Arrangement of item along the z axis in the stage. Should be between the near and far clipping planes (" +
                                       QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + ") to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,
-                           "Sub Order", "Arrangement of item compared to other items within the same Z Order.", true, false);
+                           "Sub Order", "Arrangement of item compared to other items within the same Z-Order.", true, false);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,
                            "Opacity", "How transparent this item is, 0 (invisible) - 100 (solid)");
     setZOrderWithSub(z, Z_Insert::Front);

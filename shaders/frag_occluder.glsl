@@ -40,7 +40,7 @@ void main( void ) {
     highp float z =  clamp(u_depth, u_near_plane, u_far_plane);                 // Clamp to within near and far plane
                 z += abs(u_near_plane);                                         // Add near plane to equalize negative z numbers
                 z *= 1000.0;                                                    // Multiply by 1000 to include decimal precision
-    highp vec3  color_out = packColor(z);                                       // Pack z order into a vec3
+    highp vec3  color_out = packColor(z);                                       // Pack z-order into a vec3
 
     gl_FragColor = vec4(color_out, texture2D(u_tex, coordinates.st).a * u_alpha);
 

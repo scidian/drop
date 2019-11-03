@@ -69,7 +69,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 50,
                            "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 50.0,
-                           "Light Layer", "Location along the z axis (Z Order) to draw Glow Lights. Should be between " +
+                           "Light Layer", "Location along the z axis (Z-Order) to draw Glow Lights. Should be between " +
                                           QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + " to be visible.");
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Blend, Property_Type::List, 0,
                            "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "

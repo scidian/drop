@@ -68,7 +68,7 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
     void            setThingType(DrThingType type) { m_thing_type = type; }
 
-    // Z Ordering
+    // Z-Ordering
     void            moveBackward();
     void            moveForward();
     double          getZOrderWithSub();

@@ -162,7 +162,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                     thing_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(thing->getKey()));
                 }
 
-                // ***** Update Z Order
+                // ***** Update Z-Order
                 thing_item->setData(COLUMN_Z_ORDER, Qt::DisplayRole, thing->getZOrderWithSub());
 
                 // ***** Install / update lock box
@@ -176,7 +176,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                 if (should_hide) thing_item->setHidden(should_hide);
             }
 
-            // ***** Sort Stage Items by Z Order
+            // ***** Sort Stage Items by Z-Order
             stage_item->sortChildren(COLUMN_Z_ORDER, Qt::SortOrder::DescendingOrder);
         }
     }

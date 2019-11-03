@@ -76,7 +76,7 @@ void main(void) {
             // Retreive depth value stored in occluder_frag shader (stored in r/g/b)
             highp float z = (unpackColor(data.rgb) / 1000.0) - abs(u_near_plane);
 
-            // Make sure light is behind object in z order
+            // Make sure light is behind object in z-order
             if (u_depth <= z) {
                 // ***** We check from the inside out, so if we made it here, we've hit the closest occluder to the center
 

@@ -103,7 +103,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 
                     // ***** Process press event for item movement (Translation)
                     if (origin_item_settings->isLocked() == false) {
-                        // Disable item changes before messing with Z Order
+                        // Disable item changes before messing with Z-Order
                         DrItem *dr_item = dynamic_cast<DrItem*>(m_origin_item);
                         bool flags_enabled_before = false;
                         if (dr_item) {

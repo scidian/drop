@@ -187,7 +187,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         Dr::SetLabelText(Label_Names::Label_Scale, "Scale X: " +   QString::number(my_scale.x()) +
                                                  ", Scale Y: " +   QString::number(my_scale.y()) );
         Dr::SetLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle) + ", Opacity: " + QString::number(item->opacity()));
-        Dr::SetLabelText(Label_Names::Label_Z_Order, "Z Order: " + QString::number(item->zValue()) + QString("\t") +
+        Dr::SetLabelText(Label_Names::Label_Z_Order, "Z-Order: " + QString::number(item->zValue()) + QString("\t") +
                                                              "View Mode: " + currentViewModeAsString() );
 
     } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {

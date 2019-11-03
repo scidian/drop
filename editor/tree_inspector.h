@@ -31,7 +31,7 @@ class DrFilterHoverHandler;
 // Class constants
 constexpr int    c_inspector_size_left =   3;           // Size policy width of left column
 constexpr int    c_inspector_size_right =  5;           // Size policy width of right column
-constexpr int    c_minimum_grid_size =     5;           // Minimum grid size
+constexpr int    c_minimum_grid_size =     1;//5;       // Minimum grid size
 constexpr double c_minimum_grid_scale =   .1;           // Minimum grid sscale
 
 //####################################################################################
