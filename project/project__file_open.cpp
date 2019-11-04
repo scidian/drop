@@ -37,7 +37,7 @@ bool checkMapHasKey(QVariantMap &map, QString key) {
 
 
 //####################################################################################
-//##    Save all Settings Component Properties to a File
+//##    Opens a Project File, returns false if unsuccessful
 //####################################################################################
 bool DrProject::openProjectFromFile(QString open_file) {
 
@@ -56,12 +56,11 @@ bool DrProject::openProjectFromFile(QString open_file) {
     QString version_major = options["version_major"].toString();
     QString version_minor = options["version_minor"].toString();
     QString version_build = options["version_build"].toString();
-    m_key_generator =                           options["key_generator"].toLongLong();
+    long    key_generator = options["key_generator"].toLongLong();
+          m_key_generator = key_generator;
 
-    // Not a valid save file, return false
-    if (checkMapHasKey(options, "name") == false) {
-        return false;
-    }
+    // ***** Test for a basic property, if doesnt have this probably not a valid save file, return false
+    if (checkMapHasKey(options, "name") == false) return false;
 
     setOption(Project_Options::Name,            options["name"]);
     setOption(Project_Options::File_Name_Path,  QVariant(open_file)); ///options["file_path"]);
@@ -73,31 +72,40 @@ bool DrProject::openProjectFromFile(QString open_file) {
     settings.endArray();
 
 
+    // ***** Adds Default Assets
+    addDefaultAssets();
+
+
     // ***** Read Effects
+    /**
     int effect_count = settings.beginReadArray("effects");
     for (int i = 0; i < effect_count; ++i) {
         settings.setArrayIndex(i);
-        // Load Effect, Initialize
+        // Load Effect
         QVariantMap  effect_data =  settings.value("effect").value<QVariantMap>();
         long         effect_key =   effect_data["key"].toLongLong();
         DrEffectType effect_type =  static_cast<DrEffectType>(effect_data["type"].toInt());
+        // If key doesnt already exist, initialize Effect
         if (findSettingsFromKey(effect_key, false) != nullptr) continue;
         addEffect(effect_type, effect_key);
     }
     settings.endArray();
+    */
 
 
     // ***** Read Images
     int image_count = settings.beginReadArray("images");
     for (int i = 0; i < image_count; ++i) {
         settings.setArrayIndex(i);
-        // Load Image, Initialize
+        // Load Image
         QVariantMap image_data =    settings.value("image").value<QVariantMap>();
         long        image_key =     image_data["key"].toLongLong();
         QString     full_path =     image_data["full_path"].toString();
         QString     filename =      image_data["filename"].toString();
         QString     simple_name =   image_data["simple_name"].toString();
         QImage      image =         image_data["image"].value<QPixmap>().toImage().convertToFormat(QImage::Format_ARGB32);
+
+        // If key doesnt already exist, initialize Image
         if (findSettingsFromKey(image_key, false) != nullptr) continue;
         addImage(image_key, full_path, filename, simple_name, image);
     }
@@ -108,13 +116,15 @@ bool DrProject::openProjectFromFile(QString open_file) {
     int font_count = settings.beginReadArray("fonts");
     for (int i = 0; i < font_count; ++i) {
         settings.setArrayIndex(i);
-        // Load Font, Initialize
+        // Load Font
         QVariantMap font_data =     settings.value("font").value<QVariantMap>();
         long        font_key =      font_data["key"].toLongLong();
         QString     name =          font_data["font_name"].toString();
         QString     family =        font_data["font_family"].toString();
         int         font_size =     font_data["font_size"].toInt();
         QPixmap     pix =           font_data["image"].value<QPixmap>();
+
+        // If key doesnt already exist, initialize Font
         if (findSettingsFromKey(font_key, false) != nullptr) continue;
         addFont(name, pix, family, font_size, true, font_key);
     }
@@ -125,13 +135,19 @@ bool DrProject::openProjectFromFile(QString open_file) {
     int asset_count = settings.beginReadArray("assets");
     for (int i = 0; i < asset_count; ++i) {
         settings.setArrayIndex(i);
-        // Load Asset, Initialize
+        // Load Asset
         QVariantMap asset_data =    settings.value("asset").value<QVariantMap>();
         long        asset_key =     asset_data["key"].toLongLong();
         long        source_key =    asset_data["source_key"].toLongLong();
         DrAssetType asset_type =    static_cast<DrAssetType>(asset_data["type"].toInt());
+
+        // Dont process Built-In assets
+        if (asset_type == DrAssetType::Effect || asset_type == DrAssetType::Device) continue;
+
+        // If key doesnt already exist, initialize Asset
         if (findSettingsFromKey(asset_key, false) != nullptr) continue;
         addAsset(asset_type, source_key, asset_key);
+
         // Load Asset Settings, Variables
         DrAsset *asset = findAssetFromKey(asset_key);
         loadSettingsFromMap(asset,  asset_data);
@@ -145,19 +161,24 @@ bool DrProject::openProjectFromFile(QString open_file) {
     for (int i = 0; i < world_count; ++i) {
         settings.beginReadArray("worlds");
         settings.setArrayIndex(i);
-        // Load World, Initialize
+
+        // Load World
         QVariantMap world_data =        settings.value("world").value<QVariantMap>();
         long        world_key =         checkMapHasKey(world_data, "key")               ? world_data["key"].toLongLong()            : c_no_key;
         long        start_stage_key =   checkMapHasKey(world_data, "start_stage")       ? world_data["start_stage"].toLongLong()    : c_no_key;
         long        editor_stage_key =  checkMapHasKey(world_data, "editor_stage")      ? world_data["editor_stage"].toLongLong()   : c_no_key;
         bool        world_expanded =    checkMapHasKey(world_data, "tree_expanded")     ? world_data["tree_expanded"].toBool()      : true;
+
+        // If key doesnt already exist, initialize World
         if (findSettingsFromKey(world_key, false) != nullptr) continue;
         addWorld(world_key, start_stage_key, editor_stage_key);
+
         // Load World Settings, Variables
         DrWorld *world = findWorldFromKey(world_key);
         loadSettingsFromMap(world, world_data);
         world->setExpanded(world_expanded);
         settings.endArray();
+
 
         // ***** Read Stages
         QString world_array = "stages_in_world:" + world_data["key"].toString();
@@ -166,20 +187,25 @@ bool DrProject::openProjectFromFile(QString open_file) {
         for (int j = 0; j < stage_count; ++j) {
             settings.beginReadArray(world_array);
             settings.setArrayIndex(j);
-            // Load Stage, Initialize
+
+            // Load Stage
             QVariantMap stage_data =        settings.value("stage").value<QVariantMap>();
             long        stage_key =         checkMapHasKey(stage_data, "key")            ? stage_data["key"].toLongLong()        : c_no_key;
             bool        stage_expanded =    checkMapHasKey(stage_data, "tree_expanded")  ? stage_data["tree_expanded"].toBool()  : true;
             bool        start_stage =       checkMapHasKey(stage_data, "is_start_stage") ? stage_data["is_start_stage"].toBool() : false;
             QPointF     center_point =      checkMapHasKey(stage_data, "center_point")   ? stage_data["center_point"].toPointF() : QPointF(0, 0);
             double      zoom_scale =        checkMapHasKey(stage_data, "zoom_scale")     ? stage_data["zoom_scale"].toDouble()   : 0.5;
+
+            // If key doesnt already exist, initialize Stage
             if (findSettingsFromKey(stage_key, false) != nullptr) continue;
             world->addStage(stage_key, start_stage, center_point, zoom_scale);
+
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
             loadSettingsFromMap(stage, stage_data);
             stage->setExpanded(stage_expanded);
             settings.endArray();
+
 
             // ***** Read Things
             QString stage_array = "things_in_stage:" + stage_data["key"].toString();
@@ -188,14 +214,33 @@ bool DrProject::openProjectFromFile(QString open_file) {
             for (int t = 0; t < thing_count; ++t) {
                 settings.beginReadArray(stage_array);
                 settings.setArrayIndex(t);
-                // Load Thing, Initialize
+
+                // Load Thing
                 QVariantMap thing_data =    settings.value("thing").value<QVariantMap>();
                 long thing_key =            checkMapHasKey(thing_data, "key")            ? thing_data["key"].toLongLong()        : c_no_key;
                 long asset_key =            checkMapHasKey(thing_data, "asset_key")      ? thing_data["asset_key"].toLongLong()  : c_no_key;
                 DrThingType thing_type =    checkMapHasKey(thing_data, "type")           ? static_cast<DrThingType>(thing_data["type"].toInt()) : DrThingType::Object;
-                if (findSettingsFromKey(thing_key, false) != nullptr) continue;             // Project already contains this Key
-                if (findAssetFromKey(asset_key) == nullptr)           continue;             // Cannot find Asset
+
+                // If key already exists, move on
+                if (findSettingsFromKey(thing_key, false) != nullptr) continue;
+
+                // Make sure thing uses Built-In Device / Effect Asset Key
+                switch (thing_type) {
+                    case DrThingType::Camera:       asset_key = c_key_asset_camera;     break;
+
+                    case DrThingType::Light:        asset_key = c_key_asset_light;      break;
+                    case DrThingType::Water:        asset_key = c_key_asset_water;      break;
+                    case DrThingType::Fire:         asset_key = c_key_asset_fire;       break;
+                    case DrThingType::Mirror:       asset_key = c_key_asset_mirror;     break;
+                    case DrThingType::Fisheye:      asset_key = c_key_asset_fisheye;    break;
+                    case DrThingType::Swirl:        asset_key = c_key_asset_swirl;      break;
+                    default: ;
+                }
+
+                // If we can find associated Asset, initialize Thing
+                if (findAssetFromKey(asset_key) == nullptr)           continue;
                 stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
+
                 // Load Thing Settings, Variables
                 DrThing *thing = findThingFromKey(thing_key);
                 loadSettingsFromMap(thing, thing_data);
@@ -205,12 +250,17 @@ bool DrProject::openProjectFromFile(QString open_file) {
     }
 
 
-    // ***** Adds Default Assets
-    addDefaultAssets();
-
-
     // ***** Important! Signify we don't need to save at this point!
     setHasSaved(true);
+
+
+    // ***** Set Key Generator from Save file
+    if (m_key_generator != key_generator) {
+        ///Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
+        ///                   "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
+        m_key_generator = key_generator;
+    }
+
     return true;
 }
 
@@ -255,8 +305,7 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             }
 
             // ***** Copy Saved Property Values
-            //          Property is fine if same type...
-            //          Or if was Positive and now is Double...
+            //          Property is fine if is same type, or if it was Positive and now is Double
             if ( (check_property_type == property->getPropertyType() ||
                  (check_property_type == Property_Type::Positive && property->getPropertyType() == Property_Type::Double)) ) {
                 k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );

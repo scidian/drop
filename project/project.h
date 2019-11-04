@@ -60,26 +60,27 @@ constexpr long c_key_asset_empty =      1;          //  32 x  32    Alpha value 
 constexpr long c_key_asset_character =  2;          // 256 x 256    Gray Circle
 constexpr long c_key_asset_object =     3;          // 256 x 256    Gray Box
 
-// Devices
-constexpr long c_key_device_camera =    500;        // Camera Device
 
-constexpr long c_key_asset_camera =     600;        // Camera Asset
+// Devices
+constexpr long c_key_device_camera =    400;        // Camera Device
+
+constexpr long c_key_asset_camera =     500;        // Camera Asset
+
 
 // Effects
-constexpr long c_key_effect_light =     700;        // Light Effect
-constexpr long c_key_effect_water =     701;        // Water Effect
-constexpr long c_key_effect_fire =      702;        // Fire Effect
-constexpr long c_key_effect_mirror =    703;        // Mirror Effect
-constexpr long c_key_effect_fisheye =   704;        // Fisheye Effect
-constexpr long c_key_effect_swirl =     705;        // Swirl Effect
+constexpr long c_key_effect_light =     600;        // Light Effect
+constexpr long c_key_effect_water =     601;        // Water Effect
+constexpr long c_key_effect_fire =      602;        // Fire Effect
+constexpr long c_key_effect_mirror =    603;        // Mirror Effect
+constexpr long c_key_effect_fisheye =   604;        // Fisheye Effect
+constexpr long c_key_effect_swirl =     605;        // Swirl Effect
 
-constexpr long c_key_asset_light =      800;        // Light Asset
-constexpr long c_key_asset_water =      801;        // Water Asset
-constexpr long c_key_asset_fire =       802;        // Fire Asset
-constexpr long c_key_asset_mirror =     803;        // Mirror Asset
-constexpr long c_key_asset_fisheye =    804;        // Fisheye Asset
-constexpr long c_key_asset_swirl =      805;        // Swirl Asset
-
+constexpr long c_key_asset_light =      700;        // Light Asset
+constexpr long c_key_asset_water =      701;        // Water Asset
+constexpr long c_key_asset_fire =       702;        // Fire Asset
+constexpr long c_key_asset_mirror =     703;        // Mirror Asset
+constexpr long c_key_asset_fisheye =    704;        // Fisheye Asset
+constexpr long c_key_asset_swirl =      705;        // Swirl Asset
 
 
 //####################################################################################

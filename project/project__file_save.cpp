@@ -74,6 +74,7 @@ void DrProject::saveProjectToFile() {
 
 
     // ***** Write Effects
+    /**
     int effect_count = 0;
     for (auto effect_pair : m_effects) {
         if (effect_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
@@ -86,6 +87,7 @@ void DrProject::saveProjectToFile() {
         settings.setValue("effect", effect_data);
         settings.endArray();
     }
+    */
 
 
     // ***** Write Images
