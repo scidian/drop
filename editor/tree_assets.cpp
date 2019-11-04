@@ -128,7 +128,16 @@ void TreeAssets::buildAssetTree(QString search_text) {
     widget_items[DrAssetType::Effect] =     new QTreeWidgetItem();
     widget_items[DrAssetType::Text] =       new QTreeWidgetItem();
 
-    for (auto item_pair : widget_items) {
+    // Set the order of the Asset Categories
+    std::vector<std::pair <DrAssetType, QTreeWidgetItem*>> asset_categories;
+    asset_categories.push_back( std::make_pair(DrAssetType::Character,  widget_items[DrAssetType::Character]) );
+    asset_categories.push_back( std::make_pair(DrAssetType::Object,     widget_items[DrAssetType::Object]) );
+    asset_categories.push_back( std::make_pair(DrAssetType::Device,     widget_items[DrAssetType::Device]) );
+    asset_categories.push_back( std::make_pair(DrAssetType::Effect,     widget_items[DrAssetType::Effect]) );
+    asset_categories.push_back( std::make_pair(DrAssetType::Text,       widget_items[DrAssetType::Text]) );
+
+    // Create Asset Categories
+    for (auto item_pair : asset_categories) {
         DrAssetType asset_type = item_pair.first;
         QTreeWidgetItem  *item = item_pair.second;
 
