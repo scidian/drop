@@ -62,6 +62,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         // Thing Types
         case DrThingType::Character:
         case DrThingType::Object:
+        case DrThingType::Camera:
         case DrThingType::Text:
 
         // Effect Types

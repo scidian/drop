@@ -39,8 +39,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Background", "This is the base Background Color for this world. Must enable to use, otherwise background defaults to "
                                          "transparent.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Deletion_Threshold, Property_Type::Positive, 10000,
-                           "Deletion Threshold", "Distance (in pixels) away from active camera that objects are removed from the World. Keeps game running "
-                                                 "smoothly.");
+                           "Deletion Threshold", "Distance (in World units) away from active camera that objects are removed from the World. Keeps game "
+                                                 "running smoothly.");
 
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all Objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Medium, true);

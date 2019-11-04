@@ -18,7 +18,7 @@ class DrShapeList;
 
 //####################################################################################
 //##    DrAsset
-//##        Class to hold an asset for use in a project
+//##        Class to hold an Asset for use in a Project
 //############################
 class DrAsset : public DrSettings
 {
@@ -58,6 +58,7 @@ public:
     // Initialize Calls
     void        initializeAssetSettingsCharacter(QString new_name);
     void        initializeAssetSettingsObject(QString new_name);
+    void        initializeAssetSettingsDevice(QString new_name);
     void        initializeAssetSettingsEffect(QString new_name);
     void        initializeAssetSettingsFont(DrFont *font);
 

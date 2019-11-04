@@ -21,7 +21,7 @@ typedef std::map<long, DrStage*> StageMap;
 
 //####################################################################################
 //##    DrWorld
-//##        Class to hold all stages, variables and things for one world
+//##        Class to hold Stages, variables and things for one World
 //############################
 class DrWorld : public DrSettings
 {

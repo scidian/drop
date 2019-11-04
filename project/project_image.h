@@ -19,7 +19,7 @@ class DrProject;
 
 //####################################################################################
 //##    DrImage
-//##        Class to hold an immage for use in a project, can be pulled for asset or things
+//##        Class to hold an Image for use in a Project, can be pulled for asset or things
 //############################
 class DrImage : public DrSettings
 {

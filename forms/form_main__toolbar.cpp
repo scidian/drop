@@ -76,7 +76,8 @@ void FormMain::updateToolbar() {
             // ***** Asset is selected
             DrAsset *asset = m_project->findAssetFromKey(treeAssetEditor->getSelectedKey());
             if (asset != nullptr) {
-                if (asset->getAssetType() != DrAssetType::Effect) {
+                if (asset->getAssetType() != DrAssetType::Effect &&
+                    asset->getAssetType() != DrAssetType::Device) {
                     for (auto button : buttonsGroupEdit->buttons())     if (!button->isEnabled()) button->setEnabled(true);
                 }
             }

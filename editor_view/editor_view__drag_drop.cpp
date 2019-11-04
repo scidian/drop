@@ -18,6 +18,7 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_device.h"
 #include "project/project_effect.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
@@ -108,6 +109,7 @@ void DrView::dropEvent(QDropEvent *event) {
         // Create new Thing from drop data,                                                                 !!!!! #NOTE: Sets initial Z value of Thing
         long      asset_key = variant_key.toInt();
         DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
+        DrDevice *device;
         DrEffect *effect;
         switch (asset->getAssetType()) {
             case DrAssetType::Character:    thing = stage->addThing(DrThingType::Character,     asset_key, position.x(), -position.y(),   5);   break;
@@ -127,6 +129,12 @@ void DrView::dropEvent(QDropEvent *event) {
                     case DrEffectType::Snow:    break;
                     case DrEffectType::Clouds:  break;
                     case DrEffectType::Fog:     break;
+                }
+                break;
+            case DrAssetType::Device:
+                device = m_project->getDevice( asset->getSourceKey() );
+                switch (device->getDeviceType()) {
+                    case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    asset_key, position.x(), -position.y(), 10);   break;
                 }
                 break;
         }

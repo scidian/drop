@@ -47,6 +47,7 @@ QString StringFromAssetType(DrAssetType type) {
     switch (type) {
         case DrAssetType::Object:       return "Object Asset";
         case DrAssetType::Character:    return "Character Asset";
+        case DrAssetType::Device:       return "Device Asset";
         case DrAssetType::Effect:       return "Effect Asset";
         case DrAssetType::Text:         return "Text Asset";
 
@@ -61,6 +62,7 @@ QString StringFromThingType(DrThingType type) {
         case DrThingType::None:         return "None";
         case DrThingType::Character:    return "Character";
         case DrThingType::Object:       return "Object";
+        case DrThingType::Camera:       return "Camera";
         case DrThingType::Text:         return "Text";
 
         case DrThingType::Fire:         return "Fire";
@@ -74,6 +76,12 @@ QString StringFromThingType(DrThingType type) {
         ///case DrThingType::Camera:       return "Camera";
         ///case DrThingType::Logic:        return "Logic";
         ///case DrThingType::Particle:     return "Particle";
+    }
+}
+
+QString StringFromDeviceType(DrDeviceType type) {
+    switch (type) {
+        case DrDeviceType::Camera:      return "Camera";
     }
 }
 

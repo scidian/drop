@@ -155,6 +155,7 @@ SOURCES += \
     helper.cpp \
     helper_qt.cpp \
     imaging/imaging_draw.cpp \
+    imaging/imaging_draw_devices.cpp \
     imaging/imaging_draw_effects.cpp \
     imaging/imaging_filters.cpp \
     imaging/imaging_misc.cpp \
@@ -190,6 +191,7 @@ SOURCES += \
     project/project__initialize.cpp \
     project/project_asset.cpp \
     project/project_asset__settings.cpp \
+    project/project_device.cpp \
     project/project_effect.cpp \
     project/project_font.cpp \
     project/project_image.cpp \
@@ -301,6 +303,7 @@ HEADERS += \
     playground/playground_toy.h \
     project/project.h \
     project/project_asset.h \
+    project/project_device.h \
     project/project_effect.h \
     project/project_font.h \
     project/project_image.h \

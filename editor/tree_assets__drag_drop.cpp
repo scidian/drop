@@ -17,6 +17,7 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_device.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_image.h"
@@ -40,6 +41,9 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
         case DrAssetType::Object:
         case DrAssetType::Character:
             pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+            break;
+        case DrAssetType::Device:
+            pixmap = m_editor_relay->currentProject()->getDevice( asset->getSourceKey() )->getPixmap();
             break;
         case DrAssetType::Effect:
             pixmap = m_editor_relay->currentProject()->getEffect( asset->getSourceKey() )->getPixmap();

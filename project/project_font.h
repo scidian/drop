@@ -18,7 +18,7 @@ class DrProject;
 
 //####################################################################################
 //##    DrFont
-//##        Class to hold a font for use in a project
+//##        Class to hold a Font for use in a Project
 //############################
 class DrFont : public DrSettings
 {

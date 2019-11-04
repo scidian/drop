@@ -243,7 +243,7 @@ void DrEngineCamera::updateCamera() {
     if (follow == nullptr) {                                m_follow_key = 0;   return;     }
     if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return;     }
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
-    if (object->isDying() == true || object->isAlive() == false) return;
+    if (object->isDying() || object->isDead()) return;
 
     DrPointF follow_pos = object->getPosition();
     DrPointF follow_previous_pos = object->getPreviousPosition();

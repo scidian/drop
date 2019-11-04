@@ -23,7 +23,7 @@ typedef std::map<long, DrThing*> ThingMap;
 
 //####################################################################################
 //##    DrStage
-//##        Class to hold one stage within a world
+//##        Class to hold one Stage within a World
 //############################
 class DrStage : public DrSettings
 {

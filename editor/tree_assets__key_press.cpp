@@ -99,6 +99,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_D) {
         DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());
         if (asset == nullptr) return;
+        if (asset->getAssetType() == DrAssetType::Device) return;
         if (asset->getAssetType() == DrAssetType::Effect) return;
 
         // Create new Asset, copy Settings / Components / Properties

@@ -38,30 +38,8 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
     this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_world->getFirstStageKey()) );
 
 
-    // ***** Add Effects
-    long effect_1 =  this->addEffect(DrEffectType::Light);
-    long effect_2 =  this->addEffect(DrEffectType::Water);
-    long effect_3 =  this->addEffect(DrEffectType::Fire);
-    long effect_4 =  this->addEffect(DrEffectType::Mirror);
-    long effect_5 =  this->addEffect(DrEffectType::Fisheye);
-    long effect_6 =  this->addEffect(DrEffectType::Swirl);
-    //long effect_7 =  this->addEffect(DrEffectType::Flag);
-    //long effect_8 =  this->addEffect(DrEffectType::Rain);
-    //long effect_9 =  this->addEffect(DrEffectType::Snow);
-    //long effect_10 = this->addEffect(DrEffectType::Clouds);
-    //long effect_11 = this->addEffect(DrEffectType::Fog);
-
-    this->addAsset(DrAssetType::Effect, effect_1);                             // Light
-    this->addAsset(DrAssetType::Effect, effect_2);                             // Water
-    this->addAsset(DrAssetType::Effect, effect_3);                             // Fire
-    this->addAsset(DrAssetType::Effect, effect_4);                             // Mirror
-    this->addAsset(DrAssetType::Effect, effect_5);                             // Fisheye
-    this->addAsset(DrAssetType::Effect, effect_6);                             // Swirl
-    //this->addAsset(DrAssetType::Effect, effect_7);                             // Flag
-    //this->addAsset(DrAssetType::Effect, effect_8);                             // Rain
-    //this->addAsset(DrAssetType::Effect, effect_9);                             // Snow
-    //this->addAsset(DrAssetType::Effect, effect_10);                            // Clouds
-    //this->addAsset(DrAssetType::Effect, effect_11);                            // Fog
+    // ***** Add Default Assets
+    addDefaultAssets();
 
 
     // ***** Build Test Project
@@ -177,6 +155,56 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
     // ***** Important! Signify we don't need to save at this point!
     setHasSaved(true);
 }
+
+
+//####################################################################################
+//##    Adds Default Assets to Project
+//####################################################################################
+void DrProject::addDefaultAssets() {
+
+    // ***** Add Effects
+    if (findEffectFromType(DrEffectType::Light) == nullptr) {
+        this->addEffect(DrEffectType::Light,    c_key_light_effect);
+        this->addAsset(DrAssetType::Effect,     c_key_light_effect,     c_key_light_asset);
+    }
+
+    if (findEffectFromType(DrEffectType::Water) == nullptr) {
+        this->addEffect(DrEffectType::Water,    c_key_water_effect);
+        this->addAsset(DrAssetType::Effect,     c_key_water_effect,     c_key_water_asset);
+    }
+
+    if (findEffectFromType(DrEffectType::Fire) == nullptr) {
+        this->addEffect(DrEffectType::Fire,     c_key_fire_effect);
+        this->addAsset(DrAssetType::Effect,     c_key_fire_effect,      c_key_fire_asset);
+    }
+
+    if (findEffectFromType(DrEffectType::Mirror) == nullptr) {
+        this->addEffect(DrEffectType::Mirror,   c_key_mirror_effect);
+        this->addAsset(DrAssetType::Effect,     c_key_mirror_effect,    c_key_mirror_asset);
+    }
+
+    if (findEffectFromType(DrEffectType::Fisheye) == nullptr) {
+        this->addEffect(DrEffectType::Fisheye,  c_key_fisheye_effect);
+        this->addAsset(DrAssetType::Effect,     c_key_fisheye_effect,   c_key_fisheye_asset);
+    }
+
+    if (findEffectFromType(DrEffectType::Swirl) == nullptr) {
+        this->addEffect(DrEffectType::Swirl,    c_key_swirl_effect);
+        this->addAsset(DrAssetType::Effect,     c_key_swirl_effect,     c_key_swirl_asset);
+    }
+
+
+    // ***** Add Devices
+    if (findDeviceFromType(DrDeviceType::Camera) == nullptr) {
+        this->addDevice(DrDeviceType::Camera,   c_key_camera_device);
+        this->addAsset(DrAssetType::Device,     c_key_camera_device,    c_key_camera_asset);
+    }
+}
+
+
+
+
+
 
 
 

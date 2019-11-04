@@ -69,6 +69,13 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSpecialEffects();
             break;
 
+        case DrThingType::Camera:
+            addComponentSettingsCamera("Camera 1");
+            addComponentTransform(static_cast<int>(c_image_size * 0.625), c_image_size, x, -y, DrThingType::Fire);
+            addComponentLayering(z, 100.0);
+            addComponentAppearance(true);
+            break;
+
         case DrThingType::Text:
             addComponentSettingsText(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Text);

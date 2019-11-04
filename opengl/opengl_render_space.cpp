@@ -104,11 +104,15 @@ void DrOpenGL::drawSpace() {
                 }
 
                 break;
+            case DrThingType::Camera:
+                break;
+
             case DrThingType::Text:
                 // !!!!!
                 // !!!!! IMPLEMENT DRAW TEXT HERE !!!!!
                 // !!!!!
                 break;
+
             case DrThingType::Fire:
                 if (drawObjectFire(thing, last_thing)) ++effect_count;
                 break;

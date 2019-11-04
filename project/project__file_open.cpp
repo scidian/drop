@@ -204,6 +204,11 @@ bool DrProject::openProjectFromFile(QString open_file) {
         }
     }
 
+
+    // ***** Adds Default Assets
+    addDefaultAssets();
+
+
     // ***** Important! Signify we don't need to save at this point!
     setHasSaved(true);
     return true;

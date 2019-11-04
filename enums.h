@@ -20,6 +20,7 @@ enum class Properties;
 constexpr int   c_no_key =        -1;               // Value that represents no item selected
 constexpr int   c_same_key =    -100;               // Value signifying to use the value already obtained
 
+
 //####################################################################################
 //##
 //##    Main Types of entities possible in Project
@@ -58,6 +59,8 @@ enum class DrAssetType {
     Effect,
     Text,
 
+    Device,
+
     //Action,
     //Logic,
 };
@@ -76,14 +79,13 @@ enum class DrThingType {
     Swirl,
     Water,
 
+    Camera,
+
     //Action,
-    //Camera,
     //Logic,
     //Particle,
 };
 
-// !!!!! #NOTE: This order decides the order they
-//              appear in the Assets Tree!
 enum class DrEffectType {
     Light,
     Water,
@@ -96,6 +98,10 @@ enum class DrEffectType {
     Snow,
     Clouds,
     Fog,
+};
+
+enum class DrDeviceType {
+    Camera,
 };
 
 
@@ -165,6 +171,7 @@ namespace Dr {
     QString     StringFromEditorWidget(Editor_Widgets widget);
     QString     StringFromType(DrType type);
     QString     StringFromAssetType(DrAssetType type);
+    QString     StringFromDeviceType(DrDeviceType type);
     QString     StringFromEffectType(DrEffectType type);
     QString     StringFromThingType(DrThingType type);
     QString     StringFromPositionFlag(Position_Flags flag);

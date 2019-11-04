@@ -24,6 +24,7 @@
 #include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_device.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_world.h"
@@ -123,6 +124,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     widget_items[DrAssetType::Character] =  new QTreeWidgetItem();
     widget_items[DrAssetType::Object] =     new QTreeWidgetItem();
+    widget_items[DrAssetType::Device] =     new QTreeWidgetItem();
     widget_items[DrAssetType::Effect] =     new QTreeWidgetItem();
     widget_items[DrAssetType::Text] =       new QTreeWidgetItem();
 
@@ -136,6 +138,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         switch (asset_type) {
             case DrAssetType::Character: c = createCategoryButton(item, "  Characters", "tree_character.png", Advisor_Info::Asset_Character);   break;
             case DrAssetType::Object:    c = createCategoryButton(item, "  Objects",    "tree_object.png",    Advisor_Info::Asset_Object);      break;
+            case DrAssetType::Device:    c = createCategoryButton(item, "  Devices",    "tree_camera.png",    Advisor_Info::Asset_Device);      break;
             case DrAssetType::Effect:    c = createCategoryButton(item,  " Effects",    "tree_effects.png",   Advisor_Info::Asset_Effect);      break;
             case DrAssetType::Text:      c = createCategoryButton(item, "  Text",       "tree_text.png",      Advisor_Info::Asset_Text);        break;
         }
@@ -213,6 +216,10 @@ void TreeAssets::buildAssetTree(QString search_text) {
                 case DrAssetType::Object:
                     pix = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
                     description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
+                    break;
+                case DrAssetType::Device:
+                    pix = m_project->getDevice( asset->getSourceKey() )->getPixmap();
+                    description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Device[1];
                     break;
                 case DrAssetType::Effect:
                     pix = m_project->getEffect( asset->getSourceKey() )->getPixmap();

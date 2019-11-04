@@ -99,6 +99,17 @@ void DrAsset::initializeAssetSettingsObject(QString new_name) {
 
 
 //####################################################################################
+//##    Device Asset Components
+//####################################################################################
+void DrAsset::initializeAssetSettingsDevice(QString new_name) {
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Device Name");
+    property_name->setDescription("Name of the current Device Asset.");
+    property_name->setValue(new_name);
+}
+
+
+//####################################################################################
 //##    Effect Asset Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsEffect(QString new_name) {

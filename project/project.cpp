@@ -15,6 +15,7 @@
 #include "helper_qt.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_device.h"
 #include "project_effect.h"
 #include "project_font.h"
 #include "project_image.h"
@@ -39,9 +40,11 @@ void DrProject::clearProject(bool add_built_in_items) {
 
     for (auto it = m_worlds.begin();    it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
     for (auto it = m_assets.begin();    it != m_assets.end(); )     {   delete it->second; it = m_assets.erase(it);     }
+    for (auto it = m_devices.begin();   it != m_devices.end(); )    {   delete it->second; it = m_devices.erase(it);    }
+    for (auto it = m_effects.begin();   it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
     for (auto it = m_fonts.begin();     it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
     for (auto it = m_images.begin();    it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
-    for (auto it = m_effects.begin();   it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
+
 
     // Add these Imagea to every project for use with New Assets
     if (add_built_in_items) {
@@ -77,6 +80,12 @@ long DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, long
     long new_asset_key = (key == c_no_key) ? getNextKey() : key;
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, source_image_key);
     return new_asset_key;
+}
+
+long DrProject::addDevice(DrDeviceType device_type, long key) {
+    long new_device_key = (key == c_no_key) ? getNextKey() : key;
+    m_devices[new_device_key] = new DrDevice(this, new_device_key, device_type);
+    return new_device_key;
 }
 
 long DrProject::addEffect(DrEffectType effect_type, long key) {
@@ -169,6 +178,9 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, QS
     ImageMap::iterator image_iter = m_images.find(check_key);
     if (image_iter != m_images.end())   return image_iter->second;
 
+    DeviceMap::iterator device_iter = m_devices.find(check_key);
+    if (device_iter != m_devices.end()) return device_iter->second;
+
     EffectMap::iterator effect_iter = m_effects.find(check_key);
     if (effect_iter != m_effects.end()) return effect_iter->second;
 
@@ -219,6 +231,24 @@ DrAsset* DrProject::findAssetFromKey(long check_key) {
         return asset_iter->second;
     else
         return nullptr;
+}
+
+DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
+    for (auto device_pair : m_devices) {
+        if (device_pair.second->getDeviceType() == type) {
+            return device_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrEffect* DrProject::findEffectFromType(DrEffectType type) {
+    for (auto effect_pair : m_effects) {
+        if (effect_pair.second->getEffectType() == type) {
+            return effect_pair.second;
+        }
+    }
+    return nullptr;
 }
 
 DrStage* DrProject::findStageFromKey(long check_key) {

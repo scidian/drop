@@ -19,7 +19,7 @@ enum class DrEffectType;
 
 //####################################################################################
 //##    DrEffect
-//##        Class to hold an effect for use in a project
+//##        Class to hold an Effect for use in a Project
 //############################
 class DrEffect : public DrSettings
 {
@@ -32,7 +32,7 @@ public:
     DrEffect(DrProject *parent_project, long key, DrEffectType effect_type);
 
     // Functions
-    QPixmap         getPixmap();                        // Returns a pixmap for a Light Effect in the editor based on the EffectType
+    QPixmap         getPixmap();                        // Returns a pixmap for an Effect in the editor based on the EffectType
 
     // Getters / Setters
     DrEffectType    getEffectType() { return m_effect_type; }

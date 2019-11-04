@@ -331,6 +331,7 @@ public:
 
     const bool&     isDying() { return m_dying; }
     const bool&     isAlive() { return m_alive; }
+    bool            isDead()  { return (!m_alive); }
     void            setDying(bool is_dying) { m_dying = is_dying; }
     void            setAlive(bool is_alive) { m_alive = is_alive; }
 

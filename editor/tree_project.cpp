@@ -149,6 +149,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                         case DrThingType::None:      icon_image = QImage();                                                             break;
                         case DrThingType::Character: icon_image = QPixmap(":/assets/tree_icons/tree_character.png").toImage();          break;
                         case DrThingType::Object:    icon_image = QPixmap(":/assets/tree_icons/tree_object.png").toImage();             break;
+                        case DrThingType::Camera:    icon_image = QPixmap(":/assets/tree_icons/tree_camera.png").toImage();             break;
                         case DrThingType::Text:      icon_image = QPixmap(":/assets/tree_icons/tree_text.png").toImage();               break;
                         case DrThingType::Fire:      icon_image = QPixmap(":/assets/tree_icons/tree_fire.png").toImage();               break;
                         case DrThingType::Fisheye:   icon_image = QPixmap(":/assets/tree_icons/tree_fisheye.png").toImage();            break;

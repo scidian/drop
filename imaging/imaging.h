@@ -88,6 +88,10 @@ namespace DrImaging {
     QPixmap drawWater(QColor top_color, QColor bottom_color);
 
 
+    // Draw Images for DrDevices
+    QPixmap drawCamera();
+
+
     // Object Counting / Fill (a la Ravens Project)
     QImage  blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
     void    fillBorder(QImage &image, QColor fill_color, QRect rect);

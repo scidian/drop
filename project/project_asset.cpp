@@ -18,6 +18,7 @@
 #include "imaging/imaging.h"
 #include "project.h"
 #include "project_asset.h"
+#include "project_device.h"
 #include "project_effect.h"
 #include "project_font.h"
 #include "project_image.h"
@@ -62,6 +63,14 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             initializeAssetSettingsAnimation(getAssetType(), my_starting_pixmap);
             initializeAssetSettingsPhysics(getAssetType());
             initializeAssetSettingsHealth(getAssetType(), hit_points);
+            break;
+        }
+        case DrAssetType::Device: {
+            DrDevice *device = getParentProject()->getDevice(source_image_key);
+            if (device == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Device with key: " +
+                                                        QString::number(source_image_key), Dr::GetActiveFormMain());
+            my_starting_pixmap = device->getPixmap();
+            initializeAssetSettingsDevice(Dr::StringFromDeviceType(device->getDeviceType()));
             break;
         }
         case DrAssetType::Effect: {
@@ -200,6 +209,13 @@ void DrAsset::deleteSource(long source_key) {
             if (image == nullptr) break;
             getParentProject()->getImageMap().erase( source_to_delete );
             delete image;
+            break;
+        }
+        case DrAssetType::Device: {
+            DrDevice *device = getParentProject()->getDeviceMap()[source_to_delete];
+            if (device == nullptr) break;
+            getParentProject()->getDeviceMap().erase( source_to_delete );
+            delete device;
             break;
         }
         case DrAssetType::Effect: {

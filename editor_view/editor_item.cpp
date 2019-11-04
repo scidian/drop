@@ -17,6 +17,7 @@
 #include "helper_qt.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_device.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
 #include "project/project_stage.h"
@@ -48,6 +49,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
             m_asset_height = m_asset->getHeight();
             break;
+
         case DrAssetType::Text: {
             QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
             m_pixmap = m_editor_relay->currentProject()->getFont( m_asset->getSourceKey() )->createText( text );
@@ -56,6 +58,20 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             m_asset_height = m_pixmap.height();
             break;
         }
+
+        case DrAssetType::Device:
+            switch (m_editor_relay->currentProject()->getDevice( m_asset->getSourceKey() )->getDeviceType()) {
+                case DrDeviceType::Camera: {
+                    m_pixmap = DrImaging::drawCamera();
+                    setPixmap(m_pixmap);
+                    applyFilters();
+                    break;
+                }
+            }
+            m_asset_width =  m_pixmap.width();
+            m_asset_height = m_pixmap.height();
+            break;
+
         case DrAssetType::Effect:
             switch (m_editor_relay->currentProject()->getEffect( m_asset->getSourceKey() )->getEffectType()) {
                 case DrEffectType::Fire: {
