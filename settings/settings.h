@@ -88,6 +88,7 @@ public:
                                            QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();
+    void            addComponentSizeSettings();
 
     // Setttings Helpers
     void            copyEntitySettings(DrSettings *from_entity);

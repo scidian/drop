@@ -154,7 +154,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     for (auto component: components) {
         if (component->isTurnedOn() == false) {
             continue;
-        } else if (component->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
+        } else if (component->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings) ||
+                   component->getComponentKey() == Dr::EnumToInt(Components::Size_Settings)) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
@@ -342,7 +343,8 @@ void TreeInspector::updateLockedSettings() {
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
-        if (prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings)) {
+        if (prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings) ||
+            prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Size_Settings)) {
             widget->setEnabled( true );
         } else {
             bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());

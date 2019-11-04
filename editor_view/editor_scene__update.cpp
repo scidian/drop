@@ -158,28 +158,60 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Rotation: {
                 // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
                 // ***** Also limits max size
-                //       #KEYWORD: "keep square", "lock size", "same size"
-                bool pretest = false;
-                if (thing->getThingType() == DrThingType::Light || thing->getThingType() == DrThingType::Swirl) {
+                //       #KEYWORD: "keep square", "lock size", "same size", "limit size"
+                bool    pretest = false;
+                bool    has_max_x =  (thing->maxSize().x() >= 0);
+                bool    has_max_y =  (thing->maxSize().y() >= 0);
+                bool    has_min_x =  (thing->minSize().x() >= 0);
+                bool    has_min_y =  (thing->minSize().y() >= 0);
+                bool    keep_square = thing->keepSquare();
+
+                if (keep_square || has_max_x || has_max_y || has_min_x || has_min_y) {
                     if (property == Properties::Thing_Size) {
                         if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) {
-                            if (size.x() >  c_desired_light_fbo_size) size.setX( c_desired_light_fbo_size);
-                            if (size.x() < -c_desired_light_fbo_size) size.setX(-c_desired_light_fbo_size);
-                            size.setY(size.x());
+                            if (has_max_x) {
+                                if (size.x() >  thing->maxSize().x()) size.setX( thing->maxSize().x());
+                                if (size.x() < -thing->maxSize().x()) size.setX(-thing->maxSize().x());
+                            }
+                            if (has_min_x) {
+                                if (size.x() <  thing->minSize().x() && size.x() >= 0) size.setX( thing->minSize().x());
+                                if (size.x() > -thing->minSize().x() && size.x() <= 0) size.setX(-thing->minSize().x());
+                            }
+                            if (keep_square) size.setY(size.x());
                         } else {
-                            if (size.y() >  c_desired_light_fbo_size) size.setY( c_desired_light_fbo_size);
-                            if (size.y() < -c_desired_light_fbo_size) size.setY(-c_desired_light_fbo_size);
-                            size.setX(size.y());
+                            if (has_max_y) {
+                                if (size.y() >  thing->maxSize().y()) size.setY( thing->maxSize().y());
+                                if (size.y() < -thing->maxSize().y()) size.setY(-thing->maxSize().y());
+                            }
+                            if (has_min_y) {
+                                if (size.y() <  thing->minSize().y() && size.y() >= 0) size.setY( thing->minSize().y());
+                                if (size.y() > -thing->minSize().y() && size.y() <= 0) size.setY(-thing->minSize().y());
+                            }
+                            if (keep_square) size.setX(size.y());
                         }
-                    } else {
+                    } else if (property == Properties::Thing_Scale) {
                         if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001)) {
-                            if (scale.x() * item->getAssetWidth() >  c_desired_light_fbo_size)  scale.setX( c_desired_light_fbo_size / item->getAssetWidth());
-                            if (scale.x() * item->getAssetWidth() < -c_desired_light_fbo_size)  scale.setX(-c_desired_light_fbo_size / item->getAssetWidth());
-                            scale.setY(scale.x());
+                            if (has_max_x) {
+                                if (scale.x() * item->getAssetWidth() >  thing->maxSize().x())  scale.setX( thing->maxSize().x() / item->getAssetWidth());
+                                if (scale.x() * item->getAssetWidth() < -thing->maxSize().x())  scale.setX(-thing->maxSize().x() / item->getAssetWidth());
+                            }
+                            if (has_min_x) {
+                                double new_x = scale.x() * item->getAssetWidth();
+                                if (new_x <  thing->minSize().x() && new_x >= 0) scale.setX( thing->minSize().x() / item->getAssetWidth());
+                                if (new_x > -thing->minSize().x() && new_x <= 0) scale.setX(-thing->minSize().x() / item->getAssetWidth());
+                            }
+                            if (keep_square) scale.setY(scale.x());
                         } else {
-                            if (scale.y() * item->getAssetHeight() >  c_desired_light_fbo_size) scale.setY( c_desired_light_fbo_size / item->getAssetHeight());
-                            if (scale.y() * item->getAssetHeight() < -c_desired_light_fbo_size) scale.setY(-c_desired_light_fbo_size / item->getAssetHeight());
-                            scale.setX(scale.y());
+                            if (has_max_y) {
+                                if (scale.y() * item->getAssetHeight() >  thing->maxSize().y()) scale.setY( thing->maxSize().y() / item->getAssetHeight());
+                                if (scale.y() * item->getAssetHeight() < -thing->maxSize().y()) scale.setY(-thing->maxSize().y() / item->getAssetHeight());
+                            }
+                            if (has_min_y) {
+                                double new_y = scale.y() * item->getAssetHeight();
+                                if (new_y <  thing->minSize().y() && new_y >= 0) scale.setY( thing->minSize().y() / item->getAssetHeight());
+                                if (new_y > -thing->minSize().y() && new_y <= 0) scale.setY(-thing->minSize().y() / item->getAssetHeight());
+                            }
+                            if (keep_square) scale.setX(scale.y());
                         }
                     }
                     pretest = true;

@@ -64,7 +64,7 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  37
+//##    !!!!! NEXT AVAILABLE NUMBER:  38
 //##
 //############################
 enum class Components {
@@ -72,6 +72,7 @@ enum class Components {
     // ***** General Components
     Entity_Settings                     = 0,
     Hidden_Settings                     = 1,
+    Size_Settings                       = 37,
 
 
     // ***** DrAsset Components
@@ -130,7 +131,7 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  167
+//##    !!!!! NEXT AVAILABLE NUMBER:  170
 //##
 //############################
 enum class Properties {
@@ -144,6 +145,11 @@ enum class Properties {
     Hidden_Advisor_Description          = 3,        // string, html capable textbox
     Hidden_Item_Locked                  = 4,        // bool
     Hidden_Hide_From_Trees              = 5,        // bool
+
+    // ******************** Size Properties, for locking shape / size in editor
+    Size_Keep_Square                    = 167,      // bool
+    Size_Max_Size                       = 168,      // pointf
+    Size_Min_Size                       = 169,      // pointf
 
 
     // ******************** DrAsset Component Properties

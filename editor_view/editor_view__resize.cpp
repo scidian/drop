@@ -356,17 +356,41 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
     // ***** Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
     // ***** Also limits max size
-    //       #KEYWORD: "keep square", "lock size", "same size"
-    if (original->getThing()) {
-        if (original->getThing()->getThingType() == DrThingType::Light || original->getThing()->getThingType() == DrThingType::Swirl) {
-            if (Dr::FuzzyCompare(start_scale.x(), new_scale_x)) {
-                if (new_scale_y * original->getAssetHeight() >  c_desired_light_fbo_size) new_scale_y =  (c_desired_light_fbo_size / original->getAssetHeight());
-                if (new_scale_y * original->getAssetHeight() < -c_desired_light_fbo_size) new_scale_y = -(c_desired_light_fbo_size / original->getAssetHeight());
-                new_scale_x = new_scale_y;
-            } else {
-                if (new_scale_x * original->getAssetWidth() >  c_desired_light_fbo_size)  new_scale_x =  (c_desired_light_fbo_size / original->getAssetWidth());
-                if (new_scale_x * original->getAssetWidth() < -c_desired_light_fbo_size)  new_scale_x = -(c_desired_light_fbo_size / original->getAssetWidth());
-                new_scale_y = new_scale_x;
+    //       #KEYWORD: "keep square", "lock size", "same size", "limit size"
+    if (original->getThing() != nullptr) {
+        DrThing* thing = original->getThing();
+        bool    has_max_x =  (thing->maxSize().x() >= 0);
+        bool    has_max_y =  (thing->maxSize().y() >= 0);
+        bool    has_min_x =  (thing->minSize().x() >= 0);
+        bool    has_min_y =  (thing->minSize().y() >= 0);
+        bool    keep_square = thing->keepSquare();
+
+        if (keep_square || has_max_x || has_max_y || has_min_x || has_min_y) {
+            if (has_max_y) {
+                if (new_scale_y * original->getAssetHeight() >  thing->maxSize().y()) new_scale_y =  (thing->maxSize().y() / original->getAssetHeight());
+                if (new_scale_y * original->getAssetHeight() < -thing->maxSize().y()) new_scale_y = -(thing->maxSize().y() / original->getAssetHeight());
+            }
+            if (has_min_y) {
+                double new_y = new_scale_y * original->getAssetHeight();
+                if (new_y <  thing->minSize().y() && new_y >= 0) new_scale_y =  (thing->minSize().y() / original->getAssetHeight());
+                if (new_y > -thing->minSize().y() && new_y <= 0) new_scale_y = -(thing->minSize().y() / original->getAssetHeight());
+            }
+            if (has_max_x) {
+                if (new_scale_x * original->getAssetWidth() >  thing->maxSize().x())  new_scale_x =  (thing->maxSize().x() / original->getAssetWidth());
+                if (new_scale_x * original->getAssetWidth() < -thing->maxSize().x())  new_scale_x = -(thing->maxSize().x() / original->getAssetWidth());
+            }
+            if (has_min_x) {
+                double new_x = new_scale_x * original->getAssetWidth();
+                if (new_x <  thing->minSize().x() && new_x >= 0) new_scale_x =  (thing->minSize().x() / original->getAssetWidth());
+                if (new_x > -thing->minSize().x() && new_x <= 0) new_scale_x = -(thing->minSize().x() / original->getAssetWidth());
+            }
+
+            if (keep_square) {
+                if (Dr::FuzzyCompare(start_scale.x(), new_scale_x)) {
+                     new_scale_x = new_scale_y;
+                } else {
+                     new_scale_y = new_scale_x;
+                }
             }
         }
     }

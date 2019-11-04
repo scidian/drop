@@ -25,6 +25,7 @@ DrSettings::DrSettings(DrProject *parent_project) : m_parent_project(parent_proj
 
     addComponentEntitySettings();
     addComponentHiddenSettings();
+    addComponentSizeSettings();
 }
 
 DrSettings::~DrSettings() {
@@ -55,6 +56,17 @@ void DrSettings::addComponentHiddenSettings() {
                            "Locked?", "Can this item be moved / changed by user?");
     addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, Property_Type::Bool, false,
                            "Hide?", "Should this item be hidden from editor listings (Asset Tree / Project Tree?)");
+}
+
+void DrSettings::addComponentSizeSettings() {
+    addComponent(Components::Size_Settings, "Size Settings", "Hidden size settings for object while it's in Editor.", Component_Colors::Blue_Drop_3, true);
+    getComponent(Components::Size_Settings)->setIcon(Component_Icons::Transform);
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Keep_Square, Property_Type::Bool, false,
+                           "Keep Square?", "Should this item be forced to stay square?");
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Max_Size, Property_Type::PointF, QPointF(-1, -1),
+                           "Max Size", "Maximum size of item while it's in the Editor. Negative values for width or height signify no maximum size.");
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Min_Size, Property_Type::PointF, QPointF(-1, -1),
+                           "Min Size", "Minimum size of item while it's in the Editor. Negative values for width or height signify no minimum size.");
 }
 
 

@@ -68,6 +68,11 @@ public:
     void            setDrItem(DrItem *item)     { m_item_in_scene = item; }
     void            setThingType(DrThingType type) { m_thing_type = type; }
 
+    // Size Limits
+    bool            keepSquare()        { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square).toBool(); }
+    QPointF         maxSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size).toPointF();  }
+    QPointF         minSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size).toPointF();  }
+
     // Z-Ordering
     void            moveBackward();
     void            moveForward();
