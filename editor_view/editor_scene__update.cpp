@@ -168,50 +168,51 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
 
                 if (keep_square || has_max_x || has_max_y || has_min_x || has_min_y) {
                     if (property == Properties::Thing_Size) {
-                        if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001)) {
-                            if (has_max_x) {
-                                if (size.x() >  thing->maxSize().x()) size.setX( thing->maxSize().x());
-                                if (size.x() < -thing->maxSize().x()) size.setX(-thing->maxSize().x());
-                            }
-                            if (has_min_x) {
-                                if (size.x() <  thing->minSize().x() && size.x() >= 0) size.setX( thing->minSize().x());
-                                if (size.x() > -thing->minSize().x() && size.x() <= 0) size.setX(-thing->minSize().x());
-                            }
-                            if (keep_square) size.setY(size.x());
-                        } else {
-                            if (has_max_y) {
-                                if (size.y() >  thing->maxSize().y()) size.setY( thing->maxSize().y());
-                                if (size.y() < -thing->maxSize().y()) size.setY(-thing->maxSize().y());
-                            }
-                            if (has_min_y) {
-                                if (size.y() <  thing->minSize().y() && size.y() >= 0) size.setY( thing->minSize().y());
-                                if (size.y() > -thing->minSize().y() && size.y() <= 0) size.setY(-thing->minSize().y());
-                            }
-                            if (keep_square) size.setX(size.y());
+                        if (has_max_x) {
+                            if (size.x() >  thing->maxSize().x()) size.setX( thing->maxSize().x());
+                            if (size.x() < -thing->maxSize().x()) size.setX(-thing->maxSize().x());
                         }
+                        if (has_min_x) {
+                            if (size.x() <  thing->minSize().x() && size.x() >= 0) size.setX( thing->minSize().x());
+                            if (size.x() > -thing->minSize().x() && size.x() <= 0) size.setX(-thing->minSize().x());
+                        }
+                        if (has_max_y) {
+                            if (size.y() >  thing->maxSize().y()) size.setY( thing->maxSize().y());
+                            if (size.y() < -thing->maxSize().y()) size.setY(-thing->maxSize().y());
+                        }
+                        if (has_min_y) {
+                            if (size.y() <  thing->minSize().y() && size.y() >= 0) size.setY( thing->minSize().y());
+                            if (size.y() > -thing->minSize().y() && size.y() <= 0) size.setY(-thing->minSize().y());
+                        }
+
+                        if (keep_square) {
+                            if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001))     size.setY(size.x());
+                            else                                                                        size.setX(size.y());
+                        }
+
                     } else if (property == Properties::Thing_Scale) {
-                        if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001)) {
-                            if (has_max_x) {
-                                if (scale.x() * item->getAssetWidth() >  thing->maxSize().x())  scale.setX( thing->maxSize().x() / item->getAssetWidth());
-                                if (scale.x() * item->getAssetWidth() < -thing->maxSize().x())  scale.setX(-thing->maxSize().x() / item->getAssetWidth());
-                            }
-                            if (has_min_x) {
-                                double new_x = scale.x() * item->getAssetWidth();
-                                if (new_x <  thing->minSize().x() && new_x >= 0) scale.setX( thing->minSize().x() / item->getAssetWidth());
-                                if (new_x > -thing->minSize().x() && new_x <= 0) scale.setX(-thing->minSize().x() / item->getAssetWidth());
-                            }
-                            if (keep_square) scale.setY(scale.x());
-                        } else {
-                            if (has_max_y) {
-                                if (scale.y() * item->getAssetHeight() >  thing->maxSize().y()) scale.setY( thing->maxSize().y() / item->getAssetHeight());
-                                if (scale.y() * item->getAssetHeight() < -thing->maxSize().y()) scale.setY(-thing->maxSize().y() / item->getAssetHeight());
-                            }
-                            if (has_min_y) {
-                                double new_y = scale.y() * item->getAssetHeight();
-                                if (new_y <  thing->minSize().y() && new_y >= 0) scale.setY( thing->minSize().y() / item->getAssetHeight());
-                                if (new_y > -thing->minSize().y() && new_y <= 0) scale.setY(-thing->minSize().y() / item->getAssetHeight());
-                            }
-                            if (keep_square) scale.setX(scale.y());
+                        if (has_max_x) {
+                            if (scale.x() * item->getAssetWidth() >  thing->maxSize().x())  scale.setX( thing->maxSize().x() / item->getAssetWidth());
+                            if (scale.x() * item->getAssetWidth() < -thing->maxSize().x())  scale.setX(-thing->maxSize().x() / item->getAssetWidth());
+                        }
+                        if (has_min_x) {
+                            double new_x = scale.x() * item->getAssetWidth();
+                            if (new_x <  thing->minSize().x() && new_x >= 0) scale.setX( thing->minSize().x() / item->getAssetWidth());
+                            if (new_x > -thing->minSize().x() && new_x <= 0) scale.setX(-thing->minSize().x() / item->getAssetWidth());
+                        }
+                        if (has_max_y) {
+                            if (scale.y() * item->getAssetHeight() >  thing->maxSize().y()) scale.setY( thing->maxSize().y() / item->getAssetHeight());
+                            if (scale.y() * item->getAssetHeight() < -thing->maxSize().y()) scale.setY(-thing->maxSize().y() / item->getAssetHeight());
+                        }
+                        if (has_min_y) {
+                            double new_y = scale.y() * item->getAssetHeight();
+                            if (new_y <  thing->minSize().y() && new_y >= 0) scale.setY( thing->minSize().y() / item->getAssetHeight());
+                            if (new_y > -thing->minSize().y() && new_y <= 0) scale.setY(-thing->minSize().y() / item->getAssetHeight());
+                        }
+
+                        if (keep_square) {
+                            if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001))     scale.setY(scale.x());
+                            else                                                                        scale.setX(scale.y());
                         }
                     }
                     pretest = true;

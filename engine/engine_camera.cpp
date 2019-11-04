@@ -67,10 +67,11 @@ long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float 
     DrEngineThing *follow = findThingByKey(thing_key_to_follow);
     if (follow) {
         camera->followObject( thing_key_to_follow );
-        camera->setPositionX( static_cast<float>(follow->getPosition().x) );
-        camera->setPositionY( static_cast<float>(follow->getPosition().y) );
-        camera->setRotation( follow->getCameraRotation() );
-        camera->setTarget( QVector3D(camera->getPosition().x(), camera->getPosition().y(), z));
+        camera->setPositionX( static_cast<float>(follow->getPosition().x) + follow->getCameraPosition().x() );
+        camera->setPositionY( static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y() );
+        camera->setPositionZ( static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z() );
+        camera->setRotation(  follow->getCameraRotation() );
+        camera->setTarget(    camera->getPosition() );
         follow->setActiveCameraKey(new_key);
     }
     return new_key;
@@ -217,6 +218,7 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     m_target = m_position;
     m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);          // Zero out average speed vector
     m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);          // Zero out average speed vector
+    m_avg_speed_z.clear();  m_avg_speed_z.fill(0, 20);          // Zero out average speed vector
     m_speed = QVector3D(0, 0, 0);
     m_rotation = c_default_camera_rot;
 }
@@ -231,6 +233,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
     m_position.setZ( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
     ///m_position.setX( m_target.x() );
     ///m_position.setY( m_target.y() );
+    ///m_position.setY( m_target.z() );
 }
 
 //####################################################################################
@@ -245,18 +248,26 @@ void DrEngineCamera::updateCamera() {
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
     if (object->isDying() || object->isDead()) return;
 
-    DrPointF follow_pos = object->getPosition();
-    DrPointF follow_previous_pos = object->getPreviousPosition();
+    double follow_pos_x = object->getPosition().x + static_cast<double>(object->getCameraPosition().x());
+    double follow_pos_y = object->getPosition().y + static_cast<double>(object->getCameraPosition().y());
+    double follow_pos_z = object->getZOrder() +     static_cast<double>(object->getCameraPosition().z());
+    double follow_previous_pos_x = static_cast<double>(object->getPreviousPosition().x) + static_cast<double>(object->getCameraPosition().x());
+    double follow_previous_pos_y = static_cast<double>(object->getPreviousPosition().y) + static_cast<double>(object->getCameraPosition().y());
+    double follow_previous_pos_z = static_cast<double>(object->getPreviousPosition().z) + static_cast<double>(object->getCameraPosition().z());
 
     // Calculate the average object Speed
-    m_avg_speed_x.push_back( follow_pos.x - follow_previous_pos.x );
-    m_avg_speed_y.push_back( follow_pos.y - follow_previous_pos.y );
+    m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
+    m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
+    m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
     m_avg_speed_x.pop_front();
     m_avg_speed_y.pop_front();
+    m_avg_speed_z.pop_front();
     double average_x = 0;
     double average_y = 0;
+    double average_z = 0;
     if (m_avg_speed_x.size() > 0) average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
     if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
+    if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();
 
     // Basic Camera = Object Position
     ///double pos_x = follow_pos.x();
@@ -269,11 +280,13 @@ void DrEngineCamera::updateCamera() {
     ///double pos_y = follow_previous_pos.y() + average_y;
 
     // Average of all three options, use try catch in case something happens to m_follow during this routine
-    double pos_x, pos_y;
-    pos_x = ((follow_pos.x) + ((static_cast<double>(m_target.x()) + average_x)*3.0) + (follow_previous_pos.x + average_x)) / 5.0;
-    pos_y = ((follow_pos.y) + ((static_cast<double>(m_target.y()) + average_y)*3.0) + (follow_previous_pos.y + average_y)) / 5.0;
+    double pos_x, pos_y, pos_z;
+    pos_x = ((follow_pos_x) + ((static_cast<double>(m_target.x()) + average_x)*3.0) + (follow_previous_pos_x + average_x)) / 5.0;
+    pos_y = ((follow_pos_y) + ((static_cast<double>(m_target.y()) + average_y)*3.0) + (follow_previous_pos_y + average_y)) / 5.0;
+    pos_z = ((follow_pos_z) + ((static_cast<double>(m_target.z()) + average_z)*3.0) + (follow_previous_pos_z + average_z)) / 5.0;
     m_target.setX( static_cast<float>(pos_x) );
     m_target.setY( static_cast<float>(pos_y) );
+    m_target.setZ( static_cast<float>(pos_z) );
 }
 
 

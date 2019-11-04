@@ -50,7 +50,10 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::Point3D, QVector3D(-15, 0, 0),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::Point3D, QVector3D( 0, 100, 800),
+                           "Camera Position", "Every Character has an Active Camera that follows it, this setting sets the relative camera position "
+                                              "of that Camera.");
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::Point3D, QVector3D(-10, 0, 0),
                            "Camera Rotation", "When in Perspective Mode, this is the camera rotation of the Active Camera following this Character. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation, and "
                                               "<b>Z</b> <b>Tilts</b> the camera");

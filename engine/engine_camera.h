@@ -42,8 +42,8 @@ private:
 
     long            m_follow_key = 0;                           // Unique DrEngineWorld key this camera should follow
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
-    QVector<double> m_avg_speed_y;
-
+    QVector<double> m_avg_speed_y;                              // Average y speed of object this camera is following
+    QVector<double> m_avg_speed_z;                              // Average z speed of object this camera is following
 
 
 public:

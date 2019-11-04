@@ -116,7 +116,12 @@ void DrEngineObject::addToWorld() {
 //##    Updates - Override for DrEngineThing::update()
 //####################################################################################
 void DrEngineObject::updateBodyPosition(DrPointF updated_position, bool update_previous_position_also) {
-    m_previous_position = update_previous_position_also ? updated_position : getPosition();
+    if (update_previous_position_also) {
+        m_previous_position = Vec3(static_cast<float>(updated_position.x), static_cast<float>(updated_position.y), static_cast<float>(getZOrder()));
+    } else {
+        m_previous_position = Vec3(static_cast<float>(getPosition().x), static_cast<float>(getPosition().y), static_cast<float>(getZOrder()));
+    }
+
     setPosition( updated_position );
 }
 

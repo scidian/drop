@@ -43,12 +43,8 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, bool use_offset) {
     m_projection.setToIdentity();
 
     // Set camera position
-    float cam_x, cam_y;
-          cam_x = (m_engine->getCurrentWorld()->getCameraPosition().x())       * m_scale;
-    if (render_type == Render_Type::Orthographic)
-          cam_y = (m_engine->getCurrentWorld()->getCameraPosition().y() + 100) * m_scale;
-    else
-          cam_y = (m_engine->getCurrentWorld()->getCameraPosition().y()) * m_scale;
+    float cam_x = (m_engine->getCurrentWorld()->getCameraPosition().x()) * m_scale;
+    float cam_y = (m_engine->getCurrentWorld()->getCameraPosition().y()) * m_scale;
     m_eye =     QVector3D( cam_x, cam_y, m_engine->getCurrentWorld()->getCameraPosition().z() );
     m_look_at = QVector3D( cam_x, cam_y, 0.0f );
     m_up =      QVector3D(  0.0f,  1.0f, 0.0f );
@@ -102,7 +98,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
     matrix2.setToIdentity();
     if (render_type == Render_Type::Orthographic) {
         float cam_x =  (m_engine->getCurrentWorld()->getCameraPosition().x()) * m_scale * c_occluder_scale_ortho;
-        float cam_y =  (m_engine->getCurrentWorld()->getCameraPosition().y() + 100) * m_scale * c_occluder_scale_ortho;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPosition().y()) * m_scale * c_occluder_scale_ortho;
         cam_x = (int(cam_x) / 5) * 5;
         cam_y = (int(cam_y) / 5) * 5;
         float left =   cam_x - (m_occluder_fbo->width() /  2.0f);
@@ -117,7 +113,7 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type, bool use_offset) {
         // Set camera position
         QVector3D  perspective_offset = use_offset? QVector3D(200.0f, 200.0f, 0.0f) : QVector3D(0.0f, 0.0f, 0.0f);
         float cam_x =  (m_engine->getCurrentWorld()->getCameraPosition().x()) * m_scale * c_occluder_scale_proj;
-        float cam_y =  (m_engine->getCurrentWorld()->getCameraPosition().y() + 100) * m_scale * c_occluder_scale_proj;
+        float cam_y =  (m_engine->getCurrentWorld()->getCameraPosition().y()) * m_scale * c_occluder_scale_proj;
         cam_x = (int(cam_x) / 5) * 5;
         cam_y = (int(cam_y) / 5) * 5;
         QVector3D  eye(     cam_x + perspective_offset.x(), cam_y + perspective_offset.y(), m_engine->getCurrentWorld()->getCameraPosition().z());

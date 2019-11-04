@@ -57,7 +57,8 @@ private:
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
-    QVector3D       m_camera_rotation { 0, 0, 0 };      // X, Y, and Z Camera Rotation for this objects Active (Follow) Camera
+    QVector3D       m_camera_position { 0, 0, 0 };      // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
+    QVector3D       m_camera_rotation { 0, 0, 0 };      // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
 
 
 public:
@@ -85,6 +86,7 @@ public:
     DrEngineThing(DrEngineWorld *world, long unique_key);
     virtual ~DrEngineThing();
 
+
     // Getters / Setters
     long                getKey() { return m_key; }                                          // Gets unique item key
 
@@ -96,14 +98,6 @@ public:
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
     virtual bool        update(double time_passed, double time_warp, QRectF &area);         // Process one update iteration for this Thing
 
-    // Thing Properties - Camera
-    const long&             getActiveCameraKey() { return m_active_camera; }
-    bool                    hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
-    void                    setActiveCameraKey(const long &new_camera_key) { m_active_camera = new_camera_key; }
-    QVector3D&              getCameraRotation() { return m_camera_rotation; }
-    void                    setCameraRotation(QVector3D rotation) { m_camera_rotation = rotation; }
-    void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
-                                                    m_camera_rotation = QVector3D(x_up_down, y_left_right, z_rotate); }
 
     // Basic Properties
     virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)
@@ -125,6 +119,21 @@ public:
     virtual void            setSize(DrPointF size) {            m_size = size; }
     virtual void            setZOrder(double z_order) {         m_z_order = z_order; }
     void                    setWorld(DrEngineWorld *world) {    m_world = world; }
+
+
+    // Thing Properties - Camera
+    const long&             getActiveCameraKey() { return m_active_camera; }
+    bool                    hasActiveCamera() { return (m_active_camera == 0) ? false : true; }
+    void                    setActiveCameraKey(const long &new_camera_key) { m_active_camera = new_camera_key; }
+
+    QVector3D&              getCameraPosition() { return m_camera_position; }
+    void                    setCameraPosition(QVector3D position) { m_camera_position = position; }
+    void                    setCameraPosition(float x, float y, float z) { m_camera_position = QVector3D(x, y, z); }
+
+    QVector3D&              getCameraRotation() { return m_camera_rotation; }
+    void                    setCameraRotation(QVector3D rotation) { m_camera_rotation = rotation; }
+    void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
+                                                    m_camera_rotation = QVector3D(x_up_down, y_left_right, z_rotate); }
 
     // 3D Properties
     Convert_3D_Type         get3DType() {       return m_3d_type; }

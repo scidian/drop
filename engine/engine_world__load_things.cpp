@@ -147,6 +147,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     ThingInfo   info =      loadThingBasicInfo( thing );
 
     // ***** Load Character Settings
+    QVariant cam_position = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position);
     QVariant cam_rotation = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation);
 
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
@@ -180,6 +181,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, player);                                 // Load collision shape(s)
+    player->setCameraPosition( cam_position.value<QVector3D>() );           // Set active camera position
     player->setCameraRotation( cam_rotation.value<QVector3D>() );           // Set active camera rotation
     addThing(player);                                                       // Add to world
 

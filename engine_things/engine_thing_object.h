@@ -12,6 +12,8 @@
 
 #include "enums_engine.h"
 #include "engine_thing.h"
+
+#include "3rd_party/vec3.h"
 #include "types/pointf.h"
 
 enum class Jump_State {
@@ -151,7 +153,7 @@ private:
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
 
-    DrPointF    m_previous_position;                        // Previous frame position, updated every frame by update()
+    Vec3        m_previous_position;                        // Previous frame position, updated every frame by update()
     bool        m_flipped_x = false;                        // True when image is flipped (going left) over the x axis
     bool        m_flipped_y = false;                        // True when image is flipped (going down) over the y axis
 
@@ -345,7 +347,7 @@ public:
     void            setFlipY(bool flipped) { m_flipped_y = flipped; }
 
     // Object->Body Data - Updated every frame by updateWorld()
-    DrPointF        getPreviousPosition() { return m_previous_position; }
+    Vec3            getPreviousPosition() { return m_previous_position; }
     void            updateBodyPosition(DrPointF updated_position, bool update_previous_position_also = false);
 
 };
