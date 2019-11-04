@@ -164,40 +164,34 @@ void DrProject::addDefaultAssets() {
 
     // ***** Add Effects
     if (findEffectFromType(DrEffectType::Light) == nullptr) {
-        this->addEffect(DrEffectType::Light,    c_key_light_effect);
-        this->addAsset(DrAssetType::Effect,     c_key_light_effect,     c_key_light_asset);
+        this->addEffect(DrEffectType::Light,    c_key_effect_light);
+        this->addAsset(DrAssetType::Effect,     c_key_effect_light,     c_key_asset_light);
     }
-
     if (findEffectFromType(DrEffectType::Water) == nullptr) {
-        this->addEffect(DrEffectType::Water,    c_key_water_effect);
-        this->addAsset(DrAssetType::Effect,     c_key_water_effect,     c_key_water_asset);
+        this->addEffect(DrEffectType::Water,    c_key_effect_water);
+        this->addAsset(DrAssetType::Effect,     c_key_effect_water,     c_key_asset_water);
     }
-
     if (findEffectFromType(DrEffectType::Fire) == nullptr) {
-        this->addEffect(DrEffectType::Fire,     c_key_fire_effect);
-        this->addAsset(DrAssetType::Effect,     c_key_fire_effect,      c_key_fire_asset);
+        this->addEffect(DrEffectType::Fire,     c_key_effect_fire);
+        this->addAsset(DrAssetType::Effect,     c_key_effect_fire,      c_key_asset_fire);
     }
-
     if (findEffectFromType(DrEffectType::Mirror) == nullptr) {
-        this->addEffect(DrEffectType::Mirror,   c_key_mirror_effect);
-        this->addAsset(DrAssetType::Effect,     c_key_mirror_effect,    c_key_mirror_asset);
+        this->addEffect(DrEffectType::Mirror,   c_key_effect_mirror);
+        this->addAsset(DrAssetType::Effect,     c_key_effect_mirror,    c_key_asset_mirror);
     }
-
     if (findEffectFromType(DrEffectType::Fisheye) == nullptr) {
-        this->addEffect(DrEffectType::Fisheye,  c_key_fisheye_effect);
-        this->addAsset(DrAssetType::Effect,     c_key_fisheye_effect,   c_key_fisheye_asset);
+        this->addEffect(DrEffectType::Fisheye,  c_key_effect_fisheye);
+        this->addAsset(DrAssetType::Effect,     c_key_effect_fisheye,   c_key_asset_fisheye);
     }
-
     if (findEffectFromType(DrEffectType::Swirl) == nullptr) {
-        this->addEffect(DrEffectType::Swirl,    c_key_swirl_effect);
-        this->addAsset(DrAssetType::Effect,     c_key_swirl_effect,     c_key_swirl_asset);
+        this->addEffect(DrEffectType::Swirl,    c_key_effect_swirl);
+        this->addAsset(DrAssetType::Effect,     c_key_effect_swirl,     c_key_asset_swirl);
     }
-
 
     // ***** Add Devices
     if (findDeviceFromType(DrDeviceType::Camera) == nullptr) {
-        this->addDevice(DrDeviceType::Camera,   c_key_camera_device);
-        this->addAsset(DrAssetType::Device,     c_key_camera_device,    c_key_camera_asset);
+        this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
+        this->addAsset(DrAssetType::Device,     c_key_device_camera,    c_key_asset_camera);
     }
 }
 
