@@ -18,7 +18,7 @@
 //####################################################################################
 //##    Maps 3D Point to / from 2D FBO Map Coordinates
 //####################################################################################
-QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix) {
+QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix) {
     QRect viewport = QRect(0, 0, fbo->width(), fbo->height());
 
     float x_pos, y_pos, z_pos;
@@ -26,10 +26,8 @@ QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMa
     y_pos = point3D.y();
     z_pos = point3D.z();
 
-    QMatrix4x4 identity;
-    identity.setToIdentity();
-    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( identity, matrix, viewport );
-    return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
+    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( view_matrix, proj_matrix, viewport );
+    return QPointF( static_cast<double>(vec.x()),  static_cast<double>(fbo->height() - vec.y()) );
 }
 
 
@@ -45,7 +43,7 @@ QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     x_pos = point3D.x();
     y_pos = point3D.y();
     z_pos = point3D.z();
-    QVector3D vec = QVector3D( x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
+    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
     return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
 }
 

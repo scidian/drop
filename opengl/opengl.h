@@ -147,7 +147,7 @@ public:
     QPointF         mapToScreen(double x, double y, double z);
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
-    QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 matrix);
+    QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix);
     void            zoomInOut(int level);
 
     // Initialization Calls
@@ -187,7 +187,7 @@ public:
                                       double &top, double &bottom, double &left, double &right, float &angle);
     void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float extra_scale_x = 1.0, float extra_scale_y = 1.0);
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
-    QMatrix4x4      occluderMatrix(Render_Type render_type);
+    void            occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, QMatrix4x4 &proj_matrix);
     QMatrix4x4      orthoMatrix(float width, float height);
     void            updateViewMatrix(Render_Type render_type);
     void            releaseOffscreenBuffer();

@@ -19,10 +19,10 @@
 //##    Returns a square matrix for rendering a flat quad (usually to fill screen)
 //####################################################################################
 QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
-    float left =   0.0f - (width  / 2.0f);
-    float right =  0.0f + (width  / 2.0f);
-    float top =    0.0f + (height / 2.0f);
-    float bottom = 0.0f - (height / 2.0f);
+    float left =   -(width  / 2.0f);
+    float right =  +(width  / 2.0f);
+    float top =    +(height / 2.0f);
+    float bottom = -(height / 2.0f);
     QMatrix4x4 m;
     m.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
     return m;
@@ -84,26 +84,24 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
 
 //####################################################################################
 //##    Occluder Map FBO Matrices
+//##        RETURNS: View matrix and Projection matrix by reference
 //####################################################################################
-QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type) {
+void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, QMatrix4x4 &proj_matrix) {
     float aspect_ratio = static_cast<float>(m_occluder_fbo->width()) / static_cast<float>(m_occluder_fbo->height());
 
-    QMatrix4x4 view_matrix, proj_matrix;
     view_matrix.setToIdentity();
     proj_matrix.setToIdentity();
 
+    // Scale based on Render Type
+    float scale = (render_type == Render_Type::Orthographic) ? (c_occluder_scale_ortho) : (c_occluder_scale_proj);
+          scale *= m_scale;
+
     // Set camera position
-    //      Scale based on redner_type
-    float scale = (render_type == Render_Type::Orthographic) ? (c_occluder_scale_ortho * m_scale) : (c_occluder_scale_proj * m_scale);
     float cam_x = (m_engine->getCurrentWorld()->getCameraPosition().x()) * scale;
     float cam_y = (m_engine->getCurrentWorld()->getCameraPosition().y()) * scale;
-    //      Smooth position
+    // Smooth position
     cam_x = (int(cam_x) / 5) * 5;
     cam_y = (int(cam_y) / 5) * 5;
-    //      Look at variables
-    QVector3D  eye(     cam_x, cam_y, m_engine->getCurrentWorld()->getCameraPosition().z() );
-    QVector3D  look_at( cam_x, cam_y, 0.0f );
-    QVector3D  up(      0.0f,   1.0f, 0.0f );
 
     // Orthographic
     if (render_type == Render_Type::Orthographic) {
@@ -118,10 +116,8 @@ QMatrix4x4 DrOpenGL::occluderMatrix(Render_Type render_type) {
         proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) );
     }
 
-    view_matrix.lookAt(eye, look_at, up);
+    view_matrix.lookAt(m_eye, m_look_at, m_up);
     view_matrix.scale(scale);
-
-    return (proj_matrix * view_matrix);
 }
 
 
