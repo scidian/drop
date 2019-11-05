@@ -63,10 +63,10 @@ void DrSettings::addComponentSizeSettings() {
     getComponent(Components::Size_Settings)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Size_Settings, Properties::Size_Keep_Square, Property_Type::Bool, false,
                            "Keep Square?", "Should this item be forced to stay square?");
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Max_Size, Property_Type::PointF, QPointF(-1, -1),
-                           "Max Size", "Maximum size of item while it's in the Editor. Negative values for width or height signify no maximum size.");
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Min_Size, Property_Type::PointF, QPointF(-1, -1),
-                           "Min Size", "Minimum size of item while it's in the Editor. Negative values for width or height signify no minimum size.");
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Max_Size, Property_Type::PointF, QPointF(0, 0),
+                           "Max Size", "Maximum size of item while it's in the Editor. A value of zero signifies no maximum size.");
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Min_Size, Property_Type::PointF, QPointF(0, 0),
+                           "Min Size", "Minimum size of item while it's in the Editor. A value of zero signifies  no minimum size.");
 }
 
 

@@ -75,8 +75,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentLayering(z, 100.0);
             addComponentAppearance(true);
             ///setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(100, 100));
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, QPointF(100, 100));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(100, 100));
             break;
 
         case DrThingType::Text:
@@ -103,7 +103,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Light);
             addComponentLayering(z);
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, QPointF(c_desired_light_fbo_size, c_desired_light_fbo_size));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, QPointF( c_desired_light_fbo_size,  c_desired_light_fbo_size));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(-c_desired_light_fbo_size, -c_desired_light_fbo_size));
             break;
         case DrThingType::Mirror:
             addComponentSettingsMirror();
