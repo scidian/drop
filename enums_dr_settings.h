@@ -131,7 +131,7 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  171
+//##    !!!!! NEXT AVAILABLE NUMBER:  172
 //##
 //############################
 enum class Properties {
@@ -247,6 +247,7 @@ enum class Properties {
     World_Filter_Negative               = 42,       // bool
 
     // Special Effects
+    World_Filter_Convert_3D             = 171,      // bool
     World_Filter_Wireframe              = 43,       // bool
     World_Filter_Cartoon                = 44,       // bool double combo
     World_Filter_Wavy                   = 45,       // bool

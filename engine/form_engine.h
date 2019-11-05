@@ -63,7 +63,7 @@ public:
     QWidget        *centralWidget;
     QToolButton    *pushSpawn,      *pushCar,       *pushJump,      *pushLight,     *pushPlayer;
     QToolButton    *pushPause,      *pushRestart,   *pushClose,     *pushCamera;
-    QToolButton    *pushPersp,      *pushOrtho;
+    QToolButton    *pushPersp,      *pushOrtho,     *push2D,        *push3D;
     QToolButton    *pushDebug1,     *pushDebug2;
 
     const double        m_ideal_frames_per_second =  60;
@@ -124,6 +124,8 @@ private slots:
 
     void on_pushPersp_clicked();
     void on_pushOrtho_clicked();
+    void on_push2D_clicked();
+    void on_push3D_clicked();
     void on_pushCamera_clicked();
 
     void on_pushDebug1_clicked();

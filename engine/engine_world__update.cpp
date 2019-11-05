@@ -75,8 +75,8 @@ void DrEngineWorld::updateWorld(double time_passed) {
         QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
         m_game_distance = rotated.x() - m_game_start.x;
 
-        g_info = "Distance: \t" + QString::number(int(m_game_distance)) +
-               ", Loaded To: " + QString::number(m_loaded_to);
+        ///g_info = "Distance: \t" + QString::number(int(m_game_distance)) +
+        ///       ", Loaded To: " + QString::number(m_loaded_to);
 
         if (m_loaded_to - m_game_distance < m_load_buffer)
             should_add_stage = true;

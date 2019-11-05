@@ -63,8 +63,10 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
         pushRestart = new QToolButton(upperWidget);     pushRestart->setObjectName("engineButton"); pushRestart->setGeometry(QRect(225, 55,  65, 20));
         pushClose =   new QToolButton(upperWidget);     pushClose->setObjectName("engineButton");   pushClose->setGeometry(  QRect(175, 80, 100, 20));
 
-        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("engineButton");   pushPersp->setGeometry(  QRect(305, 24, 140, 20));
-        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("engineButton");   pushOrtho->setGeometry(  QRect(305, 48, 140, 20));
+        pushPersp =   new QToolButton(upperWidget);     pushPersp->setObjectName("engineButton");   pushPersp->setGeometry(  QRect(305,  5, 140, 20));
+        pushOrtho =   new QToolButton(upperWidget);     pushOrtho->setObjectName("engineButton");   pushOrtho->setGeometry(  QRect(305, 30, 140, 20));
+        push2D =      new QToolButton(upperWidget);     push2D->setObjectName("engineButton");      push2D->setGeometry(     QRect(320, 55,  50, 20));
+        push3D =      new QToolButton(upperWidget);     push3D->setObjectName("engineButton");      push3D->setGeometry(     QRect(378, 55,  50, 20));
         pushCamera =  new QToolButton(upperWidget);     pushCamera->setObjectName("engineButton");  pushCamera->setGeometry( QRect(335, 80,  80, 20));
 
         pushDebug1 =  new QToolButton(upperWidget);     pushDebug1->setObjectName("engineButton");  pushDebug1->setGeometry( QRect(455,  5, 140, 45));
@@ -82,6 +84,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         pushPersp->setText(QApplication::translate(  "MainWindow", "Perspective View",  nullptr));
         pushOrtho->setText(QApplication::translate(  "MainWindow", "Orthographic View", nullptr));
+        push2D->setText(QApplication::translate(     "MainWindow", "2D",                nullptr));
+        push3D->setText(QApplication::translate(     "MainWindow", "3D",                nullptr));
         pushCamera->setText(QApplication::translate( "MainWindow", "Cam Switch",        nullptr));
 
         QLabel *debug1_label_image = new QLabel(pushDebug1);
@@ -118,6 +122,8 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
         connect(pushPersp,      SIGNAL(clicked()), this, SLOT(on_pushPersp_clicked()));
         connect(pushOrtho,      SIGNAL(clicked()), this, SLOT(on_pushOrtho_clicked()));
+        connect(push2D,         SIGNAL(clicked()), this, SLOT(on_push2D_clicked()));
+        connect(push3D,         SIGNAL(clicked()), this, SLOT(on_push3D_clicked()));
         connect(pushCamera,     SIGNAL(clicked()), this, SLOT(on_pushCamera_clicked()));
 
         connect(pushDebug1,     SIGNAL(clicked()), this, SLOT(on_pushDebug1_clicked()));
@@ -345,6 +351,9 @@ void FormEngine::on_pushClose_clicked() {
 void FormEngine::on_pushPersp_clicked() { m_engine->getCurrentWorld()->render_type = Render_Type::Perspective;  updateCheckedButtons(); }
 void FormEngine::on_pushOrtho_clicked() { m_engine->getCurrentWorld()->render_type = Render_Type::Orthographic; updateCheckedButtons(); }
 
+void FormEngine::on_push2D_clicked() { m_engine->getCurrentWorld()->render_mode = Render_Mode::Mode_2D; updateCheckedButtons(); }
+void FormEngine::on_push3D_clicked() { m_engine->getCurrentWorld()->render_mode = Render_Mode::Mode_3D; updateCheckedButtons(); }
+
 void FormEngine::on_pushDebug1_clicked() {
     debug_shapes = !debug_shapes;
     updateCheckedButtons();
@@ -367,6 +376,9 @@ void FormEngine::updateCheckedButtons() {
 
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective)  pushPersp->setDown(true); else pushPersp->setDown(false);
     if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) pushOrtho->setDown(true); else pushOrtho->setDown(false);
+
+    if (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D) push2D->setDown(true); else push2D->setDown(false);
+    if (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_3D) push3D->setDown(true); else push3D->setDown(false);
 
     if (debug_shapes)     pushDebug1->setDown(true); else pushDebug1->setDown(false);
     if (debug_collisions) pushDebug2->setDown(true); else pushDebug2->setDown(false);

@@ -33,7 +33,7 @@ private:
 
     QVector3D       m_speed =    QVector3D(0, 0, 0);            // Current camera speed
 
-    QVector3D       m_rotation = QVector3D(0, 0, 0);            // Current camera rotation, !!!!! Eventually needs to work with orthographic as well...
+    QVector3D       m_rotation = QVector3D(0, 0, 0);            // Current camera rotation
                                                                 //              X Rotation, controls up / down
                                                                 //              Y Rotation, controls left / right
                                                                 //              Z Rotation, tilts head

@@ -74,6 +74,11 @@ enum class Render_Type {
     Orthographic,
 };
 
+enum class Render_Mode {
+    Mode_2D,
+    Mode_3D,
+};
+
 enum class Matrix_Type {
     Model,
     View,

@@ -105,6 +105,8 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
     grayscale =     world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Grayscale).toBool();
     negative =      world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Negative).toBool();
 
+    bool draw_3D =  world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Convert_3D).toBool();
+    render_mode =   draw_3D ? Render_Mode::Mode_3D : Render_Mode::Mode_2D;
     wireframe =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toBool();
     cartoon =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[0].toBool();
     cartoon_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[1].toFloat();

@@ -135,7 +135,7 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
                 double radius = cpCircleShapeGetRadius(shape);
                 QTransform t = QTransform().translate(center.x, center.y).rotate(object->getAngle());
 
-                // Draw Normal circle since camera is facing straight on
+                // Draw Normal circle since Ortho does't skew angles
                 if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
                     QPointF mid =   t.map( QPointF( offset.x, offset.y ) );
                     QPointF top =   t.map( QPointF( offset.x, offset.y + radius ));

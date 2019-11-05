@@ -65,7 +65,7 @@ void DrOpenGL::drawSpace() {
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
         // ***** Trying to stop z-fighting in perspective mode
-        if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
+        if (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_3D) {
             if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
             if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.025; else m_add_z = 0.0;
             last_z = thing->getZOrder();
@@ -82,12 +82,9 @@ void DrOpenGL::drawSpace() {
         switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object:
-                // If no depth to object, or if in Orthographic mode and object is not rotated on X or Y axis, just draw front face
-                draw2D = Dr::FuzzyCompare(thing->getDepth(), 0.0) ||
-                         (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic &&
-                          Dr::FuzzyCompare(thing->getAngleX(), 0.0)       && Dr::FuzzyCompare(thing->getAngleY(), 0.0) &&
-                          Dr::FuzzyCompare(thing->getRotateSpeedX(), 0.0) && Dr::FuzzyCompare(thing->getRotateSpeedY(), 0.0) &&
-                          !thing->wireframe);
+                // If in 2D Mode or Object has no Depth, just draw quad
+                draw2D = Dr::FuzzyCompare(thing->getDepth(), 0.0) || (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D);
+
                 if (draw2D) {
                     ///glEnable(GL_DEPTH_TEST);
                     drawObject(thing, last_thing, draw2D);

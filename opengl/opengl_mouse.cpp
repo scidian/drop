@@ -29,7 +29,6 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     double x = static_cast<double>(vec.x());
     double y = static_cast<double>(vec.y());
     double z = static_cast<double>(vec.z());
-    if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) z = 0.0;
 
     // ***** Process click
     DrEngineWorld *world = m_engine->getCurrentWorld();

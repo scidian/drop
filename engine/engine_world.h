@@ -127,7 +127,8 @@ private:
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace    
-    Render_Type     render_type = Render_Type::Orthographic;    // Should render perspective or orthographic?
+    Render_Type     render_type = Render_Type::Orthographic;    // Should render Perspective or Orthographic?
+    Render_Mode     render_mode = Render_Mode::Mode_2D;         // Should render in 2D or 3D?
     long            effect_count = 0;                           // Stores number of effects being rendered
     long            light_count = 0;                            // Stores number of lights in scene
     QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)

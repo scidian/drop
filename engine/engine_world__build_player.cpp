@@ -65,6 +65,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
     } else if (new_player_type == Demo_Player::Jump) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 10, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+        ball1->setDepth(30);
         addThing(ball1);
 
         assignPlayerControls(ball1, true, true, true);
@@ -79,6 +80,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 800, 350, 10, c_scale1x1, 1, 0.5);
         ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
+        ball2->setDepth(30);
         addThing(ball2);
 
         ball2->setCameraRotation( -25, -40, 0 );
@@ -87,7 +89,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->setRotateSpeed( 20.0 );
 
     } else if (new_player_type == Demo_Player::Light) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 10, c_scale1x1, 0.25, 0.5, true, false);
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
@@ -103,8 +105,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         this->setGlowZOrder(100.0);
 
         ball = ball1;
-        light1 = new DrEngineLight(this, getNextKey(), 250, 325, -100, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
-        light2 = new DrEngineLight(this, getNextKey(), 250, 325, -100, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
+        light1 = new DrEngineLight(this, getNextKey(), 250, 325, -1, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
+        light2 = new DrEngineLight(this, getNextKey(), 250, 325, -1, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
         light2->draw_shadows = false;
         addThings( { light1, light2 } );
 
@@ -141,6 +143,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.append( DrPointF(   5.5,  -5.0 ));
         DrEngineObject *rover = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true);
         rover->addShapePolygon(points);
+        rover->setDepth(30);
         addThing(rover);
         ///rover->setCameraRotation( -15, 15, 0 );
         rover->setCameraRotation( -15, -25, 0 );
@@ -154,6 +157,9 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         wheel1->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel2->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel3->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        wheel1->setDepth(30);
+        wheel2->setDepth(30);
+        wheel3->setDepth(30);
         addThings( { wheel1, wheel2, wheel3 } );
         wheel1->setRotateSpeed( 110.0 );
         wheel2->setRotateSpeed(  60.0 );
@@ -166,6 +172,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         // Add Careful Cargo
         DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 30, 415, 5, c_scale1x1, 0.7, 0);
         cargo->addShapeCircleFromTexture(Asset_Textures::Ball);
+        cargo->setDepth(31);
         addThing(cargo);
 
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel
