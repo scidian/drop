@@ -53,7 +53,6 @@ extern int  g_max_light_fbo_size;
 const int   c_float_size =      static_cast<int>(sizeof(GLfloat));
 
 // Rendering Constants
-const bool  c_use_cam_offset =  true;
 const float c_near_plane =     -10000.0;
 const float c_far_plane =       10000.0;
 const float c_field_of_view =   52.5f;                  // Close to Orthographic size when using standard widescreen ratio
@@ -188,9 +187,9 @@ public:
                                       double &top, double &bottom, double &left, double &right, float &angle);
     void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float extra_scale_x = 1.0, float extra_scale_y = 1.0);
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
-    QMatrix4x4      occluderMatrix(Render_Type render_type, bool use_offset);
+    QMatrix4x4      occluderMatrix(Render_Type render_type);
     QMatrix4x4      orthoMatrix(float width, float height);
-    void            updateViewMatrix(Render_Type render_type, bool use_offset);
+    void            updateViewMatrix(Render_Type render_type);
     void            releaseOffscreenBuffer();
     void            releaseDefaultAttributeBuffer();
     void            setDefaultAttributeBuffer(QOpenGLBuffer *buffer);

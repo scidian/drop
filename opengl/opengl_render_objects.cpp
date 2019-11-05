@@ -398,7 +398,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // Set Matrix for Shader
-        m_occluder_shader.setUniformValue( u_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset) );
+        m_occluder_shader.setUniformValue( u_occluder_matrix, occluderMatrix(m_engine->getCurrentWorld()->render_type) );
 
         // Set Texture Coordinates for Shader
         m_occluder_shader.setAttributeArray(    a_occluder_texture_coord, m_quad_texture_coordinates.data(), 2 );

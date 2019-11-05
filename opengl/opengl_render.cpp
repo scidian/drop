@@ -32,7 +32,7 @@ void DrOpenGL::paintGL() {
     ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
 
     // ***** Update Camera / View Matrix
-    updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type);
 
     // ***** Make sure Things vector is sorted by depth
     EngineThings &things = m_engine->getCurrentWorld()->getThings();

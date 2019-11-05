@@ -118,14 +118,14 @@ int DrOpenGL::findNeededShadowMaps() {
         double light_radius = (light->getLightDiameterFitted() / 2.0);
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && m_occluder_fbo) {
             QPointF map_0_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x), 0.0f, 0.0f),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
             QPointF map_0_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
             QPointF map_z_a = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x), 0.0f, static_cast<float>(light->getZOrder())),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
             QPointF map_z_b = mapToFBO( QVector3D(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f,
                                                   static_cast<float>(light->getZOrder())),
-                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective, false) );
+                                          m_occluder_fbo, occluderMatrix(Render_Type::Perspective) );
             double map_0 = (map_0_a.x() > map_0_b.x()) ? (map_0_a.x() - map_0_b.x()) : (map_0_b.x() - map_0_a.x());
             double map_z = (map_z_a.x() > map_z_b.x()) ? (map_z_a.x() - map_z_b.x()) : (map_z_b.x() - map_z_a.x());
             light->setPerspectiveScale( float(map_z / map_0) );
@@ -159,7 +159,7 @@ void DrOpenGL::drawShadowMaps() {
         light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x),
                                                  static_cast<float>(light->getPosition().y),
                                                  static_cast<float>(light->getZOrder())),
-                                       m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type, false)) );
+                                       m_occluder_fbo, occluderMatrix(m_engine->getCurrentWorld()->render_type)) );
         double middle = m_texture_fbo->height() / 2.0;
         double y_diff = middle - light->getScreenPos().y();
 
@@ -283,10 +283,10 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     }
 
     // Set Matrix for to draw the Light, turn off perspective offset before drawing light
-    updateViewMatrix(m_engine->getCurrentWorld()->render_type, false);
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type);
     QMatrix4x4 m_matrix = m_projection * m_view;
     m_light_shader.setUniformValue( u_light_matrix, m_matrix );
-    updateViewMatrix(m_engine->getCurrentWorld()->render_type, c_use_cam_offset);
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type);
 
     // Set Texture Coordinates for Shader
     m_light_shader.setAttributeArray(    a_light_texture_coord, m_quad_texture_coordinates.data(), 2 );

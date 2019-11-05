@@ -57,7 +57,7 @@ private:
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
-    QVector3D       m_camera_position { 0, 0, 0 };      // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
+    QVector3D       m_camera_position { 0, 0, 800 };    // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
     QVector3D       m_camera_rotation { 0, 0, 0 };      // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
 
 
