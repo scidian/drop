@@ -267,6 +267,8 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
 
+    double lerp = 0.01 * milliseconds;
+
     if (m_follow_key != 0) {
         DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
         if (follow != nullptr) {
@@ -275,14 +277,11 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
                 if (!object->isDying() && object->isAlive()) {
 
                     DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
-                    if (object->getPosition().Distance(cam_pos) < m_lag) {
-                        return;
-                    }
+                    if (object->getPosition().Distance(cam_pos) < m_lag) return;
                 }
             }
         }
     }
-
 
     m_position.setX( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
     m_position.setY( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
