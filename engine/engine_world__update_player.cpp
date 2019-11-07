@@ -241,14 +241,14 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_drag =    object->getGroundDrag();
 
     // Air Acceleration
-    double air_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0) ? 0.2 : 1.0;
-    double air_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0) ? 0.2 : 1.0;
+    double air_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0 || has_forced_x) ? 0.005 : 1.0;
+    double air_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0 || has_forced_y) ? 0.005 : 1.0;
     double air_accel_x =    object->getMoveSpeedX() / (sqrt(air_drag)*air_x_multiplier + c_buffer_x);
     double air_accel_y =    object->getMoveSpeedY() / (sqrt(air_drag)*air_y_multiplier + c_buffer_y);
 
     // Ground Acceleration
-    double grd_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0) ? 0.2 : 1.0;
-    double grd_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0) ? 0.2 : 1.0;
+    double grd_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0) ? 0.1 : 1.0;
+    double grd_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0) ? 0.1 : 1.0;
     double ground_accel_x = object->getMoveSpeedX() / (sqrt(ground_drag)*grd_x_multiplier + c_buffer_x);
     double ground_accel_y = object->getMoveSpeedY() / (sqrt(ground_drag)*grd_y_multiplier + c_buffer_y);
 
