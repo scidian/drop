@@ -89,7 +89,6 @@ void FormMain::buildScene(long stage_key) {
 }
 
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) {
-
     // If theres notthing to update, go ahead and get out now
     if (changed_items.isEmpty()) return;
     if (property_keys.isEmpty()) return;

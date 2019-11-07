@@ -63,7 +63,10 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     if (object->ignoreGravity()) gravity = cpvzero;
 
     // ***** Get Keys - If player is still active get keyboard status
-    int key_y = 0,      key_x = 0,      key_jump = 0;
+    int key_y =     0;
+    int key_x =     0;
+    int key_jump =  0;
+
     if (!object->hasLostControl()) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
@@ -200,15 +203,15 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
-    if (target_vy < 0) {
-        target_vy -= gravity.y * object->getTempGravityMultiplier();
+    if (target_vy < 0 && gravity.y > 0) {
+        target_vy += gravity.y * object->getTempGravityMultiplier();
         if (target_vy > 0) target_vy = 0;
-    } else if (target_vy > 0) {
+    } else if (target_vy > 0 && gravity.y < 0) {
         target_vy += gravity.y * object->getTempGravityMultiplier();
         if (target_vy < 0) target_vy = 0;
     }
-    if (target_vx < 0) {
-        target_vx -= gravity.x * object->getTempGravityMultiplier();
+    if (target_vx < 0 && gravity.x > 0) {
+        target_vx += gravity.x * object->getTempGravityMultiplier();
         if (target_vx > 0) target_vx = 0;
     } else if (target_vx > 0) {
         target_vx += gravity.x * object->getTempGravityMultiplier();
@@ -216,14 +219,15 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
     // Some drag multipliers
-    double c_buffer =      0.001;
+    double c_buffer_x =    0.001;
+    double c_buffer_y =    0.001;
     double c_drag_ground = 0.005;
     double c_drag_air =    0.005;
     double c_drag_rotate = 0.025;
 
     // This increases slowdown speed while in contact with a ladder (cancel gravity object)
     if (Dr::FuzzyCompare(object->getTempGravityMultiplier(), 1.0) == false) {
-        c_drag_air    = (c_drag_air * object->getTempGravityMultiplier()) + 0.0001;
+        c_drag_air    = (c_drag_air *    object->getTempGravityMultiplier()) + 0.0001;
         c_drag_ground = (c_drag_ground * object->getTempGravityMultiplier()) + 0.0001;
     }
 
@@ -235,27 +239,26 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Air Acceleration
     double air_x_multiplier = (target_vx > 0 || target_vx < 0) ? 0.2 : 1.0;
     double air_y_multiplier = (target_vy > 0 || target_vy < 0) ? 0.2 : 1.0;
-    double air_accel_x =    object->getMoveSpeedX() / (sqrt(air_drag)*air_x_multiplier + c_buffer);
-    double air_accel_y =    object->getMoveSpeedY() / (sqrt(air_drag)*air_y_multiplier + c_buffer);
+    double air_accel_x =    object->getMoveSpeedX() / (sqrt(air_drag)*air_x_multiplier + c_buffer_x);
+    double air_accel_y =    object->getMoveSpeedY() / (sqrt(air_drag)*air_y_multiplier + c_buffer_y);
 
     // Ground Acceleration
     double grd_x_multiplier = (target_vx > 0 || target_vx < 0) ? 0.2 : 1.0;
     double grd_y_multiplier = (target_vy > 0 || target_vy < 0) ? 0.2 : 1.0;
-    double ground_accel_x = object->getMoveSpeedX() / (sqrt(ground_drag)*grd_x_multiplier + c_buffer);
-    double ground_accel_y = object->getMoveSpeedY() / (sqrt(ground_drag)*grd_y_multiplier + c_buffer);
-
+    double ground_accel_x = object->getMoveSpeedX() / (sqrt(ground_drag)*grd_x_multiplier + c_buffer_x);
+    double ground_accel_y = object->getMoveSpeedY() / (sqrt(ground_drag)*grd_y_multiplier + c_buffer_y);
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
         if ((Dr::FuzzyCompare(velocity.x, 0.0) == false && Dr::FuzzyCompare(target_vx, 0.0) == false) ||
             (velocity.x <= 0 && target_vx > 0) || (velocity.x >= 0 && target_vx < 0))
                 velocity.x = cpflerpconst( velocity.x, target_vx, air_accel_x * dt);
-        else    velocity.x = cpflerpconst( velocity.x, 0, air_drag / c_drag_air * dt);
+        else    velocity.x = cpflerpconst( velocity.x,         0, air_drag / c_drag_air * dt);
 
         if ((Dr::FuzzyCompare(velocity.y, 0.0) == false && Dr::FuzzyCompare(target_vy, 0.0) == false) ||
             (velocity.y <= 0 && target_vy > 0) || (velocity.y >= 0 && target_vy < 0))
                 velocity.y = cpflerpconst( velocity.y, target_vy, air_accel_y * dt);
-        else    velocity.y = cpflerpconst( velocity.y, 0, air_drag / c_drag_air * dt);
+        else    velocity.y = cpflerpconst( velocity.y,         0, air_drag / c_drag_air * dt);
 
     // Interpolate towards desired velocity if on ground / wall
     } else {
@@ -291,7 +294,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     if (object->ignoreGravity()) {
         cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
     } else {
-        cpVect multi_gravity = cpv(gravity.x * object->getTempGravityMultiplier(), gravity.y * object->getTempGravityMultiplier());
+        cpVect multi_gravity = cpv(gravity.x * object->getTempGravityMultiplier(),
+                                   gravity.y * object->getTempGravityMultiplier());
         cpBodyUpdateVelocity(body, multi_gravity, damping, dt);
     }
 
