@@ -14,8 +14,14 @@
 #include "form_engine.h"
 #include "opengl/opengl.h"
 
-const int   c_average_speed_buffer_size = 5;                   // Number of past object speeds to average together for camera follow
 
+//####################################################################################
+//####################################################################################
+//##
+//##    Local Camera Functions
+//##
+//####################################################################################
+//####################################################################################
 
 //####################################################################################
 //##    Lerps an X,Y,Z triplet
@@ -62,12 +68,16 @@ static float FindClosestAngle180(const float &start, const float &angle) {
 
 
 //####################################################################################
-//##    DrEngineWorld - Camera Functions
-//##        Default parameters: nullptr, 0, 0, c_default_camera_z
 //####################################################################################
-long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z) {
+//##
+//##    DrEngineWorld - Camera Functions
+//##
+//####################################################################################
+//####################################################################################
+// Adds Camera to World, Default parameters: nullptr, 0, 0, c_default_camera_z
+long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z, int buffer_size) {
     long new_key = getNextKey();
-    DrEngineCamera *camera = new DrEngineCamera(this, new_key, x, y, z);
+    DrEngineCamera *camera = new DrEngineCamera(this, new_key, x, y, z, buffer_size);
 
     m_cameras[new_key] = camera;
 
@@ -247,22 +257,30 @@ double DrEngineWorld::getCameraZoom() {
     }
 }
 
+
+//####################################################################################
+//####################################################################################
+//##
+//##    DrEngineCamera - Class Functions
+//##
 //####################################################################################
 //####################################################################################
 
-
 //####################################################################################
-//##    DrEngineCamera - Constructor / Destructor
+//##    Constructor / Destructor
 //####################################################################################
-DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, float y, float z) : m_world(world) {
+DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, float y, float z, int buffer_size) : m_world(world) {
     m_key = unique_key;
-    m_position = QVector3D(x, y, z);
-    m_target = m_position;
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, c_average_speed_buffer_size);         // Zero out average speed vector
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, c_average_speed_buffer_size);         // Zero out average speed vector
-    m_avg_speed_z.clear();  m_avg_speed_z.fill(0, c_average_speed_buffer_size);         // Zero out average speed vector
-    m_speed = QVector3D(0, 0, 0);
-    m_rotation = c_default_camera_rot;
+
+    setPosition(    QVector3D(x, y, z) );
+    setTarget(      QVector3D(x, y, z) );
+    setSpeed(       QVector3D(0, 0, 0) );
+    setRotation(    c_default_camera_rot );
+
+    setBufferSize(  buffer_size);
+    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, buffer_size);                 // Zero out average speed vector
+    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, buffer_size);                 // Zero out average speed vector
+    m_avg_speed_z.clear();  m_avg_speed_z.fill(0, buffer_size);                 // Zero out average speed vector
 }
 
 //####################################################################################
@@ -298,9 +316,6 @@ void DrEngineCamera::updateCamera() {
     double follow_previous_pos_z = static_cast<double>(object->getPreviousPosition().z) + static_cast<double>(object->getCameraPosition().z());
 
     // Check for Lag Bounding Box
-    ///DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
-    ///DrPointF target ( follow_pos_x, follow_pos_y );
-    ///if (target.Distance(cam_pos) < m_lag) return;
     bool update_x = false;
     bool update_y = false;
     bool update_z = true;
@@ -312,17 +327,20 @@ void DrEngineCamera::updateCamera() {
     double average_y = 0;
     double average_z = 0;
     if (update_x) {
-        m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
+        while (m_avg_speed_x.count() < m_buffer_size + 1)
+            m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
         m_avg_speed_x.pop_front();
         if (m_avg_speed_x.size() > 0) average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
     }
     if (update_y) {
-        m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
+        while (m_avg_speed_y.count() < m_buffer_size + 1)
+            m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
         m_avg_speed_y.pop_front();
         if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
     }
     if (update_z) {
-        m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
+        while (m_avg_speed_z.count() < m_buffer_size + 1)
+            m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
         m_avg_speed_z.pop_front();
         if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();
     }

@@ -28,7 +28,7 @@
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
     if (add_camera) {
-        long camera_key = addCamera(object->getKey());
+        long camera_key = addCamera(object->getKey() );
         if (set_active_camera) setActiveCamera(camera_key);
     }
     object->setCollisionType( Collision_Type::Damage_Enemy );

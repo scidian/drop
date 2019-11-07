@@ -13,13 +13,17 @@
 
 #include "types/pointf.h"
 
+
 // OpenGL Constants
 const int   c_float_size =      static_cast<int>(sizeof(GLfloat));
 
-// Rendering Constants
+
+// Camera Constants
 const float c_near_plane =     -10000.0;
 const float c_far_plane =       10000.0;
 const float c_field_of_view =   52.5f;                  // Close to Orthographic size when using standard widescreen ratio
+const int   c_slop_buffer_size = 5;                     // Default number of past object speeds to average together for camera follow
+
 
 // 2D Light Constants
 const float c_occluder_scale_ortho =       1.00f;       // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
@@ -46,9 +50,15 @@ constexpr   int         c_unlimited_jump =   -1;                // Flag for unli
 const       bool        c_collide_true = true;                  // Constant for collision true
 const       bool        c_collide_false = false;                // Constant for collision false
 
+
 // Constants for Object Body / Shape Creation
 constexpr   double      c_extra_radius =    0.50;               // Radius added on to block and polygon shapes for better collisions
 constexpr   double      c_mass_multiplier = 0.002;              // Shapes Area times this multiplier = shape mass
 
 
 #endif // CONSTANTS_ENGINE_H
+
+
+
+
+

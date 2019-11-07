@@ -39,6 +39,9 @@ private:
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 
     long            m_follow_key = 0;                           // Unique DrEngineWorld key this camera should follow
+    int             m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
+
+
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;                              // Average y speed of object this camera is following
     QVector<double> m_avg_speed_z;                              // Average z speed of object this camera is following
@@ -46,7 +49,7 @@ private:
 
 public:
     // Constructor
-    DrEngineCamera(DrEngineWorld *engine_world, long unique_key, float x = 0, float y = 0, float z = 0);
+    DrEngineCamera(DrEngineWorld *engine_world, long unique_key, float x = 0, float y = 0, float z = 0, int buffer_size = c_slop_buffer_size);
 
     // Function Calls
     void        followObject(long follow_key) { m_follow_key = follow_key; }
@@ -58,12 +61,14 @@ public:
     long                getKey()            { return m_key; }
     long                getThingFollowing() { return m_follow_key; }
 
+    const int&          getBufferSize()     { return m_buffer_size; }
     const DrPointF&     getLag()            { return m_lag; }
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
     const double&       getZoom()           { return m_zoom; }
 
+    void                setBufferSize(int slop) { m_buffer_size = (slop < 1) ? 1 : slop; }
     void                setLag(DrPointF lag) { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
                                                m_lag.y = (lag.y <= 0) ? 0 : lag.y; }
 

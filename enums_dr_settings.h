@@ -131,7 +131,7 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  177
+//##    !!!!! NEXT AVAILABLE NUMBER:  178
 //##
 //############################
 enum class Properties {
@@ -238,6 +238,7 @@ enum class Properties {
 
     // Camera
     World_Camera_Type                   = 174,      // list, enum class Render_Type
+    World_Camera_Slop                   = 177,      // percent
     World_Camera_Switch_Speed           = 175,      // positive double
 
     // Appearance

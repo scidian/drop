@@ -67,7 +67,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     getComponent(Components::World_Camera)->setIcon(Component_Icons::Camera);
 
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Type, Property_Type::List, 1,
-                           "Camera View", "Sets the projection type of Camera's for this World. ");
+                           "Projection Type", "Sets the projection type of Camera's for this World. ");
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Switch_Speed, Property_Type::PositiveDouble, 1.0,
                            "Switching Speed", "Multiplier to affect how fast Camera switching happens. A value lower than 1.0 will decrease switching "
                                               "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");

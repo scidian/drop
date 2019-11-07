@@ -187,7 +187,7 @@ public:
 
 
     // Cameras
-    long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z);
+    long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z, int buffer_size = c_slop_buffer_size);
     const long&         getActiveCamera() { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
