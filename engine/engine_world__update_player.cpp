@@ -198,8 +198,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpVect  velocity = cpBodyGetVelocity( object->body );
 
     // Calculate target velocity, includes any Forced Movement
-    cpFloat target_vx = (object->getMoveSpeedX() * key_x) + object->getForcedSpeedX();
-    cpFloat target_vy = (object->getMoveSpeedY() * key_y) + object->getForcedSpeedY();
+    cpFloat pre_forced_target_vx = (object->getMoveSpeedX() * key_x);
+    cpFloat pre_forced_target_vy = (object->getMoveSpeedY() * key_y);
+    bool has_forced_x = !(Dr::FuzzyCompare(object->getForcedSpeedX(), 0.0));
+    bool has_forced_y = !(Dr::FuzzyCompare(object->getForcedSpeedY(), 0.0));
+    cpFloat target_vx = pre_forced_target_vx + object->getForcedSpeedX();
+    cpFloat target_vy = pre_forced_target_vy + object->getForcedSpeedY();
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
@@ -237,28 +241,52 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_drag =    object->getGroundDrag();
 
     // Air Acceleration
-    double air_x_multiplier = (target_vx > 0 || target_vx < 0) ? 0.2 : 1.0;
-    double air_y_multiplier = (target_vy > 0 || target_vy < 0) ? 0.2 : 1.0;
+    double air_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0) ? 0.2 : 1.0;
+    double air_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0) ? 0.2 : 1.0;
     double air_accel_x =    object->getMoveSpeedX() / (sqrt(air_drag)*air_x_multiplier + c_buffer_x);
     double air_accel_y =    object->getMoveSpeedY() / (sqrt(air_drag)*air_y_multiplier + c_buffer_y);
 
     // Ground Acceleration
-    double grd_x_multiplier = (target_vx > 0 || target_vx < 0) ? 0.2 : 1.0;
-    double grd_y_multiplier = (target_vy > 0 || target_vy < 0) ? 0.2 : 1.0;
+    double grd_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0) ? 0.2 : 1.0;
+    double grd_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0) ? 0.2 : 1.0;
     double ground_accel_x = object->getMoveSpeedX() / (sqrt(ground_drag)*grd_x_multiplier + c_buffer_x);
     double ground_accel_y = object->getMoveSpeedY() / (sqrt(ground_drag)*grd_y_multiplier + c_buffer_y);
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
-        if ((Dr::FuzzyCompare(velocity.x, 0.0) == false && Dr::FuzzyCompare(target_vx, 0.0) == false) ||
-            (velocity.x <= 0 && target_vx > 0) || (velocity.x >= 0 && target_vx < 0))
-                velocity.x = cpflerpconst( velocity.x, target_vx, air_accel_x * dt);
-        else    velocity.x = cpflerpconst( velocity.x,         0, air_drag / c_drag_air * dt);
+        // If movement is not zero and target velocity is key pressed or forced
+        if ( (Dr::FuzzyCompare(velocity.x, 0.0) == false && Dr::FuzzyCompare(target_vx, 0.0) == false) ||
+             (velocity.x <= 0 && target_vx > 0) ||
+             (velocity.x >= 0 && target_vx < 0) ) {
 
-        if ((Dr::FuzzyCompare(velocity.y, 0.0) == false && Dr::FuzzyCompare(target_vy, 0.0) == false) ||
-            (velocity.y <= 0 && target_vy > 0) || (velocity.y >= 0 && target_vy < 0))
+            // If no keys are pressed or we're travleing faster than forced velocity use normal air drag
+            if ( ((object->getForcedSpeedX() > 0 && velocity.x > object->getForcedSpeedX()) ||
+                  (object->getForcedSpeedX() < 0 && velocity.x < object->getForcedSpeedX())) &&
+                  Dr::FuzzyCompare(pre_forced_target_vx, 0.0) && has_forced_x )
+                velocity.x = cpflerpconst( velocity.x, target_vx, air_drag / c_drag_air * dt);
+            else
+                velocity.x = cpflerpconst( velocity.x, target_vx, air_accel_x * dt);
+
+        } else {
+            velocity.x = cpflerpconst( velocity.x, object->getForcedSpeedX(), air_drag / c_drag_air * dt);
+        }
+
+        // If movement is not zero and target velocity is key pressed or forced
+        if ( (Dr::FuzzyCompare(velocity.y, 0.0) == false && Dr::FuzzyCompare(target_vy, 0.0) == false) ||
+             (velocity.y <= 0 && target_vy > 0) ||
+             (velocity.y >= 0 && target_vy < 0) ) {
+
+            // If no keys are pressed or we're travleing faster than forced velocity use normal air drag
+            if ( ((object->getForcedSpeedY() > 0 && velocity.y > object->getForcedSpeedY()) ||
+                  (object->getForcedSpeedY() < 0 && velocity.y < object->getForcedSpeedY())) &&
+                 Dr::FuzzyCompare(pre_forced_target_vy, 0.0) && has_forced_y)
+                velocity.y = cpflerpconst( velocity.y, target_vy, air_drag / c_drag_air * dt);
+            else
                 velocity.y = cpflerpconst( velocity.y, target_vy, air_accel_y * dt);
-        else    velocity.y = cpflerpconst( velocity.y,         0, air_drag / c_drag_air * dt);
+
+        } else {
+            velocity.y = cpflerpconst( velocity.y, object->getForcedSpeedY(), air_drag / c_drag_air * dt);
+        }
 
     // Interpolate towards desired velocity if on ground / wall
     } else {
@@ -278,6 +306,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodySetAngularVelocity( body, body_r );
 
     // ***** Max Speed - Limit Velocity
+    ///velocity.x += object->getForcedSpeedX();
+    ///velocity.y += object->getForcedSpeedY();
     velocity.x = cpfclamp(velocity.x, -object->getMaxSpeedX(), object->getMaxSpeedX());
     velocity.y = cpfclamp(velocity.y, -object->getMaxSpeedY(), object->getMaxSpeedY());
 
