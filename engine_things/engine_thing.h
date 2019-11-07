@@ -53,6 +53,7 @@ private:
     QVector3D       m_camera_position = c_default_camera_pos;       // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
     QVector3D       m_camera_rotation { 0, 0, 0 };                  // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
     double          m_camera_zoom = 1.0;                            // Camera Magnification Level         for this objects Active (Follow) Camera
+    double          m_camera_lag = 0.0;                             // Camera Movement Lag Amount         for this objects Active (Follow) Camera
 
 
 public:
@@ -130,8 +131,11 @@ public:
     void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
                                                     m_camera_rotation = QVector3D(x_up_down, y_left_right, z_rotate); }
 
-    double                  getCameraZoom() { return m_camera_zoom; }
-    void                    setCameraZoom(double zoom) { m_camera_zoom = zoom; }
+    double                  getCameraLag()              { return m_camera_lag; }
+    double                  getCameraZoom()             { return m_camera_zoom; }
+    void                    setCameraLag(double lag)    { m_camera_lag = lag; }
+    void                    setCameraZoom(double zoom)  { m_camera_zoom = zoom; }
+
 
 
     // 3D Properties

@@ -155,6 +155,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     QPointF cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
     double  cam_tilt =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
     double  cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
+    double  cam_lag =       thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag).toDouble();
 
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
@@ -190,6 +191,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCameraPositionXY( cam_position );                                                            // Set active camera position
     player->setCameraRotation( float(cam_rotation.x()), float(cam_rotation.y()), float(cam_tilt) );         // Set active camera rotation
     player->setCameraZoom( cam_zoom );                                                                      // Set active camera zoom
+    player->setCameraLag( cam_lag );                                                                        // Set active camera lag
     addThing(player);                                                                                       // Add to world
 
 

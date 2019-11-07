@@ -77,6 +77,7 @@ long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float 
         camera->setPositionZ( static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z() );
         camera->setRotation(  follow->getCameraRotation() );
         camera->setZoom(      follow->getCameraZoom() );
+        camera->setLag(       follow->getCameraLag() );
         camera->setTarget(    camera->getPosition() );
         follow->setActiveCameraKey(new_key);
     }
@@ -265,7 +266,24 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 //##    Moves camera based on current speed / settings
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
-    double lerp = 0.01 * milliseconds;
+
+    if (m_follow_key != 0) {
+        DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
+        if (follow != nullptr) {
+            if (follow->getThingType() == DrThingType::Object) {
+                DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
+                if (!object->isDying() && object->isAlive()) {
+
+                    DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
+                    if (object->getPosition().Distance(cam_pos) < m_lag) {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
     m_position.setX( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
     m_position.setY( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
     m_position.setZ( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
@@ -322,6 +340,12 @@ void DrEngineCamera::updateCamera() {
     pos_x = ((follow_pos_x) + ((static_cast<double>(m_target.x()) + average_x)*3.0) + (follow_previous_pos_x + average_x)) / 5.0;
     pos_y = ((follow_pos_y) + ((static_cast<double>(m_target.y()) + average_y)*3.0) + (follow_previous_pos_y + average_y)) / 5.0;
     pos_z = ((follow_pos_z) + ((static_cast<double>(m_target.z()) + average_z)*3.0) + (follow_previous_pos_z + average_z)) / 5.0;
+
+    // Check for lag
+    ///DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
+    ///DrPointF target ( pos_x, pos_y);
+    ///if (target.Distance(cam_pos) < m_lag) return;
+
     m_target.setX( static_cast<float>(pos_x) );
     m_target.setY( static_cast<float>(pos_y) );
     m_target.setZ( static_cast<float>(pos_z) );

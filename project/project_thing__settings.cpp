@@ -63,6 +63,10 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. ");
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::Double, 100.0,
+                           "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
+                                         "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
+                                         "camera starts to move.");
 
 }
 

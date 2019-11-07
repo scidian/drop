@@ -33,6 +33,7 @@ private:
                                                                 //              Y Rotation, controls left / right
                                                                 //              Z Rotation, tilts head
 
+    double          m_lag =  1.0;                               // Current camera lag when following object
     double          m_zoom = 1.0;                               // Current camera zoom level
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
@@ -56,6 +57,8 @@ public:
     DrEngineWorld*      getEngineWorld()    { return m_world; }
     long                getKey()            { return m_key; }
     long                getThingFollowing() { return m_follow_key; }
+
+    double              getLag()            { return m_lag; }
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
@@ -85,6 +88,7 @@ public:
     void                setSpeedZ(float z) { m_speed.setZ(z); }
     void                setTarget(QVector3D target) { m_target = target; }
 
+    void                setLag(double lag)   { m_lag = lag; }
     void                setZoom(double zoom) { m_zoom = zoom; }
 
 };
