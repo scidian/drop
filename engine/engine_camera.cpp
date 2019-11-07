@@ -308,28 +308,51 @@ void DrEngineCamera::updateCamera() {
     if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
     if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();
 
+    // Check for lag
+    bool catch_up = false;
+    DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
+    DrPointF target ( follow_pos_x, follow_pos_y );
+    if (target.Distance(cam_pos) > m_lag) catch_up = true;
+
+
+//    double pos_x = static_cast<double>(m_target.x());
+//    double pos_y = static_cast<double>(m_target.y());
+//    double pos_z = static_cast<double>(m_target.z());
+//    double average = 1.0;
+    double pos_x = 0.0;
+    double pos_y = 0.0;
+    double pos_z = 0.0;
+    double average = 0.0;
+
+
     // Basic Camera = Object Position
-    ///double pos_x = follow_pos.x();
-    ///double pos_y = follow_pos.y();
+//    if (catch_up) {
+//        pos_x +=    follow_pos_x;
+//        pos_y +=    follow_pos_y;
+//        pos_z +=    follow_pos_z;
+//        average +=  1.0;
+//    }
 
     // Move based on Last Camera Position + Average
-    ///double pos_x = m_target.x() + average_x;
-    ///double pos_y = m_target.y() + average_y;
+    if (catch_up) {
+        pos_x +=    (static_cast<double>(m_target.x()) + average_x) * 3.0;
+        pos_y +=    (static_cast<double>(m_target.y()) + average_y) * 3.0;
+        pos_z +=    (static_cast<double>(m_target.z()) + average_z) * 3.0;
+        average +=  3.0;
+    } else return;
 
     // Move based on Last Object Position + Average
-    ///double pos_x = follow_previous_pos.x() + average_x;
-    ///double pos_y = follow_previous_pos.y() + average_y;
+//    if (catch_up) {
+//        pos_x +=    follow_previous_pos_x + average_x;
+//        pos_y +=    follow_previous_pos_y + average_y;
+//        pos_z +=    follow_previous_pos_z + average_z;
+//        average +=  1.0;
+//    }
 
     // Average of all three options, use try catch in case something happens to m_follow during this routine
-    double pos_x, pos_y, pos_z;
-    pos_x = ((follow_pos_x) + ((static_cast<double>(m_target.x()) + average_x)*3.0) + (follow_previous_pos_x + average_x)) / 5.0;
-    pos_y = ((follow_pos_y) + ((static_cast<double>(m_target.y()) + average_y)*3.0) + (follow_previous_pos_y + average_y)) / 5.0;
-    pos_z = ((follow_pos_z) + ((static_cast<double>(m_target.z()) + average_z)*3.0) + (follow_previous_pos_z + average_z)) / 5.0;
-
-    // Check for lag
-    ///DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
-    ///DrPointF target ( pos_x, pos_y);
-    ///if (target.Distance(cam_pos) < m_lag) return;
+    pos_x /= average;
+    pos_y /= average;
+    pos_z /= average;
 
     m_target.setX( static_cast<float>(pos_x) );
     m_target.setY( static_cast<float>(pos_y) );
