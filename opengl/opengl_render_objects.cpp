@@ -137,7 +137,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         ///// Set as rotation
         ///model.rotate(inverse_parent_rotation);
         model = billboardSphericalBegin( QVector3D(m_eye.x(), m_eye.y(), m_eye.z()),
-                                         QVector3D(x * m_scale, y * m_scale, z), model, false);
+                                         QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), model, false);
     }
 
     // Scale
@@ -173,7 +173,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Remove scaling from camera position for shading calculations
     QMatrix4x4 matrix_eye;
-    matrix_eye.scale(1.f/m_scale);
+    matrix_eye.scale(1.f / combinedZoomScale());
     QVector3D eye_move = matrix_eye * m_eye;
 
 

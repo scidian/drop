@@ -8,7 +8,8 @@
 #ifndef ENGINE_TEXTURE_H
 #define ENGINE_TEXTURE_H
 
-#include <QOpenGLTexture>
+#include "constants_engine.h"
+#include "globals_engine.h"
 
 //####################################################################################
 //##    DrEngineTexture

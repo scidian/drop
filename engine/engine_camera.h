@@ -8,13 +8,8 @@
 #ifndef ENGINE_CAMERA_H
 #define ENGINE_CAMERA_H
 
-#include <QVector>
-#include <QVector3D>
-
-// Forward Declarations
-class DrEngine;
-class DrEngineObject;
-class DrEngineWorld;
+#include "constants_engine.h"
+#include "globals_engine.h"
 
 //####################################################################################
 //##    DrEngineCamera
@@ -37,6 +32,8 @@ private:
                                                                 //              X Rotation, controls up / down
                                                                 //              Y Rotation, controls left / right
                                                                 //              Z Rotation, tilts head
+
+    double          m_zoom = 1.0;                               // Current camera zoom level
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
 
@@ -62,6 +59,7 @@ public:
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
+    const double&       getZoom()           { return m_zoom; }
 
     void                setPosition(QVector3D new_position) {       m_position = new_position; }
     void                setPosition(double x, double y, double z) { m_position = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
@@ -86,6 +84,8 @@ public:
     void                setSpeedY(float y) { m_speed.setY(y); }
     void                setSpeedZ(float z) { m_speed.setZ(z); }
     void                setTarget(QVector3D target) { m_target = target; }
+
+    void                setZoom(double zoom) { m_zoom = zoom; }
 
 };
 

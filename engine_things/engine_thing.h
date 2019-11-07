@@ -8,17 +8,10 @@
 #ifndef ENGINE_THING_H
 #define ENGINE_THING_H
 
-#include <QVector3D>
-#include <map>
-
-#include "3rd_party_chipmunk/chipmunk.h"
-#include "enums.h"
-#include "enums_engine.h"
+#include "constants_engine.h"
+#include "globals_engine.h"
 #include "helper.h"
-#include "types/pointf.h"
 
-// Forward Declarations
-class DrEngineWorld;
 
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
@@ -56,9 +49,10 @@ private:
     double          m_rotate_y_speed = 0.0;             // Y axis rotation speed
 
     // Thing Properties - Camera
-    long            m_active_camera = 0;                // Set to ID of last camera that followed this object, 0 == no camera
-    QVector3D       m_camera_position { 0, 0, 800 };    // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
-    QVector3D       m_camera_rotation { 0, 0, 0 };      // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
+    long            m_active_camera = 0;                            // Set to ID of last camera that followed this object, 0 == no camera
+    QVector3D       m_camera_position = c_default_camera_pos;       // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
+    QVector3D       m_camera_rotation { 0, 0, 0 };                  // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
+    double          m_camera_zoom = 1.0;                            // Camera Magnification Level         for this objects Active (Follow) Camera
 
 
 public:
@@ -129,11 +123,16 @@ public:
     QVector3D&              getCameraPosition() { return m_camera_position; }
     void                    setCameraPosition(QVector3D position) { m_camera_position = position; }
     void                    setCameraPosition(float x, float y, float z) { m_camera_position = QVector3D(x, y, z); }
+    void                    setCameraPositionXY(QPointF point) { m_camera_position = QVector3D(float(point.x()), float(point.y()), m_camera_position.z()); }
 
     QVector3D&              getCameraRotation() { return m_camera_rotation; }
     void                    setCameraRotation(QVector3D rotation) { m_camera_rotation = rotation; }
     void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
                                                     m_camera_rotation = QVector3D(x_up_down, y_left_right, z_rotate); }
+
+    double                  getCameraZoom() { return m_camera_zoom; }
+    void                    setCameraZoom(double zoom) { m_camera_zoom = zoom; }
+
 
     // 3D Properties
     Convert_3D_Type         get3DType() {       return m_3d_type; }

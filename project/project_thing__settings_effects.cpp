@@ -28,10 +28,10 @@
 void DrThing::addComponentSettingsFire() {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect.");
+    property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fire");
 
-    addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for current Fire.", Component_Colors::Red_Faded, true);
+    addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for this Fire.", Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
 
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, 0,
@@ -59,10 +59,10 @@ void DrThing::addComponentSettingsFire() {
 void DrThing::addComponentSettingsFisheye() {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect.");
+    property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fisheye");
 
-    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for current Fisheye Lens.", Component_Colors::Orange_Medium, true);
+    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::Orange_Medium, true);
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
 
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
@@ -79,10 +79,10 @@ void DrThing::addComponentSettingsFisheye() {
 void DrThing::addComponentSettingsLight(QColor color) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect.");
+    property_name->setDescription("Name of this Effect.");
     property_name->setValue("Light");
 
-    addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for current Light.", Component_Colors::Mellow_Yellow, true);
+    addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for this Light.", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
 
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
@@ -116,10 +116,10 @@ void DrThing::addComponentSettingsLight(QColor color) {
 void DrThing::addComponentSettingsMirror() {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect.");
+    property_name->setDescription("Name of this Effect.");
     property_name->setValue("Mirror");
 
-    addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for current Mirror.", Component_Colors::Silver_Snow, true);
+    addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for this Mirror.", Component_Colors::Silver_Snow, true);
     getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
 
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
@@ -143,10 +143,10 @@ void DrThing::addComponentSettingsMirror() {
 void DrThing::addComponentSettingsSwirl() {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect.");
+    property_name->setDescription("Name of this Effect.");
     property_name->setValue("Swirl");
 
-    addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for current Swirl.", Component_Colors::Purple_Pastel, true);
+    addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for this Swirl.", Component_Colors::Purple_Pastel, true);
     getComponent(Components::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
 
     addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
@@ -164,10 +164,10 @@ void DrThing::addComponentSettingsSwirl() {
 void DrThing::addComponentSettingsWater() {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect.");
+    property_name->setDescription("Name of this Effect.");
     property_name->setValue("Water");
 
-    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for current Water.", Component_Colors::Blue_Drop_1, true);
+    addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for this Water.", Component_Colors::Blue_Drop_1, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
 
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, 1,
@@ -221,7 +221,7 @@ void DrThing::addComponentSettingsWater() {
     addPropertyToComponent(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,
                            "Surface", "How much refraction to apply to the top of the Water.");
 
-    addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of the current Water.", Component_Colors::Blue_Drop_5, true);
+    addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of this Water.", Component_Colors::Blue_Drop_5, true);
     getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
 
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),

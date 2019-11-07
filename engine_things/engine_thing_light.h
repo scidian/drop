@@ -8,10 +8,9 @@
 #ifndef ENGINE_LIGHT_H
 #define ENGINE_LIGHT_H
 
-#include "3rd_party_chipmunk/chipmunk.h"
+#include "constants_engine.h"
 #include "engine_thing_object.h"
-#include "enums.h"
-#include "enums_engine.h"
+#include "globals_engine.h"
 
 
 //####################################################################################

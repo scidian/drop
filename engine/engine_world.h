@@ -8,32 +8,10 @@
 #ifndef ENGINE_WORLD_H
 #define ENGINE_WORLD_H
 
-#include <QColor>
-#include <QVector>
-#include <QVector3D>
-#include <map>
-
-#include "3rd_party_chipmunk/chipmunk.h"
-#include "enums_engine.h"
-#include "types/pointf.h"
-
-// Forward declarations
-class DrAsset;
-class DrEngine;
-class DrEngineLight;
-class DrEngineCamera;
-class DrEngineObject;
-class DrEngineThing;
-class DrEngineTexture;
-class DrOpenGL;
-class DrProject;
-class DrStage;
-class DrThing;
+#include "constants_engine.h"
+#include "globals_engine.h"
 
 // Type Definitions
-typedef std::map<long, DrEngineCamera*>  EngineCameraMap;
-typedef std::map<long, DrEngineTexture*> EngineTextureMap;
-typedef QVector<DrEngineLight*>          EngineLights;
 typedef QVector<DrEngineThing*>          EngineThings;
 
 // Local Structs
@@ -104,8 +82,13 @@ private:
     // Camera Variables
     long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
+    double          m_switch_milliseconds;          // Used for tweening between cameras
+    QVector3D       m_switch_position;              // Used for tweening between cameras
+    QVector3D       m_switch_rotation;              // Used for tweening between cameras
+    double          m_switch_zoom = 1.0;            // Used for tweening between cameras
     QVector3D       m_temp_position;                // Used for tweening between cameras
     QVector3D       m_temp_rotation;                // Used for tweening between cameras
+    double          m_temp_zoom = 1.0;              // Used for tweening between cameras
 
 
     // Scene Variables
@@ -127,8 +110,10 @@ private:
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace    
-    Render_Type     render_type = Render_Type::Orthographic;    // Should render Perspective or Orthographic?
+    Render_Type     render_type = Render_Type::Perspective;     // Should render Perspective or Orthographic?
     Render_Mode     render_mode = Render_Mode::Mode_2D;         // Should render in 2D or 3D?
+    double          cam_switch_speed = 1.0;                     // Multiplier for Camera switching speed
+
     long            effect_count = 0;                           // Stores number of effects being rendered
     long            light_count = 0;                            // Stores number of lights in scene
     QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
@@ -202,7 +187,7 @@ public:
 
 
     // Cameras
-    long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = 800);
+    long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z);
     const long&         getActiveCamera() { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
@@ -215,6 +200,7 @@ public:
     double              getCameraRotationX();
     double              getCameraRotationY();
     double              getCameraRotationZ();
+    double              getCameraZoom();
     void                moveCameras(double milliseconds);
     void                switchCameraToNext(bool only_switch_to_character_cameras, bool switch_player_controls);
     void                switchCameras(long new_camera);

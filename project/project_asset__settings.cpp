@@ -34,7 +34,7 @@
 void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");
-    property_name->setDescription("Name of the current Character Asset.");
+    property_name->setDescription("Name of this Character Asset.");
     property_name->setValue(new_name);
 
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
@@ -87,7 +87,7 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
 void DrAsset::initializeAssetSettingsObject(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Object Name");
-    property_name->setDescription("Name of the current Object Asset.");
+    property_name->setDescription("Name of this Object Asset.");
     property_name->setValue(new_name);
 
 //    addComponent(Components::Asset_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
@@ -104,7 +104,7 @@ void DrAsset::initializeAssetSettingsObject(QString new_name) {
 void DrAsset::initializeAssetSettingsDevice(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Device Name");
-    property_name->setDescription("Name of the current Device Asset.");
+    property_name->setDescription("Name of this Device Asset.");
     property_name->setValue(new_name);
 }
 
@@ -115,7 +115,7 @@ void DrAsset::initializeAssetSettingsDevice(QString new_name) {
 void DrAsset::initializeAssetSettingsEffect(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of the current Effect Asset.");
+    property_name->setDescription("Name of this Effect Asset.");
     property_name->setValue(new_name);
 }
 
@@ -126,7 +126,7 @@ void DrAsset::initializeAssetSettingsEffect(QString new_name) {
 void DrAsset::initializeAssetSettingsFont(DrFont *font) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Font Name");
-    property_name->setDescription("Name of the current Font Asset.");
+    property_name->setDescription("Name of this Font Asset.");
     property_name->setValue(font->getName());
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
@@ -160,7 +160,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
         type = "Object";
     }
 
-    addComponent(Components::Asset_Collision, "Collision", "Collision settings for current " + type + ".", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Asset_Collision, "Collision", "Collision settings for this " + type + ".", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
 
     addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, start_shape_type,
@@ -208,7 +208,7 @@ void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap d
 void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     QString type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Components::Asset_Physics, "Physics", "Physics settings for current " + type + ".", Component_Colors::Orange_Medium, true);
+    addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Medium, true);
     getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
 
     // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText

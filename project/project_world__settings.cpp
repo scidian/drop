@@ -22,10 +22,10 @@
 void DrWorld::initializeWorldSettings(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("World Name");
-    property_name->setDescription("Name of the current World.");
+    property_name->setDescription("Name of this World.");
     property_name->setValue(new_name);
 
-    addComponent(Components::World_Settings, "World Settings", "Settings for current world.", Component_Colors::White_Snow, true);
+    addComponent(Components::World_Settings, "World Settings", "Settings for this world.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Components::World_Settings, Properties::World_Game_Direction, Property_Type::Angle, 0.0,
@@ -42,7 +42,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Deletion Threshold", "Distance (in World units) away from active camera that objects are removed from the World. Keeps game "
                                                  "running smoothly.");
 
-    addComponent(Components::World_Physics, "Physics", "Starting physics settings for current world, this affects all Objects that have \"Physics?\" "
+    addComponent(Components::World_Physics, "Physics", "Starting physics settings for this world, this affects all Objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Medium, true);
     getComponent(Components::World_Physics)->setIcon(Component_Icons::Physics);
 
@@ -63,7 +63,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
                                      "overriden on a per item basis.");
 
-    addComponent(Components::World_Lighting, "Lighting", "Lighting settings for current World.", Component_Colors::Mustard_Yellow, true);
+    addComponent(Components::World_Lighting, "Lighting", "Lighting settings for this World.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::World_Lighting)->setIcon(Component_Icons::Light);
 
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 50,
@@ -74,6 +74,15 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Blend, Property_Type::List, 0,
                            "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
                                          "oversaturation levels or be better for dark scenes.");
+
+    addComponent(Components::World_Camera, "Camera", "Camera settings for this World.", Component_Colors::Beige_Apricot, true);
+    getComponent(Components::World_Camera)->setIcon(Component_Icons::Camera);
+
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Type, Property_Type::List, 0,
+                           "Camera View", "Sets the projection type of Camera's for this World. ");
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Switch_Speed, Property_Type::PositiveDouble, 1.0,
+                           "Switching Speed", "Multiplier to affect how fast Camera switching happens. A value lower than 1.0 will decrease switching "
+                                              "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");
 
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Brown_Sugar, true);
@@ -101,8 +110,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
 
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Convert_3D, Property_Type::Bool, false,
-                           "3D", "Auto convert all 2D graphics into 3D. Depth of each item is customizable utilizing each "
-                                 "item's \"3D Properties - Depth\" property.");
+                           "Auto 3D", "Auto convert all 2D graphics into 3D. Depth of each item is customizable utilizing each "
+                                      "item's \"3D Properties - Depth\" property.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders all the world's objects as outlines.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon,

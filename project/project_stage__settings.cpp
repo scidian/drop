@@ -27,10 +27,10 @@
 void DrStage::initializeStageSettings(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Stage Name");
-    property_name->setDescription("Name of the current Stage.");
+    property_name->setDescription("Name of this Stage.");
     property_name->setValue(new_name);
 
-    addComponent(Components::Stage_Settings, "Stage Settings", "Settings for current stage.", Component_Colors::White_Snow, true);
+    addComponent(Components::Stage_Settings, "Stage Settings", "Settings for this stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
 
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,

@@ -90,6 +90,10 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
     cpSpaceSetDamping(m_space, m_damping);
 
     // ***** World appearance settings
+    int render =            world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Type).toInt();
+    cam_switch_speed =      world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Switch_Speed).toDouble();
+    render_type = static_cast<Render_Type>(render);
+
     m_ambient_light =       world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Ambient).toDouble();
     m_glow_light_z_order =  world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Layer).toDouble();
     m_glow_blend_mode =     world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Blend).toInt();

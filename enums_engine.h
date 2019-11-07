@@ -95,6 +95,11 @@ enum class Blend_Mode {                 // !!!!! Order is important
 //####################################################################################
 //##    Control Enumerations
 //############################
+enum class Jump_State {
+    Need_To_Jump,
+    Jumped,
+};
+
 enum class One_Way {                    // One Way Collide
     None,
     Pass_Through,                       // Objects can pass through going one_way_direction

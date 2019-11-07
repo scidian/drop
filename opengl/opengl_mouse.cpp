@@ -155,15 +155,37 @@ void DrOpenGL::wheelEvent(QWheelEvent *event) {
 }
 #endif
 
+// Converts back and forth between magnification scale and power zoom level
+double DrOpenGL::zoomScaleToPow(double scale) {
+    double solve_for_zoom  = std::log(scale) / std::log(2.0);
+           solve_for_zoom *= 50.0;
+           solve_for_zoom += 250.0;
+    return solve_for_zoom;
+}
+double DrOpenGL::zoomPowToScale(double pow) {
+   return std::pow(2.0, (pow - 250.0) / 50.0);
+}
+
 
 void DrOpenGL::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -40) m_zoom = -40;
-    m_scale = static_cast<float>(qPow(2.0, (m_zoom - 250.0) / 50.0));
+    m_zoom_scale = zoomPowToScale(m_zoom);
 }
 
+void DrOpenGL::zoomToScale(double scale) {
+    m_zoom_scale = scale;
+    m_zoom = static_cast<int>(zoomScaleToPow(m_zoom_scale));
+}
 
+float DrOpenGL::combinedZoomScale() {
+    double zoom = 1.0;
+    if (m_engine->getCurrentWorld() != nullptr)
+        zoom = m_engine->getCurrentWorld()->getCameraZoom();
+
+    return static_cast<float>(zoom * m_zoom_scale);
+}
 
 
 

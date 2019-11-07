@@ -8,38 +8,10 @@
 #ifndef ENGINE_OBJECT_H
 #define ENGINE_OBJECT_H
 
-#include <QVector3D>
-
-#include "enums_engine.h"
+#include "constants_engine.h"
 #include "engine_thing.h"
+#include "globals_engine.h"
 
-#include "3rd_party/vec3.h"
-#include "types/pointf.h"
-
-enum class Jump_State {
-    Need_To_Jump,
-    Jumped,
-};
-
-// Constants for calling engine addObject calls
-constexpr   double      c_epsilon = 0.000001;                   // Floating point zero
-const       DrPointF    c_center    {0, 0};                     // Default offset in no offset
-const       DrPointF    c_scale1x1  {1, 1};                     // Default scale of 1x1
-const       QVector3D   c_default_camera_pos {0, 0, 800};       // Default camera position if there is no active camera
-const       QVector3D   c_default_camera_rot {0, 0, 0};         // Default camera rotation if there is no active camera
-constexpr   double      c_norotate =   0;                       // Default rotation amount of zero
-constexpr   double      c_opaque =     1;                       // Default transparency of fully opaque
-constexpr   double      c_friction =  -1;                       // Flag for add**** call to use world friction setting
-constexpr   double      c_bounce =    -1;                       // Flag for add**** call to use world bounce setting
-constexpr   int         c_no_max_health = -1;                   // Flag for no maximum health
-constexpr   int         c_unlimited_health = -1;                // Flag for unlimited health
-constexpr   int         c_unlimited_jump =   -1;                // Flag for unlimited jump
-const       bool        c_collide_true = true;                  // Constant for collision true
-const       bool        c_collide_false = false;                // Constant for collision false
-
-// Constants for Object Body / Shape Creation
-constexpr   double      c_extra_radius =    0.50;               // Radius added on to block and polygon shapes for better collisions
-constexpr   double      c_mass_multiplier = 0.002;              // Shapes Area times this multiplier = shape mass
 
 //####################################################################################
 //##    DrEngineObject

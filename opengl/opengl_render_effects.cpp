@@ -124,7 +124,7 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
 
     // Set more variables for shader
     m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
-    m_fisheye_shader.setUniformValue( u_fisheye_zoom,       m_scale );
+    m_fisheye_shader.setUniformValue( u_fisheye_zoom,       combinedZoomScale() );
     m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPosition().x(),
                                                             m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
@@ -220,7 +220,7 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 
     // Set more variables for shader
     m_mirror_shader.setUniformValue( u_mirror_alpha,        mirror->getOpacity() );
-    m_mirror_shader.setUniformValue( u_mirror_zoom,         m_scale );
+    m_mirror_shader.setUniformValue( u_mirror_zoom,         combinedZoomScale() );
     m_mirror_shader.setUniformValue( u_mirror_pos,          m_engine->getCurrentWorld()->getCameraPosition().x(),
                                                             m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_mirror_shader.setUniformValue( u_mirror_width,        static_cast<float>(fbo->width()) );
@@ -300,7 +300,7 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Set more variables for shader
     m_swirl_shader.setUniformValue( u_swirl_alpha,      swirl->getOpacity() );
-    m_swirl_shader.setUniformValue( u_swirl_zoom,       m_scale );
+    m_swirl_shader.setUniformValue( u_swirl_zoom,       combinedZoomScale() );
     m_swirl_shader.setUniformValue( u_swirl_pos,        m_engine->getCurrentWorld()->getCameraPosition().x(),
                                                         m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_swirl_shader.setUniformValue( u_swirl_width,      static_cast<float>(fbo->width()) );
@@ -442,7 +442,7 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Set variables for shader
     m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );
-    m_water_shader.setUniformValue( u_water_zoom,       m_scale );
+    m_water_shader.setUniformValue( u_water_zoom,       combinedZoomScale() );
     m_water_shader.setUniformValue( u_water_pos,        m_engine->getCurrentWorld()->getCameraPosition().x(),
                                                         m_engine->getCurrentWorld()->getCameraPosition().y(), 0.0f );
     m_water_shader.setUniformValue( u_water_width,      static_cast<float>(fbo->width()) );

@@ -260,6 +260,7 @@ HEADERS += \
     3rd_party_chipmunk/cpVect.h \
     3rd_party_chipmunk/prime.h \
     colors/colors.h \
+    constants_engine.h \
     editor/tree_advisor.h \
     editor/tree_assets.h \
     editor/tree_inspector.h \
@@ -294,6 +295,7 @@ HEADERS += \
     forms/form_main.h \
     forms/form_popup.h \
     forms/form_settings.h \
+    globals_engine.h \
     helper.h \
     helper_qt.h \
     imaging/imaging.h \

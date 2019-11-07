@@ -82,6 +82,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         options << tr("None")
                 << tr("Fade")
                 << tr("Shrink");
+    } else if   (property_key == static_cast<int>(Properties::World_Camera_Type)) {
+        options << tr("Perspective")
+                << tr("Orthographic");
     } else {
         options << tr("Unknown List");
     }

@@ -175,7 +175,7 @@ void DrOpenGL::drawShadowMaps() {
         // Adjust scale for Perspective Mode lights
         double o_scale;
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
-            o_scale = static_cast<double>(c_occluder_scale_ortho * m_scale);
+            o_scale = static_cast<double>(c_occluder_scale_ortho * combinedZoomScale());
         } else {
             float screen_scale;
             screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;         // field of view = 52.5 (in use)
@@ -183,7 +183,7 @@ void DrOpenGL::drawShadowMaps() {
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.70f;      // field of view = 70
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;      // field of view = 52.5
             ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.20f;      // field of view = 45
-            o_scale = static_cast<double>(c_occluder_scale_proj * m_scale * screen_scale);
+            o_scale = static_cast<double>(c_occluder_scale_proj * combinedZoomScale() * screen_scale);
         }
 
         // Blit the area of the occluder map the light will take up to the Light Occluder FBO

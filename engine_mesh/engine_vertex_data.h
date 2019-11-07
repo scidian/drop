@@ -8,17 +8,7 @@
 #ifndef ENGINE_VERTEX_DATA_H
 #define ENGINE_VERTEX_DATA_H
 
-#include <QOpenGLWidget>    // for "GLFloat"
-#include <QVector>
-#include <QVector2D>
-#include <QVector3D>
-
-#include <map>
-
 #include "engine_mesh.h"
-
-// Forward Declarations
-class DrPointF;
 
 // Type Definitions
 typedef std::map<Vec3, std::vector<Vertex>> NeighborMap;

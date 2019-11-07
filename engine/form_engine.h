@@ -16,21 +16,14 @@
 #include <QTimer>
 #include <chrono>
 
-#include "enums_engine.h"
+#include "constants_engine.h"
+#include "globals_engine.h"
 
 enum class Engine_Timer {
     Update,
     Render,
     Camera,
 };
-
-// Forward declarations
-class DrEngine;
-class DrOpenGL;
-class DrProject;
-
-// Type definitions
-typedef std::chrono::high_resolution_clock Clock;
 
 //####################################################################################
 //##    FormEngine

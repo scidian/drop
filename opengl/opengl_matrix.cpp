@@ -43,8 +43,8 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     m_projection.setToIdentity();
 
     // Set camera position
-    float cam_x = (m_engine->getCurrentWorld()->getCameraPosition().x()) * m_scale;
-    float cam_y = (m_engine->getCurrentWorld()->getCameraPosition().y()) * m_scale;
+    float cam_x = (m_engine->getCurrentWorld()->getCameraPosition().x()) * combinedZoomScale();
+    float cam_y = (m_engine->getCurrentWorld()->getCameraPosition().y()) * combinedZoomScale();
     m_eye =     QVector3D( cam_x, cam_y, m_engine->getCurrentWorld()->getCameraPosition().z() );
     m_look_at = QVector3D( cam_x, cam_y, 0.0f );
     m_up =      QVector3D(  0.0f,  1.0f, 0.0f );
@@ -70,7 +70,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
         float right =  +(width()  * devicePixelRatio() / 2.0f);
         float top =    +(height() * devicePixelRatio() / 2.0f);
         float bottom = -(height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, c_near_plane * m_scale, c_far_plane * m_scale);
+        m_projection.ortho( left, right, bottom, top, c_near_plane * combinedZoomScale(), c_far_plane * combinedZoomScale());
 
     // Perspective
     } else {
@@ -78,7 +78,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     }
 
     m_view.lookAt(m_eye, m_look_at, m_up);
-    m_view.scale( m_scale );
+    m_view.scale( combinedZoomScale() );
 }
 
 
@@ -94,7 +94,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
 
     // Scale based on Render Type
     float scale = (render_type == Render_Type::Orthographic) ? (c_occluder_scale_ortho) : (c_occluder_scale_proj);
-          scale *= m_scale;
+          scale *= combinedZoomScale();
 
     // Set camera position
     float cam_x = (m_engine->getCurrentWorld()->getCameraPosition().x()) * scale;
@@ -116,7 +116,13 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
         proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) );
     }
 
-    view_matrix.lookAt(m_eye, m_look_at, m_up);
+    QVector3D eye =     QVector3D( cam_x, cam_y, m_engine->getCurrentWorld()->getCameraPosition().z() );
+    QVector3D look_at = QVector3D( cam_x, cam_y, 0.0f );
+    QVector3D up =      QVector3D(  0.0f,  1.0f, 0.0f );
+
+    // Dont need extra rotation
+    ///view_matrix.lookAt(m_eye, m_look_at, m_up);
+    view_matrix.lookAt(eye, look_at, up);
     view_matrix.scale(scale);
 }
 

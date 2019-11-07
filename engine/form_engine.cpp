@@ -262,7 +262,7 @@ void FormEngine::updateEngine() {
         m_time_fps =  Clock::now();
 
         bool cam_enabled = pushCamera->isEnabled();
-        bool can_enable_cam = (m_engine->getCurrentWorld()->countCharacters() > 1);
+        bool can_enable_cam = (m_engine->getCurrentWorld()->getCameraMap().size() > 1);
         if (cam_enabled != can_enable_cam) pushCamera->setEnabled( can_enable_cam );
     }
 

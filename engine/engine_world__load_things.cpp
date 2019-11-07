@@ -147,8 +147,14 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     ThingInfo   info =      loadThingBasicInfo( thing );
 
     // ***** Load Character Settings
-    QVariant cam_position = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position);
-    QVariant cam_rotation = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation);
+    ///QVariant cam_position = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position);
+    ///QVariant cam_rotation = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation);
+    ///player->setCameraPosition( cam_position.value<QVector3D>() );
+    ///player->setCameraRotation( cam_rotation.value<QVector3D>() );
+    QPointF cam_position =  thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position).toPointF();
+    QPointF cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
+    double  cam_tilt =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
+    double  cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
 
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
@@ -180,10 +186,11 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.position.x, -info.position.y, info.z_order,
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
-    loadThingCollisionShape(asset, player);                                 // Load collision shape(s)
-    player->setCameraPosition( cam_position.value<QVector3D>() );           // Set active camera position
-    player->setCameraRotation( cam_rotation.value<QVector3D>() );           // Set active camera rotation
-    addThing(player);                                                       // Add to world
+    loadThingCollisionShape(asset, player);                                                                 // Load collision shape(s)
+    player->setCameraPositionXY( cam_position );                                                            // Set active camera position
+    player->setCameraRotation( float(cam_rotation.x()), float(cam_rotation.y()), float(cam_tilt) );         // Set active camera rotation
+    player->setCameraZoom( cam_zoom );                                                                      // Set active camera zoom
+    addThing(player);                                                                                       // Add to world
 
 
     // ***** Apply Character Settings

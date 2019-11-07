@@ -17,17 +17,22 @@
 //####################################################################################
 //##    Lerps an X,Y,Z triplet
 //####################################################################################
-static inline void SmoothMove(QVector3D& start, const QVector3D &target, const float& lerp, const float& milliseconds) {
-    start.setX( Dr::Lerp( start.x(), target.x(), lerp * milliseconds) );
-    start.setY( Dr::Lerp( start.y(), target.y(), lerp * milliseconds) );
-    start.setZ( Dr::Lerp( start.z(), target.z(), lerp * milliseconds) );
+static inline void SmoothMove(QVector3D &start, const QVector3D &target, const float &lerp, const float &milliseconds) {
+    float lerp_amount = Dr::Clamp(lerp * milliseconds, 0.001f, 1.0f);
+    start.setX( Dr::Lerp(start.x(), target.x(), lerp_amount) );
+    start.setY( Dr::Lerp(start.y(), target.y(), lerp_amount) );
+    start.setZ( Dr::Lerp(start.z(), target.z(), lerp_amount) );
+
+    ///start.setX( Dr::LerpConst(start.x(), target.x(), lerp_amount * 100.0f) );
+    ///start.setY( Dr::LerpConst(start.y(), target.y(), lerp_amount * 100.0f) );
+    ///start.setZ( Dr::LerpConst(start.z(), target.z(), lerp_amount * 100.0f) );
 }
 
-///static inline void smoothMoveMaxSpeed(QVector3D& start, const QVector3D &target, const float& max) {
-///    start.setX( drflerpconst( start.x(), target.x(), max ));
-///    start.setY( drflerpconst( start.y(), target.y(), max ));
-///    start.setZ( drflerpconst( start.z(), target.z(), max ));
-///}
+static inline void SmoothMove(double &start, const double &target, const double &lerp, const double &milliseconds) {
+    double  lerp_amount = Dr::Clamp(lerp * milliseconds, 0.001, 1.0);
+    start = Dr::Lerp(start, target, lerp_amount);
+    ///start = Dr::LerpConst(start, target, lerp_amount * 100.0);
+}
 
 
 //####################################################################################
@@ -55,8 +60,8 @@ static float FindClosestAngle180(const float &start, const float &angle) {
 
 //####################################################################################
 //##    DrEngineWorld - Camera Functions
+//##        Default parameters: nullptr, 0, 0, c_default_camera_z
 //####################################################################################
-// Default parameters: nullptr, 0, 0, 800
 long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z) {
     long new_key = getNextKey();
     DrEngineCamera *camera = new DrEngineCamera(this, new_key, x, y, z);
@@ -71,6 +76,7 @@ long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float 
         camera->setPositionY( static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y() );
         camera->setPositionZ( static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z() );
         camera->setRotation(  follow->getCameraRotation() );
+        camera->setZoom(      follow->getCameraZoom() );
         camera->setTarget(    camera->getPosition() );
         follow->setActiveCameraKey(new_key);
     }
@@ -83,24 +89,37 @@ void DrEngineWorld::moveCameras(double milliseconds) {
         camera_pair.second->moveCamera(milliseconds);
 
         if (m_switching_cameras) {
+            m_switch_milliseconds += milliseconds;
+
+            DrEngineCamera *target_camera = getCamera(m_active_camera);
+
             // Lerp position
-            QVector3D target_position = getCamera(m_active_camera)->getPosition();
-            SmoothMove(m_temp_position, target_position, .0050f, static_cast<float>(milliseconds) );
-            ///smoothMoveMaxSpeed(m_temp_position, target, 4.0f);
+            QVector3D target_position = target_camera->getPosition();
+            m_temp_position = m_switch_position;
+            SmoothMove(m_temp_position, target_position, 0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
 
             // Lerp Rotation
-            QVector3D target_rotation = getCamera(m_active_camera)->getRotation();
+            QVector3D target_rotation = target_camera->getRotation();
                       target_rotation.setX( EqualizeAngle0to360(target_rotation.x()) );
                       target_rotation.setY( EqualizeAngle0to360(target_rotation.y()) );
                       target_rotation.setZ( EqualizeAngle0to360(target_rotation.z()) );
                       target_rotation.setX( FindClosestAngle180(m_temp_rotation.x(), target_rotation.x()) );
                       target_rotation.setY( FindClosestAngle180(m_temp_rotation.y(), target_rotation.y()) );
                       target_rotation.setZ( FindClosestAngle180(m_temp_rotation.z(), target_rotation.z()) );
-            SmoothMove(m_temp_rotation, target_rotation, .0050f, static_cast<float>(milliseconds) );
+            m_temp_rotation = m_switch_rotation;
+            SmoothMove(m_temp_rotation, target_rotation, 0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
 
-            if ( m_temp_position.distanceToPoint(target_position) < 1 ) {
+            m_temp_zoom = m_switch_zoom;
+            double target_zoom_as_pow = DrOpenGL::zoomScaleToPow( target_camera->getZoom() );
+            double temp_zoom_as_pow =   DrOpenGL::zoomScaleToPow( m_temp_zoom );
+            SmoothMove(temp_zoom_as_pow, target_zoom_as_pow, 0.001 * cam_switch_speed, m_switch_milliseconds);
+            m_temp_zoom = DrOpenGL::zoomPowToScale( temp_zoom_as_pow );
+
+            if (m_temp_position.distanceToPoint(target_position) < (0.0001f) &&
+                abs(temp_zoom_as_pow - target_zoom_as_pow) < 10.0) {
                 m_temp_position = target_position;
                 m_temp_rotation = target_rotation;
+                m_temp_zoom =     DrOpenGL::zoomPowToScale( target_zoom_as_pow );
                 m_switching_cameras = false;
             }
         }
@@ -116,11 +135,18 @@ void DrEngineWorld::updateCameras() {
 
 // Initiates a move to a new camera
 void DrEngineWorld::switchCameras(long new_camera) {
-    m_temp_position = getCameraPosition();
-    m_temp_rotation = getCameraRotation();
-        m_temp_rotation.setX( EqualizeAngle0to360(m_temp_rotation.x()) );
-        m_temp_rotation.setY( EqualizeAngle0to360(m_temp_rotation.y()) );
-        m_temp_rotation.setZ( EqualizeAngle0to360(m_temp_rotation.z()) );
+    m_switch_milliseconds = 0;
+    m_switch_position = getCameraPosition();
+    m_switch_rotation = getCameraRotation();
+        m_switch_rotation.setX( EqualizeAngle0to360(m_switch_rotation.x()) );
+        m_switch_rotation.setY( EqualizeAngle0to360(m_switch_rotation.y()) );
+        m_switch_rotation.setZ( EqualizeAngle0to360(m_switch_rotation.z()) );
+    m_switch_zoom = getCameraZoom();
+
+    m_temp_position = m_switch_position;
+    m_temp_rotation = m_switch_rotation;
+    m_temp_zoom =     m_switch_zoom;
+
     m_switching_cameras = true;
     m_active_camera = new_camera;
 }
@@ -204,6 +230,18 @@ double DrEngineWorld::getCameraRotationX() { return static_cast<double>(getCamer
 double DrEngineWorld::getCameraRotationY() { return static_cast<double>(getCameraRotation().y()); }
 double DrEngineWorld::getCameraRotationZ() { return static_cast<double>(getCameraRotation().z()); }
 
+//####################################################################################
+//##    DrEngineWorld - Returns Camera Zoom
+//####################################################################################
+double DrEngineWorld::getCameraZoom() {
+    if (m_active_camera == 0) {
+        return 1.0;
+    } else if (m_switching_cameras == false) {
+        return m_cameras[m_active_camera]->getZoom();
+    } else {
+        return m_temp_zoom;
+    }
+}
 
 //####################################################################################
 //####################################################################################

@@ -8,7 +8,6 @@
 #ifndef ENUMS_DR_SETTINGS_H
 #define ENUMS_DR_SETTINGS_H
 
-
 //####################################################################################
 //##    Used to track what the QVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
@@ -64,7 +63,7 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  38
+//##    !!!!! NEXT AVAILABLE NUMBER:  39
 //##
 //############################
 enum class Components {
@@ -90,6 +89,7 @@ enum class Components {
     World_Settings                      = 7,
     World_Physics                       = 8,
     World_Lighting                      = 9,
+    World_Camera                        = 38,
     World_Appearance                    = 10,
     World_Special_Effects               = 11,
 
@@ -131,7 +131,7 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  172
+//##    !!!!! NEXT AVAILABLE NUMBER:  175
 //##
 //############################
 enum class Properties {
@@ -236,6 +236,10 @@ enum class Properties {
     World_Light_Layer                   = 33,       // percent
     World_Light_Blend                   = 34,       // list, enum class Blend_Mode
 
+    // Camera
+    World_Camera_Type                   = 174,      // list, enum class Render_Type
+    World_Camera_Switch_Speed           = 175,      // positive double
+
     // Appearance
     World_Filter_Bitrate                = 35,       // ranged int, 0 to 256
     World_Filter_Pixelation             = 36,       // positive size
@@ -318,8 +322,10 @@ enum class Properties {
     Thing_Camera_Zoom                   = 83,       // double
 
     // Character Settings
-    Thing_Character_Camera_Position     = 170,      // point3d
-    Thing_Character_Camera_Rotation     = 165,      // point3d
+    Thing_Character_Camera_Position     = 170,      // pointf
+    Thing_Character_Camera_Rotation     = 165,      // pointf
+    Thing_Character_Camera_Tilt         = 172,      // double
+    Thing_Character_Camera_Zoom         = 173,      // double
 
     // Object Settings
     Thing_Object_Physics_Type           = 84,       // list, enum class Body_Type (Static, Kinematic, Dynamic)

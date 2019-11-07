@@ -17,6 +17,7 @@
 #include <QMatrix4x4>
 #include <chrono>
 
+#include "constants_engine.h"
 #include "enums.h"
 #include "enums_engine.h"
 #include "types/pointf.h"
@@ -49,21 +50,6 @@ extern int  g_max_light_fbo_size;
 #define PROGRAM_TEXCOORD_ATTRIBUTE      2
 #define PROGRAM_BARYCENTRIC_ATTRIBUTE   3
 
-// OpenGL Constants
-const int   c_float_size =      static_cast<int>(sizeof(GLfloat));
-
-// Rendering Constants
-const float c_near_plane =     -10000.0;
-const float c_far_plane =       10000.0;
-const float c_field_of_view =   52.5f;                  // Close to Orthographic size when using standard widescreen ratio
-
-// 2D Light Constants
-const float c_occluder_scale_ortho =       1.00f;       // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
-const float c_occluder_scale_proj =        1.00f;       // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
-const int   c_desired_max_rays =           4096;        // Desired max number of rays to send out during shadow map calculations
-const int   c_desired_occluder_fbo_size =  8192;        // Desired max width and height of offscreen fbo used for shadow map
-const int   c_desired_light_fbo_size =     4096;        // Desired max width and height of offscreen fbo used for lights (and max size of lights themselves)
-
 
 //####################################################################################
 //##    DrOpenGL
@@ -86,8 +72,8 @@ private:
     QVector3D       m_look_at;
     QVector3D       m_up;
 
-    int             m_zoom =  250;                              // Zoom level of current view, 200 is 50% - 250 is 100%
-    float           m_scale = 1.0;                              // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    int             m_zoom =  250;                              // Zoom level, 200 is 50% - 250 is 100%
+    double          m_zoom_scale = 1.0;                         // Zoom level represented as magification multiplier
 
     float           m_background_red = 0;
     float           m_background_green = 0;
@@ -120,6 +106,7 @@ private:
     QVector<DrEngineLight*> m_shadow_lights;
     QVector<DrEngineLight*> m_glow_lights;
 
+
 public:
     // Constructor / Destructor
     DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
@@ -140,7 +127,8 @@ public:
     virtual void    wheelEvent(QWheelEvent *event) override;
 #endif
 
-    // Function Calls
+    // Screen Functions
+    float           combinedZoomScale();
     QVector3D       mapFromScreen(double x, double y);
     QVector3D       mapFromScreen(float x, float y);
     QVector3D       mapFromScreen(QPointF point);
@@ -148,7 +136,10 @@ public:
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);
     QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix);
+    static double   zoomPowToScale(double pow);
+    static double   zoomScaleToPow(double scale);
     void            zoomInOut(int level);
+    void            zoomToScale(double scale);
 
     // Initialization Calls
     void            importTexture(long texture_id, QString from_asset_string);
@@ -212,11 +203,10 @@ public:
     int             findNeededShadowMaps();
     void            process2DLights();
 
-    // Getters and Setters
-    float           getScale()          { return m_scale; }
+    // Triangles
+    void            addTriangles(long triangles) { m_triangles += triangles; }
     long            getTriangleCount()  { return m_triangles; }
 
-    void            addTriangles(long triangles) { m_triangles += triangles; }
 
 
 //####################################################################################

@@ -24,7 +24,7 @@
 //##    Draws the health of each object using QPainter
 //####################################################################################
 void DrOpenGL::drawDebugHealth(QPainter &painter) {
-    QFont health_font("Avenir", static_cast<int>(18 * m_scale));
+    QFont health_font("Avenir", static_cast<int>(18 * combinedZoomScale()));
     painter.setPen(Qt::NoPen);
 
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {

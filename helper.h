@@ -45,6 +45,11 @@ template<class T> T     Min(const T& a, const T& b) { return (a < b) ? a : b; }
 // Linear Interpolation between two values
 template<class T> T     Lerp(const T& f1, const T& f2, const T& t) { return (f1 * (static_cast<T>(1.0) - t)) + (f2 * t); }
 
+// Linear Interpolation between two values by no more than d
+template<class T> T     LerpConst(const T& f1, const T& f2, const T& d) {
+    return f1 + Clamp(f2 - f1, -d, d);
+}
+
 // Returns true if 'number_desired' is within +-'tolerance' of 'number_to_check'
 template<class T> bool  IsCloseTo(const T& number_desired, const T& number_to_check, const T& tolerance) {
     return ( (number_to_check <= (number_desired + tolerance)) && (number_to_check >= (number_desired - tolerance)) ); }

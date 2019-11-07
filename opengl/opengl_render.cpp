@@ -142,7 +142,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_alpha,          1.0f );
     m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
     m_default_shader.setUniformValue( u_default_average_color,  0.0f, 0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_zoom,           m_scale );
+    m_default_shader.setUniformValue( u_default_zoom,           combinedZoomScale() );
     m_default_shader.setUniformValue( u_default_width,          texture_width  );
     m_default_shader.setUniformValue( u_default_height,         texture_height );
     m_default_shader.setUniformValue( u_default_time,           static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
