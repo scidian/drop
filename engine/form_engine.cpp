@@ -328,7 +328,9 @@ void FormEngine::on_pushLight_clicked() {   loadDemo( Demo_Player::Light ); }
 void FormEngine::on_pushPlayer_clicked() {  loadDemo( Demo_Player::Player ); }
 
 void FormEngine::on_pushCamera_clicked() {
-    m_engine->getCurrentWorld()->switchCameraToNext(true, true);
+    bool only_switch_to_character_cameras = false;
+    bool switch_player_controls = true;
+    m_engine->getCurrentWorld()->switchCameraToNext(only_switch_to_character_cameras, switch_player_controls);
 }
 
 

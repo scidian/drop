@@ -34,8 +34,20 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
     getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
 
-    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 10,
-                           "Zoom Level", "Sets distance away from stage (0 to 1000)");
+//    Thing_Camera_Set_As_Active          = 178,      // bool
+//    Thing_Camera_Speed                  = 179,      // pointf
+//    Thing_Camera_Rotation               = 180,      // pointf
+
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active, Property_Type::Bool, true,
+                           "Set As Active", "If set to true and Camera is in a Start Stage, this camera will attempt to be the Active Game Camera when this "
+                                            "world starts. Only one Camera should be set as Active in each Start Stage.");
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed, Property_Type::PointF, QPointF(0, 0),
+                           "Camera Speed", "Fixed movement speed of camera.");
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation, Property_Type::PointF, QPointF(0, 0),
+                           "Camera Rotation", "This setting is the camera rotation of that Camera. The "
+                                              "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 1.0,
+                           "Zoom Level", "Magnification zoom level of this camera. A value of 1.0 is no zoom, 0.5 is twice as far away, 2.0 is twice as close. ");
 }
 
 //####################################################################################
@@ -53,7 +65,7 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, QPointF(0, 100),
                            "Camera Offset", "Every Character has a Camera attached which always looks directly at the Character. "
                                             "The Camera Offset allows for the camera to look at a point offset from the Character in 2D space.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, QPointF(-15, 0),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, QPointF(0, 0),
                            "Camera Rotation", "Every Character has a Camera attached which always looks directly at the Character. "
                                               "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");

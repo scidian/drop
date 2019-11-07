@@ -16,8 +16,11 @@
 class DrPointF;
 
 // Image Constants
-const int   c_image_size = 600;             // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
-const int   c_image_border = 6;             // Border used for mirror, fire, swirl, etc...
+const int   c_image_size =   600;           // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
+const int   c_image_border =   6;           // Border used for mirror, fire, swirl, etc...
+
+const int   c_device_size =  400;           // Size used for square Device / Control icons (camera, etc)
+const int   c_device_border = 10;           // Border used for camera, etc
 
 // Color constants
 ///const unsigned int c_color_black = 0;
@@ -89,6 +92,7 @@ namespace DrImaging {
 
 
     // Draw Images for DrDevices
+    QPixmap drawFixedIcon(QPixmap &middle_icon);
     QPixmap drawCamera();
 
 

@@ -166,13 +166,14 @@ public:
     void            loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
     void            loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
 
+    void            loadCameraToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadCharacterToWorld(DrThing *thing);
     void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadObjectToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y);
+    void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
     void            loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
 
@@ -187,7 +188,7 @@ public:
 
 
     // Cameras
-    long                addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z, int buffer_size = c_slop_buffer_size);
+    DrEngineCamera*     addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z, int buffer_size = c_slop_buffer_size);
     const long&         getActiveCamera() { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }

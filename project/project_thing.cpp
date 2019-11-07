@@ -71,10 +71,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
         case DrThingType::Camera:
             addComponentSettingsCamera("Camera 1");
-            addComponentTransform(static_cast<int>(c_image_size * 0.625), c_image_size, x, -y, DrThingType::Fire);
-            addComponentLayering(z, 100.0);
-            addComponentAppearance(true);
-            ///setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);
+            addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Camera);
+            addComponentLayering(z, 100.0, false);
+            addComponentAppearance(true, false);
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, QPointF(100, 100));
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(100, 100));
             break;

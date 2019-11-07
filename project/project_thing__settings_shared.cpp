@@ -29,28 +29,43 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
 
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y),
-                           "Position", "Location of item within the current stage.");
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0,
-                           "Rotation Z", "Starting rotation of object on the Z Axis. Does affect physics collision shape.");
+    QString position_text = "Location of item within the current stage.";
+    if (type == DrThingType::Camera) {
+        position_text = "Point at which camera is looking at.";
+    }
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y), "Position", position_text);
+
+    QString transform_title = "Rotation Z";
+    QString transform_text =  "Starting rotation of object on the Z Axis. Does affect physics collision shape.";
+    if (type == DrThingType::Camera) {
+        transform_title = "Camera Tilt";
+        transform_text =  "Starting tilt / rotation of camera on the Z Axis.";
+    }
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0, transform_title, transform_text);
+
     QString size_text = "Width and Height of item in pixels, affected by Scale property.";
     if (type == DrThingType::Light) {
-            size_text = "Width and Height of item in pixels, affected by Scale property. "
-                        "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
+        size_text = "Width and Height of item in pixels, affected by Scale property. "
+                    "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
+    } else if (type == DrThingType::Camera) {
+        size_text = "Width and Height settings have no effect on Camera.";
     }
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height),
-                           "Size", size_text);
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1),
-                           "Scale", "X and Y scale of item within the stage.");
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height), "Size", size_text);
+
+    QString scale_text = "X and Y scale of item within the stage.";
+    if (type== DrThingType::Camera) {
+        scale_text = "X and Y scale settings have no effect on Camera.";
+    }
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1), "Scale", scale_text);
 }
 
 
 //####################################################################################
 //##    Layering Components
 //####################################################################################
-void DrThing::addComponentLayering(double z, double opacity) {
+void DrThing::addComponentLayering(double z, double opacity, bool show_component) {
     addComponent(Components::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z-Order\", lower numbers are "
-                                                         "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, true);
+                                                         "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, show_component);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
 
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
@@ -130,8 +145,8 @@ void DrThing::addComponentLighting() {
 //####################################################################################
 //##    Appearance Components
 //####################################################################################
-void DrThing::addComponentAppearance(bool bitrate_and_pixel_only) {
-    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Brown_Sugar, true);
+void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_component) {
+    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Brown_Sugar, show_component);
     getComponent(Components::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate, Property_Type::Slider, QList<QVariant>({256, 0, 256, 8, ""}),

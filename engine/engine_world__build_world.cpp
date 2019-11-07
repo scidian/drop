@@ -117,7 +117,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
     wavy =          world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
 
     // ***** Load Current Stage to origin position
-    loadStageToWorld(stage, 0, 0);
+    loadStageToWorld(stage, 0, 0, true);
 
 
     // ********** Bouyancy Test

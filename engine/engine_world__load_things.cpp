@@ -220,7 +220,8 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     // Check if there are any active characters, if not, give controls
     bool should_we_give_control = (countCharacters() == 0);
-    assignPlayerControls(player, should_we_give_control, true, should_we_give_control);
+    bool give_camera = should_we_give_control && (this->getActiveCamera() <= 0);
+    assignPlayerControls(player, should_we_give_control, true, give_camera);
 
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, player);

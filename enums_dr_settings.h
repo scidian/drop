@@ -131,8 +131,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  178
+//##    !!!!! NEXT AVAILABLE NUMBER:  181
 //##
+//##    Checked for doubles up through 180 on 11/07/2019
 //############################
 enum class Properties {
 
@@ -320,7 +321,11 @@ enum class Properties {
 
     // ********** Thing Specific
     // Camera Settings
+    Thing_Camera_Set_As_Active          = 178,      // bool
+    Thing_Camera_Speed                  = 179,      // pointf
+    Thing_Camera_Rotation               = 180,      // pointf
     Thing_Camera_Zoom                   = 83,       // double
+
 
     // Character Settings
     Thing_Character_Camera_Position     = 170,      // pointf

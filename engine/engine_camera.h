@@ -40,7 +40,7 @@ private:
 
     long            m_follow_key = 0;                           // Unique DrEngineWorld key this camera should follow
     int             m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
-
+    bool            m_wants_active = false;                     // If set to true in Editor, this camera tries to take Active when in Start Stage
 
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;                              // Average y speed of object this camera is following
@@ -66,6 +66,7 @@ public:
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
+    const bool&         getWantsActive()    { return m_wants_active; }
     const double&       getZoom()           { return m_zoom; }
 
     void                setBufferSize(int slop) { m_buffer_size = (slop < 1) ? 1 : slop; }
@@ -96,6 +97,7 @@ public:
     void                setSpeedZ(float z) { m_speed.setZ(z); }
 
     void                setTarget(QVector3D target) { m_target = target; }
+    void                setWantActive(bool wants) { m_wants_active = wants; }
     void                setZoom(double zoom) { m_zoom = zoom; }
 
 };

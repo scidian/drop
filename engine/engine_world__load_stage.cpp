@@ -6,6 +6,7 @@
 //
 //
 #include "engine.h"
+#include "engine_camera.h"
 #include "engine_world.h"
 #include "project/project.h"
 #include "project/project_asset.h"
@@ -14,11 +15,10 @@
 #include "project/thing_shape_list.h"
 
 
-
 //####################################################################################
 //##    Load DrProject Stage to World / Space
 //####################################################################################
-void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double offset_y) {
+void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage) {
 
     // ***** Load Things
     for (auto thing_pair : stage->getThingMap()) {
@@ -41,6 +41,9 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             case DrThingType::Swirl:    loadSwirlToWorld(   thing, offset_x, offset_y);     break;
             case DrThingType::Water:    loadWaterToWorld(   thing, offset_x, offset_y);     break;
 
+            // Load Device
+            case DrThingType::Camera:   loadCameraToWorld(  thing, offset_x, offset_y);     break;
+
             // Don't load Character, only on Start Stage for now
             case DrThingType::Character:
                 break;
@@ -51,11 +54,40 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
     }
 
+    // Check cameras for another non-character following camera that wants to be active
+    if (start_stage) {
+        for (auto &camera_pair : m_cameras) {
+            DrEngineCamera *camera = camera_pair.second;
+            if (camera->getWantsActive()) {
+                this->setActiveCamera( camera->getKey() );
+                break;
+            }
+        }
+    }
+
     // ***** Update distance we've loaded scenes to
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 }
 
 
+//####################################################################################
+//##    Load DrEngineCamera
+//####################################################################################
+void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double offset_y) {
+    ThingInfo   info =          loadThingBasicInfo( thing );
+    bool        wants_active =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active).toBool();
+    QPointF     cam_speed =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed).toPointF();
+    QPointF     cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
+    double      cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
+
+    float x = static_cast<float>( info.position.x + offset_x);
+    float y = static_cast<float>(-info.position.y + offset_y);
+    DrEngineCamera *camera = addCamera(0, x, y);
+    camera->setSpeed( cam_speed.x(), cam_speed.y(), 0.0 );
+    camera->setRotation( cam_rotation.x(), cam_rotation.y(), info.angle );
+    camera->setWantActive( wants_active );
+    camera->setZoom( cam_zoom );
+}
 
 
 

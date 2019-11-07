@@ -75,7 +75,7 @@ static float FindClosestAngle180(const float &start, const float &angle) {
 //####################################################################################
 //####################################################################################
 // Adds Camera to World, Default parameters: nullptr, 0, 0, c_default_camera_z
-long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z, int buffer_size) {
+DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z, int buffer_size) {
     long new_key = getNextKey();
     DrEngineCamera *camera = new DrEngineCamera(this, new_key, x, y, z, buffer_size);
 
@@ -83,7 +83,7 @@ long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float 
 
     // If an object was passed in, attach camera to that object
     DrEngineThing *follow = findThingByKey(thing_key_to_follow);
-    if (follow) {
+    if (thing_key_to_follow != 0 && follow != nullptr) {
         camera->followObject( thing_key_to_follow );
         camera->setPositionX( static_cast<float>(follow->getPosition().x) + follow->getCameraPosition().x() );
         camera->setPositionY( static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y() );
@@ -94,7 +94,7 @@ long DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float 
         camera->setTarget(    camera->getPosition() );
         follow->setActiveCameraKey(new_key);
     }
-    return new_key;
+    return camera;
 }
 
 // Updates all cameras based on the objects they're following
@@ -192,20 +192,33 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
     // If not active camera already, switch cameras
     long new_key = (*it).second->getKey();
     if (new_key != m_active_camera) {
-        if (m_cameras[m_active_camera]->getThingFollowing() != 0) {
-            DrEngineThing *thing = findThingByKey(m_cameras[m_active_camera]->getThingFollowing());
-            if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
-                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                if (switch_player_controls) object->setLostControl(true);
-            }
-        }
+
+        DrEngineThing  *thing_new =  nullptr;
+        DrEngineObject *object_new = nullptr;
+
+        // Switch on new player if there is one
+        bool switched = false;
         if (m_cameras[new_key]->getThingFollowing() != 0) {
-            DrEngineThing *thing = findThingByKey(m_cameras[new_key]->getThingFollowing());
-            if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
-                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                if (switch_player_controls) object->setLostControl(false);
+            thing_new = findThingByKey(m_cameras[new_key]->getThingFollowing());
+            if (thing_new != nullptr && thing_new->getThingType() == DrThingType::Object) {
+                object_new = dynamic_cast<DrEngineObject*>(thing_new);
+                if (switch_player_controls) {
+                    object_new->setLostControl(false);
+                    switched = true;
+                }
             }
         }
+
+        // Switch off other players if we switched to new player
+        if (switched) {
+            for (auto &thing : m_things) {
+                if (thing->getKey() != thing_new->getKey()) {
+                    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+                    object->setLostControl(true);
+                }
+            }
+        }
+
         switchCameras(new_key);
     }
 }
@@ -287,19 +300,27 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 //##    Moves camera based on current speed / settings
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
-    double lerp = 0.01 * milliseconds;
-    m_position.setX( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
-    m_position.setY( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
-    m_position.setZ( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
-    ///m_position.setX( m_target.x() );
-    ///m_position.setY( m_target.y() );
-    ///m_position.setY( m_target.z() );
+    // Update by fixed speed if not following an object
+    if (m_follow_key == 0) {
+        m_position.setX( m_position.x() + (m_speed.x() * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0)) );
+        m_position.setY( m_position.y() + (m_speed.y() * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0)) );
+
+    // Otherwise Lerp to new Target
+    } else {
+        double lerp = 0.01 * milliseconds;
+        m_position.setX( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.x()), static_cast<double>(m_target.x()), lerp)) );
+        m_position.setY( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.y()), static_cast<double>(m_target.y()), lerp)) );
+        m_position.setZ( static_cast<float>( Dr::Lerp( static_cast<double>(m_position.z()), static_cast<double>(m_target.z()), lerp)) );
+        ///m_position.setX( m_target.x() );
+        ///m_position.setY( m_target.y() );
+        ///m_position.setY( m_target.z() );
+    }
 }
 
 //####################################################################################
 //##    DrEngineCamera - Update Camera Position
 //####################################################################################
-void DrEngineCamera::updateCamera() {
+void DrEngineCamera::updateCamera() {        
     // Movement is based on following an object stored in m_follow
     if (m_follow_key == 0) return;
     DrEngineThing *follow = m_world->findThingByKey(m_follow_key);

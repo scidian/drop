@@ -28,8 +28,8 @@
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
     if (add_camera) {
-        long camera_key = addCamera(object->getKey() );
-        if (set_active_camera) setActiveCamera(camera_key);
+        DrEngineCamera *camera = addCamera(object->getKey() );
+        if (set_active_camera) setActiveCamera( camera->getKey() );
     }
     object->setCollisionType( Collision_Type::Damage_Enemy );
     object->setKeyControls( true );
@@ -122,7 +122,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setOriginalVelocityX( 15 );
         ball1->setOriginalVelocityY(  0 );
         cpBodySetVelocityUpdateFunc(ball1->body, KinematicUpdateVelocity);
-        setActiveCamera( addCamera(ball1->getKey()) );
+        setActiveCamera( addCamera(ball1->getKey())->getKey() );
 
 
     } else if (new_player_type == Demo_Player::Car) {
@@ -147,7 +147,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         addThing(rover);
         ///rover->setCameraRotation( -15, 15, 0 );
         rover->setCameraRotation( -15, -25, 0 );
-        setActiveCamera( addCamera(rover->getKey()) );
+        setActiveCamera( addCamera(rover->getKey())->getKey() );
 
 
         // Add wheels

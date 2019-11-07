@@ -81,8 +81,8 @@ public:
 
     // Thing Components
     void    addComponent3D();
-    void    addComponentAppearance(bool bitrate_and_pixel_only = false);
-    void    addComponentLayering(double z, double opacity = 100.0);
+    void    addComponentAppearance(bool bitrate_and_pixel_only = false, bool show_component = true);
+    void    addComponentLayering(double z, double opacity = 100.0, bool show_component = true);
     void    addComponentLighting();
     void    addComponentMovement();
     void    addComponentSpecialEffects();
