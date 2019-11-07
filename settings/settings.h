@@ -83,8 +83,8 @@ public:
     DrProperty*     findPropertyFromPropertyKey(Properties property_key_to_find);
 
     // Component / Property Building
-    void            addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
-    void            addPropertyToComponent(Components component, Properties property_number, Property_Type type, QVariant value,
+    DrComponent*    addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
+    DrProperty*     addPropertyToComponent(Components component, Properties property_number, Property_Type type, QVariant value,
                                            QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();

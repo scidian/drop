@@ -33,7 +33,7 @@ private:
                                                                 //              Y Rotation, controls left / right
                                                                 //              Z Rotation, tilts head
 
-    double          m_lag =  1.0;                               // Current camera lag when following object
+    DrPointF        m_lag = { 0.0, 0.0 };                       // Current camera lag when following object
     double          m_zoom = 1.0;                               // Current camera zoom level
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
@@ -58,11 +58,14 @@ public:
     long                getKey()            { return m_key; }
     long                getThingFollowing() { return m_follow_key; }
 
-    double              getLag()            { return m_lag; }
+    const DrPointF&     getLag()            { return m_lag; }
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
     const double&       getZoom()           { return m_zoom; }
+
+    void                setLag(DrPointF lag) { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
+                                               m_lag.y = (lag.y <= 0) ? 0 : lag.y; }
 
     void                setPosition(QVector3D new_position) {       m_position = new_position; }
     void                setPosition(double x, double y, double z) { m_position = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
@@ -86,9 +89,8 @@ public:
     void                setSpeedX(float x) { m_speed.setX(x); }
     void                setSpeedY(float y) { m_speed.setY(y); }
     void                setSpeedZ(float z) { m_speed.setZ(z); }
-    void                setTarget(QVector3D target) { m_target = target; }
 
-    void                setLag(double lag)   { m_lag = lag; }
+    void                setTarget(QVector3D target) { m_target = target; }
     void                setZoom(double zoom) { m_zoom = zoom; }
 
 };

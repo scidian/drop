@@ -14,6 +14,9 @@
 #include "form_engine.h"
 #include "opengl/opengl.h"
 
+const int   c_average_speed_buffer_size = 5;                   // Number of past object speeds to average together for camera follow
+
+
 //####################################################################################
 //##    Lerps an X,Y,Z triplet
 //####################################################################################
@@ -255,9 +258,9 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     m_key = unique_key;
     m_position = QVector3D(x, y, z);
     m_target = m_position;
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, 20);          // Zero out average speed vector
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, 20);          // Zero out average speed vector
-    m_avg_speed_z.clear();  m_avg_speed_z.fill(0, 20);          // Zero out average speed vector
+    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, c_average_speed_buffer_size);         // Zero out average speed vector
+    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, c_average_speed_buffer_size);         // Zero out average speed vector
+    m_avg_speed_z.clear();  m_avg_speed_z.fill(0, c_average_speed_buffer_size);         // Zero out average speed vector
     m_speed = QVector3D(0, 0, 0);
     m_rotation = c_default_camera_rot;
 }
@@ -294,69 +297,68 @@ void DrEngineCamera::updateCamera() {
     double follow_previous_pos_y = static_cast<double>(object->getPreviousPosition().y) + static_cast<double>(object->getCameraPosition().y());
     double follow_previous_pos_z = static_cast<double>(object->getPreviousPosition().z) + static_cast<double>(object->getCameraPosition().z());
 
+    // Check for Lag Bounding Box
+    ///DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
+    ///DrPointF target ( follow_pos_x, follow_pos_y );
+    ///if (target.Distance(cam_pos) < m_lag) return;
+    bool update_x = false;
+    bool update_y = false;
+    bool update_z = true;
+    if (abs(static_cast<double>(m_position.x()) - follow_pos_x) > m_lag.x) update_x = true;
+    if (abs(static_cast<double>(m_position.y()) - follow_pos_y) > m_lag.y) update_y = true;
+
     // Calculate the average object Speed
-    m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
-    m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
-    m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
-    m_avg_speed_x.pop_front();
-    m_avg_speed_y.pop_front();
-    m_avg_speed_z.pop_front();
     double average_x = 0;
     double average_y = 0;
     double average_z = 0;
-    if (m_avg_speed_x.size() > 0) average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
-    if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
-    if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();
+    if (update_x) {
+        m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
+        m_avg_speed_x.pop_front();
+        if (m_avg_speed_x.size() > 0) average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
+    }
+    if (update_y) {
+        m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
+        m_avg_speed_y.pop_front();
+        if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
+    }
+    if (update_z) {
+        m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
+        m_avg_speed_z.pop_front();
+        if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();
+    }
 
-    // Check for lag
-    bool catch_up = false;
-    DrPointF cam_pos( static_cast<double>(m_position.x()), static_cast<double>(m_position.y()) );
-    DrPointF target ( follow_pos_x, follow_pos_y );
-    if (target.Distance(cam_pos) > m_lag) catch_up = true;
-
-
-//    double pos_x = static_cast<double>(m_target.x());
-//    double pos_y = static_cast<double>(m_target.y());
-//    double pos_z = static_cast<double>(m_target.z());
-//    double average = 1.0;
+    // Average
     double pos_x = 0.0;
     double pos_y = 0.0;
     double pos_z = 0.0;
-    double average = 0.0;
+    double total = 0.0;
 
-
-    // Basic Camera = Object Position
-//    if (catch_up) {
-//        pos_x +=    follow_pos_x;
-//        pos_y +=    follow_pos_y;
-//        pos_z +=    follow_pos_z;
-//        average +=  1.0;
-//    }
+    // Basic Camera = Object Position    
+    ///pos_x += follow_pos_x;
+    ///pos_y += follow_pos_y;
+    ///pos_z += follow_pos_z;
+    ///total += 1.0;
 
     // Move based on Last Camera Position + Average
-    if (catch_up) {
-        pos_x +=    (static_cast<double>(m_target.x()) + average_x) * 3.0;
-        pos_y +=    (static_cast<double>(m_target.y()) + average_y) * 3.0;
-        pos_z +=    (static_cast<double>(m_target.z()) + average_z) * 3.0;
-        average +=  3.0;
-    } else return;
+    pos_x += (static_cast<double>(m_target.x()) + average_x) * 3.0;
+    pos_y += (static_cast<double>(m_target.y()) + average_y) * 3.0;
+    pos_z += (static_cast<double>(m_target.z()) + average_z) * 3.0;
+    total += 3.0;
 
     // Move based on Last Object Position + Average
-//    if (catch_up) {
-//        pos_x +=    follow_previous_pos_x + average_x;
-//        pos_y +=    follow_previous_pos_y + average_y;
-//        pos_z +=    follow_previous_pos_z + average_z;
-//        average +=  1.0;
-//    }
+    ///pos_x += follow_previous_pos_x + average_x;
+    ///pos_y += follow_previous_pos_y + average_y;
+    ///pos_z += follow_previous_pos_z + average_z;
+    ///total += 1.0;
 
     // Average of all three options, use try catch in case something happens to m_follow during this routine
-    pos_x /= average;
-    pos_y /= average;
-    pos_z /= average;
+    pos_x /= total;
+    pos_y /= total;
+    pos_z /= total;
 
-    m_target.setX( static_cast<float>(pos_x) );
-    m_target.setY( static_cast<float>(pos_y) );
-    m_target.setZ( static_cast<float>(pos_z) );
+    if (update_x) m_target.setX( static_cast<float>(pos_x) );
+    if (update_y) m_target.setY( static_cast<float>(pos_y) );
+    if (update_z) m_target.setZ( static_cast<float>(pos_z) );
 }
 
 

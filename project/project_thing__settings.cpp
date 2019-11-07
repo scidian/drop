@@ -53,17 +53,17 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, QPointF(0, 100),
                            "Camera Offset", "Every Character has a Camera attached which always looks directly at the Character. "
                                             "The Camera Offset allows for the camera to look at a point offset from the Character in 2D space.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, QPointF(-10, 0),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, QPointF(-15, 0),
                            "Camera Rotation", "Every Character has a Camera attached which always looks directly at the Character. "
                                               "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt, Property_Type::Double, 0.0,
                            "Camera Tilt", "Every Character has a Camera attached which always looks directly at the Character. "
-                                          "This is the tilt angle (z axis rotation) of that camera. ");
+                                          "This is the tilt angle (Z Axis rotation) of that camera. ");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. ");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::Double, 100.0,
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::SizeF, QPointF(50, 50),
                            "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
                                          "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
                                          "camera starts to move.");

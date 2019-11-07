@@ -77,13 +77,13 @@ public:
     void        setListOrder(int order) { m_list_order = order; }
 
     // Building Calls
-    void addProperty(Properties     property_number,
-                     Property_Type  type,
-                     QVariant       value,
-                     QString        display_name,
-                     QString        description,
-                     bool           is_hidden = false,
-                     bool           is_editable = true);
+    DrProperty* addProperty(Properties     property_number,
+                            Property_Type  type,
+                            QVariant       value,
+                            QString        display_name,
+                            QString        description,
+                            bool           is_hidden = false,
+                            bool           is_editable = true);
 
 };
 

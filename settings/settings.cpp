@@ -160,15 +160,17 @@ bool DrSettings::setName(QString new_name) {
 //####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
-void DrSettings::addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on) {
+DrComponent* DrSettings::addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on) {
     DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
     comp->setListOrder( static_cast<int>(m_components.size()) );
     m_components[static_cast<long>(component)] = comp;
+    return comp;
 }
 
-void DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
-                                        QVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
-    m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
+DrProperty* DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
+                                               QVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
+    DrProperty *prop = m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
+    return prop;
 }
 
 
