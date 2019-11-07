@@ -202,7 +202,7 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
             thing_new = findThingByKey(m_cameras[new_key]->getThingFollowing());
             if (thing_new != nullptr && thing_new->getThingType() == DrThingType::Object) {
                 object_new = dynamic_cast<DrEngineObject*>(thing_new);
-                if (switch_player_controls) {
+                if (switch_player_controls && object_new != nullptr) {
                     object_new->setLostControl(false);
                     switched = true;
                 }
@@ -213,8 +213,10 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
         if (switched) {
             for (auto &thing : m_things) {
                 if (thing->getKey() != thing_new->getKey()) {
-                    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                    object->setLostControl(true);
+                    if (thing_new->getThingType() == DrThingType::Object) {
+                        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+                        if (object != nullptr) object->setLostControl(true);
+                    }
                 }
             }
         }
