@@ -200,17 +200,19 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Movement Speed, adjust to angle if desired
     cpFloat move_speed_x = object->getMoveSpeedX() * key_x;
     cpFloat move_speed_y = object->getMoveSpeedY() * key_y;
-    if (object->getAngleMovement()) {
-        QPointF force(move_speed_x, move_speed_y);
-        QTransform t = QTransform().rotate(object->getAngle());
-        force = t.map(force);
 
-        g_info = "Before X: " + QString::number(move_speed_x) + ", Y: " + QString::number(move_speed_y) +
-               " - After X: " + QString::number(force.x()) +    ", Y: " + QString::number(force.y());
+    g_info = "Move X: " + QString::number(move_speed_x) + ", Y: " + QString::number(move_speed_y);
 
-        move_speed_x = force.x();
-        move_speed_y = force.y();
-    }
+//    if (object->getAngleMovement()) {
+//        QPointF force(move_speed_x, move_speed_y);
+//        QTransform t = QTransform().rotate(object->getAngle());
+//        force = t.map(force);
+
+//        g_info += " - After X: " + QString::number(force.x()) +    ", Y: " + QString::number(force.y());
+
+//        move_speed_x = force.x();
+//        move_speed_y = force.y();
+//    }
 
     // Calculate target velocity, includes any Forced Movement
     cpFloat pre_forced_target_vx = move_speed_x;
@@ -220,19 +222,23 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpFloat target_vx = pre_forced_target_vx + object->getForcedSpeedX();
     cpFloat target_vy = pre_forced_target_vy + object->getForcedSpeedY();
 
+
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
     if (target_vy < 0 && gravity.y > 0) {
         target_vy += gravity.y * object->getTempGravityMultiplier();
         if (target_vy > 0) target_vy = 0;
+
     } else if (target_vy > 0 && gravity.y < 0) {
         target_vy += gravity.y * object->getTempGravityMultiplier();
         if (target_vy < 0) target_vy = 0;
     }
+
     if (target_vx < 0 && gravity.x > 0) {
         target_vx += gravity.x * object->getTempGravityMultiplier();
         if (target_vx > 0) target_vx = 0;
-    } else if (target_vx > 0) {
+
+    } else if (target_vx > 0 && gravity.x < 0) {
         target_vx += gravity.x * object->getTempGravityMultiplier();
         if (target_vx < 0) target_vx = 0;
     }
