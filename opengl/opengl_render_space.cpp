@@ -34,10 +34,13 @@
 //##        Turn off culling before drawing 2D quads
 //##        !!!!! #NOTE: Must turn OFF culling for QPainter to work
 //####################################################################################
-void DrOpenGL::cullingOn() {
+void DrOpenGL::cullingOn(bool reversed) {
     glEnable( GL_CULL_FACE );
     glCullFace(  GL_BACK );
-    glFrontFace( GL_CCW );
+    if (reversed)
+        glFrontFace( GL_CW );
+    else
+        glFrontFace( GL_CCW );
 }
 void DrOpenGL::cullingOff() {
     glDisable( GL_CULL_FACE );
@@ -92,14 +95,15 @@ void DrOpenGL::drawSpace() {
                     ///glDisable(GL_DEPTH_TEST);
 
                 } else {
-                    ///cullingOn();
+                    cullingOn(false);
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
                     drawObject(thing, last_thing, draw2D);
+                    glDepthMask(GL_TRUE);
                     glDisable(GL_DEPTH_TEST);
-                    ///cullingOff();
                 }
 
+                cullingOff();
                 break;
             case DrThingType::Camera:
                 break;

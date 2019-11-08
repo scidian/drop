@@ -154,7 +154,9 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
     float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
-    model.scale( (object->getScaleX() + add_pixel_x) * flip_x, (object->getScaleY() + add_pixel_y) * flip_y, static_cast<float>(object->getDepth()) );
+    float final_x_scale = (object->getScaleX() + add_pixel_x) * flip_x;
+    float final_y_scale = (object->getScaleY() + add_pixel_y) * flip_y;
+    model.scale( final_x_scale, final_y_scale, static_cast<float>(object->getDepth()) );
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
     float alpha = object->getOpacity();                                                 // Start with object alpha
@@ -167,11 +169,20 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         }
     }
 
-    // Set Model Shader Values
+    // ***** Some 3D Use Cases
+    if (!draw2D) {
+        // Transparent 3D Objects Don't Affect Depth Buffer
+        if (alpha < 1.0f) glDepthMask(GL_FALSE);
+
+        // Reverse Culling for Flipped Objects
+        if ((final_x_scale < 0 && final_y_scale > 0) || (final_x_scale > 0 && final_y_scale < 0)) cullingOn(true);
+    }
+
+    // ***** Set Model Shader Values
     m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
     m_default_shader.setUniformValue( u_default_matrix_object,  model );
 
-    // Remove scaling from camera position for shading calculations
+    // *****Remove scaling from camera position for shading calculations
     QMatrix4x4 matrix_eye;
     matrix_eye.scale(1.f / combinedZoomScale());
     QVector3D eye_move = matrix_eye * m_eye;

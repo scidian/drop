@@ -63,6 +63,7 @@ public:
 
     DrEngineThing*      getThingFollowing();
     double              getThingFollowingRotation();
+    float               getThingFollowingZOrder();
     long                getThingFollowingKey() { return m_follow_key; }
     void                setFollowThing(long follow_key) { m_follow_key = follow_key; }
 

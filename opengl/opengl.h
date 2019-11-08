@@ -149,9 +149,9 @@ public:
     void            loadProjectTextures();
     void            loadShaders();
 
-    // Render Calls
+    // Render Calls    
     void            bindOffscreenBuffer(bool clear = true);
-    void            cullingOn();
+    void            cullingOn(bool reversed = false);
     void            cullingOff();
     void            drawDebug(QPainter &painter);
     void            drawDebugCollisions(QPainter &painter);

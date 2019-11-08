@@ -253,10 +253,19 @@ double DrEngineWorld::getCameraRotationX() { return static_cast<double>(getCamer
 double DrEngineWorld::getCameraRotationY() { return static_cast<double>(getCameraRotation().y()); }
 double DrEngineWorld::getCameraRotationZ() { return static_cast<double>(getCameraRotation().z()); }
 
+// Tries to return Rotation of Thing camera is following, if not following returns 0
 double DrEngineWorld::getCameraFollowingRotation() {
     if (m_active_camera == 0) {                     return 0.0;
     } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingRotation();
     } else {                                        return 0.0;
+    }
+}
+
+// Tries to return Z Order of Thing camera is following, if not following returns 0
+float DrEngineWorld::getCameraFollowingZ() {
+    if (m_active_camera == 0) {                     return 0.0f;
+    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingZOrder();
+    } else {                                        return 0.0f;
     }
 }
 
@@ -316,6 +325,12 @@ double DrEngineCamera::getThingFollowingRotation() {
     DrEngineThing *follow = getThingFollowing();
     if (follow == nullptr) return 0;
     return follow->getAngle();
+}
+
+float DrEngineCamera::getThingFollowingZOrder() {
+    DrEngineThing *follow = getThingFollowing();
+    if (follow == nullptr) return 0.0;
+    return static_cast<float>(follow->getZOrder());
 }
 
 //####################################################################################

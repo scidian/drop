@@ -202,6 +202,7 @@ public:
     double              getCameraRotationY();
     double              getCameraRotationZ();
     double              getCameraFollowingRotation();
+    float               getCameraFollowingZ();
     Up_Vector           getCameraUpVector();
     double              getCameraZoom();
     void                moveCameras(double milliseconds);

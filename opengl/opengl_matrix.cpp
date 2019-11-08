@@ -49,7 +49,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     float cam_y = world->getCameraPosition().y() * combinedZoomScale();
     float cam_z = world->getCameraPosition().z();
     m_eye =     QVector3D( cam_x, cam_y, cam_z );
-    m_look_at = QVector3D( cam_x, cam_y, 0.0f );
+    m_look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * combinedZoomScale() );
     m_up =      (world->getCameraUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
 
     // ***** Camera Rotation
@@ -109,7 +109,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     view_matrix.setToIdentity();
     proj_matrix.setToIdentity();
 
-    // Scale based on Render Type
+    // ***** Scale based on Render Type
     float scale = (render_type == Render_Type::Orthographic) ? (c_occluder_scale_ortho) : (c_occluder_scale_proj);
           scale *= combinedZoomScale();
 
@@ -139,7 +139,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     // ***** Set Look At and Scale, Dont need extra rotation
     ///view_matrix.lookAt(m_eye, m_look_at, m_up);
     QVector3D eye =     QVector3D( cam_x, cam_y, cam_z );
-    QVector3D look_at = QVector3D( cam_x, cam_y, 0.0f );
+    QVector3D look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * scale );
     QVector3D up =      (world->getCameraUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
     view_matrix.lookAt(eye, look_at, up);
     view_matrix.scale(scale);
