@@ -25,7 +25,7 @@ QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x
 
     // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane
     obj_to_cam_proj.setX( camera.x() - object.x() );
-    obj_to_cam_proj.setY( 0 );
+    obj_to_cam_proj.setY( camera.y() - object.y() );//0 );
     obj_to_cam_proj.setZ( camera.z() - object.z() );
 
     // This is the original look_at vector for the object in world coordinates
@@ -44,7 +44,7 @@ QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x
 
     // Perform the rotation
     if ((angle_cosine < 0.9999f) && (angle_cosine > -0.9999f)) {
-        mvp.rotate( acos(angle_cosine)*180.f/3.14f, up_aux.x(), up_aux.y(), up_aux.z());
+        mvp.rotate( std::acos(angle_cosine)*180.f/3.14f, up_aux.x(), up_aux.y(), up_aux.z());
     }
 
     // So far it is just a cylindrical billboard, now the second part tilts the object so that it faces the camera
@@ -119,11 +119,11 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Rotate
     if (!object->getBillboard()) {
+        model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
         if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
             model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
         if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
             model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
-        model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
 
     // Rotate Billboards
     } else {

@@ -42,6 +42,8 @@ private:
     int             m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
     bool            m_wants_active = false;                     // If set to true in Editor, this camera tries to take Active when in Start Stage
 
+    Up_Vector       m_up_vector = Up_Vector::Y;                 // Up Vector of Camera, usually Y, Z for first person
+
     QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
     QVector<double> m_avg_speed_y;                              // Average y speed of object this camera is following
     QVector<double> m_avg_speed_z;                              // Average z speed of object this camera is following
@@ -52,20 +54,24 @@ public:
     DrEngineCamera(DrEngineWorld *engine_world, long unique_key, float x = 0, float y = 0, float z = 0, int buffer_size = c_slop_buffer_size);
 
     // Function Calls
-    void        followObject(long follow_key) { m_follow_key = follow_key; }
-    void        moveCamera(const double& milliseconds);
-    void        updateCamera();
+    void            moveCamera(const double& milliseconds);
+    void            updateCamera();
 
     // Getters / Setters
     DrEngineWorld*      getEngineWorld()    { return m_world; }
     long                getKey()            { return m_key; }
-    long                getThingFollowing() { return m_follow_key; }
+
+    DrEngineThing*      getThingFollowing();
+    double              getThingFollowingRotation();
+    long                getThingFollowingKey() { return m_follow_key; }
+    void                setFollowThing(long follow_key) { m_follow_key = follow_key; }
 
     const int&          getBufferSize()     { return m_buffer_size; }
     const DrPointF&     getLag()            { return m_lag; }
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
+    Up_Vector           getUpVector()       { return m_up_vector; }
     const bool&         getWantsActive()    { return m_wants_active; }
     const double&       getZoom()           { return m_zoom; }
 
@@ -97,6 +103,7 @@ public:
     void                setSpeedZ(float z) { m_speed.setZ(z); }
 
     void                setTarget(QVector3D target) { m_target = target; }
+    void                setUpVector(Up_Vector up) { m_up_vector = up; }
     void                setWantActive(bool wants) { m_wants_active = wants; }
     void                setZoom(double zoom) { m_zoom = zoom; }
 

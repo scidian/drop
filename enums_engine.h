@@ -85,6 +85,12 @@ enum class Matrix_Type {
     Projection,
 };
 
+enum class Up_Vector {
+    Y = 0,                              // Normal 2D Platformer
+    Z = 1,                              // Useful for 2.5D First Person Shooter
+    ///X = 2,                           // -- Unused Currently --
+};
+
 enum class Blend_Mode {                 // !!!!! Order is important
     Standard    = 0,
     Multiply    = 1,

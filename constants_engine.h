@@ -19,10 +19,12 @@ const int   c_float_size =      static_cast<int>(sizeof(GLfloat));
 
 
 // Camera Constants
-const float c_near_plane =     -10000.0;
-const float c_far_plane =       10000.0;
-const float c_field_of_view =   52.5f;                  // Close to Orthographic size when using standard widescreen ratio
-const int   c_slop_buffer_size = 5;                     // Default number of past object speeds to average together for camera follow
+const QVector3D c_up_vector_y { 0.0, 1.0, 0.0 };
+const QVector3D c_up_vector_z { 0.0, 0.0, 1.0 };
+const float     c_near_plane =     -10000.0;
+const float     c_far_plane =       10000.0;
+const float     c_field_of_view =   52.5f;              // Close to Orthographic size when using standard widescreen ratio
+const int       c_slop_buffer_size = 5;                 // Default number of past object speeds to average together for camera follow
 
 
 // 2D Light Constants

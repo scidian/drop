@@ -85,6 +85,10 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     } else if   (property_key == static_cast<int>(Properties::World_Camera_Type)) {
         options << tr("Perspective")
                 << tr("Orthographic");
+    } else if   (property_key == static_cast<int>(Properties::Thing_Character_Camera_Up_Vector) ||
+                 property_key == static_cast<int>(Properties::Thing_Camera_Up_Vector)) {
+        options << tr("Y Axis (Default)")
+                << tr("Z Axis (First Person)");
     } else {
         options << tr("Unknown List");
     }

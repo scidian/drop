@@ -131,9 +131,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  181
+//##    !!!!! NEXT AVAILABLE NUMBER:  184
 //##
-//##    Checked for doubles up through 180 on 11/07/2019
+//##    Checked for doubles up through 184 on 11/07/2019
 //############################
 enum class Properties {
 
@@ -201,6 +201,7 @@ enum class Properties {
     // Asset_Physics
     Asset_Physics_Custom_Friction       = 162,      // bool double combo
     Asset_Physics_Custom_Bounce         = 163,      // bool double combo
+    Asset_Physics_Rotate_Speed          = 181,      // double
 
     // Asset_Health
     Asset_Health_Max_Health             = 144,      // double
@@ -324,6 +325,7 @@ enum class Properties {
     Thing_Camera_Set_As_Active          = 178,      // bool
     Thing_Camera_Speed                  = 179,      // pointf
     Thing_Camera_Rotation               = 180,      // pointf
+    Thing_Camera_Up_Vector              = 183,      // list, enum class Up_Vector
     Thing_Camera_Zoom                   = 83,       // double
 
 
@@ -331,6 +333,7 @@ enum class Properties {
     Thing_Character_Camera_Position     = 170,      // pointf
     Thing_Character_Camera_Rotation     = 165,      // pointf
     Thing_Character_Camera_Tilt         = 172,      // double
+    Thing_Character_Camera_Up_Vector    = 182,      // list, enum class Up_Vector
     Thing_Character_Camera_Zoom         = 173,      // double
     Thing_Character_Camera_Lag          = 176,      // double
 

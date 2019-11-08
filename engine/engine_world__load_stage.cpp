@@ -79,6 +79,7 @@ void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double of
     QPointF     cam_speed =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed).toPointF();
     QPointF     cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
     double      cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
+    int         up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
 
     float x = static_cast<float>( info.position.x + offset_x);
     float y = static_cast<float>(-info.position.y + offset_y);
@@ -87,6 +88,7 @@ void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double of
     camera->setRotation( cam_rotation.x(), cam_rotation.y(), info.angle );
     camera->setWantActive( wants_active );
     camera->setZoom( cam_zoom );
+    camera->setUpVector( static_cast<Up_Vector>(up_vector) );
 }
 
 

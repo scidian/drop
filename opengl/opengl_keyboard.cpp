@@ -25,8 +25,8 @@ void DrOpenGL::keyPressEvent(QKeyEvent *event) {
     } else if (event->key() == Qt::Key_D) { g_keyboard_x =  1;
     } else if (event->key() == Qt::Key_S) { g_keyboard_y = -1;
 
-    } else if (event->key() == Qt::Key_Q) { g_pedal = Pedal::Clockwise;
-    } else if (event->key() == Qt::Key_E) { g_pedal = Pedal::CounterClockwise;
+    } else if (event->key() == Qt::Key_Left)    { g_pedal = Pedal::CounterClockwise;
+    } else if (event->key() == Qt::Key_Right)   { g_pedal = Pedal::Clockwise;
 
     } else if (event->key() == Qt::Key::Key_P) {
         QString file_name = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
@@ -49,8 +49,8 @@ void DrOpenGL::keyReleaseEvent(QKeyEvent *event) {
     } else if (event->key() == Qt::Key_D) { if (g_keyboard_x > 0.0) g_keyboard_x = 0;
     } else if (event->key() == Qt::Key_S) { if (g_keyboard_y < 0.0) g_keyboard_y = 0;
 
-    } else if (event->key() == Qt::Key_Q) { g_pedal = Pedal::None;
-    } else if (event->key() == Qt::Key_E) { g_pedal = Pedal::None;
+    } else if (event->key() == Qt::Key_Left)    { g_pedal = Pedal::None;
+    } else if (event->key() == Qt::Key_Right)   { g_pedal = Pedal::None;
     }
 
     QOpenGLWidget::keyReleaseEvent(event);

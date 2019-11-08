@@ -156,6 +156,8 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     double  cam_tilt =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
     double  cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
     QPointF cam_lag =       thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag).toPointF();
+    int     up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
+    Up_Vector cam_up =      static_cast<Up_Vector>(up_vector);
 
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
@@ -179,6 +181,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     QList<QVariant> friction = asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
+    double  rotate_speed =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
@@ -192,10 +195,15 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCameraRotation( float(cam_rotation.x()), float(cam_rotation.y()), float(cam_tilt) );         // Set active camera rotation
     player->setCameraZoom( cam_zoom );                                                                      // Set active camera zoom
     player->setCameraLag( DrPointF(cam_lag.x(), cam_lag.y()) );                                             // Set active camera lag
+    player->setCameraUpVector(cam_up);                                                                      // Set active camera up vector
     addThing(player);                                                                                       // Add to world
 
 
     // ***** Apply Character Settings
+    if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
+        player->setCanRotate( true );
+        player->setRotateSpeed(rotate_speed);
+    }
     player->setMaxSpeedX( max_speed.x() );
     player->setMaxSpeedY( max_speed.y() );
     player->setForcedSpeedX( forced_speed.x() );
@@ -249,6 +257,8 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
 
     QList<QVariant> friction = asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
+    double  rotate_speed =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
+
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
@@ -275,6 +285,12 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
         case 3: collision_type = Collision_Type::Damage_All;    break;
     }
     block->setCollisionType(collision_type);
+
+    // ***** Rotate Speed
+    if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
+        block->setCanRotate( true );
+        block->setRotateSpeed(rotate_speed);
+    }
 
     // ***** Velocity settings
     QPointF vel_x = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_X).toPointF();

@@ -201,6 +201,8 @@ public:
     double              getCameraRotationX();
     double              getCameraRotationY();
     double              getCameraRotationZ();
+    double              getCameraFollowingRotation();
+    Up_Vector           getCameraUpVector();
     double              getCameraZoom();
     void                moveCameras(double milliseconds);
     void                switchCameraToNext(bool only_switch_to_character_cameras, bool switch_player_controls);

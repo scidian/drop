@@ -220,6 +220,9 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
                            Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
                             "Custom Bounce?", "All Things default to World Bounce unless specified otherwise here. Bounce usually ranges from "
                                               "0.0 to 2.0 or higher.");
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed, Property_Type::Double, 0.0,
+                            "Rotate Speed", "Speed at which this Thing rotates when Rotate buttons are pressed.");
+
 }
 
 //####################################################################################

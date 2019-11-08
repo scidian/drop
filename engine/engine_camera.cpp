@@ -84,14 +84,15 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
     // If an object was passed in, attach camera to that object
     DrEngineThing *follow = findThingByKey(thing_key_to_follow);
     if (thing_key_to_follow != 0 && follow != nullptr) {
-        camera->followObject( thing_key_to_follow );
-        camera->setPositionX( static_cast<float>(follow->getPosition().x) + follow->getCameraPosition().x() );
-        camera->setPositionY( static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y() );
-        camera->setPositionZ( static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z() );
-        camera->setRotation(  follow->getCameraRotation() );
-        camera->setZoom(      follow->getCameraZoom() );
-        camera->setLag(       follow->getCameraLag() );
-        camera->setTarget(    camera->getPosition() );
+        camera->setFollowThing( thing_key_to_follow );
+        camera->setPositionX(   static_cast<float>(follow->getPosition().x) + follow->getCameraPosition().x() );
+        camera->setPositionY(   static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y() );
+        camera->setPositionZ(   static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z() );
+        camera->setRotation(    follow->getCameraRotation() );
+        camera->setZoom(        follow->getCameraZoom() );
+        camera->setLag(         follow->getCameraLag() );
+        camera->setTarget(      camera->getPosition() );
+        camera->setUpVector(    follow->getCameraUpVector() );
         follow->setActiveCameraKey(new_key);
     }
     return camera;
@@ -178,8 +179,8 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
         if ((*it).second->getKey() == m_active_camera) return;          // Made it back to active camera, cancel switching
 
         if (only_switch_to_character_cameras) {
-            if ((*it).second->getThingFollowing() != 0) {
-                DrEngineThing *thing = findThingByKey((*it).second->getThingFollowing());
+            if ((*it).second->getThingFollowingKey() != 0) {
+                DrEngineThing *thing = findThingByKey((*it).second->getThingFollowingKey());
                 if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
                     found_camera = true;
                 }
@@ -198,8 +199,8 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
 
         // Switch on new player if there is one
         bool switched = false;
-        if (m_cameras[new_key]->getThingFollowing() != 0) {
-            thing_new = findThingByKey(m_cameras[new_key]->getThingFollowing());
+        if (m_cameras[new_key]->getThingFollowingKey() != 0) {
+            thing_new = findThingByKey(m_cameras[new_key]->getThingFollowingKey());
             if (thing_new != nullptr && thing_new->getThingType() == DrThingType::Object) {
                 object_new = dynamic_cast<DrEngineObject*>(thing_new);
                 if (switch_player_controls && object_new != nullptr) {
@@ -227,51 +228,53 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
 
 
 //####################################################################################
-//##    DrEngineWorld - Returns Camera Position, also takes into handle camera switching
+//##    DrEngineWorld - Camera Property Getters
+//##                    #NOTE: Takes into account camera switching
 //####################################################################################
+// Returns Camera Position
 QVector3D DrEngineWorld::getCameraPosition() {
-    if (m_active_camera == 0) {
-        return c_default_camera_pos;
-    } else if (m_switching_cameras == false) {
-        return m_cameras[m_active_camera]->getPosition();
-    } else {
-        return m_temp_position;
+    if (m_active_camera == 0) {                     return c_default_camera_pos;
+    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getPosition();
+    } else {                                        return m_temp_position;
     }
 }
 double DrEngineWorld::getCameraPositionX() { return static_cast<double>(getCameraPosition().x()); }
 double DrEngineWorld::getCameraPositionY() { return static_cast<double>(getCameraPosition().y()); }
 double DrEngineWorld::getCameraPositionZ() { return static_cast<double>(getCameraPosition().z()); }
 
-
-//####################################################################################
-//##    DrEngineWorld - Returns Camera Rotation, also takes into handle camera switching
-//####################################################################################
+// Returns Camera Rotation, also takes into handle camera switching
 QVector3D DrEngineWorld::getCameraRotation() {
-    if (m_active_camera == 0) {
-        return c_default_camera_rot;
-    } else if (m_switching_cameras == false) {
-        return m_cameras[m_active_camera]->getRotation();
-    } else {
-        return m_temp_rotation;
+    if (m_active_camera == 0) {                     return c_default_camera_rot;
+    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getRotation();
+    } else {                                        return m_temp_rotation;
     }
 }
 double DrEngineWorld::getCameraRotationX() { return static_cast<double>(getCameraRotation().x()); }
 double DrEngineWorld::getCameraRotationY() { return static_cast<double>(getCameraRotation().y()); }
 double DrEngineWorld::getCameraRotationZ() { return static_cast<double>(getCameraRotation().z()); }
 
-//####################################################################################
-//##    DrEngineWorld - Returns Camera Zoom
-//####################################################################################
-double DrEngineWorld::getCameraZoom() {
-    if (m_active_camera == 0) {
-        return 1.0;
-    } else if (m_switching_cameras == false) {
-        return m_cameras[m_active_camera]->getZoom();
-    } else {
-        return m_temp_zoom;
+double DrEngineWorld::getCameraFollowingRotation() {
+    if (m_active_camera == 0) {                     return 0.0;
+    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingRotation();
+    } else {                                        return 0.0;
     }
 }
 
+// Returns Camera Zoom
+double DrEngineWorld::getCameraZoom() {
+    if (m_active_camera == 0) {                     return 1.0;
+    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getZoom();
+    } else {                                        return m_temp_zoom;
+    }
+}
+
+// Returns Camera Up Vector
+Up_Vector DrEngineWorld::getCameraUpVector() {
+    if (m_active_camera == 0) {                     return Up_Vector::Y;
+    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getUpVector();
+    } else {                                        return Up_Vector::Y;
+    }
+}
 
 //####################################################################################
 //####################################################################################
@@ -296,6 +299,23 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     m_avg_speed_x.clear();  m_avg_speed_x.fill(0, buffer_size);                 // Zero out average speed vector
     m_avg_speed_y.clear();  m_avg_speed_y.fill(0, buffer_size);                 // Zero out average speed vector
     m_avg_speed_z.clear();  m_avg_speed_z.fill(0, buffer_size);                 // Zero out average speed vector
+}
+
+
+//####################################################################################
+//##    Get Thing Following / Info
+//####################################################################################
+DrEngineThing* DrEngineCamera::getThingFollowing() {
+    DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
+    if (follow == nullptr) {                                m_follow_key = 0;   return nullptr;     }
+    if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return nullptr;     }
+    return follow;
+}
+
+double DrEngineCamera::getThingFollowingRotation() {
+    DrEngineThing *follow = getThingFollowing();
+    if (follow == nullptr) return 0;
+    return follow->getAngle();
 }
 
 //####################################################################################
@@ -325,9 +345,8 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 void DrEngineCamera::updateCamera() {        
     // Movement is based on following an object stored in m_follow
     if (m_follow_key == 0) return;
-    DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
-    if (follow == nullptr) {                                m_follow_key = 0;   return;     }
-    if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return;     }
+    DrEngineThing *follow = getThingFollowing();
+    if (follow == nullptr) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
     if (object->isDying() || object->isDead()) return;
 
