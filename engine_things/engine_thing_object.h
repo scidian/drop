@@ -83,6 +83,7 @@ private:
 
     double          m_move_speed_x =  400.0;        // Movement speed x
     double          m_move_speed_y =  400.0;        // Movement speed y
+    bool            m_angle_movement = false;       // Should the objects angle affect the objects move speeds? (good for first person, etc)
 
     double          m_jump_force_x =    0.0;        // Jump force x
     double          m_jump_force_y =  250.0;        // Jump force y
@@ -245,6 +246,7 @@ public:
     const double&   getForcedSpeedY() { return m_forced_speed_y; }
     const double&   getMoveSpeedX() { return m_move_speed_x; }
     const double&   getMoveSpeedY() { return m_move_speed_y; }
+    const bool&     getAngleMovement() { return m_angle_movement; }
     const double&   getJumpForceX() { return m_jump_force_x; }
     const double&   getJumpForceY() { return m_jump_force_y; }
     const long&     getJumpTimeout() { return m_jump_timeout; }
@@ -268,6 +270,7 @@ public:
     void            setForcedSpeedY(double new_forced_speed_y) { m_forced_speed_y = new_forced_speed_y; }
     void            setMoveSpeedX(double new_move_speed_x) { m_move_speed_x = new_move_speed_x; }
     void            setMoveSpeedY(double new_move_speed_y) { m_move_speed_y = new_move_speed_y; }
+    void            setAngleMovement(bool angle_should_affect_movement) { m_angle_movement = angle_should_affect_movement; }
     void            setJumpForceX(double new_jump_force_x) { m_jump_force_x = new_jump_force_x; }
     void            setJumpForceY(double new_jump_force_y) { m_jump_force_y = new_jump_force_y; }
     void            setJumpTimeout(long new_jump_timeout) { m_jump_timeout = new_jump_timeout; }

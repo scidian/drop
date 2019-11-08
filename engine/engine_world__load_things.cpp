@@ -162,6 +162,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     QPointF forced_speed =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
     QPointF move_speed =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed).toPointF();
+    bool    angle_move =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Angle_Movement).toBool();
 
     QPointF jump_force =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force).toPointF();
     int     jump_timeout =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout).toInt();
@@ -210,6 +211,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setForcedSpeedY( forced_speed.y() );
     player->setMoveSpeedX( move_speed.x() );
     player->setMoveSpeedY( move_speed.y() );
+    player->setAngleMovement( angle_move );
 
     player->setJumpForceX( jump_force.x() );
     player->setJumpForceY( jump_force.y() );

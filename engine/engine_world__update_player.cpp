@@ -197,9 +197,24 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ***** Velocity - Target horizontal speed for air / ground control
     cpVect  velocity = cpBodyGetVelocity( object->body );
 
+    // Movement Speed, adjust to angle if desired
+    cpFloat move_speed_x = object->getMoveSpeedX() * key_x;
+    cpFloat move_speed_y = object->getMoveSpeedY() * key_y;
+    if (object->getAngleMovement()) {
+        QPointF force(move_speed_x, move_speed_y);
+        QTransform t = QTransform().rotate(object->getAngle());
+        force = t.map(force);
+
+        g_info = "Before X: " + QString::number(move_speed_x) + ", Y: " + QString::number(move_speed_y) +
+               " - After X: " + QString::number(force.x()) +    ", Y: " + QString::number(force.y());
+
+        move_speed_x = force.x();
+        move_speed_y = force.y();
+    }
+
     // Calculate target velocity, includes any Forced Movement
-    cpFloat pre_forced_target_vx = (object->getMoveSpeedX() * key_x);
-    cpFloat pre_forced_target_vy = (object->getMoveSpeedY() * key_y);
+    cpFloat pre_forced_target_vx = move_speed_x;
+    cpFloat pre_forced_target_vy = move_speed_y;
     bool has_forced_x = !(Dr::FuzzyCompare(object->getForcedSpeedX(), 0.0));
     bool has_forced_y = !(Dr::FuzzyCompare(object->getForcedSpeedY(), 0.0));
     cpFloat target_vx = pre_forced_target_vx + object->getForcedSpeedX();
@@ -243,14 +258,14 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Air Acceleration
     double air_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0 || has_forced_x) ? 0.005 : 1.0;
     double air_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0 || has_forced_y) ? 0.005 : 1.0;
-    double air_accel_x =    object->getMoveSpeedX() / (sqrt(air_drag)*air_x_multiplier + c_buffer_x);
-    double air_accel_y =    object->getMoveSpeedY() / (sqrt(air_drag)*air_y_multiplier + c_buffer_y);
+    double air_accel_x =    move_speed_x / (sqrt(air_drag)*air_x_multiplier + c_buffer_x);
+    double air_accel_y =    move_speed_y / (sqrt(air_drag)*air_y_multiplier + c_buffer_y);
 
     // Ground Acceleration
     double grd_x_multiplier = (pre_forced_target_vx > 0 || pre_forced_target_vx < 0) ? 0.1 : 1.0;
     double grd_y_multiplier = (pre_forced_target_vy > 0 || pre_forced_target_vy < 0) ? 0.1 : 1.0;
-    double ground_accel_x = object->getMoveSpeedX() / (sqrt(ground_drag)*grd_x_multiplier + c_buffer_x);
-    double ground_accel_y = object->getMoveSpeedY() / (sqrt(ground_drag)*grd_y_multiplier + c_buffer_y);
+    double ground_accel_x = move_speed_x / (sqrt(ground_drag)*grd_x_multiplier + c_buffer_x);
+    double ground_accel_y = move_speed_y / (sqrt(ground_drag)*grd_y_multiplier + c_buffer_y);
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {

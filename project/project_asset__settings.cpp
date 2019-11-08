@@ -46,6 +46,8 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
                            "Forced Speed", "Forced movement speed of this Character in the x and y direction.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed, Property_Type::PointF, QPointF(400, 400),
                            "Move Speed", "Button / Joystick movement speed of this Character in the x and y direction.");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Angle_Movement, Property_Type::Bool, false,
+                           "Angle Movement?", "Should the rotation of this Character affect the movement speed forces? Good for moving in first person.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, QPointF(0, 250),
                            "Jump Force", "Force of jump button in the x and y direction");
 

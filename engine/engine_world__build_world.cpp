@@ -91,6 +91,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
 
     // ***** World appearance settings
     int render =            world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Type).toInt();
+    cam_object_angle =      world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Object_Angle).toBool();
     cam_switch_speed =      world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Switch_Speed).toDouble();
     render_type = static_cast<Render_Type>(render);
 

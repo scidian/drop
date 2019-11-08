@@ -131,9 +131,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  184
+//##    !!!!! NEXT AVAILABLE NUMBER:  186
 //##
-//##    Checked for doubles up through 184 on 11/07/2019
+//##    Checked for doubles up through 186 on 11/07/2019
 //############################
 enum class Properties {
 
@@ -158,6 +158,7 @@ enum class Properties {
     Asset_Character_Max_Speed           = 6,        // pointf
     Asset_Character_Forced_Speed        = 7,        // pointf
     Asset_Character_Move_Speed          = 8,        // pointf
+    Asset_Character_Angle_Movement      = 184,      // bool
     Asset_Character_Jump_Force          = 9,        // pointf
     Asset_Character_Jump_Timeout        = 10,       // positive int
     Asset_Character_Jump_Counter        = 11,       // int
@@ -242,6 +243,7 @@ enum class Properties {
     World_Camera_Type                   = 174,      // list, enum class Render_Type
     World_Camera_Slop                   = 177,      // percent
     World_Camera_Switch_Speed           = 175,      // positive double
+    World_Camera_Object_Angle           = 185,      // bool
 
     // Appearance
     World_Filter_Bitrate                = 35,       // ranged int, 0 to 256

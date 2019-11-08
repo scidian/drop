@@ -71,6 +71,8 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Switch_Speed, Property_Type::PositiveDouble, 1.0,
                            "Switching Speed", "Multiplier to affect how fast Camera switching happens. A value lower than 1.0 will decrease switching "
                                               "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Object_Angle, Property_Type::Bool, false,
+                           "Object Angle?", "Locks Camera angle onto active Character angle. Useful for first person perspective.");
 
     addComponent(Components::World_Lighting, "Lighting", "Lighting settings for this World.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::World_Lighting)->setIcon(Component_Icons::Light);

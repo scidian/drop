@@ -50,7 +50,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     float cam_z = world->getCameraPosition().z();
     m_eye =     QVector3D( cam_x, cam_y, cam_z );
     m_look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * combinedZoomScale() );
-    m_up =      (world->getCameraUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
+    m_up =      world->getCameraUpVector();
 
     // ***** Camera Rotation
     //          X Rotation, controls up / down
@@ -81,16 +81,24 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     }
 
     // ***** Rotation locked to Camera Follow Thing
-    if (world->getCameraUpVector() == Up_Vector::Y) {
-        rotate_up.setToIdentity();
-        rotate_up.rotate(static_cast<float>(world->getCameraFollowingRotation()), 0.0f, 0.0f, 1.0f);
-        m_up = rotate_up * m_up;
-    } else if (world->getCameraUpVector() == Up_Vector::Z) {
-        rotate_eye.setToIdentity();
-        rotate_eye.translate( m_look_at);
-        rotate_eye.rotate(static_cast<float>(world->getCameraFollowingRotation()), 0.0f, 0.0, 1.0f);
-        rotate_eye.translate(-m_look_at);
-        m_eye = rotate_eye * m_eye;
+    if (world->cam_object_angle) {
+        float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
+        float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
+
+        // Apply rotation as a percentage of distance from max distance of square root of 2, useful for camera tweening between camera up vectors
+        float sqrt_2 = static_cast<float>(sqrt(2.0));
+        if (dist_y < sqrt_2) {
+            rotate_up.setToIdentity();
+            rotate_up.rotate(static_cast<float>(world->getCameraFollowingRotation()) * ((sqrt_2 - dist_y) / sqrt_2),  0.0f, 0.0f, 1.0f);
+            m_up = rotate_up * m_up;
+        }
+        if (dist_z < sqrt_2) {
+            rotate_eye.setToIdentity();
+            rotate_eye.translate( m_look_at);
+            rotate_eye.rotate(static_cast<float>(world->getCameraFollowingRotation()) * ((sqrt_2 - dist_z) / sqrt_2), 0.0f, 0.0, 1.0f);
+            rotate_eye.translate(-m_look_at);
+            m_eye = rotate_eye * m_eye;
+        }
     }
 
     // ***** Set Look At and Scale
@@ -140,7 +148,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     ///view_matrix.lookAt(m_eye, m_look_at, m_up);
     QVector3D eye =     QVector3D( cam_x, cam_y, cam_z );
     QVector3D look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * scale );
-    QVector3D up =      (world->getCameraUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
+    QVector3D up =      world->getCameraUpVector();
     view_matrix.lookAt(eye, look_at, up);
     view_matrix.scale(scale);
 }
