@@ -149,6 +149,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     QVector3D eye =     QVector3D( cam_x, cam_y, cam_z );
     QVector3D look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * scale );
     QVector3D up =      world->getCameraUpVector();
+
     view_matrix.lookAt(eye, look_at, up);
     view_matrix.scale(scale);
 }

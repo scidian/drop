@@ -53,8 +53,8 @@ void DrOpenGL::keyReleaseEvent(QKeyEvent *event) {
 
     } else if (event->key() == Qt::Key_Up)      { if (g_keyboard_y > 0.0) g_keyboard_y = 0;
     } else if (event->key() == Qt::Key_Down)    { if (g_keyboard_y < 0.0) g_keyboard_y = 0;
-    } else if (event->key() == Qt::Key_Left)    { g_pedal = Pedal::None;
-    } else if (event->key() == Qt::Key_Right)   { g_pedal = Pedal::None;
+    } else if (event->key() == Qt::Key_Left)    { if (g_pedal == Pedal::CounterClockwise) g_pedal = Pedal::None;
+    } else if (event->key() == Qt::Key_Right)   { if (g_pedal == Pedal::Clockwise)        g_pedal = Pedal::None;
     }
 
     QOpenGLWidget::keyReleaseEvent(event);
