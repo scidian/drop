@@ -131,9 +131,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  186
+//##    !!!!! NEXT AVAILABLE NUMBER:   187
 //##
-//##    Checked for doubles up through 186 on 11/07/2019
+//##    Checked for doubles up through 187 on 11/07/2019
 //############################
 enum class Properties {
 
@@ -342,6 +342,7 @@ enum class Properties {
     // Object Settings
     Thing_Object_Physics_Type           = 84,       // list, enum class Body_Type (Static, Kinematic, Dynamic)
     Thing_Object_Collide                = 85,       // bool
+    Thing_Object_Collision_Group        = 186,      // list, enum class Collision_Group (none, all, active players, players, enemies)
     Thing_Object_Damage                 = 86,       // list, enum class Collision_Type (none, player, enemy, all)
 
     // Text Settings

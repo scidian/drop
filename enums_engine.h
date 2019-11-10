@@ -10,6 +10,7 @@
 
 #include <string>
 
+
 //####################################################################################
 //##    !!!!! #TEMP: Temporary Demo Enums
 //############################
@@ -21,7 +22,6 @@ enum class Demo_Player {
     Player,
 };
 // ########## !!!!! END
-
 
 enum Asset_Textures {
     Numbers =               -1,
@@ -98,6 +98,7 @@ enum class Blend_Mode {                 // !!!!! Order is important
     Hard_Light  = 3,
 };
 
+
 //####################################################################################
 //##    Control Enumerations
 //############################
@@ -123,11 +124,12 @@ enum class Pedal {
 
 //####################################################################################
 //##    DrEngineObject Enumerations
+//##        !!!!! #NOTE: Order is important for enums that have set values
 //############################
-enum class Body_Type {                  // !!!!! Order is important
-    Static =    0,
-    Kinematic = 1,
-    Dynamic =   2,
+enum class Body_Type {
+    Static =                0,
+    Kinematic =             1,
+    Dynamic =               2,
 };
 
 enum class Shape_Type {
@@ -137,11 +139,23 @@ enum class Shape_Type {
     Polygon,                            // cpPolyShapeNew
 };
 
-enum class Collision_Type {             // !!!!! Order is important
+enum class Collision_Type {
     Damage_None =           1,
     Damage_Player =         2,
     Damage_Enemy =          3,
     Damage_All =            4,
+};
+
+enum class Collision_Groups {
+    None =                  0,
+    All =                   1,
+    Active_Players_Only =   2,
+    Players =               3,
+    Enemies =               4,
+
+    // Future Use
+    Water =                 5,
+    Fire =                  6,
 };
 
 enum class Death_Animation {
@@ -155,9 +169,9 @@ enum class Light_Type {
     Glow,
 };
 
-enum class Convert_3D_Type {            // !!!!! Order is important
-    Extrusion = 0,
-    Cube =      1,
+enum class Convert_3D_Type {
+    Extrusion =             0,
+    Cube =                  1,
 };
 
 

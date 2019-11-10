@@ -24,13 +24,6 @@
 //      seperate:   Two shapes have just stopped touching for the first time this step. To ensure that begin() / separate() are always called in
 //                      balanced pairs, it will also be called when removing a shape while its in contact with something or when deallocating the space.
 
-enum class One_Way_Reference {          // One Way Collide
-    None,
-    Pass_Through,                       // Objects can pass through going one_way_direction
-    Weak_Point,                         // Only takes damage from one_way_direction
-    ///Damage_Direction,                // Only gives damage from one_way_direction
-};
-
 // Internal Linkage (File Scope) Forward Declarations
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
 
@@ -47,6 +40,9 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
+
+    if (object_a->shouldCollide(object_b) == false) return cpArbiterIgnore(arb);
+    if (object_b->shouldCollide(object_a) == false) return cpArbiterIgnore(arb);
 
     // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
     if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {

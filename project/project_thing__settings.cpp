@@ -105,11 +105,14 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
                                           "<b>Kinematic</b> - Moves at fixed speed. <br> "
                                           "<b>Dynamic</b> - Physics object.");
     addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collide, Property_Type::Bool, should_collide,
-                           "Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
-                                       "still provide damage and sound reponses when coming into contact with other Objects.");
+                           "Physics Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
+                                               "still provide damage and sound reponses when coming into contact with other Objects.");
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collision_Group, Property_Type::List, 1,
+                           "Collide With", "What types of other items should this Object collide with. Objects types not selected will not provide "
+                                           "physics or damage collision responses.");
     addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Damage, Property_Type::List, 0,
-                           "Damage", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
-                                     "Object will be treated as an enemy and vice versa.");
+                           "Damage Type", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
+                                          "Object will be treated as an enemy and vice versa.");
 }
 
 //####################################################################################

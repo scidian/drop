@@ -253,9 +253,10 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset =     m_project->getAsset(asset_key);
             if (asset == nullptr) return;
-    ThingInfo   info =      loadThingBasicInfo( thing );
-    bool        collide =   thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
-    int         physics =   thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
+    ThingInfo   info =          loadThingBasicInfo( thing );
+    bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
+    int         collide_with =  thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collision_Group).toInt();
+    int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
     QList<QVariant> friction = asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
@@ -275,6 +276,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, info.position.x + offset_x, -info.position.y + offset_y,
                                                info.z_order, info.scale, use_friction, use_bounce, collide, true, info.angle, info.opacity);
     loadThingCollisionShape(asset, block);
+    block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
     addThing(block);
 
     // ***** Set collision type

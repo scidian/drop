@@ -89,6 +89,12 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                  property_key == static_cast<int>(Properties::Thing_Camera_Up_Vector)) {
         options << tr("Y Axis (Default)")
                 << tr("Z Axis (First Person)");
+    } else if   (property_key == static_cast<int>(Properties::Thing_Object_Collision_Group)) {
+        options << tr("None")
+                << tr("All")
+                << tr("Active Players Only")
+                << tr("Players")
+                << tr("Enemies");
     } else {
         options << tr("Unknown List");
     }

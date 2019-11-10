@@ -32,8 +32,9 @@ private:
     //      To be set for each object as desired
     //
     // Object Basic Settings
-    bool            m_does_collide = true;          // Set to false to have this object not collide with anything
-    long            m_texture_number;               // Reference to which texture to use from Engine->EngineTexture map
+    bool                m_does_collide = true;                      // Set to false to have this object not collide with anything
+    Collision_Groups    m_collide_with = Collision_Groups::All;     // Types of other objects this should collide with (physcics and collision)
+    long                m_texture_number;                           // Reference to which texture to use from Engine->EngineTexture map
 
     // Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
@@ -167,12 +168,14 @@ public:
 
 
     // Object Basic Settings
-    const bool&     doesCollide() { return m_does_collide; }
-    const long&     getTextureNumber() { return m_texture_number; }
-    const long&     getAssetKey() { return m_texture_number; }
+    const bool&         doesCollide() { return m_does_collide; }
+    Collision_Groups    getCollidesWith() { return m_collide_with; }
+    const long&         getTextureNumber() { return m_texture_number; }
+    const long&         getAssetKey() { return m_texture_number; }
 
-    void            setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
-    void            setTextureNumber(long texture_number) { m_texture_number = texture_number; }
+    void                setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
+    void                setCollidesWith(Collision_Groups groups) { m_collide_with = groups; }
+    void                setTextureNumber(long texture_number) { m_texture_number = texture_number; }
 
     // Object Properties - Bounce / Friction
     const double&   getCustomFriction() { return m_custom_friction; }
@@ -232,6 +235,8 @@ public:
     bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false);
+
+    bool            shouldCollide(DrEngineObject *object);
 
     // Object Movement - Rotation (On Z Axis)
     const double&   getRotateSpeed() { return m_rotate_speed; }

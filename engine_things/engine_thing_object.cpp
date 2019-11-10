@@ -227,6 +227,18 @@ bool DrEngineObject::shouldDamage(Collision_Type check_damage) {
     return false;
 }
 
+// Returns true if two objects should collide
+bool DrEngineObject::shouldCollide(DrEngineObject *b) {
+    switch (this->getCollidesWith()) {
+        case Collision_Groups::None:                return false;
+        case Collision_Groups::Active_Players_Only: return (b->hasKeyControls() && (b->hasLostControl() == false));
+        case Collision_Groups::Players:             return (b->hasKeyControls() || (b->getCollisionType() == Collision_Type::Damage_Enemy));
+        case Collision_Groups::Enemies:             return (b->getCollisionType() == Collision_Type::Damage_Player);
+        default: ;
+    }
+    return true;
+}
+
 
 //####################################################################################
 //##    Take Damage / Heal

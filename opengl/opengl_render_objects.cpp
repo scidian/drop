@@ -18,18 +18,38 @@
 #include "project/project_asset.h"
 
 
-QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x4 model_view_projection, bool cylindrical_only = false) {
+QMatrix4x4 billboard(QVector3D pos, QVector3D camera_pos, QVector3D camera_up) {
+    QVector3D look =    QVector3D(camera_pos - pos);
+             look.normalize();
+    QVector3D right =   QVector3D::crossProduct(camera_up,  look);
+    QVector3D up2 =     QVector3D::crossProduct(look,       right);
+    QMatrix4x4 transform = QMatrix4x4(  right.x(),  right.y(),  right.z(),  0,
+                                        up2.x(),    up2.y(),    up2.z(),    0,
+                                        look.x(),   look.y(),   look.z(),   0,
+                                        pos.x(),    pos.y(),    pos.z(),    1);
+    return transform;
+}
+
+QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QVector3D up, QVector3D look_at,
+                                   QMatrix4x4 model_view_projection, bool cylindrical_only = false) {
     QMatrix4x4 mvp = model_view_projection;
-    QVector3D  look_at, obj_to_cam_proj, up_aux, obj_to_cam;
+    QVector3D  obj_to_cam_proj, up_aux, obj_to_cam;
     float      angle_cosine;
 
-    // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane
+    Up_Vector uv = (c_up_vector_y.distanceToPoint(up) < 0.5f) ? Up_Vector::Y : Up_Vector::Z;
+
+    // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane    
     obj_to_cam_proj.setX( camera.x() - object.x() );
-    obj_to_cam_proj.setY( camera.y() - object.y() );//0 );
+    obj_to_cam_proj.setY( camera.y() - object.y() );
     obj_to_cam_proj.setZ( camera.z() - object.z() );
 
-    // This is the original look_at vector for the object in world coordinates
-    look_at = QVector3D(0, 0, 1);
+    if (uv == Up_Vector::Y) {
+        obj_to_cam_proj.setY( 0 );
+        look_at = QVector3D(0, 0, 1);           // This is the original look_at vector for the object in world coordinates
+    } else {
+        obj_to_cam_proj.setZ( 0 );
+        look_at = QVector3D(0, 0, 1);           // This is the original look_at vector for the object in world coordinates
+    }
 
     // Normalize both vectors to get the cosine directly afterwards
     obj_to_cam_proj.normalize();
@@ -37,10 +57,10 @@ QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QMatrix4x
     // Easy fix to determine wether the angle is -/+:
     //      For positive angles up_aux will be a vector pointing in the positive y direction,
     //      Otherwise up_aux will point downwards effectively reversing the rotation
-    up_aux = QVector3D::crossProduct(look_at, obj_to_cam_proj);
+    up_aux =        QVector3D::crossProduct(look_at, obj_to_cam_proj);
 
     // Compute the angle
-    angle_cosine = QVector3D::dotProduct(look_at, obj_to_cam_proj);
+    angle_cosine =  QVector3D::dotProduct(look_at, obj_to_cam_proj);
 
     // Perform the rotation
     if ((angle_cosine < 0.9999f) && (angle_cosine > -0.9999f)) {
@@ -118,26 +138,20 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     model.translate(x, y, z);
 
     // Rotate
-    if (!object->getBillboard()) {
-        model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-        if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
-            model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
-        if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
-            model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+    if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
+        model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
+        model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
 
     // Rotate Billboards
-    } else {
-        ///QMatrix4x4 pmv = (m_projection * m_view * model);
-        ///// Get length of first row as scale factor
-        ///float       scale_factor = pmv.row(0).toVector3D().length();
-        ///// Get upper left 3x3 sub-matrix and unscale
-        ///QMatrix3x3  parent_rotation = pmv.toGenericMatrix<3,3>();
-        ///            parent_rotation *= 1.0f / scale_factor;
-        ///QQuaternion inverse_parent_rotation = QQuaternion::fromRotationMatrix(parent_rotation).inverted();
-        ///// Set as rotation
-        ///model.rotate(inverse_parent_rotation);
-        model = billboardSphericalBegin( QVector3D(m_eye.x(), m_eye.y(), m_eye.z()),
-                                         QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), model, false);
+    if (object->getBillboard()) {
+        ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
+        QVector3D obj = QVector3D(x, y, z);
+        QVector3D eye = m_eye / combinedZoomScale();
+        model.setToIdentity();
+        model.lookAt(obj, eye, m_up);
+        model = model.inverted();
     }
 
     // Scale
@@ -179,7 +193,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // ***** Set Model Shader Values
-    m_default_shader.setUniformValue( u_default_matrix,         m_projection * m_view * model );
+    QMatrix4x4 mvp = m_projection * m_view * model;
+    m_default_shader.setUniformValue( u_default_matrix,         mvp );
     m_default_shader.setUniformValue( u_default_matrix_object,  model );
 
     // *****Remove scaling from camera position for shading calculations
