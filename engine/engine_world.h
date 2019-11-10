@@ -168,7 +168,7 @@ public:
     void            clearWorld();
     int             countCharacters();
 
-    void            loadThing3DSettings(DrThing *thing, DrEngineObject *object);
+    void            loadThing3DSettings(DrThing *thing, DrEngineThing *object);
     void            loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
     ThingInfo       loadThingBasicInfo(DrThing *thing);
     void            loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);

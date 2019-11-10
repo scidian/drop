@@ -497,8 +497,47 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
 
+
+    // ***** Set Matrix for Shader, calculates current matrix, adds in object location
+    float x =   static_cast<float>(thing->getPosition().x);
+    float y =   static_cast<float>(thing->getPosition().y);
+    float z =   static_cast<float>(thing->getZOrder() + m_add_z);
+    double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
+
+    // Translate
+    QMatrix4x4 model;
+    model.translate(x, y, z);
+
+    // Rotate
+    model.rotate(static_cast<float>(fire->getAngle()), 0.f, 0.f, 1.f);
+    if (Dr::FuzzyCompare(fire->getAngleX(), 0.0) == false || Dr::FuzzyCompare(fire->getRotateSpeedX(), 0.0) == false)
+        model.rotate(static_cast<float>(fire->getAngleX() + (now * fire->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    if (Dr::FuzzyCompare(fire->getAngleY(), 0.0) == false || Dr::FuzzyCompare(fire->getRotateSpeedY(), 0.0) == false)
+        model.rotate(static_cast<float>(fire->getAngleY() + (now * fire->getRotateSpeedY())), 0.f, 1.f, 0.f);
+
+    // Rotate Billboards
+    if (fire->getBillboard()) {
+        ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
+        QVector3D obj = QVector3D(x, y, z);
+        QVector3D eye = m_eye / combinedZoomScale();
+        model.setToIdentity();
+        model.lookAt(obj, eye, m_up);
+        model = model.inverted();
+    }
+
+    // Scale
+    model.scale( static_cast<float>(fire->getSize().x), static_cast<float>(fire->getSize().y), 1.0f );
+    float final_x_scale = (fire->getScaleX());
+    float final_y_scale = (fire->getScaleY());
+    model.scale( final_x_scale, final_y_scale, static_cast<float>(fire->getDepth()) );
+
+    // Reverse Culling for Flipped Objects
+    if ((final_x_scale < 0 && final_y_scale > 0) || (final_x_scale > 0 && final_y_scale < 0)) cullingOn(true);
+
+
     // ***** Set Matrix for Shader, calculates current matrix
-    m_fire_shader.setUniformValue( u_fire_matrix, (m_projection * m_view) );
+    QMatrix4x4 mvp = m_projection * m_view * model;
+    m_fire_shader.setUniformValue( u_fire_matrix,         mvp );
 
     // ***** Set Texture Coordinates for Shader
     m_fire_shader.setAttributeArray(    a_fire_texture_coord, m_quad_texture_coordinates.data(), 2 );
@@ -529,15 +568,13 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_engine->getTexture(Asset_Textures::Fire_Noise)->texture()->setWrapMode(QOpenGLTexture::WrapMode::MirroredRepeat);
 
     // ***** Load vertices for this object
-    QVector<GLfloat> vertices;
-    getThingVertices(vertices, fire);
-    m_fire_shader.setAttributeArray(    a_fire_vertex, vertices.data(), 3 );
+    m_fire_shader.setAttributeArray(    a_fire_vertex, m_quad_vertices.data(), 3 );
     m_fire_shader.enableAttributeArray( a_fire_vertex );
 
     // ***** Set Shader Variables
-    float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0);
+    now = Dr::MillisecondsSinceStartOfDay() / 1000.0;
     m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
-    m_fire_shader.setUniformValue( u_fire_time,     now );
+    m_fire_shader.setUniformValue( u_fire_time,     static_cast<float>(now) );
     m_fire_shader.setUniformValue( u_fire_position, static_cast<float>(thing->getPosition().x), static_cast<float>(thing->getPosition().y) );
     m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->getSize().x) * fire->getScaleX() );
     m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->getSize().y) * fire->getScaleY() );

@@ -40,7 +40,7 @@ ThingInfo DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
 //####################################################################################
 //##    Loads 3D Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineObject *object) {
+void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
     int    convert_type =   thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Type).toInt();
     double depth =          thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
     QPointF x_axis_rotate = thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Rotation).toPointF();

@@ -89,6 +89,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsFire();
             addComponentTransform(static_cast<int>(c_image_size * 0.625), c_image_size, x, -y, DrThingType::Fire);
             addComponentLayering(z, 100.0);
+            addComponent3D();
+            getComponentProperty(Components::Thing_3D, Properties::Thing_3D_Type)->setHidden(true);
+            getComponentProperty(Components::Thing_3D, Properties::Thing_3D_Depth)->setHidden(true);
             addComponentAppearance(true);
             break;
         case DrThingType::Fisheye:

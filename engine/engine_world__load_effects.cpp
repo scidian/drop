@@ -79,6 +79,9 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     fire->bitrate = bit_rate;
     fire->pixel_x = static_cast<float>(pixelation.x());
     fire->pixel_y = static_cast<float>(pixelation.y());
+
+    // ***** 3D Settings
+    loadThing3DSettings(thing, fire);
 }
 
 
