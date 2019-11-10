@@ -172,6 +172,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     float final_y_scale = (object->getScaleY() + add_pixel_y) * flip_y;
     model.scale( final_x_scale, final_y_scale, static_cast<float>(object->getDepth()) );
 
+
     // ***** Fade Away / Shrink Dying Object (Death Animation
     float alpha = object->getOpacity();                                                 // Start with object alpha
     if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
@@ -183,6 +184,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         }
     }
 
+
     // ***** Some 3D Use Cases
     if (!draw2D) {
         // Transparent 3D Objects Don't Affect Depth Buffer
@@ -191,6 +193,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         // Reverse Culling for Flipped Objects
         if ((final_x_scale < 0 && final_y_scale > 0) || (final_x_scale > 0 && final_y_scale < 0)) cullingOn(true);
     }
+
 
     // ***** Set Model Shader Values
     QMatrix4x4 mvp = m_projection * m_view * model;

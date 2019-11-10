@@ -113,8 +113,8 @@ int DrOpenGL::findNeededShadowMaps() {
         light->setLightDiameter( abs(static_cast<int>(light->light_size)) );
         light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
 
-        // In perspective mode we still draw the light the same size as z-order 0 even if its far away, this allows for cool large lights (like a big sun)
-        //      far away. This calculates the size difference for rendering later
+        // In perspective mode we still draw the light the same size as z-order 0 even if its far away,
+        // this allows for cool large lights (like a big sun) far away. This calculates the size difference for rendering later
         double light_radius = (light->getLightDiameterFitted() / 2.0);
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && m_occluder_fbo) {
             QMatrix4x4 view_matrix, proj_matrix;

@@ -103,7 +103,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
 
     // ***** Set Look At and Scale
     m_view.lookAt(m_eye, m_look_at, m_up);
-    m_view.scale( combinedZoomScale() );
+    m_view.scale(combinedZoomScale());
 }
 
 
@@ -148,7 +148,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     ///view_matrix.lookAt(m_eye, m_look_at, m_up);
     QVector3D eye =     QVector3D( cam_x, cam_y, cam_z );
     QVector3D look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * scale );
-    QVector3D up =      world->getCameraUpVector();
+    QVector3D up =      c_up_vector_y;///world->getCameraUpVector();
 
     view_matrix.lookAt(eye, look_at, up);
     view_matrix.scale(scale);
