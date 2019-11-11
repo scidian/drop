@@ -278,10 +278,10 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::number(component->getComponentKey()) + ":";
         QString k;
-        k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString()   );
+        ///k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString()   );
         k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString()   );
-        k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString()   );
-        k = map_key + "color";              if (checkMapHasKey(map, k)) component->setColor(        QColor::fromRgba(map[k].toUInt())   );
+        ///k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString()   );
+        ///k = map_key + "color";              if (checkMapHasKey(map, k)) component->setColor(        QColor::fromRgba(map[k].toUInt())   );
         k = map_key + "turned_on";          if (checkMapHasKey(map, k)) component->setOnOrOff(      map[k].toBool()     );
         ///k = map_key + "comp_key";           if (checkMapHasKey(map, k)) component->setComponentKey( map[k].toLongLong() );
 
@@ -298,8 +298,7 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             k = map_key + "data_type";
             if (checkMapHasKey(map, k)) {
                 check_property_type = static_cast<Property_Type>(map[k].toInt());
-                // Already set by Drop
-                ///property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
+                ///property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );           // Already set by Drop
             } else {
                 continue;
             }
@@ -308,7 +307,7 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             //          Property is fine if is same type, or if it was Positive and now is Double
             if ( (check_property_type == property->getPropertyType() ||
                  (check_property_type == Property_Type::Positive && property->getPropertyType() == Property_Type::Double)) ) {
-                k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
+                ///k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
                 k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
                 k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k] );
                 k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );

@@ -65,6 +65,12 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type 
     cpBodySetAngle(    this->body, qDegreesToRadians(-angle) );
     setAngle( -angle );
     cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
+
+    if (body_type == Body_Type::Kinematic) {
+        cpBodySetVelocityUpdateFunc(this->body, KinematicUpdateVelocity);
+    } else if (body_type == Body_Type::Dynamic) {
+        cpBodySetVelocityUpdateFunc(this->body, ObjectUpdateVelocity);
+    }
 }
 
 
@@ -111,6 +117,15 @@ void DrEngineObject::addToWorld() {
     Dr::ResetTimer( update_timer );
 }
 
+void DrEngineObject::setIgnoreGravity(bool ignore_gravity) {
+//    if (ignore_gravity) {
+//        if (hasKeyControls())
+//            cpBodySetVelocityUpdateFunc(this->body, PlayerUpdateVelocity);              // Assign the ObjectUpdateVelocity callback function
+//        else
+//            cpBodySetVelocityUpdateFunc(this->body, ObjectUpdateVelocity);              // Assign the ObjectUpdateVelocity callback function
+//    }
+    m_ignore_gravity = ignore_gravity;
+}
 
 //####################################################################################
 //##    Updates - Override for DrEngineThing::update()

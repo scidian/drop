@@ -175,14 +175,13 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     double  rotate_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag).toDouble();
 
     bool    can_rotate =    asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Can_Rotate).toBool();
-    bool    feels_gravity = asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Feels_Gravity).toBool();
-
     bool    flip_image_x =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_X).toBool();
     bool    flip_image_y =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y).toBool();
 
-    QList<QVariant> friction = asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
-    QList<QVariant> bounce =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
-    double  rotate_speed =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
+    bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
+    QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
+    QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
+    double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
@@ -258,9 +257,10 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     int         collide_with =  thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collision_Group).toInt();
     int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
-    QList<QVariant> friction = asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
-    QList<QVariant> bounce =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
-    double  rotate_speed =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
+    bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
+    QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
+    QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
+    double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
 
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
@@ -290,11 +290,12 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     }
     block->setCollisionType(collision_type);
 
-    // ***** Rotate Speed
+    // ***** Physics settings
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
         block->setCanRotate( true );
         block->setRotateSpeed(rotate_speed);
     }
+    block->setIgnoreGravity( !feels_gravity );
 
     // ***** Velocity settings
     QPointF vel_x = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_X).toPointF();
@@ -317,7 +318,6 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
             block->setOriginalVelocityY( velocity.y );
             block->setOriginalSpinVelocity( rad_angular );
             block->setUseAngleVelocity( angle_velocty );
-            cpBodySetVelocityUpdateFunc(block->body, KinematicUpdateVelocity);
         }
     }
 

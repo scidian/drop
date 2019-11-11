@@ -119,6 +119,22 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
 
 //####################################################################################
+//##    Updates Physics Object Velocity
+//####################################################################################
+extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
+    // ***** Grab object from User Data
+    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
+    if (object == nullptr) return;
+
+    // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
+    if (object->ignoreGravity()) {
+        cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
+    } else {
+        cpBodyUpdateVelocity(body, gravity, damping, dt);
+    }
+}
+
+//####################################################################################
 //##    Updates Kinematic Angular Velocity
 //####################################################################################
 extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {

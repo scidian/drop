@@ -171,7 +171,6 @@ enum class Properties {
     Asset_Character_Rotation_Drag       = 16,       // positive double
 
     Asset_Character_Can_Rotate          = 17,       // bool
-    Asset_Character_Feels_Gravity       = 18,       // bool
     Asset_Character_Flip_Image_X        = 159,      // bool
     Asset_Character_Flip_Image_Y        = 160,      // bool
 
@@ -200,6 +199,7 @@ enum class Properties {
     Asset_Animation_Default             = 22,       // image
 
     // Asset_Physics
+    Asset_Physics_Feels_Gravity         = 18,       // bool
     Asset_Physics_Custom_Friction       = 162,      // bool double combo
     Asset_Physics_Custom_Bounce         = 163,      // bool double combo
     Asset_Physics_Rotate_Speed          = 181,      // double

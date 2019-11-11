@@ -68,6 +68,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setDepth(30);
         addThing(ball1);
 
+        ball1->setCameraPositionXY( QPointF(0, 200) );
         assignPlayerControls(ball1, true, true, true);
         ball1->setJumpCount( 1 );
         ball1->setCanAirJump( false );
@@ -121,7 +122,6 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         ball1->setOriginalVelocityX( 15 );
         ball1->setOriginalVelocityY(  0 );
-        cpBodySetVelocityUpdateFunc(ball1->body, KinematicUpdateVelocity);
         setActiveCamera( addCamera(ball1->getKey())->getKey() );
 
 
@@ -146,7 +146,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         rover->setDepth(30);
         addThing(rover);
         ///rover->setCameraRotation( -15, 15, 0 );
-        rover->setCameraRotation( -15, -25, 0 );
+        rover->setCameraRotation( -15,  -25, 0 );
+        rover->setCameraPositionXY( QPointF(0, 200) );
         setActiveCamera( addCamera(rover->getKey())->getKey() );
 
 

@@ -24,12 +24,14 @@ struct ThingInfo {
     double      z_order;
 };
 
-// Global Forward Declaratopns for static Chipmunk callbacks
+// Global Forward Declarations for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
 extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
 extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
-extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_world_update_player.cpp
-extern void     KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);         // defined in engine_world_update_object.cpp
+
+extern void     KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);         // defined in engine_world__update.cpp
+extern void     ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_world__update.cpp
+extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);            // defined in engine_world__update_player.cpp
 
 extern cpBool   WaterPreSolve(cpArbiter *arb, cpSpace *space, void *);
 

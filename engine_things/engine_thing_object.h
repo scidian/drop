@@ -287,7 +287,7 @@ public:
     void            setCanAirJump(bool can_air_jump) { m_air_jump = can_air_jump; }
     void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
     void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
-    void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
+    void            setIgnoreGravity(bool ignore_gravity);
     void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
     void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
 

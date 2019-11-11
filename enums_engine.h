@@ -172,6 +172,7 @@ enum class Light_Type {
 enum class Convert_3D_Type {
     Extrusion =             0,
     Cube =                  1,
+    None,
 };
 
 

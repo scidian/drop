@@ -105,9 +105,10 @@ void DrQLayoutFlow::sortItems() {
 //####################################################################################
 void DrQLayoutFlow::setGeometry(const QRect &rect) {
     // Updates asset sizes if necessary
-    if (parentWidget()->objectName() == "assetsContainer") {
+    if (parentWidget() != nullptr) {
+        if (parentWidget()->objectName() == "assetsContainer") {
 
-
+        }
     }
 
     QLayout::setGeometry(rect);
@@ -115,10 +116,12 @@ void DrQLayoutFlow::setGeometry(const QRect &rect) {
     m_last_size.setHeight( doLayout(rect, m_row_width, false) );
 
     // Forces an update of parent tree after resize of layout
-    if (parentWidget()->objectName() == "assetsContainer") {
-        parentWidget()->setFixedHeight( m_last_size.height() );
-        TreeAssets *tree = dynamic_cast<TreeAssets*>(parentWidget()->parentWidget()->parentWidget());
-        if (tree) tree->forceUpdateOfItemSizes();
+    if (parentWidget() != nullptr) {
+        if (parentWidget()->objectName() == "assetsContainer") {
+            parentWidget()->setFixedHeight( m_last_size.height() );
+            TreeAssets *tree = dynamic_cast<TreeAssets*>(parentWidget()->parentWidget()->parentWidget());
+            if (tree != nullptr) tree->forceUpdateOfItemSizes();
+        }
     }
 }
 

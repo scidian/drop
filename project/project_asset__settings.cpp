@@ -47,7 +47,7 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed, Property_Type::PointF, QPointF(400, 400),
                            "Move Speed", "Button / Joystick movement speed of this Character in the x and y direction.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Angle_Movement, Property_Type::Bool, false,
-                           "Angle Movement?", "Should the rotation of this Character affect the movement speed forces? Good for moving in first person.");
+                           "Relative Angle?", "Should the rotation of this Character affect the movement speed forces? Good for moving in first person.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, QPointF(0, 250),
                            "Jump Force", "Force of jump button in the x and y direction");
 
@@ -73,8 +73,6 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
 
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Can_Rotate, Property_Type::Bool, false,
                            "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Feels_Gravity, Property_Type::Bool, true,
-                           "Feels Gravity?", "Should this character be affected by gravity?");
 
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_X, Property_Type::Bool, false,
                            "Flip Image X?", "Should this characters image flip left and right depending on movement?");
@@ -213,6 +211,8 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Medium, true);
     getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
 
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity, Property_Type::Bool, true,
+                           "Feels Gravity?", "Should this character be affected by gravity?");
     // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
     addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction,
                            Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
