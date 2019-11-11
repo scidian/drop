@@ -53,11 +53,11 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 
     // Check for one way platform
     if (object_a->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something trying to pass through you
-        if (cpvdot(cpArbiterGetNormal(arb), object_a->getOneWayDirection()) < 0.0)
+        if (cpvdot(cpArbiterGetNormal(arb), object_a->getOneWayDirection()) <= 0.0)
             return cpArbiterIgnore(arb);
     }
     if (object_b->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something you want to pass through
-        if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) > 0.0)
+        if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) >= 0.0)
             return cpArbiterIgnore(arb);
     }
 
