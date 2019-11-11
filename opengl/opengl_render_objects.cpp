@@ -240,7 +240,9 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     m_default_shader.setUniformValue( u_default_shade_away,     !draw2D ); ///(m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) );
     m_default_shader.setUniformValue( u_default_camera_pos,     eye_move.x(), eye_move.y(), eye_move.z() );
-    m_default_shader.setUniformValue( u_default_cartoon,        false );
+
+    m_default_shader.setUniformValue( u_default_cartoon,        object->cartoon );
+    m_default_shader.setUniformValue( u_default_cartoon_width,  object->cartoon_width );
     m_default_shader.setUniformValue( u_default_wavy,           false );
     m_default_shader.setUniformValue( u_default_wireframe,      (m_engine->getCurrentWorld()->wireframe || object->wireframe) );
 

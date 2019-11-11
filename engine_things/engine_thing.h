@@ -60,6 +60,9 @@ private:
 public:
     // ***** Image Post Processing Attributes
     bool        wireframe = false;                      // Wireframe        True / False
+    bool        cartoon = false;                        // Cartoon          True / False
+    float       cartoon_width = 5.0;                    // Cartoon Width
+
     float       bitrate = 256.0;                        // Bitrate          1 to 256
     float       pixel_x = 1.0;                          // Pixelation X     1.0+
     float       pixel_y = 1.0;                          // Pixelation Y     1.0+

@@ -47,8 +47,8 @@ static inline void SmoothMove(double &start, const double &target, const double 
 //####################################################################################
 //##    Equalizes x, y, and z angles to within 0 to 360
 //####################################################################################
-static float EqualizeAngle0to360(const float &angle) {
-    float equalized = angle;
+template<class T> T EqualizeAngle0to360(const T& angle) {
+    T equalized = angle;
     while (equalized <   0) { equalized += 360; }
     while (equalized > 360) { equalized -= 360; }
     return equalized;
@@ -57,8 +57,8 @@ static float EqualizeAngle0to360(const float &angle) {
 //####################################################################################
 //##    Finds closest angle within 180 degrees of angle (both angles must be between 0 to 360)
 //####################################################################################
-static float FindClosestAngle180(const float &start, const float &angle) {
-    float closest = angle;
+template<class T> T FindClosestAngle180(const T& start, const T& angle) {
+    T closest = angle;
     if (closest - start > 180)
         closest -= 360;
     else if (start - closest > 180)
@@ -119,6 +119,8 @@ void DrEngineWorld::moveCameras(double milliseconds) {
                       target_rotation.setZ( FindClosestAngle180(m_temp_rotation.z(), target_rotation.z()) );
             QVector3D target_up_vector = (target_camera->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
             double    target_following_rotation = target_camera->getThingFollowingRotation();
+                      target_following_rotation = EqualizeAngle0to360(target_following_rotation);
+                      target_following_rotation = FindClosestAngle180(m_temp_follow_angle, target_following_rotation);
             double    target_z_order = static_cast<double>(target_camera->getThingFollowingZOrder());
             double    target_zoom_as_pow = DrOpenGL::zoomScaleToPow( target_camera->getZoom() );
             double    temp_zoom_as_pow =   DrOpenGL::zoomScaleToPow( m_temp_zoom );
@@ -167,6 +169,7 @@ void DrEngineWorld::switchCameras(long new_camera) {
         m_switch_rotation.setZ( EqualizeAngle0to360(m_switch_rotation.z()) );
     m_switch_zoom = getCameraZoom();
     m_switch_follow_angle = getCameraFollowingRotation();
+        m_switch_follow_angle = EqualizeAngle0to360(m_switch_follow_angle);
     m_switch_up_vector = getCameraUpVector();
     m_switch_z_order = static_cast<double>(getCameraFollowingZ());
 

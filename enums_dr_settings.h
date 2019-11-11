@@ -131,9 +131,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   187
+//##    !!!!! NEXT AVAILABLE NUMBER:   188
 //##
-//##    Checked for doubles up through 187 on 11/07/2019
+//##    Checked for doubles up through 188 on 11/07/2019
 //############################
 enum class Properties {
 
@@ -311,6 +311,7 @@ enum class Properties {
 
     // Special Effects
     Thing_Filter_Wireframe              = 75,       // bool
+    Thing_Filter_Cartoon                = 187,      // bool double combo
 
     // 3D Variables
     Thing_3D_Type                       = 76,       // list, enum class Convert_3D_Type (Extrusion, Cube)
@@ -347,6 +348,7 @@ enum class Properties {
 
     // Text Settings
     Thing_Text_User_Text                = 87,       // string
+
 
     // ********** Effect Specific
     // Fire Settings

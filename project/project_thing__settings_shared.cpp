@@ -179,6 +179,9 @@ void DrThing::addComponentSpecialEffects() {
 
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders this item as an 3d outline, item 3D Depth should be greater than 0 for best effect.");
+    addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
+                           "Cartoon", "Gives this item a comic book look.");
 }
 
 

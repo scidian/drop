@@ -47,10 +47,10 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
                            "Camera Rotation", "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector, Property_Type::List, 0,
-                           "Up Vector", "Camera Up Vectors for this World. Default for most games / styles of gameplay is for a Y Axis Up "
+                           "Camera Up Vector", "Camera Up Vectors for this World. Default for most games / styles of gameplay is for a Y Axis Up "
                                         "Vector. If making a First Person style game, rotate camera X or Y to 90 degrees and set Up Vector to Z Axis.");
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 1.0,
-                           "Zoom Level", "Magnification zoom level of this camera. A value of 1.0 is no zoom, 0.5 is twice as far away, 2.0 is twice as close. ");
+                           "Camera Zoom", "Magnification zoom level of this camera. A value of 1.0 is no zoom, 0.5 is twice as far away, 2.0 is twice as close. ");
 }
 
 //####################################################################################
@@ -65,6 +65,10 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
 
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::SizeF, QPointF(50, 50),
+                           "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
+                                         "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
+                                         "camera starts to move.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, QPointF(0, 100),
                            "Camera Offset", "Every Character has a Camera attached which always looks directly at the Character. "
                                             "The Camera Offset allows for the camera to look at a point offset from the Character in 2D space.");
@@ -72,19 +76,16 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
                            "Camera Rotation", "Every Character has a Camera attached which always looks directly at the Character. "
                                               "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt, Property_Type::Double, 0.0,
-                           "Camera Tilt", "Every Character has a Camera attached which always looks directly at the Character. "
-                                          "This is the tilt angle (Z Axis rotation) of that camera. ");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector, Property_Type::List, 0,
                            "Camera Up Vector", "Camera Up Vectors for this World. Default for most games / styles of gameplay is for a Y Axis Up "
                                         "Vector. If making a First Person style game, rotate camera X or Y to 90 degrees and set Up Vector to Z Axis.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. ");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::SizeF, QPointF(50, 50),
-                           "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
-                                         "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
-                                         "camera starts to move.");
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt, Property_Type::Double, 0.0,
+                           "Camera Tilt", "Every Character has a Camera attached which always looks directly at the Character. "
+                                          "This is the tilt angle (Z Axis rotation) of that camera. ");
+
 
 }
 
