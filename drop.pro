@@ -191,6 +191,7 @@ SOURCES += \
     project/project__initialize.cpp \
     project/project_asset.cpp \
     project/project_asset__settings.cpp \
+    project/project_asset__settings_shared.cpp \
     project/project_device.cpp \
     project/project_effect.cpp \
     project/project_font.cpp \
