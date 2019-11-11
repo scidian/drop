@@ -174,6 +174,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     bool    jump_air =      asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Air).toBool();
     bool    jump_wall =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall).toBool();
 
+    double  acceleration =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Acceleration).toDouble();
     double  air_drag =      asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag).toDouble();
     double  ground_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag).toDouble();
     double  rotate_drag =   asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag).toDouble();
@@ -223,6 +224,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCanAirJump( jump_air );
     player->setCanWallJump( jump_wall );
 
+    player->setAcceleration( acceleration );
     player->setAirDrag( air_drag );
     player->setGroundDrag( ground_drag );
     player->setRotateDrag( rotate_drag );

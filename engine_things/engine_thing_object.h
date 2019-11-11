@@ -91,6 +91,7 @@ private:
     long            m_jump_timeout =  800;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
     int             m_jump_count =      0;          // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
+    double          m_acceleration =  1.00;         // Affects move / switch speeds, 0.0 is instant, 1.0 is default, 5.0 is slower
     double          m_air_drag =       1.00;        // Affects acceleration and decceleration in air (0 to 1+)
     double          m_ground_drag =    1.00;        // Affects acceleration and decceleration on the ground (0 to 1+)
     double          m_rotate_drag =    0.25;        // Affects rotation acceleration and decceleration (0 to 1+)
@@ -257,6 +258,7 @@ public:
     const long&     getJumpTimeout() { return m_jump_timeout; }
     const int&      getJumpCount() { return m_jump_count; }
 
+    const double&   getAcceleration() { return m_acceleration; }
     const double&   getAirDrag() { return m_air_drag; }
     const double&   getGroundDrag() { return m_ground_drag; }
     const double&   getRotateDrag() { return m_rotate_drag; }
@@ -281,6 +283,7 @@ public:
     void            setJumpTimeout(long new_jump_timeout) { m_jump_timeout = new_jump_timeout; }
     void            setJumpCount(int new_jump_count) { m_jump_count = (new_jump_count < -1) ? c_unlimited_jump : new_jump_count; }
 
+    void            setAcceleration(double new_acceleration) { m_acceleration = new_acceleration; }
     void            setAirDrag(double new_air_drag) { m_air_drag = new_air_drag; }
     void            setGroundDrag(double new_ground_drag) { m_ground_drag = new_ground_drag; }
     void            setRotateDrag(double new_rotate_drag) { m_rotate_drag = new_rotate_drag; }

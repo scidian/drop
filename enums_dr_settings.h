@@ -131,9 +131,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   188
+//##    !!!!! NEXT AVAILABLE NUMBER:   189
 //##
-//##    Checked for doubles up through 188 on 11/07/2019
+//##    Checked for doubles up through 189 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -166,6 +166,7 @@ enum class Properties {
     Asset_Character_Jump_Air            = 12,       // bool
     Asset_Character_Jump_Wall           = 13,       // bool
 
+    Asset_Character_Acceleration        = 188,      // positive double
     Asset_Character_Air_Drag            = 14,       // positive double
     Asset_Character_Ground_Drag         = 15,       // positive double
     Asset_Character_Rotation_Drag       = 16,       // positive double

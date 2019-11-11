@@ -64,6 +64,9 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall, Property_Type::Bool, false,
                            "Wall Jump?", "Can this Character jump off of walls?");
 
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Acceleration, Property_Type::PositiveDouble, 1.0,
+                           "Acceleration", "Multiplier affecting how fast Character starts to move / switch directions. A value of 1.0 is default, a higher "
+                                           "number like 5.0 will cause slower acceleration, a value of 0.0 will cause instant acceleration.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag, Property_Type::PositiveDouble, 1.0,
                            "Air Drag", "Affects acceleration and decceleration in air. Usually ranging from 0.0 to 1.0 or higher.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag, Property_Type::PositiveDouble, 1.0,
