@@ -201,8 +201,6 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCameraZoom( cam_zoom );                                                                      // Set active camera zoom
     player->setCameraLag( DrPointF(cam_lag.x(), cam_lag.y()) );                                             // Set active camera lag
     player->setCameraUpVector(cam_up);                                                                      // Set active camera up vector
-    addThing(player);                                                                                       // Add to world
-
 
     // ***** Apply Character Settings
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
@@ -232,6 +230,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     player->setFlipImageX( flip_image_x );
     player->setFlipImageY( flip_image_y );
+
+    // ***** Add to world
+    addThing(player);
 
     // Check if there are any active characters, if not, give controls
     bool should_we_give_control = (countCharacters() == 0);

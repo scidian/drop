@@ -203,11 +203,11 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double  move_speed_y = object->getMoveSpeedY() * key_y;
     double  rotate_speed = object->getRotateSpeedZ();
     if (object->getAngleMovement()) {
-        QPointF force(move_speed_x, move_speed_y);
+        QPointF angle_force(move_speed_x, move_speed_y);
         QTransform t = QTransform().rotate(object->getAngle());
-        force = t.map(force);
-        move_speed_x = force.x();
-        move_speed_y = force.y();
+        angle_force = t.map(angle_force);
+        move_speed_x = angle_force.x();
+        move_speed_y = angle_force.y();
     }
 
 
@@ -217,7 +217,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double c_drag_air =             0.005;
     double c_drag_rotate =          0.100;
     double c_accel_key_pressed =    0.125;
-    double c_accel_no_key =         1.250;
+    double c_accel_no_key =         0.125;//1.250;
 
     // Increase slowdown speed while in contact with a ladder (cancel gravity object)
     if (Dr::FuzzyCompare(object->getTempGravityMultiplier(), 1.0) == false) {
@@ -302,36 +302,40 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_accel_x = abs(move_speed_x / (sqrt(ground_drag)*grd_x_multiplier + c_buffer));
     double ground_accel_y = abs(move_speed_y / (sqrt(ground_drag)*grd_y_multiplier + c_buffer));
 
+    g_info = "Target VX: " + QString::number(target_vx);
+
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
         // If key is pressed
-        if ( Dr::FuzzyCompare(pre_forced_target_vx, 0.0) == false ) {
-            velocity.x = cpflerpconst( velocity.x, target_vx, air_accel_x * dt);
+        if (Dr::FuzzyCompare(pre_forced_target_vx, 0.0) == false ) {
+            velocity.x = cpflerpconst(velocity.x, target_vx, air_accel_x * dt);
         } else {
-            velocity.x = cpflerpconst( velocity.x, object->getForcedSpeedX(), air_drag / c_drag_air * dt);
+            velocity.x = cpflerpconst(velocity.x, object->getForcedSpeedX(), air_drag / c_drag_air * dt);
         }
 
         // If key is pressed
-        if ( Dr::FuzzyCompare(pre_forced_target_vy, 0.0) == false ) {
-            velocity.y = cpflerpconst( velocity.y, target_vy, air_accel_y * dt);
+        if (Dr::FuzzyCompare(pre_forced_target_vy, 0.0) == false ) {
+            velocity.y = cpflerpconst(velocity.y, target_vy, air_accel_y * dt);
         } else {
-            velocity.y = cpflerpconst( velocity.y, object->getForcedSpeedY(), air_drag / c_drag_air * dt);
+            velocity.y = cpflerpconst(velocity.y, object->getForcedSpeedY(), air_drag / c_drag_air * dt);
         }
 
     // Interpolate towards desired velocity if on ground / wall
     } else {
         // If key is pressed
-        if (Dr::FuzzyCompare(pre_forced_target_vx, 0.0) == false) {
-            velocity.x = cpflerpconst( velocity.x, target_vx, ground_accel_x * dt);
+        if (Dr::FuzzyCompare(pre_forced_target_vx, 0.0) == false || has_forced_x) {
+            velocity.x = cpflerpconst(velocity.x, target_vx, ground_accel_x * dt);
+            g_info += ", First";
         } else {
-            velocity.x = cpflerpconst( velocity.x, object->getForcedSpeedX(), ground_drag / c_drag_ground * dt);
+            velocity.x = cpflerpconst(velocity.x, object->getForcedSpeedX(), ground_drag / c_drag_ground * dt);
+            g_info += ", Second";
         }
 
         // If key is pressed
-        if (Dr::FuzzyCompare(pre_forced_target_vy, 0.0) == false) {
-            velocity.y = cpflerpconst( velocity.y, target_vy, ground_accel_y * dt);
+        if (Dr::FuzzyCompare(pre_forced_target_vy, 0.0) == false || has_forced_y) {
+            velocity.y = cpflerpconst(velocity.y, target_vy, ground_accel_y * dt);
         } else {
-            velocity.y = cpflerpconst( velocity.y, object->getForcedSpeedY(), ground_drag / c_drag_ground * dt);
+            velocity.y = cpflerpconst(velocity.y, object->getForcedSpeedY(), ground_drag / c_drag_ground * dt);
         }
     }
 

@@ -113,6 +113,10 @@ void DrEngineObject::addToWorld() {
     if (this->canRotate() == false)
         cpBodySetMoment( this->body, static_cast<double>(INFINITY) );
 
+    // Set initial velocity to forced velocity
+    cpVect forced_velocity = cpv( getForcedSpeedX(), getForcedSpeedY() );
+    cpBodySetVelocity( body, forced_velocity );
+
     // Reset Update Timer
     Dr::ResetTimer( update_timer );
 }
