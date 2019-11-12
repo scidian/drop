@@ -207,7 +207,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     // ***** Apply Character Settings
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
         player->setCanRotate( true );
-        player->setRotateSpeed(rotate_speed);
+        player->setRotateSpeedZ(rotate_speed);
     }
     player->setMaxSpeedX( max_speed.x() );
     player->setMaxSpeedY( max_speed.y() );
@@ -299,7 +299,7 @@ void DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double of
     // ***** Physics settings
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
         block->setCanRotate( true );
-        block->setRotateSpeed(rotate_speed);
+        block->setRotateSpeedZ(rotate_speed);
     }
     block->setIgnoreGravity( !feels_gravity );
 

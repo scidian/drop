@@ -130,6 +130,7 @@ SOURCES += \
     engine_things/engine_thing_mirror.cpp \
     engine_things/engine_thing_object.cpp \
     engine_things/engine_thing_object__create.cpp \
+    engine_things/engine_thing_object__update.cpp \
     engine_things/engine_thing_swirl.cpp \
     engine_things/engine_thing_water.cpp \
     enums.cpp \

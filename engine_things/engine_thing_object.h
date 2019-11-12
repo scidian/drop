@@ -69,7 +69,7 @@ private:
     double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
 
     // Object Movement - Rotation
-    double          m_rotate_speed =  0.0;          // Speed at which object should spin when Motor Rotate (gas pedal) is pressed
+    double          m_rotate_speed =  0.0;          // Speed at which object should spin (on standard 2D Z axis) when Motor Rotate (gas pedal) is pressed
 
     // Object Movement - PlayerUpdateVelocity Callback Func
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
@@ -240,8 +240,8 @@ public:
     bool            shouldCollide(DrEngineObject *object);
 
     // Object Movement - Rotation (On Z Axis)
-    const double&   getRotateSpeed() { return m_rotate_speed; }
-    void            setRotateSpeed(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
+    const double&   getRotateSpeedZ() { return m_rotate_speed; }
+    void            setRotateSpeedZ(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
 
     // Object Movemnt - PlayerUpdateVelocity Callback Func
     const bool&     hasKeyControls() { return m_key_controls; }
@@ -290,7 +290,7 @@ public:
     void            setCanAirJump(bool can_air_jump) { m_air_jump = can_air_jump; }
     void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
     void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
-    void            setIgnoreGravity(bool ignore_gravity);
+    void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
     void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
     void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
 

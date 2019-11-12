@@ -105,9 +105,9 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
                                               "0.0 to 2.0 or higher.");
     bool default_can_rotate = (asset_type == DrAssetType::Character) ? false : true;
     addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate, Property_Type::Bool, default_can_rotate,
-                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed. Rotation can still be altered by Rotate Buttons.");
+                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed. Rotation can still be altered by Motor Buttons.");
     addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed, Property_Type::Double, 0.0,
-                           "Rotate Speed", "Speed at which this Thing rotates when Rotate Buttons are pressed.");
+                           "Motor Speed", "Speed at which this Thing rotates when Motor Buttons are pressed.");
 
 }
 

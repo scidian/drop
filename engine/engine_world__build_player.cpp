@@ -87,7 +87,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->setCameraRotation( -25, -40, 0 );
         assignPlayerControls(ball2, false, true, false);
         ball2->setJumpCount( c_unlimited_jump );
-        ball2->setRotateSpeed( 20.0 );
+        ball2->setRotateSpeedZ( 20.0 );
 
     } else if (new_player_type == Demo_Player::Light) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false);
@@ -162,9 +162,9 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         wheel2->setDepth(30);
         wheel3->setDepth(30);
         addThings( { wheel1, wheel2, wheel3 } );
-        wheel1->setRotateSpeed( 110.0 );
-        wheel2->setRotateSpeed(  60.0 );
-        wheel3->setRotateSpeed(  90.0 );
+        wheel1->setRotateSpeedZ( 110.0 );
+        wheel2->setRotateSpeedZ(  60.0 );
+        wheel3->setRotateSpeedZ(  90.0 );
 
         DrEngineObject *spare1 = new DrEngineObject(this, getNextKey(), Body_Type::Dynamic, Asset_Textures::Spare, -11,  349, 4, c_scale1x1, 4, 0.7);
         spare1->addShapeCircleFromTexture(Asset_Textures::Spare);
