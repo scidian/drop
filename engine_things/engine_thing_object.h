@@ -111,6 +111,7 @@ private:
     //
     int         m_remaining_jumps = 0;                      // How many jumps player has left before it must hit ground before it can jump again
     double      m_remaining_boost = 0.0;                    // Used by Engine Update to process Jump Timeout boost
+    double      m_remaining_ground_time = 0.0;              // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
     double      m_remaining_wall_time = 0.0;                // Used by Engine Update to allow some time for a wall jump to occur
 
     bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
@@ -297,6 +298,7 @@ public:
     // ***** Local Variables - Updated By Engine
     const int&      getRemainingJumps() { return m_remaining_jumps; }
     const double&   getRemainingBoost() { return m_remaining_boost; }
+    const double&   getRemainingGroundTime() { return m_remaining_ground_time; }
     const double&   getRemainingWallTime() { return m_remaining_wall_time; }
     const bool&     isOnGround() { return m_grounded; }
     const bool&     isOnWall() { return m_on_wall; }
@@ -306,6 +308,7 @@ public:
     Jump_State      getJumpState() { return m_jump_state; }
     void            setRemainingJumps(int new_remaining_jumps) { m_remaining_jumps = new_remaining_jumps; }
     void            setRemainingBoost(double boost_time) { m_remaining_boost = boost_time; }
+    void            setRemainingGroundTime(double ground_time) { m_remaining_ground_time = ground_time; }
     void            setRemainingWallTime(double wall_time) { m_remaining_wall_time = wall_time; }
     void            setOnGround(bool on_ground) { m_grounded = on_ground; }
     void            setOnWall(bool on_wall) { m_on_wall = on_wall; }

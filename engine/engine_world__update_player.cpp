@@ -63,15 +63,17 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     if (object->ignoreGravity()) gravity = cpvzero;
 
 
-    // ********** Get Keys - If player is still active get keyboard status
-    int key_x =     0;
-    int key_y =     0;
-    int key_jump =  0;
+    // ********** Get Keys - If player is still active, get keyboard status
+    int     key_x =     0;
+    int     key_y =     0;
+    int     key_jump =  0;
+    Pedal   pedal = Pedal::None;
 
     if (!object->hasLostControl()) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
+        pedal =     g_pedal;
 
         if (object->shouldFlipImageX() && (key_x < 0 && !object->isFlippedX())) object->setFlipX(true);
         if (object->shouldFlipImageX() && (key_x > 0 &&  object->isFlippedX())) object->setFlipX(false);
@@ -97,12 +99,19 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         object->setRemainingBoost( 0.0 );
     }
 
-    // Update wall jump time (gives player some time to do a wall jump)
-    object->setRemainingWallTime( object->getRemainingWallTime() - dt );
-    if (object->isOnWall())
-        object->setRemainingWallTime( 0.25 );
-    if (object->isOnGround() || object->getRemainingWallTime() < 0.0)
-        object->setRemainingWallTime( 0.00 );
+    // Update wall jump time (gives player some time to do a wall jump), updated 11/12/2019: also give player time to do a ground jump (helps with bumpiness)
+    object->setRemainingGroundTime( object->getRemainingGroundTime() - dt );
+    object->setRemainingWallTime(   object->getRemainingWallTime() - dt );
+    if (object->isOnWall()) {
+        object->setRemainingGroundTime( 0.00 );
+        object->setRemainingWallTime(   0.25 );
+    }
+    if (object->isOnGround()) {
+        object->setRemainingGroundTime( 0.25 );
+        object->setRemainingWallTime(   0.00 );
+    }
+    if (object->getRemainingGroundTime() < 0.0) object->setRemainingGroundTime( 0.00 );
+    if (object->getRemainingWallTime()   < 0.0) object->setRemainingWallTime( 0.00 );
 
 
     // ********** Process Boost - Continues to provide jump velocity, although slowly fades
@@ -117,7 +126,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ********** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, jump!
     if ((key_jump == true) && (object->getJumpState() == Jump_State::Need_To_Jump)) {
-        if ( object->isOnGround() ||                                                                        // Jump from ground
+        if ((object->getRemainingGroundTime() > 0.0) ||                                                     // Jump from ground
             (object->getRemainingWallTime() > 0.0 ) ||                                                      // Jump from wall
             ///(object->isOnWall() && object->getRemainingJumps() > 0) ||                                   // Jump from wall if jumps remaining
             (object->canAirJump() && object->getRemainingJumps() > 0) ||                                    // Jump from air if jumps remaining
@@ -129,7 +138,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
             // Calculate wall jump forces
             cpFloat jump_vx, jump_vy;
-            if (!object->isOnGround() && object->getRemainingWallTime() > 0.0) {
+            if (object->getRemainingWallTime() > 0.0) {
                 double angle = atan2(object->getLastTouchedGroundNormal().y, object->getLastTouchedGroundNormal().x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
                 angle = qRadiansToDegrees( angle ) - 180;
                 ///qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->getLastTouchedGroundDot();
@@ -186,6 +195,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             cpBodySetVelocity( object->body, player_v );
 
             // Reset wall_timeout, jump timeout boost and subtract remaining jumps until ground
+            object->setRemainingGroundTime( 0.0 );
             object->setRemainingWallTime( 0.0 );
             object->setRemainingBoost( static_cast<double>(object->getJumpTimeout()) / 1000.0 );
             object->setRemainingJumps( object->getRemainingJumps() - 1 );
@@ -256,12 +266,11 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double  target_vx = move_speed_x;
     double  target_vy = move_speed_y;
     double  target_spin = 0.0;
-    bool    pedal;
-    switch (g_pedal) {
-        case Pedal::Brake:              pedal = true;   break;
-        case Pedal::Clockwise:          pedal = true;   target_spin = -object->getRotateSpeedZ();   break;
-        case Pedal::CounterClockwise:   pedal = true;   target_spin =  object->getRotateSpeedZ();   break;
-        case Pedal::None:               pedal = false;  break;
+    switch (pedal) {
+        case Pedal::Brake:              target_spin = 0.0;                          break;
+        case Pedal::Clockwise:          target_spin = -object->getRotateSpeedZ();   break;
+        case Pedal::CounterClockwise:   target_spin =  object->getRotateSpeedZ();   break;
+        case Pedal::None:               break;
     }
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
@@ -286,7 +295,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double body_r = cpBodyGetAngularVelocity( body );
     double rotate_multiplier = 0.125 * acceleration;
     double rotate_accel =   abs(rotate_speed / (sqrt(rotate_drag)*rotate_multiplier + c_buffer));
-    if (!pedal) {
+    if (pedal == Pedal::None) {
         body_r = cpflerpconst( body_r, 0, rotate_drag / c_drag_rotate * dt);
     } else {
         body_r = cpflerpconst( body_r, target_spin, rotate_accel * dt);
