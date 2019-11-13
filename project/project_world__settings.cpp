@@ -120,7 +120,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                            Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch,
-                           Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Hatch Width: "}),
+                           Property_Type::BoolDouble, QList<QVariant>({false, 10.0, 1.0, 100, 5.0, "Hatch Width: "}),
                            "Cross Hatch", "Gives the world a sketched look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");

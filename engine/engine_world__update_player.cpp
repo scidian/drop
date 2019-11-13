@@ -80,8 +80,6 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         if (object->shouldFlipImageY() && (key_y < 0 && !object->isFlippedY())) object->setFlipY(true);
         if (object->shouldFlipImageY() && (key_y > 0 &&  object->isFlippedY())) object->setFlipY(false);
     }
-    bool has_key_x = (Dr::FuzzyCompare(key_x, 0.0)) ? false : true;
-    bool has_key_y = (Dr::FuzzyCompare(key_y, 0.0)) ? false : true;
 
 
     // ********** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off m_remaining_boost time
@@ -226,6 +224,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             forced_speed_x = forced_angle.x();
             forced_speed_y = forced_angle.y();
     }
+    bool has_key_x = (Dr::FuzzyCompare(move_speed_x, 0.0)) ? false : true;
+    bool has_key_y = (Dr::FuzzyCompare(move_speed_y, 0.0)) ? false : true;
     move_speed_x = forced_speed_x + move_speed_x;
     move_speed_y = forced_speed_y + move_speed_y;
 

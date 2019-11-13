@@ -57,8 +57,8 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     //          Y Rotation, controls left / right
     QMatrix4x4 rotate_eye;
     rotate_eye.translate( m_look_at);
-    rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()), 1.0f, 0.0f, 0.0f);
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationY()), 0.0f, 1.0f, 0.0f);
+    rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()), 1.0f, 0.0f, 0.0f);
     rotate_eye.translate(-m_look_at);
     m_eye = rotate_eye * m_eye;
 

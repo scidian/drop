@@ -427,24 +427,25 @@ void main( void ) {
 
     // ***** CROSS HATCH
     if (u_cross_hatch) {
-        float hatch_y_offset = u_cross_hatch_width;
-        float lum_threshold_1 = 1.0;
+        float hatch_width =    u_cross_hatch_width;
+        float hatch_y_offset = hatch_width / 2.0;//5.0;//u_cross_hatch_width;
+        float lum_threshold_1 = 1.05;
         float lum_threshold_2 = 0.8;
         float lum_threshold_3 = 0.55;
-        float lum_threshold_4 = 0.35;
+        float lum_threshold_4 = 0.3;
         float lum = length(frag_rgb);
         vec3 tc = vec3(1.0, 1.0, 1.0);
         if (lum < lum_threshold_1) {
-            if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+            if (mod(gl_FragCoord.x + gl_FragCoord.y, hatch_width) == 0.0) tc = vec3(0.0, 0.0, 0.0);
         }
         if (lum < lum_threshold_2) {
-            if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+            if (mod(gl_FragCoord.x - gl_FragCoord.y, hatch_width) == 0.0) tc = vec3(0.0, 0.0, 0.0);
         }
         if (lum < lum_threshold_3) {
-            if (mod(gl_FragCoord.x + gl_FragCoord.y - hatch_y_offset, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+            if (mod(gl_FragCoord.x + gl_FragCoord.y - hatch_y_offset, hatch_width) == 0.0) tc = vec3(0.0, 0.0, 0.0);
         }
         if (lum < lum_threshold_4) {
-            if (mod(gl_FragCoord.x - gl_FragCoord.y - hatch_y_offset, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+            if (mod(gl_FragCoord.x - gl_FragCoord.y - hatch_y_offset, hatch_width) == 0.0) tc = vec3(0.0, 0.0, 0.0);
         }
         frag_rgb = tc;
     }

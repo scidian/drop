@@ -209,7 +209,7 @@ void DrThing::addComponentSpecialEffects() {
                            Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
                            "Cartoon", "Gives this item a comic book look.");
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Cross_Hatch,
-                           Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Hatch Width: "}),
+                           Property_Type::BoolDouble, QList<QVariant>({false, 10.0, 1.0, 100, 5.0, "Hatch Width: "}),
                            "Cross Hatch", "Gives this item a sketched look.");
 }
 
