@@ -210,24 +210,24 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpVect  velocity = cpBodyGetVelocity( object->body );
 
     // Movement Speed, adjust to angle if desired
-    double  move_speed_x =  (object->getMoveSpeedX() * key_x);
-    double  move_speed_y =  (object->getMoveSpeedY() * key_y);
+    double  button_speed_x = object->getMoveSpeedX() * key_x;
+    double  button_speed_y = object->getMoveSpeedY() * key_y;
     double  forced_speed_x = object->getForcedSpeedX();
     double  forced_speed_y = object->getForcedSpeedY();
     double  rotate_speed =   object->getRotateSpeedZ();
     if (object->getAngleMovement()) {
         QTransform t = QTransform().rotate(object->getAngle());
-        QPointF move_angle =   t.map( QPointF(move_speed_x, move_speed_y) );
-            move_speed_x = move_angle.x();
-            move_speed_y = move_angle.y();
+        QPointF button_angle = t.map( QPointF(button_speed_x, button_speed_y) );
+            button_speed_x = button_angle.x();
+            button_speed_y = button_angle.y();
         QPointF forced_angle = t.map( QPointF(forced_speed_x, forced_speed_y) );
             forced_speed_x = forced_angle.x();
             forced_speed_y = forced_angle.y();
     }
-    bool has_key_x = (Dr::FuzzyCompare(move_speed_x, 0.0)) ? false : true;
-    bool has_key_y = (Dr::FuzzyCompare(move_speed_y, 0.0)) ? false : true;
-    move_speed_x = forced_speed_x + move_speed_x;
-    move_speed_y = forced_speed_y + move_speed_y;
+    bool has_key_x = (Dr::FuzzyCompare(button_speed_x, 0.0)) ? false : true;
+    bool has_key_y = (Dr::FuzzyCompare(button_speed_y, 0.0)) ? false : true;
+    double move_speed_x = forced_speed_x + button_speed_x;
+    double move_speed_y = forced_speed_y + button_speed_y;
 
 
     // ********** Drag / Acceleration
@@ -276,19 +276,21 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
-    if (target_vy < 0 && gravity.y > 0) {
-        target_vy += gravity.y * object->getTempGravityMultiplier();
-        if (target_vy > 0) target_vy = 0;
-    } else if (target_vy > 0 && gravity.y < 0) {
-        target_vy += gravity.y * object->getTempGravityMultiplier();
-        if (target_vy < 0) target_vy = 0;
-    }
+    double actual_gravity_x = gravity.x * object->getTempGravityMultiplier();
+    double actual_gravity_y = gravity.y * object->getTempGravityMultiplier();
     if (target_vx < 0 && gravity.x > 0) {
-        target_vx += gravity.x * object->getTempGravityMultiplier();
+        target_vx += actual_gravity_x;
         if (target_vx > 0) target_vx = 0;
     } else if (target_vx > 0 && gravity.x < 0) {
-        target_vx += gravity.x * object->getTempGravityMultiplier();
+        target_vx += actual_gravity_x;
         if (target_vx < 0) target_vx = 0;
+    }
+    if (target_vy < 0 && gravity.y > 0) {
+        target_vy += actual_gravity_y;
+        if (target_vy > 0) target_vy = 0;
+    } else if (target_vy > 0 && gravity.y < 0) {
+        target_vy += actual_gravity_y;
+        if (target_vy < 0) target_vy = 0;
     }
 
 
@@ -311,22 +313,22 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double ground_accel_x = abs(move_speed_x / (sqrt(ground_drag)*accel_multiplier + c_buffer));
     double ground_accel_y = abs(move_speed_y / (sqrt(ground_drag)*accel_multiplier + c_buffer));
 
-    bool target_x_is_zero = Dr::FuzzyCompare(target_vx, 0.0);
-    bool target_y_is_zero = Dr::FuzzyCompare(target_vx, 0.0);
-    ///bool speed_x_greater_than_forced = (forced_speed_x > 0 && velocity.x > forced_speed_x) || (forced_speed_x < 0 && velocity.x < forced_speed_x);
-    ///bool speed_y_greater_than_forced = (forced_speed_y > 0 && velocity.y > forced_speed_y) || (forced_speed_y < 0 && velocity.y < forced_speed_y);
-    bool no_forced_x = Dr::FuzzyCompare(forced_speed_x, 0.0);
-    bool no_forced_y = Dr::FuzzyCompare(forced_speed_y, 0.0);
+    bool target_x_is_zero = Dr::FuzzyCompare(target_vx, forced_speed_x);
+    bool target_y_is_zero = Dr::FuzzyCompare(target_vy, forced_speed_y);
+    bool speed_x_greater_than_forced = (forced_speed_x > 0 && velocity.x > forced_speed_x) || (forced_speed_x < 0 && velocity.x < forced_speed_x);
+    bool speed_y_greater_than_forced = (forced_speed_y > 0 && velocity.y > forced_speed_y) || (forced_speed_y < 0 && velocity.y < forced_speed_y);
+    ///bool forced_x_is_zero = Dr::FuzzyCompare(forced_speed_x, 0.0);
+    ///bool forced_y_is_zero = Dr::FuzzyCompare(forced_speed_y, 0.0);
 
     // Interpolate towards desired velocity if in air
     if (!object->isOnGround() && !object->isOnWall()) {
-        if (has_key_x == false && (target_x_is_zero || no_forced_x)) {
+        if (target_x_is_zero || (has_key_x == false && speed_x_greater_than_forced)) {
             velocity.x = cpflerpconst(velocity.x, object->getForcedSpeedX(), air_drag / c_drag_air * dt);
         } else {
             velocity.x = cpflerpconst(velocity.x, target_vx, air_accel_x * dt);
         }
 
-        if (has_key_y == false && (target_y_is_zero || no_forced_y)) {
+        if (target_y_is_zero || (has_key_y == false && speed_y_greater_than_forced)) {
             velocity.y = cpflerpconst(velocity.y, object->getForcedSpeedY(), air_drag / c_drag_air * dt);
         } else {
             velocity.y = cpflerpconst(velocity.y, target_vy, air_accel_y * dt);
@@ -334,13 +336,13 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // Interpolate towards desired velocity if on ground / wall
     } else {
-        if (has_key_x == false && (target_x_is_zero || no_forced_x)) {
+        if (target_x_is_zero || (has_key_x == false && speed_x_greater_than_forced)) {
             velocity.x = cpflerpconst(velocity.x, object->getForcedSpeedX(), ground_drag / c_drag_ground * dt);
         } else {
             velocity.x = cpflerpconst(velocity.x, target_vx, ground_accel_x * dt);
         }
 
-        if (has_key_y == false && (target_y_is_zero || no_forced_y)) {
+        if (target_y_is_zero || (has_key_y == false && speed_y_greater_than_forced)) {
             velocity.y = cpflerpconst(velocity.y, object->getForcedSpeedY(), ground_drag / c_drag_ground * dt);
         } else {
             velocity.y = cpflerpconst(velocity.y, target_vy, ground_accel_y * dt);
