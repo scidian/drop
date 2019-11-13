@@ -124,17 +124,20 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *object) {
     int shape_type =        asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape).toInt();
-    if (shape_type == 0) {
+    Collision_Shape shape = static_cast<Collision_Shape>(shape_type);
+    if (shape == Collision_Shape::Image) {
         QVariant shapes =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
         DrShapeList shape = shapes.value<DrShapeList>();
         for (auto poly : shape.getPolygons()) {
             QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
             object->addShapePolygon(points);
         }
-    } else if (shape_type == 1) {
+    } else if (shape == Collision_Shape::Circle) {
         object->addShapeCircleFromTexture( asset->getKey() );
-    } else if (shape_type == 2) {
+    } else if (shape == Collision_Shape::Square) {
         object->addShapeBoxFromTexture( asset->getKey() );
+    } else if (shape == Collision_Shape::Triangle) {
+        object->addShapeTriangleFromTexture( asset->getKey() );
     }
 }
 

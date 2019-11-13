@@ -188,7 +188,7 @@ enum class Properties {
     Asset_Font_Size                     = 20,
 
     // Asset_Collision
-    Asset_Collision_Shape               = 21,       // list, 0 is Image Shape, 1 is Circle, 2 is Square
+    Asset_Collision_Shape               = 21,       // list, enum class Collision_Shape (image shape, circle, square, triangle)
     Asset_Collision_One_Way_Type        = 141,      // list, enum class One_Way (none, pass_through, weak_spot)
     Asset_Collision_One_Way_Direction   = 142,      // point
     Asset_Collision_Gravity_Multiplier  = 143,      // double

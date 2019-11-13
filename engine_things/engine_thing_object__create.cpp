@@ -83,6 +83,16 @@ void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
     }
 }
 
+void DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
+    double width =  getWorld()->getTexture(texture_number)->width();
+    double height = getWorld()->getTexture(texture_number)->height();
+    QVector<DrPointF> points;
+    points.append(DrPointF(       0.0, +height/2.0));
+    points.append(DrPointF(-width/2.0, -height/2.0));
+    points.append(DrPointF( width/2.0, -height/2.0));
+    addShapePolygon(points);
+}
+
 void DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
     cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     double   area =  cpAreaForSegment(cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);

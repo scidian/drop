@@ -162,6 +162,7 @@ public:
     void                addShapeBoxFromTexture(long texture_number);
     void                addShapeCircle(double circle_radius, DrPointF shape_offset);
     void                addShapeCircleFromTexture(long texture_number);
+    void                addShapeTriangleFromTexture(long texture_number);
     void                addShapePolygon(const QVector<DrPointF> &points);
     void                addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
     void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);

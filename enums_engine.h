@@ -146,6 +146,13 @@ enum class Collision_Type {
     Damage_All =            4,
 };
 
+enum class Collision_Shape {
+    Image,
+    Circle,
+    Square,
+    Triangle,
+};
+
 enum class Collision_Groups {
     None =                  0,
     All =                   1,

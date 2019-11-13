@@ -78,7 +78,8 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     } else if   (property_key == static_cast<int>(Properties::Asset_Collision_Shape)) {
         options << tr("Image Shape")
                 << tr("Circle")
-                << tr("Square");
+                << tr("Square")
+                << tr("Triangle");
     } else if   (property_key == static_cast<int>(Properties::Asset_Health_Death_Animation)) {
         options << tr("None")
                 << tr("Fade")
