@@ -257,8 +257,23 @@ QString CustomStyleSheetFormatting() {
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; }"
         " QAbstractSpinBox:!enabled { background: transparent; border: none; "
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
+        " QAbstractSpinBox:readOnly { background: transparent; border: none; "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
         " QAbstractSpinBox#spinBool:!enabled { color: transparent; }"
+
+        // Right click menu, mostly in SpinBox context menus
+        " QMenu { "
+        "       border: 1px solid black; "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Highlight).name() + ";"
+        " } "
+        " QMenu::item:!enabled { "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "}"
+
 
         // Line Edit, mostly in Inspector
         " QLineEdit {               border: " + Dr::BorderWidth() + " solid; height: 20px; "

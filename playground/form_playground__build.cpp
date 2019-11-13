@@ -173,7 +173,7 @@ void FormPlayground::buildForm() {
             m_play_view->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
             m_play_view->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
             m_play_view->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
-            m_play_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+            m_play_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
             m_play_view->setSceneRect(-1000, -1000, 2000, 2000);
 
             // Set initial zoom level

@@ -255,6 +255,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             switch (property->getPropertyType()) {
                 case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right);                                break;
                 case Property_Type::BoolDouble:     new_widget = createCheckBoxSpinBoxPair( prop, fp, sp_right);                                break;
+                case Property_Type::BoolInt:        new_widget = createCheckBoxIntBoxPair(  prop, fp, sp_right);                                break;
                 case Property_Type::String:         new_widget = createLineEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Textbox:        new_widget = createTextEdit(            prop, fp, sp_right);                                break;
                 case Property_Type::Int:            new_widget = createIntSpinBox(          prop, fp, sp_right, Property_Type::Int);            break;
@@ -349,9 +350,19 @@ void TreeInspector::updateLockedSettings() {
         } else {
             bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());
 
-            if (prop->getPropertyType() == Property_Type::BoolDouble) {
+            if ( prop->getPropertyType() == Property_Type::BoolDouble ||
+                 prop->getPropertyType() == Property_Type::BoolInt) {
                 if (widget->property(User_Property::Order).toInt() == 1) {
                     if (prop->getValue().toList().first().toBool() == false) enabled = false;
+                }
+            }
+
+            if ( prop->getPropertyKey() == static_cast<int>(Properties::Entity_Key) ||
+                 prop->getPropertyKey() == static_cast<int>(Properties::Entity_Asset_Key)) {
+                QSpinBox *spin = dynamic_cast<QSpinBox*>(widget);
+                if (spin != nullptr) {
+                    spin->setReadOnly(true);
+                    enabled = true;
                 }
             }
 

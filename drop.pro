@@ -131,6 +131,7 @@ SOURCES += \
     engine_things/engine_thing_object.cpp \
     engine_things/engine_thing_object__create.cpp \
     engine_things/engine_thing_object__update.cpp \
+    engine_things/engine_thing_spawner.cpp \
     engine_things/engine_thing_swirl.cpp \
     engine_things/engine_thing_water.cpp \
     enums.cpp \
@@ -284,6 +285,7 @@ HEADERS += \
     engine_things/engine_thing_light.h \
     engine_things/engine_thing_mirror.h \
     engine_things/engine_thing_object.h \
+    engine_things/engine_thing_spawner.h \
     engine_things/engine_thing_swirl.h \
     engine_things/engine_thing_water.h \
     enums.h \

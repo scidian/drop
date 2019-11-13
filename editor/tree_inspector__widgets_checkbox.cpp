@@ -50,7 +50,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 
 
 //####################################################################################
-//##    Pair of Double Spin Boxes, uses Property_Type::BoolDouble
+//##    Pair of Check Box / Double Spin Box, uses Property_Type::BoolDouble
 //##        QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
@@ -77,6 +77,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
     check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     check_left->setChecked(property->getValue().toList()[0].toBool());
+    m_filter_hover->attachToHoverHandler(check_left, property);
 
     DrQTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toList()[1].toDouble());
     spin_right->setObjectName("spinBool");
@@ -108,6 +109,75 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 
     return spin_pair;
 }
+
+
+//####################################################################################
+//##    Pair of Check Box / In Spin Box, uses Property_Type::BoolInt
+//##        QList<QVariant> of 6 values: bool, int value, min, max, int step size, string spinText
+//####################################################################################
+QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
+    long property_key = property->getPropertyKey();
+
+    QFrame *spin_pair = new QFrame();
+    spin_pair->setFixedHeight(25);
+    spin_pair->setSizePolicy(size_policy);
+
+    QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
+    horizontal_split->setAlignment(Qt::AlignVCenter);
+    horizontal_split->setSpacing(2);
+    horizontal_split->setContentsMargins(0,0,0,0);
+
+    DrQCheckBox *check_left = new DrQCheckBox();
+    check_left->setFixedWidth(36);
+    check_left->setFixedHeight(22);
+    check_left->setObjectName("checkInspector");
+    check_left->setFont(font);
+    check_left->setDrawLeft(0);
+    check_left->setDrawTop(2);
+    check_left->setTristate(false);
+    check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
+    check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
+    check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    check_left->setChecked(property->getValue().toList()[0].toBool());
+    m_filter_hover->attachToHoverHandler(check_left, property);
+
+    QSpinBox *spin_right = new QSpinBox();
+    spin_right->setObjectName("spinBool");
+    spin_right->setFont(font);
+    spin_right->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    spin_right->setMinimumWidth(50);
+    spin_right->setFixedHeight(22);
+    spin_right->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
+    spin_right->setPrefix(property->getValue().toList()[5].toString());
+    spin_right->setRange(property->getValue().toList()[2].toInt(), property->getValue().toList()[3].toInt());
+    spin_right->setSingleStep(property->getValue().toList()[4].toInt());
+    spin_right->setValue(property->getValue().toList()[1].toInt());
+    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_right->setEnabled(property->getValue().toList()[0].toBool());
+    m_filter_hover->attachToHoverHandler(spin_right, property);
+
+    horizontal_split->addWidget(check_left);
+    horizontal_split->addWidget(spin_right);
+
+    check_left->setProperty(User_Property::Order, 0);
+    spin_right->setProperty(User_Property::Order, 1);
+    addToWidgetList(check_left);
+    addToWidgetList(spin_right);
+
+    // This stops mouse wheel from stealing focus unless user has selected the widget
+    spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    spin_right->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_right));
+
+    connect (check_left, &QCheckBox::toggled, [this, property_key, spin_right](bool checked) {
+        updateSettingsFromNewValue( property_key, checked );
+        spin_right->setEnabled( checked );
+    });
+    connect (spin_right, QOverload<int>::of(&QSpinBox::valueChanged),
+         this, [this, property_key] (int i) { updateSettingsFromNewValue(property_key, i, 1); });
+
+    return spin_pair;
+}
+
 
 
 //####################################################################################

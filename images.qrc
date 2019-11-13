@@ -182,5 +182,6 @@
         <file>assets/form_engine_icons/debug_shape.png</file>
         <file>assets/icon/expired.png</file>
         <file>assets/asset_types/camera.png</file>
+        <file>assets/inspector_icons/comp_spawn.png</file>
     </qresource>
 </RCC>

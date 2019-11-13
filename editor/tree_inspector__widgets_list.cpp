@@ -96,6 +96,11 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Active Players Only")
                 << tr("Players")
                 << tr("Enemies");
+    } else if   (property_key == static_cast<int>(Properties::Thing_Spawn_Type)) {
+        options << tr("Permanent")
+                << tr("Shoot Button")
+                << tr("Jump Button")
+                << tr("Object Death");
     } else {
         options << tr("Unknown List");
     }

@@ -105,11 +105,37 @@ void DrThing::addComponentMovement() {
 
 
 //####################################################################################
+//##    Spawn Components
+//####################################################################################
+void DrThing::addComponentSpawn() {
+    addComponent(Components::Thing_Spawn, "Spawning", "Initial starting velocities of Object in stage. <br><br> "
+                                                      "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!",
+                                                      Component_Colors::Orange_Pastel, true);
+    getComponent(Components::Thing_Spawn)->setIcon(Component_Icons::Spawn);
+
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Rate, Property_Type::Variable, QPointF(1000, 0),
+                           "Spawn Rate", "Rate, in milliseconds, this item will spawn.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Count, Property_Type::Int, 1,
+                           "Spawn Count", "How many instances of this item will spawn. A value of -1 will allow unlimited spawning.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, 0,
+                           "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to spawn when "
+                                         "corresponding buttons are pressed. ");
+    // QList<QVariant> of 6 values: bool, int value,    min, max, int step size,    string spinText
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_At_Object, Property_Type::BoolInt,
+                           QList<QVariant>({false, 1001, 0, 1000000000, 1, "Object ID: "}),
+                           "Spawn At Object", "This will cause this item to spawn at the Object with the desired ID Key. <b>NOTE:</b> "
+                                              "Enter instance <i>Object</i> ID Keys here, <b>NOT</b> Asset ID Keys.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Offset, Property_Type::PointF, QPointF(0, 0),
+                           "Spawn Offset", "This is a X/Y offset for use with spawning at objects.");
+}
+
+
+//####################################################################################
 //##    3D Components
 //####################################################################################
 void DrThing::addComponent3D() {
     addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images whose pixels are "
-                                       "mostly opaque.", Component_Colors::Orange_Pastel, true);
+                                       "mostly opaque.", Component_Colors::Brown_Sugar, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
 
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
@@ -146,7 +172,7 @@ void DrThing::addComponentLighting() {
 //##    Appearance Components
 //####################################################################################
 void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_component) {
-    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Brown_Sugar, show_component);
+    addComponent(Components::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Purple_Royal, show_component);
     getComponent(Components::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate, Property_Type::Slider, QList<QVariant>({256, 0, 256, 8, ""}),
@@ -174,7 +200,7 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_comp
 //##    Special Effects Components
 //####################################################################################
 void DrThing::addComponentSpecialEffects() {
-    addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Purple_Royal, true);
+    addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Blue_Royal, true);
     getComponent(Components::Thing_Special_Effects)->setIcon(Component_Icons::Effects);
 
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,

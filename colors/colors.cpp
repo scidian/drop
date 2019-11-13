@@ -111,7 +111,7 @@ void LoadPalettes() {
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Button_Dark,           QColor( 40,  40,  40)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Button_Light,          QColor( 60,  60,  60)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Midlight,              QColor( 85,  85,  85)));
-    g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Text_Dark,             QColor(145, 145, 145)));
+    g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Text_Dark,             QColor(100, 100, 100)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Text,                  QColor(205, 205, 205)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Text_Light,            QColor(225, 225, 225)));
     g_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Highlight,             QColor(255, 255, 255)));
@@ -127,7 +127,7 @@ void LoadPalettes() {
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Button_Dark,          QColor(190, 190, 190)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Button_Light,         QColor(170, 170, 170)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Midlight,             QColor(150, 150, 150)));
-    g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Text_Dark,            QColor( 80,  80,  80)));
+    g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Text_Dark,            QColor(128, 128, 128)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Text,                 QColor( 55,  55,  55)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Text_Light,           QColor( 25,  25,  25)));
     g_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Highlight,            QColor(  4,   4,   4)));

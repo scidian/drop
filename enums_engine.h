@@ -158,6 +158,13 @@ enum class Collision_Groups {
     Fire =                  6,
 };
 
+enum class Spawn_Type {
+    Permanent,
+    Shoot_Button,
+    Jump_Button,
+    Object_Death,
+};
+
 enum class Death_Animation {
     None,
     Fade,

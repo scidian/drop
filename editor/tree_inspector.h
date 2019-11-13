@@ -75,6 +75,7 @@ public:
     // Property Builders
     void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*          createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*             createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QFrame*             createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*            createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QFrame*             createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy);

@@ -35,7 +35,6 @@ enum class DrType {
         Stage,
             Thing,
 
-
     //        Background,
     //        Foreground,
 
@@ -51,8 +50,6 @@ enum class DrType {
 };
 
 // ################## Sub Types ####################
-// !!!!! #NOTE: This order decides the order they
-//              appear in the Assets Tree!
 enum class DrAssetType {
     Character,
     Object,

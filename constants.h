@@ -20,6 +20,7 @@
 namespace Component_Colors {
     const QColor White_Snow         { QColor(255, 252, 249, 255) };
     const QColor Silver_Snow        { QColor(192, 188, 183, 255) };
+    const QColor Darkness           { QColor( 40,  33,  33, 255) };
 
     const QColor Orange_Medium      { QColor(221, 110,  66, 255) };
     const QColor Orange_Pastel      { QColor(0xfa, 0x92, 0, 255) };
@@ -31,8 +32,10 @@ namespace Component_Colors {
     const QColor Purple_Pastel      { QColor(176, 161, 186, 255) };
     const QColor Purple_Royal       { QColor("#7E57C2") };
     const QColor Blue_Yonder        { QColor(165, 181, 191, 255) };
+    const QColor Blue_Royal         { QColor( 57, 120, 237, 255) };
 
     const QColor Green_SeaGrass     { QColor(154, 225, 157, 255) };
+    const QColor Green_Sickness     { QColor(203, 240,  19, 255) };
 
     const QColor Mustard_Yellow     { QColor(255, 200,  87, 255) };
     const QColor Mellow_Yellow      { QColor(250, 223, 127, 255) };
@@ -60,6 +63,7 @@ namespace Component_Icons {
     const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
     const QString Layering      { QString(":/assets/inspector_icons/comp_layering.png") };
     const QString Movement      { QString(":/assets/inspector_icons/comp_movement.png") };
+    const QString Spawn         { QString(":/assets/inspector_icons/comp_spawn.png") };
     const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };
     const QString Collide       { QString(":/assets/inspector_icons/comp_collide.png") };
     const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };

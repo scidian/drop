@@ -145,7 +145,7 @@ void FormMain::buildWidgetsEditor() {
                         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
                             viewEditor->setRenderHint(QPainter::Antialiasing, false);
                         else
-                            viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+                            viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
                         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
                             QOpenGLWidget *gl_widget = new QOpenGLWidget();

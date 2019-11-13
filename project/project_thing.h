@@ -85,6 +85,7 @@ public:
     void    addComponentLayering(double z, double opacity = 100.0, bool show_component = true);
     void    addComponentLighting();
     void    addComponentMovement();
+    void    addComponentSpawn();
     void    addComponentSpecialEffects();
     void    addComponentTransform(double width, double height, double x, double y, DrThingType type);
 

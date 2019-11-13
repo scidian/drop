@@ -12,13 +12,15 @@
 //##    Used to track what the QVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  28
+//##    !!!!! NEXT AVAILABLE NUMBER:  29
 //##
 //############################
 enum class Property_Type {
     Bool            =  0,   // bool             True or False
     BoolDouble      =  1,   // bool w/double    True or False, and when True shows double spinbox
                             //                  QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
+    BoolInt         =  28,  // bool w/int       True or False, and when True shows int spinbox
+                            //                  QList<QVariant> of 6 values: bool, int value,    min, max, int step size,    string spinText
 
     Int             =  2,   // long             Integer
     Positive        =  3,   // long             Integer >= 0
@@ -63,7 +65,7 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  39
+//##    !!!!! NEXT AVAILABLE NUMBER:  40
 //##
 //############################
 enum class Components {
@@ -119,6 +121,7 @@ enum class Components {
     Thing_Transform                     = 27,
     Thing_Layering                      = 28,
     Thing_Movement                      = 29,
+    Thing_Spawn                         = 39,
     Thing_Lighting                      = 30,
     Thing_3D                            = 31,
     Thing_Appearance                    = 32,
@@ -131,9 +134,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   189
+//##    !!!!! NEXT AVAILABLE NUMBER:   194
 //##
-//##    Checked for doubles up through 189 on 11/11/2019
+//##    Checked for doubles up through 194 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -296,6 +299,13 @@ enum class Properties {
     Thing_Velocity_Y                    = 63,       // variable
     Thing_Spin_Velocity                 = 64,       // variable
     Thing_Angle_Velocity                = 65,       // bool
+
+    // Spawn
+    Thing_Spawn_Rate                    = 189,      // variable
+    Thing_Spawn_Count                   = 190,      // int
+    Thing_Spawn_Type                    = 191,      // list, enum class Spawn_Type
+    Thing_Spawn_At_Object               = 192,      // bool int combo
+    Thing_Spawn_Offset                  = 193,      // pointf
 
     // Lighting
     Thing_Lighting_Cast_Shadows         = 66,       // bool

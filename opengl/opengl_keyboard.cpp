@@ -20,13 +20,13 @@
 //####################################################################################
 void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 
-           if (event->key() == Qt::Key_W) { g_keyboard_y =  1;
-    } else if (event->key() == Qt::Key_A) { g_keyboard_x = -1;
-    } else if (event->key() == Qt::Key_D) { g_keyboard_x =  1;
-    } else if (event->key() == Qt::Key_S) { g_keyboard_y = -1;
+           if (event->key() == Qt::Key_W) { g_keyboard_y =  1.0;
+    } else if (event->key() == Qt::Key_A) { g_keyboard_x = -1.0;
+    } else if (event->key() == Qt::Key_D) { g_keyboard_x =  1.0;
+    } else if (event->key() == Qt::Key_S) { g_keyboard_y = -1.0;
 
-    } else if (event->key() == Qt::Key_Up)      { g_keyboard_y =  1;
-    } else if (event->key() == Qt::Key_Down)    { g_keyboard_y = -1;
+    } else if (event->key() == Qt::Key_Up)      { g_keyboard_y =  1.0;
+    } else if (event->key() == Qt::Key_Down)    { g_keyboard_y = -1.0;
     } else if (event->key() == Qt::Key_Left)    { g_pedal = Pedal::CounterClockwise;
     } else if (event->key() == Qt::Key_Right)   { g_pedal = Pedal::Clockwise;
 
@@ -46,13 +46,13 @@ void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 //####################################################################################
 void DrOpenGL::keyReleaseEvent(QKeyEvent *event) {
 
-           if (event->key() == Qt::Key_W) { if (g_keyboard_y > 0.0) g_keyboard_y = 0;
-    } else if (event->key() == Qt::Key_A) { if (g_keyboard_x < 0.0) g_keyboard_x = 0;
-    } else if (event->key() == Qt::Key_D) { if (g_keyboard_x > 0.0) g_keyboard_x = 0;
-    } else if (event->key() == Qt::Key_S) { if (g_keyboard_y < 0.0) g_keyboard_y = 0;
+           if (event->key() == Qt::Key_W) { if (g_keyboard_y > 0.0) g_keyboard_y = 0.0;
+    } else if (event->key() == Qt::Key_A) { if (g_keyboard_x < 0.0) g_keyboard_x = 0.0;
+    } else if (event->key() == Qt::Key_D) { if (g_keyboard_x > 0.0) g_keyboard_x = 0.0;
+    } else if (event->key() == Qt::Key_S) { if (g_keyboard_y < 0.0) g_keyboard_y = 0.0;
 
-    } else if (event->key() == Qt::Key_Up)      { if (g_keyboard_y > 0.0) g_keyboard_y = 0;
-    } else if (event->key() == Qt::Key_Down)    { if (g_keyboard_y < 0.0) g_keyboard_y = 0;
+    } else if (event->key() == Qt::Key_Up)      { if (g_keyboard_y > 0.0) g_keyboard_y = 0.0;
+    } else if (event->key() == Qt::Key_Down)    { if (g_keyboard_y < 0.0) g_keyboard_y = 0.0;
     } else if (event->key() == Qt::Key_Left)    { if (g_pedal == Pedal::CounterClockwise) g_pedal = Pedal::None;
     } else if (event->key() == Qt::Key_Right)   { if (g_pedal == Pedal::Clockwise)        g_pedal = Pedal::None;
     }
