@@ -74,19 +74,23 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     bool    wireframe =     thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toBool();
     bool    cartoon =       thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toList()[0].toBool();
     float   cartoon_width = thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toList()[1].toFloat();
-    object->cast_shadows =  cast_shadows;
-    object->bitrate =       bit_rate;
-    object->pixel_x =       static_cast<float>(pixelation.x());
-    object->pixel_y =       static_cast<float>(pixelation.y());
-    object->brightness =    brightness;
-    object->contrast =      contrast;
-    object->saturation =    saturation;
-    object->hue =           hue;
-    object->grayscale =     grayscale;
-    object->negative =      negative;
-    object->wireframe =     wireframe;
-    object->cartoon =       cartoon;
-    object->cartoon_width = cartoon_width;
+    bool    cross_hatch =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cross_Hatch).toList()[0].toBool();
+    float   cross_width =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cross_Hatch).toList()[1].toFloat();
+    object->cast_shadows =      cast_shadows;
+    object->bitrate =           bit_rate;
+    object->pixel_x =           static_cast<float>(pixelation.x());
+    object->pixel_y =           static_cast<float>(pixelation.y());
+    object->brightness =        brightness;
+    object->contrast =          contrast;
+    object->saturation =        saturation;
+    object->hue =               hue;
+    object->grayscale =         grayscale;
+    object->negative =          negative;
+    object->wireframe =         wireframe;
+    object->cartoon =           cartoon;
+    object->cartoon_width =     cartoon_width;
+    object->cross_hatch =       cross_hatch;
+    object->cross_hatch_width = cross_width;
 }
 
 

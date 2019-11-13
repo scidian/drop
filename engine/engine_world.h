@@ -135,20 +135,22 @@ public:
     DrEngineLight  *light2;
 
     // Image Post Processing Variables
-    float           bitrate = 256.0;                            // Bitrate          1 to 256
-    float           pixel_x = 1.0;                              // Pixelation X     1.0+
-    float           pixel_y = 1.0;                              // Pixelation Y     1.0+
-    bool            negative = false;                           // Negative         True / False
-    bool            grayscale = false;                          // Grayscale        True / False
-    float           hue = 0.0f;                                 // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
-    float           saturation = 0.0f;                          // Saturation       Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           contrast = 0.0f;                            // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           brightness = 0.0f;                          // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           bitrate = 256.0;                            // Bitrate              1 to 256
+    float           pixel_x = 1.0;                              // Pixelation X         1.0+
+    float           pixel_y = 1.0;                              // Pixelation Y         1.0+
+    bool            negative = false;                           // Negative             True / False
+    bool            grayscale = false;                          // Grayscale            True / False
+    float           hue = 0.0f;                                 // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
+    float           saturation = 0.0f;                          // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           contrast = 0.0f;                            // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           brightness = 0.0f;                          // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
-    bool            wireframe = false;                          // Wireframe        True / False
-    bool            cartoon = false;                            // Cartoon          True / False
+    bool            wireframe = false;                          // Wireframe            True / False
+    bool            cartoon = false;                            // Cartoon              True / False
     float           cartoon_width = 5.0;                        // Cartoon Width
-    bool            wavy = false;                               // Wavy (Ripple)    True / False
+    bool            cross_hatch = false;                        // Cross Hatch          True / False
+    float           cross_hatch_width = 5.0;                    // Cross Hatch Width
+    bool            wavy = false;                               // Wavy (Ripple)        True / False
 
 
 public:

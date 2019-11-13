@@ -45,6 +45,8 @@ uniform highp   vec3    u_camera_pos;
 uniform mediump float   u_bitrate;// = 256;                 // Bitrate              Editor:    0 to  256
 uniform         bool    u_cartoon;// = false;               // Cartoon              True / False
 uniform mediump float   u_cartoon_width;// = 5.0            // Cartoon Edge Width   0.0 to ?
+uniform         bool    u_cross_hatch;//false               // Cross Hatch          True / False
+uniform mediump float   u_cross_hatch_width;// = 5.0        // Cross Hatch Width    0.0 to ?
 uniform         bool    u_wavy;// = false;                  // Wavy                 True / False
 uniform         bool    u_wireframe;// = false;             // Wireframe            True / False
 
@@ -316,6 +318,35 @@ void main( void ) {
     }
 
 
+    // ***** CROSS STITCH
+//    if (u_cross_hatch) {
+//        float size =  u_cross_hatch_width; // = 6.0;
+//        int   invert = 1;
+//        vec4  c = vec4(0.0);
+//        float tex_w = u_width;
+//        float tex_h = u_height;
+//        vec2  c_pos =  coords * vec2(tex_w, tex_h);
+//        vec2  tl_pos = floor(c_pos / vec2(size, size)) * size;
+//        int   remain_x = int(mod(c_pos.x, size));
+//        int   remain_y = int(mod(c_pos.y, size));
+//        if (remain_x == 0 && remain_y == 0) tl_pos = c_pos;
+//        vec2 blPos = tl_pos;
+//             blPos.y += (size - 1.0);
+//        if ((remain_x == remain_y) || (((int(c_pos.x) - int(blPos.x)) == (int(blPos.y) - int(c_pos.y))))) {
+//            if (invert == 1)
+//                c = vec4(0.2, 0.15, 0.05, 1.0);
+//            else
+//                c = texture2D(u_texture, tl_pos * vec2(1.0/tex_w, 1.0/tex_h)) * 1.4;
+//        } else {
+//            if (invert == 1)
+//                c = texture2D(u_texture, tl_pos * vec2(1.0/tex_w, 1.0/tex_h)) * 1.4;
+//            else
+//                c = vec4(0.0, 0.0, 0.0, 1.0);
+//        }
+//        texture_color = c;
+//    }
+
+
     // ********** Set some variables for use later
     highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
@@ -392,6 +423,30 @@ void main( void ) {
         float edg = isEdge(coords.xy);
         vec3 v_rgb = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : cartoonHsvToRgb(v_hsv.x, v_hsv.y, v_hsv.z);
         frag_rgb = vec3(v_rgb.x, v_rgb.y, v_rgb.z);
+    }
+
+    // ***** CROSS HATCH
+    if (u_cross_hatch) {
+        float hatch_y_offset = u_cross_hatch_width;
+        float lum_threshold_1 = 1.0;
+        float lum_threshold_2 = 0.8;
+        float lum_threshold_3 = 0.55;
+        float lum_threshold_4 = 0.35;
+        float lum = length(frag_rgb);
+        vec3 tc = vec3(1.0, 1.0, 1.0);
+        if (lum < lum_threshold_1) {
+            if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+        }
+        if (lum < lum_threshold_2) {
+            if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+        }
+        if (lum < lum_threshold_3) {
+            if (mod(gl_FragCoord.x + gl_FragCoord.y - hatch_y_offset, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+        }
+        if (lum < lum_threshold_4) {
+            if (mod(gl_FragCoord.x - gl_FragCoord.y - hatch_y_offset, 10.0) == 0.0) tc = vec3(0.0, 0.0, 0.0);
+        }
+        frag_rgb = tc;
     }
 
 

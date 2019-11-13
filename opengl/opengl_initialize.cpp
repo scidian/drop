@@ -192,43 +192,45 @@ void DrOpenGL::loadShaders() {
     m_default_shader.link();
 
     // Vertex Shader Input
-    a_default_vertex =          m_default_shader.attributeLocation( "vertex" );
-    a_default_normal =          m_default_shader.attributeLocation( "normal" );
-    a_default_texture_coord =   m_default_shader.attributeLocation( "texture_coordinates" );
-    a_default_barycentric =     m_default_shader.attributeLocation( "barycentric" );
-    u_default_matrix =          m_default_shader.uniformLocation(   "u_matrix" );
-    u_default_matrix_object =   m_default_shader.uniformLocation(   "u_matrix_object" );
+    a_default_vertex =              m_default_shader.attributeLocation( "vertex" );
+    a_default_normal =              m_default_shader.attributeLocation( "normal" );
+    a_default_texture_coord =       m_default_shader.attributeLocation( "texture_coordinates" );
+    a_default_barycentric =         m_default_shader.attributeLocation( "barycentric" );
+    u_default_matrix =              m_default_shader.uniformLocation(   "u_matrix" );
+    u_default_matrix_object =       m_default_shader.uniformLocation(   "u_matrix_object" );
 
     // Fragment Shader Input
-    u_default_texture =         m_default_shader.uniformLocation(   "u_texture" );
-    u_default_alpha =           m_default_shader.uniformLocation(   "u_alpha" );
-    u_default_average_color =   m_default_shader.uniformLocation(   "u_average_color" );
-    u_default_tint =            m_default_shader.uniformLocation(   "u_tint" );
-    u_default_zoom =            m_default_shader.uniformLocation(   "u_zoom" );
+    u_default_texture =             m_default_shader.uniformLocation(   "u_texture" );
+    u_default_alpha =               m_default_shader.uniformLocation(   "u_alpha" );
+    u_default_average_color =       m_default_shader.uniformLocation(   "u_average_color" );
+    u_default_tint =                m_default_shader.uniformLocation(   "u_tint" );
+    u_default_zoom =                m_default_shader.uniformLocation(   "u_zoom" );
 
-    u_default_width =           m_default_shader.uniformLocation(   "u_width" );
-    u_default_height =          m_default_shader.uniformLocation(   "u_height" );
-    u_default_time =            m_default_shader.uniformLocation(   "u_time" );
-    u_default_pre =             m_default_shader.uniformLocation(   "u_premultiplied");
+    u_default_width =               m_default_shader.uniformLocation(   "u_width" );
+    u_default_height =              m_default_shader.uniformLocation(   "u_height" );
+    u_default_time =                m_default_shader.uniformLocation(   "u_time" );
+    u_default_pre =                 m_default_shader.uniformLocation(   "u_premultiplied");
 
-    u_default_pixel_x =         m_default_shader.uniformLocation(   "u_pixel_x" );
-    u_default_pixel_y =         m_default_shader.uniformLocation(   "u_pixel_y" );
-    u_default_pixel_offset =    m_default_shader.uniformLocation(   "u_pixel_offset" );
-    u_default_negative =        m_default_shader.uniformLocation(   "u_negative" );
-    u_default_grayscale =       m_default_shader.uniformLocation(   "u_grayscale" );
-    u_default_hue =             m_default_shader.uniformLocation(   "u_hue" );
-    u_default_saturation =      m_default_shader.uniformLocation(   "u_saturation" );
-    u_default_contrast =        m_default_shader.uniformLocation(   "u_contrast" );
-    u_default_brightness =      m_default_shader.uniformLocation(   "u_brightness" );
+    u_default_pixel_x =             m_default_shader.uniformLocation(   "u_pixel_x" );
+    u_default_pixel_y =             m_default_shader.uniformLocation(   "u_pixel_y" );
+    u_default_pixel_offset =        m_default_shader.uniformLocation(   "u_pixel_offset" );
+    u_default_negative =            m_default_shader.uniformLocation(   "u_negative" );
+    u_default_grayscale =           m_default_shader.uniformLocation(   "u_grayscale" );
+    u_default_hue =                 m_default_shader.uniformLocation(   "u_hue" );
+    u_default_saturation =          m_default_shader.uniformLocation(   "u_saturation" );
+    u_default_contrast =            m_default_shader.uniformLocation(   "u_contrast" );
+    u_default_brightness =          m_default_shader.uniformLocation(   "u_brightness" );
 
-    u_default_shade_away =      m_default_shader.uniformLocation(   "u_shade_away" );
-    u_default_camera_pos =      m_default_shader.uniformLocation(   "u_camera_pos" );
+    u_default_shade_away =          m_default_shader.uniformLocation(   "u_shade_away" );
+    u_default_camera_pos =          m_default_shader.uniformLocation(   "u_camera_pos" );
 
-    u_default_bitrate =         m_default_shader.uniformLocation(   "u_bitrate" );
-    u_default_cartoon =         m_default_shader.uniformLocation(   "u_cartoon" );
-    u_default_cartoon_width =   m_default_shader.uniformLocation(   "u_cartoon_width" );
-    u_default_wavy =            m_default_shader.uniformLocation(   "u_wavy" );
-    u_default_wireframe =       m_default_shader.uniformLocation(   "u_wireframe" );
+    u_default_bitrate =             m_default_shader.uniformLocation(   "u_bitrate" );
+    u_default_cartoon =             m_default_shader.uniformLocation(   "u_cartoon" );
+    u_default_cartoon_width =       m_default_shader.uniformLocation(   "u_cartoon_width" );
+    u_default_cross_hatch =         m_default_shader.uniformLocation(   "u_cross_hatch" );
+    u_default_cross_hatch_width =   m_default_shader.uniformLocation(   "u_cross_hatch_width" );
+    u_default_wavy =                m_default_shader.uniformLocation(   "u_wavy" );
+    u_default_wireframe =           m_default_shader.uniformLocation(   "u_wireframe" );
 
 
     // ***** Initialize our Occluder Map Shader

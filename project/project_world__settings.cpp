@@ -87,7 +87,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
                                          "oversaturation levels or be better for dark scenes.");
 
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
-                                               Component_Colors::Brown_Sugar, true);
+                                               Component_Colors::Purple_Royal, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
 
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 8 }),
@@ -108,7 +108,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Negative, Property_Type::Bool, false,
                            "Negative", "Should this world's colors be inverted?");
 
-    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Purple_Royal, true);
+    addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Blue_Royal, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
 
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Convert_3D, Property_Type::Bool, false,
@@ -119,6 +119,9 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon,
                            Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
                            "Cartoon", "Gives the world a comic book look.");
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Hatch Width: "}),
+                           "Cross Hatch", "Gives the world a sketched look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");
 }

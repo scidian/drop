@@ -138,30 +138,32 @@ void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing
 //##        Sets shader variables to default normal render
 //####################################################################################
 void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
-    m_default_shader.setUniformValue( u_default_texture,        0 );                            // Use texture unit "0"
-    m_default_shader.setUniformValue( u_default_alpha,          1.0f );
-    m_default_shader.setUniformValue( u_default_tint,           0.0f, 0.0f, 0.0f );             // Add 0 to red, green, and blue
-    m_default_shader.setUniformValue( u_default_average_color,  0.0f, 0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_zoom,           combinedZoomScale() );
-    m_default_shader.setUniformValue( u_default_width,          texture_width  );
-    m_default_shader.setUniformValue( u_default_height,         texture_height );
-    m_default_shader.setUniformValue( u_default_time,           static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
-    m_default_shader.setUniformValue( u_default_pre,            false );
-    m_default_shader.setUniformValue( u_default_bitrate,        256.0f );
-    m_default_shader.setUniformValue( u_default_pixel_x,        1.0f );
-    m_default_shader.setUniformValue( u_default_pixel_y,        1.0f );
-    m_default_shader.setUniformValue( u_default_pixel_offset,   0.5f, 0.5f );
-    m_default_shader.setUniformValue( u_default_negative,       false );
-    m_default_shader.setUniformValue( u_default_grayscale,      false );
-    m_default_shader.setUniformValue( u_default_hue,            0.0f );
-    m_default_shader.setUniformValue( u_default_saturation,     0.0f );
-    m_default_shader.setUniformValue( u_default_contrast,       0.0f );
-    m_default_shader.setUniformValue( u_default_brightness,     0.0f );
-    m_default_shader.setUniformValue( u_default_shade_away,     false );
-    m_default_shader.setUniformValue( u_default_cartoon,        false );
-    m_default_shader.setUniformValue( u_default_cartoon_width,  5.0f );
-    m_default_shader.setUniformValue( u_default_wavy,           false );
-    m_default_shader.setUniformValue( u_default_wireframe,      false );
+    m_default_shader.setUniformValue( u_default_texture,            0 );                                // Use texture unit "0"
+    m_default_shader.setUniformValue( u_default_alpha,              1.0f );
+    m_default_shader.setUniformValue( u_default_tint,               0.0f, 0.0f, 0.0f );                 // Add 0 to red, green, and blue
+    m_default_shader.setUniformValue( u_default_average_color,      0.0f, 0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_zoom,               combinedZoomScale() );
+    m_default_shader.setUniformValue( u_default_width,              texture_width  );
+    m_default_shader.setUniformValue( u_default_height,             texture_height );
+    m_default_shader.setUniformValue( u_default_time,               static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
+    m_default_shader.setUniformValue( u_default_pre,                false );
+    m_default_shader.setUniformValue( u_default_bitrate,            256.0f );
+    m_default_shader.setUniformValue( u_default_pixel_x,            1.0f );
+    m_default_shader.setUniformValue( u_default_pixel_y,            1.0f );
+    m_default_shader.setUniformValue( u_default_pixel_offset,       0.5f, 0.5f );
+    m_default_shader.setUniformValue( u_default_negative,           false );
+    m_default_shader.setUniformValue( u_default_grayscale,          false );
+    m_default_shader.setUniformValue( u_default_hue,                0.0f );
+    m_default_shader.setUniformValue( u_default_saturation,         0.0f );
+    m_default_shader.setUniformValue( u_default_contrast,           0.0f );
+    m_default_shader.setUniformValue( u_default_brightness,         0.0f );
+    m_default_shader.setUniformValue( u_default_shade_away,         false );
+    m_default_shader.setUniformValue( u_default_cartoon,            false );
+    m_default_shader.setUniformValue( u_default_cartoon_width,      5.0f );
+    m_default_shader.setUniformValue( u_default_cross_hatch,        false );
+    m_default_shader.setUniformValue( u_default_cross_hatch_width,  5.0f );
+    m_default_shader.setUniformValue( u_default_wavy,               false );
+    m_default_shader.setUniformValue( u_default_wireframe,          false );
 }
 
 
