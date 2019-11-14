@@ -46,7 +46,8 @@ private:
 public:
     // Constructor / Destructor
     DrEngineSpawner();
-    DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, int rate, int rate_variable, int spawn_count,
+    DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, int rate, int rate_variable,
+                    int spawn_count, int spawns_remaining,
                     DrEngineThing *attached, long attached_id,
                     double x, double y, double x_variable, double y_variable);
     ~DrEngineSpawner() { }

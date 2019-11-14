@@ -14,7 +14,8 @@
 //####################################################################################
 DrEngineSpawner::DrEngineSpawner() { }
 
-DrEngineSpawner::DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, int rate, int rate_variable, int spawn_count,
+DrEngineSpawner::DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, int rate, int rate_variable,
+                                 int spawn_count, int spawns_remaining,
                                  DrEngineThing *attached, long attached_id,
                                  double x, double y, double x_variable, double y_variable) {
     setLocation(location);
@@ -25,7 +26,7 @@ DrEngineSpawner::DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF locat
     setSpawnRate( rate );
     setSpawnRateVariable( rate_variable );
     setSpawnCount( spawn_count );
-    setSpawnsRemaining( spawn_count );
+    setSpawnsRemaining( spawns_remaining );
 
     if (attached_id != c_no_key) setAttachedThingKey(attached_id);
     if (attached != nullptr)     setAttachedThing(attached);

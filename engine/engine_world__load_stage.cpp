@@ -45,6 +45,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
                 // Load Spawning Info
                 int spawn_count =    thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Count).toInt();
                 if (spawn_count == 0) continue;
+                int spawns_remaining = spawn_count;
                 QList<QVariant> spawn_object;
                 spawn_object =       thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_At_Object).toList();
                 QPoint spawn_rate =  thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Rate).toPoint();
@@ -55,25 +56,23 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
                 // Load Object if Spawns Permanent
                 bool make_spawner = true;
-                bool spawned_once = false;
                 if (attached_to_object == false && static_cast<Spawn_Type>(spawn_type) == Spawn_Type::Permanent) {
-                    DrEngineObject *object = loadObjectToWorld(  thing, offset_x, offset_y);
+                    DrEngineObject *object = loadObjectToWorld( thing, offset_x, offset_y );
                     if (object != nullptr) things_in_stage.push_back(object);
 
-                    if (spawn_count > 1) {
-                        make_spawner = true;
-                        spawned_once = true;
-                    } else {
+                    if (spawn_count > 1)
+                        spawns_remaining--;
+                    else
                         make_spawner = false;
-                    }
                 }
 
+                // Add Spawner to list for processing when scene finishes loading
                 if (make_spawner) {
                     long attached_id = (attached_to_object) ? spawn_object[1].toLongLong() : c_no_key;
-                    DrEngineSpawner *spawner = new DrEngineSpawner(thing, static_cast<Spawn_Type>(spawn_type),
-                                                                   DrPointF(offset_x, offset_y), spawn_rate.x(), spawn_rate.y(),
-                                                                   spawn_count, nullptr, attached_id,
-                                                                   spawn_x.x(), spawn_x.y(), spawn_y.x(), spawn_y.y());
+                    DrEngineSpawner *spawner;
+                    spawner = new DrEngineSpawner(thing, static_cast<Spawn_Type>(spawn_type), DrPointF(offset_x, offset_y),
+                                                  spawn_rate.x(), spawn_rate.y(), spawn_count, spawns_remaining, nullptr, attached_id,
+                                                  spawn_x.x(), spawn_x.y(), spawn_y.x(), spawn_y.y());
                     spawners.push_back(spawner);
                 }
                 break;
