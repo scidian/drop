@@ -197,8 +197,7 @@ void FormEngine::loadDemo(Demo_Player using_player) {
 
     // ***** The following are the steps to load a new Space
     m_engine->getCurrentWorld()->clearWorld();
-    m_engine->getCurrentWorld()->buildWorld( m_engine->getCurrentEditorWorld() );
-    m_engine->getCurrentWorld()->addPlayer( using_player );
+    m_engine->getCurrentWorld()->buildWorld( m_engine->getCurrentEditorWorld(), using_player );
     m_engine->getCurrentWorld()->updateSpace( 0 );
 
     // Finished loading Space, update buttons and start timer

@@ -44,7 +44,7 @@ void DrEngineWorld::addThings(QList<DrEngineThing*> things) {
 }
 void DrEngineWorld::addThing( DrEngineThing *thing) {
     thing->addToWorld();
-    m_things.append(thing);
+    m_things.push_back(thing);
 }
 
 int DrEngineWorld::countCharacters() {

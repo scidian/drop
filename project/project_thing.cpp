@@ -39,7 +39,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     m_asset_key =  from_asset_key;                  // associated asset key
 
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
-    ///getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
     addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
                            "Asset ID Key", "ID Key of Asset this item represents.", false, false);
 
@@ -49,6 +49,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     // Call to load in all the components / properties for this Stage thing
     switch (new_thing_type) {
         case DrThingType::Character:
+            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(false);
+            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setDisplayName("Character ID Key");
             addComponentSettingsCharacter(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
             addComponentLayering(z);
@@ -59,6 +61,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
 
         case DrThingType::Object:
+            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(false);
+            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setDisplayName("Object ID Key");
             addComponentSettingsObject(new_thing_name, should_collide);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);

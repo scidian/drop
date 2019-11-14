@@ -8,12 +8,13 @@
 #include <QApplication>
 #include <QDebug>
 
-#include "engine.h"
-#include "engine_camera.h"
+#include "engine/engine.h"
+#include "engine/engine_camera.h"
+#include "engine/engine_spawner.h"
+#include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine_world.h"
-#include "form_engine.h"
 #include "opengl/opengl.h"
 
 //####################################################################################
@@ -70,6 +71,11 @@ void DrEngineWorld::clearWorld() {
         for (auto camera_pair : m_cameras)
             delete camera_pair.second;
         m_cameras.clear();
+
+        // Remove all Spawners
+        for (auto spawner_pair : m_spawners)
+            delete spawner_pair.second;
+        m_spawners.clear();
 
         // Clear cpSpace from any remaining items, free Space
         ChipmunkFreeSpaceChildren(m_space);

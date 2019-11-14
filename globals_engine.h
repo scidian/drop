@@ -33,6 +33,7 @@ class DrEngine;
 class DrEngineLight;
 class DrEngineCamera;
 class DrEngineObject;
+class DrEngineSpawner;
 class DrEngineThing;
 class DrEngineTexture;
 class DrEngineWorld;
@@ -46,7 +47,9 @@ class FormEngine;
 // Type definitions
 typedef std::chrono::high_resolution_clock  Clock;
 typedef std::map<long, DrEngineCamera*>     EngineCameraMap;
+typedef std::map<long, DrEngineSpawner*>    EngineSpawnerMap;
 typedef std::map<long, DrEngineTexture*>    EngineTextureMap;
+typedef std::vector<   DrEngineThing*>      EngineThings;
 typedef std::map<long, DrEngineWorld*>      EngineWorldMap;
 
 

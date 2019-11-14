@@ -29,7 +29,7 @@
 //####################################################################################
 //##    Build Space
 //####################################################################################
-void DrEngineWorld::buildWorld(long world_id_to_build) {
+void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use) {
 
     // ***** Basic World Proeprties
     m_background_color = QColor(0, 0, 0);
@@ -118,6 +118,10 @@ void DrEngineWorld::buildWorld(long world_id_to_build) {
     cross_hatch =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toList()[0].toBool();
     cross_hatch_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toList()[1].toFloat();
     wavy =              world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
+
+
+    // ***** Load Start Stage Players
+    addPlayer( player_to_use );
 
     // ***** Load Current Stage to origin position
     loadStageToWorld(stage, 0, 0, true);

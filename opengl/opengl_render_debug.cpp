@@ -81,7 +81,7 @@ void DrOpenGL::drawDebug(QPainter &painter) {
     painter.setFont(font);
     painter.setPen( Qt::white );
     painter.drawText( QPointF(20,  20), "FPS: \t" +         QString::number(m_engine->getFormEngine()->fps_render) );               // Frames per second
-    painter.drawText( QPointF(20,  40), "Objects: \t" +     QString::number(m_engine->getCurrentWorld()->getThings().count()) );    // Object count
+    painter.drawText( QPointF(20,  40), "Objects: \t" +     QString::number(m_engine->getCurrentWorld()->getThings().size()) );     // Object count
     painter.drawText( QPointF(20,  60), "Triangles: \t" +   QString::number(getTriangleCount()) );                                  // Triangle count
     painter.drawText( QPointF(20,  80), "Zoom: \t" +        QString::number(double(combinedZoomScale())) );                         // World scale
     painter.drawText( QPointF(20, 100), g_info );                                                                                   // Global debug string

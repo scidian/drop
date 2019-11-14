@@ -134,9 +134,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   196
+//##    !!!!! NEXT AVAILABLE NUMBER:   197
 //##
-//##    Checked for doubles up through 196 on 11/11/2019
+//##    Checked for doubles up through 197 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -306,7 +306,8 @@ enum class Properties {
     Thing_Spawn_Count                   = 190,      // int
     Thing_Spawn_Type                    = 191,      // list, enum class Spawn_Type
     Thing_Spawn_At_Object               = 192,      // bool int combo
-    Thing_Spawn_Offset                  = 193,      // pointf
+    Thing_Spawn_Offset_X                = 193,      // variable
+    Thing_Spawn_Offset_Y                = 196,      // variable
 
     // Lighting
     Thing_Lighting_Cast_Shadows         = 66,       // bool

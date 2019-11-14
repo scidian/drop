@@ -99,6 +99,10 @@ public:
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
     virtual bool        update(double time_passed, double time_warp, QRectF &area);         // Process one update iteration for this Thing
 
+    // Virtual Event Functions
+    virtual void        onCollide() { }
+    virtual void        onDamaged() { }
+    virtual void        onDeath()   { }
 
     // Basic Properties
     virtual double          getAngle() {    return m_angle_z; }                             // Returns Thing angle (in degrees)

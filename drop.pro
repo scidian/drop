@@ -108,12 +108,14 @@ SOURCES += \
     editor_view/editor_view__tooltip.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
+    engine/engine_spawner.cpp \
     engine/engine_texture.cpp \
     engine/engine_world.cpp \
     engine/engine_world__build_player.cpp \
     engine/engine_world__build_world.cpp \
     engine/engine_world__clear.cpp \
     engine/engine_world__collision.cpp \
+    engine/engine_world__load_characters.cpp \
     engine/engine_world__load_effects.cpp \
     engine/engine_world__load_stage.cpp \
     engine/engine_world__load_things.cpp \
@@ -131,7 +133,6 @@ SOURCES += \
     engine_things/engine_thing_object.cpp \
     engine_things/engine_thing_object__create.cpp \
     engine_things/engine_thing_object__update.cpp \
-    engine_things/engine_thing_spawner.cpp \
     engine_things/engine_thing_swirl.cpp \
     engine_things/engine_thing_water.cpp \
     enums.cpp \
@@ -274,6 +275,7 @@ HEADERS += \
     editor_view/editor_view.h \
     engine/engine.h \
     engine/engine_camera.h \
+    engine/engine_spawner.h \
     engine/engine_texture.h \
     engine/engine_world.h \
     engine/form_engine.h \
@@ -285,7 +287,6 @@ HEADERS += \
     engine_things/engine_thing_light.h \
     engine_things/engine_thing_mirror.h \
     engine_things/engine_thing_object.h \
-    engine_things/engine_thing_spawner.h \
     engine_things/engine_thing_swirl.h \
     engine_things/engine_thing_water.h \
     enums.h \

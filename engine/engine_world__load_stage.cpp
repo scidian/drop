@@ -7,9 +7,12 @@
 //
 #include <QDebug>
 
-#include "engine.h"
-#include "engine_camera.h"
-#include "engine_world.h"
+#include "engine/engine.h"
+#include "engine/engine_camera.h"
+#include "engine/engine_spawner.h"
+#include "engine/engine_world.h"
+#include "engine_things/engine_thing.h"
+#include "engine_things/engine_thing_object.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_stage.h"
@@ -22,7 +25,12 @@
 //####################################################################################
 void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage) {
 
-    // ***** Load Things
+    // Use to keep a list of Things that were added, so we can attach Spawners later
+    std::vector<DrEngineSpawner*>   spawners;           spawners.clear();
+    std::vector<DrEngineThing*>     things_in_stage;    things_in_stage.clear();
+
+
+    // ********** Load Things
     for (auto thing_pair : stage->getThingMap()) {
 
         // Grab current Thing
@@ -30,10 +38,46 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
         // Check if Thing type, if it is, call appropriate Thing Loader
         if (thing->getType() != DrType::Thing) continue;
-
         switch (thing->getThingType()) {
-            // Load Thing
-            case DrThingType::Object:   loadObjectToWorld(  thing, offset_x, offset_y);     break;
+
+            // ***** Load Thing
+            case DrThingType::Object: {
+                // Load Spawning Info
+                int spawn_count =    thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Count).toInt();
+                if (spawn_count == 0) continue;
+                QList<QVariant> spawn_object;
+                spawn_object =       thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_At_Object).toList();
+                QPoint spawn_rate =  thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Rate).toPoint();
+                int spawn_type =     thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Type).toInt();
+                QPointF spawn_x =    thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Offset_X).toPointF();
+                QPointF spawn_y =    thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Offset_Y).toPointF();
+                bool attached_to_object = spawn_object[0].toBool();
+
+                // Load Object if Spawns Permanent
+                bool make_spawner = true;
+                bool spawned_once = false;
+                if (attached_to_object == false && static_cast<Spawn_Type>(spawn_type) == Spawn_Type::Permanent) {
+                    DrEngineObject *object = loadObjectToWorld(  thing, offset_x, offset_y);
+                    if (object != nullptr) things_in_stage.push_back(object);
+
+                    if (spawn_count > 1) {
+                        make_spawner = true;
+                        spawned_once = true;
+                    } else {
+                        make_spawner = false;
+                    }
+                }
+
+                if (make_spawner) {
+                    long attached_id = (attached_to_object) ? spawn_object[1].toLongLong() : c_no_key;
+                    DrEngineSpawner *spawner = new DrEngineSpawner(thing, static_cast<Spawn_Type>(spawn_type),
+                                                                   DrPointF(offset_x, offset_y), spawn_rate.x(), spawn_rate.y(),
+                                                                   spawn_count, nullptr, attached_id,
+                                                                   spawn_x.x(), spawn_x.y(), spawn_y.x(), spawn_y.y());
+                    spawners.push_back(spawner);
+                }
+                break;
+            }
 
             // Load Thing Effect
             case DrThingType::Fire:     loadFireToWorld(    thing, offset_x, offset_y);     break;
@@ -56,7 +100,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
     }
 
-    // Check cameras for another non-character following camera that wants to be active
+    // ***** Check cameras for another non-character following camera that wants to be active
     if (start_stage) {
         for (auto &camera_pair : m_cameras) {
             DrEngineCamera *camera = camera_pair.second;
@@ -66,6 +110,11 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             }
         }
     }
+
+
+    // ***** Add Spawners
+
+
 
     // ***** Update distance we've loaded scenes to
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();

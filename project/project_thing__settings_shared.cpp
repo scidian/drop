@@ -118,15 +118,18 @@ void DrThing::addComponentSpawn() {
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Count, Property_Type::Int, 1,
                            "Spawn Count", "How many instances of this item will spawn. A value of -1 will allow unlimited spawning.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, 0,
-                           "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to spawn when "
-                                         "corresponding buttons are pressed. ");
+                           "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to "
+                                         "spawn when corresponding buttons are pressed. ");
     // QList<QVariant> of 6 values: bool, int value,    min, max, int step size,    string spinText
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_At_Object, Property_Type::BoolInt,
                            QList<QVariant>({false, 1001, 0, 1000000000, 1, "Object ID: "}),
-                           "Spawn At Object", "This will cause this item to spawn at the Object with the desired ID Key. <b>NOTE:</b> "
-                                              "Enter instance <i>Object</i> ID Keys here, <b>NOT</b> Asset ID Keys.");
-    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Offset, Property_Type::PointF, QPointF(0, 0),
-                           "Spawn Offset", "This is a X/Y offset for use with spawning at objects.");
+                           "Spawn At Object", "This will cause this item to spawn at the location of the Object with the designated ID Key. <br>"
+                                              "<b>NOTE:</b> Enter instance <i>Object</i> or <i>Character</i> ID Keys here, "
+                                              "<b>NOT</b> Asset ID Keys. Enter <b>\"0\"</b> here to stay attached to active character.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Offset_X, Property_Type::Variable, QPointF(0, 0),
+                           "Spawn Offset X", "This is a X offset for use with spawning. Also allows for some randomess to object location.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Offset_Y, Property_Type::Variable, QPointF(0, 0),
+                           "Spawn Offset Y", "This is a Y offset for use with spawning. Also allows for some randomess to object location.");
 }
 
 
@@ -134,13 +137,13 @@ void DrThing::addComponentSpawn() {
 //##    3D Components
 //####################################################################################
 void DrThing::addComponent3D() {
-    addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images whose pixels are "
-                                       "mostly opaque.", Component_Colors::Brown_Sugar, true);
+    addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images "
+                                                        "whose pixels are mostly opaque.", Component_Colors::Brown_Sugar, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
 
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
-                           "Type", "How this object is represented in 3D. The texture can be Extruded (pulled) into the 3rd dimension. Or it can be Wrapped "
-                                   "onto a Cube.");
+                           "Type", "How this object is represented in 3D. The texture can be Extruded (pulled) into the 3rd dimension. Or it can "
+                                   "be Wrapped onto a Cube.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Depth, Property_Type::PositiveDouble, 50.0,
                            "Depth", "Depth of Object in pixels when appearing in 3D.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_X_Axis_Rotation, Property_Type::Variable, QPointF(0, 0),

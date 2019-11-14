@@ -11,9 +11,6 @@
 #include "constants_engine.h"
 #include "globals_engine.h"
 
-// Type Definitions
-typedef QVector<DrEngineThing*>          EngineThings;
-
 // Local Structs
 struct ThingInfo {
     double      angle;
@@ -57,8 +54,10 @@ private:
     //      Every Item In These Projects Maps:
     //          - Is assigned an unique key upon creation from DrEngineWorld::getNextKey()
     //
-    EngineThings        m_things;                   // Holds all things being used in this World / cpSpace
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
+    EngineSpawnerMap    m_spawners;                 // Holds all recurring Spawners loaded into this world
+    EngineThings        m_things;                   // Holds all things being used in this World / cpSpace
+
 
 
     // Chipmunk Physics Space
@@ -168,7 +167,7 @@ public:
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void            addThing(DrEngineThing *thing);
     void            addThings(QList<DrEngineThing*> things);
-    void            buildWorld(long world_id_to_build);
+    void            buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
     void            clearWorld();
     int             countCharacters();
 
@@ -184,7 +183,7 @@ public:
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadObjectToWorld(DrThing *thing, double offset_x, double offset_y);
+    DrEngineObject* loadObjectToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
     void            loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
