@@ -65,7 +65,8 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  40
+//##    !!!!! NEXT AVAILABLE NUMBER:                    40,
+//##    !!!!! MUST ALSO CHANGE:     Components::Total = 40 !!!!!
 //##
 //############################
 enum class Components {
@@ -127,6 +128,7 @@ enum class Components {
     Thing_Appearance                    = 32,
     Thing_Special_Effects               = 33,
 
+    Total = 40,
 };
 
 

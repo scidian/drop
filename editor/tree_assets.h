@@ -67,8 +67,10 @@ public:
 
     // Tree Building Functions
     void                    buildAssetTree(QString search_text = "");
-    DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, QString name, QString icon_resource, QList<QString> advisor_info);
+    DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, DrAssetType asset_type);
     void                    ensureSelectedKeyVisible();
+    void                    expandCollapseComponents();
+    QList<QTreeWidgetItem*> getListOfTopLevelItems();
     void                    removeAsset(long asset_key);
 
     // Function Calls
@@ -83,6 +85,10 @@ public:
 private slots:
     void            searchTextChanged(QString new_text);
     void            setAdvisorInfo(QString header, QString body);
+
+public slots:
+    void            handleCollapsed(QTreeWidgetItem *item);
+    void            handleExpanded(QTreeWidgetItem *item);
 
 };
 

@@ -5,9 +5,11 @@
 //
 //
 //
+#include <QDebug>
 #include <QScrollBar>
 
 #include "editor/tree_assets.h"
+#include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
 #include "interface_editor_relay.h"
@@ -109,7 +111,10 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
         }
     }
 
-    // Resort Layouts
+    // ***** Expand / collapse top level items based on last known setting
+    expandCollapseComponents();
+
+    // ***** Re-Sort Layouts
     for (auto layout : m_grid_layouts) {
         DrQLayoutFlow *flow = layout.second;
         flow->sortItems();
@@ -117,14 +122,48 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
     }
     update();
 
-    // If some assets were changed, and items were updated, update those items in the other widgets
+    // ***** If some assets were changed, and items were updated, update those items in the other widgets
     if (newly_changed_items.isEmpty() == false) {
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, newly_changed_items, newly_changed_properties);
     }
 }
 
 
+//####################################################################################
+//##    SLOTS: Handles Expand / Collapse of QTreeWidgetItems
+//####################################################################################
+void TreeAssets::handleCollapsed(QTreeWidgetItem *item) {
+    long type = item->data(0, User_Roles::Type).toLongLong();
+    DrAssetType asset_type = static_cast<DrAssetType>(type);
+    Dr::SetAssetExpanded(asset_type, false);
+}
 
+void TreeAssets::handleExpanded(QTreeWidgetItem *item) {
+    long type = item->data(0, User_Roles::Type).toLongLong();
+    DrAssetType asset_type = static_cast<DrAssetType>(type);
+    Dr::SetAssetExpanded(asset_type, true);
+}
+
+
+//####################################################################################
+//##    Expand / collapse top level items based on last known setting
+//####################################################################################
+void TreeAssets::expandCollapseComponents() {
+    for (auto &item : getListOfTopLevelItems()) {
+        long type = item->data(0, User_Roles::Type).toLongLong();
+        DrAssetType asset_type = static_cast<DrAssetType>(type);
+
+        if (Dr::GetAssetExpanded(asset_type)) {
+            if (item->isExpanded() == false) {
+                this->expandItem( item );
+            }
+        } else {
+            if (item->isExpanded()) {
+                this->collapseItem( item );
+            }
+        }
+    }
+}
 
 
 

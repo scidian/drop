@@ -56,45 +56,51 @@ private:
     DrType                  m_selected_type;                // Stores object type of currently selected item
 
 public:
-    explicit        TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
+    explicit                TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Event Overrides
-    virtual void    focusInEvent(QFocusEvent *event) override;
+    virtual void            focusInEvent(QFocusEvent *event) override;
 
     // Function Calls
-    void            buildInspectorFromKeys(QList<long> key_list, bool force_rebuild = false);
-    void            updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
-    void            updateInspectorPropertyBoxesOfSelectedItem(QList<long> property_keys_to_update);
-    void            updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
-    void            updateLockedSettings();
+    void                    buildInspectorFromKeys(QList<long> key_list, bool force_rebuild = false);
+    void                    expandCollapseComponents();
+    QList<QTreeWidgetItem*> getListOfTopLevelItems();
+    void                    updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
+    void                    updateInspectorPropertyBoxesOfSelectedItem(QList<long> property_keys_to_update);
+    void                    updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
+    void                    updateLockedSettings();
 
     // Getters and Setters
-    IEditorRelay*   getRelay()          { return m_editor_relay; }
-    long            getSelectedKey()    { return m_selected_key; }
+    IEditorRelay*           getRelay()          { return m_editor_relay; }
+    long                    getSelectedKey()    { return m_selected_key; }
 
     // Property Builders
-    void                addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
-    QCheckBox*          createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QFrame*             createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QFrame*             createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QWidget*            createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QFrame*             createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QPushButton*        createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QDoubleSpinBox*     createDoubleSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
-    QFrame*             createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
-    QFrame*             createDoubleSpinBoxTrio(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
-    QSpinBox*           createIntSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
-    QLineEdit*          createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QTextEdit*          createTextEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QWidget*            createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
-    QFrame*             createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    DrQTripleSpinBox*   initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
-    void                setButtonColorFromSystemDialog(QPushButton *button);
-    void                updateColorButton(QPushButton *button, QColor color);
+    void                    addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
+    QCheckBox*              createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*                 createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*                 createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QWidget*                createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*                 createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QPushButton*            createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QDoubleSpinBox*         createDoubleSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QFrame*                 createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QFrame*                 createDoubleSpinBoxTrio(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QSpinBox*               createIntSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QLineEdit*              createLineEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QTextEdit*              createTextEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QWidget*                createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
+    QFrame*                 createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    DrQTripleSpinBox*       initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
+    void                    setButtonColorFromSystemDialog(QPushButton *button);
+    void                    updateColorButton(QPushButton *button, QColor color);
 
 private slots:
-    void                setAdvisorInfo(QString header, QString body);
-    void                setButtonColor(QWidget *button, QColor color);
+    void        setAdvisorInfo(QString header, QString body);
+    void        setButtonColor(QWidget *button, QColor color);
+
+public slots:
+    void        handleCollapsed(QTreeWidgetItem *item);
+    void        handleExpanded(QTreeWidgetItem *item);
 
 };
 

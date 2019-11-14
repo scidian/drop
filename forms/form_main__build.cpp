@@ -220,6 +220,7 @@ void FormMain::buildWidgetsShared() {
                 treeInspector->setFrameShape(QFrame::NoFrame);
                 treeInspector->setUniformRowHeights(false);
                 treeInspector->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+                treeInspector->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
             verticalLayoutObject->addWidget(treeInspector);
         dockInspector->setWidget(widgetInspector);

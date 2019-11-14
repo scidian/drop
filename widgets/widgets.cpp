@@ -27,9 +27,7 @@ DrQPushButtonCategory::DrQPushButtonCategory(const QString &text, QColor text_co
 
 // Called by click signal, expands or contracts category after user click
 void DrQPushButtonCategory::buttonPressed() {
-    m_is_shrunk = !m_is_shrunk;
-    m_parent_item->setExpanded(!m_is_shrunk);
-
+    m_parent_item->setExpanded( !(m_parent_item->isExpanded()) );
 }
 
 // Override paint event to draw tree expansion decoration
@@ -50,7 +48,7 @@ void DrQPushButtonCategory::paintEvent(QPaintEvent *event) {
     double y = this->geometry().height() / 2 - 1;
 
     QPolygonF triangle;
-    if (m_is_shrunk) {
+    if (!(m_parent_item->isExpanded())) {
         triangle.append( QPointF(x - 2, y - 4) );       // To the right
         triangle.append( QPointF(x + 2, y + 0) );
         triangle.append( QPointF(x - 2, y + 4) );

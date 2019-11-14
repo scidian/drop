@@ -15,6 +15,7 @@
 #include "colors/colors.h"
 #include "editor/tree_inspector.h"
 #include "enums.h"
+#include "globals.h"
 #include "helper.h"
 #include "interface_editor_relay.h"
 #include "project/project.h"
@@ -58,9 +59,6 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         // ***** Must turn off signals while updating or we will cause recursive function calling as changes to the
         //       widgets are connected to updateThingFromNewValue()
         widget->blockSignals(true);
-
-        // Enable / disable widgets as necessary
-        widget->setEnabled( prop->isEditable() );
 
         switch (prop->getPropertyType()) {
             case Property_Type::Bool:
@@ -179,6 +177,14 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         widget->blockSignals(false);
     }
 
+
+    // ***** Disable / enable widgets based on property status
+    updateLockedSettings();
+
+    // ***** Expand / collapse top level items based on last known setting
+    expandCollapseComponents();
+
+    // Update
     this->update();
 }
 
@@ -292,6 +298,44 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
 }
 
 
+//####################################################################################
+//##    SLOTS: Handles Expand / Collapse of QTreeWidgetItems
+//####################################################################################
+void TreeInspector::handleCollapsed(QTreeWidgetItem *item) {
+    long key = item->data(0, User_Roles::Key).toLongLong();
+    Components comp = static_cast<Components>(key);
+    Dr::SetInspectorExpanded(comp, false);
+}
+
+void TreeInspector::handleExpanded(QTreeWidgetItem *item) {
+    long key = item->data(0, User_Roles::Key).toLongLong();
+    Components comp = static_cast<Components>(key);
+    Dr::SetInspectorExpanded(comp, true);
+}
+
+
+//####################################################################################
+//##    Expand / collapse top level items based on last known setting
+//####################################################################################
+void TreeInspector::expandCollapseComponents() {
+    ///this->expandAll();
+    for (auto &item : getListOfTopLevelItems()) {
+        long comp_key = item->data(0, User_Roles::Key).toLongLong();
+
+        if (Dr::GetInspectorExpanded(static_cast<Components>(comp_key))) {
+            if (item->isExpanded() == false) {
+                this->expandItem( item );
+                ///this->expandRecursively( this->indexFromItem(item) );
+                ///item->setExpanded( true );
+            }
+        } else {
+            if (item->isExpanded()) {
+                this->collapseItem( item );
+                ///item->setExpanded( false );
+            }
+        }
+    }
+}
 
 
 

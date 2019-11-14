@@ -27,7 +27,6 @@ private:
     QTreeWidgetItem     *m_parent_item;
 
     // Local Variables
-    bool                 m_is_shrunk = false;
     QColor               m_text_color;
     QColor               m_disabled_color;
 

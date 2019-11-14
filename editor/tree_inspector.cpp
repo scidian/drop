@@ -49,6 +49,10 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *
 
     // Connect this widget to the hover handler
     m_filter_hover->attachToHoverHandler(this, Advisor_Info::Inspector_Window);
+
+    // Connect to Expand / Collapse slots
+    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem *)), this, SLOT(handleCollapsed(QTreeWidgetItem *)));
+    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem *)),  this, SLOT(handleExpanded(QTreeWidgetItem *)));
 }
 
 // SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
@@ -102,7 +106,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             }
             break;
         }
-        default:                   m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+        default:
+            m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
     // ***** If Inspector already contains this item exit now
@@ -142,7 +147,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
     // ***** Get component map, sort by listOrder
     std::vector<DrComponent*> components { };
-    for (auto component_pair: new_settings->getComponentMap()) components.push_back(component_pair.second);
+    for (auto component_pair: new_settings->getComponentMap())
+        components.push_back(component_pair.second);
     std::sort(components.begin(), components.end(), [](DrComponent *a, DrComponent *b) {
         return a->getListOrder() < b->getListOrder();
     });
@@ -324,12 +330,29 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
 
+
     // ***** Disable / enable widgets based on property status
     updateLockedSettings();
 
-    // ***** Expands all tree items, scroll back to previous position
-    this->expandAll();
+    // ***** Expand / collapse top level items based on last known setting
+    expandCollapseComponents();
+
+    // ***** Scroll back to previous position
     this->verticalScrollBar()->setValue(scroll_position);
+    this->update();
+}
+
+
+//####################################################################################
+//##    Returns List of Top Level (Component) Items
+//####################################################################################
+QList<QTreeWidgetItem*> TreeInspector::getListOfTopLevelItems() {
+    QTreeWidgetItem         *item = this->invisibleRootItem();
+    QList <QTreeWidgetItem*> items;
+    for (int i = 0; i < item->childCount(); ++i) {
+        items.append( item->child(i) );
+    }
+    return items;
 }
 
 
