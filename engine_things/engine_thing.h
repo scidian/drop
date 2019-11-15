@@ -59,6 +59,7 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
+    bool        extrude_3d = false;                     // Auto convert to 3D   True / False
     bool        wireframe = false;                      // Wireframe            True / False
     bool        cartoon = false;                        // Cartoon              True / False
     float       cartoon_width = 5.0;                    // Cartoon Width

@@ -25,8 +25,8 @@ private:
     DrPointF        m_original_location { 0, 0 };               // Original location of Spawner, used to take Spawner out of scene as
                                                                 // gameplay proceeds and not attached to Object
 
-    int             m_spawn_rate = 1000;                        // Spawn rate in milliseconds
-    int             m_spawn_rate_variable = 0;                  // Spawn rate + or - milliseconds
+    double          m_spawn_rate = 1000;                        // Spawn rate in seconds
+    double          m_spawn_rate_variable = 0;                  // Spawn rate + or - seconds
 
     int             m_spawn_count = 1;                          // Total spawn count
     int             m_spawns_remaining = 1;                     // Spawns remaining, can be reset in case of Shoot or Jump button
@@ -46,7 +46,7 @@ private:
 public:
     // Constructor / Destructor
     DrEngineSpawner();
-    DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, int rate, int rate_variable,
+    DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, double rate, double rate_variable,
                     int spawn_count, int spawns_remaining,
                     DrEngineThing *attached, long attached_id,
                     double x, double y, double x_variable, double y_variable);
@@ -58,8 +58,8 @@ public:
     // Getters & Setters
     DrThing*        getThingToSpawn()       { return m_thing_to_spawn; }
     DrPointF        getLocation()           { return m_original_location; }
-    const int&      getSpawnRate()          { return m_spawn_rate; }
-    const int&      getSpawnRateVariable()  { return m_spawn_rate_variable; }
+    const double&   getSpawnRate()          { return m_spawn_rate; }
+    const double&   getSpawnRateVariable()  { return m_spawn_rate_variable; }
     const int&      getSpawnCount()         { return m_spawn_count; }
     const int&      getSpawnsRemaining()    { return m_spawns_remaining; }
     Spawn_Type      getSpawnType()          { return m_spawn_type; }
@@ -73,21 +73,21 @@ public:
     const double&   getSpawnVariableX()     { return m_spawn_variable_x; }
     const double&   getSpawnVariableY()     { return m_spawn_variable_y; }
 
-    void            setThingToSpawn(DrThing *thing)     { m_thing_to_spawn = thing; }
-    void            setLocation(DrPointF location)      { m_original_location = location; }
-    void            setSpawnRate(int spawn_rate)        { m_spawn_rate = spawn_rate; }
-    void            setSpawnRateVariable(int variable)  { m_spawn_rate_variable = variable; }
-    void            setSpawnCount(int count)            { m_spawn_count = count; }
-    void            setSpawnsRemaining(int remaining)   { m_spawns_remaining = remaining; }
-    void            setSpawnType(Spawn_Type type)       { m_spawn_type = type; }
+    void            setThingToSpawn(DrThing *thing)         { m_thing_to_spawn = thing; }
+    void            setLocation(DrPointF location)          { m_original_location = location; }
+    void            setSpawnRate(double spawn_rate)         { m_spawn_rate = spawn_rate; }
+    void            setSpawnRateVariable(double variable)   { m_spawn_rate_variable = variable; }
+    void            setSpawnCount(int count)                { m_spawn_count = count; }
+    void            setSpawnsRemaining(int remaining)       { m_spawns_remaining = remaining; }
+    void            setSpawnType(Spawn_Type type)           { m_spawn_type = type; }
 
-    void            setAttachedThingKey(long key)       { m_attached_id_key = key; }
+    void            setAttachedThingKey(long key)           { m_attached_id_key = key; }
     void            setAttachedThing(DrEngineThing *thing);
 
-    void            setSpawnOffsetX(double x)           { m_spawn_offset_x = x; }
-    void            setSpawnOffsetY(double y)           { m_spawn_offset_y = y; }
-    void            setSpawnVariableX(double x)         { m_spawn_variable_x = x; }
-    void            setSpawnVariableY(double y)         { m_spawn_variable_y = y; }
+    void            setSpawnOffsetX(double x)               { m_spawn_offset_x = x; }
+    void            setSpawnOffsetY(double y)               { m_spawn_offset_y = y; }
+    void            setSpawnVariableX(double x)             { m_spawn_variable_x = x; }
+    void            setSpawnVariableY(double y)             { m_spawn_variable_y = y; }
 
 };
 

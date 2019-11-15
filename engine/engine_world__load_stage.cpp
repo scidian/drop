@@ -48,8 +48,8 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
                 int spawns_remaining = spawn_count;
                 QList<QVariant> spawn_object;
                 spawn_object =       thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_At_Object).toList();
-                QPoint spawn_rate =  thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Rate).toPoint();
-                int spawn_type =     thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Type).toInt();
+                int     spawn_type = thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Type).toInt();
+                QPointF spawn_rate = thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Rate).toPointF();
                 QPointF spawn_x =    thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Offset_X).toPointF();
                 QPointF spawn_y =    thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Offset_Y).toPointF();
                 bool attached_to_object = spawn_object[0].toBool();

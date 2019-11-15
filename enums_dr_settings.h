@@ -136,9 +136,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   197
+//##    !!!!! NEXT AVAILABLE NUMBER:   199
 //##
-//##    Checked for doubles up through 197 on 11/11/2019
+//##    Checked for doubles up through 199 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -310,6 +310,8 @@ enum class Properties {
     Thing_Spawn_At_Object               = 192,      // bool int combo
     Thing_Spawn_Offset_X                = 193,      // variable
     Thing_Spawn_Offset_Y                = 196,      // variable
+    Thing_Spawn_Instantly               = 197,      // bool
+
 
     // Lighting
     Thing_Lighting_Cast_Shadows         = 66,       // bool
@@ -325,6 +327,7 @@ enum class Properties {
     Thing_Filter_Negative               = 74,       // bool
 
     // Special Effects
+    Thing_Filter_Convert_3D             = 198,      // bool
     Thing_Filter_Wireframe              = 75,       // bool
     Thing_Filter_Cartoon                = 187,      // bool double combo
     Thing_Filter_Cross_Hatch            = 195,      // bool double combo

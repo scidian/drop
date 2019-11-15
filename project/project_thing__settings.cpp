@@ -39,8 +39,8 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 //    Thing_Camera_Rotation               = 180,      // pointf
 
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active, Property_Type::Bool, true,
-                           "Set As Active", "If set to true and Camera is in a Start Stage, this camera will attempt to be the Active Game Camera when this "
-                                            "world starts. Only one Camera should be set as Active in each Start Stage.");
+                           "Set As Active?", "If set to true and Camera is in a Start Stage, this camera will attempt to be the Active Game Camera when this "
+                                             "world starts. Only one Camera should be set as Active in each Start Stage.");
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed, Property_Type::PointF, QPointF(0, 0),
                            "Camera Speed", "Fixed movement speed of camera.");
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation, Property_Type::PointF, QPointF(0, 0),

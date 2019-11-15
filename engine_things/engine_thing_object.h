@@ -139,7 +139,6 @@ private:
 public:
     // ***** Image Post Processing Attributes
     bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
-    bool        extrude_3d = false;                         // Playing with 3d extrusion
 
 
 

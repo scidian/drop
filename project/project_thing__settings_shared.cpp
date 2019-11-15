@@ -114,9 +114,12 @@ void DrThing::addComponentSpawn() {
     getComponent(Components::Thing_Spawn)->setIcon(Component_Icons::Spawn);
 
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Rate, Property_Type::Variable, QPointF(1000, 0),
-                           "Spawn Rate", "Rate, in milliseconds, this item will spawn.");
+                           "Spawn Rate", "Rate, in seconds, this item will spawn, +/- variable amount.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Count, Property_Type::Int, 1,
                            "Spawn Count", "How many instances of this item will spawn. A value of -1 will allow unlimited spawning.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Instantly, Property_Type::Bool, true,
+                           "Spawn Instantly", "If this is not selected, item will wait the initial Spawn Rate amount of time before spawning for "
+                                              "the first time.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, 0,
                            "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to "
                                          "spawn when corresponding buttons are pressed. ");
@@ -127,9 +130,11 @@ void DrThing::addComponentSpawn() {
                                               "<b>NOTE:</b> Enter instance <i>Object</i> or <i>Character</i> ID Keys here, "
                                               "<b>NOT</b> Asset ID Keys. Enter <b>\"0\"</b> here to stay attached to active character.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Offset_X, Property_Type::Variable, QPointF(0, 0),
-                           "Spawn Offset X", "This is a X offset for use with spawning. Also allows for some randomess to object location.");
+                           "Spawn Offset X", "This is a X offset for use with spawning, +/- variable amount. "
+                                             "Useful for some randomess to object location.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Offset_Y, Property_Type::Variable, QPointF(0, 0),
-                           "Spawn Offset Y", "This is a Y offset for use with spawning. Also allows for some randomess to object location.");
+                           "Spawn Offset Y", "This is a Y offset for use with spawning, +/- variable amount. "
+                                             "Useful for some randomess to object location.");
 }
 
 
@@ -138,7 +143,9 @@ void DrThing::addComponentSpawn() {
 //####################################################################################
 void DrThing::addComponent3D() {
     addComponent(Components::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images "
-                                                        "whose pixels are mostly opaque.", Component_Colors::Brown_Sugar, true);
+                                                        "whose pixels are mostly opaque. The World Setting \"Instant 3D\" setting under "
+                                                        "the \"Appearance\" category must be checked to see 3D.",
+                                                        Component_Colors::Brown_Sugar, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
 
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
@@ -167,7 +174,7 @@ void DrThing::addComponentLighting() {
     getComponent(Components::Thing_Lighting)->setIcon(Component_Icons::Light);
 
     addPropertyToComponent(Components::Thing_Lighting, Properties::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
-                           "Cast Shadows", "This item will cast shadows when appearing higher on the z axis than a Light.");
+                           "Cast Shadows?", "This item will cast shadows when appearing higher on the z axis than a Light.");
 }
 
 
@@ -206,6 +213,9 @@ void DrThing::addComponentSpecialEffects() {
     addComponent(Components::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Blue_Royal, true);
     getComponent(Components::Thing_Special_Effects)->setIcon(Component_Icons::Effects);
 
+    addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Convert_3D, Property_Type::Bool, false,
+                           "Instant 3D", "Auto convert 2D graphics into 3D. Depth of item is customizable utilizing the "
+                                         "\"3D Properties - Depth\" property.");
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders this item as an 3d outline, item 3D Depth should be greater than 0 for best effect.");
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon,

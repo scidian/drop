@@ -113,7 +113,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
 
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Convert_3D, Property_Type::Bool, false,
                            "Instant 3D", "Auto convert all 2D graphics into 3D. Depth of each item is customizable utilizing each "
-                                      "item's \"3D Properties - Depth\" property.");
+                                         "item's \"3D Properties - Depth\" property.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders all the world's objects as outlines.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon,

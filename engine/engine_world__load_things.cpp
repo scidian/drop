@@ -71,6 +71,7 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt() / 360.f;
     bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
     bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
+    bool    instant_3d =    thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Convert_3D).toBool();
     bool    wireframe =     thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toBool();
     bool    cartoon =       thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toList()[0].toBool();
     float   cartoon_width = thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toList()[1].toFloat();
@@ -86,6 +87,7 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     object->hue =               hue;
     object->grayscale =         grayscale;
     object->negative =          negative;
+    object->extrude_3d =        instant_3d;
     object->wireframe =         wireframe;
     object->cartoon =           cartoon;
     object->cartoon_width =     cartoon_width;

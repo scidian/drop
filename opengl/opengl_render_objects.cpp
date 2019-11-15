@@ -158,10 +158,10 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Scale
-    bool  model_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube);
+    bool  scale_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube);
     float add_pixel_x = 0.0;
     float add_pixel_y = 0.0;
-    if (model_2d) {
+    if (scale_2d) {
         model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
     } else {
         // Add an extra pixel on 3D objects to reduce blockiness of world

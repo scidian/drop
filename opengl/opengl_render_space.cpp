@@ -85,11 +85,14 @@ void DrOpenGL::drawSpace() {
         switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object:
-                // If in 2D Mode or Object has no Depth, just draw quad
-                draw2D = Dr::FuzzyCompare(thing->getDepth(), 0.0) ||
-                         m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D ||
-                         thing->get3DType() == Convert_3D_Type::None;
+                // If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
+                draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
+                if (thing->get3DType() == Convert_3D_Type::None || Dr::FuzzyCompare(thing->getDepth(), 0.0))
+                    draw2D = true;
+                else if (thing->extrude_3d)
+                    draw2D = false;
 
+                // Draw Object / Character
                 if (draw2D) {
                     ///glEnable(GL_DEPTH_TEST);
                     drawObject(thing, last_thing, draw2D);
@@ -104,9 +107,9 @@ void DrOpenGL::drawSpace() {
                     glDepthMask(GL_TRUE);
                     glDisable(GL_DEPTH_TEST);
                 }
-
                 cullingOff();
                 break;
+
             case DrThingType::Camera:
                 break;
 
