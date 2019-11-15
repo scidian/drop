@@ -114,6 +114,7 @@ namespace Dr {
 
         Dr::SetInspectorExpanded(Components::Thing_Layering,            true);
         Dr::SetInspectorExpanded(Components::Thing_Transform,           true);
+        Dr::SetInspectorExpanded(Components::Thing_Movement,            true);
 
         Dr::SetInspectorExpanded(Components::Thing_Settings_Camera,     true);
         Dr::SetInspectorExpanded(Components::Thing_Settings_Character,  true);

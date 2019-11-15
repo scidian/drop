@@ -151,18 +151,22 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
                angle1 =     Dr::EqualizeAngle0to360(angle1);
 
         // Angle of Object
-        DrPointF up =       Dr::RotatePointAroundOrigin(DrPointF(my_pos.x, my_pos.y + 1.0), DrPointF(my_pos.x, my_pos.y), my_angle, true);
+        DrPointF up =       Dr::RotatePointAroundOrigin(DrPointF(my_pos.x, my_pos.y - 1.0), DrPointF(my_pos.x, my_pos.y), my_angle, true);
         double angle2 =     Dr::CalcRotationAngleInDegrees(DrPointF(my_pos.x, my_pos.y), up);
                angle2 =     Dr::EqualizeAngle0to360(angle2);
 
         // Set Rotate Direction Towards Player
-        double angle3 =     Dr::FindClosestAngle180(angle1, angle2);
+        double angle3 =     Dr::FindClosestAngle180(angle2, angle1);
         double angle_vel =  abs(object->getOriginalSpinVelocity());
+        double new_spin =   (angle3 > angle2) ? angle_vel : -angle_vel;
 
-        double new_spin = (angle3 > angle1) ? angle_vel : -angle_vel;
-        double angle_diff = 180.0 - abs(angle3 - angle1);
+        double angle_diff = abs(angle3 - angle2);
         if (angle_diff < 10.0) new_spin *= (angle_diff / 10.0);
         cpBodySetAngularVelocity(body, new_spin);
+
+        ///g_info = "Angle 1: " +      QString::number(angle1,     'f', 2) +
+        ///       ", Angle 3: " +      QString::number(angle2,     'f', 2) +
+        ///       ", Angle Diff: " +   QString::number(angle_diff, 'f', 2);
     }
 
     // Figure out new velocity based on current object angle
