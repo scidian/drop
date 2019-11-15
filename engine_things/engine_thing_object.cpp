@@ -78,7 +78,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 //##    Destructor
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
-    if (body) {
+    if (body != nullptr) {
         cpSpace *space = cpBodyGetSpace(body);
 
         QVector<cpShape*> shape_list;

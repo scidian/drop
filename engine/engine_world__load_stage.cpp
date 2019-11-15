@@ -43,22 +43,23 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             // ***** Load Thing
             case DrThingType::Object: {
                 // Load Spawning Info
-                int spawn_count =               thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Count).toInt();
+                int spawn_count =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Count).toInt();
                 if (spawn_count == 0)   continue;
                 int spawns_remaining =  spawn_count;
 
-                QList<QVariant> spawn_object =  thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_At_Object).toList();
-                bool    spawn_instant =         thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Instantly).toBool();
-                int     spawn_type =            thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Type).toInt();
-                QPointF spawn_rate =            thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Rate).toPointF();
-                QPointF spawn_x =               thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Offset_X).toPointF();
-                QPointF spawn_y =               thing->getComponentPropertyValue(Components::Thing_Spawn,  Properties::Thing_Spawn_Offset_Y).toPointF();
+                QList<QVariant> spawn_object =  thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_At_Object).toList();
+                bool    spawn_instant =         thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Instantly).toBool();
+                int     spawn_type =            thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Type).toInt();
+                QPointF spawn_rate =            thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Rate).toPointF();
+                QPointF spawn_x =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Offset_X).toPointF();
+                QPointF spawn_y =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Offset_Y).toPointF();
+                QPointF pos =                   thing->getComponentPropertyValue(Components::Thing_Transform,   Properties::Thing_Position).toPointF();
                 bool attached_to_object = spawn_object[0].toBool();
 
                 // Add Spawner to list for processing when scene finishes loading
                 long attached_id = (attached_to_object) ? spawn_object[1].toLongLong() : c_no_key;
                 DrEngineSpawner *spawner;
-                spawner = new DrEngineSpawner(this, thing, static_cast<Spawn_Type>(spawn_type), DrPointF(offset_x, offset_y),
+                spawner = new DrEngineSpawner(this, thing, static_cast<Spawn_Type>(spawn_type), DrPointF(pos.x() + offset_x, -pos.y() + offset_y),
                                               spawn_rate.x(), spawn_rate.y(), spawn_instant, spawn_count, spawns_remaining,
                                               nullptr, attached_id, spawn_x.x(), spawn_x.y(), spawn_y.x(), spawn_y.y());
                 DrEngineObject *object = spawner->update(0.0, 1.0, QRectF(), false);
@@ -105,7 +106,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
         if (spawner->getAttachedIDKey() != c_no_key) {
             for (auto thing : things_in_stage) {
                 if (thing->getOriginalKey() == spawner->getAttachedIDKey()) {
-                    spawner->setAttachedThing(thing);
+                    spawner->setAttachedThing( thing );
                     break;
                 }
             }

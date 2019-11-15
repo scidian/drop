@@ -58,8 +58,12 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
         // ***** Process Removal
         if (remove) {
+            // Let Spawners know that the Object they're attached to is being deleted
+            for (auto spawner : thing->getSpawners()) {
+                spawner->setAttachedThing(nullptr);
+            }
+            // Delete Thing, remember delete recursively calls children destructors
             delete thing;
-            ///thing = nullptr;
             it = m_things.erase(it);
             continue;
         }
@@ -78,6 +82,10 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
         // ***** Process Removal
         if (spawner->readyForRemoval()) {
+            // Let Attached Object know Spawner is being deleted
+            if (spawner->getAttachedThing() != nullptr) {
+                spawner->getAttachedThing()->removeSpawner(spawner);
+            }
             delete spawner;
             it = m_spawners.erase(it);
             continue;

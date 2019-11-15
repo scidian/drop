@@ -151,7 +151,7 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 //##    Loads one DrProject DrThingType::Object to World / Space
 //####################################################################################
-DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x, double offset_y) {
+DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double x, double y) {
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
@@ -165,8 +165,8 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x
     // Adjust loading position from Spawn Offset
     QPointF     spawn_x =       thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
     QPointF     spawn_y =       thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();
-    info.position.x += spawn_x.x() + (QRandomGenerator::global()->bounded(spawn_x.y() * 2.0) - spawn_x.y());
-    info.position.y += spawn_y.x() + (QRandomGenerator::global()->bounded(spawn_y.y() * 2.0) - spawn_y.y());
+    double x_offset = spawn_x.x() + (QRandomGenerator::global()->bounded(spawn_x.y() * 2.0) - spawn_x.y());
+    double y_offset = spawn_y.x() + (QRandomGenerator::global()->bounded(spawn_y.y() * 2.0) - spawn_y.y());
 
     // Load Physics Properties
     bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
@@ -187,7 +187,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x
 
     // ***** Add the block to the cpSpace
     DrEngineObject *block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset_key,
-                                               info.position.x + offset_x, -info.position.y + offset_y, info.z_order, info.scale,
+                                               x + x_offset, y + y_offset, info.z_order, info.scale,
                                                use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, block);
     block->setCollidesWith(static_cast<Collision_Groups>(collide_with));

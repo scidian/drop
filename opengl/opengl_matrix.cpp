@@ -74,11 +74,11 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
         float right =  +(width()  * devicePixelRatio() / 2.0f);
         float top =    +(height() * devicePixelRatio() / 2.0f);
         float bottom = -(height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, c_near_plane * combinedZoomScale(), c_far_plane * combinedZoomScale());
+        m_projection.ortho( left, right, bottom, top, c_near_plane * (1.0f / combinedZoomScale()), c_far_plane * (1.0f / combinedZoomScale()));
 
     // ***** Perspective
     } else {
-        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * combinedZoomScale() );
+        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * (1.0f / combinedZoomScale()) );
     }
 
     // ***** Rotation locked to Camera Follow Thing
@@ -138,11 +138,11 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
         float right =  +(m_occluder_fbo->width() /  2.0f);
         float top =    +(m_occluder_fbo->height() / 2.0f);
         float bottom = -(m_occluder_fbo->height() / 2.0f);
-        proj_matrix.ortho( left, right, bottom, top, c_near_plane * scale, c_far_plane * scale);
+        proj_matrix.ortho( left, right, bottom, top, c_near_plane * (1.0f / scale), c_far_plane * (1.0f / scale));
 
     // ***** Perspective
     } else {
-        proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * scale );
+        proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * (1.0f / scale) );
     }
 
     // ***** Set Look At and Scale, Dont need extra rotation

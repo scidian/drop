@@ -27,6 +27,9 @@ private:
     // External Borrowed Pointers
     DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
 
+    // Containers
+    EngineSpawners  m_spawners;                         // Holds all Spawners that have been attached to this Object
+
     // Engine Info
     long            m_key;                              // Unique key for this item
     long            m_original_project_key;             // Key of item when it was in Project Data Model
@@ -93,6 +96,15 @@ public:
     // Getters / Setters
     long                getKey() { return m_key; }                                          // Gets unique item key
     long                getOriginalKey() { return m_original_project_key; }                 // Gets original Project Data Model key
+
+    // Spawners
+    void                addSpawner(DrEngineSpawner *spawner) { m_spawners.push_back(spawner); }
+    EngineSpawners&     getSpawners() { return m_spawners; }
+    void                removeSpawner(DrEngineSpawner *spawner) {
+        for (auto it = m_spawners.begin(); it != m_spawners.end(); ) {
+            if ((*it) == spawner) { it = m_spawners.erase(it); } else { ++it; }
+        }
+    }
 
     // Abstract Virtual Functions
     virtual DrThingType getThingType() = 0;                                                 // Returns DrThingType of this Thing

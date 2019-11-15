@@ -55,7 +55,10 @@ DrEngineSpawner::DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Sp
 //####################################################################################
 void DrEngineSpawner::setAttachedThing(DrEngineThing *thing)  {
     m_attached = thing;
-    m_attached_id_key = thing->getKey();
+    if (thing != nullptr) {
+        m_attached_id_key = thing->getKey();
+        thing->addSpawner(this);
+    }
     m_attached_to_object = true;
 }
 
@@ -65,6 +68,7 @@ void DrEngineSpawner::setNextSpawnTimeAmount() {
     m_next_spawn = wait_time;
 }
 
+
 //####################################################################################
 //##    Update Function, called every physics frame
 //####################################################################################
@@ -73,15 +77,17 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
 
     DrEngineObject *object = nullptr;
 
-    // Can't find Thing to Spawn, mark for removal
+    // ***** Can't find Thing to Spawn, mark for removal
+    if (readyForRemoval()) return nullptr;
     if (getThingToSpawn() == nullptr) {
         setReadyForRemoval();
-        return object;
+        return nullptr;
     }
-    if (getAttachedIDKey() != c_no_key && isAttached() == false) return object;
+    if (getAttachedIDKey() != c_no_key && isAttached() == false) return nullptr;
 
-    // Add milliseconds since last time we were here (time is passed by engine so its possible to pause in game)
+    // ***** Add milliseconds since last time we were here (time is passed by engine so its possible to pause in game)
     addTimePassed(time_passed);
+
 
     // ***** Process Permanent Spawn Type
     if (getSpawnType() == Spawn_Type::Permanent) {
@@ -95,8 +101,8 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
                     setReadyForRemoval();
                     return object;
                 }
-                x_pos = x_pos - thing->getPosition().x;
-                y_pos = y_pos - thing->getPosition().y;
+                x_pos = thing->getPosition().x;
+                y_pos = thing->getPosition().y;
             }
             object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos );
 
@@ -111,7 +117,7 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
 
     // ***** Delete spawner if ends up outside the deletion threshold
     if (use_area && getSpawnType() == Spawn_Type::Permanent) {
-        if (area.contains(QPointF(this->getLocation().x, this->getLocation().y)) == false) {
+        if (area.contains(QPointF(getLocation().x, getLocation().y)) == false) {
             if (getSpawnType() == Spawn_Type::Permanent)
                 setReadyForRemoval();
         }
