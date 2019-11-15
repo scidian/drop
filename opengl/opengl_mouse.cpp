@@ -126,14 +126,8 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
 void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
 
-    if (m_form_engine->demo_player == Demo_Player::Light) {
-        DrEngineObject *ball = m_engine->getCurrentWorld()->ball;
-
-        QPointF ball_pos =  mapToScreen( ball->getPosition().x, ball->getPosition().y, ball->getZOrder() );
-        double  angle =     QLineF( ball_pos, QPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio()) ).angle();
-
-        m_engine->getCurrentWorld()->light1->setAngle(angle);
-    }
+    QPointF mouse_position = QPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
+    g_mouse_position = DrPointF(mouse_position.x(), mouse_position.y());
 }
 
 //####################################################################################

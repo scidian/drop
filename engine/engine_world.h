@@ -185,7 +185,8 @@ public:
     void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
-    DrEngineObject* loadObjectToWorld(DrThing *thing, double offset_x, double offset_y, double scale_x, double scale_y, double angle);
+    DrEngineObject* loadObjectToWorld(DrThing *thing, double offset_x, double offset_y, double scale_x, double scale_y,
+                                      double angle, double x_velocity, double y_velocity);
     void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
     void            loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);

@@ -136,9 +136,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   200
+//##    !!!!! NEXT AVAILABLE NUMBER:   201
 //##
-//##    Checked for doubles up through 200 on 11/11/2019
+//##    Checked for doubles up through 201 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -178,6 +178,7 @@ enum class Properties {
 
     Asset_Character_Flip_Image_X        = 159,      // bool
     Asset_Character_Flip_Image_Y        = 160,      // bool
+    Asset_Character_Mouse_Rotate        = 200,      // bool
 
 
     // Asset_Settings_Object

@@ -96,11 +96,9 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     addTimePassed(time_passed);
 
     // ***** Init spawn adjustments
-    double x_pos =      getLocation().x;
-    double y_pos =      getLocation().y;
-    double x_scale =    1.0;
-    double y_scale =    1.0;
-    double angle =      0.0;
+    double x_pos = getLocation().x,     x_scale = 1.0,      x_velocity = 0.0;
+    double y_pos = getLocation().y,     y_scale = 1.0,      y_velocity = 0.0;
+    double angle = 0.0;
 
     // ***** Check for attachment and alter spawn adjustments
     if (isAttached()) {
@@ -114,60 +112,48 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
         x_scale = static_cast<double>(thing->getScaleX());
         y_scale = static_cast<double>(thing->getScaleY());
         angle = thing->getAngle();
+        x_velocity = thing->getVelocityX();
+        y_velocity = thing->getVelocityY();
     }
 
-
     // ##### NEED IMPLEMENT
-    //Spawn_Type::Object_Death
+    // Spawn_Type::Object_Death
 
+    bool spawn = false;
 
     // ***** Process Jump Spawn Type
     if (getSpawnType() == Spawn_Type::Jump_Button) {
-        if (m_last_key_jump_status == false && g_jump_button) {
-            setSpawnerForFirstTime();
-        }
-        if (g_jump_button) {
-            if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
-                object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle );
-                resetSpawnTime();
-                setNextSpawnTimeAmount();
-                if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
-            }
-        }
+        if (m_last_key_jump_status == false && g_jump_button) setSpawnerForFirstTime();
+        if (g_jump_button) spawn = true;
     }
     m_last_key_jump_status = g_jump_button;
 
-
     // ***** Process Shoot Spawn Type
     if (getSpawnType() == Spawn_Type::Shoot_Button) {
-        if (m_last_key_shoot_status == false && g_shoot_button) {
-            setSpawnerForFirstTime();
-        }
-        if (g_shoot_button) {
-            if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
-                object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle );
-                resetSpawnTime();
-                setNextSpawnTimeAmount();
-                if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
-            }
-        }
+        if (m_last_key_shoot_status == false && g_shoot_button) setSpawnerForFirstTime();
+        if (g_shoot_button) spawn = true;
     }
     m_last_key_shoot_status = g_shoot_button;
 
-
     // ***** Process Permanent Spawn Type
-    if (getSpawnType() == Spawn_Type::Permanent) {
+    if (getSpawnType() == Spawn_Type::Permanent) spawn = true;
+
+
+    // ***** Perform Spawn
+    if (spawn) {
         if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
-            object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle );
+            object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle, x_velocity, y_velocity );
             resetSpawnTime();
             setNextSpawnTimeAmount();
             if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
         }
-        if (getSpawnCount() == 0) setReadyForRemoval();
     }
 
 
     // ***** Delete spawner if ends up outside the deletion threshold
+    if (getSpawnType() == Spawn_Type::Permanent) {
+        if (getSpawnCount() == 0) setReadyForRemoval();
+    }
     if (use_area && getSpawnType() == Spawn_Type::Permanent) {
         if (area.contains(QPointF(getLocation().x, getLocation().y)) == false) {
             if (getSpawnType() == Spawn_Type::Permanent)

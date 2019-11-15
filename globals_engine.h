@@ -62,6 +62,7 @@ extern Pedal        g_pedal;                            // Used to pass Pedal bu
 
 extern cpVect       g_gravity_normal;                   // Stores a gravity as a normalized vector for use in static callback functions
 extern DrPointF     g_player_position;                  // Stores active player location for Kinematic objects trying to rotate toward player
+extern DrPointF     g_mouse_position;                   // Stores last known mouse position
 
 extern QString      g_info;                             // Used to draw some debug text onto the Engine screen
 

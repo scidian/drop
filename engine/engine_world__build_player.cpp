@@ -99,6 +99,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setJumpCount( -1 );
         ball1->setMoveSpeedY( 300 );
         ball1->cast_shadows = false;
+        ball1->setMouseRotate(true);
 
         if (this->getAmbientLight() > 3.0)
             this->setAmbientLight(3.0);
@@ -107,7 +108,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         ball = ball1;
         light1 = new DrEngineLight(this, getNextKey(), c_no_key, 250, 325, -1, 1.0, Light_Type::Glow, QColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
-        light2 = new DrEngineLight(this, getNextKey(), c_no_key, 250, 325, -1, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
+        light2 = new DrEngineLight(this, getNextKey(), c_no_key, 250, 325,  1, 1.0, Light_Type::Glow, QColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
         light2->draw_shadows = false;
         addThings( { light1, light2 } );
 

@@ -105,6 +105,7 @@ private:
 
     bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
     bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
+    bool            m_mouse_rotate = false;         // If turned to true, player rotates to mouse position
 
 
     // ***** Local Variables Updated by Engine
@@ -176,6 +177,7 @@ public:
     const long&         getTextureNumber()      { return m_texture_number; }
     const long&         getAssetKey()           { return m_texture_number; }
 
+    DrPointF            mapPositionToScreen();
     void                setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void                setCollidesWith(Collision_Groups groups) { m_collide_with = groups; }
     void                setTextureNumber(long texture_number) { m_texture_number = texture_number; }
@@ -272,6 +274,7 @@ public:
     bool            ignoreGravity()             { return m_ignore_gravity; }
     bool            shouldFlipImageX()          { return m_flip_image_x; }
     bool            shouldFlipImageY()          { return m_flip_image_y; }
+    bool            shouldMouseRotate()         { return m_mouse_rotate; }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -297,6 +300,7 @@ public:
     void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
     void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
     void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
+    void            setMouseRotate(bool mouse_rotate) { m_mouse_rotate = mouse_rotate; }
 
     // ***** Local Variables - Updated By Engine
     const int&      getRemainingJumps()         { return m_remaining_jumps; }

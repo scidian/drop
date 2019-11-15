@@ -68,7 +68,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     rotate_up.rotate(static_cast<float>(world->getCameraRotationZ()), 0.0f, 0.0f, 1.0f);
     m_up = rotate_up * m_up;
 
-    float plane_scale = (1.0f / combinedZoomScale());
+    float plane_scale = combinedZoomScale();
     if (plane_scale < 1.0f) plane_scale = 1.0f;
 
     // ***** Orthographic
@@ -135,7 +135,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     cam_x = (int(cam_x) / 5) * 5;
     cam_y = (int(cam_y) / 5) * 5;
 
-    float plane_scale = (1.0f / scale);
+    float plane_scale = scale;
     if (plane_scale < 1.0f) plane_scale = 1.0f;
 
     // ***** Orthographic

@@ -62,6 +62,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     bool    flip_image_x =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_X).toBool();
     bool    flip_image_y =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y).toBool();
+    bool    mouse_rotate =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Mouse_Rotate).toBool();
 
     bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
     QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
@@ -112,6 +113,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     player->setFlipImageX( flip_image_x );
     player->setFlipImageY( flip_image_y );
+    player->setMouseRotate( mouse_rotate );
 
     // ***** Add to world
     addThing(player);

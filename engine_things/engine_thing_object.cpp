@@ -10,7 +10,9 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
-#include "engine_thing_object.h"
+#include "engine/form_engine.h"
+#include "engine_things/engine_thing_object.h"
+#include "opengl/opengl.h"
 
 
 //####################################################################################
@@ -121,6 +123,10 @@ void DrEngineObject::addToWorld() {
     Dr::ResetTimer( update_timer );
 }
 
+DrPointF DrEngineObject::mapPositionToScreen() {
+    QPointF position = getWorld()->getEngine()->getFormEngine()->getOpenGL()->mapToScreen( getPosition().x, getPosition().y, getZOrder() );
+    return DrPointF(position.x(), position.y());
+}
 
 //####################################################################################
 //##    Collision Type of Object

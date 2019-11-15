@@ -48,6 +48,9 @@ void DrEngineWorld::updateWorld(double time_passed) {
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
 
 
+    g_info = "Spawners: " + QString::number(m_spawners.size()) + ", Things: " + QString::number(m_things.size());
+
+
     // ********** Iterate through Things, delete if they go off screen
     for (auto it = m_things.begin(); it != m_things.end(); ) {
         DrEngineThing *thing = *it;
@@ -143,6 +146,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
     if (demo_player == Demo_Player::Light) {
         light1->setPosition( ball->getPosition() );
         light2->setPosition( ball->getPosition() );
+        light1->setAngle( ball->getAngle() + 90 );
     }
 }
 

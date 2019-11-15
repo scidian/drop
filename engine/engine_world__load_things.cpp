@@ -151,7 +151,9 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 //##    Loads one DrProject DrThingType::Object to World / Space
 //####################################################################################
-DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double x, double y, double scale_x, double scale_y, double angle) {
+DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
+                                                 double x, double y, double scale_x, double scale_y,
+                                                 double angle, double x_velocity, double y_velocity) {
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
@@ -228,13 +230,13 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double x, doubl
     double deg_angular = rotation_vel.x() + (QRandomGenerator::global()->bounded(rotation_vel.y() * 2.0) - rotation_vel.y());
     double rad_angular = qDegreesToRadians( deg_angular );
     if (body_type != Body_Type::Static) {
-        cpBodySetVelocity( block->body, velocity );
+        cpBodySetVelocity( block->body, velocity + cpv(x_velocity, y_velocity) );
         cpBodySetAngularVelocity( block->body, rad_angular );
 
         // Attach KinematicUpdateVelocity callback function
         if (body_type == Body_Type::Kinematic) {
-            block->setOriginalVelocityX( velocity.x );
-            block->setOriginalVelocityY( velocity.y );
+            block->setOriginalVelocityX( velocity.x + x_velocity );
+            block->setOriginalVelocityY( velocity.y + y_velocity );
             block->setOriginalSpinVelocity( rad_angular );
             block->setUseAngleVelocity( angle_velocty );
             block->setRotateToPlayer( angle_player );

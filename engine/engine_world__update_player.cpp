@@ -25,6 +25,7 @@ Pedal    g_pedal = Pedal::None;                         // Pedal enumeration for
 
 cpVect   g_gravity_normal = cpv(0, 0);
 DrPointF g_player_position = DrPointF(0, 0);
+DrPointF g_mouse_position = DrPointF(0, 0);
 
 QString  g_info = "";
 
@@ -86,6 +87,13 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         if (object->shouldFlipImageX() && (key_x > 0 &&  object->isFlippedX())) object->setFlipX(false);
         if (object->shouldFlipImageY() && (key_y < 0 && !object->isFlippedY())) object->setFlipY(true);
         if (object->shouldFlipImageY() && (key_y > 0 &&  object->isFlippedY())) object->setFlipY(false);
+    }
+
+    // ***** Mouse Rotate
+    if (object->shouldMouseRotate()) {
+        DrPointF pos = object->mapPositionToScreen();
+        double angle = QLineF( QPointF(pos.x, pos.y), QPointF(g_mouse_position.x, g_mouse_position.y)).angle();
+        cpBodySetAngle( object->body, Dr::DegreesToRadians(angle - 90.0) );
     }
 
 

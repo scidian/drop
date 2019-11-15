@@ -78,6 +78,8 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
                            "Flip Image X?", "Should this characters image flip left and right depending on movement?");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y, Property_Type::Bool, false,
                            "Flip Image Y?", "Should this characters image flip up and down depending on movement?");
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Mouse_Rotate, Property_Type::Bool, false,
+                           "Mouse Rotate", "Should this character rotate to the mouse cursor?");
 }
 
 

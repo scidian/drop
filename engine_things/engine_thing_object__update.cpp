@@ -31,10 +31,13 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
 
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject
     cpVect new_position = cpBodyGetPosition( body );
+    cpVect new_velocity = cpBodyGetVelocity( body );
     updateBodyPosition( DrPointF( new_position.x, new_position.y ));
     setAngle( Dr::RadiansToDegrees( cpBodyGetAngle( body )) );
+    setVelocityX( new_velocity.x );
+    setVelocityY( new_velocity.y );
 
-    // **** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
+    // ***** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
     bool sleeping = cpBodyIsSleeping(body);
     if (hasKeyControls() && !hasLostControl() && sleeping) {
         cpBodyActivate(body);
