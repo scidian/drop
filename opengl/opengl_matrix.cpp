@@ -68,17 +68,20 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     rotate_up.rotate(static_cast<float>(world->getCameraRotationZ()), 0.0f, 0.0f, 1.0f);
     m_up = rotate_up * m_up;
 
+    float plane_scale = (1.0f / combinedZoomScale());
+    if (plane_scale < 1.0f) plane_scale = 1.0f;
+
     // ***** Orthographic
     if (render_type == Render_Type::Orthographic) {
         float left =   -(width()  * devicePixelRatio() / 2.0f);
         float right =  +(width()  * devicePixelRatio() / 2.0f);
         float top =    +(height() * devicePixelRatio() / 2.0f);
         float bottom = -(height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, c_near_plane * (1.0f / combinedZoomScale()), c_far_plane * (1.0f / combinedZoomScale()));
+        m_projection.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
 
     // ***** Perspective
     } else {
-        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * (1.0f / combinedZoomScale()) );
+        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * plane_scale );
     }
 
     // ***** Rotation locked to Camera Follow Thing
@@ -132,17 +135,20 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     cam_x = (int(cam_x) / 5) * 5;
     cam_y = (int(cam_y) / 5) * 5;
 
+    float plane_scale = (1.0f / scale);
+    if (plane_scale < 1.0f) plane_scale = 1.0f;
+
     // ***** Orthographic
     if (render_type == Render_Type::Orthographic) {
         float left =   -(m_occluder_fbo->width() /  2.0f);
         float right =  +(m_occluder_fbo->width() /  2.0f);
         float top =    +(m_occluder_fbo->height() / 2.0f);
         float bottom = -(m_occluder_fbo->height() / 2.0f);
-        proj_matrix.ortho( left, right, bottom, top, c_near_plane * (1.0f / scale), c_far_plane * (1.0f / scale));
+        proj_matrix.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
 
     // ***** Perspective
     } else {
-        proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * (1.0f / scale) );
+        proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * plane_scale );
     }
 
     // ***** Set Look At and Scale, Dont need extra rotation
