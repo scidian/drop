@@ -140,11 +140,16 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
                                     { Properties::Thing_Velocity_X, Properties::Thing_Velocity_Y, Properties::Thing_Spin_Velocity });
                 }
 
-                pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->isEditable();
+                bool pretest_velocity = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->isEditable();
+                bool pretest_player =   thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Player)->isEditable();
                 test = (type == Body_Type::Kinematic) ? true : false;
-                if (test != pretest) {
+                if (test != pretest_velocity) {
                     thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->setEditable(test);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Angle_Velocity });
+                }
+                if (test != pretest_player) {
+                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Player)->setEditable(test);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Angle_Player });
                 }
                 break;
             }

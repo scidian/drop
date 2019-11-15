@@ -14,6 +14,7 @@
 #include "engine_things/engine_thing_light.h"
 #include "opengl/opengl.h"
 
+const float c_not_zero = 0.0001f;
 
 //####################################################################################
 //##    Returns a square matrix for rendering a flat quad (usually to fill screen)
@@ -57,8 +58,8 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     //          Y Rotation, controls left / right
     QMatrix4x4 rotate_eye;
     rotate_eye.translate( m_look_at);
-    rotate_eye.rotate(static_cast<float>(world->getCameraRotationY()), 0.0f, 1.0f, 0.0f);
-    rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()), 1.0f, 0.0f, 0.0f);
+    rotate_eye.rotate(static_cast<float>(world->getCameraRotationY()) + c_not_zero, 0.0f, 1.0f, 0.0f);
+    rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()) + c_not_zero, 1.0f, 0.0f, 0.0f);
     rotate_eye.translate(-m_look_at);
     m_eye = rotate_eye * m_eye;
 
@@ -95,7 +96,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
         if (dist_z < sqrt_2) {
             rotate_eye.setToIdentity();
             rotate_eye.translate( m_look_at);
-            rotate_eye.rotate(static_cast<float>(world->getCameraFollowingRotation()) * ((sqrt_2 - dist_z) / sqrt_2), 0.0f, 0.0, 1.0f);
+            rotate_eye.rotate(static_cast<float>(world->getCameraFollowingRotation()) * ((sqrt_2 - dist_z) / sqrt_2) + c_not_zero, 0.0f, 0.0, 1.0f);
             rotate_eye.translate(-m_look_at);
             m_eye = rotate_eye * m_eye;
         }

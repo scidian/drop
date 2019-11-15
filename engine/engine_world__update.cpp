@@ -140,6 +140,30 @@ extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Grab object from User Data
     DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
+    if (object == nullptr) return;
+
+    // Try and turn object to rotate toward player
+    if (object->getRotateToPlayer()) {
+        // Angle to Player
+        cpVect my_pos =     cpBodyGetPosition(body);
+        double my_angle =   cpBodyGetAngle(body);
+        double angle1 =     Dr::CalcRotationAngleInDegrees(DrPointF(my_pos.x, my_pos.y), g_player_position);
+               angle1 =     Dr::EqualizeAngle0to360(angle1);
+
+        // Angle of Object
+        DrPointF up =       Dr::RotatePointAroundOrigin(DrPointF(my_pos.x, my_pos.y + 1.0), DrPointF(my_pos.x, my_pos.y), my_angle, true);
+        double angle2 =     Dr::CalcRotationAngleInDegrees(DrPointF(my_pos.x, my_pos.y), up);
+               angle2 =     Dr::EqualizeAngle0to360(angle2);
+
+        // Set Rotate Direction Towards Player
+        double angle3 =     Dr::FindClosestAngle180(angle1, angle2);
+        double angle_vel =  abs(object->getOriginalSpinVelocity());
+
+        double new_spin = (angle3 > angle1) ? angle_vel : -angle_vel;
+        double angle_diff = 180.0 - abs(angle3 - angle1);
+        if (angle_diff < 10.0) new_spin *= (angle_diff / 10.0);
+        cpBodySetAngularVelocity(body, new_spin);
+    }
 
     // Figure out new velocity based on current object angle
     if (object->getUseAngleVelocity()) {
@@ -147,11 +171,29 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
         QPointF original = QPointF( object->getOriginalVelocityX(), object->getOriginalVelocityY() );
         QPointF rotated = QTransform().rotate(angle).map(original);
         cpBodySetVelocity( body, cpv(rotated.x(), rotated.y()) );
-    }
+    }  
 
     // Call real update function
     cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

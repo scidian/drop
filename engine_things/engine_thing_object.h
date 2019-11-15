@@ -45,6 +45,7 @@ private:
     double          m_velocity_y;                   // Original y velocity when loaded into scene, used for KinematicUpdateVelocity func
     double          m_spin_velocity;                // Original angular velocity when loaded into scene, !!!!! #NOTE: In radians !!!!!
     bool            m_use_angle_velocity = true;    // Should the angle of the object affect velocity? (only for Kinematic)
+    bool            m_rotate_to_player = false;     // Should the angle of the object rotate toward active player? (only for Kinematic)
 
     // Object Properties - One Way / Collision
     One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
@@ -170,36 +171,38 @@ public:
 
 
     // Object Basic Settings
-    const bool&         doesCollide() { return m_does_collide; }
-    Collision_Groups    getCollidesWith() { return m_collide_with; }
-    const long&         getTextureNumber() { return m_texture_number; }
-    const long&         getAssetKey() { return m_texture_number; }
+    const bool&         doesCollide()           { return m_does_collide; }
+    Collision_Groups    getCollidesWith()       { return m_collide_with; }
+    const long&         getTextureNumber()      { return m_texture_number; }
+    const long&         getAssetKey()           { return m_texture_number; }
 
     void                setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void                setCollidesWith(Collision_Groups groups) { m_collide_with = groups; }
     void                setTextureNumber(long texture_number) { m_texture_number = texture_number; }
 
     // Object Properties - Bounce / Friction
-    const double&   getCustomFriction() { return m_custom_friction; }
-    const double&   getCustomBounce() { return m_custom_bounce; }
+    const double&   getCustomFriction()         { return m_custom_friction; }
+    const double&   getCustomBounce()           { return m_custom_bounce; }
     void            setCustomFriction(double new_friction) { m_custom_friction = new_friction; }
     void            setCustomBounce(double new_bounce) { m_custom_bounce = new_bounce; }
 
     // Object Properties - Movement
-    const double&   getOriginalVelocityX() { return m_velocity_x; }
-    const double&   getOriginalVelocityY() { return m_velocity_y; }
-    const double&   getOriginalSpinVelocity() { return m_spin_velocity; }                                                 // !!!!! In Radians
-    const bool&     getUseAngleVelocity() { return m_use_angle_velocity; }
-    void            setOriginalVelocityX(double vel_x) { m_velocity_x = vel_x; }
-    void            setOriginalVelocityY(double vel_y) { m_velocity_y = vel_y; }
-    void            setOriginalSpinVelocity(double radian_velocity) { m_spin_velocity = radian_velocity; }                // !!!!! In Radians
-    void            setUseAngleVelocity(bool angle_affects_velocity) { m_use_angle_velocity = angle_affects_velocity; }
+    const double&   getOriginalVelocityX()      { return m_velocity_x; }
+    const double&   getOriginalVelocityY()      { return m_velocity_y; }
+    const double&   getOriginalSpinVelocity()   { return m_spin_velocity; }                                                 // !!!!! In Radians
+    const bool&     getUseAngleVelocity()       { return m_use_angle_velocity; }
+    const bool&     getRotateToPlayer()         { return m_rotate_to_player; }
+    void            setOriginalVelocityX(double vel_x)                  { m_velocity_x = vel_x; }
+    void            setOriginalVelocityY(double vel_y)                  { m_velocity_y = vel_y; }
+    void            setOriginalSpinVelocity(double radian_velocity)     { m_spin_velocity = radian_velocity; }              // !!!!! In Radians
+    void            setUseAngleVelocity(bool angle_affects_velocity)    { m_use_angle_velocity = angle_affects_velocity; }
+    void            setRotateToPlayer(bool angle_towards_player)        { m_rotate_to_player = angle_towards_player; }
 
     // Object Properties - One Way / Collision
-    One_Way         getOneWay() { return m_one_way; }
-    cpVect          getOneWayDirection() { return m_one_way_direction; }
-    const double&   getGravityMultiplier() { return m_gravity_multiplier; }
-    cpVect          getSurfaceVelocity() { return m_surface_velocity; }
+    One_Way         getOneWay()                 { return m_one_way; }
+    cpVect          getOneWayDirection()        { return m_one_way_direction; }
+    const double&   getGravityMultiplier()      { return m_gravity_multiplier; }
+    cpVect          getSurfaceVelocity()        { return m_surface_velocity; }
 
     void            setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
     void            setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
@@ -208,18 +211,18 @@ public:
     void            setSurfaceVelocity(cpVect surface_vel);
 
     // Object Properties - Health / Damage
-    Collision_Type  getCollisionType() { return m_collision_type; }
-    const bool&     isInvincible() { return m_invincible; }
-    const bool&     hasDeathTouch() { return m_death_touch; }
-    const double&   getMaxHealth() { return m_max_health; }
-    const double&   getHealth() { return m_health; }
-    const double&   getDamage() { return m_damage; }
-    const long&     getDamageDelay() { return m_damage_delay; }
-    const double&   getAutoDamage() { return m_auto_damage; }
-    const long&     getDeathDelay() { return m_death_delay; }
-    Death_Animation getDeathAnimation() { return m_death_animation; }
-    const long&     getDeathDuration() { return m_death_duration; }
-    const double&   getDamageRecoil() { return m_damage_recoil; }
+    Collision_Type  getCollisionType()          { return m_collision_type; }
+    const bool&     isInvincible()              { return m_invincible; }
+    const bool&     hasDeathTouch()             { return m_death_touch; }
+    const double&   getMaxHealth()              { return m_max_health; }
+    const double&   getHealth()                 { return m_health; }
+    const double&   getDamage()                 { return m_damage; }
+    const long&     getDamageDelay()            { return m_damage_delay; }
+    const double&   getAutoDamage()             { return m_auto_damage; }
+    const long&     getDeathDelay()             { return m_death_delay; }
+    Death_Animation getDeathAnimation()         { return m_death_animation; }
+    const long&     getDeathDuration()          { return m_death_duration; }
+    const double&   getDamageRecoil()           { return m_damage_recoil; }
 
     void            setCollisionType(Collision_Type what_should_collide);
     void            setInvincible(bool invincible) { m_invincible = invincible; }
@@ -241,34 +244,34 @@ public:
     bool            shouldCollide(DrEngineObject *object);
 
     // Object Movement - Rotation (On Z Axis)
-    const double&   getRotateSpeedZ() { return m_rotate_speed; }
+    const double&   getRotateSpeedZ()           { return m_rotate_speed; }
     void            setRotateSpeedZ(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
 
     // Object Movemnt - PlayerUpdateVelocity Callback Func
-    const bool&     hasKeyControls() { return m_key_controls; }
-    const bool&     hasLostControl() { return m_lost_control; }
-    const double&   getMaxSpeedX() { return m_max_speed_x; }
-    const double&   getMaxSpeedY() { return m_max_speed_y; }
-    const double&   getForcedSpeedX() { return m_forced_speed_x; }
-    const double&   getForcedSpeedY() { return m_forced_speed_y; }
-    const double&   getMoveSpeedX() { return m_move_speed_x; }
-    const double&   getMoveSpeedY() { return m_move_speed_y; }
-    const bool&     getAngleMovement() { return m_angle_movement; }
-    const double&   getJumpForceX() { return m_jump_force_x; }
-    const double&   getJumpForceY() { return m_jump_force_y; }
-    const long&     getJumpTimeout() { return m_jump_timeout; }
-    const int&      getJumpCount() { return m_jump_count; }
+    const bool&     hasKeyControls()            { return m_key_controls; }
+    const bool&     hasLostControl()            { return m_lost_control; }
+    const double&   getMaxSpeedX()              { return m_max_speed_x; }
+    const double&   getMaxSpeedY()              { return m_max_speed_y; }
+    const double&   getForcedSpeedX()           { return m_forced_speed_x; }
+    const double&   getForcedSpeedY()           { return m_forced_speed_y; }
+    const double&   getMoveSpeedX()             { return m_move_speed_x; }
+    const double&   getMoveSpeedY()             { return m_move_speed_y; }
+    const bool&     getAngleMovement()          { return m_angle_movement; }
+    const double&   getJumpForceX()             { return m_jump_force_x; }
+    const double&   getJumpForceY()             { return m_jump_force_y; }
+    const long&     getJumpTimeout()            { return m_jump_timeout; }
+    const int&      getJumpCount()              { return m_jump_count; }
 
-    const double&   getAcceleration() { return m_acceleration; }
-    const double&   getAirDrag() { return m_air_drag; }
-    const double&   getGroundDrag() { return m_ground_drag; }
-    const double&   getRotateDrag() { return m_rotate_drag; }
-    const bool&     canAirJump() { return m_air_jump; }
-    const bool&     canWallJump() { return m_wall_jump; }
-    const bool&     canRotate() { return m_can_rotate; }
-    bool            ignoreGravity() { return m_ignore_gravity; }
-    bool            shouldFlipImageX() { return m_flip_image_x; }
-    bool            shouldFlipImageY() { return m_flip_image_y; }
+    const double&   getAcceleration()           { return m_acceleration; }
+    const double&   getAirDrag()                { return m_air_drag; }
+    const double&   getGroundDrag()             { return m_ground_drag; }
+    const double&   getRotateDrag()             { return m_rotate_drag; }
+    const bool&     canAirJump()                { return m_air_jump; }
+    const bool&     canWallJump()               { return m_wall_jump; }
+    const bool&     canRotate()                 { return m_can_rotate; }
+    bool            ignoreGravity()             { return m_ignore_gravity; }
+    bool            shouldFlipImageX()          { return m_flip_image_x; }
+    bool            shouldFlipImageY()          { return m_flip_image_y; }
 
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
@@ -296,16 +299,16 @@ public:
     void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
 
     // ***** Local Variables - Updated By Engine
-    const int&      getRemainingJumps() { return m_remaining_jumps; }
-    const double&   getRemainingBoost() { return m_remaining_boost; }
-    const double&   getRemainingGroundTime() { return m_remaining_ground_time; }
-    const double&   getRemainingWallTime() { return m_remaining_wall_time; }
-    const bool&     isOnGround() { return m_grounded; }
-    const bool&     isOnWall() { return m_on_wall; }
-    const double&   getTempGravityMultiplier() { return m_temp_gravity_multiplier; }
+    const int&      getRemainingJumps()         { return m_remaining_jumps; }
+    const double&   getRemainingBoost()         { return m_remaining_boost; }
+    const double&   getRemainingGroundTime()    { return m_remaining_ground_time; }
+    const double&   getRemainingWallTime()      { return m_remaining_wall_time; }
+    const bool&     isOnGround()                { return m_grounded; }
+    const bool&     isOnWall()                  { return m_on_wall; }
+    const double&   getTempGravityMultiplier()  { return m_temp_gravity_multiplier; }
     const cpVect&   getLastTouchedGroundNormal() { return m_last_touched_ground_normal; }
-    const double&   getLastTouchedGroundDot() { return m_last_touched_ground_dot; }
-    Jump_State      getJumpState() { return m_jump_state; }
+    const double&   getLastTouchedGroundDot()   { return m_last_touched_ground_dot; }
+    Jump_State      getJumpState()              { return m_jump_state; }
     void            setRemainingJumps(int new_remaining_jumps) { m_remaining_jumps = new_remaining_jumps; }
     void            setRemainingBoost(double boost_time) { m_remaining_boost = boost_time; }
     void            setRemainingGroundTime(double ground_time) { m_remaining_ground_time = ground_time; }
@@ -317,23 +320,23 @@ public:
     void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
     void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }
 
-    const bool&     isDying() { return m_dying; }
-    const bool&     isAlive() { return m_alive; }
-    bool            isDead()  { return (!m_alive); }
+    const bool&     isDying()                   { return m_dying; }
+    const bool&     isAlive()                   { return m_alive; }
+    bool            isDead()                    { return (!m_alive); }
     void            setDying(bool is_dying) { m_dying = is_dying; }
     void            setAlive(bool is_alive) { m_alive = is_alive; }
 
-    DrTime&         getDamageTimer() { return m_damage_timer; }
-    DrTime&         getDeathTimer() { return m_death_timer; }
-    DrTime&         getFadeTimer() { return m_fade_timer; }
+    DrTime&         getDamageTimer()            { return m_damage_timer; }
+    DrTime&         getDeathTimer()             { return m_death_timer; }
+    DrTime&         getFadeTimer()              { return m_fade_timer; }
 
-    bool            isFlippedX() { return (m_flipped_x); }
-    bool            isFlippedY() { return (m_flipped_y); }
-    void            setFlipX(bool flipped) { m_flipped_x = flipped; }
-    void            setFlipY(bool flipped) { m_flipped_y = flipped; }
+    bool            isFlippedX()                { return (m_flipped_x); }
+    bool            isFlippedY()                { return (m_flipped_y); }
+    void            setFlipX(bool flipped)  { m_flipped_x = flipped; }
+    void            setFlipY(bool flipped)  { m_flipped_y = flipped; }
 
     // Object->Body Data - Updated every frame by updateWorld()
-    Vec3            getPreviousPosition() { return m_previous_position; }
+    Vec3            getPreviousPosition()       { return m_previous_position; }
     void            updateBodyPosition(DrPointF updated_position, bool update_previous_position_also = false);
 
 };

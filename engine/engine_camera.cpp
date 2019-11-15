@@ -12,6 +12,7 @@
 #include "engine_things/engine_thing_object.h"
 #include "engine_world.h"
 #include "form_engine.h"
+#include "helper.h"
 #include "opengl/opengl.h"
 
 
@@ -41,29 +42,6 @@ static inline void SmoothMove(double &start, const double &target, const double 
     double  lerp_amount = Dr::Clamp(lerp * milliseconds, 0.001, 1.0);
     start = Dr::Lerp(start, target, lerp_amount);
     ///start = Dr::LerpConst(start, target, lerp_amount * 100.0);
-}
-
-
-//####################################################################################
-//##    Equalizes x, y, and z angles to within 0 to 360
-//####################################################################################
-template<class T> T EqualizeAngle0to360(const T& angle) {
-    T equalized = angle;
-    while (equalized <   0) { equalized += 360; }
-    while (equalized > 360) { equalized -= 360; }
-    return equalized;
-}
-
-//####################################################################################
-//##    Finds closest angle within 180 degrees of angle (both angles must be between 0 to 360)
-//####################################################################################
-template<class T> T FindClosestAngle180(const T& start, const T& angle) {
-    T closest = angle;
-    if (closest - start > 180)
-        closest -= 360;
-    else if (start - closest > 180)
-        closest += 360;
-    return closest;
 }
 
 
@@ -111,16 +89,16 @@ void DrEngineWorld::moveCameras(double milliseconds) {
             // Linear Interpolation of temporary values
             QVector3D target_position = target_camera->getPosition();
             QVector3D target_rotation = target_camera->getRotation();
-                      target_rotation.setX( EqualizeAngle0to360(target_rotation.x()) );
-                      target_rotation.setY( EqualizeAngle0to360(target_rotation.y()) );
-                      target_rotation.setZ( EqualizeAngle0to360(target_rotation.z()) );
-                      target_rotation.setX( FindClosestAngle180(m_temp_rotation.x(), target_rotation.x()) );
-                      target_rotation.setY( FindClosestAngle180(m_temp_rotation.y(), target_rotation.y()) );
-                      target_rotation.setZ( FindClosestAngle180(m_temp_rotation.z(), target_rotation.z()) );
+                      target_rotation.setX( Dr::EqualizeAngle0to360(target_rotation.x()) );
+                      target_rotation.setY( Dr::EqualizeAngle0to360(target_rotation.y()) );
+                      target_rotation.setZ( Dr::EqualizeAngle0to360(target_rotation.z()) );
+                      target_rotation.setX( Dr::FindClosestAngle180(m_temp_rotation.x(), target_rotation.x()) );
+                      target_rotation.setY( Dr::FindClosestAngle180(m_temp_rotation.y(), target_rotation.y()) );
+                      target_rotation.setZ( Dr::FindClosestAngle180(m_temp_rotation.z(), target_rotation.z()) );
             QVector3D target_up_vector = (target_camera->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
             double    target_following_rotation = target_camera->getThingFollowingRotation();
-                      target_following_rotation = EqualizeAngle0to360(target_following_rotation);
-                      target_following_rotation = FindClosestAngle180(m_temp_follow_angle, target_following_rotation);
+                      target_following_rotation = Dr::EqualizeAngle0to360(target_following_rotation);
+                      target_following_rotation = Dr::FindClosestAngle180(m_temp_follow_angle, target_following_rotation);
             double    target_z_order = static_cast<double>(target_camera->getThingFollowingZOrder());
             double    target_zoom_as_pow = DrOpenGL::zoomScaleToPow( target_camera->getZoom() );
             double    temp_zoom_as_pow =   DrOpenGL::zoomScaleToPow( m_temp_zoom );
@@ -164,12 +142,12 @@ void DrEngineWorld::switchCameras(long new_camera) {
     m_switch_milliseconds = 0;
     m_switch_position = getCameraPosition();
     m_switch_rotation = getCameraRotation();
-        m_switch_rotation.setX( EqualizeAngle0to360(m_switch_rotation.x()) );
-        m_switch_rotation.setY( EqualizeAngle0to360(m_switch_rotation.y()) );
-        m_switch_rotation.setZ( EqualizeAngle0to360(m_switch_rotation.z()) );
+        m_switch_rotation.setX( Dr::EqualizeAngle0to360(m_switch_rotation.x()) );
+        m_switch_rotation.setY( Dr::EqualizeAngle0to360(m_switch_rotation.y()) );
+        m_switch_rotation.setZ( Dr::EqualizeAngle0to360(m_switch_rotation.z()) );
     m_switch_zoom = getCameraZoom();
     m_switch_follow_angle = getCameraFollowingRotation();
-        m_switch_follow_angle = EqualizeAngle0to360(m_switch_follow_angle);
+        m_switch_follow_angle = Dr::EqualizeAngle0to360(m_switch_follow_angle);
     m_switch_up_vector = getCameraUpVector();
     m_switch_z_order = static_cast<double>(getCameraFollowingZ());
 

@@ -19,6 +19,7 @@ typedef Clock::time_point DrTime;
 
 // Local Defines
 #define EPSILON 0.00001
+#define DR_PI   3.141592653589793238463
 
 
 //####################################################################################
@@ -75,15 +76,33 @@ void                    ResetTimer(DrTime &timer);
 
 // Angle Functions
 template<class T> T     RadiansToDegrees(const T& rad) { return (rad * 57.295779513082321); }           // == (180.0 / 3.141592653589793238463);
+template<class T> T     DegreesToRadians(const T& degrees) { return degrees * (DR_PI / 180.0); }
+
+// Equalizes x, y, and z angles to within 0 to 360
+template<class T> T EqualizeAngle0to360(const T& angle) {
+    T equalized = angle;
+    while (equalized <   0) { equalized += 360; }
+    while (equalized > 360) { equalized -= 360; }
+    return equalized;
+}
+
+// Finds closest angle within 180 degrees of angle (both angles must be between 0 to 360)
+template<class T> T FindClosestAngle180(const T& start, const T& angle) {
+    T closest = angle;
+    if (closest - start > 180)
+        closest -= 360;
+    else if (start - closest > 180)
+        closest += 360;
+    return closest;
+}
+
 double                  CalcRotationAngleInDegrees(DrPointF center_point, DrPointF target_point);
 double                  Closest90DegreeAngle(double angle, double angle_to_find);
 double                  DifferenceBetween2Angles(double angle1, double angle2);
 bool                    IsSimilarAngle(double angle1, double angle2, double tolerance = .001);
 bool                    IsSquare(double check_angle);
 bool                    IsRectangle(DrPointF p1, DrPointF p2, DrPointF p3, DrPointF p4);
-
-
-// Shape Functions
+DrPointF                RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, bool angle_is_in_radians = false);
 
 
 }

@@ -215,6 +215,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x
     QPointF vel_y = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_Y).toPointF();
     QPointF rotation_vel =  thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Spin_Velocity).toPointF();
     bool    angle_velocty = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Velocity).toBool();
+    bool    angle_player =  thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Player).toBool();
 
     cpVect velocity;
     velocity.x = vel_x.x() + (QRandomGenerator::global()->bounded(vel_x.y() * 2.0) - vel_x.y());
@@ -231,6 +232,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x
             block->setOriginalVelocityY( velocity.y );
             block->setOriginalSpinVelocity( rad_angular );
             block->setUseAngleVelocity( angle_velocty );
+            block->setRotateToPlayer( angle_player );
         }
     }
 

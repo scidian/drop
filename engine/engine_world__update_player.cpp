@@ -23,6 +23,7 @@ bool     g_jump_button = false;                         // Set to False for Not-
 Pedal    g_pedal = Pedal::None;                         // Pedal enumeration for rotate key state
 
 cpVect   g_gravity_normal = cpv(0, 0);
+DrPointF g_player_position = DrPointF(0, 0);
 
 QString  g_info = "";
 
@@ -74,6 +75,9 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
         pedal =     g_pedal;
+
+        cpVect pos = cpBodyGetPosition(object->body);
+        g_player_position = DrPointF(pos.x, pos.y);
 
         if (object->shouldFlipImageX() && (key_x < 0 && !object->isFlippedX())) object->setFlipX(true);
         if (object->shouldFlipImageX() && (key_x > 0 &&  object->isFlippedX())) object->setFlipX(false);

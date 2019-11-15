@@ -136,9 +136,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   199
+//##    !!!!! NEXT AVAILABLE NUMBER:   200
 //##
-//##    Checked for doubles up through 199 on 11/11/2019
+//##    Checked for doubles up through 200 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -302,6 +302,7 @@ enum class Properties {
     Thing_Velocity_Y                    = 63,       // variable
     Thing_Spin_Velocity                 = 64,       // variable
     Thing_Angle_Velocity                = 65,       // bool
+    Thing_Angle_Player                  = 199,      // bool
 
     // Spawn
     Thing_Spawn_Rate                    = 189,      // variable
