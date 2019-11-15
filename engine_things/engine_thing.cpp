@@ -12,9 +12,10 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key) {
+DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long original_key) {
     m_world = world;
     m_key = unique_key;
+    m_original_project_key = original_key;
 
     m_camera_rotation = c_default_camera_rot;
 }
@@ -55,3 +56,13 @@ bool DrEngineThing::update(double time_passed, double time_warp, QRectF &area) {
     if (area.contains(QPointF(getPosition().x, getPosition().y)) == false) remove = true;
     return remove;
 }
+
+
+
+
+
+
+
+
+
+

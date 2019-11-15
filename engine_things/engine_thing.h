@@ -29,6 +29,7 @@ private:
 
     // Engine Info
     long            m_key;                              // Unique key for this item
+    long            m_original_project_key;             // Key of item when it was in Project Data Model
 
     // Basic Thing Properties
     double          m_angle_z = 0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
@@ -85,12 +86,13 @@ public:
 
 
 public:
-    DrEngineThing(DrEngineWorld *world, long unique_key);
+    DrEngineThing(DrEngineWorld *world, long unique_key, long original_key);
     virtual ~DrEngineThing();
 
 
     // Getters / Setters
     long                getKey() { return m_key; }                                          // Gets unique item key
+    long                getOriginalKey() { return m_original_project_key; }                 // Gets original Project Data Model key
 
     // Abstract Virtual Functions
     virtual DrThingType getThingType() = 0;                                                 // Returns DrThingType of this Thing

@@ -19,18 +19,22 @@
 class DrEngineSpawner
 {
 private:
+    // External Borrowed Pointers
+    DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
+
     // Local Variables
     DrThing        *m_thing_to_spawn = nullptr;                 // Reference to the object we wish to spawn
-
     DrPointF        m_original_location { 0, 0 };               // Original location of Spawner, used to take Spawner out of scene as
                                                                 // gameplay proceeds and not attached to Object
+    double          m_time_passed;                              // Time last spawn occured
+    double          m_next_spawn;                               // Seconds until next spawn
+    bool            m_delete_me = false;                        // Mark for deletion when spawner is empty
 
+    bool            m_spawn_instantly = true;                   // Spawn instantly, or wait initial m_spawn_rate before spawning?
     double          m_spawn_rate = 1000;                        // Spawn rate in seconds
     double          m_spawn_rate_variable = 0;                  // Spawn rate + or - seconds
-
     int             m_spawn_count = 1;                          // Total spawn count
     int             m_spawns_remaining = 1;                     // Spawns remaining, can be reset in case of Shoot or Jump button
-
     Spawn_Type      m_spawn_type = Spawn_Type::Permanent;       // Spawn Type (permanent, shoot button, jump button, object death, etc)
 
     bool            m_attached_to_object = false;               // Is attached to object?
@@ -43,21 +47,40 @@ private:
     double          m_spawn_variable_y = 0.0;                   // Vartable Y location amount
 
 
+private:
+    void            setReadyForRemoval() { m_delete_me = true; }
+
+
 public:
     // Constructor / Destructor
     DrEngineSpawner();
-    DrEngineSpawner(DrThing *thing, Spawn_Type type, DrPointF location, double rate, double rate_variable,
-                    int spawn_count, int spawns_remaining,
+    DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location,
+                    double rate, double rate_variable,
+                    bool spawn_instantly, int spawn_count, int spawns_remaining,
                     DrEngineThing *attached, long attached_id,
                     double x, double y, double x_variable, double y_variable);
     ~DrEngineSpawner() { }
 
     // Function Calls
+    void            setNextSpawnTimeAmount();
+    bool            readyForRemoval()       { return m_delete_me; }
+
+
+    // Spawning
+    DrEngineObject* update(double time_passed, double time_warp, QRectF area, bool use_area = true);
+
+
+    // Timer Calls
+    void            addTimePassed(double milliseconds)  { m_time_passed += (milliseconds / 1000.0); }
+    double          getSecondsUntilNextSpawn()          { return m_next_spawn; }
+    void            resetSpawnTime()                    { m_time_passed = 0.0; }
+    double          secondsSinceLastSpawn()             { return m_time_passed; }
 
 
     // Getters & Setters
     DrThing*        getThingToSpawn()       { return m_thing_to_spawn; }
     DrPointF        getLocation()           { return m_original_location; }
+    const bool&     getSpawnInstantly()     { return m_spawn_instantly; }
     const double&   getSpawnRate()          { return m_spawn_rate; }
     const double&   getSpawnRateVariable()  { return m_spawn_rate_variable; }
     const int&      getSpawnCount()         { return m_spawn_count; }
@@ -75,6 +98,7 @@ public:
 
     void            setThingToSpawn(DrThing *thing)         { m_thing_to_spawn = thing; }
     void            setLocation(DrPointF location)          { m_original_location = location; }
+    void            setSpawnInstantly(bool instant)         { m_spawn_instantly = instant; }
     void            setSpawnRate(double spawn_rate)         { m_spawn_rate = spawn_rate; }
     void            setSpawnRateVariable(double variable)   { m_spawn_rate_variable = variable; }
     void            setSpawnCount(int count)                { m_spawn_count = count; }

@@ -145,8 +145,8 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineObject(DrEngineWorld *world, long unique_key);
-    DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number = 0,
+    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key);
+    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long texture_number = 0,
                    double x = 0, double y = 0, double z = 0, DrPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
                    bool should_collide = true, bool can_rotate = true, double angle = c_norotate, float opacity = c_opaque);
     virtual ~DrEngineObject() override;

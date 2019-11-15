@@ -55,7 +55,7 @@ private:
     //          - Is assigned an unique key upon creation from DrEngineWorld::getNextKey()
     //
     EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
-    EngineSpawnerMap    m_spawners;                 // Holds all recurring Spawners loaded into this world
+    EngineSpawners      m_spawners;                 // Holds all recurring Spawners loaded into this world
     EngineThings        m_things;                   // Holds all things being used in this World / cpSpace
 
 
@@ -200,6 +200,10 @@ public:
     EngineTextureMap&   getTextureMap() { return m_textures; }
 
 
+    // Spawners
+    void                addSpawner(DrEngineSpawner* spawner) { m_spawners.push_back(spawner); }
+
+
     // Cameras
     DrEngineCamera*     addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z, int buffer_size = c_slop_buffer_size);
     const long&         getActiveCamera() { return m_active_camera; }
@@ -226,7 +230,7 @@ public:
 
 
     // Getter and Setters
-    //DrEngine*           getEngine()                 { return m_engine; }
+    DrEngine*           getEngine()                 { return m_engine; }
     DrProject*          getProject()                { return m_project; }
     cpSpace*            getSpace()                  { return m_space; }
     EngineThings&       getThings()                 { return m_things; }

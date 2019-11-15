@@ -186,8 +186,9 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double offset_x
     }
 
     // ***** Add the block to the cpSpace
-    DrEngineObject *block = new DrEngineObject(this, getNextKey(), body_type, asset_key, info.position.x + offset_x, -info.position.y + offset_y,
-                                               info.z_order, info.scale, use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
+    DrEngineObject *block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset_key,
+                                               info.position.x + offset_x, -info.position.y + offset_y, info.z_order, info.scale,
+                                               use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, block);
     block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
     addThing(block);

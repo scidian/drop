@@ -9,11 +9,12 @@
 #include <QRandomGenerator>
 #include <numeric>
 
-#include "engine.h"
-#include "engine_camera.h"
+#include "engine/engine.h"
+#include "engine/engine_camera.h"
+#include "engine/engine_spawner.h"
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine_world.h"
+#include "engine/engine_world.h"
 #include "form_engine.h"
 #include "helper.h"
 #include "helper_qt.h"
@@ -37,7 +38,7 @@ void DrEngineWorld::updateSpace(double time_passed) {
 
 void DrEngineWorld::updateWorld(double time_passed) {
 
-    // Calculate area that if Things are within, they can stay in the Space
+    // ***** Calculate area that if Things are within, they can stay in the Space
     QRectF threshold(getCameraPositionX() - getDeleteThresholdX(),
                      getCameraPositionY() - getDeleteThresholdY(),
                      getDeleteThresholdX()*2.0,
@@ -46,8 +47,9 @@ void DrEngineWorld::updateWorld(double time_passed) {
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
 
+
     // ********** Iterate through Things, delete if they go off screen
-    for ( auto it = m_things.begin(); it != m_things.end(); ) {
+    for (auto it = m_things.begin(); it != m_things.end(); ) {
         DrEngineThing *thing = *it;
 
         // ***** Update Thing
@@ -57,6 +59,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
         // ***** Process Removal
         if (remove) {
             delete thing;
+            ///thing = nullptr;
             it = m_things.erase(it);
             continue;
         }
@@ -66,7 +69,26 @@ void DrEngineWorld::updateWorld(double time_passed) {
     }   // End For
 
 
-    // ***** Calculate distance and load new stage if we need to
+    // ********** Iterate through Spawners, delete if they go off screen, run out of Spawns
+    for (auto it = m_spawners.begin(); it != m_spawners.end(); ) {
+        DrEngineSpawner *spawner = *it;
+
+        // ***** Update Spawner
+        spawner->update(time_passed, m_time_warp, threshold);
+
+        // ***** Process Removal
+        if (spawner->readyForRemoval()) {
+            delete spawner;
+            it = m_spawners.erase(it);
+            continue;
+        }
+
+        // ***** Increment for loop
+        it++;
+    }   // End For
+
+
+    // ********** Calculate distance and load new stage if we need to
     bool should_add_stage = false;
     if (has_scene == true) {
         QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)

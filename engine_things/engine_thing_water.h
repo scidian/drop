@@ -50,7 +50,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineWater(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPointF size,
+    DrEngineWater(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
                   Water_Texture texture, QColor start_color, QColor end_color,
                   float tint, float reflection,
                   float rip_length,     float rip_speed, float rip_amplitude, float rip_stretch,

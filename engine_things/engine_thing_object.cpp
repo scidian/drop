@@ -25,11 +25,11 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_
 //##    Object Constructor
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //####################################################################################
-DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key) : DrEngineThing (world, unique_key) { }
+DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key) : DrEngineThing (world, unique_key, original_key) { }
 
-DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, Body_Type body_type, long texture_number,
+DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long texture_number,
                                double x, double y, double z, DrPointF scale, double friction, double bounce,
-                               bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key) {
+                               bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key, original_key) {
     // Thing Basics
     this->setOpacity(opacity);
     this->setScaleX(scale.x);                                                   // Save x scale for later

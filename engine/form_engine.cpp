@@ -265,7 +265,6 @@ void FormEngine::updateEngine() {
         if (cam_enabled != can_enable_cam) pushCamera->setEnabled( can_enable_cam );
     }
 
-
     // ***** Update Physics and Render
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
 

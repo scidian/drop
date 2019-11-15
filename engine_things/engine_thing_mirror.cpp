@@ -11,9 +11,10 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineMirror::DrEngineMirror(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPointF size,
+DrEngineMirror::DrEngineMirror(DrEngineWorld *world, long unique_key, long original_key,
+                               double x, double y, double z, double angle, float opacity, DrPointF size,
                                QColor color_1, QColor color_2, float tint_amount, float blur, float blur_stretch, float scale) :
-    DrEngineThing(world, unique_key) {
+    DrEngineThing(world, unique_key, original_key) {
 
     this->setAngle(angle);
     this->setOpacity(opacity);

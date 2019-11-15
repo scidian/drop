@@ -27,7 +27,7 @@ public:
 
 public:
     // Constructor / Destructor
-    DrEngineSwirl(DrEngineWorld *world, long unique_key, double x, double y, double z, double angle, float opacity, DrPointF size,
+    DrEngineSwirl(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
                   QColor color, float tint, float rotation_amount);
     virtual ~DrEngineSwirl() override;
 

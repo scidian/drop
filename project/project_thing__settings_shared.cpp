@@ -116,7 +116,7 @@ void DrThing::addComponentSpawn() {
                                                       Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Spawn)->setIcon(Component_Icons::Spawn);
 
-    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Rate, Property_Type::Variable, QPointF(1000, 0),
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Rate, Property_Type::Variable, QPointF(1, 0),
                            "Spawn Rate", "Rate, in seconds, this item will spawn, +/- variable amount.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Count, Property_Type::Int, 1,
                            "Spawn Count", "How many instances of this item will spawn. A value of -1 will allow unlimited spawning.");

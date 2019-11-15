@@ -41,7 +41,7 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
     float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
     QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineFisheye *lens = new DrEngineFisheye(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y,
+    DrEngineFisheye *lens = new DrEngineFisheye(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                 info.z_order, info.angle, info.opacity, info.size,
                                                 start_color, tint, zoom );
     addThing( lens );
@@ -72,7 +72,7 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     // Find out original QPixmap size used in editor
     info.size.x = info.size.x / info.scale.x;
     info.size.y = info.size.y / info.scale.y;
-    DrEngineFire *fire = new DrEngineFire(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y,
+    DrEngineFire *fire = new DrEngineFire(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                           info.z_order, info.scale, info.angle, info.opacity, info.size,
                                           static_cast<Fire_Mask>(mask), color_1, color_2, smoke, intensity, smooth, wave, speed);
     addThing( fire );
@@ -105,7 +105,7 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 
     info.size.x = info.size.x * c_light_size_adjuster;
 
-    addThing( new DrEngineLight(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y, info.z_order, info.opacity,
+    addThing( new DrEngineLight(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y, info.z_order, info.opacity,
                                 static_cast<Light_Type>(light_type),
                                 light_color, static_cast<float>(info.size.x),
                                 DrPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed));
@@ -128,7 +128,7 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
     float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
     QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineMirror *mirror = new DrEngineMirror(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y,
+    DrEngineMirror *mirror = new DrEngineMirror(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                 info.z_order, info.angle, info.opacity, info.size,
                                                 color_1, color_2, color_tint, blur, blur_stretch, scale );
     addThing( mirror );
@@ -151,7 +151,7 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
     float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
     QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineSwirl *swirl = new DrEngineSwirl(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y,
+    DrEngineSwirl *swirl = new DrEngineSwirl(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.angle, info.opacity, info.size,
                                              start_color, tint, rotation );
     addThing( swirl );
@@ -196,7 +196,7 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
     QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineWater *water = new DrEngineWater(this, getNextKey(), info.position.x + offset_x, -info.position.y + offset_y,
+    DrEngineWater *water = new DrEngineWater(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.angle, info.opacity, info.size,
                                              static_cast<Water_Texture>(texture), start_color, end_color,
                                              water_tint, reflection,

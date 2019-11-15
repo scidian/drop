@@ -17,7 +17,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
+DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
                              double x, double y, double z, float  opacity,
                              Light_Type type_,
                              QColor     color_,
@@ -29,7 +29,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key,
                              float blur_,
                              float pulse_,
                              float pulse_speed_)
-    : DrEngineThing(world, unique_key) {
+    : DrEngineThing(world, unique_key, original_key) {
 
     this->setOpacity(opacity);
     this->setPosition(DrPointF(x, y));

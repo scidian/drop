@@ -53,7 +53,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrEngineLight(DrEngineWorld *world, long unique_key,
+    DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
                   double x, double y, double z, float opacity, Light_Type type, QColor color, float diameter, DrPointF cone, float intensity,
                   float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed);
     virtual ~DrEngineLight() override;

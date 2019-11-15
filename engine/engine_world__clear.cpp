@@ -73,8 +73,8 @@ void DrEngineWorld::clearWorld() {
         m_cameras.clear();
 
         // Remove all Spawners
-        for (auto spawner_pair : m_spawners)
-            delete spawner_pair.second;
+        for (auto spawner : m_spawners)
+            delete spawner;
         m_spawners.clear();
 
         // Clear cpSpace from any remaining items, free Space

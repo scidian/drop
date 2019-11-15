@@ -42,10 +42,10 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                 DrEngineObject *circle;
                 if (QRandomGenerator::global()->bounded(0, 2) == 0) {
-                    circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
+                    circle = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
                 } else {
                     ///circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
-                    circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPointF(2, 1));
+                    circle = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPointF(2, 1));
                 }
                 circle->addShapeCircle(ball_radius, c_center);
                 circle->setOriginalVelocityX(vel_x);
@@ -53,7 +53,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 world->addThing(circle);
             }
         } else if (event->button() & Qt::MiddleButton) {            
-            DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
+            DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
             block->addShapeBoxFromTexture(Asset_Textures::Block);
             world->addThing(block);
 
@@ -68,7 +68,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             points.append( DrPointF(-46, -10) );    // Left Middle
             points.append( DrPointF(-38, -55) );    // Left Bottom
 
-            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPointF(2, .5));
+            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPointF(2, .5));
             plant->addShapePolygon(points);
             world->addThing(plant);
         }
@@ -89,7 +89,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             g_jump_button = true;
         } else if (event->button() & Qt::RightButton) {
             for (int i = 0; i < 25; i++ ) {
-                DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
+                DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
                 block->addShapeBoxFromTexture(Asset_Textures::Block);
                 block->set3DType(Convert_3D_Type::Cube);
                 block->setDepth(61);
