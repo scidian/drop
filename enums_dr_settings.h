@@ -249,7 +249,6 @@ enum class Properties {
     World_Camera_Type                   = 174,      // list, enum class Render_Type
     World_Camera_Slop                   = 177,      // percent
     World_Camera_Switch_Speed           = 175,      // positive double
-    World_Camera_Object_Angle           = 185,      // bool
 
     // Appearance
     World_Filter_Bitrate                = 35,       // ranged int, 0 to 256
@@ -359,6 +358,7 @@ enum class Properties {
     Thing_Character_Camera_Up_Vector    = 182,      // list, enum class Up_Vector
     Thing_Character_Camera_Zoom         = 173,      // double
     Thing_Character_Camera_Lag          = 176,      // double
+    Thing_Character_Camera_Match_Angle  = 185,      // bool
 
     // Object Settings
     Thing_Object_Physics_Type           = 84,       // list, enum class Body_Type (Static, Kinematic, Dynamic)

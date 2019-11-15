@@ -69,6 +69,7 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
         camera->setRotation(    follow->getCameraRotation() );
         camera->setZoom(        follow->getCameraZoom() );
         camera->setLag(         follow->getCameraLag() );
+        camera->setMatchAngle(  follow->getCameraMatch() );
         camera->setTarget(      camera->getPosition() );
         camera->setUpVector(    follow->getCameraUpVector() );
         follow->setActiveCameraKey(new_key);
@@ -84,7 +85,7 @@ void DrEngineWorld::moveCameras(double milliseconds) {
         if (m_switching_cameras) {
             m_switch_milliseconds += milliseconds;
 
-            DrEngineCamera *target_camera = getCamera(m_active_camera);
+            DrEngineCamera *target_camera = getCamera(m_active_camera);           
 
             // Linear Interpolation of temporary values
             QVector3D target_position = target_camera->getPosition();
@@ -108,6 +109,7 @@ void DrEngineWorld::moveCameras(double milliseconds) {
             m_temp_up_vector =      m_switch_up_vector;
             m_temp_z_order =        m_switch_z_order;
             m_temp_zoom =           m_switch_zoom;
+            m_temp_match =          target_camera->getMatchAngle();
 
             SmoothMove(m_temp_follow_angle, target_following_rotation,  0.001 * cam_switch_speed, m_switch_milliseconds );
             SmoothMove(m_temp_z_order,      target_z_order,             0.001 * cam_switch_speed, m_switch_milliseconds );
@@ -124,7 +126,8 @@ void DrEngineWorld::moveCameras(double milliseconds) {
                 m_temp_zoom =           DrOpenGL::zoomPowToScale( target_zoom_as_pow );
                 m_temp_follow_angle =   target_following_rotation;
                 m_temp_up_vector =      target_up_vector;
-                m_switching_cameras = false;
+                m_temp_match =          false;
+                m_switching_cameras =   false;
             }
         }
     }
@@ -150,6 +153,7 @@ void DrEngineWorld::switchCameras(long new_camera) {
         m_switch_follow_angle = Dr::EqualizeAngle0to360(m_switch_follow_angle);
     m_switch_up_vector = getCameraUpVector();
     m_switch_z_order = static_cast<double>(getCameraFollowingZ());
+    m_switch_match = getCameraMatching();
 
     m_temp_position =       m_switch_position;
     m_temp_rotation =       m_switch_rotation;
@@ -157,6 +161,7 @@ void DrEngineWorld::switchCameras(long new_camera) {
     m_temp_follow_angle =   m_switch_follow_angle;
     m_temp_up_vector =      m_switch_up_vector;
     m_temp_z_order =        m_switch_z_order;
+    m_temp_match =          m_switch_match;
 
     m_switching_cameras = true;
     m_active_camera = new_camera;
@@ -278,6 +283,14 @@ QVector3D DrEngineWorld::getCameraUpVector() {
     if (m_active_camera == 0) {                     return c_up_vector_y;
     } else if (m_switching_cameras == false) {      return (m_cameras[m_active_camera]->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
     } else {                                        return m_temp_up_vector;
+    }
+}
+
+// Returns Camera Matching Object Angle
+bool DrEngineWorld::getCameraMatching() {
+    if (m_active_camera == 0) {                     return false;
+    } else if (m_switching_cameras == false) {      return (m_cameras[m_active_camera]->getMatchAngle());
+    } else {                                        return (m_temp_match || m_switch_match);
     }
 }
 

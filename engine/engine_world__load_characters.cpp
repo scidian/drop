@@ -41,6 +41,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     double  cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
     QPointF cam_lag =       thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag).toPointF();
     int     up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
+    bool    cam_match =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle).toBool();
     Up_Vector cam_up =      static_cast<Up_Vector>(up_vector);
 
     QPointF max_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
@@ -81,6 +82,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCameraZoom( cam_zoom );                                                                      // Set active camera zoom
     player->setCameraLag( DrPointF(cam_lag.x(), cam_lag.y()) );                                             // Set active camera lag
     player->setCameraUpVector(cam_up);                                                                      // Set active camera up vector
+    player->setCameraMatch(cam_match);
 
     // ***** Apply Character Settings
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {

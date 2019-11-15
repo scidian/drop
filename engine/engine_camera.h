@@ -34,6 +34,7 @@ private:
                                                                 //              Z Rotation, tilts head
 
     DrPointF        m_lag = { 0.0, 0.0 };                       // Current camera lag when following object
+    bool            m_match_angle = false;                      // Does this camera match angle of following object
     double          m_zoom = 1.0;                               // Current camera zoom level
 
     QVector3D       m_target;                                   // Calculated point this camera is moving towards
@@ -69,6 +70,7 @@ public:
 
     const int&          getBufferSize()     { return m_buffer_size; }
     const DrPointF&     getLag()            { return m_lag; }
+    const bool&         getMatchAngle()     { return m_match_angle; }
     const QVector3D&    getPosition()       { return m_position; }
     const QVector3D&    getRotation()       { return m_rotation; }
     const QVector3D&    getSpeed()          { return m_speed; }
@@ -79,6 +81,7 @@ public:
     void                setBufferSize(int slop) { m_buffer_size = (slop < 1) ? 1 : slop; }
     void                setLag(DrPointF lag) { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
                                                m_lag.y = (lag.y <= 0) ? 0 : lag.y; }
+    void                setMatchAngle(bool match) { m_match_angle = match; }
 
     void                setPosition(QVector3D new_position) {       m_position = new_position; }
     void                setPosition(double x, double y, double z) { m_position = QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }

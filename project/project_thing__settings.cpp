@@ -85,8 +85,10 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt, Property_Type::Double, 0.0,
                            "Camera Tilt", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the tilt angle (Z Axis rotation) of that camera. ");
-
-
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle, Property_Type::Bool, false,
+                           "Match Angle?", "Every Character has a Camera attached which always looks directly at the Character. "
+                                           "Should this camera rotate to so that it matches the Character's Z Rotation? "
+                                           "Good for first person perspective movement. ");
 }
 
 //####################################################################################

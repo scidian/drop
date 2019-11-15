@@ -82,7 +82,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     }
 
     // ***** Rotation locked to Camera Follow Thing
-    if (world->cam_object_angle) {
+    if (world->getCameraMatching()) {
         float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
         float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
 

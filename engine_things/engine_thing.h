@@ -55,7 +55,7 @@ private:
     double          m_camera_zoom = 1.0;                            // Camera Magnification Level         for this objects Active (Follow) Camera
     DrPointF        m_camera_lag { 0.0, 0.0 };                      // Camera Movement Lag Amount         for this objects Active (Follow) Camera
     Up_Vector       m_camera_up = Up_Vector::Y;                     // Camera Up Vector                   usually Y, Z for first person
-
+    bool            m_camera_match_angle = false;                   // Should Camera Match Angle of Object Following
 
 public:
     // ***** Image Post Processing Attributes
@@ -145,6 +145,8 @@ public:
     DrPointF                getCameraLag()              { return m_camera_lag; }
     void                    setCameraLag(DrPointF lag)  { m_camera_lag.x = (lag.x <= 0) ? 0 : lag.x;
                                                           m_camera_lag.y = (lag.y <= 0) ? 0 : lag.y; }
+    bool                    getCameraMatch()            { return m_camera_match_angle; }
+    void                    setCameraMatch(bool match)  { m_camera_match_angle = match; }
     Up_Vector               getCameraUpVector()         { return m_camera_up; }
     void                    setCameraUpVector(Up_Vector up) { m_camera_up = up; }
     double                  getCameraZoom()             { return m_camera_zoom; }

@@ -91,6 +91,7 @@ private:
     double          m_switch_follow_angle;          // Used for tweening between cameras
     QVector3D       m_switch_up_vector;             // Used for tweening between cameras
     double          m_switch_z_order;               // Used for tweening between cameras
+    bool            m_switch_match = false;         // Used for tweening between cameras
 
     QVector3D       m_temp_position;                // Used for tweening between cameras
     QVector3D       m_temp_rotation;                // Used for tweening between cameras
@@ -98,6 +99,8 @@ private:
     double          m_temp_follow_angle;            // Used for tweening between cameras
     QVector3D       m_temp_up_vector;               // Used for tweening between cameras
     double          m_temp_z_order;                 // Used for tweening between cameras
+    bool            m_temp_match = false;           // Used for tweening between cameras
+
 
     // Scene Variables
     double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
@@ -120,7 +123,6 @@ public:
     bool            has_scene = false;                          // True after a scene has been loaded into cpSpace    
     Render_Type     render_type = Render_Type::Perspective;     // Should render Perspective or Orthographic?
     Render_Mode     render_mode = Render_Mode::Mode_2D;         // Should render in 2D or 3D?
-    bool            cam_object_angle = false;                   // Locks Camera angle to character angle
     double          cam_switch_speed = 1.0;                     // Multiplier for Camera switching speed
 
     long            effect_count = 0;                           // Stores number of effects being rendered
@@ -214,6 +216,7 @@ public:
     double              getCameraRotationZ();
     double              getCameraFollowingRotation();
     float               getCameraFollowingZ();
+    bool                getCameraMatching();
     QVector3D           getCameraUpVector();
     double              getCameraZoom();
     void                moveCameras(double milliseconds);
