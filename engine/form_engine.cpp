@@ -190,6 +190,7 @@ void FormEngine::loadDemo(Demo_Player using_player) {
     g_keyboard_x = 0.0;
     g_keyboard_y = 0.0;
     g_jump_button = false;
+    g_shoot_button = false;
     g_pedal = Pedal::None;
 
     // Save Demo Types

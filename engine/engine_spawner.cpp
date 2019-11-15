@@ -10,6 +10,7 @@
 #include "engine/engine_spawner.h"
 #include "engine/engine_world.h"
 #include "engine_things/engine_thing.h"
+#include "engine_things/engine_thing_object.h"
 
 
 //####################################################################################
@@ -30,6 +31,7 @@ DrEngineSpawner::DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Sp
     setSpawnRate( rate );
     setSpawnRateVariable( rate_variable );
     setSpawnCount( spawn_count );
+    setSpawnStartCount( spawn_count );
     setSpawnsRemaining( spawns_remaining );
 
     if (attached_id != c_no_key) setAttachedThingKey(attached_id);
@@ -41,12 +43,7 @@ DrEngineSpawner::DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Sp
     setSpawnVariableY( y_variable );
 
     // Set up timer for first spawn
-    resetSpawnTime();
-    if (spawn_instantly) {
-        m_next_spawn = 0.0;
-    } else {
-        setNextSpawnTimeAmount();
-    }
+    setSpawnerForFirstTime();
 }
 
 
@@ -66,6 +63,16 @@ void DrEngineSpawner::setNextSpawnTimeAmount() {
     double wait_time = getSpawnRate() + (QRandomGenerator::global()->bounded(getSpawnRateVariable() * 2.0) - getSpawnRateVariable());
     if (wait_time < 0) wait_time = 0;
     m_next_spawn = wait_time;
+}
+
+void DrEngineSpawner::setSpawnerForFirstTime() {
+    resetSpawnTime();
+    setSpawnCount( getSpawnStartCount() );
+    if (getSpawnInstantly()) {
+        m_next_spawn = 0.0;
+    } else {
+        setNextSpawnTimeAmount();
+    }
 }
 
 
@@ -88,27 +95,72 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     // ***** Add milliseconds since last time we were here (time is passed by engine so its possible to pause in game)
     addTimePassed(time_passed);
 
+    // ***** Init spawn adjustments
+    double x_pos =      getLocation().x;
+    double y_pos =      getLocation().y;
+    double x_scale =    1.0;
+    double y_scale =    1.0;
+    double angle =      0.0;
+
+    // ***** Check for attachment and alter spawn adjustments
+    if (isAttached()) {
+        DrEngineThing  *thing = getAttachedThing();
+        if (thing == nullptr) {
+            setReadyForRemoval();
+            return object;
+        }
+        x_pos = thing->getPosition().x;
+        y_pos = thing->getPosition().y;
+        x_scale = static_cast<double>(thing->getScaleX());
+        y_scale = static_cast<double>(thing->getScaleY());
+        angle = thing->getAngle();
+    }
+
+
+    // ##### NEED IMPLEMENT
+    //Spawn_Type::Object_Death
+
+
+    // ***** Process Jump Spawn Type
+    if (getSpawnType() == Spawn_Type::Jump_Button) {
+        if (m_last_key_jump_status == false && g_jump_button) {
+            setSpawnerForFirstTime();
+        }
+        if (g_jump_button) {
+            if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
+                object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle );
+                resetSpawnTime();
+                setNextSpawnTimeAmount();
+                if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
+            }
+        }
+    }
+    m_last_key_jump_status = g_jump_button;
+
+
+    // ***** Process Shoot Spawn Type
+    if (getSpawnType() == Spawn_Type::Shoot_Button) {
+        if (m_last_key_shoot_status == false && g_shoot_button) {
+            setSpawnerForFirstTime();
+        }
+        if (g_shoot_button) {
+            if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
+                object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle );
+                resetSpawnTime();
+                setNextSpawnTimeAmount();
+                if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
+            }
+        }
+    }
+    m_last_key_shoot_status = g_shoot_button;
+
 
     // ***** Process Permanent Spawn Type
     if (getSpawnType() == Spawn_Type::Permanent) {
         if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
-            double x_pos = getLocation().x;
-            double y_pos = getLocation().y;
-
-            if (isAttached()) {
-                DrEngineThing *thing = getAttachedThing();
-                if (thing == nullptr) {
-                    setReadyForRemoval();
-                    return object;
-                }
-                x_pos = thing->getPosition().x;
-                y_pos = thing->getPosition().y;
-            }
-            object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos );
-
+            object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle );
             resetSpawnTime();
             setNextSpawnTimeAmount();
-
             if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
         }
         if (getSpawnCount() == 0) setReadyForRemoval();

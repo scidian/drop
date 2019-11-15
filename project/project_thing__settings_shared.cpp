@@ -36,7 +36,7 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y), "Position", position_text);
 
     QString transform_title = "Rotation Z";
-    QString transform_text =  "Starting rotation of object on the Z Axis. Does affect physics collision shape.";
+    QString transform_text =  "Starting rotation, in degrees, of item on the Z Axis. Does affect physics collision shape.";
     if (type == DrThingType::Camera) {
         transform_title = "Camera Tilt";
         transform_text =  "Starting tilt / rotation of camera on the Z Axis.";

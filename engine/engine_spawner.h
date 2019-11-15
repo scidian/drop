@@ -26,14 +26,21 @@ private:
     DrThing        *m_thing_to_spawn = nullptr;                 // Reference to the object we wish to spawn
     DrPointF        m_original_location { 0, 0 };               // Original location of Spawner, used to take Spawner out of scene as
                                                                 // gameplay proceeds and not attached to Object
+    // Time Variables
     double          m_time_passed;                              // Time last spawn occured
     double          m_next_spawn;                               // Seconds until next spawn
     bool            m_delete_me = false;                        // Mark for deletion when spawner is empty
 
+    // Key Trackers
+    bool            m_last_key_jump_status = false;             // Track Jump Key
+    bool            m_last_key_shoot_status = false;            // Track Shoot Key
+
+    // Spawn Properties
     bool            m_spawn_instantly = true;                   // Spawn instantly, or wait initial m_spawn_rate before spawning?
     double          m_spawn_rate = 1000;                        // Spawn rate in seconds
     double          m_spawn_rate_variable = 0;                  // Spawn rate + or - seconds
     int             m_spawn_count = 1;                          // Total spawn count
+    int             m_spawn_start_count = 1;                    // Keeps track of initial spawn count
     int             m_spawns_remaining = 1;                     // Spawns remaining, can be reset in case of Shoot or Jump button
     Spawn_Type      m_spawn_type = Spawn_Type::Permanent;       // Spawn Type (permanent, shoot button, jump button, object death, etc)
 
@@ -62,9 +69,7 @@ public:
     ~DrEngineSpawner() { }
 
     // Function Calls
-    void            setNextSpawnTimeAmount();
     bool            readyForRemoval()       { return m_delete_me; }
-
 
     // Spawning
     DrEngineObject* update(double time_passed, double time_warp, QRectF area, bool use_area = true);
@@ -75,6 +80,8 @@ public:
     double          getSecondsUntilNextSpawn()          { return m_next_spawn; }
     void            resetSpawnTime()                    { m_time_passed = 0.0; }
     double          secondsSinceLastSpawn()             { return m_time_passed; }
+    void            setNextSpawnTimeAmount();
+    void            setSpawnerForFirstTime();
 
 
     // Getters & Setters
@@ -84,6 +91,7 @@ public:
     const double&   getSpawnRate()          { return m_spawn_rate; }
     const double&   getSpawnRateVariable()  { return m_spawn_rate_variable; }
     const int&      getSpawnCount()         { return m_spawn_count; }
+    const int&      getSpawnStartCount()    { return m_spawn_start_count; }
     const int&      getSpawnsRemaining()    { return m_spawns_remaining; }
     Spawn_Type      getSpawnType()          { return m_spawn_type; }
 
@@ -102,6 +110,7 @@ public:
     void            setSpawnRate(double spawn_rate)         { m_spawn_rate = spawn_rate; }
     void            setSpawnRateVariable(double variable)   { m_spawn_rate_variable = variable; }
     void            setSpawnCount(int count)                { m_spawn_count = count; }
+    void            setSpawnStartCount(int count)           { m_spawn_start_count = count; }
     void            setSpawnsRemaining(int remaining)       { m_spawns_remaining = remaining; }
     void            setSpawnType(Spawn_Type type)           { m_spawn_type = type; }
 

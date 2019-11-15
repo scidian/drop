@@ -29,6 +29,13 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
     std::vector<DrEngineSpawner*>   spawners;           spawners.clear();
     std::vector<DrEngineThing*>     things_in_stage;    things_in_stage.clear();
 
+    // Add Character to thing list for Start Stages
+    if (start_stage) {
+        for (auto thing : m_things) {
+            things_in_stage.push_back(thing);
+        }
+    }
+
 
     // ********** Load Things
     for (auto thing_pair : stage->getThingMap()) {

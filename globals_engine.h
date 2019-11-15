@@ -56,7 +56,8 @@ typedef std::map<long, DrEngineWorld*>      EngineWorldMap;
 // Input / Engine Globals - defined in engine_update_player.cpp
 extern double       g_keyboard_x;                       // Used to pass keyboard x button state to static callback functions
 extern double       g_keyboard_y;                       // Used to pass keyboard y button state to static callback functions
-extern bool         g_jump_button;                      // Used to pass jump button state to static callback functions
+extern bool         g_jump_button;                      // Used to pass jump  button state to static callback functions
+extern bool         g_shoot_button;                     // Used to pass shoot button state to static callback functions
 extern Pedal        g_pedal;                            // Used to pass Pedal button state
 
 extern cpVect       g_gravity_normal;                   // Stores a gravity as a normalized vector for use in static callback functions

@@ -151,13 +151,17 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 //##    Loads one DrProject DrThingType::Object to World / Space
 //####################################################################################
-DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double x, double y) {
+DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing, double x, double y, double scale_x, double scale_y, double angle) {
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset =     m_project->getAsset(asset_key);
             if (asset == nullptr) return nullptr;
     ThingInfo   info =          loadThingBasicInfo( thing );
+                info.scale.x *= scale_x;
+                info.scale.y *= scale_y;
+                info.angle   -= angle;
+
     bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
     int         collide_with =  thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collision_Group).toInt();
     int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();

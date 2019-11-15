@@ -20,6 +20,7 @@
 double   g_keyboard_x = 0;                              // Set to -1 for left, 1 for right
 double   g_keyboard_y = 0;                              // Set to -1 for down, 1 for up
 bool     g_jump_button = false;                         // Set to False for Not-Pressed, True for Pressed
+bool     g_shoot_button = false;                        // Set to False for Not-Pressed, True for Pressed
 Pedal    g_pedal = Pedal::None;                         // Pedal enumeration for rotate key state
 
 cpVect   g_gravity_normal = cpv(0, 0);
@@ -67,13 +68,15 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ********** Get Keys - If player is still active, get keyboard status
     double  key_x =     0;
     double  key_y =     0;
-    int     key_jump =  0;
+    bool    key_jump =  false;
+    bool    key_shoot = false;
     Pedal   pedal = Pedal::None;
 
     if (!object->hasLostControl()) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
+        key_shoot = g_shoot_button;
         pedal =     g_pedal;
 
         cpVect pos = cpBodyGetPosition(object->body);
