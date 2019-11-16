@@ -134,7 +134,9 @@ namespace Advisor_Info {
                                                                      "with mouse. Either have the center of the selection group snap to the grid, or have each "
                                                                      "object within the group snap to grid individually." };
 
-    const HeaderBodyList Play_Game              { "Play Game",  "Start playing game." };
+    const HeaderBodyList Play_Game              { "Play Game",  "Start playing game! Gameplay starts at the Start Stage of the World selected." };
+    const HeaderBodyList Play_Stage             { "Play Stage", "Play ONLY the current Stage. Gameplay starts at the Start Stage of the current World "
+                                                                "and only loads in the Stage currently selected." };
 
 
     // Form Main Widgets

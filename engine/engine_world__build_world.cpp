@@ -32,8 +32,9 @@
 void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use) {
 
     // ***** Basic World Proeprties
-    m_background_color = QColor(0, 0, 0);
-    m_ambient_light = 50;
+    m_background_color =    QColor(0, 0, 0);
+    m_ambient_light =       50;
+    m_max_game_distance =   0.0;
 
     // ***** Create Physics World
     m_space = cpSpaceNew();                             // Creates an empty space

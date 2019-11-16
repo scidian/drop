@@ -61,6 +61,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
                                    .translate(-m_game_start.x, -m_game_start.y);
         QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
         m_game_distance = rotated.x() - m_game_start.x;
+        m_max_game_distance = Dr::Max(m_game_distance, m_max_game_distance);
 
         if (m_loaded_to - m_game_distance < m_load_buffer) {
             addStage();
@@ -155,7 +156,14 @@ void DrEngineWorld::addStage() {
         // !!!!! NEED TO IMPLEMENT
         int  cooldown =      stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Cooldown).toInt();
 
-        if (stage_enabled && stage->getName() != "Start Stage") {
+        // "Play Stage" Mode
+        if (m_engine->getFormEngine()->stage_key != c_no_key) {
+            if (stage->getKey() == m_engine->getFormEngine()->stage_key) {
+                stages.append(stage_pair.second);
+            }
+
+        // Normal Mode
+        } else if (stage_enabled && stage->getName() != "Start Stage") {
             if (m_loaded_to > stage_start) {
                 if (m_loaded_to < stage_end || stage_end <= 0) {
                     stages.append(stage_pair.second);

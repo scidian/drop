@@ -99,6 +99,7 @@ enum class Buttons_Grid {
 
 enum class Buttons_Play {
     Play,
+    Play_Stage,
 };
 
 

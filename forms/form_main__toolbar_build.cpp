@@ -206,7 +206,7 @@ void FormMain::buildToolBar() {
     widgetGroupPlay->setObjectName(QStringLiteral("widgetGroupPlay"));
     widgetGroupPlay->setFixedHeight(46);
         QHBoxLayout *toolbarLayoutPlay = new QHBoxLayout(widgetGroupPlay);
-        toolbarLayoutPlay->setSpacing(1);
+        toolbarLayoutPlay->setSpacing(5);
         toolbarLayoutPlay->setContentsMargins(0, 0, 0, 0);
 
         buttonsGroupPlay = new QButtonGroup();
@@ -216,6 +216,11 @@ void FormMain::buildToolBar() {
         tool = createToolbarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, 48, 26, false, true);
         buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play));
         toolbarLayoutPlay->addWidget(tool);
+
+        tool = createToolbarButton(QStringLiteral("buttonPlayStage"), Advisor_Info::Play_Stage, 34, 26, false, true);
+        buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play_Stage));
+        toolbarLayoutPlay->addWidget(tool);
+
         toolbarLayoutPlay->addWidget(createToolbarSpacer(24, 34, false));
 
 

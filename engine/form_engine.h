@@ -71,6 +71,9 @@ public:
     double              fps_physics =       60.0;
     double              fps_camera =        60.0;
 
+    // Stage Variables
+    long                stage_key = c_no_key;                   // If "Play Stage" was clicked, this will hold the Key of Stage
+
     // Debug Variables
     bool                debug_shapes =      false;
     bool                debug_collisions =  false;

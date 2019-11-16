@@ -179,10 +179,18 @@ void FormMain::buttonGroupPlayClicked(int id) {
     Buttons_Play clicked = static_cast<Buttons_Play>(id);
 
     if (clicked == Buttons_Play::Play) {
-
         FormEngine *engine = new FormEngine(m_project);             // !!!!! #NOTE: Does not like to be a child?
         engine->show();
 
+    } else if (clicked == Buttons_Play::Play_Stage) {
+        FormEngine *engine = new FormEngine(m_project);
+        engine->stage_key = this->getStageView()->getDrScene()->getCurrentStageKeyShown();
+
+        DrStage *stage = m_project->findStageFromKey(engine->stage_key);
+        if (stage != nullptr) {
+            if (stage->isStartStage()) engine->stage_key = 0;
+        }
+        engine->show();
     }
 }
 
