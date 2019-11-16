@@ -123,19 +123,14 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
                 double forced_speed_x = object->getForcedSpeedX();
                 double forced_speed_y = object->getForcedSpeedY();
                 if (object->getAngleMovement()) {
-
                     QTransform t = QTransform().rotate(object->getAngle());
                     QPointF forced_angle = t.map( QPointF(forced_speed_x, forced_speed_y) );
                         forced_speed_x = forced_angle.x();
                         forced_speed_y = forced_angle.y();
-
-//                    DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, -forced_speed_y), DrPointF(0, 0), object->getAngle() );
-//                    forced_speed_x = forced_angle.x;
-//                    forced_speed_y = forced_angle.y;
                 }
 
-                // If has forced use that, otherwise if kinematic use that velocity, otherwise keep velocity at zero for dynamic objects
-                if (Dr::IsCloseTo(forced_speed_x, 0.0, 0.001) == false || Dr::IsCloseTo(forced_speed_y, 0.0, 0.001) == false) {
+                // Use Forced Speed for Dynamic objects, otherwise use Current Velocity of Kinematic objects
+                if (object->body_type == Body_Type::Dynamic) {
                     x_velocity = forced_speed_x;
                     y_velocity = forced_speed_y;
                 } else if (object->body_type == Body_Type::Kinematic) {

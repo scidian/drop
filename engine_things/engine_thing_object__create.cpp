@@ -54,11 +54,11 @@ void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
 
 void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
-    if (Dr::FuzzyCompare(this->getScaleX(), this->getScaleY()) == false) {
+    if (Dr::FuzzyCompare(abs(this->getScaleX()), abs(this->getScaleY())) == false) {
         QVector<DrPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
         addShapePolygon(points);
     } else {
-        double  radius = circle_radius * static_cast<double>(this->getScaleX());
+        double  radius = circle_radius * static_cast<double>(abs(this->getScaleX()));
         cpVect  offset = cpv(shape_offset.x, shape_offset.y);                                       // Offset of collision shape
         cpShape *shape = cpCircleShapeNew(this->body, radius, offset);
         double    area = cpAreaForCircle( 0, circle_radius );

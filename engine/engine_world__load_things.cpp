@@ -169,19 +169,20 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     int         collide_with =  thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collision_Group).toInt();
     int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
-    // Adjust loading position from Spawn Offset
+    // ***** Adjust loading position from Spawn Offset
     QPointF     spawn_off_x =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
     QPointF     spawn_off_y =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();
     double spawn_x = spawn_off_x.x() + (QRandomGenerator::global()->bounded(spawn_off_x.y() * 2.0) - spawn_off_x.y());
     double spawn_y = spawn_off_y.x() + (QRandomGenerator::global()->bounded(spawn_off_y.y() * 2.0) - spawn_off_y.y());
     DrPointF spawn_rotate;
-    //if (Dr::FuzzyCompare(rotate_spawn, 0.0))
-    //     spawn_rotate = DrPointF(spawn_x, spawn_y);
-    spawn_rotate = Dr::RotatePointAroundOrigin(DrPointF(spawn_x, -spawn_y), DrPointF(0, 0), rotate_spawn);
+    QTransform t = QTransform().rotate(rotate_spawn);
+    QPointF spawn_angle = t.map( QPointF(spawn_x * scale_x, spawn_y * scale_y) );
+        spawn_rotate.x = spawn_angle.x();
+        spawn_rotate.y = spawn_angle.y();
     double x_offset = spawn_rotate.x;
     double y_offset = spawn_rotate.y;
 
-    // Load Physics Properties
+    // ***** Load Physics Properties
     bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
     QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
@@ -190,7 +191,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
-    // Set Chipmunk Body Type
+    // ***** Set Chipmunk Body Type
     Body_Type body_type = Body_Type::Static;
     switch (physics) {
         case 0: body_type = Body_Type::Static;       break;
@@ -204,7 +205,6 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
                                                use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, block);
     block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
-    addThing(block);
 
     // ***** Set collision type
     Collision_Type collision_type = Collision_Type::Damage_None;
@@ -227,9 +227,9 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     // ***** Velocity settings
     QPointF vel_x = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_X).toPointF();
     QPointF vel_y = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_Y).toPointF();
-    QPointF rotation_vel =  thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Spin_Velocity).toPointF();
-    bool    angle_velocty = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Velocity).toBool();
-    bool    angle_player =  thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Player).toBool();
+    QPointF rotation_vel =      thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Spin_Velocity).toPointF();
+    bool    angle_velocity =    thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Velocity).toBool();
+    bool    angle_player =      thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Player).toBool();
 
     cpVect velocity;
     velocity.x = vel_x.x() + (QRandomGenerator::global()->bounded(vel_x.y() * 2.0) - vel_x.y());
@@ -245,7 +245,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
             block->setOriginalVelocityX( velocity.x + x_velocity );
             block->setOriginalVelocityY( velocity.y + y_velocity );
             block->setOriginalSpinVelocity( rad_angular );
-            block->setUseAngleVelocity( angle_velocty );
+            block->setUseAngleVelocity( angle_velocity );
             block->setRotateToPlayer( angle_player );
         }
     }
@@ -256,7 +256,8 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double  gravity_multi = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier).toDouble();
     QPointF surface_vel =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity).toPointF();
 
-    QTransform t; t.rotate(one_way_angle);
+    t.reset();
+    t.rotate(one_way_angle);
     QPointF one_way_point = t.map(QPoint(0.0, 1.0));
     block->setOneWay(static_cast<One_Way>(one_way_type));
     block->setOneWayDirection(DrPointF(one_way_point.x(), one_way_point.y()));
@@ -272,6 +273,9 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     // ***** 3D Settings
     loadThing3DSettings(thing, block);
 
+
+    // ********** Add to world
+    addThing(block);
     return block;
 }
 

@@ -98,7 +98,7 @@ void DrThing::addComponentMovement() {
                            "Rotate Speed Z", "Initial rotational speed Object on the Z Axis, +/- variable amount. <br><br> "
                                              "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Velocity, Property_Type::Bool, true,
-                           "Relative Angle?", "Should the Rotation of this object affect it's Movement direction? (allows Object to move "
+                           "Relative Angle?", "Should the Rotation and Scale of this object affect it's Movement direction? (allows Object to move "
                                               "along an arc instead of spinning in place) <br> "
                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Player, Property_Type::Bool, false,
