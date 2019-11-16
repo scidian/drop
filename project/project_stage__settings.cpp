@@ -33,14 +33,17 @@ void DrStage::initializeStageSettings(QString new_name) {
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for this stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
 
+
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Enabled, Property_Type::Bool, true,
+                           "Enabled?", "Should this Stage be able to be shown?");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
                            "Start", "Start showing stage at this distance.");
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, 1200,
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, -1,
                            "End", "Stop showing stage at this distance, -1 for always show.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Size, Property_Type::Positive, 1200,
                            "Size", "Length of stage.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Cooldown, Property_Type::Positive, 0,
-                           "Cooldown", "Distance to wait after stage plays before it is possible to be shown again.");
+                           "Cooldown", "Distance to wait after stage plays before it is possible to start showing again.");
 
 
     addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "

@@ -167,6 +167,7 @@ public:
     // World Construction / Handling
     void            addPlayer(Demo_Player new_player_type);
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void            addStage();
     void            addThing(DrEngineThing *thing);
     void            addThings(QList<DrEngineThing*> things);
     void            buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
@@ -192,6 +193,8 @@ public:
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
 
     void            updateSpace(double time_passed);
+    void            updateSpawners(double time_passed, double time_warp, QRectF &area);
+    void            updateThings(double time_passed, double time_warp, QRectF &area);
     void            updateWorld(double time_passed);
     void            wakeAllBodies();
 
@@ -250,6 +253,9 @@ public:
     const double&       getAmbientLight()           { return m_ambient_light; }
     const double&       getGlowZOrder()             { return m_glow_light_z_order; }
     Blend_Mode          getGlowBlendMode()          { return static_cast<Blend_Mode>(m_glow_blend_mode); }
+
+    double              getDistance()               { return m_game_distance; }
+    double              getLoadedTo()               { return m_loaded_to; }
 
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }
     void                setGravity(cpVect new_gravity) { m_gravity = new_gravity; }

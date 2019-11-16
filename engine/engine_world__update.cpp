@@ -41,66 +41,20 @@ void DrEngineWorld::updateWorld(double time_passed) {
     // ***** Calculate area that if Things are within, they can stay in the Space
     QRectF threshold(getCameraPositionX() - getDeleteThresholdX(),
                      getCameraPositionY() - getDeleteThresholdY(),
-                     getDeleteThresholdX()*2.0,
-                     getDeleteThresholdY()*2.0);
+                     getDeleteThresholdX()*2.0, getDeleteThresholdY()*2.0);
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
 
 
-    g_info = "Spawners: " + QString::number(m_spawners.size()) + ", Things: " + QString::number(m_things.size());
+    // ***** Iterate through Things, delete if they go off screen
+    updateThings(time_passed, m_time_warp, threshold);
+
+    // ***** Iterate through Spawners, delete if they go off screen, run out of Spawns
+    updateSpawners(time_passed, m_time_warp, threshold);
 
 
-    // ********** Iterate through Things, delete if they go off screen
-    for (auto it = m_things.begin(); it != m_things.end(); ) {
-        DrEngineThing *thing = *it;
-
-        // ***** Update Thing
-        thing->calculateTimeSinceLastUpdate();
-        bool remove = thing->update(time_passed, m_time_warp, threshold);
-
-        // ***** Process Removal
-        if (remove) {
-            // Let Spawners know that the Object they're attached to is being deleted
-            for (auto spawner : thing->getSpawners()) {
-                spawner->setAttachedThing(nullptr);
-            }
-            // Delete Thing, remember delete recursively calls children destructors
-            delete thing;
-            it = m_things.erase(it);
-            continue;
-        }
-
-        // ***** Increment for loop
-        it++;
-    }   // End For
-
-
-    // ********** Iterate through Spawners, delete if they go off screen, run out of Spawns
-    for (auto it = m_spawners.begin(); it != m_spawners.end(); ) {
-        DrEngineSpawner *spawner = *it;
-
-        // ***** Update Spawner
-        spawner->update(time_passed, m_time_warp, threshold);
-
-        // ***** Process Removal
-        if (spawner->readyForRemoval()) {
-            // Let Attached Object know Spawner is being deleted
-            if (spawner->getAttachedThing() != nullptr) {
-                spawner->getAttachedThing()->removeSpawner(spawner);
-            }
-            delete spawner;
-            it = m_spawners.erase(it);
-            continue;
-        }
-
-        // ***** Increment for loop
-        it++;
-    }   // End For
-
-
-    // ********** Calculate distance and load new stage if we need to
-    bool should_add_stage = false;
+    // ***** Calculate distance and Add New Stage if needed
     if (has_scene == true) {
         QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
                                    .rotate(    m_game_direction)
@@ -108,36 +62,8 @@ void DrEngineWorld::updateWorld(double time_passed) {
         QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
         m_game_distance = rotated.x() - m_game_start.x;
 
-        ///g_info = "Distance: \t" + QString::number(int(m_game_distance)) +
-        ///       ", Loaded To: " + QString::number(m_loaded_to);
-
-        if (m_loaded_to - m_game_distance < m_load_buffer)
-            should_add_stage = true;
-    }
-
-    // ********** Adds a Stage if necessary
-    if (should_add_stage) {
-        DrWorld *world = m_project->getWorld(m_world);
-
-        // Pick a random stage other than start stage
-        QVector<DrStage*> stages;
-        for (auto stage_pair : world->getStageMap()) {
-            if (stage_pair.second->getName() != "Start Stage") {
-                stages.append(stage_pair.second);
-            }
-        }
-
-        // If there is at least one other stage available, load it up
-        if (stages.count() >= 1) {
-            int stage_count = static_cast<int>(stages.size());
-            int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
-            DrStage *stage = stages[stage_num];
-
-            QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
-                                       .rotate(   -m_game_direction)
-                                       .translate(-m_game_start.x, -m_game_start.y);
-            QPointF rotated = t.map( QPointF( m_loaded_to, 0 ));
-            loadStageToWorld(stage, rotated.x(), rotated.y());
+        if (m_loaded_to - m_game_distance < m_load_buffer) {
+            addStage();
         }
     }
 
@@ -151,73 +77,108 @@ void DrEngineWorld::updateWorld(double time_passed) {
 }
 
 
-
 //####################################################################################
-//##    Updates Physics Object Velocity
+//##    Iterate through Things, delete if they go off screen
 //####################################################################################
-extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
-    // ***** Grab object from User Data
-    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
-    if (object == nullptr) return;
+void DrEngineWorld::updateThings(double time_passed, double time_warp, QRectF &area) {
+    for (auto it = m_things.begin(); it != m_things.end(); ) {
+        DrEngineThing *thing = *it;
 
-    // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    if (object->ignoreGravity()) {
-        cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
-    } else {
-        cpBodyUpdateVelocity(body, gravity, damping, dt);
+        // ***** Update Thing
+        thing->calculateTimeSinceLastUpdate();
+        bool remove = thing->update(time_passed, time_warp, area);
+
+        // ***** Process Removal
+        if (remove) {
+            // Let Spawners know that the Object they're attached to is being deleted
+            for (auto spawner : thing->getSpawners()) {
+                spawner->setAttachedThing(nullptr);
+            }
+
+            // Delete Thing, #NOTE: Remember that delete recursively calls children destructors
+            delete thing;
+            it = m_things.erase(it);
+            continue;
+        }
+
+        // ***** Increment for loop
+        it++;
     }
 }
 
 //####################################################################################
-//##    Updates Kinematic Angular Velocity
+//##    Iterate through Spawners, delete if they go off screen or run out of Spawns
 //####################################################################################
-extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
-    // Grab object from User Data
-    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
-    if (object == nullptr) return;
+void DrEngineWorld::updateSpawners(double time_passed, double time_warp, QRectF &area) {
+    for (auto it = m_spawners.begin(); it != m_spawners.end(); ) {
+        DrEngineSpawner *spawner = *it;
 
-    // Try and turn object to rotate toward player
-    if (object->getRotateToPlayer()) {
-        // Angle to Player
-        cpVect my_pos =     cpBodyGetPosition(body);
-        double my_angle =   cpBodyGetAngle(body);
-        double angle1 =     Dr::CalcRotationAngleInDegrees(DrPointF(my_pos.x, my_pos.y), g_player_position);
-               angle1 =     Dr::EqualizeAngle0to360(angle1);
+        // ***** Update Spawner
+        spawner->update(time_passed, time_warp, area);
 
-        // Angle of Object
-        DrPointF up =       Dr::RotatePointAroundOrigin(DrPointF(my_pos.x, my_pos.y - 1.0), DrPointF(my_pos.x, my_pos.y), my_angle, true);
-        double angle2 =     Dr::CalcRotationAngleInDegrees(DrPointF(my_pos.x, my_pos.y), up);
-               angle2 =     Dr::EqualizeAngle0to360(angle2);
+        // ***** Process Removal
+        if (spawner->readyForRemoval()) {
+            // Let Attached Object know Spawner is being deleted
+            if (spawner->getAttachedThing() != nullptr) {
+                spawner->getAttachedThing()->removeSpawner(spawner);
+            }
 
-        // Set Rotate Direction Towards Player
-        double angle3 =     Dr::FindClosestAngle180(angle2, angle1);
-        double angle_vel =  abs(object->getOriginalSpinVelocity());
-        double new_spin =   (angle3 > angle2) ? angle_vel : -angle_vel;
+            // Delete Spawner
+            delete spawner;
+            it = m_spawners.erase(it);
+            continue;
+        }
 
-        double angle_diff = abs(angle3 - angle2);
-        if (angle_diff < 10.0) new_spin *= (angle_diff / 10.0);
-        cpBodySetAngularVelocity(body, new_spin);
-
-        ///g_info = "Angle 1: " +      QString::number(angle1,     'f', 2) +
-        ///       ", Angle 3: " +      QString::number(angle2,     'f', 2) +
-        ///       ", Angle Diff: " +   QString::number(angle_diff, 'f', 2);
+        // ***** Increment for loop
+        it++;
     }
-
-    // Figure out new velocity based on current object angle
-    if (object->getUseAngleVelocity()) {
-        double  angle = qRadiansToDegrees( cpBodyGetAngle(body) );
-        QPointF original = QPointF( object->getOriginalVelocityX(), object->getOriginalVelocityY() );
-        QPointF rotated = QTransform().rotate(angle).map(original);
-        cpBodySetVelocity( body, cpv(rotated.x(), rotated.y()) );
-    }  
-
-    // Call real update function
-    cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
 
+//####################################################################################
+//##    Finds a Stage, if possible, and Loads it to this World
+//####################################################################################
+void DrEngineWorld::addStage() {
+    // Get DrWorld from Project
+    DrWorld *world = m_project->getWorld(m_world);
 
+    // Find a list of possible Stages to pick from
+    QVector<DrStage*> stages;
+    for (auto &stage_pair : world->getStageMap()) {
+        DrStage *stage = stage_pair.second;
+        if (stage == nullptr) continue;
 
+        bool stage_enabled = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Enabled).toBool();
+        int  stage_start =   stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Start).toInt();
+        int  stage_end =     stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_End).toInt();
+
+        // !!!!! NEED TO IMPLEMENT
+        int  cooldown =      stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Cooldown).toInt();
+
+        if (stage_enabled && stage->getName() != "Start Stage") {
+            if (m_loaded_to > stage_start) {
+                if (m_loaded_to < stage_end || stage_end < 0) {
+                    stages.append(stage_pair.second);
+                }
+            }
+        }
+    }
+
+    // If there is at least one other stage available, load it up
+    if (stages.count() >= 1) {
+        DrStage *stage = nullptr;
+        int stage_count = static_cast<int>(stages.size());
+        int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
+            stage = stages[stage_num];
+
+        QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
+                                   .rotate(   -m_game_direction)
+                                   .translate(-m_game_start.x, -m_game_start.y);
+        QPointF rotated = t.map( QPointF( m_loaded_to, 0 ));
+        loadStageToWorld(stage, rotated.x(), rotated.y());
+    }
+
+}
 
 
 

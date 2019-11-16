@@ -121,6 +121,7 @@ SOURCES += \
     engine/engine_world__load_things.cpp \
     engine/engine_world__update.cpp \
     engine/engine_world__update_player.cpp \
+    engine/engine_world__update_velocity.cpp \
     engine/form_engine.cpp \
     engine_mesh/engine_vertex_data.cpp \
     engine_mesh/engine_vertex_data__extrude.cpp \

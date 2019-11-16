@@ -135,12 +135,9 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     }
     m_last_key_shoot_status = g_shoot_button;
 
-    // ***** Process Permanent Spawn Type
-    if (getSpawnType() == Spawn_Type::Permanent) spawn = true;
-
 
     // ***** Perform Spawn
-    if (spawn) {
+    if (getSpawnType() == Spawn_Type::Permanent || spawn) {
         if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
             object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle, x_velocity, y_velocity );
             resetSpawnTime();
@@ -153,11 +150,12 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     // ***** Delete spawner if ends up outside the deletion threshold
     if (getSpawnType() == Spawn_Type::Permanent) {
         if (getSpawnCount() == 0) setReadyForRemoval();
-    }
-    if (use_area && getSpawnType() == Spawn_Type::Permanent) {
-        if (area.contains(QPointF(getLocation().x, getLocation().y)) == false) {
-            if (getSpawnType() == Spawn_Type::Permanent)
-                setReadyForRemoval();
+
+        if (use_area) {
+            if (area.contains(QPointF(getLocation().x, getLocation().y)) == false) {
+                if (getSpawnType() == Spawn_Type::Permanent)
+                    setReadyForRemoval();
+            }
         }
     }
     return object;

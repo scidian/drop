@@ -136,9 +136,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   201
+//##    !!!!! NEXT AVAILABLE NUMBER:   202
 //##
-//##    Checked for doubles up through 201 on 11/11/2019
+//##    Checked for doubles up through 202 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -271,6 +271,7 @@ enum class Properties {
 
     // ******************** DrStage Component Properties
     // Settings
+    Stage_Enabled                       = 201,      // bool
     Stage_Start                         = 46,       // positive
     Stage_End                           = 47,       // positive
     Stage_Size                          = 48,       // positive

@@ -122,7 +122,6 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
     }
 
 
-
     // ***** Update distance we've loaded scenes to
     m_loaded_to += stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
 }

@@ -110,6 +110,7 @@ namespace Dr {
 
         Dr::SetInspectorExpanded(Components::World_Physics,             true);
 
+        Dr::SetInspectorExpanded(Components::Stage_Settings,            true);
         Dr::SetInspectorExpanded(Components::Stage_Grid,                true);
 
         Dr::SetInspectorExpanded(Components::Thing_Layering,            true);

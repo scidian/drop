@@ -116,13 +116,14 @@ void DrThing::addComponentSpawn() {
                                                       Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Spawn)->setIcon(Component_Icons::Spawn);
 
-    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Rate, Property_Type::Variable, QPointF(1, 0),
-                           "Spawn Rate", "Rate, in seconds, this item will spawn, +/- variable amount.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Count, Property_Type::Int, 1,
                            "Spawn Count", "How many instances of this item will spawn. A value of -1 will allow unlimited spawning.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Rate, Property_Type::Variable, QPointF(1, 0),
+                           "Spawn Rate", "Rate, in seconds, this item will spawn, +/- variable amount.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Instantly, Property_Type::Bool, true,
-                           "Spawn Instantly", "If this is not selected, item will wait the initial Spawn Rate amount of time before spawning for "
-                                              "the first time.");
+                           "Spawn Immediately", "If this option is not selected, item will wait the initial Spawn Rate amount of time before spawning "
+                                                "the first time. When selected, item will spawn as soon as the event occurs and then wait Spawn Rate in between "
+                                                "the remaining spawms.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, 0,
                            "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to "
                                          "spawn when corresponding buttons are pressed. ");
