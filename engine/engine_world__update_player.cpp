@@ -231,6 +231,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double  forced_speed_y = object->getForcedSpeedY();
     double  rotate_speed =   object->getRotateSpeedZ();
     if (object->getAngleMovement()) {
+//        DrPointF button_angle = Dr::RotatePointAroundOrigin( DrPointF(button_speed_x, button_speed_y), DrPointF(0, 0), object->getAngle() );
+//            button_speed_x = button_angle.x;
+//            button_speed_y = button_angle.y;
+//        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
+//            forced_speed_x = forced_angle.x;
+//            forced_speed_y = forced_angle.y;
         QTransform t = QTransform().rotate(object->getAngle());
         QPointF button_angle = t.map( QPointF(button_speed_x, button_speed_y) );
             button_speed_x = button_angle.x();

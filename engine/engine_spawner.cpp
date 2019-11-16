@@ -82,7 +82,7 @@ void DrEngineSpawner::setSpawnerForFirstTime() {
 DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QRectF area, bool use_area) {
     Q_UNUSED( time_warp )
 
-    DrEngineObject *object = nullptr;
+    DrEngineObject *return_object = nullptr;
 
     // ***** Can't find Thing to Spawn, mark for removal
     if (readyForRemoval()) return nullptr;
@@ -99,22 +99,53 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     double x_pos = getLocation().x,     x_scale = 1.0,      x_velocity = 0.0;
     double y_pos = getLocation().y,     y_scale = 1.0,      y_velocity = 0.0;
     double angle = 0.0;
+    double rotate_spawn = 0.0;
 
     // ***** Check for attachment and alter spawn adjustments
     if (isAttached()) {
-        DrEngineThing  *thing = getAttachedThing();
+        DrEngineThing *thing = getAttachedThing();
         if (thing == nullptr) {
             setReadyForRemoval();
-            return object;
+            return nullptr;
         }
         x_pos = thing->getPosition().x;
         y_pos = thing->getPosition().y;
         x_scale = static_cast<double>(thing->getScaleX());
         y_scale = static_cast<double>(thing->getScaleY());
         angle = thing->getAngle();
-        x_velocity = thing->getVelocityX();
-        y_velocity = thing->getVelocityY();
+        rotate_spawn = angle;
+
+        // Find velocity of follow object
+        if (thing->getThingType() == DrThingType::Object || thing->getThingType() == DrThingType::Character) {
+            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+            if (object != nullptr) {
+                // If character with forced velocity, find forced velocity
+                double forced_speed_x = object->getForcedSpeedX();
+                double forced_speed_y = object->getForcedSpeedY();
+                if (object->getAngleMovement()) {
+
+                    QTransform t = QTransform().rotate(object->getAngle());
+                    QPointF forced_angle = t.map( QPointF(forced_speed_x, forced_speed_y) );
+                        forced_speed_x = forced_angle.x();
+                        forced_speed_y = forced_angle.y();
+
+//                    DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, -forced_speed_y), DrPointF(0, 0), object->getAngle() );
+//                    forced_speed_x = forced_angle.x;
+//                    forced_speed_y = forced_angle.y;
+                }
+
+                // If has forced use that, otherwise if kinematic use that velocity, otherwise keep velocity at zero for dynamic objects
+                if (Dr::IsCloseTo(forced_speed_x, 0.0, 0.001) == false || Dr::IsCloseTo(forced_speed_y, 0.0, 0.001) == false) {
+                    x_velocity = forced_speed_x;
+                    y_velocity = forced_speed_y;
+                } else if (object->body_type == Body_Type::Kinematic) {
+                    x_velocity = thing->getVelocityX();
+                    y_velocity = thing->getVelocityY();
+                }
+            }
+        }
     }
+
 
     // ##### NEED IMPLEMENT
     // Spawn_Type::Object_Death
@@ -139,7 +170,9 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     // ***** Perform Spawn
     if (getSpawnType() == Spawn_Type::Permanent || spawn) {
         if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
-            object = m_world->loadObjectToWorld( getThingToSpawn(), x_pos, y_pos, x_scale, y_scale, angle, x_velocity, y_velocity );
+            return_object = m_world->loadObjectToWorld( getThingToSpawn(),
+                                                        x_pos, y_pos, x_scale, y_scale, angle,
+                                                        x_velocity, y_velocity, rotate_spawn );
             resetSpawnTime();
             setNextSpawnTimeAmount();
             if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);
@@ -158,7 +191,7 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
             }
         }
     }
-    return object;
+    return return_object;
 }
 
 

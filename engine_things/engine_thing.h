@@ -146,7 +146,6 @@ public:
     void                    setWorld(DrEngineWorld *world)  { m_world = world; }
     virtual void            setZOrder(double z_order)       { m_z_order = z_order; }
 
-
     // Thing Properties - Camera
     const long&             getActiveCameraKey()    { return m_active_camera; }
     bool                    hasActiveCamera()       { return (m_active_camera == 0) ? false : true; }

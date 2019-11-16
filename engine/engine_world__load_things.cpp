@@ -153,7 +153,8 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
                                                  double x, double y, double scale_x, double scale_y,
-                                                 double angle, double x_velocity, double y_velocity) {
+                                                 double angle, double x_velocity, double y_velocity,
+                                                 double rotate_spawn) {
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
@@ -169,10 +170,16 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
     // Adjust loading position from Spawn Offset
-    QPointF     spawn_x =       thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
-    QPointF     spawn_y =       thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();
-    double x_offset = spawn_x.x() + (QRandomGenerator::global()->bounded(spawn_x.y() * 2.0) - spawn_x.y());
-    double y_offset = spawn_y.x() + (QRandomGenerator::global()->bounded(spawn_y.y() * 2.0) - spawn_y.y());
+    QPointF     spawn_off_x =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
+    QPointF     spawn_off_y =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();
+    double spawn_x = spawn_off_x.x() + (QRandomGenerator::global()->bounded(spawn_off_x.y() * 2.0) - spawn_off_x.y());
+    double spawn_y = spawn_off_y.x() + (QRandomGenerator::global()->bounded(spawn_off_y.y() * 2.0) - spawn_off_y.y());
+    DrPointF spawn_rotate;
+    //if (Dr::FuzzyCompare(rotate_spawn, 0.0))
+    //     spawn_rotate = DrPointF(spawn_x, spawn_y);
+    spawn_rotate = Dr::RotatePointAroundOrigin(DrPointF(spawn_x, -spawn_y), DrPointF(0, 0), rotate_spawn);
+    double x_offset = spawn_rotate.x;
+    double y_offset = spawn_rotate.y;
 
     // Load Physics Properties
     bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
