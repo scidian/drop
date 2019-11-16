@@ -80,12 +80,12 @@ void DrOpenGL::drawDebug(QPainter &painter) {
     QFont font("Avenir", 12);
     painter.setFont(font);
     painter.setPen( Qt::white );
+    painter.drawText( QPointF(500, 20), "Distance: \t" +    QString::number(m_engine->getCurrentWorld()->getMaxDistance()) );       // Game Distance
     painter.drawText( QPointF(20,  20), "FPS: \t" +         QString::number(m_engine->getFormEngine()->fps_render) );               // Frames per second
     painter.drawText( QPointF(20,  40), "Objects: \t" +     QString::number(m_engine->getCurrentWorld()->getThings().size()) );     // Object count
     painter.drawText( QPointF(20,  60), "Triangles: \t" +   QString::number(getTriangleCount()) );                                  // Triangle count
     painter.drawText( QPointF(20,  80), "Zoom: \t" +        QString::number(double(combinedZoomScale())) );                         // World scale
-    painter.drawText( QPointF(20, 100), "Distance: \t" +    QString::number(m_engine->getCurrentWorld()->getDistance()) );          // Game Distance
-    painter.drawText( QPointF(20, 120), g_info );                                                                                   // Global debug string
+    painter.drawText( QPointF(20, 100), g_info );                                                                                   // Global debug string
     ///painter.drawText( QPointF(20, 120), "Physics: \t" +     QString::number(m_engine->getFormEngine()->fps_physics) );           // Physics update
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;

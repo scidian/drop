@@ -114,6 +114,7 @@ private:
     double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
     DrPointF        m_game_start {0, 0};            // Origin point start stage loaded at
     double          m_game_distance = 0.0;          // Keeps track of distance traveled linearly from the start
+    double          m_max_game_distance = 0.0;      // Keeps track of maximum distance character has traveled linearly from the start
     double          m_load_buffer = 3000;           // Distance further from m_game_distance we should already have preloaded
     double          m_loaded_to = 0.0;              // Last distance we loaded a new stage
 
@@ -255,6 +256,7 @@ public:
     Blend_Mode          getGlowBlendMode()          { return static_cast<Blend_Mode>(m_glow_blend_mode); }
 
     double              getDistance()               { return m_game_distance; }
+    double              getMaxDistance()            { return m_max_game_distance; }
     double              getLoadedTo()               { return m_loaded_to; }
 
     void                setTimeWarp(double new_time_warp) { m_time_warp = new_time_warp; }

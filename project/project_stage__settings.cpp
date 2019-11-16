@@ -37,9 +37,10 @@ void DrStage::initializeStageSettings(QString new_name) {
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Enabled, Property_Type::Bool, true,
                            "Enabled?", "Should this Stage be able to be shown?");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
-                           "Start", "Start showing stage at this distance.");
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, -1,
-                           "End", "Stop showing stage at this distance, -1 for always show.");
+                           "Start", "Start randomly showing this Stage at this distance.");
+    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Positive, 0,
+                           "End", "Stop randomly showing this Stage at this distance. Use a value of 0 for an unlimited end value, except for the "
+                                  "Start Stage. The Start Stage is always just shown once when the World starts.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Size, Property_Type::Positive, 1200,
                            "Size", "Length of stage.");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Cooldown, Property_Type::Positive, 0,

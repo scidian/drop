@@ -157,7 +157,7 @@ void DrEngineWorld::addStage() {
 
         if (stage_enabled && stage->getName() != "Start Stage") {
             if (m_loaded_to > stage_start) {
-                if (m_loaded_to < stage_end || stage_end < 0) {
+                if (m_loaded_to < stage_end || stage_end <= 0) {
                     stages.append(stage_pair.second);
                 }
             }
