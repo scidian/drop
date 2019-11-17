@@ -170,7 +170,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     button->setMenu(menu);
     button->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     menu->installEventFilter(new DrFilterPopUpMenuRelocater(menu, 2, 0));
-    m_filter_hover->attachToHoverHandler(button, property);
+    getHoverHandler()->attachToHoverHandler(button, property);
     addToWidgetList(button);
 
     return button;

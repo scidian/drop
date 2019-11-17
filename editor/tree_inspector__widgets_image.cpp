@@ -48,7 +48,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     image_frame->setProperty(User_Property::Mouse_Over, false);                                     // Initialize mouse user data, event filter updates this info
     image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                               // Used to track when the mouse
     image_frame->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    m_filter_hover->attachToHoverHandler(image_frame, property);
+    getHoverHandler()->attachToHoverHandler(image_frame, property);
     addToWidgetList(image_frame);
 
     // ***** Create the label that will display the image

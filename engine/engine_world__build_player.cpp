@@ -89,6 +89,52 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeedZ( 20.0 );
 
+
+        // Soft Body Physics Playing Around
+        /**
+            std::vector<std::vector<DrEngineObject*>> balls;
+            size_t row_size = 10;
+            size_t col_size = 10;
+
+            for (size_t j = 0; j < col_size; j++) {
+                std::vector<DrEngineObject*> row;
+                row.clear();
+                for (size_t i = 0; i < row_size; i++) {
+                    Asset_Textures texture = Asset_Textures::Ball;
+                    Body_Type body_type =    Body_Type::Dynamic;
+                    double x = (j * 25) + 400;
+                    double y = (i * 25) + 200;
+                    double friction = 1.0;
+                    double bounce =   0.0;
+                    DrEngineObject *ball = new DrEngineObject(this, getNextKey(), c_no_key, body_type, texture, x, y, 0, DrPointF(0.5, 0.5), friction, bounce);
+                    ball->addShapeCircleFromTexture(Asset_Textures::Ball);
+                    row.push_back( ball );
+                    addThing( ball );
+                }
+                balls.push_back( row );
+            }
+
+            for (size_t j = 0; j < col_size; j++) {
+                for (size_t i = 0; i < row_size; i++) {
+                    cpBody *body1 = balls[j][i]->body;
+                    if (j < col_size - 1) {
+                        cpBody *body2 = balls[j+1][i]->body;
+                        cpSpaceAddConstraint( m_space, cpPivotJointNew(body1, body2, cpBodyGetPosition(body2)) );
+                        //cpSpaceAddConstraint( m_space, cpSlideJointNew(  body1, body2, cpvzero, cpvzero, 20, 30));
+                        //cpSpaceAddConstraint( m_space, cpDampedSpringNew(body1, body2, cpvzero, cpvzero, 50.0, 5000.0, 10.0) );
+                    }
+                    if (i < row_size - 1) {
+                        cpBody *body3 = balls[j][i+1]->body;
+                        cpSpaceAddConstraint( m_space, cpPivotJointNew(body1, body3, cpBodyGetPosition(body3)) );
+                        //cpSpaceAddConstraint( m_space, cpSlideJointNew(  body1, body3, cpvzero, cpvzero, 20, 30));
+                        //cpSpaceAddConstraint( m_space, cpDampedSpringNew(body1, body3, cpvzero, cpvzero, 50.0, 5000.0, 10.0) );
+                    }
+                }
+            }
+        }
+        */
+
+
     } else if (new_player_type == Demo_Player::Light) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);

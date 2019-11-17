@@ -74,6 +74,9 @@ public:
     IEditorRelay*           getRelay()          { return m_editor_relay; }
     long                    getSelectedKey()    { return m_selected_key; }
 
+    DrFilterHoverHandler*   getHoverHandler();
+    void                    setHoverHandler(DrFilterHoverHandler *hover_handler) { m_filter_hover = hover_handler; }
+
     // Property Builders
     void                    addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
     QCheckBox*              createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);

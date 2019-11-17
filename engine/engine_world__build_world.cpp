@@ -38,6 +38,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
 
     // ***** Create Physics World
     m_space = cpSpaceNew();                             // Creates an empty space
+    ///cpSpaceUseSpatialHash(m_space, 8, 10000);        // Spatial Hash is better than default Bounding Box Tree for lots of uniform particles
     cpSpaceSetIterations(m_space, m_iterations);        // Sets how many times physics are processed each update
     cpSpaceSetCollisionSlop(m_space, 0.5);              // Allows for a little overlap, makes sleep happier
     cpSpaceSetSleepTimeThreshold(m_space, 0.50);        // Objects will sleep after this long of not moving

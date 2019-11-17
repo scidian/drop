@@ -69,6 +69,14 @@ void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
     double width =  getWorld()->getTexture(texture_number)->width();
     double height = getWorld()->getTexture(texture_number)->height();
     double radius = width / 2.0;
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  TEMP WATER
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //if (this->getThingType() != DrThingType::Character) {
+    //    radius /= 2.0;
+    //}
+
     double ratio =  height / (width + 0.0001);
     // Is Square, can be a nice circle
     if (Dr::IsCloseTo(width, height, 0.001)) {

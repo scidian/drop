@@ -44,15 +44,21 @@
 TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                               QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
     // Initialize hover handler
-    m_filter_hover = new DrFilterHoverHandler(this);
+    setHoverHandler( new DrFilterHoverHandler(this) );
     connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
     // Connect this widget to the hover handler
-    m_filter_hover->attachToHoverHandler(this, Advisor_Info::Inspector_Window);
+    getHoverHandler()->attachToHoverHandler(this, Advisor_Info::Inspector_Window);
 
     // Connect to Expand / Collapse slots
     connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem *)), this, SLOT(handleCollapsed(QTreeWidgetItem *)));
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem *)),  this, SLOT(handleExpanded(QTreeWidgetItem *)));
+}
+
+DrFilterHoverHandler* TreeInspector::getHoverHandler() {
+    if (m_filter_hover == nullptr)
+        Dr::ShowErrorMessage("TreeInspector::getHoverHandler", "Could not get DrFilterHoverHandler pointer in TreeInspector, not initialized or corrupt!");
+    return m_filter_hover;
 }
 
 // SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
@@ -209,7 +215,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             category_button->setStyleSheet(button_style);
 
             // Add the button widget to the tree item
-            m_filter_hover->attachToHoverHandler(category_button, component->getDisplayName(), component->getDescription());
+            getHoverHandler()->attachToHoverHandler(category_button, component->getDisplayName(), component->getDescription());
             grid->addWidget(category_button);
         }
         this->setItemWidget(category_item, 0, button_frame);
@@ -252,7 +258,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 sp_right.setHorizontalStretch(c_inspector_size_right);
 
             property_name->setSizePolicy(sp_left);
-            m_filter_hover->attachToHoverHandler(property_name, property);
+            getHoverHandler()->attachToHoverHandler(property_name, property);
             horizontal_split->addWidget(property_name);
 
             QWidget    *new_widget = nullptr;

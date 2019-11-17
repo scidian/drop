@@ -47,7 +47,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
     spin->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin->setValue( property_value );
 
-    m_filter_hover->attachToHoverHandler(spin, property);
+    getHoverHandler()->attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
@@ -99,7 +99,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setValue( property_value );
 
     // Connect HoverHandler with proper text, add this widget to list of widgets in Inspector
-    m_filter_hover->attachToHoverHandler(spin, property);
+    getHoverHandler()->attachToHoverHandler(spin, property);
     addToWidgetList(spin);
 
     // This stops mouse wheel from stealing focus unless user has selected the widget
@@ -285,7 +285,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     variable_sign->setFont(font);
     size_policy.setHorizontalStretch(1);
     variable_sign->setSizePolicy(size_policy);
-    m_filter_hover->attachToHoverHandler(variable_sign, Advisor_Info::Variable_Widget);
+    getHoverHandler()->attachToHoverHandler(variable_sign, Advisor_Info::Variable_Widget);
     DrQTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
     spin_right->setMinimum(0);
     size_policy.setHorizontalStretch(3);
@@ -331,7 +331,7 @@ DrQTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QF
     new_spin->setRange(-100000000, 100000000);
     new_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
     new_spin->setValue(start_value);
-    m_filter_hover->attachToHoverHandler(new_spin, property);
+    getHoverHandler()->attachToHoverHandler(new_spin, property);
     return new_spin;
 }
 
@@ -356,7 +356,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
     QWidget *slider_pair = new QWidget();
     slider_pair->setMaximumHeight(28);
     slider_pair->setSizePolicy(size_policy);
-    m_filter_hover->attachToHoverHandler(slider_pair, property);                            // Connect to hover handler for advisor
+    getHoverHandler()->attachToHoverHandler(slider_pair, property);                            // Connect to hover handler for advisor
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(slider_pair);
     horizontal_split->setSpacing(6);

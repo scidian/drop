@@ -71,8 +71,12 @@ FormColorMagnifier::~FormColorMagnifier() { }
 void FormColorMagnifier::grabScreen(QScreen *screen) {
     m_screen = screen;
     QRect sg  = m_screen->geometry();
-    m_capture = m_screen->grabWindow( QApplication::desktop()->winId(), sg.x(), sg.y(), sg.width(), sg.height());
-    m_image   = m_capture.toImage();
+
+    QDesktopWidget *root_window = QApplication::desktop();
+    if (root_window != nullptr) {
+        m_capture = m_screen->grabWindow( root_window->winId(), sg.x(), sg.y(), sg.width(), sg.height());
+        m_image   = m_capture.toImage();
+    }
 }
 
 

@@ -39,7 +39,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     check->setChecked(property->getValue().toBool());
 
-    m_filter_hover->attachToHoverHandler(check, property);
+    getHoverHandler()->attachToHoverHandler(check, property);
     addToWidgetList(check);
 
     connect (check, &QCheckBox::toggled, [this, property_key](bool checked) { updateSettingsFromNewValue( property_key, checked );  });
@@ -77,7 +77,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
     check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     check_left->setChecked(property->getValue().toList()[0].toBool());
-    m_filter_hover->attachToHoverHandler(check_left, property);
+    getHoverHandler()->attachToHoverHandler(check_left, property);
 
     DrQTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toList()[1].toDouble());
     spin_right->setObjectName("spinBool");
@@ -139,7 +139,7 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
     check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     check_left->setChecked(property->getValue().toList()[0].toBool());
-    m_filter_hover->attachToHoverHandler(check_left, property);
+    getHoverHandler()->attachToHoverHandler(check_left, property);
 
     QSpinBox *spin_right = new QSpinBox();
     spin_right->setObjectName("spinBool");
@@ -154,7 +154,7 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     spin_right->setValue(property->getValue().toList()[1].toInt());
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     spin_right->setEnabled(property->getValue().toList()[0].toBool());
-    m_filter_hover->attachToHoverHandler(spin_right, property);
+    getHoverHandler()->attachToHoverHandler(spin_right, property);
 
     horizontal_split->addWidget(check_left);
     horizontal_split->addWidget(spin_right);

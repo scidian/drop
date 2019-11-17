@@ -38,7 +38,7 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     edit->setText(property->getValue().toString());
 
-    m_filter_hover->attachToHoverHandler(edit, property);
+    getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
@@ -62,7 +62,7 @@ QTextEdit* TreeInspector::createTextEdit(DrProperty *property, QFont &font, QSiz
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     edit->setText(property->getValue().toString());
 
-    m_filter_hover->attachToHoverHandler(edit, property);
+    getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QTextEdit::textChanged,

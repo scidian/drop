@@ -34,7 +34,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
 
     QWidget *color_box = new QWidget();
     color_box->setSizePolicy(size_policy);
-    m_filter_hover->attachToHoverHandler(color_box, property);
+    getHoverHandler()->attachToHoverHandler(color_box, property);
         QHBoxLayout *color_layout = new QHBoxLayout(color_box);
         color_layout->setContentsMargins(0, 0, 0, 0);
         color_layout->setSpacing(0);
@@ -52,7 +52,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
             connect(color_popup, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
             color_popup->show();
         });
-        m_filter_hover->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
+        getHoverHandler()->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
         QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
         color_button->setToolTip( color_as_string );
         color_button->setProperty(User_Property::Body, property->getDescription() + "<br><br><b>Selected:</b> " + color_as_string);
@@ -71,7 +71,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
             picker->show();
             picker_button->setDown(false);
         });
-        m_filter_hover->attachToHoverHandler(picker_button, Advisor_Info::ColorPicker);
+        getHoverHandler()->attachToHoverHandler(picker_button, Advisor_Info::ColorPicker);
         color_layout->addWidget(picker_button);
 
         // ***** This is the button that shows the color wheel, clicking it opens the system color dialog
@@ -82,7 +82,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         connect(dialog_button, &QPushButton::clicked, [this, color_button] () {
             this->setButtonColorFromSystemDialog(color_button);
         });
-        m_filter_hover->attachToHoverHandler(dialog_button, Advisor_Info::ColorDialog);
+        getHoverHandler()->attachToHoverHandler(dialog_button, Advisor_Info::ColorDialog);
         color_layout->addWidget(dialog_button);
 
     return color_box;

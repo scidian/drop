@@ -79,8 +79,10 @@ public:
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
     // Getters / Setters
-    long            getSelectedKey() { return m_selected_key; }
-    void            setSelectedKey(long key);
+    DrFilterHoverHandler*   getHoverHandler();
+    void                    setHoverHandler(DrFilterHoverHandler* hover_handler) { m_filter_hover = hover_handler; }
+    long                    getSelectedKey() { return m_selected_key; }
+    void                    setSelectedKey(long key);
 
 private slots:
     void            searchTextChanged(QString new_text);

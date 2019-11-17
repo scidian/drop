@@ -42,7 +42,7 @@ const       DrPointF    c_scale1x1  {1, 1};                     // Default scale
 const       double      c_default_camera_z =        801;        // Default camera z distance
 const       QVector3D   c_default_camera_pos {0, 0, 801};       // Default camera position if there is no active camera
 const       QVector3D   c_default_camera_rot {0, 0, 0};         // Default camera rotation if there is no active camera
-constexpr   double      c_norotate =   0;                       // Default rotation amount of zero
+constexpr   double      c_zero_rotate = 0;                      // Default rotation amount of zero
 constexpr   double      c_opaque =     1;                       // Default transparency of fully opaque
 constexpr   double      c_friction =  -1;                       // Flag for add**** call to use world friction setting
 constexpr   double      c_bounce =    -1;                       // Flag for add**** call to use world bounce setting

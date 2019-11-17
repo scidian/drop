@@ -45,11 +45,11 @@
 TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                        QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
     // Initialize hover handler
-    m_filter_hover = new DrFilterHoverHandler(this);
+    setHoverHandler( new DrFilterHoverHandler(this) );
     connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
 
     // Connect this widget to the hover handler
-    m_filter_hover->attachToHoverHandler(this, Advisor_Info::Asset_List);
+    getHoverHandler()->attachToHoverHandler(this, Advisor_Info::Asset_List);
 
     // Connect to Expand / Collapse slots
     connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem *)), this, SLOT(handleCollapsed(QTreeWidgetItem *)));
@@ -59,7 +59,7 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     m_search_widget = new QWidget(parent);
     m_search_widget->setFixedHeight(30);
     m_search_widget->setObjectName(QStringLiteral("assetSearchWidget"));
-    m_filter_hover->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
+    getHoverHandler()->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
     m_search_widget->setToolTip( Advisor_Info::Asset_Search[0] );
         m_search_layout = new QVBoxLayout(m_search_widget);
         m_search_layout->setMargin(4);
@@ -72,6 +72,12 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
         m_search_layout->addWidget(m_search_bar);
 
     parent->layout()->addWidget(m_search_widget);
+}
+
+DrFilterHoverHandler* TreeAssets::getHoverHandler() {
+    if (m_filter_hover == nullptr)
+        Dr::ShowErrorMessage("TreeAssets::getHoverHandler", "Could not get DrFilterHoverHandler pointer in TreeAssets, not initialized or corrupt!");
+    return m_filter_hover;
 }
 
 // Focus In Event
@@ -239,7 +245,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
                     break;
             }
             description += "<br>" + hidden_txt;
-            m_filter_hover->attachToHoverHandler(single_asset, asset_name, description);
+            getHoverHandler()->attachToHoverHandler(single_asset, asset_name, description);
 
             QLabel *asset_pix = new QLabel(single_asset);
             asset_pix->setObjectName(QStringLiteral("assetPixmap"));
@@ -355,7 +361,7 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, D
     text_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(text_icon.toImage(), drop_shadow, 0) );
 
     button->setIcon( text_icon );
-    m_filter_hover->attachToHoverHandler(button, info);
+    getHoverHandler()->attachToHoverHandler(button, info);
     return button;
 }
 

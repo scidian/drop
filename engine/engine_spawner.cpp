@@ -161,9 +161,14 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     }
     m_last_key_shoot_status = g_shoot_button;
 
+    // ***** Process Permanent Spawn Type
+    if (getSpawnType() == Spawn_Type::Permanent) {
+        spawn = true;
+    }
 
-    // ***** Perform Spawn
-    if (getSpawnType() == Spawn_Type::Permanent || spawn) {
+
+    // ********** Perform Spawn
+    if (spawn) {
         if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
             return_object = m_world->loadObjectToWorld( getThingToSpawn(),
                                                         x_pos, y_pos, x_scale, y_scale, angle,
