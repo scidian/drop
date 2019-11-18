@@ -48,8 +48,10 @@ DrOpenGL::~DrOpenGL() {
         }
         for (auto data_pair : m_texture_data)
             delete data_pair.second;
-        m_quad_vbo->destroy();  delete m_quad_vbo;
+        m_cone_vbo->destroy();  delete m_cone_vbo;
         m_cube_vbo->destroy();  delete m_cube_vbo;
+        m_quad_vbo->destroy();  delete m_quad_vbo;
+
 
     doneCurrent();
 }

@@ -11,17 +11,18 @@
 #include "engine/engine_world.h"
 #include "engine_things/engine_thing.h"
 #include "engine_things/engine_thing_object.h"
+#include "project/project_thing.h"
 
 
 //####################################################################################
 //##    Constructor
 //####################################################################################
-DrEngineSpawner::DrEngineSpawner() { }
+DrEngineSpawner::DrEngineSpawner(DrThing *thing) : m_thing_to_spawn(thing) { }
 
 DrEngineSpawner::DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location, double rate, double rate_variable,
                                  bool spawn_instantly, int spawn_count, int spawns_remaining,
                                  DrEngineThing *attached, long attached_id,
-                                 double x, double y, double x_variable, double y_variable) : m_world(engine_world) {
+                                 double x, double y, double x_variable, double y_variable) : m_world(engine_world), m_thing_to_spawn(thing) {
     setLocation(location);
     if (thing == nullptr) return;
     setThingToSpawn(thing);
@@ -86,10 +87,7 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
 
     // ***** Can't find Thing to Spawn, mark for removal
     if (readyForRemoval()) return nullptr;
-    if (getThingToSpawn() == nullptr) {
-        setReadyForRemoval();
-        return nullptr;
-    }
+    if (getThingToSpawn() == nullptr) { setReadyForRemoval(); return nullptr; }
     if (getAttachedIDKey() != c_no_key && isAttached() == false) return nullptr;
 
     // ***** Add milliseconds since last time we were here (time is passed by engine so its possible to pause in game)
@@ -103,21 +101,21 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
 
     // ***** Check for attachment and alter spawn adjustments
     if (isAttached()) {
-        DrEngineThing *thing = getAttachedThing();
-        if (thing == nullptr) {
+        DrEngineThing *thing_attached_to = getAttachedThing();
+        if (thing_attached_to == nullptr) {
             setReadyForRemoval();
             return nullptr;
         }
-        x_pos = thing->getPosition().x;
-        y_pos = thing->getPosition().y;
-        x_scale = static_cast<double>(thing->getScaleX());
-        y_scale = static_cast<double>(thing->getScaleY());
-        angle = thing->getAngle();
+        x_pos = thing_attached_to->getPosition().x;
+        y_pos = thing_attached_to->getPosition().y;
+        x_scale = static_cast<double>(thing_attached_to->getScaleX());
+        y_scale = static_cast<double>(thing_attached_to->getScaleY());
+        angle = thing_attached_to->getAngle();
         rotate_spawn = angle;
 
         // Find velocity of follow object
-        if (thing->getThingType() == DrThingType::Object || thing->getThingType() == DrThingType::Character) {
-            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+        if (thing_attached_to->getThingType() == DrThingType::Object || thing_attached_to->getThingType() == DrThingType::Character) {
+            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing_attached_to);
             if (object != nullptr) {
                 // If character with forced velocity, find forced velocity
                 double forced_speed_x = object->getForcedSpeedX();
@@ -134,8 +132,8 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
                     x_velocity = forced_speed_x;
                     y_velocity = forced_speed_y;
                 } else if (object->body_type == Body_Type::Kinematic) {
-                    x_velocity = thing->getVelocityX();
-                    y_velocity = thing->getVelocityY();
+                    x_velocity = thing_attached_to->getVelocityX();
+                    y_velocity = thing_attached_to->getVelocityY();
                 }
             }
         }
@@ -170,7 +168,11 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
     // ********** Perform Spawn
     if (spawn) {
         if (secondsSinceLastSpawn() >= getSecondsUntilNextSpawn() && getSpawnCount() != 0) {
-            return_object = m_world->loadObjectToWorld( getThingToSpawn(),
+            DrThing *thing_to_spawn = dynamic_cast<DrThing*>(getThingToSpawn());                    // Try to use dynamic_cast to see if object has been deleted
+                                                                                                    // Works on macOS, but possibly undefined on other systems
+            if (thing_to_spawn == nullptr) { setReadyForRemoval(); return nullptr; }
+
+            return_object = m_world->loadObjectToWorld( thing_to_spawn,
                                                         x_pos, y_pos, x_scale, y_scale, angle,
                                                         x_velocity, y_velocity, rotate_spawn );
             resetSpawnTime();

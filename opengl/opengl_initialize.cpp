@@ -154,25 +154,35 @@ void DrOpenGL::loadBuiltInModels() {
     m_quad_barycentric[ 6] = 0.0;   m_quad_barycentric[ 7] = 0.0;  m_quad_barycentric[ 8] = 1.0;    // Bottom Right
     m_quad_barycentric[ 9] = 1.0;   m_quad_barycentric[10] = 0.0;  m_quad_barycentric[11] = 0.0;    // Bottom Left
 
-    // ***** Quad to use to render textures
-    DrEngineVertexData *quad = new DrEngineVertexData();
-    quad->initializeTextureQuad();
-        m_quad_vbo =  new QOpenGLBuffer();
-        m_quad_vbo->create();
-        m_quad_vbo->bind();
-        m_quad_vbo->allocate(quad->constData(), quad->count() * static_cast<int>(sizeof(GLfloat)));
-        m_quad_vbo->release();
-    delete quad;
+    // ***** Cone to use to turn textures into cones
+    DrEngineVertexData *cone = new DrEngineVertexData();
+    cone->initializeTextureCone();
+        m_cone_vbo = new QOpenGLBuffer();
+        m_cone_vbo->create();
+        m_cone_vbo->bind();
+        m_cone_vbo->allocate(cone->constData(), cone->count() * static_cast<int>(sizeof(GLfloat)));
+        m_cone_vbo->release();
+    delete cone;
 
     // ***** Cube to use to turn textures into cubes
     DrEngineVertexData *cube = new DrEngineVertexData();
     cube->initializeTextureCube();
-        m_cube_vbo =  new QOpenGLBuffer();
+        m_cube_vbo = new QOpenGLBuffer();
         m_cube_vbo->create();
         m_cube_vbo->bind();
         m_cube_vbo->allocate(cube->constData(), cube->count() * static_cast<int>(sizeof(GLfloat)));
         m_cube_vbo->release();
     delete cube;
+
+    // ***** Quad to use to render textures
+    DrEngineVertexData *quad = new DrEngineVertexData();
+    quad->initializeTextureQuad();
+        m_quad_vbo = new QOpenGLBuffer();
+        m_quad_vbo->create();
+        m_quad_vbo->bind();
+        m_quad_vbo->allocate(quad->constData(), quad->count() * static_cast<int>(sizeof(GLfloat)));
+        m_quad_vbo->release();
+    delete quad;
 }
 
 //####################################################################################

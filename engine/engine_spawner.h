@@ -23,7 +23,7 @@ private:
     DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
 
     // Local Variables
-    DrThing        *m_thing_to_spawn = nullptr;                 // Reference to the object we wish to spawn
+    DrThing        *m_thing_to_spawn = nullptr;                 // Reference to the DrThing pointer we wish to spawn
     DrPointF        m_original_location { 0, 0 };               // Original location of Spawner, used to take Spawner out of scene as
                                                                 // gameplay proceeds and not attached to Object
     // Time Variables
@@ -60,7 +60,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrEngineSpawner();
+    DrEngineSpawner(DrThing *thing);
     DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location,
                     double rate, double rate_variable,
                     bool spawn_instantly, int spawn_count, int spawns_remaining,

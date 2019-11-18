@@ -57,6 +57,7 @@ public:
 
     // Creation Functions
     void    initializeExtrudedPixmap(QPixmap &pixmap, bool wireframe = true);
+    void    initializeTextureCone();
     void    initializeTextureCube();
     void    initializeTextureQuad();
 

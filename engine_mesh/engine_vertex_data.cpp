@@ -86,6 +86,37 @@ void DrEngineVertexData::initializeTextureCube() {
 
 
 //####################################################################################
+//##    Builds a Textured Spike (eventually cone)
+//####################################################################################
+void DrEngineVertexData::initializeTextureCone() {
+    m_data.resize(36 * c_vertex_length);
+
+    int   width =  1;
+    int   height = 1;
+    float w2 = width  / 2.f;
+    float h2 = height / 2.f;
+
+    // EXAMPLE: Adding Triangles
+    GLfloat x1 = +w2, y1 = +h2;         // Top Right
+    GLfloat x2 = -w2, y2 = +h2;         // Top Left
+    GLfloat x3 = +w2, y3 = -h2;         // Bottom Right
+    GLfloat x4 = -w2, y4 = -h2;         // Bottom Left
+
+    GLfloat tx1 = 1.0, ty1 = 1.0;
+    GLfloat tx2 = 0.0, ty2 = 1.0;
+    GLfloat tx3 = 1.0, ty3 = 0.0;
+    GLfloat tx4 = 0.0, ty4 = 0.0;
+
+    cube( x1,  y1,  tx1, ty1,
+          x2,  y2,  tx2, ty2,
+          x3,  y3,  tx3, ty3,
+          x4,  y4,  tx4, ty4);
+}
+
+
+
+
+//####################################################################################
 //##    Adds a Vertex, including:
 //##        Vec3 Position
 //##        Vec3 Normal
@@ -113,16 +144,16 @@ void DrEngineVertexData::add(const QVector3D &vertex, const QVector3D &normal, c
 
 
 //####################################################################################
-//##    Adds a Cube, as 3 pairs of front and back
+//##    Adds a Cube, as 3 pairs (six sides) of front and back
 //####################################################################################
 void DrEngineVertexData::cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                               GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
                               GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3,
                               GLfloat x4, GLfloat y4, GLfloat tx4, GLfloat ty4) {
     QMatrix4x4 rotate;  rotate.setToIdentity();
-    QVector3D  nf, nb;
-    QVector3D  p1f, p2f, p3f, p4f;
-    QVector3D  p1b, p2b, p3b, p4b;
+    QVector3D  nf, nb;                                  // Normal Front, Normal Back
+    QVector3D  p1f, p2f, p3f, p4f;                      // Point 1 Front, etc
+    QVector3D  p1b, p2b, p3b, p4b;                      // Point 1 Back, etc
 
     for (int i = 0; i <= 2; ++i) {
         nf = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));

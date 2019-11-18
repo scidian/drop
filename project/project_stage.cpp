@@ -91,7 +91,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
 }
 
 // Removes an object from the project
-void DrStage::deleteThing(DrThing *thing) {
+void DrStage::deleteThing(DrThing *&thing) {
     m_things.erase(thing->getKey());
     delete thing;
 }

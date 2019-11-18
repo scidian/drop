@@ -335,7 +335,7 @@ enum class Properties {
     Thing_Filter_Cross_Hatch            = 195,      // bool double combo
 
     // 3D Variables
-    Thing_3D_Type                       = 76,       // list, enum class Convert_3D_Type (Extrusion, Cube)
+    Thing_3D_Type                       = 76,       // list, enum class Convert_3D_Type (extrusion, cube, cone, none)
     Thing_3D_Depth                      = 77,       // positive double
     Thing_3D_X_Axis_Rotation            = 78,       // variable
     Thing_3D_Y_Axis_Rotation            = 79,       // variable

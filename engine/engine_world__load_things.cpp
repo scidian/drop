@@ -155,6 +155,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
                                                  double x, double y, double scale_x, double scale_y,
                                                  double angle, double x_velocity, double y_velocity,
                                                  double rotate_spawn) {
+            if (thing == nullptr) return nullptr;
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
@@ -236,19 +237,16 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     velocity.y = vel_y.x() + (QRandomGenerator::global()->bounded(vel_y.y() * 2.0) - vel_y.y());
     double deg_angular = rotation_vel.x() + (QRandomGenerator::global()->bounded(rotation_vel.y() * 2.0) - rotation_vel.y());
     double rad_angular = qDegreesToRadians( deg_angular );
-    if (body_type != Body_Type::Static) {
-        cpBodySetVelocity( block->body, velocity + cpv(x_velocity, y_velocity) );
-        cpBodySetAngularVelocity( block->body, rad_angular );
 
-        // Attach KinematicUpdateVelocity callback function
-        if (body_type == Body_Type::Kinematic) {
-            block->setOriginalVelocityX( velocity.x + x_velocity );
-            block->setOriginalVelocityY( velocity.y + y_velocity );
-            block->setOriginalSpinVelocity( rad_angular );
-            block->setUseAngleVelocity( angle_velocity );
-            block->setRotateToPlayer( angle_player );
-        }
+    // Attach KinematicUpdateVelocity callback function
+    if (body_type == Body_Type::Kinematic) {
+        block->setOriginalVelocityX( velocity.x + x_velocity );
+        block->setOriginalVelocityY( velocity.y + y_velocity );
+        block->setOriginalSpinVelocity( rad_angular );
+        block->setUseAngleVelocity( angle_velocity );
+        block->setRotateToPlayer( angle_player );
     }
+
 
     // ***** Additional Collision Settings
     int     one_way_type =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type).toInt();
@@ -276,6 +274,13 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
     // ********** Add to world
     addThing(block);
+
+    // ***** Add Velocity, HAVE TO WAIT until is in world!!
+    if (body_type != Body_Type::Static) {
+        cpBodySetVelocity( block->body, velocity + cpv(x_velocity, y_velocity) );
+        cpBodySetAngularVelocity( block->body, rad_angular );
+    }
+
     return block;
 }
 

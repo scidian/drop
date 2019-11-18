@@ -158,7 +158,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Scale
-    bool  scale_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube);
+    bool  scale_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube || object->get3DType() == Convert_3D_Type::Cone);
     float add_pixel_x = 0.0;
     float add_pixel_y = 0.0;
     if (scale_2d) {
@@ -280,6 +280,14 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         releaseDefaultAttributeBuffer();
         m_cube_vbo->release();
         addTriangles( 12 );      // aka 'cube_vertices / 3'
+
+    } else if (object->get3DType() == Convert_3D_Type::Cone) {
+        setDefaultAttributeBuffer(m_cone_vbo);
+        int cone_vertices =  m_cone_vbo->size() / (c_vertex_length * c_float_size);
+        glDrawArrays(GL_TRIANGLES, 0, cone_vertices );
+        releaseDefaultAttributeBuffer();
+        m_cone_vbo->release();
+        addTriangles( 6 );      // aka 'cone_vertices / 3'
 
     } else {
         setDefaultAttributeBuffer(m_texture_vbos[object->getTextureNumber()]);

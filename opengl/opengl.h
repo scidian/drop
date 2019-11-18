@@ -89,8 +89,9 @@ private:
     // VBO's
     std::map<long, QOpenGLBuffer*>      m_texture_vbos;         // Stores extruded texture vbo's
     std::map<long, DrEngineVertexData*> m_texture_data;         // Stores extruded texture vertex data
-    QOpenGLBuffer                      *m_quad_vbo;             // Stores quad vbo, to use to render 2d quads
+    QOpenGLBuffer                      *m_cone_vbo;             // Stores cone vbo, to use to turn a texture into a cone
     QOpenGLBuffer                      *m_cube_vbo;             // Stores cube vbo, to use to turn a texture into a cube
+    QOpenGLBuffer                      *m_quad_vbo;             // Stores quad vbo, to use to render 2d quads
 
     // Frame Buffers
     QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
