@@ -20,11 +20,16 @@
 #include "project/project.h"
 
 
+// Local File Scope Globals
+static cpBody *g_drag_body = nullptr;
+
+
 //####################################################################################
 //##    Mouse Events
 //####################################################################################
 void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
+    DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
     QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
@@ -32,8 +37,9 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     double y = static_cast<double>(vec.y());
     double z = static_cast<double>(vec.z());
 
-    // ***** Process click
-    DrEngineWorld *world = m_engine->getCurrentWorld();
+    // ***** If running, process click
+    if (m_form_engine->isTimerActive() == false)
+        return;
     if (m_form_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 50; i++ ) {
@@ -99,17 +105,21 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 touch = static_cast<DrEngineObject*>(cpShapeGetUserData(nearest));
 
                 if (touch != nullptr) {
-                    ///DrSettings *settings = m_engine->getProject()->findSettingsFromKey(touch->getOriginalKey(), false);
-                    ///if (settings != nullptr) { }
-
                     if (touch->getOnTouchDamage()) {
                         touch->takeDamage(touch->getTouchDamageAmount(), true);
                         should_jump = false;
                     }
 
                     if (touch->getOnTouchDrag()) {
+                        if (touch->body_type == Body_Type::Kinematic) {
+                            g_drag_body = touch->body;
+                            should_jump = false;
 
-                        should_jump = false;
+                        } else if (touch->body_type == Body_Type::Dynamic) {
+                            g_mouse_joint = cpPivotJointNew(g_mouse_body, touch->body, cpBodyGetPosition(touch->body));
+                            cpSpaceAddConstraint(world->getSpace(), g_mouse_joint);
+                            should_jump = false;
+                        }
                     }
                 }
             }
@@ -130,8 +140,6 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                 ///double saturation = QRandomGenerator::global()->bounded(0.5) - 0.125;
                 ///block->saturation = static_cast<float>(saturation);
-                ///double contrast = QRandomGenerator::global()->bounded(0.5) - 0.125;
-                ///block->contrast = static_cast<float>(contrast);
             }
         }
     }
@@ -139,6 +147,9 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 }
 
 void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
+    if (m_engine->getCurrentWorld()->has_scene == false) return;
+    DrEngineWorld *world = m_engine->getCurrentWorld();
+
     if (m_form_engine->demo_player == Demo_Player::Car) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             g_pedal = Pedal::None;
@@ -146,6 +157,15 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     } else if (m_form_engine->demo_player == Demo_Player::Jump ||
                m_form_engine->demo_player == Demo_Player::Light ||
                m_form_engine->demo_player == Demo_Player::Player) {
+        // On mouse up if there was an object linked to the mouse_body, destroy the mouse_joint
+        if (g_mouse_joint != nullptr) {
+            cpSpaceRemoveConstraint(world->getSpace(), g_mouse_joint);
+            cpConstraintFree(g_mouse_joint);
+            g_mouse_joint = nullptr;
+        }
+        if (g_drag_body != nullptr) g_drag_body = nullptr;
+
+        // Reset buttons
         if (event->buttons() == Qt::MouseButton::NoButton) {
             g_jump_button =  false;
             g_shoot_button = false;
@@ -156,10 +176,27 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
 
 void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
+    ///DrEngineWorld *world = m_engine->getCurrentWorld();
+
+    // ***** Convert mouse click to world coordinates
+    QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
+    double x = static_cast<double>(vec.x());
+    double y = static_cast<double>(vec.y());
+    ///double z = static_cast<double>(vec.z());
 
     QPointF mouse_position = QPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
     g_mouse_position = DrPointF(mouse_position.x(), mouse_position.y());
+
+    // If running, process mouse move
+    if (m_form_engine->isTimerActive()) {
+        cpVect pos = cpv(x, y);
+        cpBodySetPosition(g_mouse_body, pos);
+        if (g_drag_body != nullptr) {
+            cpBodySetPosition(g_drag_body, pos);
+        }
+    }
 }
+
 
 //####################################################################################
 //##    Wheel Event / Zoom Functions

@@ -151,7 +151,6 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
 }
 
 
-
 //####################################################################################
 //##    Controls Components
 //####################################################################################
@@ -167,7 +166,8 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            "On Touch Damage", "Should this " + Dr::StringFromAssetType(asset_type) + " take damage when touched / tapped / clicked with the mouse? "
                                               "If so, how much damage? Can be negative (healing).");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag, Property_Type::Bool, false,
-                           "On Touch Drag", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be dragged by mouse / touch?");
+                           "On Touch Drag", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be dragged by mouse / touch? <br><br>"
+                                            "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,
                            "Motor Speed", "Speed at which this " + Dr::StringFromAssetType(asset_type) + " rotates when Motor Buttons are pressed.");
 

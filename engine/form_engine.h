@@ -94,6 +94,7 @@ public:
     DrEngine*   getEngine() { return m_engine; }
     DrOpenGL*   getOpenGL() { return m_opengl; }
     double      getTimerMilliseconds(Engine_Timer time_since_last);
+    bool        isTimerActive() { return m_update_timer->isActive(); }
     void        loadDemo(Demo_Player using_player);
     void        resetTimer(Engine_Timer timer_to_reset);
     void        startTimers();

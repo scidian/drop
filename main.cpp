@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
     // ***** Version
     Dr::SetPreference(Preferences::Version_Major, "1");
     Dr::SetPreference(Preferences::Version_Minor, "0");
-    Dr::SetPreference(Preferences::Version_Build, "0002");
+    Dr::SetPreference(Preferences::Version_Build, "0003");
 
     // ***** Temporary-ish options
     Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
@@ -185,6 +185,7 @@ int main(int argc, char *argv[]) {
 //##
 //####################################################################################
 //##
+//##    v 1.0.0003 - Post Space Shooter Droplet
 //##    v 1.0.0002 - Version for Space Shooter Droplet
 //##    v 1.0.0001 - Initial release with Platformer Droplet
 //##

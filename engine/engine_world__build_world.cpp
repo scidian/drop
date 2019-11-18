@@ -50,6 +50,10 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
 
+    // ***** Add Mouse Body that is used to join to objects to move them around with the mouse
+    g_mouse_body = cpBodyNewKinematic();
+    cpSpaceAddBody(m_space, g_mouse_body);
+
 
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
     QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
