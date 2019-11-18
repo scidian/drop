@@ -117,8 +117,8 @@ SOURCES += \
     engine/engine_world__collision.cpp \
     engine/engine_world__load_characters.cpp \
     engine/engine_world__load_effects.cpp \
+    engine/engine_world__load_objects.cpp \
     engine/engine_world__load_stage.cpp \
-    engine/engine_world__load_things.cpp \
     engine/engine_world__update.cpp \
     engine/engine_world__update_player.cpp \
     engine/engine_world__update_velocity.cpp \

@@ -37,20 +37,21 @@ const int   c_desired_light_fbo_size =     4096;        // Desired max width and
 
 // Constants for calling engine addObject calls
 constexpr   double      c_epsilon = 0.000001;                   // Floating point zero
-const       DrPointF    c_center    {0, 0};                     // Default offset in no offset
-const       DrPointF    c_scale1x1  {1, 1};                     // Default scale of 1x1
-const       double      c_default_camera_z =        801;        // Default camera z distance
+const       DrPointF    c_center             {0, 0};            // Default offset in no offset
+const       DrPointF    c_scale1x1           {1, 1};            // Default scale of 1x1
+const       double      c_default_camera_z =  801;              // Default camera z distance
 const       QVector3D   c_default_camera_pos {0, 0, 801};       // Default camera position if there is no active camera
 const       QVector3D   c_default_camera_rot {0, 0, 0};         // Default camera rotation if there is no active camera
-constexpr   double      c_zero_rotate = 0;                      // Default rotation amount of zero
-constexpr   double      c_opaque =     1;                       // Default transparency of fully opaque
-constexpr   double      c_friction =  -1;                       // Flag for add**** call to use world friction setting
-constexpr   double      c_bounce =    -1;                       // Flag for add**** call to use world bounce setting
-constexpr   int         c_no_max_health = -1;                   // Flag for no maximum health
-constexpr   int         c_unlimited_health = -1;                // Flag for unlimited health
-constexpr   int         c_unlimited_jump =   -1;                // Flag for unlimited jump
-const       bool        c_collide_true = true;                  // Constant for collision true
-const       bool        c_collide_false = false;                // Constant for collision false
+constexpr   double      c_zero_rotate =         0;              // Default rotation amount of zero
+constexpr   double      c_opaque =              1;              // Default transparency of fully opaque
+constexpr   double      c_transparent =         0;              // Fully transparent
+constexpr   double      c_friction =           -1;              // Flag for add**** call to use world friction setting
+constexpr   double      c_bounce =             -1;              // Flag for add**** call to use world bounce setting
+constexpr   int         c_no_max_health =      -1;              // Flag for no maximum health
+constexpr   int         c_unlimited_health =   -1;              // Flag for unlimited health
+constexpr   int         c_unlimited_jump =     -1;              // Flag for unlimited jump
+const       bool        c_collide_true =     true;              // Constant for collision true
+const       bool        c_collide_false =   false;              // Constant for collision false
 
 
 // Constants for Object Body / Shape Creation

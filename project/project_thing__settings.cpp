@@ -127,7 +127,7 @@ void DrThing::addComponentSettingsText(QString new_name) {
     property_name->setDescription("Name of this Text Box.");
     property_name->setValue(new_name);
 
-    addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for this Text Box.", Component_Colors::Orange_Medium, true);
+    addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for this Text Box.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);
 
     addPropertyToComponent(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text, Property_Type::String, "Text",

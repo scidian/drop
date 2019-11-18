@@ -72,6 +72,12 @@ private:
     // Object Movement - Rotation
     double          m_rotate_speed =  0.0;          // Speed at which object should spin (on standard 2D Z axis) when Motor Rotate (gas pedal) is pressed
 
+    // Object Controls
+    bool            m_on_touch_drag = false;        // Should this object be able to be dragged by touch / mouse?
+    bool            m_on_touch_damage = false;      // Should this object receive damage when tapped / clicked?
+    double          m_touch_damage_amount = 1.0;    // Amount of damage to receive when tapped / clicked
+
+
     // Object Movement - PlayerUpdateVelocity Callback Func
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
@@ -248,6 +254,16 @@ public:
     // Object Movement - Rotation (On Z Axis)
     const double&   getRotateSpeedZ()           { return m_rotate_speed; }
     void            setRotateSpeedZ(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
+
+    // Object Controls
+    const bool&     getOnTouchDrag()               { return m_on_touch_drag; }
+    const bool&     getOnTouchDamage()             { return m_on_touch_damage; }
+    const double&   getTouchDamageAmount()         { return m_touch_damage_amount; }
+
+    void            setOnTouchDrag(bool touch_drag)         { m_on_touch_drag = touch_drag; }
+    void            setOnTouchDamage(bool touch_damage)     { m_on_touch_damage = touch_damage; }
+    void            setTouchDamageAmount(double damage)     { m_touch_damage_amount = damage; }
+
 
     // Object Movemnt - PlayerUpdateVelocity Callback Func
     const bool&     hasKeyControls()            { return m_key_controls; }

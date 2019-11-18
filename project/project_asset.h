@@ -64,6 +64,7 @@ public:
 
     void        initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation);
     void        initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape);
+    void        initializeAssetSettingsControls(DrAssetType asset_type);
     void        initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points = 1);
     void        initializeAssetSettingsPhysics(DrAssetType asset_type);
 };

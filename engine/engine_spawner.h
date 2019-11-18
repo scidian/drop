@@ -20,7 +20,7 @@ class DrEngineSpawner
 {
 private:
     // External Borrowed Pointers
-    DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
+    DrEngineWorld  *m_world = nullptr;                          // Points to current parent DrEngineWorld
 
     // Local Variables
     DrThing        *m_thing_to_spawn = nullptr;                 // Reference to the DrThing pointer we wish to spawn

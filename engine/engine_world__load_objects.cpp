@@ -126,6 +126,25 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
 
 
 //####################################################################################
+//##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
+//####################################################################################
+void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *object) {
+    double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed).toDouble();
+    bool    on_touch_drag =     asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag).toBool();
+    bool    on_touch_damage =   asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toList()[0].toBool();
+    double  touch_damage =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toList()[1].toDouble();
+
+    if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
+        object->setCanRotate( true );
+        object->setRotateSpeedZ(rotate_speed);
+    }
+    object->setOnTouchDrag(on_touch_drag);
+    object->setOnTouchDamage(on_touch_damage);
+    object->setTouchDamageAmount(touch_damage);
+}
+
+
+//####################################################################################
 //##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *object) {
@@ -188,9 +207,8 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
     bool    can_rotate =        asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate).toBool();
-    double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
-    double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
+    double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;  
 
     // ***** Set Chipmunk Body Type
     Body_Type body_type = Body_Type::Static;
@@ -200,12 +218,14 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
         case 2: body_type = Body_Type::Dynamic;      break;
     }
 
+
     // ***** Add the block to the cpSpace
     DrEngineObject *block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset_key,
                                                x + x_offset, y + y_offset, info.z_order, info.scale,
                                                use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, block);
     block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
+
 
     // ***** Set collision type
     Collision_Type collision_type = Collision_Type::Damage_None;
@@ -217,12 +237,6 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
         case 3: collision_type = Collision_Type::Damage_All;    break;
     }
     block->setCollisionType(collision_type);
-
-    // ***** Physics settings
-    if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
-        block->setCanRotate( true );
-        block->setRotateSpeedZ(rotate_speed);
-    }
     block->setIgnoreGravity( !feels_gravity );
 
     // ***** Velocity settings
@@ -270,6 +284,9 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
     // ***** 3D Settings
     loadThing3DSettings(thing, block);
+
+    // ***** Controls Settings
+    loadThingControlsSettings(asset, block);
 
 
     // ********** Add to world

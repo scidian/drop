@@ -31,10 +31,6 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     ThingInfo   info =      loadThingBasicInfo( thing );
 
     // ***** Load Character Settings
-    ///QVariant cam_position = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position);
-    ///QVariant cam_rotation = thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation);
-    ///player->setCameraPosition( cam_position.value<QVector3D>() );
-    ///player->setCameraRotation( cam_rotation.value<QVector3D>() );
     QPointF cam_position =  thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position).toPointF();
     QPointF cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
     double  cam_tilt =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
@@ -68,7 +64,6 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
     bool    can_rotate =        asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate).toBool();
-    double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed).toDouble();
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
@@ -86,10 +81,6 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCameraMatch(cam_match);
 
     // ***** Apply Character Settings
-    if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
-        player->setCanRotate( true );
-        player->setRotateSpeedZ(rotate_speed);
-    }
     player->setMaxSpeedX( max_speed.x() );
     player->setMaxSpeedY( max_speed.y() );
     player->setForcedSpeedX( forced_speed.x() );
@@ -123,6 +114,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     // ***** 3D Settings
     loadThing3DSettings(thing, player);
+
+    // ***** Controls Settings
+    loadThingControlsSettings(asset, player);
 
 
     // ********** Add to world

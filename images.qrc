@@ -184,5 +184,6 @@
         <file>assets/asset_types/camera.png</file>
         <file>assets/inspector_icons/comp_spawn.png</file>
         <file>assets/toolbar_icons/toolbar_play_stage.png</file>
+        <file>assets/inspector_icons/comp_controls.png</file>
     </qresource>
 </RCC>

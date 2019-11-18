@@ -32,8 +32,6 @@ void DrStage::initializeStageSettings(QString new_name) {
 
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for this stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
-
-
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Enabled, Property_Type::Bool, true,
                            "Enabled?", "Should this Stage be able to be shown?");
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
@@ -46,12 +44,10 @@ void DrStage::initializeStageSettings(QString new_name) {
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after stage plays before it is possible to start showing again.");
 
-
     addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "
                                                  "to 45 degrees, and set \"Grid Scale\" X value twice the size \"Grid Scale\" Y value (i.e. X: 2, Y: 1).",
                                                  Component_Colors::Pink_Pearl, true);
     getComponent(Components::Stage_Grid)->setIcon(Component_Icons::Transform);
-
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, 0,
                            "Grid Style", "Visual style of alignment grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, QPointF(0, 0),

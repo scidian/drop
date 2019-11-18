@@ -12,11 +12,13 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine/form_engine.h"
-#include "opengl/opengl.h"
 #include "helper.h"
+#include "opengl/opengl.h"
+#include "project/project.h"
+
 
 //####################################################################################
 //##    Mouse Events
@@ -52,13 +54,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 circle->setOriginalVelocityX(vel_y);
                 world->addThing(circle);
             }
-        } else if (event->button() & Qt::MiddleButton) {            
-            DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
-            block->addShapeBoxFromTexture(Asset_Textures::Block);
-            world->addThing(block);
-
         } else if (event->button() & Qt::RightButton) {
-
             // Polygon shape points should be counter-clockwise
             QVector<DrPointF> points;
             points.append( DrPointF( 20, -55) );    // Right Bottom
@@ -75,18 +71,52 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
     } else if (m_form_engine->demo_player == Demo_Player::Car) {
         if (event->button() & Qt::LeftButton) {
-            if (event->pos().x() < width() / 2)
-                g_pedal = Pedal::Clockwise;
-            else
-                g_pedal = Pedal::CounterClockwise;
-        } else if (event->button() & Qt::RightButton)
+            if (event->pos().x() < width() / 2) g_pedal = Pedal::Clockwise;
+            else                                g_pedal = Pedal::CounterClockwise;
+        } else if (event->button() & Qt::RightButton) {
             g_pedal = Pedal::CounterClockwise;
+        }
 
     } else if (m_form_engine->demo_player == Demo_Player::Jump ||
                m_form_engine->demo_player == Demo_Player::Light ||
                m_form_engine->demo_player == Demo_Player::Player) {
+
         if (event->button() & Qt::LeftButton) {
-            g_jump_button = true;
+            bool should_jump = true;
+
+            // struct cpPointQueryInfo {
+            //      const cpShape *shape;           // The nearest shape, NULL if no shape was within range.
+            //      cpVect point;                   // The closest point on the shape's surface. (in world space coordinates)
+            //      cpFloat distance;               // The distance to the point. The distance is negative if the point is inside the shape.
+            //      cpVect gradient;                // The gradient of the signed distance function. The value should be similar to info.p/info.d,
+            //                                      //      but accurate even for very small values of info.d
+            DrEngineObject  *touch = nullptr;
+            cpPointQueryInfo point_query;
+            cpFloat          max_distance = 10.0;
+            cpShape         *nearest = cpSpacePointQueryNearest(world->getSpace(), cpv(x, y), max_distance, CP_SHAPE_FILTER_ALL, &point_query);
+
+            if (nearest != nullptr) {
+                touch = static_cast<DrEngineObject*>(cpShapeGetUserData(nearest));
+
+                if (touch != nullptr) {
+                    ///DrSettings *settings = m_engine->getProject()->findSettingsFromKey(touch->getOriginalKey(), false);
+                    ///if (settings != nullptr) { }
+
+                    if (touch->getOnTouchDamage()) {
+                        touch->takeDamage(touch->getTouchDamageAmount(), true);
+                        should_jump = false;
+                    }
+
+                    if (touch->getOnTouchDrag()) {
+
+                        should_jump = false;
+                    }
+                }
+            }
+
+            if (should_jump) g_jump_button = true;
+
+
         } else if (event->button() & Qt::RightButton) {
             for (int i = 0; i < 25; i++ ) {
                 DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
@@ -117,7 +147,8 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
                m_form_engine->demo_player == Demo_Player::Light ||
                m_form_engine->demo_player == Demo_Player::Player) {
         if (event->buttons() == Qt::MouseButton::NoButton) {
-            g_jump_button = false;
+            g_jump_button =  false;
+            g_shoot_button = false;
             g_pedal = Pedal::None;
         }
     }

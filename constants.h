@@ -22,15 +22,14 @@ namespace Component_Colors {
     const QColor Silver_Snow        { QColor(192, 188, 183, 255) };
     const QColor Darkness           { QColor( 40,  33,  33, 255) };
 
-    const QColor Orange_Medium      { QColor(221, 110,  66, 255) };
-    const QColor Orange_Pastel      { QColor(0xfa, 0x92, 0, 255) };
+    const QColor Orange_Pastel      { QColor(250, 146,   0, 255) };
 
     const QColor Pink_Pearl         { QColor(228, 180, 194, 255) };
     const QColor Red_Faded          { QColor(255, 105, 120, 255) };
 
     const QColor Red_Tuscan         { QColor(104,  71,  86, 255) };
     const QColor Purple_Pastel      { QColor(176, 161, 186, 255) };
-    const QColor Purple_Royal       { QColor("#7E57C2") };
+    const QColor Purple_Royal       { QColor(126,  87, 194, 255) };
     const QColor Blue_Yonder        { QColor(165, 181, 191, 255) };
     const QColor Blue_Royal         { QColor( 57, 120, 237, 255) };
 
@@ -69,6 +68,7 @@ namespace Component_Icons {
     const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
     const QString Effects       { QString(":/assets/inspector_icons/comp_effects.png") };
     const QString Health        { QString(":/assets/inspector_icons/comp_health.png") };
+    const QString Controls      { QString(":/assets/inspector_icons/comp_controls.png") };
 
     // Thing Components
     const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };

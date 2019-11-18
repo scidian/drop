@@ -179,6 +179,7 @@ public:
     void            loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
     ThingInfo       loadThingBasicInfo(DrThing *thing);
     void            loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
+    void            loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
     void            loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
 
     void            loadCameraToWorld(DrThing *thing, double offset_x, double offset_y);

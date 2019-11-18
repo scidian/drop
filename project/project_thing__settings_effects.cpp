@@ -62,7 +62,7 @@ void DrThing::addComponentSettingsFisheye() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fisheye");
 
-    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::Orange_Medium, true);
+    addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
 
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),

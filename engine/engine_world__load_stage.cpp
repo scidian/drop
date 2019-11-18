@@ -38,7 +38,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 
 
     // ********** Load Things
-    for (auto thing_pair : stage->getThingMap()) {
+    for (auto &thing_pair : stage->getThingMap()) {
 
         // Grab current Thing
         DrThing *thing = thing_pair.second;

@@ -131,7 +131,7 @@ void DrAsset::initializeAssetSettingsFont(DrFont *font) {
     property_name->setDescription("Name of this Font Asset.");
     property_name->setValue(font->getName());
 
-    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Medium, true);
+    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
 
     addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),

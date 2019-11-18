@@ -84,34 +84,6 @@ void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap d
 
 
 //####################################################################################
-//##    Physics Components
-//####################################################################################
-void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
-    QString type = Dr::StringFromAssetType(asset_type);
-
-    addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Medium, true);
-    getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
-
-    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity, Property_Type::Bool, true,
-                           "Feels Gravity?", "Should this character be affected by gravity?");
-    // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
-    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction,
-                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
-                           "Custom Friction?", "All Things default to World Friction unless specified otherwise here. Friction usually ranges from "
-                                                "0.0 to 2.0 or higher.");
-    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce,
-                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
-                           "Custom Bounce?", "All Things default to World Bounce unless specified otherwise here. Bounce usually ranges from "
-                                              "0.0 to 2.0 or higher.");
-    bool default_can_rotate = (asset_type == DrAssetType::Character) ? false : true;
-    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate, Property_Type::Bool, default_can_rotate,
-                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed. Rotation can still be altered by Motor Buttons.");
-    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Rotate_Speed, Property_Type::Double, 0.0,
-                           "Motor Speed", "Speed at which this Thing rotates when Motor Buttons are pressed.");
-
-}
-
-//####################################################################################
 //##    Health Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points) {
@@ -153,7 +125,53 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
 }
 
 
+//####################################################################################
+//##    Physics Components
+//####################################################################################
+void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
+    QString type = Dr::StringFromAssetType(asset_type);
 
+    addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Pastel, true);
+    getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
+
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity, Property_Type::Bool, true,
+                           "Feels Gravity?", "Should this character be affected by gravity?");
+    // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
+                           "Custom Friction?", "All Things default to World Friction unless specified otherwise here. Friction usually ranges from "
+                                                "0.0 to 2.0 or higher.");
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
+                           "Custom Bounce?", "All Things default to World Bounce unless specified otherwise here. Bounce usually ranges from "
+                                              "0.0 to 2.0 or higher.");
+    bool default_can_rotate = (asset_type == DrAssetType::Character) ? false : true;
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate, Property_Type::Bool, default_can_rotate,
+                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed. Rotation can still be altered by Motor Buttons.");
+}
+
+
+
+//####################################################################################
+//##    Controls Components
+//####################################################################################
+void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
+    QString type = Dr::StringFromAssetType(asset_type);
+
+    addComponent(Components::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::Brown_Sugar, true);
+    getComponent(Components::Asset_Controls)->setIcon(Component_Icons::Controls);
+
+    // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage,
+                           Property_Type::BoolDouble, QList<QVariant>({false, 1.0, -1000000000, 1000000000, 1, "Damage: "}),
+                           "On Touch Damage", "Should this " + Dr::StringFromAssetType(asset_type) + " take damage when touched / tapped / clicked with the mouse? "
+                                              "If so, how much damage? Can be negative (healing).");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag, Property_Type::Bool, false,
+                           "On Touch Drag", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be dragged by mouse / touch?");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,
+                           "Motor Speed", "Speed at which this " + Dr::StringFromAssetType(asset_type) + " rotates when Motor Buttons are pressed.");
+
+}
 
 
 

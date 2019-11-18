@@ -65,8 +65,8 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:                    40,
-//##    !!!!! MUST ALSO CHANGE:     Components::Total = 40 !!!!!
+//##    !!!!! NEXT AVAILABLE NUMBER:                    41,
+//##    !!!!! MUST ALSO CHANGE:     Components::Total = 41 !!!!!
 //##
 //############################
 enum class Components {
@@ -84,8 +84,9 @@ enum class Components {
 
     Asset_Collision                     = 5,
     Asset_Animation                     = 6,
-    Asset_Physics                       = 35,
     Asset_Health                        = 34,
+    Asset_Physics                       = 35,
+    Asset_Controls                      = 40,
 
 
     // ***** DrWorld Components
@@ -128,7 +129,7 @@ enum class Components {
     Thing_Appearance                    = 32,
     Thing_Special_Effects               = 33,
 
-    Total = 40,
+    Total = 41,
 };
 
 
@@ -136,9 +137,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   202
+//##    !!!!! NEXT AVAILABLE NUMBER:   204
 //##
-//##    Checked for doubles up through 202 on 11/11/2019
+//##    Checked for doubles up through 204 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -204,13 +205,6 @@ enum class Properties {
     // Asset_Animation
     Asset_Animation_Default             = 22,       // image
 
-    // Asset_Physics
-    Asset_Physics_Feels_Gravity         = 18,       // bool
-    Asset_Physics_Custom_Friction       = 162,      // bool double combo
-    Asset_Physics_Custom_Bounce         = 163,      // bool double combo
-    Asset_Physics_Can_Rotate            = 17,       // bool
-    Asset_Physics_Rotate_Speed          = 181,      // double
-
     // Asset_Health
     Asset_Health_Max_Health             = 144,      // double
     Asset_Health_Health                 = 145,      // double
@@ -224,6 +218,17 @@ enum class Properties {
     Asset_Health_Damage_Recoil          = 152,      // double
     Asset_Health_Invincible             = 153,      // bool
     Asset_Health_Death_Touch            = 154,      // bool
+
+    // Asset_Physics
+    Asset_Physics_Feels_Gravity         = 18,       // bool
+    Asset_Physics_Custom_Friction       = 162,      // bool double combo
+    Asset_Physics_Custom_Bounce         = 163,      // bool double combo
+    Asset_Physics_Can_Rotate            = 17,       // bool
+
+    // Asset_Controls
+    Asset_Controls_Touch_Damage         = 202,      // bool double
+    Asset_Controls_Touch_Drag           = 203,      // bool
+    Asset_Controls_Rotate_Speed         = 181,      // double
 
 
     // ******************** DrWorld Component Properties

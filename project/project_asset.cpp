@@ -61,8 +61,9 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             }
             initializeAssetSettingsCollision(getAssetType(), shape);
             initializeAssetSettingsAnimation(getAssetType(), my_starting_pixmap);
-            initializeAssetSettingsPhysics(getAssetType());
             initializeAssetSettingsHealth(getAssetType(), hit_points);
+            initializeAssetSettingsPhysics(getAssetType());
+            initializeAssetSettingsControls(getAssetType());
             break;
         }
         case DrAssetType::Device: {
