@@ -89,28 +89,78 @@ void DrEngineVertexData::initializeTextureCube() {
 //##    Builds a Textured Spike (eventually cone)
 //####################################################################################
 void DrEngineVertexData::initializeTextureCone() {
-    m_data.resize(36 * c_vertex_length);
+    m_data.resize(16 * c_vertex_length);
 
+    QMatrix4x4 rotate;  rotate.setToIdentity();
     int   width =  1;
     int   height = 1;
     float w2 = width  / 2.f;
     float h2 = height / 2.f;
 
     // EXAMPLE: Adding Triangles
-    GLfloat x1 = +w2, y1 = +h2;         // Top Right
-    GLfloat x2 = -w2, y2 = +h2;         // Top Left
-    GLfloat x3 = +w2, y3 = -h2;         // Bottom Right
-    GLfloat x4 = -w2, y4 = -h2;         // Bottom Left
+    GLfloat x1,   y1,  x2,  y2,  x3,  y3,  x4,  y4;
+    GLfloat tx1, ty1, tx2, ty2, tx3, ty3, tx4, ty4;
+    QVector3D n;
 
-    GLfloat tx1 = 1.0, ty1 = 1.0;
-    GLfloat tx2 = 0.0, ty2 = 1.0;
-    GLfloat tx3 = 1.0, ty3 = 0.0;
-    GLfloat tx4 = 0.0, ty4 = 0.0;
+    x1 =    0;  y1 = +h2;               // Top
+    x2 =  -w2;  y2 = -h2;               // Bottom Left
+    x3 =  +w2;  y3 = -h2;               // Bottom Right
+    tx1 = 0.5; ty1 = 0.5;
+    tx2 = 0.0; ty2 = 0.0;
+    tx3 = 1.0; ty3 = 0.0;
 
-    cube( x1,  y1,  tx1, ty1,
-          x2,  y2,  tx2, ty2,
-          x3,  y3,  tx3, ty3,
-          x4,  y4,  tx4, ty4);
+    n = QVector3D::normal(QVector3D(x3 - x1, y3 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
+    QVector3D point_t( x1, y1,                0);
+    QVector3D point_bl(x2, y2, +c_extrude_depth);
+    QVector3D point_br(x3, y3, +c_extrude_depth);
+
+    for (int i = 0; i <= 4; ++i) {
+        add(point_t , n, QVector2D(tx1, ty1), Triangle_Point::Point1);
+        add(point_bl, n, QVector2D(tx2, ty2), Triangle_Point::Point2);
+        add(point_br, n, QVector2D(tx3, ty3), Triangle_Point::Point3);
+
+        rotate.rotate( 90.f, 0.0, 1.0, 0.0);
+
+        point_t =  rotate * point_t;
+        point_bl = rotate * point_bl;
+        point_br = rotate * point_br;
+        n =  rotate * n;
+    }
+
+
+    // Bottom Square
+    x1 =  +w2;  y1 = +h2;               // Top Right
+    x2 =  -w2;  y2 = +h2;               // Top Left
+    x3 =  +w2;  y3 = -h2;               // Bottom Right
+    x4 =  -w2;  y4 = -h2;               // Bottom Left
+    tx1 = 1.0; ty1 = 1.0;
+    tx2 = 0.0; ty2 = 1.0;
+    tx3 = 1.0; ty3 = 0.0;
+    tx4 = 0.0; ty4 = 0.0;
+
+    rotate.setToIdentity();
+    QVector3D  nf;                                      // Normal Front
+    QVector3D  p1f, p2f, p3f, p4f;                      // Point 1 Front, etc
+    nf = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, 0.0f), QVector3D(x2 - x1, y2 - y1, 0.0f));
+    //nf = QVector3D::normal(QVector3D(x1 - x4, y1 - y4, 0.0f), QVector3D(x2 - x4, y2 - y4, 0.0f));
+    p1f = QVector3D(x1, y1, +c_extrude_depth);
+    p2f = QVector3D(x2, y2, +c_extrude_depth);
+    p3f = QVector3D(x3, y3, +c_extrude_depth);
+    p4f = QVector3D(x4, y4, +c_extrude_depth);
+
+    rotate.rotate( 90.f, 1.0, 0.0, 0.0);
+    nf =  rotate * nf;
+    p1f = rotate * p1f;
+    p2f = rotate * p2f;
+    p3f = rotate * p3f;
+    p4f = rotate * p4f;
+
+    add(p1f, nf, QVector2D(tx1, ty1), Triangle_Point::Point1);
+    add(p2f, nf, QVector2D(tx2, ty2), Triangle_Point::Point2);
+    add(p3f, nf, QVector2D(tx3, ty3), Triangle_Point::Point3);
+    add(p2f, nf, QVector2D(tx2, ty2), Triangle_Point::Point1);
+    add(p4f, nf, QVector2D(tx4, ty4), Triangle_Point::Point2);
+    add(p3f, nf, QVector2D(tx3, ty3), Triangle_Point::Point3);
 }
 
 
