@@ -75,7 +75,7 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector, Property_Type::List, 0,
                            "Camera Up Vector", "Camera Up Vectors for this World. Default for most games / styles of gameplay is for a Y Axis Up "
-                                        "Vector. If making a First Person style game, rotate camera X or Y to 90 degrees and set Up Vector to Z Axis.");
+                                               "Vector. If making a First Person style game, set Up Vector to Z Axis.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. Generally less than 10.");
@@ -88,7 +88,8 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
                                           "This is the tilt angle (Z Axis rotation) of that camera. ");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle, Property_Type::Bool, false,
                            "Rotation Follow", "Should this camera rotate to so that it matches the Character's Z Rotation? "
-                                              "Rotates World with Y Up Vector, first person perspective movement with Z Up. ");
+                                              "When Up Vectoris set to Y the whole world will spin. When it is set to Z, it allows you to have "
+                                              "first person directional looking. ");
 }
 
 //####################################################################################

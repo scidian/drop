@@ -43,7 +43,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     m_view.setToIdentity();
     m_projection.setToIdentity();
 
-    // ***** Set camera position
+    // ***** Camera position
     DrEngineWorld *world = m_engine->getCurrentWorld();
     if (world == nullptr) return;
     float cam_x = world->getCameraPosition().x() * combinedZoomScale();
@@ -53,13 +53,34 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     m_look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * combinedZoomScale() );
     m_up =      world->getCameraUpVector();
 
+    float plane_scale = combinedZoomScale();
+    if (plane_scale < 1.0f) plane_scale = 1.0f;
+
+    // Orthographic
+    if (render_type == Render_Type::Orthographic) {
+        float left =   -(width()  * devicePixelRatio() / 2.0f);
+        float right =  +(width()  * devicePixelRatio() / 2.0f);
+        float top =    +(height() * devicePixelRatio() / 2.0f);
+        float bottom = -(height() * devicePixelRatio() / 2.0f);
+        m_projection.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
+
+    // Perspective
+    } else {
+        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * plane_scale );
+    }
+
+
     // ***** Camera Rotation
+    float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
+    float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
+
     //          X Rotation, controls up / down
     //          Y Rotation, controls left / right
     QMatrix4x4 rotate_eye;
     rotate_eye.translate( m_look_at);
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationY()) + c_not_zero, 0.0f, 1.0f, 0.0f);
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()) + c_not_zero, 1.0f, 0.0f, 0.0f);
+    if (dist_z < dist_y) rotate_eye.rotate(90.0001f, 1.0f, 0.0f, 0.0f);         // Extra Z Up Rotation
     rotate_eye.translate(-m_look_at);
     m_eye = rotate_eye * m_eye;
 
@@ -68,27 +89,9 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     rotate_up.rotate(static_cast<float>(world->getCameraRotationZ()), 0.0f, 0.0f, 1.0f);
     m_up = rotate_up * m_up;
 
-    float plane_scale = combinedZoomScale();
-    if (plane_scale < 1.0f) plane_scale = 1.0f;
-
-    // ***** Orthographic
-    if (render_type == Render_Type::Orthographic) {
-        float left =   -(width()  * devicePixelRatio() / 2.0f);
-        float right =  +(width()  * devicePixelRatio() / 2.0f);
-        float top =    +(height() * devicePixelRatio() / 2.0f);
-        float bottom = -(height() * devicePixelRatio() / 2.0f);
-        m_projection.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
-
-    // ***** Perspective
-    } else {
-        m_projection.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * plane_scale );
-    }
 
     // ***** Rotation locked to Camera Follow Thing
     if (world->getCameraMatching()) {
-        float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
-        float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
-
         // Apply rotation as a percentage of distance from max distance of square root of 2, useful for camera tweening between camera up vectors
         float sqrt_2 = static_cast<float>(sqrt(2.0));
         if (dist_y < sqrt_2) {
@@ -125,7 +128,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     float scale = (render_type == Render_Type::Orthographic) ? (c_occluder_scale_ortho) : (c_occluder_scale_proj);
           scale *= combinedZoomScale();
 
-    // ***** Set camera position
+    // ***** Camera position
     DrEngineWorld *world = m_engine->getCurrentWorld();
     if (world == nullptr) return;
     float cam_x = world->getCameraPosition().x() * scale;
@@ -138,7 +141,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     float plane_scale = scale;
     if (plane_scale < 1.0f) plane_scale = 1.0f;
 
-    // ***** Orthographic
+    // Orthographic
     if (render_type == Render_Type::Orthographic) {
         float left =   -(m_occluder_fbo->width() /  2.0f);
         float right =  +(m_occluder_fbo->width() /  2.0f);
@@ -146,12 +149,12 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
         float bottom = -(m_occluder_fbo->height() / 2.0f);
         proj_matrix.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
 
-    // ***** Perspective
+    // Perspective
     } else {
         proj_matrix.perspective( c_field_of_view, aspect_ratio, 1.0f, (c_far_plane - c_near_plane) * plane_scale );
     }
 
-    // ***** Set Look At and Scale, Dont need extra rotation
+    // ***** Set Look At and Scale, Don't need extra rotation
     ///view_matrix.lookAt(m_eye, m_look_at, m_up);
     QVector3D eye =     QVector3D( cam_x, cam_y, cam_z );
     QVector3D look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * scale );
