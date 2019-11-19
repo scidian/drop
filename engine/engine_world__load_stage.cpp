@@ -140,7 +140,7 @@ void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double of
 
     float x = static_cast<float>( info.position.x + offset_x);
     float y = static_cast<float>(-info.position.y + offset_y);
-    DrEngineCamera *camera = addCamera(0, x, y);
+    DrEngineCamera *camera = addCamera(0, x, y, c_default_camera_z);
     camera->setSpeed( cam_speed.x(), cam_speed.y(), 0.0 );
     camera->setRotation( cam_rotation.x(), cam_rotation.y(), info.angle );
     camera->setWantActive( wants_active );

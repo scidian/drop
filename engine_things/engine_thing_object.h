@@ -73,9 +73,10 @@ private:
     double          m_rotate_speed =  0.0;          // Speed at which object should spin (on standard 2D Z axis) when Motor Rotate (gas pedal) is pressed
 
     // Object Controls
-    bool            m_on_touch_drag = false;        // Should this object be able to be dragged by touch / mouse?
-    bool            m_on_touch_damage = false;      // Should this object receive damage when tapped / clicked?
-    double          m_touch_damage_amount = 1.0;    // Amount of damage to receive when tapped / clicked
+    bool            m_touch_drag = false;           // Should this object be able to be dragged by touch / mouse?
+    double          m_touch_drag_force = 100.0;     // Max force the constraint holding this object to the mouse_body can apply (as a percentange)
+    bool            m_touch_damage = false;         // Should this object receive damage when tapped / clicked?
+    double          m_touch_damage_points = 1.0;    // Amount of damage to receive when tapped / clicked
 
 
     // Object Movement - PlayerUpdateVelocity Callback Func
@@ -256,13 +257,15 @@ public:
     void            setRotateSpeedZ(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
 
     // Object Controls
-    const bool&     getOnTouchDrag()               { return m_on_touch_drag; }
-    const bool&     getOnTouchDamage()             { return m_on_touch_damage; }
-    const double&   getTouchDamageAmount()         { return m_touch_damage_amount; }
+    const bool&     hasTouchDrag()              { return m_touch_drag; }
+    const double&   getTouchDragForce()         { return m_touch_drag_force; }
+    const bool&     hasTouchDamage()            { return m_touch_damage; }
+    const double&   getTouchDamagePoints()      { return m_touch_damage_points; }
 
-    void            setOnTouchDrag(bool touch_drag)         { m_on_touch_drag = touch_drag; }
-    void            setOnTouchDamage(bool touch_damage)     { m_on_touch_damage = touch_damage; }
-    void            setTouchDamageAmount(double damage)     { m_touch_damage_amount = damage; }
+    void            setTouchDrag(bool touch_drag)           { m_touch_drag = touch_drag; }
+    void            setTouchDragForce(double drag_force)    { m_touch_drag_force = drag_force; }
+    void            setTouchDamage(bool touch_damage)       { m_touch_damage = touch_damage; }
+    void            setTouchDamagePoints(double damage)     { m_touch_damage_points = damage; }
 
 
     // Object Movemnt - PlayerUpdateVelocity Callback Func

@@ -130,17 +130,19 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
 //####################################################################################
 void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *object) {
     double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed).toDouble();
-    bool    on_touch_drag =     asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag).toBool();
-    bool    on_touch_damage =   asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toList()[0].toBool();
-    double  touch_damage =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toList()[1].toDouble();
+    bool    touch_drag =        asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag).toList()[0].toBool();
+    double  touch_drag_force =  asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag).toList()[1].toDouble();
+    bool    touch_damage =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toList()[0].toBool();
+    double  touch_damage_pts =  asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toList()[1].toDouble();
 
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
         object->setCanRotate( true );
         object->setRotateSpeedZ(rotate_speed);
     }
-    object->setOnTouchDrag(on_touch_drag);
-    object->setOnTouchDamage(on_touch_damage);
-    object->setTouchDamageAmount(touch_damage);
+    object->setTouchDrag(         touch_drag);
+    object->setTouchDragForce(    touch_drag_force);
+    object->setTouchDamage(       touch_damage);
+    object->setTouchDamagePoints( touch_damage_pts);
 }
 
 

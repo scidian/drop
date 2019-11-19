@@ -23,6 +23,8 @@ enum class Engine_Timer {
     Update,
     Render,
     Camera,
+    Fps,
+    Input,
 };
 
 //####################################################################################
@@ -46,6 +48,7 @@ private:
     Clock::time_point   m_time_update;                          // Checks time between SpaceStep calls
     Clock::time_point   m_time_render;                          // Checks time between paintGL calls
     Clock::time_point   m_time_camera;                          // Checks time between moveCamera calls
+    Clock::time_point   m_time_input;                           // Checks time between Input Update calls
     Clock::time_point   m_time_physics;                         // Stores time since last physics call
     Clock::time_point   m_time_frame;                           // Stores time since last paint call
     bool                m_running = false;

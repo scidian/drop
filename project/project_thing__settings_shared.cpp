@@ -102,7 +102,8 @@ void DrThing::addComponentMovement() {
                                               "along an arc instead of spinning in place) <br> "
                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Player, Property_Type::Bool, false,
-                           "Rotate To Player?", "Should the Rotation of this object try and point towards (Y Axis Up) the active player? <br> "
+                           "Rotate To Player?", "Should the Rotation of this object try and point towards (Y Axis Up) the active player? Rotates this"
+                                                "direction at Rotate Speed Z speed. <br> "
                                                 "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
 }
 

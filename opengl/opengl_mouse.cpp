@@ -105,18 +105,22 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 touch = static_cast<DrEngineObject*>(cpShapeGetUserData(nearest));
 
                 if (touch != nullptr) {
-                    if (touch->getOnTouchDamage()) {
-                        touch->takeDamage(touch->getTouchDamageAmount(), true);
+                    if (touch->hasTouchDamage()) {
+                        touch->takeDamage(touch->getTouchDamagePoints(), true);
                         should_jump = false;
                     }
 
-                    if (touch->getOnTouchDrag()) {
+                    if (touch->hasTouchDrag()) {
                         if (touch->body_type == Body_Type::Kinematic) {
                             g_drag_body = touch->body;
                             should_jump = false;
 
                         } else if (touch->body_type == Body_Type::Dynamic) {
                             g_mouse_joint = cpPivotJointNew(g_mouse_body, touch->body, cpBodyGetPosition(touch->body));
+                            double max_force = 10000;
+                            double body_mass = cpBodyGetMass(touch->body);
+                            if (isinf(body_mass) == false && isnan(body_mass) == false) max_force *= body_mass * (touch->getTouchDragForce() / 100.0);
+                            cpConstraintSetMaxForce(g_mouse_joint, max_force);
                             cpSpaceAddConstraint(world->getSpace(), g_mouse_joint);
                             should_jump = false;
                         }

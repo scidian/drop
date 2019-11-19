@@ -219,6 +219,8 @@ void FormEngine::startTimers() {
     m_time_camera =  Clock::now();
     m_time_physics = Clock::now();
     m_time_frame =   Clock::now();
+    m_time_fps =     Clock::now();
+    m_time_input =   Clock::now();
     m_update_timer->start( 0 );                         // Timeout of zero will call this timeout every pass of the event loop
 }
 void FormEngine::stopTimers() {
@@ -230,6 +232,8 @@ double FormEngine::getTimerMilliseconds(Engine_Timer time_since_last) {
         case Engine_Timer::Update:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_update).count() /  1000000.0;
         case Engine_Timer::Render:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_render).count() /  1000000.0;
         case Engine_Timer::Camera:  return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_camera).count() /  1000000.0;
+        case Engine_Timer::Fps:     return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps   ).count() /  1000000.0;
+        case Engine_Timer::Input:   return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_input ).count() /  1000000.0;
     }
 }
 void FormEngine::resetTimer(Engine_Timer timer_to_reset) {
@@ -237,6 +241,8 @@ void FormEngine::resetTimer(Engine_Timer timer_to_reset) {
         case Engine_Timer::Update:  m_time_update =  Clock::now();      break;
         case Engine_Timer::Render:  m_time_render =  Clock::now();      break;
         case Engine_Timer::Camera:  m_time_camera =  Clock::now();      break;
+        case Engine_Timer::Fps:     m_time_fps =     Clock::now();      break;
+        case Engine_Timer::Input:   m_time_input =   Clock::now();      break;
     }
 }
 
@@ -251,20 +257,34 @@ void FormEngine::moveCameras() {
 // ***** MAIN UPDATE LOOP: Space (Physics), Rendering
 void FormEngine::updateEngine() {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
-    m_running = true;
+    m_running = true;   
 
     // ***** Calculates Render Frames per Second
-    double fps_milli = std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_time_fps).count() / 1000000.0;
-    if (fps_milli > 1000.0) {
+    double fps_milliseconds = getTimerMilliseconds(Engine_Timer::Fps);
+    if (fps_milliseconds > 1000.0) {
         fps_render =  fps_count_render;         fps_count_render =  0;
         fps_physics = fps_count_physics;        fps_count_physics = 0;
         fps_camera =  fps_count_camera;         fps_count_camera =  0;
-        m_time_fps =  Clock::now();
+        resetTimer(Engine_Timer::Fps);
 
         bool cam_enabled = pushCamera->isEnabled();
         bool can_enable_cam = (m_engine->getCurrentWorld()->getCameraMap().size() > 1);
         if (cam_enabled != can_enable_cam) pushCamera->setEnabled( can_enable_cam );
     }
+
+    // ***** Update Mouse Position
+    double input_milliseconds = getTimerMilliseconds(Engine_Timer::Input);
+    if (input_milliseconds > 30.0) {
+        QMouseEvent *event = new QMouseEvent(QMouseEvent::MouseMove, m_opengl->mapFromGlobal(QCursor::pos()), Qt::MouseButton::NoButton, { }, { });
+        m_opengl->mouseMoveEvent(event);
+        resetTimer(Engine_Timer::Input);
+    }
+
+
+    g_info = "Cam X: " + QString::number(m_engine->getCurrentWorld()->getCameraPositionX()) +
+             " \t , Y: " + QString::number(m_engine->getCurrentWorld()->getCameraPositionY()) +
+             " \t , Z: " + QString::number(m_engine->getCurrentWorld()->getCameraPositionZ());
+
 
     // ***** Update Physics and Render
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);

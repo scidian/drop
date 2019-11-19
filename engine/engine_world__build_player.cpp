@@ -28,7 +28,7 @@
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
     // Create camera
     if (add_camera) {
-        DrEngineCamera *camera = addCamera(object->getKey());
+        DrEngineCamera *camera = addCamera(object->getKey());       
         if (set_active_camera) setActiveCamera( camera->getKey() );
     }
     object->setCollisionType( Collision_Type::Damage_Enemy );
@@ -270,16 +270,6 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         for (auto shape : wheel2->shapes) cpShapeSetFilter( shape, filter);
         for (auto shape : wheel3->shapes) cpShapeSetFilter( shape, filter);
         for (auto shape : spare1->shapes) cpShapeSetFilter( shape, filter);
-
-
-        // Set constrained objects not to collide with each other, unfortunately they still collide with other parts of the car
-        ///cpConstraintSetCollideBodies(groove1, cpFalse);
-        ///cpConstraintSetCollideBodies(groove2, cpFalse);
-        ///cpConstraintSetCollideBodies(groove3, cpFalse);
-        ///cpConstraintSetCollideBodies(spring1, cpFalse);
-        ///cpConstraintSetCollideBodies(spring2, cpFalse);
-        ///cpConstraintSetCollideBodies(spring3, cpFalse);
-        ///cpConstraintSetCollideBodies(joint1,  cpFalse);
     }
 }
 
