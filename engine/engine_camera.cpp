@@ -179,17 +179,20 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
         if (it == m_cameras.end()) it = m_cameras.begin();              // End of map, loop back around
         if ((*it).second->getKey() == m_active_camera) return;          // Made it back to active camera, cancel switching
 
-        if (only_switch_to_character_cameras) {
+        if ((*it).second->wasFollowLost() == false) {
             if ((*it).second->getThingFollowingKey() != 0) {
-                DrEngineThing *thing = findThingByKey((*it).second->getThingFollowingKey());
-                if (thing != nullptr && thing->getThingType() == DrThingType::Object) {
-                    found_camera = true;
+                DrEngineThing *following = findThingByKey((*it).second->getThingFollowingKey());
+                if (following != nullptr) {
+                    if (only_switch_to_character_cameras == false || following->getThingType() == DrThingType::Object)
+                        found_camera = true;
                 }
+            } else if (only_switch_to_character_cameras == false) {
+                found_camera = true;
             }
-        } else {
-            found_camera = true;
         }
     } while (found_camera == false);
+
+    g_info = "Cam Following Key: " + QString::number((*it).second->getThingFollowingKey());
 
     // If not active camera already, switch cameras
     long new_key = (*it).second->getKey();
@@ -325,8 +328,14 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 //####################################################################################
 DrEngineThing* DrEngineCamera::getThingFollowing() {
     DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
-    if (follow == nullptr) {                                m_follow_key = 0;   return nullptr;     }
-    if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   return nullptr;     }
+    if (follow == nullptr) {
+        if (m_follow_key != 0) {
+            m_follow_key = 0;
+            m_follow_lost = true;
+        }
+        return nullptr;
+    }
+    if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   m_follow_lost = true;   return nullptr;     }
     return follow;
 }
 
