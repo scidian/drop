@@ -64,9 +64,9 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ********** Grab object from User Data
     DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
 
-    // Check if object ignores gravity, adjust gravity to zero if so
-    if (object->ignoreGravity()) gravity = cpvzero;
-
+    // Adjust object gravity
+    gravity.x *= object->getGravityScale().x;
+    gravity.y *= object->getGravityScale().y;
 
     // ********** Get Keys - If player is still active, get keyboard status
     double  key_x =     0;
@@ -376,15 +376,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ********** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
     cpBodySetVelocity( object->body, velocity );
-
-    if (object->ignoreGravity()) {
-        cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
-    } else {
-        cpVect multi_gravity = cpv(gravity.x * object->getTempGravityMultiplier(),
-                                   gravity.y * object->getTempGravityMultiplier());
-        cpBodyUpdateVelocity(body, multi_gravity, damping, dt);
-    }
-
+    cpBodyUpdateVelocity(body, cpv(actual_gravity_x, actual_gravity_y), damping, dt);
 }
 
 

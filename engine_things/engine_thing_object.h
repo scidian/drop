@@ -108,7 +108,7 @@ private:
     bool            m_wall_jump = false;            // Can this player jump off of walls?
 
     bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
-    bool            m_ignore_gravity = false;       // If turned to true, this object no longer is affected by gravity
+    DrPointF        m_gravity_scale { 1.0, 1.0 };   // Multiplies gravity by this scale for Dynamic objects, changes how gravity affects object
 
     bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
     bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
@@ -290,7 +290,7 @@ public:
     const bool&     canAirJump()                { return m_air_jump; }
     const bool&     canWallJump()               { return m_wall_jump; }
     const bool&     canRotate()                 { return m_can_rotate; }
-    bool            ignoreGravity()             { return m_ignore_gravity; }
+    DrPointF        getGravityScale()           { return m_gravity_scale; }
     bool            shouldFlipImageX()          { return m_flip_image_x; }
     bool            shouldFlipImageY()          { return m_flip_image_y; }
     bool            shouldMouseRotate()         { return m_mouse_rotate; }
@@ -316,7 +316,7 @@ public:
     void            setCanAirJump(bool can_air_jump) { m_air_jump = can_air_jump; }
     void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
     void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
-    void            setIgnoreGravity(bool ignore_gravity) { m_ignore_gravity = ignore_gravity; }
+    void            setGravityScale(DrPointF gravity_scale) { m_gravity_scale = gravity_scale; }
     void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
     void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
     void            setMouseRotate(bool mouse_rotate) { m_mouse_rotate = mouse_rotate; }

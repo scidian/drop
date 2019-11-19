@@ -54,18 +54,18 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
                            "Image Shape", "Stores auto generated Image Shape.", true, false);
 
     if (asset_type == DrAssetType::Object) {
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
-                               "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
-                                                      "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity, Property_Type::PointF, 0.0,
-                               "Surface Velocity", "Speed given to other Things when touching. Useful for objects like conveyor belts. Works better with "
-                                                    "higher friction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
                                "One Way Type", "Type of One Way collision for this Object. <br>"
                                                 "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
                                                 "<b>Weak_Spot</b> - Only takes damage from one direction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
                                "One Way Angle", "Direction that affects <b>One Way Type</b>. 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity, Property_Type::PointF, 0.0,
+                               "Surface Velocity", "Speed given to other Things when touching. Useful for objects like conveyor belts. Works better with "
+                                                    "higher friction.");
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
+                               "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
+                                                      "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
     }
 }
 
@@ -134,8 +134,9 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
 
-    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity, Property_Type::Bool, true,
-                           "Feels Gravity?", "Should this character be affected by gravity?");
+    addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Gravity_Scale, Property_Type::PointF, QPointF(1.0, 1.0),
+                           "Gravity Scale", "Changes how gravity affects this " + Dr::StringFromAssetType(asset_type) + ". Set to (0, 0) to "
+                                            "ignore gravity comepletely. Also great for making balloons.");
     // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
     addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction,
                            Property_Type::BoolDouble, QList<QVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),

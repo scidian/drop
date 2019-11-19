@@ -205,7 +205,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double y_offset = spawn_rotate.y;
 
     // ***** Load Physics Properties
-    bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
+    QPointF gravity_scale =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Gravity_Scale).toPointF();
     QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
     bool    can_rotate =        asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate).toBool();
@@ -239,7 +239,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
         case 3: collision_type = Collision_Type::Damage_All;    break;
     }
     block->setCollisionType(collision_type);
-    block->setIgnoreGravity( !feels_gravity );
+    block->setGravityScale( DrPointF(gravity_scale.x(), gravity_scale.y()) );
 
     // ***** Velocity settings
     QPointF vel_x = thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_X).toPointF();

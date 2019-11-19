@@ -75,7 +75,6 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setCanWallJump( true );
         ball1->setHealth( 80.0 );
         ///ball1->setDeathTouch( true );
-        ///ball1->setIgnoreGravity( true );
         ball1->setMoveSpeedY( 300 );
 
 

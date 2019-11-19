@@ -60,7 +60,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     bool    flip_image_y =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y).toBool();
     bool    mouse_rotate =  asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Mouse_Rotate).toBool();
 
-    bool    feels_gravity =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Feels_Gravity).toBool();
+    QPointF gravity_scale =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Gravity_Scale).toPointF();
     QList<QVariant> friction =  asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toList();
     QList<QVariant> bounce =    asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toList();
     bool    can_rotate =        asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate).toBool();
@@ -100,7 +100,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setAirDrag( air_drag );
     player->setGroundDrag( ground_drag );
     player->setRotateDrag( rotate_drag );
-    player->setIgnoreGravity( !feels_gravity );
+    player->setGravityScale( DrPointF(gravity_scale.x(), gravity_scale.y()) );
 
     player->setFlipImageX( flip_image_x );
     player->setFlipImageY( flip_image_y );

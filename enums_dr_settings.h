@@ -220,7 +220,7 @@ enum class Properties {
     Asset_Health_Death_Touch            = 154,      // bool
 
     // Asset_Physics
-    Asset_Physics_Feels_Gravity         = 18,       // bool
+    Asset_Physics_Gravity_Scale         = 18,       // bool
     Asset_Physics_Custom_Friction       = 162,      // bool double combo
     Asset_Physics_Custom_Bounce         = 163,      // bool double combo
     Asset_Physics_Can_Rotate            = 17,       // bool

@@ -32,12 +32,12 @@ extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
     if (object == nullptr) return;
 
+    // Adjust object gravity
+    gravity.x *= object->getGravityScale().x;
+    gravity.y *= object->getGravityScale().y;
+
     // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    if (object->ignoreGravity()) {
-        cpBodyUpdateVelocityNoGravity(body, gravity, damping, dt);
-    } else {
-        cpBodyUpdateVelocity(body, gravity, damping, dt);
-    }
+    cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
 //####################################################################################

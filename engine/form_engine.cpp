@@ -257,7 +257,7 @@ void FormEngine::moveCameras() {
 // ***** MAIN UPDATE LOOP: Space (Physics), Rendering
 void FormEngine::updateEngine() {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
-    m_running = true;   
+    m_running = true;
 
     // ***** Calculates Render Frames per Second
     double fps_milliseconds = getTimerMilliseconds(Engine_Timer::Fps);
@@ -272,6 +272,7 @@ void FormEngine::updateEngine() {
         if (cam_enabled != can_enable_cam) pushCamera->setEnabled( can_enable_cam );
     }
 
+
     // ***** Update Mouse Position
     double input_milliseconds = getTimerMilliseconds(Engine_Timer::Input);
     if (input_milliseconds > 30.0) {
@@ -281,35 +282,18 @@ void FormEngine::updateEngine() {
     }
 
 
-    g_info = "Cam X: " + QString::number(m_engine->getCurrentWorld()->getCameraPositionX()) +
-             " \t , Y: " + QString::number(m_engine->getCurrentWorld()->getCameraPositionY()) +
-             " \t , Z: " + QString::number(m_engine->getCurrentWorld()->getCameraPositionZ());
-
-
     // ***** Update Physics and Render
     double update_milliseconds = getTimerMilliseconds(Engine_Timer::Update);
 
     if (Dr::GetPreference(Preferences::Limit_Frames_Rendered).toBool() == false) {
-        if (update_milliseconds > 4.0) {                                            // Max update time set around 250 times per second
-            processFrame(update_milliseconds);                                      // This accounts for system clocks with low precision
+        if (update_milliseconds > 4.0) {                                            // This limits max update time around 250 times per second,
+            processFrame(update_milliseconds);                                      //      but accounts for system clocks with low precision
         }
-
     } else {
         #if defined (Q_OS_MACOS)
-            if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds())
-                processFrame(update_milliseconds);
-
-            // Additional render on MacOS (smooths more with vsync being disabled)
-            /** if (m_engine->getCurrentWorld()->getThings().count() < 250 && m_engine->getCurrentWorld()->effect_count <= 0) {
-                double render_milliseconds = getTimerMilliseconds(Engine_Timer::Render);
-                if (render_milliseconds > (1000.0 / m_ideal_frames_per_second)) {
-                    resetTimer(Engine_Timer::Render);
-                    m_opengl->update();
-                }
-            } */
+            if (update_milliseconds > m_engine->getCurrentWorld()->getTimeStepAsMilliseconds()) processFrame(update_milliseconds);
         #else
-            if (m_wait_vsync == false)
-                processFrame(update_milliseconds);
+            if (m_wait_vsync == false) processFrame(update_milliseconds);
         #endif
     }
 

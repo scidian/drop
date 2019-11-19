@@ -508,27 +508,6 @@ cpBodyUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	cpAssertSaneBody(body);
 }
 
-//####################################################################################
-//####################################################################################
-// by Stevinz
-void cpBodyUpdateVelocityNoGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
-    // Skip kinematic bodies.
-    if (cpBodyGetType(body) == CP_BODY_TYPE_KINEMATIC) return;
-    cpAssertSoft(body->m > 0.0f && body->i > 0.0f, "Body's mass and moment must be positive to simulate. (Mass: %f Moment: %f)", body->m, body->i);
-
-    body->v = cpvadd(cpvmult(body->v, damping), cpvmult(cpvadd(cpv(0, 0), cpvmult(body->f, body->m_inv)), dt));
-    body->w = body->w*damping + body->t*body->i_inv*dt;
-
-    // Reset forces.
-    body->f = cpvzero;
-    body->t = 0.0f;
-
-    cpAssertSaneBody(body);
-}
-
-//####################################################################################
-//####################################################################################
-
 void
 cpBodyUpdatePosition(cpBody *body, cpFloat dt)
 {

@@ -71,16 +71,12 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
 
 
     // ***** Camera Rotation
-    float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
-    float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
-
     //          X Rotation, controls up / down
     //          Y Rotation, controls left / right
     QMatrix4x4 rotate_eye;
     rotate_eye.translate( m_look_at);
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationY()) + c_not_zero, 0.0f, 1.0f, 0.0f);
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()) + c_not_zero, 1.0f, 0.0f, 0.0f);
-    if (dist_z < dist_y) rotate_eye.rotate(90.0001f, 1.0f, 0.0f, 0.0f);         // Extra Z Up Rotation
     rotate_eye.translate(-m_look_at);
     m_eye = rotate_eye * m_eye;
 
@@ -92,6 +88,9 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
 
     // ***** Rotation locked to Camera Follow Thing
     if (world->getCameraMatching()) {
+        float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
+        float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
+
         // Apply rotation as a percentage of distance from max distance of square root of 2, useful for camera tweening between camera up vectors
         float sqrt_2 = static_cast<float>(sqrt(2.0));
         if (dist_y < sqrt_2) {
