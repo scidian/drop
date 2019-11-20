@@ -15,13 +15,8 @@
 #include <QVBoxLayout>
 
 #include "colors/colors.h"
-#include "debug.h"
 #include "editor/tree_assets.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
 #include "imaging/imaging.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
@@ -37,6 +32,12 @@
 #include "widgets/widgets.h"
 #include "widgets/widgets_event_filters.h"
 #include "widgets/widgets_layout.h"
+
+#include "debug.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
+#include "interface_editor_relay.h"
 
 
 //####################################################################################

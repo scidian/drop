@@ -7,9 +7,9 @@
 //
 #include <QtMath>
 
-#include "form_playground.h"
-#include "playground.h"
-#include "playground_toy.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
 
 
 //####################################################################################

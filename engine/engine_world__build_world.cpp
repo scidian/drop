@@ -8,13 +8,12 @@
 #include <QApplication>
 #include <QDebug>
 
-#include "engine.h"
+#include "engine/engine.h"
+#include "engine/engine_texture.h"
+#include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine_texture.h"
-#include "engine_world.h"
-#include "form_engine.h"
-#include "helper.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
@@ -24,6 +23,8 @@
 #include "project/project_stage.h"
 #include "project/project_thing.h"
 #include "project/thing_shape_list.h"
+
+#include "helper.h"
 
 
 //####################################################################################

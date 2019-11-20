@@ -5,12 +5,13 @@
 //      Functions associated with enums
 //
 //
-#include "enums.h"
-#include "enums_engine.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "project/project_thing.h"
 #include "settings/settings.h"
+
+#include "enums.h"
+#include "enums_engine.h"
 
 
 namespace Dr {

@@ -7,13 +7,14 @@
 //
 #include <numeric>
 
-#include "engine.h"
-#include "engine_camera.h"
+#include "engine/engine.h"
+#include "engine/engine_camera.h"
+#include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine_world.h"
-#include "form_engine.h"
-#include "helper.h"
 #include "opengl/opengl.h"
+
+#include "helper.h"
 
 
 //####################################################################################

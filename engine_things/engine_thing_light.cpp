@@ -10,9 +10,11 @@
 #include "engine/engine.h"
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
-#include "engine_thing_light.h"
-#include "helper.h"
+#include "engine_things/engine_thing_light.h"
 #include "opengl/opengl.h"
+
+#include "helper.h"
+
 
 //####################################################################################
 //##    Constructor / Destructor

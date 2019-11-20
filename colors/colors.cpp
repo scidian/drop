@@ -12,6 +12,7 @@
 #include "globals.h"
 #include "helper.h"
 
+
 typedef std::map<Color_Scheme,   std::map<Window_Colors, QColor>> Color_Scheme_Map;
 typedef std::map<Color_Palettes, Palette_Info> Color_Palette_Map;
 

@@ -5,12 +5,14 @@
 //      DrComponent Class Definitions
 //
 //
+#include "settings/settings.h"
+#include "settings/settings_component.h"
+#include "settings/settings_component_property.h"
+
 #include "constants.h"
 #include "helper.h"
 #include "helper_qt.h"
-#include "settings.h"
-#include "settings_component.h"
-#include "settings_component_property.h"
+
 
 //####################################################################################
 //##    Constructor, Destructor

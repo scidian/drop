@@ -9,13 +9,14 @@
 #include <QStyleOptionGraphicsItem>
 
 #include "colors/colors.h"
-#include "debug.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_view.h"
+#include "project/project_thing.h"
+
+#include "debug.h"
 #include "enums.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
-#include "project/project_thing.h"
 
 
 //####################################################################################

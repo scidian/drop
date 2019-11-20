@@ -9,14 +9,15 @@
 #include <QHeaderView>
 #include <QOpenGLWidget>
 
-#include "debug.h"
 #include "editor/tree_assets.h"
 #include "editor/tree_inspector.h"
 #include "editor/tree_project.h"
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "form_main.h"
+#include "forms/form_main.h"
+
+#include "debug.h"
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"

@@ -15,11 +15,12 @@
 #include <QVector2D>
 
 #include "colors/colors.h"
-#include "globals.h"
-#include "helper.h"
-#include "imaging.h"
+#include "imaging/imaging.h"
 #include "types/point.h"
 #include "types/pointf.h"
+
+#include "globals.h"
+#include "helper.h"
 
 
 namespace DrImaging

@@ -11,18 +11,19 @@
 #include <QToolBar>
 #include <QToolButton>
 
-#include "enums_form_main.h"
-#include "form_blank.h"
-#include "form_fonts.h"
-#include "form_main.h"
-#include "form_popup.h"
-#include "form_settings.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "forms/form_blank.h"
+#include "forms/form_fonts.h"
+#include "forms/form_main.h"
+#include "forms/form_popup.h"
+#include "forms/form_settings.h"
 #include "playground/form_playground.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "enums_form_main.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################

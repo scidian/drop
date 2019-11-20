@@ -5,11 +5,12 @@
 //
 //
 //
-#include "engine.h"
-#include "engine_camera.h"
-#include "engine_texture.h"
-#include "engine_world.h"
+#include "engine/engine.h"
+#include "engine/engine_camera.h"
+#include "engine/engine_texture.h"
+#include "engine/engine_world.h"
 #include "project/project.h"
+
 
 //####################################################################################
 //##    Constructor

@@ -6,13 +6,9 @@
 //
 //
 #include "colors/colors.h"
-#include "debug.h"
-#include "editor_item.h"
-#include "editor_scene.h"
-#include "editor_view.h"
-#include "interface_editor_relay.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
@@ -21,6 +17,11 @@
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
+
+#include "debug.h"
+#include "interface_editor_relay.h"
+#include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################

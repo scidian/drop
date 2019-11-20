@@ -14,14 +14,15 @@
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "enums_form_main.h"
-#include "form_main.h"
-#include "globals.h"
-#include "helper.h"
+#include "forms/form_main.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_thing.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "enums_form_main.h"
+#include "globals.h"
+#include "helper.h"
 
 
 //####################################################################################

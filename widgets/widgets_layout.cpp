@@ -8,12 +8,13 @@
 #include <QWidget>
 
 #include "editor/tree_assets.h"
-#include "globals.h"
-#include "helper.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_font.h"
-#include "widgets_layout.h"
+#include "widgets/widgets_layout.h"
+
+#include "globals.h"
+#include "helper.h"
 
 
 //####################################################################################

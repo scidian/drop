@@ -91,9 +91,10 @@
 #include <QSurfaceFormat>
 
 #include "colors/colors.h"
-#include "debug.h"
 #include "forms/form_main.h"
 #include "forms/form_expire.h"
+
+#include "debug.h"
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"

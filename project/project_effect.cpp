@@ -6,8 +6,9 @@
 //
 //
 #include "imaging/imaging.h"
-#include "project.h"
-#include "project_effect.h"
+#include "project/project.h"
+#include "project/project_effect.h"
+
 
 //####################################################################################
 //##    Constructor, Destructor

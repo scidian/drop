@@ -14,8 +14,6 @@
 #include "editor/tree_assets.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "globals.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
@@ -23,6 +21,10 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
+
+#include "globals.h"
+#include "interface_editor_relay.h"
+
 
 //####################################################################################
 //##    Drag Handling

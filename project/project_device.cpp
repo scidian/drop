@@ -6,8 +6,8 @@
 //
 //
 #include "imaging/imaging.h"
-#include "project.h"
-#include "project_device.h"
+#include "project/project.h"
+#include "project/project_device.h"
 
 
 //####################################################################################

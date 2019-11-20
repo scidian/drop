@@ -7,11 +7,12 @@
 //
 #include "colors/colors.h"
 #include "editor/tree_inspector.h"
-#include "form_playground.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
+
 #include "helper.h"
 #include "helper_qt.h"
-#include "playground.h"
-#include "playground_toy.h"
 
 
 //####################################################################################

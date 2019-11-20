@@ -12,14 +12,9 @@
 #include <QScrollBar>
 
 #include "colors/colors.h"
-#include "debug.h"
 #include "editor/tree_project.h"
 #include "editor_view/editor_view.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
 #include "imaging/imaging.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
@@ -27,6 +22,12 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "debug.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
+#include "interface_editor_relay.h"
 
 
 //####################################################################################

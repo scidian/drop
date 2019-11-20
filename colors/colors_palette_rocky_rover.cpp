@@ -10,6 +10,7 @@
 #include "colors.h"
 #include "helper.h"
 
+
 namespace Dr {
 
 void LoadPaletteRockyRover(Palette_Info &palette) {

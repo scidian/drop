@@ -209,7 +209,7 @@ SOURCES += \
     project/project_thing__z_order.cpp \
     project/project_world.cpp \
     project/project_world__settings.cpp \
-    project/thing_shape_list.cpp \
+    properties/thing_shape_list.cpp \
     settings/settings.cpp \
     settings/settings_component.cpp \
     settings/settings_component_property.cpp \
@@ -318,7 +318,7 @@ HEADERS += \
     project/project_stage.h \
     project/project_thing.h \
     project/project_world.h \
-    project/thing_shape_list.h \
+    properties/thing_shape_list.h \
     settings/settings.h \
     settings/settings_component.h \
     settings/settings_component_property.h \

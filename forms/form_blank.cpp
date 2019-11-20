@@ -8,11 +8,13 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "form_blank.h"
-#include "helper.h"
+#include "forms/form_blank.h"
 #include "project/project.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "helper.h"
+
 
 //####################################################################################
 //##    Constructor

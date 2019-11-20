@@ -7,7 +7,7 @@
 //
 #include <QPainter>
 
-#include "widgets.h"
+#include "widgets/widgets.h"
 
 
 //####################################################################################

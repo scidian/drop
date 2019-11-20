@@ -7,11 +7,13 @@
 //
 #include <QRadioButton>
 
-#include "form_main.h"
-#include "form_popup.h"
+#include "forms/form_main.h"
+#include "forms/form_popup.h"
+
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
+
 
 //####################################################################################
 //##    Builds out FormPop's inner widget to show options for grid snapping

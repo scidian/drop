@@ -8,11 +8,13 @@
 #include <QDebug>
 #include <QGraphicsWidget>
 
-#include "form_playground.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
+
 #include "globals.h"
 #include "helper.h"
-#include "playground.h"
-#include "playground_toy.h"
+
 
 // Internal Constants
 constexpr int c_pen_size = 2;

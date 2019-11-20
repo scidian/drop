@@ -8,9 +8,10 @@
 #include <QtMath>
 #include <QRectF>
 
-#include "form_playground.h"
-#include "playground.h"
-#include "playground_toy.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
+
 
 // Internal Constants
 constexpr double c_extra_radius =    0.010;         // Radius added on to block and polygon shapes for better collisions

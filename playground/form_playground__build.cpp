@@ -14,13 +14,15 @@
 #include <QVBoxLayout>
 
 #include "editor/tree_inspector.h"
-#include "form_playground.h"
-#include "globals.h"
-#include "helper.h"
-#include "playground.h"
-#include "playground_toy.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "globals.h"
+#include "helper.h"
+
 
 //####################################################################################
 //##    Builds Form

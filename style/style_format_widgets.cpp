@@ -15,7 +15,8 @@
 #include <QWindow>
 
 #include "colors/colors.h"
-#include "style.h"
+#include "style/style.h"
+
 
 namespace Dr {
 

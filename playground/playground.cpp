@@ -6,7 +6,8 @@
 //
 //
 #include <QDebug>
-#include "playground.h"
+#include "playground/playground.h"
+
 
 //####################################################################################
 //##    Constructor

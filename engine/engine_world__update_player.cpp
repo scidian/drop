@@ -8,10 +8,12 @@
 #include <QtMath>
 #include <QDebug>
 
-#include "engine.h"
+#include "engine/engine.h"
+#include "engine/engine_world.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine_world.h"
+
 #include "helper.h"
+
 
 //####################################################################################
 //##    Definition of Global Variables to be used to pass info to callbacks

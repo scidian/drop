@@ -16,6 +16,7 @@
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 
+
 // OpenGL Constant Definitions
 int g_max_texture_size =        2048;
 int g_max_rays =                2048;

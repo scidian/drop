@@ -5,7 +5,7 @@
 //
 //
 //
-#include "thing_shape_list.h"
+#include "properties/thing_shape_list.h"
 
 
 //####################################################################################

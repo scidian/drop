@@ -10,14 +10,16 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-#include "form_color_magnifier.h"
-#include "form_settings.h"
-#include "globals.h"
-#include "interface_editor_relay.h"
-#include "helper.h"
+#include "forms/form_color_magnifier.h"
+#include "forms/form_settings.h"
 #include "project/project.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "globals.h"
+#include "interface_editor_relay.h"
+#include "helper.h"
+
 
 //####################################################################################
 //##    Constructor

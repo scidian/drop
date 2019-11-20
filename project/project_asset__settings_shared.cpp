@@ -7,25 +7,26 @@
 //
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/polyline_simplification.h"
-#include "debug.h"
 #include "engine_mesh/engine_vertex_data.h"
 #include "forms/form_main.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
 #include "imaging/imaging.h"
-#include "project.h"
-#include "project_asset.h"
-#include "project_effect.h"
-#include "project_font.h"
-#include "project_image.h"
-#include "project_world.h"
-#include "project_stage.h"
-#include "project_thing.h"
-#include "project/thing_shape_list.h"
+#include "project/project.h"
+#include "project/project_asset.h"
+#include "project/project_effect.h"
+#include "project/project_font.h"
+#include "project/project_image.h"
+#include "project/project_world.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
+#include "properties/thing_shape_list.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "debug.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################
@@ -56,16 +57,16 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
     if (asset_type == DrAssetType::Object) {
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
                                "One Way Type", "Type of One Way collision for this Object. <br>"
-                                                "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
-                                                "<b>Weak_Spot</b> - Only takes damage from one direction.");
+                                               "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
+                                               "<b>Weak_Spot</b> - Only takes damage from one direction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
                                "One Way Angle", "Direction that affects <b>One Way Type</b>. 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity, Property_Type::PointF, 0.0,
                                "Surface Velocity", "Speed given to other Things when touching. Useful for objects like conveyor belts. Works better with "
-                                                    "higher friction.");
+                                                   "higher friction.");
         addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
-                                                      "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
+                                                     "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
     }
 }
 

@@ -8,7 +8,8 @@
 #include <QtMath>
 #include <QRandomGenerator>
 
-#include "engine.h"
+#include "engine/engine.h"
+#include "engine/engine_world.h"
 #include "engine_things/engine_thing_fire.h"
 #include "engine_things/engine_thing_fisheye.h"
 #include "engine_things/engine_thing_light.h"
@@ -16,12 +17,12 @@
 #include "engine_things/engine_thing_object.h"
 #include "engine_things/engine_thing_swirl.h"
 #include "engine_things/engine_thing_water.h"
-#include "engine_world.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "project/thing_shape_list.h"
+#include "properties/thing_shape_list.h"
+
 
 // Internal Constants
 const double    c_light_size_adjuster = 1.15;           // Multiplier to equal out the slight rendering difference between shader and pixmap drawing functions

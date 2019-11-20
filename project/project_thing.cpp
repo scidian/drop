@@ -5,21 +5,22 @@
 //      DrThing Class Definitions
 //
 //
-#include "debug.h"
 #include "forms/form_main.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
 #include "imaging/imaging.h"
 #include "opengl/opengl.h"
-#include "project.h"
-#include "project_asset.h"
-#include "project_world.h"
-#include "project_stage.h"
-#include "project_thing.h"
+#include "project/project.h"
+#include "project/project_asset.h"
+#include "project/project_world.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "debug.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################

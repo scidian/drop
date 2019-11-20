@@ -12,10 +12,12 @@
 //##    Used to track what the QVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:  29
+//##    !!!!! NEXT AVAILABLE NUMBER:    30
 //##
 //############################
 enum class Property_Type {
+    Enabled         = 29,   // bool             True or False,
+
     Bool            =  0,   // bool             True or False
     BoolDouble      =  1,   // bool w/double    True or False, and when True shows double spinbox
                             //                  QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText

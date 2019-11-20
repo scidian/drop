@@ -14,14 +14,15 @@
 
 #include "colors/colors.h"
 #include "editor/tree_inspector.h"
-#include "enums.h"
-#include "globals.h"
-#include "helper.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "enums.h"
+#include "globals.h"
+#include "helper.h"
+#include "interface_editor_relay.h"
 
 
 //####################################################################################

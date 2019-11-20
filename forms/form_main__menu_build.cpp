@@ -13,7 +13,6 @@
 #include <QMessageBox>
 
 #include "colors/colors.h"
-#include "debug.h"
 #include "editor/tree_advisor.h"
 #include "editor/tree_assets.h"
 #include "editor/tree_inspector.h"
@@ -21,10 +20,12 @@
 #include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "form_main.h"
+#include "forms/form_main.h"
+#include "project/project.h"
+
+#include "debug.h"
 #include "helper.h"
 #include "helper_qt.h"
-#include "project/project.h"
 
 
 //####################################################################################

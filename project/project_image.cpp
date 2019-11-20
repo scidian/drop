@@ -7,7 +7,8 @@
 //
 #include <QFileInfo>
 
-#include "project_image.h"
+#include "project/project_image.h"
+
 
 //####################################################################################
 //##    Constructors

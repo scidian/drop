@@ -11,12 +11,14 @@
 #include <QMouseEvent>
 
 #include "colors/colors.h"
-#include "form_popup.h"
-#include "globals.h"
-#include "helper.h"
+#include "forms/form_popup.h"
 #include "project/project.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "globals.h"
+#include "helper.h"
+
 
 //####################################################################################
 //##    Constructor

@@ -32,9 +32,10 @@
 #include <string.h>
 #include <vector>
 
-using namespace std;
+#include "3rd_party/poly_partition.h"
 
-#include "poly_partition.h"
+
+using namespace std;
 
 #define TPPL_VERTEXTYPE_REGULAR 0
 #define TPPL_VERTEXTYPE_START   1

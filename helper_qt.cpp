@@ -5,19 +5,21 @@
 //
 //
 //
-#include "helper_qt.h"
-
 #include <QApplication>
 #include <QFontDatabase>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <QTime>
+
 #include <cmath>
 
 #include "colors/colors.h"
-#include "helper.h"
 #include "widgets/widgets.h"
+
+#include "helper.h"
+#include "helper_qt.h"
+
 
 namespace Dr {
 

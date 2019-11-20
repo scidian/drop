@@ -5,13 +5,9 @@
 //      Very Important File! Updates Items in the GraphicsScene based on changes elsewhere
 //
 //
-#include "editor_item.h"
-#include "editor_scene.h"
-#include "enums_engine.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
 #include "imaging/imaging.h"
-#include "globals.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
@@ -23,6 +19,11 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "enums_engine.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################

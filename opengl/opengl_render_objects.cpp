@@ -12,15 +12,19 @@
 #include "engine_mesh/engine_vertex_data.h"
 #include "engine_things/engine_thing_object.h"
 #include "engine_things/engine_thing_fire.h"
-#include "helper.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 
+#include "helper.h"
 
+
+//####################################################################################
+//##    Keeps Object Looking at Camera
+//####################################################################################
 QMatrix4x4 billboard(QVector3D pos, QVector3D camera_pos, QVector3D camera_up) {
     QVector3D look =    QVector3D(camera_pos - pos);
-             look.normalize();
+              look.normalize();
     QVector3D right =   QVector3D::crossProduct(camera_up,  look);
     QVector3D up2 =     QVector3D::crossProduct(look,       right);
     QMatrix4x4 transform = QMatrix4x4(  right.x(),  right.y(),  right.z(),  0,

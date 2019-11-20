@@ -12,11 +12,13 @@
 #include <QPainter>
 #include <QScreen>
 
-#include "form_color_magnifier.h"
-#include "form_main.h"
+#include "forms/form_color_magnifier.h"
+#include "forms/form_main.h"
+
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
+
 
 constexpr int c_text_box_height = 35;
 

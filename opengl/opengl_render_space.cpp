@@ -9,6 +9,7 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLPaintDevice>
 #include <QPainter>
+
 #include <vector>
 
 #include "engine/engine.h"
@@ -23,9 +24,10 @@
 #include "engine_things/engine_thing_mirror.h"
 #include "engine_things/engine_thing_swirl.h"
 #include "engine_things/engine_thing_water.h"
+#include "opengl/opengl.h"
+
 #include "enums_engine.h"
 #include "helper.h"
-#include "opengl/opengl.h"
 
 
 //####################################################################################

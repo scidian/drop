@@ -9,12 +9,8 @@
 #include <QRandomGenerator>
 #include <QUndoView>
 
-#include "debug.h"
-#include "editor_item.h"
-#include "editor_scene.h"
-#include "globals.h"
-#include "interface_editor_relay.h"
-#include "helper.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_font.h"
@@ -24,6 +20,11 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "debug.h"
+#include "globals.h"
+#include "interface_editor_relay.h"
+#include "helper.h"
 
 
 //####################################################################################

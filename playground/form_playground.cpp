@@ -14,14 +14,16 @@
 #include <QVBoxLayout>
 
 #include "3rd_party_chipmunk/chipmunk.h"
-#include "form_playground.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
+#include "style/style.h"
+#include "widgets/widgets_event_filters.h"
+
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
-#include "playground.h"
-#include "playground_toy.h"
-#include "style/style.h"
-#include "widgets/widgets_event_filters.h"
+
 
 //####################################################################################
 //##    Constructor

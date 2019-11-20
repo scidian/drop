@@ -15,12 +15,13 @@
 #include "editor/tree_inspector.h"
 #include "forms/form_color_magnifier.h"
 #include "forms/form_popup.h"
-#include "helper.h"
 #include "project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "helper.h"
 
 
 //####################################################################################

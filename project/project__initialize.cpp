@@ -5,10 +5,10 @@
 //
 //
 //
-#include "project.h"
-#include "project_world.h"
-#include "project_stage.h"
-#include "project_thing.h"
+#include "project/project.h"
+#include "project/project_world.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
 
 
 //####################################################################################

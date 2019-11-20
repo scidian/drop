@@ -17,7 +17,7 @@
 #include "project/project_asset.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "project/thing_shape_list.h"
+#include "properties/thing_shape_list.h"
 
 
 //####################################################################################

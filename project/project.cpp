@@ -10,18 +10,19 @@
 #include <QTime>
 
 #include "forms/form_main.h"
+#include "project/project.h"
+#include "project/project_asset.h"
+#include "project/project_device.h"
+#include "project/project_effect.h"
+#include "project/project_font.h"
+#include "project/project_image.h"
+#include "project/project_world.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
+
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
-#include "project.h"
-#include "project_asset.h"
-#include "project_device.h"
-#include "project_effect.h"
-#include "project_font.h"
-#include "project_image.h"
-#include "project_world.h"
-#include "project_stage.h"
-#include "project_thing.h"
 
 
 //####################################################################################

@@ -8,6 +8,7 @@
 #include <QApplication>
 
 #include "forms/form_main.h"
+
 #include "globals.h"
 #include "interface_editor_relay.h"
 

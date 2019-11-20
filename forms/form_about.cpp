@@ -11,12 +11,14 @@
 #include <QVBoxLayout>
 
 #include "colors/colors.h"
-#include "form_about.h"
-#include "globals.h"
-#include "helper.h"
+#include "forms/form_about.h"
 #include "project/project.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "globals.h"
+#include "helper.h"
+
 
 //####################################################################################
 //##    Constructor

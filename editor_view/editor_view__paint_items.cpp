@@ -8,9 +8,10 @@
 #include <QDebug>
 
 #include "colors/colors.h"
+#include "editor_view/editor_scene.h"
+#include "editor_view/editor_view.h"
+
 #include "debug.h"
-#include "editor_scene.h"
-#include "editor_view.h"
 #include "enums.h"
 #include "globals.h"
 #include "helper.h"

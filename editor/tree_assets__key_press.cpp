@@ -11,15 +11,9 @@
 #include <QScrollBar>
 
 #include "colors/colors.h"
-#include "constants.h"
 #include "editor/tree_assets.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "enums.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"
@@ -31,6 +25,13 @@
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 #include "widgets/widgets_layout.h"
+
+#include "constants.h"
+#include "enums.h"
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
+#include "interface_editor_relay.h"
 
 
 //####################################################################################

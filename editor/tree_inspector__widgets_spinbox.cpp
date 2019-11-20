@@ -12,10 +12,12 @@
 #include <QVector3D>
 
 #include "editor/tree_inspector.h"
-#include "helper.h"
-#include "helper_qt.h"
 #include "settings/settings_component_property.h"
 #include "widgets/widgets_event_filters.h"
+
+#include "helper.h"
+#include "helper_qt.h"
+
 
 //####################################################################################
 //##    Integer Spin Box

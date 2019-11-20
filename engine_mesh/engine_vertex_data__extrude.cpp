@@ -24,10 +24,11 @@
 #include "3rd_party_chipmunk/chipmunk.h"
 #include "engine/engine_texture.h"
 #include "engine_mesh/engine_vertex_data.h"
-#include "helper.h"
 #include "imaging/imaging.h"
 #include "types/point.h"
 #include "types/pointf.h"
+
+#include "helper.h"
 
 
 //####################################################################################

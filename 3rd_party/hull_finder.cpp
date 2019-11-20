@@ -3,9 +3,10 @@
 //
 //
 //
-#include "helper.h"
-#include "hull_finder.h"
+#include "3rd_party/hull_finder.h"
 #include "types/pointf.h"
+
+#include "helper.h"
 
 
 HullFinder::HullFinder() { }

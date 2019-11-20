@@ -9,20 +9,21 @@
 #include <QFile>
 #include <QSettings>
 
-#include "globals.h"
-#include "helper.h"
-#include "project.h"
-#include "project_asset.h"
-#include "project_effect.h"
-#include "project_font.h"
-#include "project_image.h"
-#include "project_world.h"
-#include "project_stage.h"
-#include "project_thing.h"
-#include "project/thing_shape_list.h"
+#include "project/project.h"
+#include "project/project_asset.h"
+#include "project/project_effect.h"
+#include "project/project_font.h"
+#include "project/project_image.h"
+#include "project/project_world.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
+#include "properties/thing_shape_list.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
+
+#include "globals.h"
+#include "helper.h"
 
 
 //####################################################################################

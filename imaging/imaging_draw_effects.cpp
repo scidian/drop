@@ -15,10 +15,11 @@
 #include <QVector3D>
 
 #include "colors/colors.h"
-#include "globals.h"
-#include "imaging.h"
-#include "helper.h"
+#include "imaging/imaging.h"
 #include "style/style.h"
+
+#include "globals.h"
+#include "helper.h"
 
 
 namespace DrImaging

@@ -13,11 +13,13 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
-#include "engine_thing_object.h"
+#include "engine_things/engine_thing_object.h"
 #include "forms/form_main.h"
+
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
+
 
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle

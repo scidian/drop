@@ -9,16 +9,17 @@
 #include <QScrollBar>
 
 #include "editor/tree_assets.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
 #include "widgets/widgets_layout.h"
+
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
+#include "interface_editor_relay.h"
 
 
 //####################################################################################

@@ -10,7 +10,7 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/engine_world.h"
-#include "engine_thing_object.h"
+#include "engine_things/engine_thing_object.h"
 
 
 //####################################################################################

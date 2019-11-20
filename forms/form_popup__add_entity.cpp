@@ -14,16 +14,17 @@
 #include "editor/tree_project.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "form_main.h"
-#include "form_popup.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "forms/form_main.h"
+#include "forms/form_popup.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "settings/settings.h"
+
+#include "globals.h"
+#include "helper.h"
+#include "helper_qt.h"
 
 
 //####################################################################################

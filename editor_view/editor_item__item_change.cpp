@@ -49,15 +49,16 @@
 #include <QDebug>
 
 #include "colors/colors.h"
+#include "editor_view/editor_item.h"
+#include "editor_view/editor_scene.h"
+#include "project/project_stage.h"
+#include "project/project_thing.h"
+
 #include "debug.h"
-#include "editor_item.h"
-#include "editor_scene.h"
 #include "enums.h"
 #include "globals.h"
 #include "interface_editor_relay.h"
 #include "helper.h"
-#include "project/project_stage.h"
-#include "project/project_thing.h"
 
 
 //####################################################################################

@@ -11,12 +11,15 @@
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <QTime>
+
 #include <cmath>
 
 #include "colors/colors.h"
-#include "helper.h"
 #include "types/pointf.h"
 #include "widgets/widgets.h"
+
+#include "helper.h"
+
 
 namespace Dr {
 

@@ -9,14 +9,15 @@
 #include <QScrollBar>
 
 #include "colors/colors.h"
-#include "debug.h"
-#include "editor_view.h"
-#include "editor_scene.h"
-#include "globals.h"
-#include "helper.h"
+#include "editor_view/editor_view.h"
+#include "editor_view/editor_scene.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
+
+#include "debug.h"
+#include "globals.h"
+#include "helper.h"
 
 
 //####################################################################################

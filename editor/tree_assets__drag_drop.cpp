@@ -11,10 +11,7 @@
 #include <QScreen>
 
 #include "editor/tree_assets.h"
-#include "enums.h"
-#include "helper.h"
 #include "imaging/imaging.h"
-#include "interface_editor_relay.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
@@ -23,6 +20,10 @@
 #include "project/project_image.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
+
+#include "enums.h"
+#include "helper.h"
+#include "interface_editor_relay.h"
 
 
 //####################################################################################

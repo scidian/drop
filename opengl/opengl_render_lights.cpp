@@ -14,8 +14,9 @@
 #include "engine/form_engine.h"
 #include "engine_things/engine_thing_light.h"
 #include "engine_things/engine_thing_object.h"
-#include "helper.h"
 #include "opengl/opengl.h"
+
+#include "helper.h"
 
 
 //####################################################################################

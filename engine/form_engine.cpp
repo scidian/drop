@@ -6,7 +6,6 @@
 //
 //
 #include <QtMath>
-
 #include <QApplication>
 #include <QCloseEvent>
 #include <QGraphicsLineItem>
@@ -17,14 +16,16 @@
 #include <QTimer>
 #include <QWindow>
 
-#include "engine.h"
-#include "engine_camera.h"
+#include "engine/engine.h"
+#include "engine/engine_camera.h"
+#include "engine/engine_world.h"
+#include "engine/form_engine.h"
 #include "engine_things/engine_thing_object.h"
-#include "engine_world.h"
-#include "form_engine.h"
-#include "globals.h"
 #include "opengl/opengl.h"
 #include "style/style.h"
+
+#include "globals.h"
+
 
 //####################################################################################
 //##    Constructor / Destructor

@@ -10,6 +10,7 @@
 #include "colors.h"
 #include "helper.h"
 
+
 namespace Dr {
 
 void LoadPaletteBlank(Palette_Info &palette) {

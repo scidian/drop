@@ -6,9 +6,10 @@
 //
 //
 #include "colors/colors.h"
-#include "helper.h"
 #include "imaging/imaging.h"
-#include "style.h"
+#include "style/style.h"
+
+#include "helper.h"
 
 
 namespace Dr {

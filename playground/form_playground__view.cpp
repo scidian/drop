@@ -11,11 +11,13 @@
 #include <QWheelEvent>
 
 #include "colors/colors.h"
+#include "playground/form_playground.h"
+#include "playground/playground.h"
+#include "playground/playground_toy.h"
+
 #include "enums.h"
-#include "form_playground.h"
 #include "helper.h"
-#include "playground.h"
-#include "playground_toy.h"
+
 
 //####################################################################################
 //##    Updates GraphicsItems to match physics scene

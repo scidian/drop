@@ -8,7 +8,7 @@
 #include "engine/engine.h"
 #include "engine/engine_world.h"
 #include "engine_things/engine_thing_light.h"
-#include "opengl.h"
+#include "opengl/opengl.h"
 
 
 //####################################################################################

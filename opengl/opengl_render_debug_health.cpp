@@ -15,9 +15,10 @@
 #include "engine/engine_world.h"
 #include "engine/form_engine.h"
 #include "engine_things/engine_thing_object.h"
+#include "opengl/opengl.h"
+
 #include "helper.h"
 #include "helper_qt.h"
-#include "opengl/opengl.h"
 
 
 //####################################################################################

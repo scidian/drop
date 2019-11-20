@@ -14,6 +14,7 @@
 #include "engine_things/engine_thing_light.h"
 #include "opengl/opengl.h"
 
+
 const float c_not_zero = 0.0001f;
 
 //####################################################################################

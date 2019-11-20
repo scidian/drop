@@ -9,6 +9,7 @@
 
 #include "colors.h"
 
+
 namespace Dr {
 
 void LoadPaletteMaterial(Palette_Info &palette) {
