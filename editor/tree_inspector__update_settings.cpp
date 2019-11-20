@@ -5,8 +5,10 @@
 //
 //
 //
+#include <QDebug>
 #include <QVBoxLayout>
 
+#include "colors/colors.h"
 #include "editor/tree_inspector.h"
 #include "project/project.h"
 #include "settings/settings.h"
@@ -105,6 +107,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
             } else {
                 if (last_found != -1) {
                     if (affected.contains(QVariant::fromValue(prop->getPropertyKey()))) {
+                        row->setStyleSheet("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }");
                         row->setVisible(enabled);
                         changed = true;
                     }

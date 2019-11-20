@@ -244,6 +244,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             }
 
             QFrame *single_row = new QFrame(properties_frame);
+            single_row->setObjectName("propertyRow");
             single_row->setProperty(User_Property::Key, QVariant::fromValue(property->getPropertyKey()) );
 
             QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
@@ -338,7 +339,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
     spacer_item->setData(0, User_Roles::Key, QVariant::fromValue(c_spacer_item_key));
     QLabel *spacer_label = new QLabel();
-    spacer_label->setFixedHeight(560);
+    spacer_label->setFixedHeight(420);
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
     this->expandItem(spacer_item);
