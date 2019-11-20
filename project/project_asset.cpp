@@ -21,7 +21,7 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "properties/thing_shape_list.h"
+#include "properties/property_collision.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -33,7 +33,7 @@
 
 
 // Internal Linkage (File Scope) Forward Declarations
-DrShapeList autoCollisionShape(QPixmap pixmap);
+DrPropertyCollision autoCollisionShape(QPixmap pixmap);
 
 
 //####################################################################################
@@ -45,8 +45,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
     m_asset_type = new_asset_type;
     m_source_key = source_image_key;
 
+    DrPropertyCollision shape;
     QPixmap     my_starting_pixmap;
-    DrShapeList shape;
     int         hit_points = 1;
     switch (getAssetType()) {
         case DrAssetType::Character:
@@ -100,8 +100,8 @@ DrAsset::~DrAsset() { }
 //####################################################################################
 //##    Determines automatic collision shapes based on image
 //####################################################################################
-DrShapeList autoCollisionShape(QPixmap pixmap) {
-    DrShapeList shapes;
+DrPropertyCollision autoCollisionShape(QPixmap pixmap) {
+    DrPropertyCollision shapes;
 
     // ***** Break pixmap into seperate images for each object in image
     QVector<QImage> images;
@@ -248,8 +248,8 @@ void DrAsset::updateAnimationProperty(long source_key) {
     QPixmap     new_pixmap = getParentProject()->getImage(source_key)->getPixmapFromImage();
     setComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Default, QVariant(new_pixmap));
 
-    DrShapeList shape = autoCollisionShape(new_pixmap);
-    setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, QVariant::fromValue<DrShapeList>(shape));
+    DrPropertyCollision shape = autoCollisionShape(new_pixmap);
+    setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, QVariant::fromValue<DrPropertyCollision>(shape));
 
     m_width =  new_pixmap.width();
     m_height = new_pixmap.height();

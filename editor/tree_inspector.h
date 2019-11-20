@@ -34,6 +34,8 @@ constexpr int    c_inspector_size_right =  5;           // Size policy width of 
 constexpr int    c_minimum_grid_size =     1;//5;       // Minimum grid size
 constexpr double c_minimum_grid_scale =   .1;           // Minimum grid sscale
 
+constexpr int    c_spacer_item_key =     -10;           // Number is arbitrary below zero value, used to ignore spacer category while iterating
+
 //####################################################################################
 //##    TreeInspector
 //##        A Tree List to show properties of items / classes / objects
@@ -65,10 +67,12 @@ public:
     void                    buildInspectorFromKeys(QList<long> key_list, bool force_rebuild = false);
     void                    expandCollapseComponents();
     QList<QTreeWidgetItem*> getListOfTopLevelItems();
+    void                    forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                // #NOTE: Forces updating of QTreeWidget, yay!
     void                    updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update);
     void                    updateInspectorPropertyBoxesOfSelectedItem(QList<long> property_keys_to_update);
-    void                    updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
     void                    updateLockedSettings();
+    void                    updateSubProperties(bool called_from_build = false);
+    void                    updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
     // Getters and Setters
     IEditorRelay*           getRelay()          { return m_editor_relay; }
@@ -79,7 +83,7 @@ public:
 
     // Property Builders
     void                    addToWidgetList(QWidget *widget) { m_widgets.append(widget); }
-    QCheckBox*              createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QCheckBox*              createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type check_type);
     QFrame*                 createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QFrame*                 createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*                createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);

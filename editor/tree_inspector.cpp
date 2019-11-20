@@ -89,7 +89,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         return;
     }
 
-
     // ***** Retrieve unique key of item clicked in list
     long new_key = key_list[0];
     if (new_key == c_no_key) return;                                                // Exit if no key
@@ -160,6 +159,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         return a->getListOrder() < b->getListOrder();
     });
 
+
     // ********** Loop through each component and add it to the Inspector list
     this->clear();
     m_widgets.clear();
@@ -225,7 +225,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         // ***** Creates a frame to hold all properties of component, with vertical layout
         QFrame *properties_frame = new QFrame();
         properties_frame->setObjectName("propertiesFrame");
-        QBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
+        QVBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
         vertical_layout->setSpacing(4);
         vertical_layout->setMargin(0);
         vertical_layout->setContentsMargins(6,4,8,4);
@@ -244,7 +244,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             }
 
             QFrame *single_row = new QFrame(properties_frame);
-            QBoxLayout *horizontal_split = new QHBoxLayout(single_row);
+            single_row->setProperty(User_Property::Key, QVariant::fromValue(property->getPropertyKey()) );
+
+            QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
             horizontal_split->setSpacing(0);
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(0,0,0,0);
@@ -266,7 +268,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             DrProperty *prop = property;
 
             switch (property->getPropertyType()) {
-                case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right);                                break;
+                case Property_Type::Enabled:        new_widget = createCheckBox(            prop, fp, sp_right, Property_Type::Enabled);        break;
+                case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right, Property_Type::Bool);           break;
                 case Property_Type::BoolDouble:     new_widget = createCheckBoxSpinBoxPair( prop, fp, sp_right);                                break;
                 case Property_Type::BoolInt:        new_widget = createCheckBoxIntBoxPair(  prop, fp, sp_right);                                break;
                 case Property_Type::String:         new_widget = createLineEdit(            prop, fp, sp_right);                                break;
@@ -288,6 +291,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 case Property_Type::PositiveSizeF:  new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositiveSizeF);  break;
                 case Property_Type::Point3D:        new_widget = createDoubleSpinBoxTrio(   prop, fp, sp_right, Property_Type::Point3D);        break;
                 case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);         break;
+                case Property_Type::PositiveScaleF: new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositiveScaleF); break;
                 case Property_Type::GridF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridF);          break;
                 case Property_Type::GridScaleF:     new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::GridScaleF);     break;
                 case Property_Type::Variable:       new_widget = createVariableSpinBoxPair( prop, fp, sp_right);                                break;
@@ -332,75 +336,28 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
     // ***** Adds a spacer item at the bottom to allow for comfortable scrolling to the bottom of the tree
     QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
+    spacer_item->setData(0, User_Roles::Key, QVariant::fromValue(c_spacer_item_key));
     QLabel *spacer_label = new QLabel();
-    spacer_label->setFixedHeight(160);
+    spacer_label->setFixedHeight(560);
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
+    this->expandItem(spacer_item);
 
 
     // ***** Disable / enable widgets based on property status
     updateLockedSettings();
 
+    // ***** Hide / show rows depending on sub property types (Property_Type::Enabled) being true / false
+    bool calling_from_build = true;
+    updateSubProperties(calling_from_build);
+
     // ***** Expand / collapse top level items based on last known setting
     expandCollapseComponents();
 
     // ***** Scroll back to previous position
-    this->verticalScrollBar()->setValue(scroll_position);
+    this->verticalScrollBar()->setValue( scroll_position );
     this->update();
 }
-
-
-//####################################################################################
-//##    Returns List of Top Level (Component) Items
-//####################################################################################
-QList<QTreeWidgetItem*> TreeInspector::getListOfTopLevelItems() {
-    QTreeWidgetItem         *item = this->invisibleRootItem();
-    QList <QTreeWidgetItem*> items;
-    for (int i = 0; i < item->childCount(); ++i) {
-        items.append( item->child(i) );
-    }
-    return items;
-}
-
-
-//####################################################################################
-//##    Disable / Enable property widgets based on property status
-//####################################################################################
-void TreeInspector::updateLockedSettings() {
-    // Go through each widget in Object Inpector propert widget list
-    for (auto widget : m_widgets) {
-        long prop_key = widget->property(User_Property::Key).toInt();
-        DrProperty *prop = m_project->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
-        if (prop == nullptr) continue;
-
-        // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
-        if (prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings) ||
-            prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Size_Settings)) {
-            widget->setEnabled( true );
-        } else {
-            bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());
-
-            if ( prop->getPropertyType() == Property_Type::BoolDouble ||
-                 prop->getPropertyType() == Property_Type::BoolInt) {
-                if (widget->property(User_Property::Order).toInt() == 1) {
-                    if (prop->getValue().toList().first().toBool() == false) enabled = false;
-                }
-            }
-
-            if ( prop->getPropertyKey() == static_cast<int>(Properties::Entity_Key) ||
-                 prop->getPropertyKey() == static_cast<int>(Properties::Entity_Asset_Key)) {
-                QSpinBox *spin = dynamic_cast<QSpinBox*>(widget);
-                if (spin != nullptr) {
-                    spin->setReadOnly(true);
-                    enabled = true;
-                }
-            }
-
-            widget->setEnabled( enabled );
-        }
-    }
-}
-
 
 
 

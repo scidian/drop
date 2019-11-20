@@ -25,11 +25,11 @@ struct DrCircle {
 
 
 //####################################################################################
-//##    DrShapeList, defines a collsion shape of an object
+//##    DrPropertyCollision, defines a collsion shape of an object
 //##        - One Way Type / Direction
 //##        - Collection of Polygons and Circles
 //############################
-class DrShapeList
+class DrPropertyCollision
 {
 private:
     double      m_direction = 0.0;                                  // One-Way Angle in Degrees
@@ -40,7 +40,7 @@ private:
 
 public:
     // Constructor
-    DrShapeList() { }
+    DrPropertyCollision() { }
 
     // Shape Functions
     void        addPolygon(std::vector<DrPointF> point_list);
@@ -54,15 +54,15 @@ public:
 
 
     // Operator Overloads for file saving
-    bool operator==(const DrShapeList & o){
+    bool operator==(const DrPropertyCollision &o){
         return Dr::FuzzyCompare(o.m_direction, this->m_direction);
     }
 
-    friend QDataStream &operator<<(QDataStream &out, const DrShapeList &rhs){
+    friend QDataStream &operator<<(QDataStream &out, const DrPropertyCollision &rhs){
         out << rhs.m_direction;
         return out;
     }
-    friend QDataStream &operator>>(QDataStream &in, DrShapeList &rhs){
+    friend QDataStream &operator>>(QDataStream &in, DrPropertyCollision &rhs){
         in >> rhs.m_direction;
         return in;
     }
@@ -70,7 +70,7 @@ public:
 };
 
 // //############################ Must declare for use with QVariant
-Q_DECLARE_METATYPE(DrShapeList);
+Q_DECLARE_METATYPE(DrPropertyCollision);
 
 
 #endif // THING_SHAPE_LIST_H

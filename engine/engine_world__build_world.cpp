@@ -22,7 +22,7 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "project/thing_shape_list.h"
+#include "properties/property_collision.h"
 
 #include "helper.h"
 

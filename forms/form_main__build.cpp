@@ -213,6 +213,7 @@ void FormMain::buildWidgetsShared() {
                 treeInspector->setAlternatingRowColors(false);
                 treeInspector->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
                 treeInspector->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
+                ///treeInspector->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
                 treeInspector->setIndentation(0);
                 treeInspector->setRootIsDecorated(false);
                 treeInspector->setItemsExpandable(true);

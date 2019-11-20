@@ -18,7 +18,7 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "properties/thing_shape_list.h"
+#include "properties/property_collision.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -32,7 +32,7 @@
 //####################################################################################
 //##    Collision Components
 //####################################################################################
-void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape) {
+void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape) {
     QString    type = "Thing";
     int start_shape_type = 0;
     if (asset_type == DrAssetType::Character) {
@@ -51,7 +51,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeLi
                                               "work nicely as <b>Square</b>.");
     // !! Hidden Property
     addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape,
-                           Property_Type::Collision, QVariant::fromValue<DrShapeList>(shape),
+                           Property_Type::Collision, QVariant::fromValue<DrPropertyCollision>(shape),
                            "Image Shape", "Stores auto generated Image Shape.", true, false);
 
     if (asset_type == DrAssetType::Object) {
@@ -171,6 +171,38 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            Property_Type::BoolDouble, QList<QVariant>({false, 100.0, -1000000000, 1000000000, 10, "Force: "}),
                            "Touch Drag", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be dragged by mouse / touch? If so, how much force "
                                          "to apply? <br><br> <b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!");
+
+    QList<QVariant> sling_properties  { Dr::EnumToInt(Properties::Asset_Slingshot_Arrow_Image),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Arrow_Offset),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Arrow_Scale),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Tail_Image),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Tail_Offset),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Tail_Scale),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Max_Distance),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Force_Multiplier),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Future_1),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Future_2),
+                                        Dr::EnumToInt(Properties::Asset_Slingshot_Future_3) };
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Enabled, Property_Type::Enabled, QList<QVariant>({false, sling_properties }),
+                           "Touch Slingshot", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be shot by slingshot control? "
+                                              "<br><br> <b>NOTE:</b> Object Type must be <b>Dynamic</b> to use this setting!");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Force_Multiplier, Property_Type::Double, 1.0,
+                           "Force Multiplier", "Force multiplier can be used to increase or decrease power of slingshot.");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Max_Distance, Property_Type::PositiveDouble, 500.0,
+                           "Max Pull Distance", "Maximum distance slingshot can be pulled away from item.");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Image, Property_Type::Image, QVariant(QPixmap()),
+                           "Slingshot Arrow", "Image used to show direction of slingshot.");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Offset, Property_Type::PositiveDouble, 100.0,
+                           "Arrow Offset", "Distance to render Slingshot Arrow away from this " + Dr::StringFromAssetType(asset_type) );
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Scale, Property_Type::PositiveScaleF, QPointF(1.0, 1.0),
+                           "Arrow Scale", "Scale used to render Slingshot Arrow.");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Image, Property_Type::Image, QVariant(QPixmap()),
+                           "Slingshot Tail", "Image used to show pull back of slingshot.");
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Offset, Property_Type::PositiveDouble, 100.0,
+                           "Tail Offset", "Distance to start rendering Slingshot Tail away from this " + Dr::StringFromAssetType(asset_type) );
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Scale, Property_Type::PositiveScaleF, QPointF(1.0, 1.0),
+                           "Tail Scale", "Scale used to render Slingshot Tail.");
+
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,
                            "Motor Speed", "Speed at which this " + Dr::StringFromAssetType(asset_type) + " rotates when Motor Buttons are pressed.");
 

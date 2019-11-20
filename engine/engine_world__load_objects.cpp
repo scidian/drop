@@ -16,7 +16,7 @@
 #include "project/project_asset.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "properties/thing_shape_list.h"
+#include "properties/property_collision.h"
 
 
 //####################################################################################
@@ -154,7 +154,7 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
     Collision_Shape shape = static_cast<Collision_Shape>(shape_type);
     if (shape == Collision_Shape::Image) {
         QVariant shapes =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
-        DrShapeList shape = shapes.value<DrShapeList>();
+        DrPropertyCollision shape = shapes.value<DrPropertyCollision>();
         for (auto poly : shape.getPolygons()) {
             QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
             object->addShapePolygon(points);

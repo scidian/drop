@@ -140,6 +140,11 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
         case Property_Type::PointF:
         case Property_Type::ScaleF:
             spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
+        case Property_Type::PositiveScaleF:
+            spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");
+            spin_left->setRange( 0.0, 100000000);
+            spin_right->setRange(0.0, 100000000);
+            break;
         case Property_Type::GridF:
             spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
             spin_left->setRange( c_minimum_grid_size, 100000000);
@@ -156,10 +161,10 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
             spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
             spin_left->setRange( 1.0, 100000000);
             spin_right->setRange(1.0, 100000000);
-        break;
+            break;
         default: ;
     }
-    if (spin_type == Property_Type::ScaleF || spin_type == Property_Type::GridScaleF) {
+    if (spin_type == Property_Type::ScaleF || spin_type == Property_Type::GridScaleF || spin_type == Property_Type::PositiveScaleF) {
         spin_left->setSingleStep(.1);
         spin_right->setSingleStep(.1);
     } else if (spin_type == Property_Type::PositiveSizeF) {

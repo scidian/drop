@@ -5,13 +5,13 @@
 //
 //
 //
-#include "properties/thing_shape_list.h"
+#include "properties/property_collision.h"
 
 
 //####################################################################################
 //##    Adds a Polygon to the list of Polygons (m_polygons)
 //####################################################################################
-void DrShapeList::addPolygon(std::vector<DrPointF> point_list) {
+void DrPropertyCollision::addPolygon(std::vector<DrPointF> point_list) {
     m_polygons.push_back( point_list );
 }
 

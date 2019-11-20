@@ -5,6 +5,7 @@
 //      Object Inspector Image Frame
 //
 #include <QApplication>
+#include <QDebug>
 #include <QDropEvent>
 #include <QHBoxLayout>
 #include <QMimeData>
@@ -62,7 +63,12 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         asset_pix->setFont(font);
         asset_pix->setSizePolicy(size_policy);
         asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        asset_pix->setPixmap(property->getValue().value<QPixmap>().scaled(QSize(frame_width, frame_height - 15), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        QPixmap pixmap = property->getValue().value<QPixmap>();
+        if (pixmap.isNull()) {
+            asset_pix->setPixmap(pixmap);
+        } else {
+            asset_pix->setPixmap(pixmap.scaled(QSize(frame_width, frame_height - 15), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
         vertical_split->addWidget( asset_pix );
 
     return image_frame;
@@ -84,7 +90,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     long settings_key = m_editor_relay->getInspector()->getSelectedKey();
     long property_key = frame->property(User_Property::Key).toLongLong();
     if (settings_key <= 0 || property_key <= 0) return QObject::eventFilter(object, event);
-    DrProject *project =    m_editor_relay->currentProject();
+    DrProject  *project =   m_editor_relay->currentProject();
     DrSettings *settings =  project->findSettingsFromKey(settings_key);
     if (settings == nullptr) return QObject::eventFilter(object, event);
 

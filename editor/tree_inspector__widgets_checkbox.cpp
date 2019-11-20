@@ -27,7 +27,7 @@
 //####################################################################################
 //##    Checkbox
 //####################################################################################
-QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy) {
+QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type check_type) {
     long property_key = property->getPropertyKey();
 
     DrQCheckBox *check = new DrQCheckBox();
@@ -38,7 +38,13 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
     check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    check->setChecked(property->getValue().toBool());
+
+    if (check_type == Property_Type::Enabled) {
+        QList<QVariant> prop_list = property->getValue().toList();
+        if (prop_list.count() > 0) check->setChecked(prop_list[0].toBool());
+    } else {
+        check->setChecked(property->getValue().toBool());
+    }
 
     getHoverHandler()->attachToHoverHandler(check, property);
     addToWidgetList(check);

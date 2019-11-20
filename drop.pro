@@ -74,6 +74,7 @@ SOURCES += \
     editor/tree_assets__update.cpp \
     editor/tree_inspector.cpp \
     editor/tree_inspector__update.cpp \
+    editor/tree_inspector__update_settings.cpp \
     editor/tree_inspector__widgets_checkbox.cpp \
     editor/tree_inspector__widgets_color.cpp \
     editor/tree_inspector__widgets_image.cpp \
@@ -209,7 +210,7 @@ SOURCES += \
     project/project_thing__z_order.cpp \
     project/project_world.cpp \
     project/project_world__settings.cpp \
-    properties/thing_shape_list.cpp \
+    properties/property_collision.cpp \
     settings/settings.cpp \
     settings/settings_component.cpp \
     settings/settings_component_property.cpp \
@@ -318,7 +319,7 @@ HEADERS += \
     project/project_stage.h \
     project/project_thing.h \
     project/project_world.h \
-    properties/thing_shape_list.h \
+    properties/property_collision.h \
     settings/settings.h \
     settings/settings_component.h \
     settings/settings_component_property.h \

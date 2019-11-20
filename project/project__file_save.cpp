@@ -17,7 +17,7 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "properties/thing_shape_list.h"
+#include "properties/property_collision.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -45,7 +45,7 @@ void DrProject::saveProjectToFile() {
 
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
-    qRegisterMetaTypeStreamOperators<DrShapeList>("DrShapeList");
+    qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
 
 
     // ***** Open File for Writing

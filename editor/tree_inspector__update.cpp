@@ -10,6 +10,7 @@
 #include <QDoubleSpinBox>
 #include <QLineEdit>
 #include <QMenu>
+#include <QScrollBar>
 #include <QVector3D>
 
 #include "colors/colors.h"
@@ -37,17 +38,24 @@ void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(QList<long> prope
 
 void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update) {
     if (changed_items.isEmpty()) return;
-    ///if (property_keys_to_update.isEmpty()) return;   // ********** Don't do this! This function is made so all properties update if none are received
+    // ***** #NOTE: Don't do the following!
+    // *****        This function is designed so that all properties update if empty list is passed in!
+    ///if (property_keys_to_update.isEmpty()) return;
+
+    // ***** Store current scroll bar position
+    int scroll_position = this->verticalScrollBar()->value();
+
 
     // !!!!! #TEMP: Need to be more than just one item represented in Inspector
     DrSettings* thing = changed_items.first();
     if (thing == nullptr) return;
     // !!!!!
 
+
     if (thing->getKey() != m_selected_key) return;
     if (m_selected_type != DrType::Thing) return;
 
-
+    // Go through list of property widgets in inspector
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
 
@@ -62,6 +70,10 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
         widget->blockSignals(true);
 
         switch (prop->getPropertyType()) {
+            case Property_Type::Enabled:
+                dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toList()[0].toBool());
+                break;
+
             case Property_Type::Bool:
                 dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toBool());
                 break;
@@ -120,6 +132,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
             case Property_Type::SizeF:
             case Property_Type::PositiveSizeF:
             case Property_Type::ScaleF:
+            case Property_Type::PositiveScaleF:
             case Property_Type::GridF:
             case Property_Type::GridScaleF:
             case Property_Type::Variable: {
@@ -185,7 +198,8 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     // ***** Expand / collapse top level items based on last known setting
     expandCollapseComponents();
 
-    // Update
+    // ***** Scroll back to previous position
+    this->verticalScrollBar()->setValue( scroll_position );
     this->update();
 }
 
@@ -208,6 +222,14 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
         DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
 
         switch (property->getPropertyType()) {
+            case Property_Type::Enabled: {
+                QList<QVariant> enabled_list = property->getValue().toList();
+                enabled_list[0] = new_value;
+                property->setValue(enabled_list);
+                updateSubProperties();
+                break;
+            }
+
             case Property_Type::Bool:                                   // true or false
             case Property_Type::Int:                                    // any integer
             case Property_Type::Positive:                               // integer >= 0
@@ -249,6 +271,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::SizeF:                                  // Floating pair w and h
             case Property_Type::PositiveSizeF:                          // Floating pair x and y, both floats are >= 1.0
             case Property_Type::ScaleF:                                 // Floating pair, has smaller step in spin box
+            case Property_Type::PositiveScaleF:                         // Floating pair x and y, both floats are >= 0.0
             case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
             case Property_Type::GridScaleF:                             // Floating pair x and y, minimum value c_minimum_grid_scale
             case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
@@ -304,12 +327,14 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
 //####################################################################################
 void TreeInspector::handleCollapsed(QTreeWidgetItem *item) {
     long key = item->data(0, User_Roles::Key).toLongLong();
+    if (key < 0) return;
     Components comp = static_cast<Components>(key);
     Dr::SetInspectorExpanded(comp, false);
 }
 
 void TreeInspector::handleExpanded(QTreeWidgetItem *item) {
     long key = item->data(0, User_Roles::Key).toLongLong();
+    if (key < 0) return;
     Components comp = static_cast<Components>(key);
     Dr::SetInspectorExpanded(comp, true);
 }
@@ -322,6 +347,7 @@ void TreeInspector::expandCollapseComponents() {
     ///this->expandAll();
     for (auto &item : getListOfTopLevelItems()) {
         long comp_key = item->data(0, User_Roles::Key).toLongLong();
+        if (comp_key < 0) continue;
 
         if (Dr::GetInspectorExpanded(static_cast<Components>(comp_key))) {
             if (item->isExpanded() == false) {

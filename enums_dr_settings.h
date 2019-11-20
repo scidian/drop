@@ -12,11 +12,11 @@
 //##    Used to track what the QVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:    30
+//##    !!!!! NEXT AVAILABLE NUMBER:    31
 //##
 //############################
 enum class Property_Type {
-    Enabled         = 29,   // bool             True or False,
+    Enabled         = 29,   // bool             QList<QVariant> of 2 values, bool for enabled or not, and a QList of Properties that are included
 
     Bool            =  0,   // bool             True or False
     BoolDouble      =  1,   // bool w/double    True or False, and when True shows double spinbox
@@ -44,6 +44,7 @@ enum class Property_Type {
                             //                      Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
                             //                                    updateInspectorPropertyBoxes(), updateToolTipData()
     ScaleF          = 15,   // QPointF          Floating pair x and y, has smaller increment step in spin box
+    PositiveScaleF  = 30,   // QPointF          Floating pair x and y, both numbers are >= 0.0
     SizeF           = 16,   // QPointF          Floating pair w and h
     PositiveSizeF   = 17,   // QPointF          Floating pair w and h, both numbers are >= 1.0
     Point3D         = 27,   // QVector3D        Floating point trio, x, y, z
@@ -54,8 +55,8 @@ enum class Property_Type {
 
     List            = 21,   // enum list
 
-    Collision       = 22,   // DrShapeList      For Collision Shapes
-    Color           = 23,   // QColor.rgba()    For Colors
+    Collision       = 22,   // DrPropertyCollision      For Collision Shapes
+    Color           = 23,   // QColor.rgba()            For Colors
     Image           = 24,   // QPixmap
     Icon            = 25,   // QPixmap
 
@@ -139,9 +140,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   204
+//##    !!!!! NEXT AVAILABLE NUMBER:   216
 //##
-//##    Checked for doubles up through 204 on 11/11/2019
+//##    Checked for doubles up through 216 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -198,7 +199,7 @@ enum class Properties {
     Asset_Collision_One_Way_Type        = 141,      // list, enum class One_Way (none, pass_through, weak_spot)
     Asset_Collision_One_Way_Direction   = 142,      // point
     Asset_Collision_Gravity_Multiplier  = 143,      // double
-    Asset_Collision_Image_Shape         = 155,      // DrShapeList (polygons)
+    Asset_Collision_Image_Shape         = 155,      // DrPropertyCollision (polygons)
     Asset_Collision_Circles             = 156,      // future use storing circles?
     Asset_Collision_Squares             = 157,      // future use storing squares?
     Asset_Collision_Polygons            = 158,      // future use storing polygons?
@@ -230,6 +231,20 @@ enum class Properties {
     // Asset_Controls
     Asset_Controls_Touch_Damage         = 202,      // bool double
     Asset_Controls_Touch_Drag           = 203,      // bool
+
+    Asset_Slingshot_Enabled             = 204,      // enabled
+    Asset_Slingshot_Arrow_Image         = 205,      // image
+    Asset_Slingshot_Arrow_Offset        = 206,      // positive double
+    Asset_Slingshot_Arrow_Scale         = 207,      // positive scalef
+    Asset_Slingshot_Tail_Image          = 208,      // image
+    Asset_Slingshot_Tail_Offset         = 209,      // positive double
+    Asset_Slingshot_Tail_Scale          = 210,      // positive scalef
+    Asset_Slingshot_Max_Distance        = 211,      // positive double
+    Asset_Slingshot_Force_Multiplier    = 212,      // double
+    Asset_Slingshot_Future_1            = 213,      // future
+    Asset_Slingshot_Future_2            = 214,      // future
+    Asset_Slingshot_Future_3            = 215,      // future
+
     Asset_Controls_Rotate_Speed         = 181,      // double
 
 

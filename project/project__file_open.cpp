@@ -19,7 +19,7 @@
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "properties/thing_shape_list.h"
+#include "properties/property_collision.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -43,7 +43,7 @@ bool checkMapHasKey(QVariantMap &map, QString key) {
 bool DrProject::openProjectFromFile(QString open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
-    qRegisterMetaTypeStreamOperators<DrShapeList>("DrShapeList");
+    qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
 
 
     // ***** Open File
@@ -290,7 +290,7 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
 
-            // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrShapeList class
+            // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrPropertyCollision class
             if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Image_Shape)) continue;
 
             // ***** Check data type is the same as we were expecting

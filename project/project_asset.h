@@ -14,7 +14,7 @@
 // Forward Declarations
 class DrFont;
 class DrProject;
-class DrShapeList;
+class DrPropertyCollision;
 
 //####################################################################################
 //##    DrAsset
@@ -63,7 +63,7 @@ public:
     void        initializeAssetSettingsFont(DrFont *font);
 
     void        initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation);
-    void        initializeAssetSettingsCollision(DrAssetType asset_type, DrShapeList &shape);
+    void        initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape);
     void        initializeAssetSettingsControls(DrAssetType asset_type);
     void        initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points = 1);
     void        initializeAssetSettingsPhysics(DrAssetType asset_type);
