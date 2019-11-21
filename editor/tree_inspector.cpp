@@ -226,9 +226,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         QFrame *properties_frame = new QFrame();
         properties_frame->setObjectName("propertiesFrame");
         QVBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
-        vertical_layout->setSpacing(4);
+        vertical_layout->setSpacing(0);
         vertical_layout->setMargin(0);
-        vertical_layout->setContentsMargins(6,4,8,4);
+        vertical_layout->setContentsMargins(0,2,0,2);
 
         // ***** Get property map, sort by listOrder
         std::vector<DrProperty*> properties { };
@@ -248,9 +248,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             single_row->setProperty(User_Property::Key, QVariant::fromValue(property->getPropertyKey()) );
 
             QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
-            horizontal_split->setSpacing(0);
+            horizontal_split->setSpacing(6);
             horizontal_split->setMargin(0);
-            horizontal_split->setContentsMargins(0,0,0,0);
+            horizontal_split->setContentsMargins(4,2,4,2);
 
             QLabel *property_name = new QLabel(property->getDisplayName());
             QFont fp = Dr::CustomFont();
@@ -339,7 +339,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
     spacer_item->setData(0, User_Roles::Key, QVariant::fromValue(c_spacer_item_key));
     QLabel *spacer_label = new QLabel();
-    spacer_label->setFixedHeight(420);
+    spacer_label->setFixedHeight(450);
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
     this->expandItem(spacer_item);

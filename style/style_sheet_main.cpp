@@ -200,9 +200,13 @@ QString CustomStyleSheetFormatting() {
         " QFrame#assetFrame { border: " + Dr::BorderWidth() + " solid; " + StyleSheetRecessedBackgroundBorder(5, 95) +
         "       margin-top: 2px; margin-bottom: 2px; margin-left: 5px; margin-right: 0px; "
         "       border-radius: 6px; } "
-
         " QFrame#assetFrame:hover { " + StyleSheetRecessedBackgroundBorder(5, 95, true) + "; } "
         ///"       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
+
+        " QFrame#inspectorImageFrame { border: " + Dr::BorderWidth() + " solid; " + StyleSheetRecessedBackgroundBorder(5, 95) +
+        "       margin-top: 2px; margin-bottom: 2px; margin-left: 0px; margin-right: 0px; "
+        "       border-radius: 6px; } "
+        " QFrame#inspectorImageFrame:hover { " + StyleSheetRecessedBackgroundBorder(5, 95, true) + "; } "
 
         " QPushButton#buttonAssetCategory { height: 22px; font: 13px; text-align: left; "
         "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
@@ -244,7 +248,7 @@ QString CustomStyleSheetFormatting() {
         //##    Inspector Widgets - Spinboxes, LineEdits, Pushbutton Menus, Sliders
         //################################################################################
         // Check boxes, mostly in Inspector
-        " QCheckBox#checkInspector::indicator { height: 22px; width: 32px; }"
+        " QCheckBox#checkInspector::indicator { height: 27px; width: 32px; }"
 
         // Spin boxes, mostly in Inspector
         " QAbstractSpinBox {        border: " + Dr::BorderWidth() + " solid; height: 20px; "

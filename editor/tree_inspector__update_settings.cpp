@@ -107,7 +107,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
             } else {
                 if (last_found != -1) {
                     if (affected.contains(QVariant::fromValue(prop->getPropertyKey()))) {
-                        row->setStyleSheet("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }");
+                        row->setStyleSheet("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }");
                         row->setVisible(enabled);
                         changed = true;
                     }

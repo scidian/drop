@@ -33,6 +33,8 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     DrQCheckBox *check = new DrQCheckBox();
     check->setObjectName("checkInspector");
     check->setFont(font);
+    check->setDrawTop(3);
+    check->setDrawLeft(4);
     check->setSizePolicy(size_policy);
     check->setTristate(false);
     check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, DrFilterHoverHandler updates this info,
@@ -55,7 +57,6 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 }
 
 
-
 //####################################################################################
 //##    Pair of Check Box / Double Spin Box, uses Property_Type::BoolDouble
 //##        QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
@@ -70,15 +71,14 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
     horizontal_split->setAlignment(Qt::AlignVCenter);
     horizontal_split->setSpacing(2);
-    horizontal_split->setContentsMargins(0,0,0,0);
+    horizontal_split->setContentsMargins(0,0,0,2);
 
     DrQCheckBox *check_left = new DrQCheckBox();
     check_left->setFixedWidth(36);
-    check_left->setFixedHeight(22);
     check_left->setObjectName("checkInspector");
     check_left->setFont(font);
     check_left->setDrawLeft(0);
-    check_left->setDrawTop(2);
+    check_left->setDrawTop(3);
     check_left->setTristate(false);
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event

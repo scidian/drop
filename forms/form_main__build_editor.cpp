@@ -8,6 +8,7 @@
 #include <QDockWidget>
 #include <QHeaderView>
 #include <QOpenGLWidget>
+#include <QScrollBar>
 
 #include "editor/tree_assets.h"
 #include "editor/tree_inspector.h"
@@ -263,6 +264,7 @@ void FormMain::buildWidgetsEditor() {
                 treeAssetEditor->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
                 treeAssetEditor->setUniformRowHeights(false);
                 treeAssetEditor->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+                treeAssetEditor->verticalScrollBar()->setSingleStep(25);
 
             verticalLayoutAsset->insertWidget(0, treeAssetEditor);
 

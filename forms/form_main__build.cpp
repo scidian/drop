@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QDockWidget>
 #include <QScreen>
+#include <QScrollBar>
 
 #include "colors/colors.h"
 #include "editor/tree_advisor.h"
@@ -223,6 +224,7 @@ void FormMain::buildWidgetsShared() {
                 treeInspector->setUniformRowHeights(false);
                 treeInspector->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
                 treeInspector->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+                treeInspector->verticalScrollBar()->setSingleStep(25);
 
             verticalLayoutObject->addWidget(treeInspector);
         dockInspector->setWidget(widgetInspector);

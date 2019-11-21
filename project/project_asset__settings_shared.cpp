@@ -189,7 +189,7 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Force_Multiplier, Property_Type::Double, 1.0,
                            "Force Multiplier", "Force multiplier can be used to increase or decrease power of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Max_Distance, Property_Type::PositiveDouble, 500.0,
-                           "Max Pull Distance", "Maximum distance slingshot can be pulled away from item.");
+                           "Pull Back Distance", "Maximum distance slingshot can be pulled away from item.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Image, Property_Type::Image, QVariant(QPixmap()),
                            "Slingshot Arrow", "Image used to show direction of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Offset, Property_Type::PositiveDouble, 100.0,

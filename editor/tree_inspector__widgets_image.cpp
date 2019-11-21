@@ -44,7 +44,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     image_frame->setAcceptDrops(true);
     image_frame->setSizePolicy(size_policy);
     image_frame->setMinimumHeight(frame_height);
-    image_frame->setObjectName("assetFrame");
+    image_frame->setObjectName("inspectorImageFrame");
 
     long property_key = property->getPropertyKey();
     image_frame->setProperty(User_Property::Mouse_Over, false);                                     // Initialize mouse user data, event filter updates this info
