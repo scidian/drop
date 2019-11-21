@@ -339,7 +339,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     QTreeWidgetItem *spacer_item  = new QTreeWidgetItem();
     spacer_item->setData(0, User_Roles::Key, QVariant::fromValue(c_spacer_item_key));
     QLabel *spacer_label = new QLabel();
-    spacer_label->setFixedHeight(450);
+    spacer_label->setFixedHeight(500);
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
     this->expandItem(spacer_item);

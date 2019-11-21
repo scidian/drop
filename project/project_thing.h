@@ -19,6 +19,10 @@ class DrWorld;
 class DrStage;
 class DrThing;
 
+// Type definitions
+typedef std::map<long, DrThing*> ThingMap;
+
+// Local Structs / Enums
 struct OrderInfo {
     long     key;
     DrThing *thing;
@@ -46,6 +50,10 @@ private:
     DrThingType     m_thing_type;                       // Holds type of current Thing
     long            m_asset_key;                        // Holds the associated asset key, this way we know what image to grab for GraphicsView
     DrItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
+
+    // Container of child Things
+    ThingMap    m_things;                               // Map of pointers to DrThing classes (holds the things for current thing)
+
 
 public:
     // Constructor / Destructor

@@ -41,7 +41,7 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, QPointF(1000, 1000),
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, QPointF(2000, 2000),
                            "Max Speed", "Maximum movement speed of this Character in the x and y direction.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed, Property_Type::PointF, QPointF(0, 0),
                            "Forced Speed", "Forced movement speed of this Character in the x and y direction.");

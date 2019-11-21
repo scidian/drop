@@ -84,8 +84,8 @@ private:
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
     bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
 
-    double          m_max_speed_x =  1000.0;        // Maximum speed x of object
-    double          m_max_speed_y =  1000.0;        // Maximum speed y of object
+    double          m_max_speed_x =  2000.0;        // Maximum speed x of object
+    double          m_max_speed_y =  2000.0;        // Maximum speed y of object
 
     double          m_forced_speed_x =  0.0;        // Forced move speed x of object
     double          m_forced_speed_y =  0.0;        // Forced move speed y of object
@@ -99,7 +99,7 @@ private:
     long            m_jump_timeout =  800;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
     int             m_jump_count =      0;          // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
-    double          m_acceleration =  1.00;         // Affects move / switch speeds, 0.0 is instant, 1.0 is default, 5.0 is slower
+    double          m_acceleration =   1.00;        // Affects move / switch speeds, 0.0 is instant, 1.0 is default, 5.0 is slower
     double          m_air_drag =       1.00;        // Affects acceleration and decceleration in air (0 to 1+)
     double          m_ground_drag =    1.00;        // Affects acceleration and decceleration on the ground (0 to 1+)
     double          m_rotate_drag =    0.25;        // Affects rotation acceleration and decceleration (0 to 1+)
@@ -118,10 +118,10 @@ private:
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
-    int         m_remaining_jumps = 0;                      // How many jumps player has left before it must hit ground before it can jump again
-    double      m_remaining_boost = 0.0;                    // Used by Engine Update to process Jump Timeout boost
-    double      m_remaining_ground_time = 0.0;              // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
-    double      m_remaining_wall_time = 0.0;                // Used by Engine Update to allow some time for a wall jump to occur
+    int         m_remaining_jumps =         0;              // How many jumps player has left before it must hit ground before it can jump again
+    double      m_remaining_boost =         0.0;            // Used by Engine Update to process Jump Timeout boost
+    double      m_remaining_ground_time =   0.0;            // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
+    double      m_remaining_wall_time =     0.0;            // Used by Engine Update to allow some time for a wall jump to occur
 
     bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
     bool        m_on_wall = false;                          // Used by Engine Update to keep track of if this object is on a wall
