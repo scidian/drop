@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef PROJECT_DEVICE_H
-#define PROJECT_DEVICE_H
+#ifndef DRDEVICE_H
+#define DRDEVICE_H
 
 #include <QString>
 
@@ -39,4 +39,4 @@ public:
 
 };
 
-#endif // PROJECT_DEVICE_H
+#endif // DRDEVICE_H

@@ -29,22 +29,25 @@ enum class Orientation {
 };
 
 // Forward declarations
+class DrAnimation;
 class DrAsset;
 class DrDevice;
 class DrEffect;
 class DrFont;
 class DrImage;
-class DrWorld;
 class DrStage;
 class DrThing;
+class DrWorld;
 
 // Type definitions
-typedef std::map<long, DrWorld*>  WorldMap;
-typedef std::map<long, DrAsset*>  AssetMap;
-typedef std::map<long, DrDevice*> DeviceMap;
-typedef std::map<long, DrEffect*> EffectMap;
-typedef std::map<long, DrFont*>   FontMap;
-typedef std::map<long, DrImage*>  ImageMap;
+typedef std::map<long, DrAnimation*>    AnimationMap;
+typedef std::map<long, DrAsset*>        AssetMap;
+typedef std::map<long, DrDevice*>       DeviceMap;
+typedef std::map<long, DrEffect*>       EffectMap;
+typedef std::map<long, DrFont*>         FontMap;
+typedef std::map<long, DrImage*>        ImageMap;
+typedef std::map<long, DrWorld*>        WorldMap;
+
 typedef std::map<Project_Options, QVariant>  OptionMap;
 
 
@@ -103,12 +106,13 @@ private:
     //          - Inherit DrSettings for DrComponent / DrProperty usage
     //          - Is assigned an unique key upon creation from DrProject::getNextKey()
     //
-    WorldMap    m_worlds;                                       // Holds worlds for the project
-    AssetMap    m_assets;                                       // Holds assets for the project
-    DeviceMap   m_devices;                                      // Holds devices for the project
-    EffectMap   m_effects;                                      // Holds effects for the project
-    FontMap     m_fonts;                                        // Holds custom fonts for the project
-    ImageMap    m_images;                                       // Holds images for the project
+    AnimationMap    m_animations;                                   // Holds animations     for the project
+    AssetMap        m_assets;                                       // Holds assets         for the project
+    DeviceMap       m_devices;                                      // Holds devices        for the project
+    EffectMap       m_effects;                                      // Holds effects        for the project
+    FontMap         m_fonts;                                        // Holds custom fonts   for the project
+    ImageMap        m_images;                                       // Holds images         for the project
+    WorldMap        m_worlds;                                       // Holds worlds         for the project
 
 
 public:
@@ -125,24 +129,26 @@ public:
     void        setHasSaved(bool saved) { m_has_saved = saved; }
     void        setTestOnly(bool test)  { m_test_only = test; }
 
-    long        getFirstWorldKey()      { return m_worlds.begin()->first; }
-    long        getNumberOfWorlds()     { return static_cast<long>(m_worlds.size()); }
-    DrWorld*    getWorld(long key)      { return m_worlds[key]; }
-    WorldMap&   getWorldMap()           { return m_worlds; }
-    DrWorld*    findWorldWithName(QString world_name);
+    long            getFirstWorldKey()      { return m_worlds.begin()->first; }
+    long            getNumberOfWorlds()     { return static_cast<long>(m_worlds.size()); }
+    DrWorld*        getWorld(long key)      { return m_worlds[key]; }
+    WorldMap&       getWorldMap()           { return m_worlds; }
+    DrWorld*        findWorldWithName(QString world_name);
 
-    DrAsset*    getAsset(long key)      { return m_assets[key]; }
-    AssetMap&   getAssetMap()           { return m_assets; }
-    long        getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
+    DrAsset*        getAsset(long key)      { return m_assets[key]; }
+    AssetMap&       getAssetMap()           { return m_assets; }
+    long            getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
 
-    DrDevice*   getDevice(long key)     { return m_devices[key]; }
-    DeviceMap&  getDeviceMap()          { return m_devices; }
-    DrEffect*   getEffect(long key)     { return m_effects[key]; }
-    EffectMap&  getEffectMap()          { return m_effects; }
-    DrFont*     getFont(long key)       { return m_fonts[key]; }
-    FontMap&    getFontMap()            { return m_fonts; }
-    DrImage*    getImage(long key)      { return m_images[key]; }
-    ImageMap&   getImageMap()           { return m_images; }
+    DrAnimation*    getAnimation(long key)  { return m_animations[key]; }
+    AnimationMap&   getAnimationMap()       { return m_animations; }
+    DrDevice*       getDevice(long key)     { return m_devices[key]; }
+    DeviceMap&      getDeviceMap()          { return m_devices; }
+    DrEffect*       getEffect(long key)     { return m_effects[key]; }
+    EffectMap&      getEffectMap()          { return m_effects; }
+    DrFont*         getFont(long key)       { return m_fonts[key]; }
+    FontMap&        getFontMap()            { return m_fonts; }
+    DrImage*        getImage(long key)      { return m_images[key]; }
+    ImageMap&       getImageMap()           { return m_images; }
 
     // Options Calls
     QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }
@@ -154,6 +160,7 @@ public:
     void            addDefaultAssets();
     void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
     void            clearProject(bool add_built_in_items = true);
+    void            deleteAnimation(long animation_key);
     void            deleteWorld(DrWorld *world);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);
@@ -164,6 +171,7 @@ public:
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, QString custom_error = "");
     DrType          findChildTypeFromKey(long check_key);
 
+    DrAnimation*    findAnimationFromKey(long check_key);
     DrAsset*        findAssetFromKey(long check_key);
     DrDevice*       findDeviceFromType(DrDeviceType type);
     DrEffect*       findEffectFromType(DrEffectType type);
@@ -174,15 +182,16 @@ public:
     QString         testSpeedFindSettings(int test_size);
 
     // Children Creation Calls
-    DrWorld*        addWorld();
-    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
-    DrWorld*        addWorldCopyFromWorld(DrWorld* from_world);
-    long            addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
+    DrAnimation*    addAnimation(QList<long> source_image_keys, long key = c_no_key);
+    DrAsset*        addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
     long            addImage(QString image_path);
     long            addImage(long key, QString full_path, QString filename, QString simple_name, QImage &image);
+    DrWorld*        addWorld();
+    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
+    DrWorld*        addWorldCopyFromWorld(DrWorld* from_world);
 
 };
 

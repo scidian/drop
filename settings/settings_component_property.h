@@ -5,7 +5,6 @@
 //      DrProperty - Class to hold one property of any Project object component
 //
 //
-
 #ifndef DRPROPERTY_H
 #define DRPROPERTY_H
 

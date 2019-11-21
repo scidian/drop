@@ -154,11 +154,11 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
 
             // ***** Dropped on to Animation Property
             if (property_key == static_cast<int>(Properties::Asset_Animation_Default)) {
-                long old_image_key = asset->getSourceKey();
-                bool delete_after =  asset->canDeleteSource();
-                long new_image_key = project->addImage(file_path);
+                long old_animation_key = asset->getSourceKey();
+                bool delete_after =      asset->canDeleteSource();
+                long new_image_key =     project->addImage(file_path);
 
-                asset->updateAnimationProperty(new_image_key);
+                asset->updateAnimationProperty( { new_image_key } );
 
                 // Update all Things, Thing_Size that use Asset
                 for (auto world_pair : project->getWorldMap()) {
@@ -180,7 +180,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 m_editor_relay->buildAssetTree();
                 m_editor_relay->buildInspector( { settings_key }, true );
 
-                if (delete_after) asset->deleteSource(old_image_key);
+                if (delete_after) asset->deleteSource( old_animation_key );
                 drop_event->acceptProposedAction();
             }
         }

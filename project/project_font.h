@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef PROJECT_FONT_H
-#define PROJECT_FONT_H
+#ifndef DRFONT_H
+#define DRFONT_H
 
 #include <QPixmap>
 #include <QString>
@@ -74,7 +74,7 @@ public:
 
 };
 
-#endif // PROJECT_FONT_H
+#endif // DRFONT_H
 
 
 

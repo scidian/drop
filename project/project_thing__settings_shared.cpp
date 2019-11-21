@@ -27,12 +27,13 @@
 //##    Transform Components
 //####################################################################################
 void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
-    addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the item in the stage.", Component_Colors::Green_SeaGrass, true);
+    addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the " + Dr::StringFromThingType(type) + " "
+                                                           "in the Stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
 
-    QString position_text = "Location of item within the current stage.";
+    QString position_text = "Location of the " + Dr::StringFromThingType(type) + " within the current Stage.";
     if (type == DrThingType::Camera) {
-        position_text = "Point at which camera is looking at.";
+        position_text = "Point at which Camera is looking at.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y), "Position", position_text);
 
@@ -40,22 +41,22 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     QString transform_text =  "Starting rotation, in degrees, of item on the Z Axis. Does affect physics collision shape.";
     if (type == DrThingType::Camera) {
         transform_title = "Camera Tilt";
-        transform_text =  "Starting tilt / rotation of camera on the Z Axis.";
+        transform_text =  "Starting tilt / rotation of Camera on the Z Axis.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0, transform_title, transform_text);
 
-    QString size_text = "Width and Height of item in pixels, affected by Scale property.";
+    QString size_text = "Width and Height of the " + Dr::StringFromThingType(type) + " in pixels, affected by Scale property.";
     if (type == DrThingType::Light) {
-        size_text = "Width and Height of item in pixels, affected by Scale property. "
+        size_text = "Width and Height of the Light in pixels, affected by Scale property. "
                     "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
     } else if (type == DrThingType::Camera) {
-        size_text = "Width and Height settings have no effect on Camera.";
+        size_text = "Width and Height settings have no effect on Cameras.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height), "Size", size_text);
 
-    QString scale_text = "X and Y scale of item within the stage.";
+    QString scale_text = "X and Y scale of the " + Dr::StringFromThingType(type) + " within the Stage.";
     if (type== DrThingType::Camera) {
-        scale_text = "X and Y scale settings have no effect on Camera.";
+        scale_text = "X and Y scale settings have no effect on Cameras.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1), "Scale", scale_text);
 }
@@ -70,7 +71,7 @@ void DrThing::addComponentLayering(double z, double opacity, bool show_component
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
 
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
-                           "Z-Order", "Arrangement of item along the z axis in the stage. Should be between the near and far clipping planes (" +
+                           "Z-Order", "Arrangement of item along the z axis in the Stage. Should be between the near and far clipping planes (" +
                                       QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + ") to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,
                            "Sub Order", "Arrangement of item compared to other items within the same Z-Order.", true, false);
@@ -84,7 +85,7 @@ void DrThing::addComponentLayering(double z, double opacity, bool show_component
 //##    Movement Components
 //####################################################################################
 void DrThing::addComponentMovement() {
-    addComponent(Components::Thing_Movement, "Movement", "Initial starting velocities of Object in stage. <br><br> "
+    addComponent(Components::Thing_Movement, "Movement", "Initial starting velocities of Object in Stage. <br><br> "
                                                           "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!",
                                                           Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Movement)->setIcon(Component_Icons::Movement);
@@ -99,11 +100,11 @@ void DrThing::addComponentMovement() {
                            "Rotate Speed Z", "Initial rotational speed Object on the Z Axis, +/- variable amount. <br><br> "
                                              "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Velocity, Property_Type::Bool, true,
-                           "Relative Angle?", "Should the Rotation and Scale of this object affect it's Movement direction? (allows Object to move "
+                           "Relative Angle?", "Should the Rotation and Scale of this Object affect it's Movement direction? (allows Object to move "
                                               "along an arc instead of spinning in place) <br> "
                                               "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
     addPropertyToComponent(Components::Thing_Movement, Properties::Thing_Angle_Player, Property_Type::Bool, false,
-                           "Rotate To Player?", "Should the Rotation of this object try and point towards (Y Axis Up) the active player? Rotates this"
+                           "Rotate To Player?", "Should the Rotation of this Object try and point towards (Y Axis Up) the active player? Rotates this"
                                                 "direction at Rotate Speed Z speed. <br> "
                                                 "<b>NOTE:</b> Object Type must be <b>Kinematic</b> to use this setting!", false, false);
 }

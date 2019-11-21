@@ -32,14 +32,16 @@ QString StringFromEditorWidget(Editor_Widgets widget) {
 
 QString StringFromType(DrType type) {
     switch (type) {
-        case DrType::Asset:        return "Asset";
-        case DrType::Font:         return "Font";
-        case DrType::Image:        return "Image";
-        case DrType::World:        return "World";
-        case DrType::Stage:        return "Stage";
-        case DrType::Thing:        return "Thing";
-        case DrType::NotFound:     return "Not Found";
-        case DrType::BaseClass:    return "Base Class";
+        case DrType::Animation:     return "Animation";
+        case DrType::Asset:         return "Asset";
+        case DrType::Font:          return "Font";
+        case DrType::Frame:         return "Frame";
+        case DrType::Image:         return "Image";
+        case DrType::Stage:         return "Stage";
+        case DrType::Thing:         return "Thing";
+        case DrType::World:         return "World";
+        case DrType::NotFound:      return "Not Found";
+        case DrType::BaseClass:     return "Base Class";
     }
     return "Unknown";
 }

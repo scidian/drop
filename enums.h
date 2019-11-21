@@ -5,7 +5,6 @@
 //      List of enumerations used by this project
 //
 //
-
 #ifndef ENUMS_H
 #define ENUMS_H
 
@@ -28,8 +27,10 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //##
 //############################
 enum class DrType {
+    Animation,
     Asset,
     Font,
+    Frame,
     Image,
     World,
         Stage,

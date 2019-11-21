@@ -5,7 +5,6 @@
 //      DrSettings - Class to hold settings and a collection of components for all Project objects
 //
 //
-
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 

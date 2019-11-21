@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef PROJECT_EFFECT_H
-#define PROJECT_EFFECT_H
+#ifndef DREFFECT_H
+#define DREFFECT_H
 
 #include <QString>
 
@@ -40,7 +40,7 @@ public:
 };
 
 
-#endif // PROJECT_EFFECT_H
+#endif // DREFFECT_H
 
 
 

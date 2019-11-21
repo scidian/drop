@@ -194,6 +194,8 @@ SOURCES += \
     project/project__file_open.cpp \
     project/project__file_save.cpp \
     project/project__initialize.cpp \
+    project/project_animation.cpp \
+    project/project_animation_frame.cpp \
     project/project_asset.cpp \
     project/project_asset__settings.cpp \
     project/project_asset__settings_shared.cpp \
@@ -311,6 +313,7 @@ HEADERS += \
     playground/playground.h \
     playground/playground_toy.h \
     project/project.h \
+    project/project_animation.h \
     project/project_asset.h \
     project/project_device.h \
     project/project_effect.h \

@@ -5,7 +5,6 @@
 //      DrWorld - Class to hold all stages, variables and things for one world
 //
 //
-
 #ifndef DRWORLD_H
 #define DRWORLD_H
 

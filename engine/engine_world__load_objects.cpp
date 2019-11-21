@@ -160,11 +160,11 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
             object->addShapePolygon(points);
         }
     } else if (shape == Collision_Shape::Circle) {
-        object->addShapeCircleFromTexture( asset->getKey() );
+        object->addShapeCircleFromTexture( asset->getAnimationFirstFrameImageKey() );
     } else if (shape == Collision_Shape::Square) {
-        object->addShapeBoxFromTexture( asset->getKey() );
+        object->addShapeBoxFromTexture( asset->getAnimationFirstFrameImageKey() );
     } else if (shape == Collision_Shape::Triangle) {
-        object->addShapeTriangleFromTexture( asset->getKey() );
+        object->addShapeTriangleFromTexture( asset->getAnimationFirstFrameImageKey() );
     }
 }
 
@@ -222,7 +222,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
 
     // ***** Add the block to the cpSpace
-    DrEngineObject *block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset_key,
+    DrEngineObject *block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset->getKey(),
                                                x + x_offset, y + y_offset, info.z_order, info.scale,
                                                use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, block);

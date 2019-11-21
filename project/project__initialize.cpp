@@ -6,6 +6,7 @@
 //
 //
 #include "project/project.h"
+#include "project/project_asset.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
@@ -67,29 +68,29 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
         long font_2 =   this->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
         long font_3 =   this->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
 
-                         this->addAsset(DrAssetType::Character, image_6 );         // "Ball 1"
-        long a_dragon =  this->addAsset(DrAssetType::Character, image_16 );        // "Dragon"
+                                this->addAsset(DrAssetType::Character, image_6 );           // "Ball 1"
+        DrAsset *a_dragon =     this->addAsset(DrAssetType::Character, image_16 );          // "Dragon"
 
-        long a_square =  this->addAsset(DrAssetType::Object, image_1 );            // "Dr Square"
-        long a_ground  = this->addAsset(DrAssetType::Object, image_2 );            // "Ground Fill"
-        long a_top  =    this->addAsset(DrAssetType::Object, image_3 );            // "Ground Top"
-        long a_plant  =  this->addAsset(DrAssetType::Object, image_4 );            // "Moon Plant 6"
-        long a_block  =  this->addAsset(DrAssetType::Object, image_13 );           // "Metal Block"
-        long a_planet =  this->addAsset(DrAssetType::Object, image_12 );           // "PlanetWithAReallyLongName"
+        DrAsset *a_square =     this->addAsset(DrAssetType::Object, image_1 );              // "Dr Square"
+        DrAsset *a_ground =     this->addAsset(DrAssetType::Object, image_2 );              // "Ground Fill"
+        DrAsset *a_top =        this->addAsset(DrAssetType::Object, image_3 );              // "Ground Top"
+        DrAsset *a_plant =      this->addAsset(DrAssetType::Object, image_4 );              // "Moon Plant 6"
+        DrAsset *a_block =      this->addAsset(DrAssetType::Object, image_13 );             // "Metal Block"
+        DrAsset *a_planet =     this->addAsset(DrAssetType::Object, image_12 );             // "PlanetWithAReallyLongName"
 
-        long a_cake1  =  this->addAsset(DrAssetType::Object, image_9 );            // "Cake Block"
-        long a_cake2 =   this->addAsset(DrAssetType::Object, image_10 );           // "Cake Chocolate"
-        long a_cake3 =   this->addAsset(DrAssetType::Object, image_11 );           // "Cake Ice Cube"
+        DrAsset *a_cake1 =      this->addAsset(DrAssetType::Object, image_9 );              // "Cake Block"
+        DrAsset *a_cake2 =      this->addAsset(DrAssetType::Object, image_10 );             // "Cake Chocolate"
+        DrAsset *a_cake3 =      this->addAsset(DrAssetType::Object, image_11 );             // "Cake Ice Cube"
 
-        this->addAsset(DrAssetType::Object, image_7 );                             // "Water 1"
-        this->addAsset(DrAssetType::Object, image_5 );                             // "Rover Body"
-        this->addAsset(DrAssetType::Object, image_8 );                             // "Rover Wheel"
-        this->addAsset(DrAssetType::Object, image_14 );                            // "Donut"
-        this->addAsset(DrAssetType::Object, image_15 );                            // "Shapes 2"
+        this->addAsset(DrAssetType::Object, image_7 );                                      // "Water 1"
+        this->addAsset(DrAssetType::Object, image_5 );                                      // "Rover Body"
+        this->addAsset(DrAssetType::Object, image_8 );                                      // "Rover Wheel"
+        this->addAsset(DrAssetType::Object, image_14 );                                     // "Donut"
+        this->addAsset(DrAssetType::Object, image_15 );                                     // "Shapes 2"
 
-        long a_font =    this->addAsset(DrAssetType::Text, font_1);                // "Test Font"
-        this->addAsset(DrAssetType::Text, font_2);                                 // "Test Font 2"
-        this->addAsset(DrAssetType::Text, font_3);                                 // "Test Font 3"
+        DrAsset *a_font =       this->addAsset(DrAssetType::Text, font_1);                  // "Test Font"
+        this->addAsset(DrAssetType::Text, font_2);                                          // "Test Font 2"
+        this->addAsset(DrAssetType::Text, font_3);                                          // "Test Font 3"
 
         // Add some Worlds and Stages
         this->addWorld();                                                                  // "World 2"
@@ -100,51 +101,51 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
         // Stage 4 Rover Test
         long start_stage = this->findWorldWithName("World 2")->getFirstStageKey();
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_dragon,  0,    60,   5);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_dragon->getKey(),  0,    60,   5);
 
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet,   200,   600,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet,  1200,   475,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet->getKey(),   200,   600,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet->getKey(),  1200,   475,   0);
 
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_plant,    900,    55,   5, false);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_plant,   1400,    55,   5, false);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_plant->getKey(),    900,    55,   5, false);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_plant->getKey(),   1400,    55,   5, false);
 
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground,  -411,  -200,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground,     0,  -200,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground,   411,  -200,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground,   822,  -200,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground,  1233,  -200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground->getKey(),  -411,  -200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground->getKey(),     0,  -200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground->getKey(),   411,  -200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground->getKey(),   822,  -200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_ground->getKey(),  1233,  -200,   0);
 
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top,     -411,   -50,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top,        0,   -50,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top,      411,   -50,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top,      822,   -50,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top,     1233,   -50,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top->getKey(),     -411,   -50,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top->getKey(),        0,   -50,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top->getKey(),      411,   -50,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top->getKey(),      822,   -50,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_top->getKey(),     1233,   -50,   0);
 
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block,    400,   200,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block,    550,   200,   0);
-        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block,    750,   350,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block->getKey(),    400,   200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block->getKey(),    550,   200,   0);
+        this->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_block->getKey(),    750,   350,   0);
 
         // Stage 2 Misc Test
-        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_square,   600,   700,  0);
-        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Text,   a_font,     500,   900,  0);
+        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_square->getKey(),   600,   700,  0);
+        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Text,   a_font->getKey(),     500,   900,  0);
 
-        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground,   200,  -200,  0);
-        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground,   600,  -200,  0);
-        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground,  1000,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground->getKey(),   200,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground->getKey(),   600,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground->getKey(),  1000,  -200,  0);
 
         // Stage 3 Ground
-        this->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addThing(DrThingType::Object, a_ground,   200,  -200,  0);
-        this->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addThing(DrThingType::Object, a_ground,   600,  -200,  0);
-        this->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addThing(DrThingType::Object, a_ground,  1000,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addThing(DrThingType::Object, a_ground->getKey(),   200,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addThing(DrThingType::Object, a_ground->getKey(),   600,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("asdfasdfasdfasdfasdfasdfasd")->addThing(DrThingType::Object, a_ground->getKey(),  1000,  -200,  0);
 
         // Stage 4 Iso Cake Test
-        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_cake1,    200,   500,  0);
-        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_cake2,    400,   800,  0);
-        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_cake3,    600,  1100,  0);
+        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_cake1->getKey(),    200,   500,  0);
+        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_cake2->getKey(),    400,   800,  0);
+        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_cake3->getKey(),    600,  1100,  0);
 
-        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground,   200,  -200,  0);
-        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground,   600,  -200,  0);
-        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground,  1000,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground->getKey(),   200,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground->getKey(),   600,  -200,  0);
+        this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground->getKey(),  1000,  -200,  0);
 
         DrStage* current_stage = this->findWorldWithName("World 2")->getStageFromKey(start_stage);
         this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_stage->getKey()) );

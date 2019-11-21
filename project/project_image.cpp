@@ -8,6 +8,8 @@
 #include <QFileInfo>
 
 #include "project/project_image.h"
+#include "settings/settings_component.h"
+#include "settings/settings_component_property.h"
 
 
 //####################################################################################
@@ -26,6 +28,8 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) : DrSe
 
     m_image = QImage(image_path).convertToFormat(QImage::Format::Format_ARGB32);
 
+    // Set name in DrSettings Entity properties
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
 }
 
 // File Loading Constructor

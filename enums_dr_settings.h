@@ -68,8 +68,8 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:                    41,
-//##    !!!!! MUST ALSO CHANGE:     Components::Total = 41 !!!!!
+//##    !!!!! NEXT AVAILABLE NUMBER:                    43,
+//##    !!!!! MUST ALSO CHANGE:     Components::Total = 43 !!!!!
 //##
 //############################
 enum class Components {
@@ -78,6 +78,11 @@ enum class Components {
     Entity_Settings                     = 0,
     Hidden_Settings                     = 1,
     Size_Settings                       = 37,
+
+
+    // ***** DrAnimation Components
+    Animation_Settings                  = 41,
+    Frame_Settings                      = 42,
 
 
     // ***** DrAsset Components
@@ -132,7 +137,7 @@ enum class Components {
     Thing_Appearance                    = 32,
     Thing_Special_Effects               = 33,
 
-    Total = 41,
+    Total = 43,
 };
 
 
@@ -140,9 +145,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   216
+//##    !!!!! NEXT AVAILABLE NUMBER:   222
 //##
-//##    Checked for doubles up through 216 on 11/11/2019
+//##    Checked for doubles up through 222 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -160,6 +165,17 @@ enum class Properties {
     Size_Keep_Square                    = 167,      // bool
     Size_Max_Size                       = 168,      // pointf
     Size_Min_Size                       = 169,      // pointf
+
+
+    // ******************** DrAnimation Components
+    // Animation_Settings
+    Animation_Settings_Speed            = 216,      // double
+    Animation_Settings_Loops            = 217,      // int
+    Animation_Settings_Start_Frame      = 218,      // positive int
+    Animation_Settings_Future_1         = 219,
+    Animation_Settings_Future_2         = 220,
+    Animation_Settings_Future_3         = 221,
+
 
 
     // ******************** DrAsset Component Properties
@@ -184,10 +200,7 @@ enum class Properties {
     Asset_Character_Flip_Image_Y        = 160,      // bool
     Asset_Character_Mouse_Rotate        = 200,      // bool
 
-
     // Asset_Settings_Object
-
-
 
 
     // Asset_Settings_Font
@@ -336,7 +349,6 @@ enum class Properties {
     Thing_Spawn_Offset_Y                = 196,      // variable
     Thing_Spawn_Instantly               = 197,      // bool
 
-
     // Lighting
     Thing_Lighting_Cast_Shadows         = 66,       // bool
 
@@ -373,7 +385,6 @@ enum class Properties {
     Thing_Camera_Rotation               = 180,      // pointf
     Thing_Camera_Up_Vector              = 183,      // list, enum class Up_Vector
     Thing_Camera_Zoom                   = 83,       // double
-
 
     // Character Settings
     Thing_Character_Camera_Position     = 170,      // pointf
@@ -465,15 +476,7 @@ enum class Properties {
 };
 
 
-
 #endif // ENUMS_DR_SETTINGS_H
-
-
-
-
-
-
-
 
 
 

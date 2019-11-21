@@ -21,11 +21,14 @@ class DrEngineObject : public DrEngineThing
 {
 public:
     // Object Body and Shapes
-    cpBody             *body = nullptr;         // Physical Body of object
-    Body_Type           body_type;              // Body_Type
+    cpBody             *body = nullptr;             // Physical Body of object
+    Body_Type           body_type;                  // Body_Type
 
-    QVector<cpShape*>   shapes;                 // Collision Shapes of object
-    ShapeMap            shape_type;             // Shape Types of Shapes of Object
+    QVector<cpShape*>   shapes;                     // Collision Shapes of object
+    ShapeMap            shape_type;                 // Shape Types of Shapes of Object
+
+    long                animation_idle_key;         // Default Animation
+
 
 private:
     // ***** Object Component Properties
@@ -154,7 +157,7 @@ public:
 public:
     // Constructor / Destructor
     DrEngineObject(DrEngineWorld *world, long unique_key, long original_key);
-    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long texture_number = 0,
+    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key = 0,
                    double x = 0, double y = 0, double z = 0, DrPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
                    bool should_collide = true, bool can_rotate = true, double angle = c_zero_rotate, float opacity = c_opaque);
     virtual ~DrEngineObject() override;

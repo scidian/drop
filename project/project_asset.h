@@ -5,7 +5,6 @@
 //      DrAsset - Class to hold an asset for use in a project
 //
 //
-
 #ifndef DRASSET_H
 #define DRASSET_H
 
@@ -26,7 +25,7 @@ private:
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
 
-    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrImage, DrFont, DrEffect, etc.)
+    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrAnimation, DrImage, DrFont, DrEffect, etc.)
 
     long            m_width;
     long            m_height;
@@ -53,7 +52,8 @@ public:
     // Function Calls
     bool        canDeleteSource();
     void        deleteSource(long source_key = c_no_key);
-    void        updateAnimationProperty(long source_key);
+    long        getAnimationFirstFrameImageKey();
+    void        updateAnimationProperty(QList<long> image_keys);
 
     // Initialize Calls
     void        initializeAssetSettingsCharacter(QString new_name);

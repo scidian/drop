@@ -13,6 +13,7 @@
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
+#include "project/project_image.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 
@@ -117,14 +118,11 @@ void DrOpenGL::loadBuiltInTextures() {
 //##    Load resources from project
 //####################################################################################
 void DrOpenGL::loadProjectTextures() {
-    for (auto asset_pair : m_engine->getProject()->getAssetMap() ) {
-        DrAsset *asset = asset_pair.second;
-        if (asset) {
-            DrAssetType asset_type = asset->getAssetType();
-            if (asset_type == DrAssetType::Object || asset_type == DrAssetType::Character) {
-                QPixmap pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
-                importTexture(asset->getKey(), pixmap);
-            }
+    for (auto image_pair : m_engine->getProject()->getImageMap() ) {
+        DrImage *image = image_pair.second;
+        if (image != nullptr) {
+            QPixmap pixmap = image->getPixmapFromImage();
+            importTexture(image->getKey(), pixmap);
         }
     }
 }

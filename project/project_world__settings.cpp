@@ -26,7 +26,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     property_name->setDescription("Name of this World.");
     property_name->setValue(new_name);
 
-    addComponent(Components::World_Settings, "World Settings", "Settings for this world.", Component_Colors::White_Snow, true);
+    addComponent(Components::World_Settings, "World Settings", "Settings for this World.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Components::World_Settings, Properties::World_Game_Direction, Property_Type::Angle, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - down, 180 - left, 270 - up, etc.");

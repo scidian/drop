@@ -26,7 +26,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     // ***** Load Character Thing Properties
     long        asset_key = thing->getAssetKey();
-    DrAsset    *asset = m_project->getAsset(asset_key);
+    DrAsset    *asset =     m_project->getAsset(asset_key);
             if (asset == nullptr) return;
     ThingInfo   info =      loadThingBasicInfo( thing );
 
@@ -68,7 +68,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
     // ***** Add the player to the cpSpace
-    DrEngineObject *player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset_key,
+    DrEngineObject *player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset->getKey(),
                                                 info.position.x, -info.position.y, info.z_order,
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);

@@ -11,6 +11,7 @@
 
 #include "forms/form_main.h"
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
 #include "project/project_effect.h"
@@ -39,15 +40,15 @@ DrProject::~DrProject() {
 void DrProject::clearProject(bool add_built_in_items) {
     m_test_only = false;
 
-    for (auto it = m_worlds.begin();    it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
-    for (auto it = m_assets.begin();    it != m_assets.end(); )     {   delete it->second; it = m_assets.erase(it);     }
-    for (auto it = m_devices.begin();   it != m_devices.end(); )    {   delete it->second; it = m_devices.erase(it);    }
-    for (auto it = m_effects.begin();   it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
-    for (auto it = m_fonts.begin();     it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
-    for (auto it = m_images.begin();    it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
+    for (auto it = m_animations.begin();    it != m_animations.end(); ) {   delete it->second; it = m_animations.erase(it); }
+    for (auto it = m_assets.begin();        it != m_assets.end(); )     {   delete it->second; it = m_assets.erase(it);     }
+    for (auto it = m_devices.begin();       it != m_devices.end(); )    {   delete it->second; it = m_devices.erase(it);    }
+    for (auto it = m_effects.begin();       it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
+    for (auto it = m_fonts.begin();         it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
+    for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
+    for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
-
-    // Add these Imagea to every project for use with New Assets
+    // Add these Images to every project for use with New Assets
     if (add_built_in_items) {
         QImage::Format format = QImage::Format::Format_ARGB32;
 
@@ -65,6 +66,13 @@ void DrProject::clearProject(bool add_built_in_items) {
     m_key_generator = c_key_starting_number;
 }
 
+// Removes an Animation from the Project
+void DrProject::deleteAnimation(long animation_key) {
+    DrAnimation *animation = m_animations[animation_key];
+    m_animations.erase(animation_key);
+    delete animation;
+}
+
 // Removes a World from the Project
 void DrProject::deleteWorld(DrWorld *world) {
     m_worlds.erase(world->getKey());
@@ -77,10 +85,16 @@ void DrProject::deleteWorld(DrWorld *world) {
 //##    Functions to add different item types into project
 //##
 //####################################################################################
-long DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, long key) {
+DrAnimation* DrProject::addAnimation(QList<long> source_image_keys, long key) {
+    long new_animation_key = (key == c_no_key) ? getNextKey() : key;
+    m_animations[new_animation_key] = new DrAnimation(this, new_animation_key, source_image_keys);
+    return m_animations[new_animation_key];
+}
+
+DrAsset* DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, long key) {
     long new_asset_key = (key == c_no_key) ? getNextKey() : key;
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, source_image_key);
-    return new_asset_key;
+    return m_assets[new_asset_key];
 }
 
 long DrProject::addDevice(DrDeviceType device_type, long key) {
@@ -173,34 +187,37 @@ DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world) {
 
 // Returns a pointer to the Base DrSettings class of the item with the specified key
 DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, QString custom_error) {
+    AnimationMap::iterator animation_iter = m_animations.find(check_key);
+    if (animation_iter != m_animations.end())   return animation_iter->second;
+
     AssetMap::iterator asset_iter = m_assets.find(check_key);
-    if (asset_iter != m_assets.end())   return asset_iter->second;
+    if (asset_iter != m_assets.end())           return asset_iter->second;
 
     ImageMap::iterator image_iter = m_images.find(check_key);
-    if (image_iter != m_images.end())   return image_iter->second;
+    if (image_iter != m_images.end())           return image_iter->second;
 
     DeviceMap::iterator device_iter = m_devices.find(check_key);
-    if (device_iter != m_devices.end()) return device_iter->second;
+    if (device_iter != m_devices.end())         return device_iter->second;
 
     EffectMap::iterator effect_iter = m_effects.find(check_key);
-    if (effect_iter != m_effects.end()) return effect_iter->second;
+    if (effect_iter != m_effects.end())         return effect_iter->second;
 
     FontMap::iterator font_iter = m_fonts.find(check_key);
-    if (font_iter != m_fonts.end())     return font_iter->second;
+    if (font_iter != m_fonts.end())             return font_iter->second;
 
     WorldMap &worlds = m_worlds;
     WorldMap::iterator world_iter = worlds.find(check_key);
-    if (world_iter != worlds.end())     return world_iter->second;
+    if (world_iter != worlds.end())             return world_iter->second;
 
     for (auto world_pair : worlds) {
         StageMap &stages = world_pair.second->getStageMap();
         StageMap::iterator stage_iter = stages.find(check_key);
-        if (stage_iter != stages.end())     return stage_iter->second;
+        if (stage_iter != stages.end())         return stage_iter->second;
 
         for (auto stage_pair : stages) {
             ThingMap &things = stage_pair.second->getThingMap();
             ThingMap::iterator thing_iter = things.find(check_key);
-            if (thing_iter != things.end()) return thing_iter->second;
+            if (thing_iter != things.end())     return thing_iter->second;
         }
     }
 
@@ -225,6 +242,13 @@ DrType DrProject::findChildTypeFromKey(long check_key) {
     }
 }
 
+DrAnimation* DrProject::findAnimationFromKey(long check_key) {
+    AnimationMap::iterator animation_iter = m_animations.find(check_key);
+    if (animation_iter != m_animations.end())
+        return animation_iter->second;
+    else
+        return nullptr;
+}
 
 DrAsset* DrProject::findAssetFromKey(long check_key) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);

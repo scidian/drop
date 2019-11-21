@@ -13,6 +13,9 @@
 #include "engine/form_engine.h"
 #include "engine_things/engine_thing_object.h"
 #include "opengl/opengl.h"
+#include "project/project.h"
+#include "project/project_animation.h"
+#include "project/project_asset.h"
 
 
 //####################################################################################
@@ -29,7 +32,7 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_
 //####################################################################################
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key) : DrEngineThing (world, unique_key, original_key) { }
 
-DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long texture_number,
+DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key,
                                double x, double y, double z, DrPointF scale, double friction, double bounce,
                                bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key, original_key) {
     // Thing Basics
@@ -39,15 +42,22 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
     this->setZOrder(z);
 
     // Object Basics                 !!!!! #NOTE: texture_number == Asset Key
-    if (texture_number != 0) {
-        DrEngineTexture *texture = world->getTexture(texture_number);
+    long image_number = asset_key;
+    if (asset_key != 0) {
+        DrAsset *asset = world->getProject()->getAsset(asset_key);
+        if (asset != nullptr)
+            image_number = asset->getAnimationFirstFrameImageKey();
+        else
+            image_number = asset_key;
+
+        DrEngineTexture *texture = world->getTexture(image_number);
         if (texture != nullptr) {
             this->setSize( DrPointF(texture->width(), texture->height()));
         } else {
             this->setSize( DrPointF(100, 100) );
         }
     }
-    this->setTextureNumber(texture_number);                                     // Texture to render from
+    this->setTextureNumber(image_number);                                       // Texture to render from
     this->updateBodyPosition( DrPointF(x, y), true );
 
     this->setCustomFriction(friction);

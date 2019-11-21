@@ -104,8 +104,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         if (asset->getAssetType() == DrAssetType::Effect) return;
 
         // Create new Asset, copy Settings / Components / Properties
-        long copy_asset_key = m_project->addAsset(asset->getAssetType(), asset->getSourceKey());
-        DrAsset *copy_asset = m_project->findAssetFromKey(copy_asset_key);
+        DrAsset *copy_asset = m_project->addAsset(asset->getAssetType(), asset->getSourceKey());
         copy_asset->copyEntitySettings(asset);
 
         // Find a new name for Asset
@@ -124,9 +123,9 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
         // Update EditorRelay widgets
         m_editor_relay->buildAssetTree();
-        m_editor_relay->buildInspector( { copy_asset_key } );
+        m_editor_relay->buildInspector( { copy_asset->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
-        setSelectedKey(copy_asset_key);
+        setSelectedKey(copy_asset->getKey());
         setFocus(Qt::FocusReason::PopupFocusReason);
     }
 

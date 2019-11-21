@@ -33,7 +33,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
 
     m_is_start_stage = is_start_stage;              // is this a start stage or not, can only be one start stage per World
 
-    initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage thing
+    initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage entity
 
     // If start stage, make name hidden to stop user from changing it
     if (m_is_start_stage) {
@@ -56,6 +56,12 @@ DrStage::~DrStage() {
 //####################################################################################
 DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide, long key) {
     DrAsset *asset = getParentProject()->getAsset(from_asset_key);
+    if (asset == nullptr) {
+        Dr::ShowMessageBox("Error in DrStage::addThing, Could not find DrAsset to load from! \n "
+                           "New Type: " + Dr::StringFromThingType(new_type) + " \n "
+                           "Asset Key: " + QString::number(from_asset_key) + ".",
+                       QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
+    }
 
     // Figure out name for Thing
     QString new_name;
@@ -81,7 +87,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         ///    break;
 
         default:
-            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! Type: " + Dr::StringFromThingType(new_type),
+            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! New Type: " + Dr::StringFromThingType(new_type),
                                QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 

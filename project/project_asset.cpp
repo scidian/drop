@@ -13,6 +13,7 @@
 #include "forms/form_main.h"
 #include "imaging/imaging.h"
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
 #include "project/project_effect.h"
@@ -41,28 +42,40 @@ DrPropertyCollision autoCollisionShape(QPixmap pixmap);
 //####################################################################################
 DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key) : DrSettings(parent_project) {
     this->setKey(key);
-
     m_asset_type = new_asset_type;
     m_source_key = source_image_key;
 
+    DrSettings *source = parent_project->findSettingsFromKey(source_image_key);
+
     DrPropertyCollision shape;
+    QString     my_starting_name = "";
     QPixmap     my_starting_pixmap;
-    int         hit_points = 1;
     switch (getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
-            my_starting_pixmap = getParentProject()->getImage(source_image_key)->getPixmapFromImage();
-            shape = autoCollisionShape(my_starting_pixmap);
-            if (new_asset_type == DrAssetType::Character) {
-                initializeAssetSettingsCharacter(getParentProject()->getImage(source_image_key)->getSimplifiedName());
-                hit_points = 1;
-            } else if (new_asset_type == DrAssetType::Object) {
-                initializeAssetSettingsObject(getParentProject()->getImage(source_image_key)->getSimplifiedName());
-                hit_points = 1;
+
+            // Add Animation to Project from Image if passed in image key and not animation key
+            DrAnimation *animation = nullptr;
+            if (source->getType() == DrType::Image) {
+                animation = parent_project->addAnimation({ source_image_key });
+                if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not create animation from image: " + QString::number(source_image_key));
+                m_source_key = animation->getKey();
+            } else if (source->getType() == DrType::Animation) {
+                animation = parent_project->findAnimationFromKey(source_image_key);
+                if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + QString::number(source_image_key));
             }
+            my_starting_pixmap = animation->getPixmapFromFirstFrame();
+            my_starting_name =   animation->getName();
+
+            // Load / Initialize Entity Settings
+            shape = autoCollisionShape(my_starting_pixmap);
+            if (new_asset_type == DrAssetType::Character)
+                initializeAssetSettingsCharacter(my_starting_name);
+            else if (new_asset_type == DrAssetType::Object)
+                initializeAssetSettingsObject(my_starting_name);
             initializeAssetSettingsCollision(getAssetType(), shape);
             initializeAssetSettingsAnimation(getAssetType(), my_starting_pixmap);
-            initializeAssetSettingsHealth(getAssetType(), hit_points);
+            initializeAssetSettingsHealth(getAssetType());
             initializeAssetSettingsPhysics(getAssetType());
             initializeAssetSettingsControls(getAssetType());
             break;
@@ -207,10 +220,19 @@ void DrAsset::deleteSource(long source_key) {
     switch (getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
-            DrImage *image = getParentProject()->getImageMap()[source_to_delete];
-            if (image == nullptr) break;
-            getParentProject()->getImageMap().erase( source_to_delete );
-            delete image;
+            // Get animation
+            DrAnimation *animation = getParentProject()->getAnimation(source_to_delete);
+            if (animation == nullptr) break;
+
+            // Delete all images in animation
+            for (auto frame : animation->getFrames()) {
+                DrImage *image = getParentProject()->getImageMap()[frame->getKey()];
+                if (image == nullptr) continue;
+                getParentProject()->getImageMap().erase( source_to_delete );
+                delete image;
+            }
+            // Delete animation
+            getParentProject()->deleteAnimation(m_source_key);
             break;
         }
         case DrAssetType::Device: {
@@ -239,15 +261,30 @@ void DrAsset::deleteSource(long source_key) {
 
 
 //####################################################################################
-//##    Updates Default Animation Image / Collsion Shape
+//##    Returns Key of Image of first frame of Animation source
 //####################################################################################
-void DrAsset::updateAnimationProperty(long source_key) {
+long DrAsset::getAnimationFirstFrameImageKey() {
+    DrAnimation *animation = getParentProject()->getAnimation(getSourceKey());
+    if (animation == nullptr) return c_no_key;
+    return animation->getFrame(animation->getStartFrameNumber())->getKey();
+}
+
+
+//####################################################################################
+//##    Updates Default Animation Images / Collsion Shape
+//####################################################################################
+void DrAsset::updateAnimationProperty(QList<long> image_keys) {
     if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
 
-    m_source_key = source_key;
-    QPixmap     new_pixmap = getParentProject()->getImage(source_key)->getPixmapFromImage();
+    // Create new animation from new image keys
+    DrAnimation *animation = getParentProject()->addAnimation(image_keys);
+    m_source_key = animation->getKey();
+
+    // Get image from new animation for Inspector
+    QPixmap     new_pixmap = animation->getPixmapFromFirstFrame();
     setComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Default, QVariant(new_pixmap));
 
+    // Calculate new image collision shape
     DrPropertyCollision shape = autoCollisionShape(new_pixmap);
     setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, QVariant::fromValue<DrPropertyCollision>(shape));
 

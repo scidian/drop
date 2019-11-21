@@ -168,13 +168,13 @@ void DrView::dropEvent(QDropEvent *event) {
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
         long image_key = m_editor_relay->currentProject()->addImage(file_path);
-        long asset_key = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image_key );
+        DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image_key );
         m_editor_relay->buildAssetTree();
-        m_editor_relay->getAssetTree()->setSelectedKey(asset_key);
+        m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
 
         // Add Object Thing at mouse position
         QPointF  position =  mapToScene(event->pos());
-        thing = stage->addThing(DrThingType::Object, asset_key, position.x(), -position.y(), 0);
+        thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(), 0);
         my_scene->addItemToSceneFromThing( thing );
         if (thing_count > 0) thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
 

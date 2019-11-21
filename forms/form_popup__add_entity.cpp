@@ -166,8 +166,7 @@ void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
     if (editor == nullptr) return;
     editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
 
-    long asset_key = m_project->addAsset(asset_type, source_key);
-    DrAsset *asset = m_project->findAssetFromKey(asset_key);
+    DrAsset *asset = m_project->addAsset(asset_type, source_key);
 
     // Count number of DrAssetTypes in AssetMap, use that number to find a new name for Asset
     int asset_count = 0;
@@ -181,9 +180,9 @@ void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
 
     // Update EditorRelay widgets
     editor->buildAssetTree();
-    editor->buildInspector( { asset_key } );
+    editor->buildInspector( { asset->getKey() } );
     editor->updateItemSelection(Editor_Widgets::Asset_Tree);
-    editor->getAssetTree()->setSelectedKey(asset_key);
+    editor->getAssetTree()->setSelectedKey(asset->getKey());
     editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
 
     // Close this popup

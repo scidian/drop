@@ -5,7 +5,6 @@
 //      DrStage - Class to hold one stage within a world
 //
 //
-
 #ifndef DRSTAGE_H
 #define DRSTAGE_H
 

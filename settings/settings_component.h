@@ -5,7 +5,6 @@
 //      DrComponent - Class to hold a component for all Project objects
 //
 //
-
 #ifndef DRCOMPONENT_H
 #define DRCOMPONENT_H
 

@@ -44,6 +44,7 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
     qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
+    qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrShapeList");               // !!!!! OLD !!!!!
 
 
     // ***** Open File
@@ -147,10 +148,9 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
         // If key doesnt already exist, initialize Asset
         if (findSettingsFromKey(asset_key, false) != nullptr) continue;
-        addAsset(asset_type, source_key, asset_key);
+        DrAsset* asset = addAsset(asset_type, source_key, asset_key);
 
         // Load Asset Settings, Variables
-        DrAsset *asset = findAssetFromKey(asset_key);
         loadSettingsFromMap(asset,  asset_data);
     }
     settings.endArray();
@@ -257,9 +257,9 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
     // ***** Set Key Generator from Save file
     if (m_key_generator != key_generator) {
-        ///Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
-        ///                   "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
-        m_key_generator = key_generator;
+        Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
+                           "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
+        ///m_key_generator = key_generator;
     }
 
     return true;
