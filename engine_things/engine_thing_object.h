@@ -27,7 +27,12 @@ public:
     QVector<cpShape*>   shapes;                     // Collision Shapes of object
     ShapeMap            shape_type;                 // Shape Types of Shapes of Object
 
-    long                animation_idle_key;         // Default Animation
+
+
+    QList<long>         animation_idle_keys;                    // Image frame keys
+    long                animation_idle_frame = 1;               // Current frame
+    double              animation_speed = 2;                    // Frames per second
+    double              animation_idle_last_change = 0;         // Milliseconds since last change frame
 
 
 private:

@@ -115,10 +115,10 @@ long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_fam
     return new_font_key;
 }
 
-long DrProject::addImage(QString image_path) {
+DrImage* DrProject::addImage(QString image_path) {
     long new_image_key = getNextKey();
     m_images[new_image_key] = new DrImage(this, new_image_key, image_path);
-    return new_image_key;
+    return m_images[new_image_key];
 }
 long DrProject::addImage(long key, QString full_path, QString filename, QString simple_name, QImage &image) {
     m_images[key] = new DrImage(this, key, full_path, filename, simple_name, image);

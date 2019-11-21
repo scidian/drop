@@ -45,9 +45,17 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
     long image_number = asset_key;
     if (asset_key != 0) {
         DrAsset *asset = world->getProject()->getAsset(asset_key);
-        if (asset != nullptr)
+        if (asset != nullptr) {
             image_number = asset->getAnimationFirstFrameImageKey();
-        else
+
+            DrAnimation *animation = world->getProject()->getAnimation(asset->getSourceKey());
+            if (animation != nullptr) {
+                for (auto frame : animation->getFrames()) {
+                    animation_idle_keys.push_back(frame->getKey());
+                }
+            }
+
+        } else
             image_number = asset_key;
 
         DrEngineTexture *texture = world->getTexture(image_number);

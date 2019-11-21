@@ -18,9 +18,10 @@
 #include "project/project_asset.h"
 #include "project/project_device.h"
 #include "project/project_effect.h"
-#include "project/project_world.h"
+#include "project/project_image.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
+#include "project/project_world.h"
 
 #include "globals.h"
 #include "interface_editor_relay.h"
@@ -167,8 +168,8 @@ void DrView::dropEvent(QDropEvent *event) {
         QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
-        long image_key = m_editor_relay->currentProject()->addImage(file_path);
-        DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image_key );
+        DrImage *add_image = m_editor_relay->currentProject()->addImage(file_path);
+        DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, add_image->getKey() );
         m_editor_relay->buildAssetTree();
         m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
 

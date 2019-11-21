@@ -7,9 +7,10 @@
 //
 #include "project/project.h"
 #include "project/project_asset.h"
-#include "project/project_world.h"
+#include "project/project_image.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
+#include "project/project_world.h"
 
 
 //####################################################################################
@@ -47,56 +48,56 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
     if (test) {
         this->setOption(Project_Options::Name, "Rocky Rover");
 
-        long image_1  = this->addImage(":/assets/test_images/test_square.png");
-        long image_2  = this->addImage(":/assets/test_images/ground_fill.png");
-        long image_3  = this->addImage(":/assets/test_images/ground_top.png");
-        long image_4  = this->addImage(":/assets/test_images/moon_plant_6.png");
-        long image_5  = this->addImage(":/assets/test_images/rover_body.png");
-        long image_6  = this->addImage(":/assets/test_images/ball_1.png");
-        long image_7  = this->addImage(":/assets/test_images/water_1.png");
-        long image_8  = this->addImage(":/assets/test_images/rover_wheel.png");
-        long image_9  = this->addImage(":/assets/test_images/cake_block.png");
-        long image_10 = this->addImage(":/assets/test_images/cake_chocolate.png");
-        long image_11 = this->addImage(":/assets/test_images/cake_ice_cube.png");
-        long image_12 = this->addImage(":/assets/test_images/planetwithareallylongname.png");
-        long image_13 = this->addImage(":/assets/test_images/metal_block.png");
-        long image_14 = this->addImage(":/assets/test_images/donut.png");
-        long image_15 = this->addImage(":/assets/test_images/shapes2.png");
-        long image_16 = this->addImage(":/assets/test_images/dragon.png");
+        DrImage *image_1  = this->addImage(":/assets/test_images/test_square.png");
+        DrImage *image_2  = this->addImage(":/assets/test_images/ground_fill.png");
+        DrImage *image_3  = this->addImage(":/assets/test_images/ground_top.png");
+        DrImage *image_4  = this->addImage(":/assets/test_images/moon_plant_6.png");
+        DrImage *image_5  = this->addImage(":/assets/test_images/rover_body.png");
+        DrImage *image_6  = this->addImage(":/assets/test_images/ball_1.png");
+        DrImage *image_7  = this->addImage(":/assets/test_images/water_1.png");
+        DrImage *image_8  = this->addImage(":/assets/test_images/rover_wheel.png");
+        DrImage *image_9  = this->addImage(":/assets/test_images/cake_block.png");
+        DrImage *image_10 = this->addImage(":/assets/test_images/cake_chocolate.png");
+        DrImage *image_11 = this->addImage(":/assets/test_images/cake_ice_cube.png");
+        DrImage *image_12 = this->addImage(":/assets/test_images/planetwithareallylongname.png");
+        DrImage *image_13 = this->addImage(":/assets/test_images/metal_block.png");
+        DrImage *image_14 = this->addImage(":/assets/test_images/donut.png");
+        DrImage *image_15 = this->addImage(":/assets/test_images/shapes2.png");
+        DrImage *image_16 = this->addImage(":/assets/test_images/dragon.png");
 
         long font_1 =   this->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
         long font_2 =   this->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
         long font_3 =   this->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
 
-                                this->addAsset(DrAssetType::Character, image_6 );           // "Ball 1"
-        DrAsset *a_dragon =     this->addAsset(DrAssetType::Character, image_16 );          // "Dragon"
+                                this->addAsset(DrAssetType::Character, image_6->getKey() );         // "Ball 1"
+        DrAsset *a_dragon =     this->addAsset(DrAssetType::Character, image_16->getKey() );        // "Dragon"
 
-        DrAsset *a_square =     this->addAsset(DrAssetType::Object, image_1 );              // "Dr Square"
-        DrAsset *a_ground =     this->addAsset(DrAssetType::Object, image_2 );              // "Ground Fill"
-        DrAsset *a_top =        this->addAsset(DrAssetType::Object, image_3 );              // "Ground Top"
-        DrAsset *a_plant =      this->addAsset(DrAssetType::Object, image_4 );              // "Moon Plant 6"
-        DrAsset *a_block =      this->addAsset(DrAssetType::Object, image_13 );             // "Metal Block"
-        DrAsset *a_planet =     this->addAsset(DrAssetType::Object, image_12 );             // "PlanetWithAReallyLongName"
+        DrAsset *a_square =     this->addAsset(DrAssetType::Object, image_1->getKey() );            // "Dr Square"
+        DrAsset *a_ground =     this->addAsset(DrAssetType::Object, image_2->getKey() );            // "Ground Fill"
+        DrAsset *a_top =        this->addAsset(DrAssetType::Object, image_3->getKey() );            // "Ground Top"
+        DrAsset *a_plant =      this->addAsset(DrAssetType::Object, image_4->getKey() );            // "Moon Plant 6"
+        DrAsset *a_block =      this->addAsset(DrAssetType::Object, image_13->getKey() );           // "Metal Block"
+        DrAsset *a_planet =     this->addAsset(DrAssetType::Object, image_12->getKey() );           // "PlanetWithAReallyLongName"
 
-        DrAsset *a_cake1 =      this->addAsset(DrAssetType::Object, image_9 );              // "Cake Block"
-        DrAsset *a_cake2 =      this->addAsset(DrAssetType::Object, image_10 );             // "Cake Chocolate"
-        DrAsset *a_cake3 =      this->addAsset(DrAssetType::Object, image_11 );             // "Cake Ice Cube"
+        DrAsset *a_cake1 =      this->addAsset(DrAssetType::Object, image_9->getKey() );            // "Cake Block"
+        DrAsset *a_cake2 =      this->addAsset(DrAssetType::Object, image_10->getKey() );           // "Cake Chocolate"
+        DrAsset *a_cake3 =      this->addAsset(DrAssetType::Object, image_11->getKey() );           // "Cake Ice Cube"
 
-        this->addAsset(DrAssetType::Object, image_7 );                                      // "Water 1"
-        this->addAsset(DrAssetType::Object, image_5 );                                      // "Rover Body"
-        this->addAsset(DrAssetType::Object, image_8 );                                      // "Rover Wheel"
-        this->addAsset(DrAssetType::Object, image_14 );                                     // "Donut"
-        this->addAsset(DrAssetType::Object, image_15 );                                     // "Shapes 2"
+        this->addAsset(DrAssetType::Object, image_7->getKey() );                                    // "Water 1"
+        this->addAsset(DrAssetType::Object, image_5->getKey() );                                    // "Rover Body"
+        this->addAsset(DrAssetType::Object, image_8->getKey() );                                    // "Rover Wheel"
+        this->addAsset(DrAssetType::Object, image_14->getKey() );                                   // "Donut"
+        this->addAsset(DrAssetType::Object, image_15->getKey() );                                   // "Shapes 2"
 
-        DrAsset *a_font =       this->addAsset(DrAssetType::Text, font_1);                  // "Test Font"
-        this->addAsset(DrAssetType::Text, font_2);                                          // "Test Font 2"
-        this->addAsset(DrAssetType::Text, font_3);                                          // "Test Font 3"
+        DrAsset *a_font =       this->addAsset(DrAssetType::Text, font_1);                          // "Test Font"
+        this->addAsset(DrAssetType::Text, font_2);                                                  // "Test Font 2"
+        this->addAsset(DrAssetType::Text, font_3);                                                  // "Test Font 3"
 
         // Add some Worlds and Stages
-        this->addWorld();                                                                  // "World 2"
-        this->findWorldWithName("World 2")->addStage();                                    // Stage 2
-        this->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");       // Stage 3
-        this->findWorldWithName("World 2")->addStage();                                    // Stage 4
+        this->addWorld();                                                                           // "World 2"
+        this->findWorldWithName("World 2")->addStage();                                             // Stage 2
+        this->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");                // Stage 3
+        this->findWorldWithName("World 2")->addStage();                                             // Stage 4
 
 
         // Stage 4 Rover Test

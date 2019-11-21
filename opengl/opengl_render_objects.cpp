@@ -214,7 +214,13 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
 
     // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
+    DrEngineTexture *texture;
+    long texture_number = object->getTextureNumber();
+    if (object->animation_idle_keys.count() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    }
+    texture = m_engine->getTexture(texture_number);
+
     if (texture == nullptr) return;
     if (!texture->texture()->isBound()) texture->texture()->bind();
     float texture_width =  texture->width();
@@ -294,11 +300,11 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( 6 );      // aka 'cone_vertices / 3'
 
     } else {
-        setDefaultAttributeBuffer(m_texture_vbos[object->getTextureNumber()]);
-        glDrawArrays(GL_TRIANGLES, 0, m_texture_data[object->getTextureNumber()]->vertexCount() );
+        setDefaultAttributeBuffer(m_texture_vbos[texture_number]);
+        glDrawArrays(GL_TRIANGLES, 0, m_texture_data[texture_number]->vertexCount() );
         releaseDefaultAttributeBuffer();
-        m_texture_vbos[object->getTextureNumber()]->release();
-        addTriangles( m_texture_data[object->getTextureNumber()]->triangleCount() );
+        m_texture_vbos[texture_number]->release();
+        addTriangles( m_texture_data[texture_number]->triangleCount() );
     }
 
     ///m_default_shader.release();
@@ -398,7 +404,13 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
 
     // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
+    DrEngineTexture *texture;
+    long texture_number = object->getTextureNumber();
+    if (object->animation_idle_keys.count() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    }
+    texture = m_engine->getTexture(texture_number);
+
     if (texture == nullptr) return;
     if (!texture->texture()->isBound()) texture->texture()->bind();
 
@@ -456,7 +468,12 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     }
 
     // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture = m_engine->getTexture(object->getTextureNumber());
+    DrEngineTexture *texture;
+    long texture_number = object->getTextureNumber();
+    if (object->animation_idle_keys.count() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    }
+    texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return true;
     if (!texture->texture()->isBound()) texture->texture()->bind();
 

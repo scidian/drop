@@ -18,9 +18,10 @@
 #include "forms/form_popup.h"
 #include "project/project.h"
 #include "project/project_asset.h"
-#include "project/project_world.h"
+#include "project/project_image.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
+#include "project/project_world.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
@@ -139,14 +140,27 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
         for (auto url : url_list)
             path_list.append( url.toLocalFile() );
 
-        // Try to load the first image, if it doesnt load, exit. If it does, make sure it is #AARRGGBB and convert to pixmap
-        QString file_path = path_list[0];
-        QImage image(file_path);
-        if (image.isNull()) {
+        // Try to load the images, if they dont load, exit. If they do, make sure they are #AARRGGBB and convert to pixmap
+        QList<QString> file_paths;
+        double width = 0, height = 0;
+        int count = 0;
+        for (auto path : path_list) {
+            QImage image(path);
+
+            if (image.isNull() == false) {
+                if (count == 0) {
+                    QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
+                    width =  pixmap.width();
+                    height = pixmap.height();
+                }
+                file_paths.append(path);
+                count++;
+            }
+        }
+        if (file_paths.isEmpty()) {
             event->ignore();
             return QObject::eventFilter(object, event);
         }
-        QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
 
         // ********** Dropped on to Asset Property
         if (settings->getType() == DrType::Asset) {
@@ -156,9 +170,13 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             if (property_key == static_cast<int>(Properties::Asset_Animation_Default)) {
                 long old_animation_key = asset->getSourceKey();
                 bool delete_after =      asset->canDeleteSource();
-                long new_image_key =     project->addImage(file_path);
 
-                asset->updateAnimationProperty( { new_image_key } );
+                QList<long> image_keys;
+                for (auto file_path : file_paths) {
+                    DrImage *image = project->addImage(file_path);
+                    image_keys.push_back( image->getKey() );
+                }
+                asset->updateAnimationProperty( image_keys );
 
                 // Update all Things, Thing_Size that use Asset
                 for (auto world_pair : project->getWorldMap()) {
@@ -167,7 +185,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                             DrThing *thing = thing_pair.second;
                             if (thing->getAssetKey() == settings_key) {
                                 QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-                                QPointF new_size(pixmap.width() * scale.x(), pixmap.height() * scale.y());
+                                QPointF new_size(width * scale.x(), height * scale.y());
                                 thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, new_size);
                             }
                         }
@@ -180,7 +198,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 m_editor_relay->buildAssetTree();
                 m_editor_relay->buildInspector( { settings_key }, true );
 
-                if (delete_after) asset->deleteSource( old_animation_key );
+//                if (delete_after) asset->deleteSource( old_animation_key );
                 drop_event->acceptProposedAction();
             }
         }

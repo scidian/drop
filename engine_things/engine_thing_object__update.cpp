@@ -37,6 +37,16 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
     setVelocityX( new_velocity.x );
     setVelocityY( new_velocity.y );
 
+
+    // ***** Animation Time Updating
+    animation_idle_last_change += time_passed;
+    if (animation_idle_last_change > (1000.0 / animation_speed)) {
+        animation_idle_frame++;
+        if (animation_idle_frame > animation_idle_keys.count()) animation_idle_frame = 1;
+        animation_idle_last_change = 0;
+    }
+
+
     // ***** Check that any object with custom PlayerUpdateVelocity callback is awake so it can access key / button events
     bool sleeping = cpBodyIsSleeping(body);
     if (hasKeyControls() && !hasLostControl() && sleeping) {
