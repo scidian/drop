@@ -25,7 +25,7 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, QLis
     this->setKey(new_animation_key);
 
     // Get first image from image keys so we can use it's name
-    DrImage *first_image = parent_project->getImage(image_keys.first());
+    DrImage *first_image = parent_project->findImageFromKey(image_keys.first());
     if (first_image == nullptr) {
         Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + QString::number(image_keys.first()) );
     }
@@ -63,10 +63,10 @@ int DrAnimation::getStartFrameNumber() {
 
 QPixmap DrAnimation::getPixmapFromFirstFrame() {
     long first_frame = getComponentPropertyValue(Components::Animation_Settings, Properties::Animation_Settings_Start_Frame).toInt();
-    long image_key = getFrame(first_frame)->getKey();
+    long image_key =   getFrame(first_frame)->getKey();
 
-    DrImage *frame_image = getParentProject()->getImage(image_key);
-    return frame_image->getPixmapFromImage();
+    DrImage *frame_image = getParentProject()->findImageFromKey(image_key);
+    return   frame_image->getPixmapFromImage();
 }
 
 

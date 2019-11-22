@@ -73,14 +73,19 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
 //####################################################################################
 //##    Animation Components
 //####################################################################################
-void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation) {
+void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key) {
     QString type = Dr::StringFromAssetType(asset_type);
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
 
-    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Default, Property_Type::Image, QVariant(default_animation),
-                           "Default Animation", "Image shown for this " + type + ".");
+    addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Idle, Property_Type::Image, QVariant::fromValue(idle_animation_key),
+                           "Idle Animation", "Idle Animation for this " + type + ".");
+
+    if (asset_type == DrAssetType::Character) {
+        addPropertyToComponent(Components::Asset_Animation, Properties::Asset_Animation_Jumping, Property_Type::Image, c_no_key,
+                               "Jumping Animation", "Jumping Animation for this " + type + ".");
+    }
 }
 
 
@@ -190,13 +195,13 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            "Force Multiplier", "Force multiplier can be used to increase or decrease power of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Max_Distance, Property_Type::PositiveDouble, 500.0,
                            "Pull Back Distance", "Maximum distance slingshot can be pulled away from item.");
-    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Image, Property_Type::Image, QVariant(QPixmap()),
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Image, Property_Type::Image, c_no_key,
                            "Slingshot Arrow", "Image used to show direction of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Offset, Property_Type::PositiveDouble, 100.0,
                            "Arrow Offset", "Distance to render Slingshot Arrow away from this " + Dr::StringFromAssetType(asset_type) );
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Scale, Property_Type::PositiveScaleF, QPointF(1.0, 1.0),
                            "Arrow Scale", "Scale used to render Slingshot Arrow.");
-    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Image, Property_Type::Image, QVariant(QPixmap()),
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Image, Property_Type::Image, c_no_key,
                            "Slingshot Tail", "Image used to show pull back of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Offset, Property_Type::PositiveDouble, 100.0,
                            "Tail Offset", "Distance to start rendering Slingshot Tail away from this " + Dr::StringFromAssetType(asset_type) );

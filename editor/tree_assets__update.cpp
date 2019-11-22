@@ -77,7 +77,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 
                     switch (check_property) {
                         case Properties::Entity_Name:
-                            asset = m_project->getAsset(item_key);
+                            asset = m_project->findAssetFromKey(item_key);
                             asset_text = item->getName();
 
                             // Update all Things in the project that use this asset name

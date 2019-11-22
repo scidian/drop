@@ -172,9 +172,8 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
                 break;
             }
 
-            case Property_Type::Collision:                              // For Collision Shapes
-
-            case Property_Type::Image:                                  // QPixmap
+            case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
+            case Property_Type::Image:                                  // Project Key to DrAnimation
             case Property_Type::Icon:
             case Property_Type::Vector3D:
 
@@ -309,8 +308,8 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             //      CASES NOT ACCOUNTED FOR
             //
             //################ !!!!!!!!!!!!!!!!!!!!!!!
-            case Property_Type::Collision:                              // For Collision Shapes
-            case Property_Type::Image:                                  // QPixmap
+            case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
+            case Property_Type::Image:                                  // Project Key to DrAnimation
             case Property_Type::Icon:
             case Property_Type::Vector3D:
 

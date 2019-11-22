@@ -25,7 +25,7 @@ private:
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
 
-    long            m_source_key;                       // Holds key to source (ie. and asset pulls from an DrAnimation, DrImage, DrFont, DrEffect, etc.)
+    long            m_base_key = c_no_key;              // Holds key to source (ie. and asset pulls from an DrAnimation, DrImage, DrFont, DrEffect, etc.)
 
     long            m_width;
     long            m_height;
@@ -33,7 +33,7 @@ private:
 
 public:
     // Constructor / Destructor
-    explicit DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long source_image_key);
+    explicit DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long base_key);
     virtual ~DrAsset() override;
 
     // DrSettings Overrides
@@ -41,19 +41,19 @@ public:
 
     // Getters / Setters
     DrAssetType     getAssetType()          { return m_asset_type; }
-    long            getSourceKey()          { return m_source_key; }
+    long            getBaseKey()            { return m_base_key; }
 
     long            getWidth()              { return m_width; }
     long            getHeight()             { return m_height; }
 
     void            setAssetType(DrAssetType type)  { m_asset_type = type; }
-    void            setSourceKey(long key)          { m_source_key = key; }
+    void            setBaseKey(long key)            { m_base_key = key; }
 
     // Function Calls
     bool        canDeleteSource();
     void        deleteSource(long source_key = c_no_key, bool double_check = true);
-    long        getAnimationFirstFrameImageKey();
-    void        updateAnimationProperty(QList<long> image_keys);
+    long        getIdleAnimationFirstFrameImageKey();
+    void        updateAnimationProperty(QList<long> image_keys, Properties animation_property);
 
     // Initialize Calls
     void        initializeAssetSettingsCharacter(QString new_name);
@@ -62,7 +62,7 @@ public:
     void        initializeAssetSettingsEffect(QString new_name);
     void        initializeAssetSettingsFont(DrFont *font);
 
-    void        initializeAssetSettingsAnimation(DrAssetType asset_type, QPixmap default_animation);
+    void        initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key);
     void        initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape);
     void        initializeAssetSettingsControls(DrAssetType asset_type);
     void        initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points = 1);

@@ -160,11 +160,11 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
             object->addShapePolygon(points);
         }
     } else if (shape == Collision_Shape::Circle) {
-        object->addShapeCircleFromTexture( asset->getAnimationFirstFrameImageKey() );
+        object->addShapeCircleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
     } else if (shape == Collision_Shape::Square) {
-        object->addShapeBoxFromTexture( asset->getAnimationFirstFrameImageKey() );
+        object->addShapeBoxFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
     } else if (shape == Collision_Shape::Triangle) {
-        object->addShapeTriangleFromTexture( asset->getAnimationFirstFrameImageKey() );
+        object->addShapeTriangleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
     }
 }
 
@@ -180,7 +180,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
-    DrAsset    *asset =     m_project->getAsset(asset_key);
+    DrAsset    *asset =     m_project->findAssetFromKey(asset_key);
             if (asset == nullptr) return nullptr;
     ThingInfo   info =          loadThingBasicInfo( thing );
                 info.scale.x *= scale_x;

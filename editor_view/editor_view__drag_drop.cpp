@@ -111,7 +111,7 @@ void DrView::dropEvent(QDropEvent *event) {
 
         // Create new Thing from drop data,                                                                 !!!!! #NOTE: Sets initial Z value of Thing
         long      asset_key = variant_key.toInt();
-        DrAsset  *asset =     m_editor_relay->currentProject()->getAsset(asset_key);
+        DrAsset  *asset =     m_editor_relay->currentProject()->findAssetFromKey(asset_key);
         DrDevice *device;
         DrEffect *effect;
         switch (asset->getAssetType()) {
@@ -119,7 +119,7 @@ void DrView::dropEvent(QDropEvent *event) {
             case DrAssetType::Object:       thing = stage->addThing(DrThingType::Object,        asset_key, position.x(), -position.y(),   0);   break;
             case DrAssetType::Text:         thing = stage->addThing(DrThingType::Text,          asset_key, position.x(), -position.y(),   0);   break;
             case DrAssetType::Effect:
-                effect = m_project->getEffect( asset->getSourceKey() );
+                effect = m_project->findEffectFromKey( asset->getBaseKey() );
                 switch (effect->getEffectType()) {
                     case DrEffectType::Fire:    thing = stage->addThing(DrThingType::Fire,      asset_key, position.x(), -position.y(), -10);   break;
                     case DrEffectType::Fisheye: thing = stage->addThing(DrThingType::Fisheye,   asset_key, position.x(), -position.y(),  10);   break;
@@ -135,7 +135,7 @@ void DrView::dropEvent(QDropEvent *event) {
                 }
                 break;
             case DrAssetType::Device:
-                device = m_project->getDevice( asset->getSourceKey() );
+                device = m_project->findDeviceFromKey( asset->getBaseKey() );
                 switch (device->getDeviceType()) {
                     case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    asset_key, position.x(), -position.y(), 10);   break;
                 }

@@ -46,10 +46,10 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
     if (asset_key < 0) {
         image_number = asset_key;
     } else if (asset_key > 0) {
-        DrAsset *asset = world->getProject()->getAsset(asset_key);
+        DrAsset *asset = world->getProject()->findAssetFromKey(asset_key);
         if (asset != nullptr) {
-            image_number = asset->getAnimationFirstFrameImageKey();
-            DrAnimation *animation = world->getProject()->getAnimation(asset->getSourceKey());
+            image_number = asset->getIdleAnimationFirstFrameImageKey();
+            DrAnimation *animation = world->getProject()->findAnimationFromKey(asset->getBaseKey());
             if (animation != nullptr) {
                 for (auto frame : animation->getFrames()) {
                     animation_idle_keys.push_back(frame->getKey());

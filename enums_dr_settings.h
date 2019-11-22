@@ -145,9 +145,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   222
+//##    !!!!! NEXT AVAILABLE NUMBER:   238
 //##
-//##    Checked for doubles up through 222 on 11/11/2019
+//##    Checked for doubles up through 238 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -219,7 +219,23 @@ enum class Properties {
     Asset_Collision_Surface_Velocity    = 161,      // future use storing polygons?
 
     // Asset_Animation
-    Asset_Animation_Default             = 22,       // image
+    Asset_Animation_Idle                = 22,        // image
+    Asset_Animation_Walking             = 222,       // image
+    Asset_Animation_Running             = 223,       // image
+    Asset_Animation_Taking_Damage       = 224,       // image
+    Asset_Animation_Death               = 225,       // image
+    Asset_Animation_Invincible          = 226,       // image
+    Asset_Animation_Shooting_A          = 227,       // image
+    Asset_Animation_Shooting_B          = 228,       // image
+    Asset_Animation_Jumping             = 229,       // image
+    Asset_Animation_Sliding             = 230,       // image
+    Asset_Animation_Dashing             = 231,       // image
+    Asset_Animation_Crouching           = 232,       // image
+    Asset_Animation_Future_01           = 233,       // image
+    Asset_Animation_Future_02           = 234,       // image
+    Asset_Animation_Future_03           = 235,       // image
+    Asset_Animation_Future_04           = 236,       // image
+    Asset_Animation_Future_05           = 237,       // image
 
     // Asset_Health
     Asset_Health_Max_Health             = 144,      // double

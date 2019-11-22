@@ -10,10 +10,12 @@
 #include "editor_view/editor_item.h"
 #include "imaging/imaging.h"
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
+#include "project/project_image.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
 #include "settings/settings.h"
@@ -37,23 +39,24 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     m_thing      = thing;
     m_thing_key  = thing->getKey();
     m_asset_key  = m_thing->getAssetKey();
-    m_asset      = project->getAsset(m_asset_key);
+    m_asset      = project->findAssetFromKey(m_asset_key);
 
     m_temp_only  = is_temp_only;                            // Used for interactive resizing in QGraphicsView
 
     // Load image from asset
     switch (m_asset->getAssetType()) {
         case DrAssetType::Character:
-        case DrAssetType::Object:
-            m_pixmap = m_asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+        case DrAssetType::Object: {
+            DrImage *image = m_project->findImageFromKey(m_asset->getIdleAnimationFirstFrameImageKey());
+            if (image != nullptr) m_pixmap = image->getPixmapFromImage();
             applyFilters();                                 // Apply filters and set pixmap
             m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
             m_asset_height = m_asset->getHeight();
             break;
-
+        }
         case DrAssetType::Text: {
             QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-            m_pixmap = m_editor_relay->currentProject()->getFont( m_asset->getSourceKey() )->createText( text );
+            m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getBaseKey() )->createText( text );
             setPixmap(m_pixmap);
             m_asset_width =  m_pixmap.width();
             m_asset_height = m_pixmap.height();
@@ -61,7 +64,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
         }
 
         case DrAssetType::Device:
-            switch (m_editor_relay->currentProject()->getDevice( m_asset->getSourceKey() )->getDeviceType()) {
+            switch (m_editor_relay->currentProject()->findDeviceFromKey( m_asset->getBaseKey() )->getDeviceType()) {
                 case DrDeviceType::Camera: {
                     m_pixmap = DrImaging::drawCamera();
                     setPixmap(m_pixmap);
@@ -74,7 +77,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             break;
 
         case DrAssetType::Effect:
-            switch (m_editor_relay->currentProject()->getEffect( m_asset->getSourceKey() )->getEffectType()) {
+            switch (m_editor_relay->currentProject()->findEffectFromKey( m_asset->getBaseKey() )->getEffectType()) {
                 case DrEffectType::Fire: {
                     uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
                     uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();

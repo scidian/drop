@@ -13,6 +13,7 @@
 #include "editor/tree_assets.h"
 #include "imaging/imaging.h"
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_device.h"
 #include "project/project_effect.h"
@@ -22,6 +23,7 @@
 #include "settings/settings_component_property.h"
 
 #include "enums.h"
+#include "globals.h"
 #include "helper.h"
 #include "interface_editor_relay.h"
 
@@ -31,7 +33,7 @@
 //####################################################################################
 void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key) {
     // Get asset from project
-    DrAsset *asset = m_editor_relay->currentProject()->getAsset(asset_key);
+    DrAsset *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
     if (asset == nullptr) return;
 
     // Pull pixmap of asset and scale based on current view zoom level
@@ -40,20 +42,24 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
     QString text;
     switch (asset->getAssetType()) {
         case DrAssetType::Object:
-        case DrAssetType::Character:
-            pixmap = asset->getComponentProperty(Components::Asset_Animation, Properties::Asset_Animation_Default)->getValue().value<QPixmap>();
+        case DrAssetType::Character: {
+            long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+            DrAnimation *ani = asset->getParentProject()->findAnimationFromKey(animation_key);
+            if (ani != nullptr) pixmap = ani->getPixmapFromFirstFrame();
             break;
+        }
         case DrAssetType::Device:
-            pixmap = m_editor_relay->currentProject()->getDevice( asset->getSourceKey() )->getPixmap();
+            pixmap = m_editor_relay->currentProject()->findDeviceFromKey( asset->getBaseKey() )->getPixmap();
             break;
         case DrAssetType::Effect:
-            pixmap = m_editor_relay->currentProject()->getEffect( asset->getSourceKey() )->getPixmap();
+            pixmap = m_editor_relay->currentProject()->findEffectFromKey( asset->getBaseKey() )->getPixmap();
             break;
         case DrAssetType::Text:
             //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-            pixmap = m_editor_relay->currentProject()->getFont( asset->getSourceKey() )->createText( "Text" );
+            pixmap = m_editor_relay->currentProject()->findFontFromKey( asset->getBaseKey() )->createText( "Text" );
             break;
     }
+    if (pixmap.isNull()) pixmap = QPixmap(1, 1);
     pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Opacity, pixmap, -64);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
     int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );

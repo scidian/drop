@@ -134,7 +134,7 @@ void DrProject::saveProjectToFile() {
         DrAsset *asset = asset_pair.second;
         QVariantMap asset_data;
         asset_data["key"] =         QVariant::fromValue(asset->getKey());
-        asset_data["source_key"] =  QVariant::fromValue(asset->getSourceKey());
+        asset_data["source_key"] =  QVariant::fromValue(asset->getBaseKey());
         asset_data["type"] =        QVariant(Dr::EnumToInt(asset->getAssetType()));
         addSettingsToMap(asset, asset_data);
         settings.beginWriteArray("assets");

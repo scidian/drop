@@ -300,7 +300,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 case Property_Type::Color:          new_widget = createColorBox(            prop, fp, sp_right);                                break;
 
                 case Property_Type::Image:
-                    new_widget = createImageFrame(          prop, fp, sp_right);
+                    new_widget = createImageFrame(prop, fp, sp_right);
                     new_widget->installEventFilter(new DrFilterInspectorImage(single_row, m_editor_relay));
                     break;
 

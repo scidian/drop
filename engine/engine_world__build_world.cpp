@@ -70,7 +70,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
 
 
     // ***** Find current world, load Start Stage of that world
-    DrWorld *world = m_project->getWorld(world_id_to_build);
+    DrWorld *world = m_project->findWorldFromKey(world_id_to_build);
     DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
     // ***** World Settings

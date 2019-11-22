@@ -48,7 +48,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
     if (new_player_type == Demo_Player::Player) {
 
         // Find current world shown in editor, load Start Stage of that world
-        DrWorld *world = m_project->getWorld(m_engine->getCurrentEditorWorld());
+        DrWorld *world = m_project->findWorldFromKey(m_engine->getCurrentEditorWorld());
         DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
         // Load Characters

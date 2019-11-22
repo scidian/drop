@@ -26,7 +26,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     // ***** Load Character Thing Properties
     long        asset_key = thing->getAssetKey();
-    DrAsset    *asset =     m_project->getAsset(asset_key);
+    DrAsset    *asset =     m_project->findAssetFromKey(asset_key);
             if (asset == nullptr) return;
     ThingInfo   info =      loadThingBasicInfo( thing );
 

@@ -274,6 +274,14 @@ DrAsset* DrProject::findAssetFromKey(long check_key) {
         return nullptr;
 }
 
+DrDevice* DrProject::findDeviceFromKey(long check_key) {
+    DeviceMap::iterator device_iter = m_devices.find(check_key);
+    if (device_iter != m_devices.end())
+        return device_iter->second;
+    else
+        return nullptr;
+}
+
 DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
     for (auto device_pair : m_devices) {
         if (device_pair.second->getDeviceType() == type) {
@@ -283,6 +291,14 @@ DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
     return nullptr;
 }
 
+DrEffect* DrProject::findEffectFromKey(long check_key) {
+    EffectMap::iterator effect_iter = m_effects.find(check_key);
+    if (effect_iter != m_effects.end())
+        return effect_iter->second;
+    else
+        return nullptr;
+}
+
 DrEffect* DrProject::findEffectFromType(DrEffectType type) {
     for (auto effect_pair : m_effects) {
         if (effect_pair.second->getEffectType() == type) {
@@ -290,6 +306,22 @@ DrEffect* DrProject::findEffectFromType(DrEffectType type) {
         }
     }
     return nullptr;
+}
+
+DrFont* DrProject::findFontFromKey(long check_key) {
+    FontMap::iterator font_iter = m_fonts.find(check_key);
+    if (font_iter != m_fonts.end())
+        return font_iter->second;
+    else
+        return nullptr;
+}
+
+DrImage* DrProject::findImageFromKey(long check_key) {
+    ImageMap::iterator image_iter = m_images.find(check_key);
+    if (image_iter != m_images.end())
+        return image_iter->second;
+    else
+        return nullptr;
 }
 
 DrStage* DrProject::findStageFromKey(long check_key) {

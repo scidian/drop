@@ -21,7 +21,7 @@
 DrFrame::DrFrame(DrProject *parent_project, long image_key) : DrSettings(parent_project) {
     this->setKey(image_key);
 
-    DrImage *image = parent_project->getImage(image_key);
+    DrImage *image = parent_project->findImageFromKey(image_key);
 
     double width =  image->getImage().width();
     double height = image->getImage().height();

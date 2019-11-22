@@ -17,11 +17,14 @@
 #include "editor_view/editor_view.h"
 #include "forms/form_popup.h"
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_image.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
 #include "project/project_world.h"
+#include "settings/settings.h"
+#include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 #include "style/style.h"
 #include "widgets/widgets_event_filters.h"
@@ -64,7 +67,11 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         asset_pix->setFont(font);
         asset_pix->setSizePolicy(size_policy);
         asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
-        QPixmap pixmap = property->getValue().value<QPixmap>();
+
+        QPixmap pixmap;
+        DrAnimation *animation = m_project->findAnimationFromKey(property->getValue().toLongLong());
+        if (animation != nullptr) pixmap = animation->getPixmapFromFirstFrame();
+
         if (pixmap.isNull()) {
             asset_pix->setPixmap(pixmap);
         } else {
@@ -91,9 +98,8 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     long settings_key = m_editor_relay->getInspector()->getSelectedKey();
     long property_key = frame->property(User_Property::Key).toLongLong();
     if (settings_key <= 0 || property_key <= 0) return QObject::eventFilter(object, event);
-    DrProject  *project =   m_editor_relay->currentProject();
-    DrSettings *settings =  project->findSettingsFromKey(settings_key);
-    if (settings == nullptr) return QObject::eventFilter(object, event);
+    DrProject  *project =   m_editor_relay->currentProject();               if (project == nullptr)  return QObject::eventFilter(object, event);
+    DrSettings *settings =  project->findSettingsFromKey(settings_key);     if (settings == nullptr) return QObject::eventFilter(object, event);
 
     // ***** Event Debugging
     /**
@@ -157,7 +163,8 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 count++;
             }
         }
-        if (file_paths.isEmpty()) {
+        DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
+        if (file_paths.isEmpty() || property == nullptr) {
             event->ignore();
             return QObject::eventFilter(object, event);
         }
@@ -165,41 +172,36 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
         // ********** Dropped on to Asset Property
         if (settings->getType() == DrType::Asset) {
             DrAsset *asset = dynamic_cast<DrAsset*>(settings);
+            long     old_animation_key = property->getValue().toLongLong();
 
-            // ***** Dropped on to Animation Property
-            if (property_key == static_cast<int>(Properties::Asset_Animation_Default)) {
-                long old_animation_key = asset->getSourceKey();
-                bool delete_after =      asset->canDeleteSource();
+            // Add Images, Update Animation
+            QList<long> image_keys;
+            for (auto file_path : file_paths) {
+                DrImage *image = project->addImage(file_path);
+                image_keys.push_back( image->getKey() );
+            }
+            asset->updateAnimationProperty( image_keys, static_cast<Properties>(property->getPropertyKey()) );
 
-                // Add Images, Update Animation
-                QList<long> image_keys;
-                for (auto file_path : file_paths) {
-                    DrImage *image = project->addImage(file_path);
-                    image_keys.push_back( image->getKey() );
-                }
-                asset->updateAnimationProperty( image_keys );
-
-                // Update all Things, Thing_Size that use Asset
-                for (auto world_pair : project->getWorldMap()) {
-                    for (auto stage_pair : world_pair.second->getStageMap()) {
-                        for (auto thing_pair : stage_pair.second->getThingMap()) {
-                            DrThing *thing = thing_pair.second;
-                            if (thing->getAssetKey() == settings_key) {
-                                QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-                                QPointF new_size(width * scale.x(), height * scale.y());
-                                thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, new_size);
-                            }
+            // Update all Things, Thing_Size that use Asset
+            for (auto world_pair : project->getWorldMap()) {
+                for (auto stage_pair : world_pair.second->getStageMap()) {
+                    for (auto thing_pair : stage_pair.second->getThingMap()) {
+                        DrThing *thing = thing_pair.second;
+                        if (thing->getAssetKey() == settings_key) {
+                            QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+                            QPointF new_size(width * scale.x(), height * scale.y());
+                            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, new_size);
                         }
                     }
                 }
-
-                m_editor_relay->buildScene( c_same_key );
-                m_editor_relay->buildAssetTree();
-                m_editor_relay->buildInspector( { settings_key }, true );
-
-                if (delete_after) asset->deleteSource( old_animation_key, false );
-                drop_event->acceptProposedAction();
             }
+
+            m_editor_relay->buildScene( c_same_key );
+            m_editor_relay->buildAssetTree();
+            m_editor_relay->buildInspector( { settings_key }, true );
+
+            asset->deleteSource( old_animation_key, false );
+            drop_event->acceptProposedAction();
         }
 
     }

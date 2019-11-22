@@ -104,7 +104,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         if (asset->getAssetType() == DrAssetType::Effect) return;
 
         // Create new Asset, copy Settings / Components / Properties
-        DrAsset *copy_asset = m_project->addAsset(asset->getAssetType(), asset->getSourceKey());
+        DrAsset *copy_asset = m_project->addAsset( asset->getAssetType(), asset->getBaseKey() );
         copy_asset->copyEntitySettings(asset);
 
         // Find a new name for Asset

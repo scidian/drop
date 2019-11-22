@@ -180,7 +180,7 @@ void DrEngineWorld::updateSpawners(double time_passed, double time_warp, QRectF 
 //####################################################################################
 void DrEngineWorld::addStage() {
     // Get DrWorld from Project
-    DrWorld *world = m_project->getWorld(m_world);
+    DrWorld *world = m_project->findWorldFromKey(m_world);
 
     // Find a list of possible Stages to pick from
     QVector<DrStage*> stages;

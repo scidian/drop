@@ -322,7 +322,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_k
             case Properties::Thing_Text_User_Text:
                 text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
                 if (text == "") text = " ";
-                item->setPixmap( m_editor_relay->currentProject()->getFont( item->getAsset()->getSourceKey() )->createText( text ));
+                item->setPixmap( m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getBaseKey() )->createText( text ));
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
