@@ -29,6 +29,9 @@ private:
     long                m_current_world;            // Project Key of current world shown in Engine
     long                m_current_editor_world;     // Project Key of current world shown in EDITOR
 
+public:
+    cpBody             *mouse_body = nullptr;       // A Body to use for mouse tracking / grabbing
+    cpConstraint       *mouse_joint = nullptr;      // A Joint to use to attach to mouse
 
 public:
     // Constructor / Destrcutor / Cleanup

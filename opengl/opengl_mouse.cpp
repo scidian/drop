@@ -22,7 +22,7 @@
 
 
 // Local File Scope Globals
-static cpBody *g_drag_body = nullptr;
+static cpBody *l_drag_body = nullptr;
 
 
 //####################################################################################
@@ -113,16 +113,16 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                     if (touch->hasTouchDrag()) {
                         if (touch->body_type == Body_Type::Kinematic) {
-                            g_drag_body = touch->body;
+                            l_drag_body = touch->body;
                             should_jump = false;
 
                         } else if (touch->body_type == Body_Type::Dynamic) {
-                            g_mouse_joint = cpPivotJointNew(g_mouse_body, touch->body, cpBodyGetPosition(touch->body));
+                            m_engine->mouse_joint = cpPivotJointNew(m_engine->mouse_body, touch->body, cpBodyGetPosition(touch->body));
                             double max_force = 10000;
                             double body_mass = cpBodyGetMass(touch->body);
                             if (isinf(body_mass) == false && isnan(body_mass) == false) max_force *= body_mass * (touch->getTouchDragForce() / 100.0);
-                            cpConstraintSetMaxForce(g_mouse_joint, max_force);
-                            cpSpaceAddConstraint(world->getSpace(), g_mouse_joint);
+                            cpConstraintSetMaxForce(m_engine->mouse_joint, max_force);
+                            cpSpaceAddConstraint(world->getSpace(), m_engine->mouse_joint);
                             should_jump = false;
                         }
                     }
@@ -163,12 +163,12 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
                m_form_engine->demo_player == Demo_Player::Light ||
                m_form_engine->demo_player == Demo_Player::Player) {
         // On mouse up if there was an object linked to the mouse_body, destroy the mouse_joint
-        if (g_mouse_joint != nullptr) {
-            cpSpaceRemoveConstraint(world->getSpace(), g_mouse_joint);
-            cpConstraintFree(g_mouse_joint);
-            g_mouse_joint = nullptr;
+        if (m_engine->mouse_joint != nullptr) {
+            cpSpaceRemoveConstraint(world->getSpace(), m_engine->mouse_joint);
+            cpConstraintFree(m_engine->mouse_joint);
+            m_engine->mouse_joint = nullptr;
         }
-        if (g_drag_body != nullptr) g_drag_body = nullptr;
+        if (l_drag_body != nullptr) l_drag_body = nullptr;
 
         // Reset buttons
         if (event->buttons() == Qt::MouseButton::NoButton) {
@@ -195,9 +195,9 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     // If running, process mouse move
     if (m_form_engine->isTimerActive()) {
         cpVect pos = cpv(x, y);
-        cpBodySetPosition(g_mouse_body, pos);
-        if (g_drag_body != nullptr) {
-            cpBodySetPosition(g_drag_body, pos);
+        cpBodySetPosition(m_engine->mouse_body, pos);
+        if (l_drag_body != nullptr) {
+            cpBodySetPosition(l_drag_body, pos);
         }
     }
 }

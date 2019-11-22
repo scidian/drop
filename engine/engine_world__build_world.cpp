@@ -52,8 +52,8 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     cpSpaceSetDamping(m_space, m_damping);
 
     // ***** Add Mouse Body that is used to join to objects to move them around with the mouse
-    g_mouse_body = cpBodyNewKinematic();
-    cpSpaceAddBody(m_space, g_mouse_body);
+    m_engine->mouse_body = cpBodyNewKinematic();
+    cpSpaceAddBody(m_space, m_engine->mouse_body);
 
 
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    

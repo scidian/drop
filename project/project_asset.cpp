@@ -200,12 +200,9 @@ bool DrAsset::canDeleteSource() {
         can_delete = false;
     } else {
         // Check all Assets for use of the same Source
-        for (auto asset_pair : getParentProject()->getAssetMap()) {
+        for (auto &asset_pair : getParentProject()->getAssetMap()) {
             DrAsset *asset_to_check = asset_pair.second;
-            if (asset_to_check == nullptr) {
-                qDebug() << "Asset key: " << asset_pair.first;
-                continue;
-            }
+            if (asset_to_check == nullptr) continue;
             if ((asset_pair.first != getKey()) && (asset_to_check->getSourceKey() == getSourceKey())) {
                 can_delete = false;
                 break;

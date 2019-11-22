@@ -169,7 +169,9 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     // ***** Get component map, sort by listOrder
     std::vector<DrAsset*> assets { };
-    for (auto asset_pair: list_assets) assets.push_back(asset_pair.second);
+    for (auto asset_pair: list_assets) {
+        if (asset_pair.first > c_no_key) assets.push_back(asset_pair.second);
+    }
     std::sort(assets.begin(), assets.end(), [](DrAsset *a, DrAsset *b) {
         return a->getName().toLower() < b->getName().toLower();
     });

@@ -138,7 +138,6 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
     }
     texture = m_engine->getTexture(texture_number);
-
     if (texture == nullptr) return;
     if (!texture->texture()->isBound()) texture->texture()->bind();
     float texture_width =  texture->width();

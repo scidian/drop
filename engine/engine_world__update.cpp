@@ -35,28 +35,28 @@ struct SpaceTime {
 //####################################################################################
 //##    Check joint forces, break if necessary
 //####################################################################################
-static void BreakJoint(cpSpace *space, cpConstraint *constraint, void *) {
-    bool was_mouse = (constraint == g_mouse_joint);
-    cpSpaceRemoveConstraint(space, constraint);
-    cpConstraintFree(constraint);
-    if (was_mouse) g_mouse_joint = nullptr;
-}
-static void CheckJointForce(cpConstraint *constraint, SpaceTime *space_time) {
-    // The most recent impulse that constraint applied. To convert this to a force, divide by the timestep passed to cpSpaceStep()
-    cpFloat joint_force = cpConstraintGetImpulse(constraint) / (space_time->time_step);
-    cpBody *body_a = cpConstraintGetBodyA(constraint);
-    cpBody *body_b = cpConstraintGetBodyB(constraint);
-    double  mass_a = cpBodyGetMass(body_a);
-    double  mass_b = cpBodyGetMass(body_b);
-    double  total_mass = 1;
-    if (isinf(mass_a) == false && isnan(mass_a) == false) total_mass += mass_a;
-    if (isinf(mass_b) == false && isnan(mass_b) == false) total_mass += mass_b;
-    joint_force /= total_mass;
+//static void BreakJoint(cpSpace *space, cpConstraint *constraint, void *) {
+//    bool was_mouse = (constraint == g_mouse_joint);
+//    cpSpaceRemoveConstraint(space, constraint);
+//    cpConstraintFree(constraint);
+//    if (was_mouse) g_mouse_joint = nullptr;
+//}
+//static void CheckJointForce(cpConstraint *constraint, SpaceTime *space_time) {
+//    // The most recent impulse that constraint applied. To convert this to a force, divide by the timestep passed to cpSpaceStep()
+//    cpFloat joint_force = cpConstraintGetImpulse(constraint) / (space_time->time_step);
+//    cpBody *body_a = cpConstraintGetBodyA(constraint);
+//    cpBody *body_b = cpConstraintGetBodyB(constraint);
+//    double  mass_a = cpBodyGetMass(body_a);
+//    double  mass_b = cpBodyGetMass(body_b);
+//    double  total_mass = 1;
+//    if (isinf(mass_a) == false && isnan(mass_a) == false) total_mass += mass_a;
+//    if (isinf(mass_b) == false && isnan(mass_b) == false) total_mass += mass_b;
+//    joint_force /= total_mass;
 
-    if (joint_force > 5000000) {
-        cpSpaceAddPostStepCallback(space_time->space, cpPostStepFunc(BreakJoint), constraint, nullptr);
-    }
-}
+//    if (joint_force > 5000000) {
+//        cpSpaceAddPostStepCallback(space_time->space, cpPostStepFunc(BreakJoint), constraint, nullptr);
+//    }
+//}
 
 
 //####################################################################################

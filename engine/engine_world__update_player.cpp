@@ -28,8 +28,6 @@ cpVect          g_gravity_normal = cpv(0, 0);
 DrPointF        g_player_position = DrPointF(0, 0);
 
 DrPointF        g_mouse_position = DrPointF(0, 0);
-cpBody         *g_mouse_body = nullptr;                         // A Body to use for mouse tracking / grabbing
-cpConstraint   *g_mouse_joint = nullptr;                        // A Joint to use to attach to mouse
 
 QString         g_info = "";
 

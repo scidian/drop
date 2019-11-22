@@ -64,8 +64,6 @@ extern cpVect        g_gravity_normal;                  // Stores a gravity as a
 extern DrPointF      g_player_position;                 // Stores active player location for Kinematic objects trying to rotate toward player
 
 extern DrPointF      g_mouse_position;                  // Stores last known mouse position
-extern cpBody       *g_mouse_body;                      // A Body to use for mouse tracking / grabbing
-extern cpConstraint *g_mouse_joint;                     // A Joint to use to attach to mouse
 
 extern QString       g_info;                            // Used to draw some debug text onto the Engine screen
 

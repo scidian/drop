@@ -43,11 +43,12 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 
     // Object Basics                 !!!!! #NOTE: texture_number == Asset Key
     long image_number = asset_key;
-    if (asset_key != 0) {
+    if (asset_key < 0) {
+        image_number = asset_key;
+    } else if (asset_key > 0) {
         DrAsset *asset = world->getProject()->getAsset(asset_key);
         if (asset != nullptr) {
             image_number = asset->getAnimationFirstFrameImageKey();
-
             DrAnimation *animation = world->getProject()->getAnimation(asset->getSourceKey());
             if (animation != nullptr) {
                 for (auto frame : animation->getFrames()) {
@@ -55,15 +56,14 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
                 }
             }
 
-        } else
-            image_number = asset_key;
-
-        DrEngineTexture *texture = world->getTexture(image_number);
-        if (texture != nullptr) {
-            this->setSize( DrPointF(texture->width(), texture->height()));
-        } else {
-            this->setSize( DrPointF(100, 100) );
         }
+    }
+
+    DrEngineTexture *texture = world->getTexture(image_number);
+    if (texture != nullptr) {
+        this->setSize( DrPointF(texture->width(), texture->height()));
+    } else {
+        this->setSize( DrPointF(100, 100) );
     }
     this->setTextureNumber(image_number);                                       // Texture to render from
     this->updateBodyPosition( DrPointF(x, y), true );
