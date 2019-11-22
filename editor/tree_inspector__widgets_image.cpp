@@ -16,6 +16,7 @@
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
 #include "forms/form_popup.h"
+#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_animation.h"
 #include "project/project_asset.h"
@@ -44,15 +45,15 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     int frame_width =  100;
 
     // ***** Store current asset key in widget
-    QFrame *image_frame = new QFrame();
+    DrImageHolder *image_frame = new DrImageHolder(m_editor_relay);
     image_frame->setAcceptDrops(true);
     image_frame->setSizePolicy(size_policy);
     image_frame->setMinimumHeight(frame_height);
     image_frame->setObjectName("inspectorImageFrame");
 
     long property_key = property->getPropertyKey();
-    image_frame->setProperty(User_Property::Mouse_Over, false);                                     // Initialize mouse user data, event filter updates this info
-    image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                               // Used to track when the mouse
+    image_frame->setProperty(User_Property::Mouse_Over, false);                             // Initialize mouse user data, event filter updates this info
+    image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                       // Used to track when the mouse
     image_frame->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
     getHoverHandler()->attachToHoverHandler(image_frame, property);
     addToWidgetList(image_frame);
@@ -73,14 +74,35 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         if (animation != nullptr) pixmap = animation->getPixmapFromFirstFrame();
 
         if (pixmap.isNull()) {
-            asset_pix->setPixmap(pixmap);
+            pixmap = QPixmap(":/assets/gui_misc/empty_image.png").scaled(QSize(64, 64), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            pixmap = DrImaging::applySinglePixelFilter(Image_Filter_Type::Opacity, pixmap, -100);
         } else {
-            asset_pix->setPixmap(pixmap.scaled(QSize(frame_width, frame_height - 15), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            pixmap = pixmap.scaled(QSize(frame_width, frame_height - 15), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
+        asset_pix->setPixmap(pixmap);
         vertical_split->addWidget( asset_pix );
+
+    // ***** Delete Button
+    QPushButton *delete_button = new QPushButton("x", image_frame);
+    delete_button->setObjectName("buttonDeleteImage");
+    delete_button->setFixedSize(20, 20);
+    delete_button->setVisible(false);
+    image_frame->setDeleteButton(delete_button);
+
 
     return image_frame;
 }
+
+
+//####################################################################################
+//##
+//##    DrImageHolder
+//##        Handles Image Holder
+//##
+//####################################################################################
+DrImageHolder::DrImageHolder(IEditorRelay *editor_relay, QWidget *parent) : QFrame(parent) {
+    m_editor_relay = editor_relay;
+};
 
 
 //####################################################################################
@@ -93,13 +115,25 @@ DrFilterInspectorImage::DrFilterInspectorImage(QObject *parent, IEditorRelay *ed
 bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
 
     // ***** Grab properties from Image Frame
-    QFrame *frame = dynamic_cast<QFrame*>(object);
+    DrImageHolder *frame = dynamic_cast<DrImageHolder*>(object);
     if (frame == nullptr) return QObject::eventFilter(object, event);
     long settings_key = m_editor_relay->getInspector()->getSelectedKey();
     long property_key = frame->property(User_Property::Key).toLongLong();
     if (settings_key <= 0 || property_key <= 0) return QObject::eventFilter(object, event);
     DrProject  *project =   m_editor_relay->currentProject();               if (project == nullptr)  return QObject::eventFilter(object, event);
     DrSettings *settings =  project->findSettingsFromKey(settings_key);     if (settings == nullptr) return QObject::eventFilter(object, event);
+
+    if (event->type() == QEvent::Resize) {
+        if (frame->getDeleteButton() != nullptr) {
+            frame->getDeleteButton()->setGeometry( frame->width() - 26, 10, 20, 20);
+        }
+
+    } else if (event->type() == QEvent::HoverMove || event->type() == QEvent::HoverEnter) {
+        if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setVisible(true);
+
+    } else if (event->type() == QEvent::HoverLeave) {
+        if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setVisible(false);
+    }
 
     // ***** Event Debugging
     /**
@@ -208,6 +242,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
 
     return QObject::eventFilter(object, event);
 }
+
 
 
 

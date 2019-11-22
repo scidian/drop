@@ -172,6 +172,29 @@ protected:
 };
 
 
+//####################################################################################
+//##    DrImageHolder
+//##        Event filter handler for image properties
+//####################################################################################
+class DrImageHolder : public QFrame
+{
+    Q_OBJECT
+
+private:
+    // External Borrowed Pointers
+    IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
+
+    // Local Variables
+    QPushButton    *m_delete_button = nullptr;          // Little delete button
+
+public:
+    explicit    DrImageHolder(IEditorRelay *editor_relay, QWidget *parent = nullptr);
+
+    // Getters / Setters
+    QPushButton*    getDeleteButton() { return m_delete_button; }
+    void            setDeleteButton(QPushButton *button) { m_delete_button = button; }
+};
+
 
 //####################################################################################
 //##    DrFilterInspectorImage
@@ -183,7 +206,7 @@ class DrFilterInspectorImage : public QObject
 
 private:
     // External Borrowed Pointers
-    IEditorRelay      *m_editor_relay;                  // Pointer to IEditorRelay class of parent form
+    IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
 public:
     explicit        DrFilterInspectorImage(QObject *parent, IEditorRelay *editor_relay);
@@ -191,8 +214,6 @@ public:
     // Event Overrides
     bool            eventFilter(QObject* object, QEvent* event) override;
 };
-
-
 
 
 #endif // EDITOR_TREE_INSPECTOR_H

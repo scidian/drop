@@ -334,6 +334,20 @@ QString CustomStyleSheetFormatting() {
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: transparent; border: none; }"
 
+        // Little X Button to Delete Image Property
+        " QPushButton#buttonDeleteImage { border: " + Dr::BorderWidth() + " solid; height: 20px; border-radius: 4px; "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 9, 92) +
+        "       padding: 0px; } "
+        " QPushButton#buttonDeleteImage:hover { border: " + Dr::BorderWidth() + " solid; "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
+        " QPushButton#buttonDeleteImage:pressed { "
+        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-radius: 0px; }"
+
         // Popup Menu for PushButton
         " QMenu#menuComboBox { "
         "       padding-top: 4px; padding-bottom: 4px; "
