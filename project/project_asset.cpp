@@ -202,6 +202,10 @@ bool DrAsset::canDeleteSource() {
         // Check all Assets for use of the same Source
         for (auto asset_pair : getParentProject()->getAssetMap()) {
             DrAsset *asset_to_check = asset_pair.second;
+            if (asset_to_check == nullptr) {
+                qDebug() << "Asset key: " << asset_pair.first;
+                continue;
+            }
             if ((asset_pair.first != getKey()) && (asset_to_check->getSourceKey() == getSourceKey())) {
                 can_delete = false;
                 break;
@@ -212,8 +216,10 @@ bool DrAsset::canDeleteSource() {
 }
 
 // Delete underlying source to Asset
-void DrAsset::deleteSource(long source_key) {
-    if (canDeleteSource() == false) return;
+void DrAsset::deleteSource(long source_key, bool double_check) {
+    if (double_check) {
+        if (canDeleteSource() == false) return;
+    }
 
     long source_to_delete = (source_key == c_no_key) ? getSourceKey() : source_key;
 
@@ -226,13 +232,13 @@ void DrAsset::deleteSource(long source_key) {
 
             // Delete all images in animation
             for (auto frame : animation->getFrames()) {
-                DrImage *image = getParentProject()->getImageMap()[frame->getKey()];
+                DrImage *image = getParentProject()->getImage( frame->getKey() );
                 if (image == nullptr) continue;
-                getParentProject()->getImageMap().erase( source_to_delete );
-                delete image;
+                getParentProject()->deleteImage( image->getKey() );
             }
+
             // Delete animation
-            getParentProject()->deleteAnimation(m_source_key);
+            getParentProject()->deleteAnimation( animation->getKey() );
             break;
         }
         case DrAssetType::Device: {

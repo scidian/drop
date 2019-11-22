@@ -109,7 +109,7 @@ void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
 //####################################################################################
 //##    Calculates rotated, z-ordered vertices for a DrEngineThing
 //####################################################################################
-void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float extra_scale_x, float extra_scale_y) {
+void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, double width, double height, float extra_scale_x, float extra_scale_y) {
     // ***** Get object position data
     DrPointF center = thing->getPosition();
     float   x, y, z;
@@ -117,8 +117,8 @@ void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing
     x = static_cast<float>(center.x);
     y = static_cast<float>(center.y);
     z = static_cast<float>(thing->getZOrder());
-    half_width =  static_cast<float>(thing->getSize().x) * thing->getScaleX() * extra_scale_x / 2.0f;
-    half_height = static_cast<float>(thing->getSize().y) * thing->getScaleY() * extra_scale_y / 2.0f;
+    half_width =  static_cast<float>(width) * thing->getScaleX() * extra_scale_x / 2.0f;
+    half_height = static_cast<float>(height) * thing->getScaleY() * extra_scale_y / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
     float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);

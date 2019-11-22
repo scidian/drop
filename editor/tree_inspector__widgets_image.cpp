@@ -171,6 +171,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 long old_animation_key = asset->getSourceKey();
                 bool delete_after =      asset->canDeleteSource();
 
+                // Add Images, Update Animation
                 QList<long> image_keys;
                 for (auto file_path : file_paths) {
                     DrImage *image = project->addImage(file_path);
@@ -190,15 +191,13 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                             }
                         }
                     }
-
                 }
-
 
                 m_editor_relay->buildScene( c_same_key );
                 m_editor_relay->buildAssetTree();
                 m_editor_relay->buildInspector( { settings_key }, true );
 
-//                if (delete_after) asset->deleteSource( old_animation_key );
+                if (delete_after) asset->deleteSource( old_animation_key, false );
                 drop_event->acceptProposedAction();
             }
         }

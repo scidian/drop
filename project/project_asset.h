@@ -51,7 +51,7 @@ public:
 
     // Function Calls
     bool        canDeleteSource();
-    void        deleteSource(long source_key = c_no_key);
+    void        deleteSource(long source_key = c_no_key, bool double_check = true);
     long        getAnimationFirstFrameImageKey();
     void        updateAnimationProperty(QList<long> image_keys);
 

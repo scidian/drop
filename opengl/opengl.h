@@ -177,7 +177,7 @@ public:
     void            drawSpace();
     bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                                       double &top, double &bottom, double &left, double &right, float &angle);
-    void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, float extra_scale_x = 1.0, float extra_scale_y = 1.0);
+    void            getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, double width, double height, float extra_scale_x = 1.0, float extra_scale_y = 1.0);
     QColor          objectDebugColor(DrEngineObject *object, bool text_color = false);
     void            occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, QMatrix4x4 &proj_matrix);
     QMatrix4x4      orthoMatrix(float width, float height);

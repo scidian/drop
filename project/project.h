@@ -135,12 +135,10 @@ public:
     WorldMap&       getWorldMap()           { return m_worlds; }
     DrWorld*        findWorldWithName(QString world_name);
 
-    DrAsset*        getAsset(long key)      { return m_assets[key]; }
-    AssetMap&       getAssetMap()           { return m_assets; }
-    long            getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
-
     DrAnimation*    getAnimation(long key)  { return m_animations[key]; }
     AnimationMap&   getAnimationMap()       { return m_animations; }
+    DrAsset*        getAsset(long key)      { return m_assets[key]; }
+    AssetMap&       getAssetMap()           { return m_assets; }
     DrDevice*       getDevice(long key)     { return m_devices[key]; }
     DeviceMap&      getDeviceMap()          { return m_devices; }
     DrEffect*       getEffect(long key)     { return m_effects[key]; }
@@ -149,6 +147,13 @@ public:
     FontMap&        getFontMap()            { return m_fonts; }
     DrImage*        getImage(long key)      { return m_images[key]; }
     ImageMap&       getImageMap()           { return m_images; }
+
+    long            getNumberOfAnimations() { return static_cast<long>(m_animations.size()); }
+    long            getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
+    long            getNumberOfDevices()    { return static_cast<long>(m_devices.size()); }
+    long            getNumberOfEffects()    { return static_cast<long>(m_effects.size()); }
+    long            getNumberOfFonts()      { return static_cast<long>(m_fonts.size()); }
+    long            getNumberOfImages()     { return static_cast<long>(m_images.size()); }
 
     // Options Calls
     QVariant    getOption(Project_Options option_to_get)   { return m_options[option_to_get]; }
@@ -161,6 +166,7 @@ public:
     void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
     void            clearProject(bool add_built_in_items = true);
     void            deleteAnimation(long animation_key);
+    void            deleteImage(long image_key);
     void            deleteWorld(DrWorld *world);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);

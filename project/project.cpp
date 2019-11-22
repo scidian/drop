@@ -66,11 +66,25 @@ void DrProject::clearProject(bool add_built_in_items) {
     m_key_generator = c_key_starting_number;
 }
 
+
+//####################################################################################
+//##    Delete
+//##        Functions to Delete different item types into project
+//####################################################################################
 // Removes an Animation from the Project
 void DrProject::deleteAnimation(long animation_key) {
     DrAnimation *animation = m_animations[animation_key];
+    if (animation == nullptr) return;
     m_animations.erase(animation_key);
     delete animation;
+}
+
+// Removes an Image from the Project
+void DrProject::deleteImage(long image_key) {
+    DrImage *image = m_images[image_key];
+    if (image == nullptr) return;
+    m_images.erase(image_key);
+    delete image;
 }
 
 // Removes a World from the Project
@@ -81,9 +95,8 @@ void DrProject::deleteWorld(DrWorld *world) {
 
 
 //####################################################################################
-//##
-//##    Functions to add different item types into project
-//##
+//##    Add
+//##        Functions to Add different item types into project
 //####################################################################################
 DrAnimation* DrProject::addAnimation(QList<long> source_image_keys, long key) {
     long new_animation_key = (key == c_no_key) ? getNextKey() : key;

@@ -131,6 +131,20 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     ///glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);        // Premultiplied alpha blend
 
 
+    // ***** Get texture to render with, set texture coordinates
+    DrEngineTexture *texture;
+    long texture_number = object->getTextureNumber();
+    if (object->animation_idle_keys.count() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    }
+    texture = m_engine->getTexture(texture_number);
+
+    if (texture == nullptr) return;
+    if (!texture->texture()->isBound()) texture->texture()->bind();
+    float texture_width =  texture->width();
+    float texture_height = texture->height();
+
+
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x);
     float y =   static_cast<float>(thing->getPosition().y);
@@ -166,12 +180,12 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     float add_pixel_x = 0.0;
     float add_pixel_y = 0.0;
     if (scale_2d) {
-        model.scale(static_cast<float>(object->getSize().x), static_cast<float>(object->getSize().y), 1.0f);
+        model.scale(static_cast<float>(texture_width), static_cast<float>(texture_height), 1.0f);
     } else {
         // Add an extra pixel on 3D objects to reduce blockiness of world
         float pixels_to_add = 1.5f;
-        add_pixel_x = (pixels_to_add * object->getScaleX()) / (static_cast<float>(object->getSize().x));
-        add_pixel_y = (pixels_to_add * object->getScaleY()) / (static_cast<float>(object->getSize().y));
+        add_pixel_x = (pixels_to_add * object->getScaleX()) / (static_cast<float>(texture_width));
+        add_pixel_y = (pixels_to_add * object->getScaleY()) / (static_cast<float>(texture_height));
     }
     float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
@@ -211,20 +225,6 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     QMatrix4x4 matrix_eye;
     matrix_eye.scale(1.f / combinedZoomScale());
     QVector3D eye_move = matrix_eye * m_eye;
-
-
-    // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture;
-    long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.count() > 0) {
-        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
-    }
-    texture = m_engine->getTexture(texture_number);
-
-    if (texture == nullptr) return;
-    if (!texture->texture()->isBound()) texture->texture()->bind();
-    float texture_width =  texture->width();
-    float texture_height = texture->height();
 
 
     // ***** Set Shader Variables
@@ -367,6 +367,16 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
 
+    // ***** Get texture to render with, set texture coordinates
+    DrEngineTexture *texture;
+    long texture_number = object->getTextureNumber();
+    if (object->animation_idle_keys.count() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    }
+    texture = m_engine->getTexture(texture_number);
+    if (texture == nullptr) return;
+    if (!texture->texture()->isBound()) texture->texture()->bind();
+
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x);
     float y =   static_cast<float>(thing->getPosition().y);
@@ -387,7 +397,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     // Scale
     float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
-    model.scale(static_cast<float>(object->getSize().x) * flip_x, static_cast<float>(object->getSize().y) * flip_y, 1.0f);
+    model.scale(static_cast<float>(texture->width()) * flip_x, static_cast<float>(texture->height()) * flip_y, 1.0f);
     model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
@@ -402,17 +412,6 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     }
 
     m_simple_shader.setUniformValue( u_simple_matrix,         m_projection * m_view * model );
-
-    // ***** Get texture to render with, set texture coordinates
-    DrEngineTexture *texture;
-    long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.count() > 0) {
-        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
-    }
-    texture = m_engine->getTexture(texture_number);
-
-    if (texture == nullptr) return;
-    if (!texture->texture()->isBound()) texture->texture()->bind();
 
     // ***** Set Shader Variables
     m_simple_shader.setUniformValue( u_simple_texture, 0 );                           // Use texture unit 0
@@ -476,6 +475,8 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return true;
     if (!texture->texture()->isBound()) texture->texture()->bind();
+    double texture_width =  texture->width();
+    double texture_height = texture->height();
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
     float alpha = object->getOpacity();                                                 // Start with object alpha
@@ -493,7 +494,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     float flip_x = (object->isFlippedX()) ? -animation_scale : animation_scale;
     float flip_y = (object->isFlippedY()) ? -animation_scale : animation_scale;
     QVector<GLfloat> vertices;
-    getThingVertices(vertices, object, flip_x, flip_y);
+    getThingVertices(vertices, object, texture_width, texture_height, flip_x, flip_y);
     m_occluder_shader.setAttributeArray(    a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 

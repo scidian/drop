@@ -19,6 +19,8 @@ class DrFrame;
 class DrProject;
 class DrWorld;
 
+typedef std::vector<DrFrame*> Frames;
+
 
 //####################################################################################
 //##    DrAnimation
@@ -28,8 +30,8 @@ class DrAnimation : public DrSettings
 {
 private:
     // Local Variables
-    std::vector<DrFrame*>   m_frames;                       // Holds frames of this animation
-                                                            // !!!!! #NOTE: Frame numbers start at 1 !!!!!
+    Frames      m_frames;                               // Holds frames of this animation
+                                                        // !!!!! #NOTE: Frame numbers start at 1 !!!!!
 
 public:
     // Constructor / Destructor
@@ -45,7 +47,7 @@ public:
     // Getters / Setters
     QPixmap                 getPixmapFromFirstFrame();
     DrFrame*                getFrame(long frame_number) { return m_frames[static_cast<unsigned long>(frame_number - 1)]; }
-    std::vector<DrFrame*>&  getFrames()                 { return m_frames; }
+    Frames&                 getFrames()                 { return m_frames; }
     long                    getFrameCount()             { return static_cast<long>(m_frames.size()); }
     int                     getStartFrameNumber();
 
