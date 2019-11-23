@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++11
+CONFIG += c++17
 QMAKE_CFLAGS += -std=c99
 
 SOURCES += \
@@ -197,6 +197,7 @@ SOURCES += \
     project/project_animation.cpp \
     project/project_animation_frame.cpp \
     project/project_asset.cpp \
+    project/project_asset__auto_collision.cpp \
     project/project_asset__settings.cpp \
     project/project_asset__settings_shared.cpp \
     project/project_device.cpp \

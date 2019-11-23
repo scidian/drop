@@ -71,10 +71,33 @@ void DrProject::clearProject(bool add_built_in_items) {
 //##    Delete
 //##        Functions to Delete different item types into project
 //####################################################################################
-// Removes an Animation from the Project
+// Removes an Animation from the Project if not used by another Asset
 void DrProject::deleteAnimation(long animation_key) {
-    DrAnimation *animation = m_animations[animation_key];
+    if (animation_key < c_key_starting_number) return;
+    DrAnimation *animation = findAnimationFromKey(animation_key);
     if (animation == nullptr) return;
+
+    // See if Animations are used by any other Asset
+    for (auto &asset_pair : getAssetMap()) {
+        if (asset_pair.second == nullptr) continue;
+        std::list<long> animations_used = asset_pair.second->animationsUsedByAsset();
+
+        // If key is used by another Asset, don't delete
+        for (auto &check_key : animations_used) {
+            if (check_key == animation_key) return;
+        }
+    }
+
+    // Delete all Images in Animation
+    for (auto frame : animation->getFrames()) {
+        long image_key = frame->getKey();
+        if ( image_key < c_key_starting_number) continue;
+        DrImage *image = findImageFromKey( image_key );
+        if (image == nullptr) continue;
+        deleteImage( image->getKey() );
+    }
+
+    // Delete Animation
     m_animations.erase(animation_key);
     delete animation;
 }

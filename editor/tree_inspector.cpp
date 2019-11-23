@@ -188,7 +188,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         } else {
             // Build category button
             DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component->getDisplayNameQString(),
-                                                                 Qt::black, Qt::black, nullptr, category_item);
+                                                                               Qt::black, Qt::black, nullptr, category_item);
             QString button_style;
             button_style = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                                         " padding-left: 2px;"
@@ -209,7 +209,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             // Assign icon to category button
             QPixmap cat_icon(component->getIcon());
             QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
-            drop_shadow->setColor(component->getColor().darker(200) );
+            drop_shadow->setColor(component->getColor().darker(200));
             drop_shadow->setOffset( -4, 4 );
             cat_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(cat_icon.toImage(), drop_shadow, 0) );
             category_button->setIcon(QIcon(cat_icon));

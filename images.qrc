@@ -186,5 +186,6 @@
         <file>assets/toolbar_icons/toolbar_play_stage.png</file>
         <file>assets/inspector_icons/comp_controls.png</file>
         <file>assets/gui_misc/empty_image.png</file>
+        <file>assets/gui_misc/image_delete.png</file>
     </qresource>
 </RCC>

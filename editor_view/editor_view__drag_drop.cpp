@@ -110,16 +110,14 @@ void DrView::dropEvent(QDropEvent *event) {
             position = m_drop_location;
 
         // Create new Thing from drop data,                                                                 !!!!! #NOTE: Sets initial Z value of Thing
-        long      asset_key = variant_key.toInt();
-        DrAsset  *asset =     m_editor_relay->currentProject()->findAssetFromKey(asset_key);
-        DrDevice *device;
-        DrEffect *effect;
+        long     asset_key = variant_key.toInt();
+        DrAsset *asset =     m_editor_relay->currentProject()->findAssetFromKey(asset_key);
         switch (asset->getAssetType()) {
             case DrAssetType::Character:    thing = stage->addThing(DrThingType::Character,     asset_key, position.x(), -position.y(),   5);   break;
             case DrAssetType::Object:       thing = stage->addThing(DrThingType::Object,        asset_key, position.x(), -position.y(),   0);   break;
             case DrAssetType::Text:         thing = stage->addThing(DrThingType::Text,          asset_key, position.x(), -position.y(),   0);   break;
-            case DrAssetType::Effect:
-                effect = m_project->findEffectFromKey( asset->getBaseKey() );
+            case DrAssetType::Effect: {
+                DrEffect *effect = m_project->findEffectFromKey( asset->getBaseKey() );
                 switch (effect->getEffectType()) {
                     case DrEffectType::Fire:    thing = stage->addThing(DrThingType::Fire,      asset_key, position.x(), -position.y(), -10);   break;
                     case DrEffectType::Fisheye: thing = stage->addThing(DrThingType::Fisheye,   asset_key, position.x(), -position.y(),  10);   break;
@@ -134,12 +132,14 @@ void DrView::dropEvent(QDropEvent *event) {
                     case DrEffectType::Fog:     break;
                 }
                 break;
-            case DrAssetType::Device:
-                device = m_project->findDeviceFromKey( asset->getBaseKey() );
+            }
+            case DrAssetType::Device: {
+                DrDevice *device = m_project->findDeviceFromKey( asset->getBaseKey() );
                 switch (device->getDeviceType()) {
                     case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    asset_key, position.x(), -position.y(), 10);   break;
                 }
                 break;
+            }
         }
         my_scene->addItemToSceneFromThing( thing );
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { Properties::Thing_Size } );

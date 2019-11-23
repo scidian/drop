@@ -335,18 +335,41 @@ QString CustomStyleSheetFormatting() {
         "       background: transparent; border: none; }"
 
         // Little X Button to Delete Image Property
-        " QPushButton#buttonDeleteImage { border: " + Dr::BorderWidth() + " solid; height: 20px; border-radius: 4px; "
-        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
-                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 9, 92) +
-        "       padding: 0px; } "
-        " QPushButton#buttonDeleteImage:hover { border: " + Dr::BorderWidth() + " solid; "
-        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
-                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
-        " QPushButton#buttonDeleteImage:pressed { "
-        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
-        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
-        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
-        "       border-radius: 0px; }"
+//        " QPushButton#buttonImageMiniButton { border: " + Dr::BorderWidth() + " solid; height: 20px; border-radius: 4px; "
+//        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
+//                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark),
+//                                                    Dr::GetColor(Window_Colors::Background_Dark), 9, 92) +
+//        "       padding: 0px; } "
+//        " QPushButton#buttonImageMiniButton:hover { border: " + Dr::BorderWidth() + " solid; "
+//        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
+//                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light),
+//                                                    Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
+//        " QPushButton#buttonImageMiniButton:pressed { "
+//        ///"       border: " + Dr::BorderWidth() + " solid; "
+//        ///"       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " + StyleSheetRecessedBackgroundBorder(10, 92) + " }"
+//        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+//        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+//        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+//        "       border-radius: 0px; }"
+        " QPushButton#buttonImageMiniButton {            border: 1px solid; border-radius: 4px; "
+        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).lighter(130).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
+        " QPushButton#buttonImageMiniButton:hover {      border: 1px solid; "
+        "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
+        " QPushButton#buttonImageMiniButton:pressed {    border: 1px solid; "
+        "       background: " +    Dr::GetColor(Window_Colors::Seperator).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Seperator).darker(150).name() +
+                                   Dr::GetColor(Window_Colors::Seperator).name() +
+                                   Dr::GetColor(Window_Colors::Seperator).darker(150).name() +
+                                   Dr::GetColor(Window_Colors::Seperator).name() +"; } "
+
 
         // Popup Menu for PushButton
         " QMenu#menuComboBox { "

@@ -45,27 +45,38 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
     m_asset_type = new_asset_type;
     m_base_key =   base_key;
 
+    // Base Key is Project Key of underyling source:
+    //      DrAssetType::Character      Refers to DrAnimation object of Asset_Animation_Idle DrProperty
+    //      DrAssetType::Object         Refers to DrAnimation object of Asset_Animation_Idle DrProperty
+    //      DrAssetType::Device         Underlying DrDevice object
+    //      DrAssetType::Effect         Underlying DrEffect object
+    //      DrAssetType::Text           Underlying DrFont   object
+
     DrSettings *source = parent_project->findSettingsFromKey(base_key);
 
     DrPropertyCollision shape;
-    QString     my_starting_name = "";
-    QPixmap     my_starting_pixmap;
+    QString     my_starting_name = "Unknown";
+    QPixmap     my_starting_pixmap(":/assets/dr_images/empty.png");
     switch (getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
 
             // Create new Animation in Project from Image Key if passed in an Image Key and not an Animation Key
             DrAnimation *animation = nullptr;
-            if (source->getType() == DrType::Image) {
-                animation = parent_project->addAnimation({ base_key });
-                if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not create animation from image: " + QString::number(base_key));
-                m_base_key = animation->getKey();
-            } else if (source->getType() == DrType::Animation) {
-                animation = parent_project->findAnimationFromKey(base_key);
-                if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + QString::number(base_key));
+            if (source != nullptr) {
+                if (source->getType() == DrType::Image) {
+                    animation = parent_project->addAnimation({ base_key });
+                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not create animation from image: " + QString::number(base_key));
+                    m_base_key = animation->getKey();
+                } else if (source->getType() == DrType::Animation) {
+                    animation = dynamic_cast<DrAnimation*>(source);
+                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + QString::number(base_key));
+                }
+                my_starting_pixmap = animation->getPixmapFromFirstFrame();
+                my_starting_name =   animation->getName();
+            } else {
+                m_base_key = c_no_key;
             }
-            my_starting_pixmap = animation->getPixmapFromFirstFrame();
-            my_starting_name =   animation->getName();
 
             // Load / Initialize Entity Settings
             shape = autoCollisionShape(my_starting_pixmap);
@@ -74,7 +85,7 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             else if (new_asset_type == DrAssetType::Object)
                 initializeAssetSettingsObject(my_starting_name);
             initializeAssetSettingsCollision(getAssetType(), shape);
-            initializeAssetSettingsAnimation(getAssetType(), animation->getKey() );
+            initializeAssetSettingsAnimation(getAssetType(), m_base_key );
             initializeAssetSettingsHealth(getAssetType());
             initializeAssetSettingsPhysics(getAssetType());
             initializeAssetSettingsControls(getAssetType());
@@ -114,141 +125,72 @@ DrAsset::~DrAsset() { }
 
 
 //####################################################################################
-//##    Determines automatic collision shapes based on image
+//##    List of Animations used by Asset
 //####################################################################################
-DrPropertyCollision autoCollisionShape(QPixmap pixmap) {
-    DrPropertyCollision shapes;
-
-    // ***** Break pixmap into seperate images for each object in image
-    QVector<QImage> images;
-    QVector<QRect>  rects;
-    DrImaging::findObjectsInImage(pixmap.toImage(), images, rects, 0.9);
-
-    // ***** Creates a box polygon for use with complicated / not complicated enough images
-    QVector<DrPointF> box;
-    box.clear();
-    box.push_back( DrPointF(0,                  0) );
-    box.push_back( DrPointF(pixmap.width() - 1, 0) );
-    box.push_back( DrPointF(pixmap.width() - 1, pixmap.height() - 1) );
-    box.push_back( DrPointF(0,                  pixmap.height() - 1) );
-
-    // ***** Go through each image (object) and Polygon for it
-    if (images.count() < 50) {
-        for (int image_number = 0; image_number < images.count(); image_number++) {
-            QImage &image = images[image_number];
-            if (image.width() < 1 || image.height() < 1) continue;
-
-            // Trace edge of image
-            QVector<DrPointF> points = DrImaging::traceImageOutline(image);
-            double plus_one_pixel_percent_x = 1.0 + (1.50 / image.width());
-            double plus_one_pixel_percent_y = 1.0 + (1.50 / image.height());
-            for (auto &point : points) {
-                point.x = point.x * plus_one_pixel_percent_x;
-                point.y = point.y * plus_one_pixel_percent_y;
+std::list<long> DrAsset::animationsUsedByAsset() {
+    std::list<long> animation_keys_used {};
+    for (auto &component_pair : getComponentMap()) {
+        for (auto &property_pair : component_pair.second->getPropertyMap()) {
+            DrProperty *property = property_pair.second;
+            if (property->getPropertyType() == Property_Type::Image) {
+                if (property->getValue().toLongLong() >= c_key_starting_number)
+                    animation_keys_used.push_back(property->getValue().toLongLong());
             }
-
-            // Run Polyline Simplification algorithm
-            QVector<DrPointF> simple_points;
-            simple_points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 2.0) );
-
-            // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
-            if ((simple_points.count() < 4)) {
-                ///points = HullFinder::FindConcaveHull(points, 5.0);
-                points.clear();
-                points.push_back( DrPointF(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
-                points.push_back( DrPointF(rects[image_number].topRight().x(),       rects[image_number].topRight().y()) );
-                points.push_back( DrPointF(rects[image_number].bottomRight().x(),    rects[image_number].bottomRight().y()) );
-                points.push_back( DrPointF(rects[image_number].bottomLeft().x(),     rects[image_number].bottomLeft().y()) );
-                points.push_back( DrPointF(rects[image_number].topLeft().x(),        rects[image_number].topLeft().y()) );
-            } else {
-                points = simple_points;
-            }
-
-            // Check we still have 3 points, remove duplicate first point
-            if (points.count() < 4) continue;
-            points.pop_back();
-
-            // Check winding
-            HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
-
-            // Add polygon to list of polygons in shape
-            shapes.addPolygon( points.toStdVector() );
         }
     }
-
-    // If we don't have polygons by this point, just add a simple box
-    if (shapes.getPolygons().size() < 1) {
-        shapes.addPolygon( box.toStdVector() );
-    }
-
-    // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image
-    for (auto &shape : shapes.getPolygons()) {
-        for (auto &point : shape) {
-            point.x = point.x - (pixmap.width() / 2.0);
-            point.y = (pixmap.height() - point.y) - (pixmap.height() / 2.0);
-        }
-    }
-
-    return shapes;
+    return animation_keys_used;
 }
 
+//####################################################################################
+//##    Deletes Underlying Asset Source, called when DrAsset is deleted
+//##        Verify first if source is used by another DrAsset or if source is built in
+//####################################################################################
+void DrAsset::deleteSource() {
+    long source_to_delete = getBaseKey();
+    if ( source_to_delete < c_key_starting_number) return;
 
-//####################################################################################
-//##    Check if built in Asset Source, or if used by another Asset,
-//##        Otherwise can delete source if desired
-//####################################################################################
-bool DrAsset::canDeleteSource() {
-    bool can_delete = true;
-    if (getBaseKey() < c_key_starting_number) {
-        can_delete = false;
+    // ***** Delete Animations not used by other Assets
+    if (getAssetType() == DrAssetType::Object || getAssetType() == DrAssetType::Character) {
+
+        // Delete animations
+        for (auto &key : animationsUsedByAsset()) {
+            getParentProject()->deleteAnimation(key);
+        }
+
+    // ***** Delete Underlying Source(s)
     } else {
         // Check all Assets for use of the same Source
         for (auto &asset_pair : getParentProject()->getAssetMap()) {
             DrAsset *asset_to_check = asset_pair.second;
             if (asset_to_check == nullptr) continue;
-            if ((asset_pair.first != getKey()) && (asset_to_check->getBaseKey() == getBaseKey())) {
-                can_delete = false;
+            if ((asset_pair.first != getKey()) && (asset_to_check->getBaseKey() == getBaseKey())) return;
+        }
+
+        switch (getAssetType()) {
+            case DrAssetType::Character:
+            case DrAssetType::Object:
+                break;
+            case DrAssetType::Device: {
+                DrDevice *device = getParentProject()->getDeviceMap()[source_to_delete];
+                if (device == nullptr) break;
+                getParentProject()->getDeviceMap().erase( source_to_delete );
+                delete device;
                 break;
             }
-        }
-    }
-    return can_delete;
-}
-
-// Delete underlying source to Asset
-void DrAsset::deleteSource(long source_key, bool double_check) {
-    if (double_check) {
-        if (canDeleteSource() == false) return;
-    }
-
-    long source_to_delete = (source_key == c_no_key) ? getBaseKey() : source_key;
-    if ( source_to_delete < c_key_starting_number) return;
-
-    switch (getAssetType()) {
-        case DrAssetType::Character:
-        case DrAssetType::Object: {
-            break;
-        }
-        case DrAssetType::Device: {
-            DrDevice *device = getParentProject()->getDeviceMap()[source_to_delete];
-            if (device == nullptr) break;
-            getParentProject()->getDeviceMap().erase( source_to_delete );
-            delete device;
-            break;
-        }
-        case DrAssetType::Effect: {
-            DrEffect *effect = getParentProject()->getEffectMap()[source_to_delete];
-            if (effect == nullptr) break;
-            getParentProject()->getEffectMap().erase( source_to_delete );
-            delete effect;
-            break;
-        }
-        case DrAssetType::Text: {
-            DrFont *font = getParentProject()->getFontMap()[source_to_delete];
-            if (font == nullptr) break;
-            getParentProject()->getFontMap().erase( source_to_delete );
-            delete font;
-            break;
+            case DrAssetType::Effect: {
+                DrEffect *effect = getParentProject()->getEffectMap()[source_to_delete];
+                if (effect == nullptr) break;
+                getParentProject()->getEffectMap().erase( source_to_delete );
+                delete effect;
+                break;
+            }
+            case DrAssetType::Text: {
+                DrFont *font = getParentProject()->getFontMap()[source_to_delete];
+                if (font == nullptr) break;
+                getParentProject()->getFontMap().erase( source_to_delete );
+                delete font;
+                break;
+            }
         }
     }
 }
@@ -263,7 +205,7 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
     long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
     DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
 
-    if (animation == nullptr) return c_no_key;
+    if (animation == nullptr) return c_key_asset_empty;
 
     return animation->getFrame(animation->getStartFrameNumber())->getKey();
 }
@@ -280,7 +222,6 @@ void DrAsset::updateAnimationProperty(QList<long> image_keys, Properties animati
     if (property == nullptr) return;
     long old_animation = property->getValue().toLongLong();
 
-
     // ***** Create new animation from new image keys
     DrAnimation *animation = getParentProject()->addAnimation(image_keys);    
     property->setValue( QVariant::fromValue(animation->getKey()) );
@@ -296,26 +237,9 @@ void DrAsset::updateAnimationProperty(QList<long> image_keys, Properties animati
         setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, QVariant::fromValue<DrPropertyCollision>(shape));
     }
 
-
     // ***** Delete Old Animation
-    if (old_animation < c_key_starting_number) return;
-    animation = getParentProject()->findAnimationFromKey(old_animation);
-    if (animation == nullptr) return;
-
-    // Delete all images in animation
-    for (auto frame : animation->getFrames()) {
-        long image_key = frame->getKey();
-        if ( image_key < c_key_starting_number) return;
-        DrImage *image = getParentProject()->findImageFromKey( image_key );
-        if (image == nullptr) continue;
-        getParentProject()->deleteImage( image->getKey() );
-    }
-
-    // Delete animation
     getParentProject()->deleteAnimation(old_animation);
 }
-
-
 
 
 

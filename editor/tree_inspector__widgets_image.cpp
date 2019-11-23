@@ -83,9 +83,13 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         vertical_split->addWidget( asset_pix );
 
     // ***** Delete Button
-    QPushButton *delete_button = new QPushButton("x", image_frame);
-    delete_button->setObjectName("buttonDeleteImage");
-    delete_button->setFixedSize(20, 20);
+    QPushButton *delete_button = new QPushButton(image_frame);
+    delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+    delete_button->setObjectName("buttonImageMiniButton");
+        QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
+        delete_icon = QPixmap::fromImage( DrImaging::colorizeImage(delete_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+        delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
+    delete_button->setFixedSize(19, 19);
     delete_button->setVisible(false);
     image_frame->setDeleteButton(delete_button);
 
@@ -206,7 +210,6 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
         // ********** Dropped on to Asset Property
         if (settings->getType() == DrType::Asset) {
             DrAsset *asset = dynamic_cast<DrAsset*>(settings);
-            long     old_animation_key = property->getValue().toLongLong();
 
             // Add Images, Update Animation
             QList<long> image_keys;
@@ -233,8 +236,6 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             m_editor_relay->buildScene( c_same_key );
             m_editor_relay->buildAssetTree();
             m_editor_relay->buildInspector( { settings_key }, true );
-
-            asset->deleteSource( old_animation_key, false );
             drop_event->acceptProposedAction();
         }
 
