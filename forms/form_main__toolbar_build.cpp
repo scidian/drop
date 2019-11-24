@@ -91,14 +91,17 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
 
         buttonAdd = createToolbarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, 48, 26, false, true);
+        Dr::ApplyDropShadowByType(buttonAdd, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupEdit->addButton(buttonAdd, int(Buttons_Edit::Add));
         toolbarLayoutEdit->addWidget(buttonAdd);
 
         tool = createToolbarButton(QStringLiteral("buttonDuplicate"), Advisor_Info::Duplicate, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Duplicate));
         toolbarLayoutEdit->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));
         toolbarLayoutEdit->addWidget(tool);
 
@@ -117,18 +120,22 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupLayering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Send_to_Back, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Send_Backward, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Send_Forward, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Send_to_Front, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
         toolbarLayoutLayering->addWidget(tool);
 
@@ -146,22 +153,27 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupTransform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Reset, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Reset_Object));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonTransformFlipH"), Advisor_Info::Flip_H, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Flip_H));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonTransformFlipV"), Advisor_Info::Flip_V, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Flip_V));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonTransformRotateL"), Advisor_Info::Rotate_L, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Rotate_L));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonTransformRotateR"), Advisor_Info::Rotate_R, 34, 26, false, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Rotate_R));
         toolbarLayoutTransform->addWidget(tool);
 
@@ -180,23 +192,27 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupGrid, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, 34, 26, true);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Grid_On_Top));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool());
         toolbarLayoutGrid->addWidget(tool);
         toolbarLayoutGrid->addSpacing(1);
 
         tool = createToolbarButton(QStringLiteral("buttonResizeToGrid"), Advisor_Info::Resize_To_Grid, 34, 26, true);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool());
         toolbarLayoutGrid->addWidget(tool);
         toolbarLayoutGrid->addSpacing(1);
 
         tool = createToolbarButton(QStringLiteral("buttonSnapToGrid"), Advisor_Info::Grid_Snap_To_Grid, 34, 26, true);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
         toolbarLayoutGrid->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSnapOptions"), Advisor_Info::Grid_Snap_Options, 14, 26, false, true);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Snap_Options));
         toolbarLayoutGrid->addWidget(tool);
 
@@ -215,10 +231,12 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupPlay, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, 48, 26, false, true);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play));
         toolbarLayoutPlay->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonPlayStage"), Advisor_Info::Play_Stage, 34, 26, false, true);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play_Stage));
         toolbarLayoutPlay->addWidget(tool);
 
@@ -243,6 +261,7 @@ void FormMain::buildToolBar() {
         ///});
 
         tool = createToolbarButton(QStringLiteral("buttonImageViewer"), Advisor_Info::Settings_Image_Viewer, 34, 26, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
             FormBlank *blank_form = new FormBlank(m_project, this);
@@ -250,6 +269,7 @@ void FormMain::buildToolBar() {
         });
 
         tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), Advisor_Info::Settings_Font_Builder, 34, 26, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
             FormFonts *font_editor = new FormFonts(m_project, this);
@@ -257,6 +277,7 @@ void FormMain::buildToolBar() {
         });
 
         tool = createToolbarButton(QStringLiteral("buttonSettingsEditor"), Advisor_Info::Settings_Manager, 34, 26, false);
+        Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
             FormSettings *settings_editor = new FormSettings(m_project, this);

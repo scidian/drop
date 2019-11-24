@@ -78,7 +78,7 @@ public:
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 
     // Other Widget Update Calls
-    IEditorRelay*   getRelay() { return m_editor_relay; }
+    IEditorRelay*   getEditorRelay() { return m_editor_relay; }
     void            updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys);
     void            updateItemInScene(DrSettings* changed_item, QList<long> property_keys);
     void            updateItemZValues();

@@ -334,7 +334,7 @@ QString CustomStyleSheetFormatting() {
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: transparent; border: none; }"
 
-        // Little X Button to Delete Image Property
+        // Little Edit / Delete Buttons on Inspector Image Property
 //        " QPushButton#buttonImageMiniButton { border: " + Dr::BorderWidth() + " solid; height: 20px; border-radius: 4px; "
 //        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
 //                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark),
@@ -352,24 +352,27 @@ QString CustomStyleSheetFormatting() {
 //        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
 //        "       border-radius: 0px; }"
         " QPushButton#buttonImageMiniButton {            border: 1px solid; border-radius: 4px; "
-        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).lighter(130).name() +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
+        "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-color: " +
+                (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Background_Light).darker(130) :
+                                                               Dr::GetColor(Window_Colors::Background_Light).lighter(200)).name() +
+                                   Dr::GetColor(Window_Colors::Background_Light).darker(130).name() +
+                                   Dr::GetColor(Window_Colors::Background_Light).name() +
+                                   Dr::GetColor(Window_Colors::Background_Light).darker(130).name() +"; } "
         " QPushButton#buttonImageMiniButton:hover {      border: 1px solid; "
         "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(150).name() +
+        "       border-color: " +
+                (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Button_Light).darker(130) :
+                                                               Dr::GetColor(Window_Colors::Button_Light).lighter(200)).name() +
+                                   Dr::GetColor(Window_Colors::Button_Light).darker(130).name() +
                                    Dr::GetColor(Window_Colors::Button_Light).name() +
-                                   Dr::GetColor(Window_Colors::Button_Light).name() +
-                                   Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
+                                   Dr::GetColor(Window_Colors::Button_Light).darker(130).name() +"; } "
         " QPushButton#buttonImageMiniButton:pressed {    border: 1px solid; "
-        "       background: " +    Dr::GetColor(Window_Colors::Seperator).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Seperator).darker(150).name() +
-                                   Dr::GetColor(Window_Colors::Seperator).name() +
-                                   Dr::GetColor(Window_Colors::Seperator).darker(150).name() +
-                                   Dr::GetColor(Window_Colors::Seperator).name() +"; } "
-
+        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
+                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
 
         // Popup Menu for PushButton
         " QMenu#menuComboBox { "

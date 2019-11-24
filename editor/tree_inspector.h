@@ -75,7 +75,8 @@ public:
     void                    updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
 
     // Getters and Setters
-    IEditorRelay*           getRelay()          { return m_editor_relay; }
+    DrProject*              getParentProject()  { return m_project; }
+    IEditorRelay*           getEditorRelay()    { return m_editor_relay; }
     long                    getSelectedKey()    { return m_selected_key; }
 
     DrFilterHoverHandler*   getHoverHandler();
@@ -188,11 +189,11 @@ private:
     QPushButton    *m_delete_button = nullptr;          // Little delete button
 
 public:
-    explicit    DrImageHolder(IEditorRelay *editor_relay, QWidget *parent = nullptr);
+    explicit        DrImageHolder(IEditorRelay *editor_relay, QWidget *parent = nullptr);
 
     // Getters / Setters
-    QPushButton*    getDeleteButton() { return m_delete_button; }
-    void            setDeleteButton(QPushButton *button) { m_delete_button = button; }
+    QPushButton*        getDeleteButton() { return m_delete_button; }
+    void                setDeleteButton(QPushButton *button) { m_delete_button = button; }
 };
 
 
@@ -212,7 +213,10 @@ public:
     explicit        DrFilterInspectorImage(QObject *parent, IEditorRelay *editor_relay);
 
     // Event Overrides
-    bool            eventFilter(QObject* object, QEvent* event) override;
+    bool                eventFilter(QObject* object, QEvent* event) override;
+
+    // Getters / Setters
+    IEditorRelay*       getEditorRelay()        { return m_editor_relay; }
 };
 
 

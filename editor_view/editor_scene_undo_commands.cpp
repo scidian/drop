@@ -131,9 +131,9 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
         new_center = DrView::stageBoundingRect(m_project, new_stage, half_height).center();
         new_stage->setViewCenterPoint( new_center );
     }
-    m_scene->getRelay()->viewCenterOnPoint( new_center );
-    m_scene->getRelay()->viewZoomToScale( new_zoom_scale );
-    m_scene->getRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
+    m_scene->getEditorRelay()->viewCenterOnPoint( new_center );
+    m_scene->getEditorRelay()->viewZoomToScale( new_zoom_scale );
+    m_scene->getEditorRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 
     // ***** Set Undo / Redo text
     if (is_undo)    return "Redo Select Stage " + redo_name;
@@ -142,7 +142,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
 
 DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
     // Create new item representing this Thing
-    DrItem *item = new DrItem(m_project, this->getRelay(), thing);
+    DrItem *item = new DrItem(m_project, this->getEditorRelay(), thing);
 
     // Temporarily disable geometry signal itemChange updates
     bool flags_enabled_before = item->itemChangeFlagsEnabled();

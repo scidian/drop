@@ -70,29 +70,38 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
         QPixmap pixmap;
-        DrAnimation *animation = m_project->findAnimationFromKey(property->getValue().toLongLong());
-        if (animation != nullptr) pixmap = animation->getPixmapFromFirstFrame();
-
-        if (pixmap.isNull()) {
+        DrAnimation *animation = getParentProject()->findAnimationFromKey(property->getValue().toLongLong());
+        if (animation == nullptr) {
             pixmap = QPixmap(":/assets/gui_misc/empty_image.png").scaled(QSize(64, 64), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             pixmap = DrImaging::applySinglePixelFilter(Image_Filter_Type::Opacity, pixmap, -100);
         } else {
-            pixmap = pixmap.scaled(QSize(frame_width, frame_height - 15), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            pixmap = animation->getPixmapFromFirstFrame();
+            pixmap = pixmap.scaled(QSize(frame_width, frame_height - 20), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
         asset_pix->setPixmap(pixmap);
         vertical_split->addWidget( asset_pix );
 
     // ***** Delete Button
-    QPushButton *delete_button = new QPushButton(image_frame);
-    delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
-    delete_button->setObjectName("buttonImageMiniButton");
-        QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
-        delete_icon = QPixmap::fromImage( DrImaging::colorizeImage(delete_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
-        delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-    delete_button->setFixedSize(19, 19);
-    delete_button->setVisible(false);
-    image_frame->setDeleteButton(delete_button);
+    if (animation != nullptr) {
+        QPushButton *delete_button = new QPushButton(image_frame);
+        Dr::ApplyDropShadowByType(delete_button, Shadow_Types::Button_Shadow_Thin);
+        delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+        delete_button->setObjectName("buttonImageMiniButton");
+            QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
+            delete_icon = QPixmap::fromImage( DrImaging::colorizeImage(delete_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+            delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
+        delete_button->setFixedSize(19, 17);
+        delete_button->setVisible(false);
+        image_frame->setDeleteButton(delete_button);
 
+        connect(delete_button, &QPushButton::clicked, [this, property, animation] () {
+            property->setValue(c_no_key);
+            this->getParentProject()->deleteAnimation(animation->getKey());
+            getEditorRelay()->buildScene( c_same_key );
+            getEditorRelay()->buildAssetTree();
+            getEditorRelay()->buildInspector( { getEditorRelay()->getInspector()->getSelectedKey() }, true );
+        });
+    }
 
     return image_frame;
 }
@@ -121,7 +130,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     // ***** Grab properties from Image Frame
     DrImageHolder *frame = dynamic_cast<DrImageHolder*>(object);
     if (frame == nullptr) return QObject::eventFilter(object, event);
-    long settings_key = m_editor_relay->getInspector()->getSelectedKey();
+    long settings_key = getEditorRelay()->getInspector()->getSelectedKey();
     long property_key = frame->property(User_Property::Key).toLongLong();
     if (settings_key <= 0 || property_key <= 0) return QObject::eventFilter(object, event);
     DrProject  *project =   m_editor_relay->currentProject();               if (project == nullptr)  return QObject::eventFilter(object, event);
@@ -233,9 +242,9 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 }
             }
 
-            m_editor_relay->buildScene( c_same_key );
-            m_editor_relay->buildAssetTree();
-            m_editor_relay->buildInspector( { settings_key }, true );
+            getEditorRelay()->buildScene( c_same_key );
+            getEditorRelay()->buildAssetTree();
+            getEditorRelay()->buildInspector( { settings_key }, true );
             drop_event->acceptProposedAction();
         }
 

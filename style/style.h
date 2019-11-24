@@ -20,6 +20,7 @@
 //############################
 enum class Shadow_Types {
     Button_Shadow,
+    Button_Shadow_Thin,
     Tool_Tip_Shadow,
 };
 

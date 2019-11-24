@@ -74,7 +74,7 @@ public:
     void                    removeAsset(long asset_key);
 
     // Function Calls
-    IEditorRelay*   getRelay() { return m_editor_relay; }
+    IEditorRelay*   getEditorRelay() { return m_editor_relay; }
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 

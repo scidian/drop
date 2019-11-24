@@ -76,12 +76,12 @@ public:
 
 
     // Getters and Setters
-    IEditorRelay*           getRelay()       { return m_editor_relay; }
+    IEditorRelay*           getEditorRelay()    { return m_editor_relay; }
 
-    DrThing*                getThing()       { return m_thing; }
-    long                    getThingKey()    { return m_thing_key; }
-    DrAsset*                getAsset()       { return m_asset; }
-    long                    getAssetKey()    { return m_asset_key; }
+    DrThing*                getThing()          { return m_thing; }
+    long                    getThingKey()       { return m_thing_key; }
+    DrAsset*                getAsset()          { return m_asset; }
+    long                    getAssetKey()       { return m_asset_key; }
 
     double                  getAssetWidth()               { return m_asset_width; }
     double                  getAssetHeight()              { return m_asset_height; }
