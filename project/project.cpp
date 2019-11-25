@@ -157,7 +157,7 @@ DrAsset* DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, 
     long new_asset_key = (key == c_no_key) ? getNextKey() : key;
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, source_image_key);
     if (new_asset_key <= 0) {
-        qDebug() << "addAsset strange number!!! Key: " << new_asset_key << ", Type: " << Dr::StringFromAssetType(new_asset_type);
+        qDebug() << "DrProject::addAsset() strange number!!! Key: " << new_asset_key << ", Type: " << Dr::StringFromAssetType(new_asset_type);
     }
     return m_assets[new_asset_key];
 }
@@ -190,7 +190,7 @@ long DrProject::addImage(long key, QString full_path, QString filename, QString 
     return key;
 }
 
-// Adds a World to the map container, finds next availbable "World xxx" name to assign to World
+// Adds a World to the map container, finds next available "World xxx" name to assign to World
 DrWorld* DrProject::addWorld() {
     int test_num = static_cast<int>(m_worlds.size());
     QString new_name;

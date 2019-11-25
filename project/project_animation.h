@@ -42,6 +42,7 @@ public:
     virtual DrType  getType() override      { return DrType::Animation; }
 
     // Function Calls
+    long        addFrame(long image_key);
     void        initializeAnimationSettings(QString new_name);
 
     // Getters / Setters

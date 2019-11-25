@@ -24,20 +24,25 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, QLis
         : DrSettings(parent_project) {
     this->setKey(new_animation_key);
 
-    // Get first image from image keys so we can use it's name
-    DrImage *first_image = parent_project->findImageFromKey(image_keys.first());
-    if (first_image == nullptr) {
-        Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + QString::number(image_keys.first()) );
-    }
+    QString new_animation_name = "Empty";
 
-    // Remove trailing numbers and spaces from name
-    QString new_animation_name = first_image->getSimplifiedName();
-    bool is_number;
-    new_animation_name.right(1).toInt(&is_number);
-    while (new_animation_name.length() > 1 && is_number) {
-        new_animation_name = new_animation_name.left(new_animation_name.length() - 1);
+    // If passed Image Keys, use name from first image, create DrFrames
+    if (image_keys.count() > 0) {
+        // Get first image from image keys so we can use it's name
+        DrImage *first_image = parent_project->findImageFromKey(image_keys.first());
+        if (first_image == nullptr) {
+            Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + QString::number(image_keys.first()) );
+        }
+
+        // Remove trailing numbers and spaces from name
+        new_animation_name = first_image->getSimplifiedName();
+        bool is_number;
         new_animation_name.right(1).toInt(&is_number);
-        if (new_animation_name.right(1) == QString(" ")) is_number = true;
+        while (new_animation_name.length() > 1 && is_number) {
+            new_animation_name = new_animation_name.left(new_animation_name.length() - 1);
+            new_animation_name.right(1).toInt(&is_number);
+            if (new_animation_name.right(1) == QString(" ")) is_number = true;
+        }
     }
 
     // Initialize Settings
@@ -53,6 +58,13 @@ DrAnimation::~DrAnimation() {
     for (auto frame: m_frames) { delete frame; }
 }
 
+//####################################################################################
+//##    Adds frame using given DrImage Key
+//####################################################################################
+long DrAnimation::addFrame(long image_key) {
+    m_frames.push_back(new DrFrame(getParentProject(), image_key));
+    return static_cast<long>(m_frames.size());
+}
 
 //####################################################################################
 //##    Returns image based on first frame

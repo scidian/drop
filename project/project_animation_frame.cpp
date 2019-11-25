@@ -13,6 +13,8 @@
 #include "settings/settings_component_property.h"
 
 #include "constants.h"
+#include "globals.h"
+#include "helper_qt.h"
 
 
 //####################################################################################
@@ -20,11 +22,16 @@
 //####################################################################################
 DrFrame::DrFrame(DrProject *parent_project, long image_key) : DrSettings(parent_project) {
     this->setKey(image_key);
+    double width = 1, height = 1;
 
     DrImage *image = parent_project->findImageFromKey(image_key);
+    if (image == nullptr) {
+        Dr::ShowErrorMessage("DrFrame::DrFrame", "Could not load DrImage with key: " + QString::number(image_key));
 
-    double width =  image->getImage().width();
-    double height = image->getImage().height();
+    } else {
+        width =  image->getImage().width();
+        height = image->getImage().height();
+    }
 
     addComponentTransform(width, height, 0, 0);
 }

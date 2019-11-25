@@ -12,6 +12,7 @@
 #include <QStandardPaths>
 
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
@@ -114,6 +115,48 @@ bool DrProject::openProjectFromFile(QString open_file) {
     settings.endArray();
 
 
+    // ***** Read Animations
+    int animation_count = settings.beginReadArray("animations");
+                          settings.endArray();
+    for (int i = 0; i < animation_count; ++i) {
+        settings.beginReadArray("animations");
+        settings.setArrayIndex(i);
+
+        // Load Animation
+        QVariantMap animation_data =    settings.value("animation").value<QVariantMap>();
+        long        animation_key =     checkMapHasKey(animation_data, "key") ? animation_data["key"].toLongLong() : c_no_key;
+
+        // If key doesnt already exist, initialize Animation
+        if (findSettingsFromKey(animation_key, false) != nullptr) continue;
+        addAnimation( { }, animation_key );
+
+        // Load World Settings, Variables
+        DrAnimation *animation = findAnimationFromKey(animation_key);
+        loadSettingsFromMap(animation, animation_data);
+        settings.endArray();
+
+
+        // ***** Read Frames
+        QString animation_array = "frames_in_animation:" + animation_data["key"].toString();
+        int frame_count = settings.beginReadArray(animation_array);
+                          settings.endArray();
+        for (int f = 0; f < frame_count; ++f) {
+            settings.beginReadArray(animation_array);
+            settings.setArrayIndex(f);
+
+            // Load Frame
+            QVariantMap frame_data =    settings.value("frame").value<QVariantMap>();
+            long frame_key =            checkMapHasKey(frame_data, "key") ? frame_data["key"].toLongLong() : c_no_key;
+            long frame_number = animation->addFrame(frame_key);
+
+            // Load Thing Settings, Variables
+            DrFrame *frame = animation->getFrame(frame_number);
+            loadSettingsFromMap(frame, frame_data);
+            settings.endArray();
+        }
+    }
+
+
     // ***** Read Fonts
     int font_count = settings.beginReadArray("fonts");
     for (int i = 0; i < font_count; ++i) {
@@ -140,7 +183,7 @@ bool DrProject::openProjectFromFile(QString open_file) {
         // Load Asset
         QVariantMap asset_data =    settings.value("asset").value<QVariantMap>();
         long        asset_key =     asset_data["key"].toLongLong();
-        long        source_key =    asset_data["source_key"].toLongLong();
+        long        base_key =      asset_data["source_key"].toLongLong();
         DrAssetType asset_type =    static_cast<DrAssetType>(asset_data["type"].toInt());
 
         // Dont process Built-In assets
@@ -148,7 +191,7 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
         // If key doesnt already exist, initialize Asset
         if (findSettingsFromKey(asset_key, false) != nullptr) continue;
-        DrAsset* asset = addAsset(asset_type, source_key, asset_key);
+        DrAsset* asset = addAsset(asset_type, base_key, asset_key);
 
         // Load Asset Settings, Variables
         loadSettingsFromMap(asset,  asset_data);
@@ -257,8 +300,8 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
     // ***** Set Key Generator from Save file
     if (m_key_generator != key_generator) {
-        Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
-                           "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
+        ///Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
+        ///                   "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
         ///m_key_generator = key_generator;
     }
 
@@ -290,8 +333,13 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
 
+
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrPropertyCollision class
             if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Image_Shape)) continue;
+
+            // !!!!! #NOTE: Base Key / Idle Animation is set upon Asset Creation
+            if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) continue;
+
 
             // ***** Check data type is the same as we were expecting
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
@@ -299,7 +347,8 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             k = map_key + "data_type";
             if (checkMapHasKey(map, k)) {
                 check_property_type = static_cast<Property_Type>(map[k].toInt());
-                ///property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );           // Already set by Drop
+                // Already assigned by Drop
+                ///property->setPropertyType(  static_cast<Property_Type>(map[k].toInt())  );
             } else {
                 continue;
             }
@@ -308,6 +357,7 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             //          Property is fine if is same type, or if it was Positive and now is Double
             if ( (check_property_type == property->getPropertyType() ||
                  (check_property_type == Property_Type::Positive && property->getPropertyType() == Property_Type::Double)) ) {
+                // Already assigned by Drop
                 ///k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
                 k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
                 k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k] );

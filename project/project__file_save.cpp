@@ -10,6 +10,7 @@
 #include <QSettings>
 
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"
 #include "project/project_font.h"
@@ -108,11 +109,37 @@ void DrProject::saveProjectToFile() {
         settings.endArray();
     }
 
+    // ***** Write Animations
+    int animation_count = 0;
+    for (auto animation_pair : m_animations) {
+        if (animation_pair.first < c_key_starting_number) continue;                     // Don't save reserved items, keys / items handled by editor
+        DrAnimation *animation = animation_pair.second;
+        QVariantMap animation_data;
+        animation_data["key"] =     QVariant::fromValue(animation->getKey());
+        addSettingsToMap(animation, animation_data);
+        settings.beginWriteArray("animations");
+        settings.setArrayIndex(animation_count++);
+        settings.setValue("animation", animation_data);
+        settings.endArray();
+
+        // Write Frames
+        QString animation_array = "frames_in_animation:" + animation_data["key"].toString();
+        int frame_count = 0;
+        for (auto frame : animation->getFrames()) {
+            QVariantMap frame_data;
+            frame_data["key"] =     QVariant::fromValue(frame->getKey());
+            addSettingsToMap(frame, frame_data);
+            settings.beginWriteArray(animation_array);
+            settings.setArrayIndex(frame_count++);
+            settings.setValue("frame", frame_data);
+            settings.endArray();
+        }
+    }
 
     // ***** Write Fonts
     int font_count = 0;
     for (auto font_pair : m_fonts) {
-        if (font_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
+        if (font_pair.first < c_key_starting_number) continue;                          // Don't save reserved items, keys / items handled by editor
         DrFont *font = font_pair.second;
         QVariantMap font_data;
         font_data["key"] =          QVariant::fromValue(font->getKey());
