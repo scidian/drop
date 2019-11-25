@@ -33,7 +33,7 @@
 //##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
 void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(QList<long> property_keys_to_update) {
-    updateInspectorPropertyBoxes( { m_project->findSettingsFromKey(m_selected_key) }, property_keys_to_update);
+    updateInspectorPropertyBoxes( { getParentProject()->findSettingsFromKey(m_selected_key) }, property_keys_to_update);
 }
 
 void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update) {
@@ -213,7 +213,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;
-    DrSettings *settings = m_project->findSettingsFromKey( m_selected_key );
+    DrSettings *settings = getParentProject()->findSettingsFromKey( m_selected_key );
 
     QPointF temp_pointf;
 

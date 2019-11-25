@@ -233,7 +233,7 @@ class DrQSplitterColor : public QSplitter
     Q_OBJECT
 
 public:
-    DrQSplitterColor(QWidget *parent = nullptr) : QSplitter(parent) {}
+    DrQSplitterColor(QWidget *parent = nullptr) : QSplitter(parent) { }
 
 };
 

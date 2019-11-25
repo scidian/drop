@@ -96,7 +96,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
 
         connect(delete_button, &QPushButton::clicked, [this, property, animation] () {
             property->setValue(c_no_key);
-            this->getParentProject()->deleteAnimation(animation->getKey());
+            this->getParentProject()->deleteAnimation(animation->getKey(), property->getParentSettings()->getKey());
             getEditorRelay()->buildScene( c_same_key );
             getEditorRelay()->buildAssetTree();
             getEditorRelay()->buildInspector( { getEditorRelay()->getInspector()->getSelectedKey() }, true );

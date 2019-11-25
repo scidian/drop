@@ -75,6 +75,9 @@ public:
     virtual void    startDrag(Qt::DropActions supportedActions) override;                                           // Inherited from QAbstractItemView
 
     // Getters and setters
+    IEditorRelay*           getEditorRelay() { return m_editor_relay; }
+    DrProject*              getParentProject() { return m_project; }
+
     long            getSelectedKey() { return m_selected_key; }
     void            setSelectedKey(long new_key) { m_selected_key = new_key; }
 

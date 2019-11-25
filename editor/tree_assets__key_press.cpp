@@ -98,13 +98,13 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
     // ***** Duplicate Asset
     if (event->key() == Qt::Key_D) {
-        DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());
+        DrAsset *asset = getParentProject()->findAssetFromKey(getSelectedKey());
         if (asset == nullptr) return;
         if (asset->getAssetType() == DrAssetType::Device) return;
         if (asset->getAssetType() == DrAssetType::Effect) return;
 
         // Create new Asset, copy Settings / Components / Properties
-        DrAsset *copy_asset = m_project->addAsset( asset->getAssetType(), asset->getBaseKey() );
+        DrAsset *copy_asset = getParentProject()->addAsset( asset->getAssetType(), asset->getBaseKey() );
         copy_asset->copyEntitySettings(asset);
 
         // Find a new name for Asset
@@ -114,7 +114,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         do {
             has_name = false;
             new_name = (i == 1) ? copy_asset->getName() + " copy" :  copy_asset->getName() + " copy (" + QString::number(i) + ")";
-            for (auto &asset_pair : m_project->getAssetMap()) {
+            for (auto &asset_pair : getParentProject()->getAssetMap()) {
                 if (asset_pair.second->getName() == new_name) has_name = true;
             }
             i++;
@@ -132,7 +132,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
     // ***** Delete Asset
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
-        DrAsset *asset = m_project->findAssetFromKey(getSelectedKey());
+        DrAsset *asset = getParentProject()->findAssetFromKey(getSelectedKey());
         if (asset == nullptr) return;
         if (asset->getAssetType() == DrAssetType::Effect) return;
 
@@ -180,11 +180,11 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 //##    Removes Asset from the Project
 //####################################################################################
 void TreeAssets::removeAsset(long asset_key) {
-    DrAsset *asset = m_project->findAssetFromKey(asset_key);
+    DrAsset *asset = getParentProject()->findAssetFromKey(asset_key);
     if (asset == nullptr) return;
 
     // ***** Delete all instances in project
-    for (auto world_pair : m_project->getWorldMap()) {
+    for (auto world_pair : getParentProject()->getWorldMap()) {
         DrWorld *world = world_pair.second;
         for (auto stage_pair : world->getStageMap()) {
             DrStage *stage = stage_pair.second;
@@ -203,12 +203,8 @@ void TreeAssets::removeAsset(long asset_key) {
         }
     }
 
-    // ***** Delete underlying source to Asset
-    asset->deleteSource();
-
-    // ***** Delete Asset
-    m_project->getAssetMap().erase( asset_key );
-    delete asset;
+    // ***** Delete Asset / underlying source to Asset
+    getParentProject()->deleteAsset(asset->getKey());
 }
 
 

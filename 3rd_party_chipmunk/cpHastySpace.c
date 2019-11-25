@@ -269,11 +269,11 @@ int pthread_join(pthread_t thread, void **value_ptr)
 
 // TODO could probably do better here, maybe using vcreate?
 // especially for the constants
-// Maybe use the {} notation for GCC/Clang?
+// Maybe use the { } notation for GCC/Clang?
 static inline cpFloatx2_t
 vmake(cpFloat_t x, cpFloat_t y)
 {
-//	cpFloatx2_t v = {};
+//	cpFloatx2_t v = { };
 //	v = vset_lane(x, v, 0);
 //	v = vset_lane(y, v, 1);
 //	
@@ -330,7 +330,7 @@ cpArbiterApplyImpulse_NEON(cpArbiter *arb)
 		cpFloatx2_t vrt_tmp = vmul(vadd(vr, surface_vr), t);
 		cpFloatx2_t vrt = vpadd(vrt_tmp, vrt_tmp);
 		
-		cpFloatx2_t jtOld = {}; jtOld = vset_lane(con->jtAcc, jtOld, 0);
+        cpFloatx2_t jtOld = { }; jtOld = vset_lane(con->jtAcc, jtOld, 0);
 		cpFloatx2_t jtMax = vrev(vmul_n(jbn_jn, friction));
 		cpFloatx2_t jt = vmul_n(vrt, -con->tMass);
 		jt = vmax(vneg(jtMax), vmin(vadd(jtOld, jt), jtMax));

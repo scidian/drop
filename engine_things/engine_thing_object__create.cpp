@@ -137,7 +137,7 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
     // where the first vertex in the hull came from (i.e. verts[first] == result[0]). Tolerance (tol) is the allowed amount to shrink the hull when
     // simplifying it. A tolerance of 0.0 creates an exact hull.
     int first = 0;
-    std::vector<cpVect> hull {};    hull.resize(  static_cast<size_t>(old_point_count) );           // Temporary array for ConvexHull call below
+    std::vector<cpVect> hull { }; hull.resize(  static_cast<size_t>(old_point_count) );             // Temporary array for ConvexHull call below
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
     // !!!!! #NOTE: For Chipmunk Polygon Shapes, points must be in Counter-Clockwise Winding !!!!!
@@ -160,7 +160,7 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
         ///pp.ConvexPartition_HM(&testpolys, &result);
 
         for (auto poly : result) {
-            std::vector<cpVect> verts {};
+            std::vector<cpVect> verts { };
             verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
             for (int i = 0; i < poly.GetNumPoints(); i++) {
                 verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );

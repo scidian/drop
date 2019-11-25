@@ -149,7 +149,7 @@ class DrPlaygroundLine : public QGraphicsLineItem
 {
 public:
     // Constructor / Destructor
-    DrPlaygroundLine() {}
+    DrPlaygroundLine() { }
 
     // Event Overrides
     virtual QVariant        itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -166,7 +166,7 @@ class DrPlaygroundCircle : public QGraphicsEllipseItem
 {
 public:
     // Constructor / Destructor
-    DrPlaygroundCircle() {}
+    DrPlaygroundCircle() { }
 
     // Event Overrides
     virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -182,7 +182,7 @@ class DrPlaygroundBox : public QGraphicsRectItem
 {
 public:
     // Constructor / Destructor
-    DrPlaygroundBox() {}
+    DrPlaygroundBox() { }
 
     // Event Overrides
     virtual QVariant    itemChange(GraphicsItemChange change, const QVariant &value) override;

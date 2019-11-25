@@ -48,7 +48,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
         switch (old_mode) {
             case Form_Main_Mode::World_Editor:
                 widgetCentralEditor = takeCentralWidget();
-                buildInspector( {} );
+                buildInspector( { } );
                 dockAssetsEditor->hide();
                 break;
             case Form_Main_Mode::Clear:

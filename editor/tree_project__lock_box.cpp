@@ -82,7 +82,7 @@ void TreeProject::processLockClick(QCheckBox *from_lock) {
     // Process locks
     for (auto lock : locks) {
         long key = lock->property(User_Property::Key).toLongLong();
-        DrSettings *entity = m_project->findSettingsFromKey( key );
+        DrSettings *entity = getParentProject()->findSettingsFromKey( key );
         if (entity == nullptr) continue;
 
         if (entity->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {

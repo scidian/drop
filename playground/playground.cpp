@@ -41,7 +41,7 @@ DrToy* DrPlayground::findToyAtPoint(cpVect point, double max_distance) {
     DrToy* toy = nullptr;
     cpShape *shape = nullptr;
 
-    cpPointQueryInfo *query_info {};
+    cpPointQueryInfo *query_info { };
     shape = cpSpacePointQueryNearest( m_space, point, max_distance, CP_SHAPE_FILTER_ALL, query_info );
 
     if (shape) {

@@ -39,7 +39,7 @@ void TreeInspector::updateLockedSettings() {
     // Go through each widget in Object Inspector property widget list
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
-        DrProperty *prop = m_project->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
+        DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
@@ -84,7 +84,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
         QFrame *properties_frame = dynamic_cast<QFrame*>(property_widget);                      if (properties_frame == nullptr) continue;
         QVBoxLayout *property_layout = dynamic_cast<QVBoxLayout*>(properties_frame->layout());  if (property_layout == nullptr) continue;
 
-        QList<QVariant> affected {};
+        QList<QVariant> affected { };
         int  last_found = -1;
         bool enabled = true;
 
@@ -93,7 +93,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
             QWidget *row = property_layout->itemAt(i)->widget();                                if (row == nullptr) continue;
             long row_key = row->property(User_Property::Key).toLongLong();
 
-            DrProperty *prop = m_project->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(row_key);
+            DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(row_key);
             if (prop == nullptr) continue;
 
             // We found a property that has sub properties, enabled / disable sub properties based on if on or off

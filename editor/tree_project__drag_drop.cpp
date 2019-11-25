@@ -86,8 +86,8 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event) {
 
         // Check if its the same type as already selected, if so allow possible drop
         if (m_is_dragging && m_selected_key > 0 && check_key > 0) {
-            DrSettings *check_settings =    m_project->findSettingsFromKey(check_key);
-            DrSettings *selected_settings = m_project->findSettingsFromKey(m_selected_key);
+            DrSettings *check_settings =    getParentProject()->findSettingsFromKey(check_key);
+            DrSettings *selected_settings = getParentProject()->findSettingsFromKey(m_selected_key);
 
             if (check_settings->getType() == selected_settings->getType()) { m_can_drop = true; }
         }

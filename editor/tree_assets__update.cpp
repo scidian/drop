@@ -77,11 +77,11 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 
                     switch (check_property) {
                         case Properties::Entity_Name:
-                            asset = m_project->findAssetFromKey(item_key);
+                            asset = getParentProject()->findAssetFromKey(item_key);
                             asset_text = item->getName();
 
                             // Update all Things in the project that use this asset name
-                            for (auto world : m_project->getWorldMap()) {
+                            for (auto world : getParentProject()->getWorldMap()) {
                                 for (auto stage : world.second->getStageMap()) {
                                     for (auto thing : stage.second->getThingMap()) {
                                         if (thing.second->getAssetKey() == asset->getKey()) {

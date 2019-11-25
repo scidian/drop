@@ -48,7 +48,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
         this->updateColorButton(color_button, color);
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
-            FormPopupColor *color_popup = new FormPopupColor(m_project, color_box, color_button, -18, 5);
+            FormPopupColor *color_popup = new FormPopupColor(getParentProject(), color_box, color_button, -18, 5);
             color_popup->buildPopupColors(color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
             connect(color_popup, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
             color_popup->show();
@@ -122,7 +122,7 @@ void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
 
     // Update advisor info with new color
     if (m_selected_key != c_no_key) {
-        DrSettings *settings = m_project->findSettingsFromKey(m_selected_key);
+        DrSettings *settings = getParentProject()->findSettingsFromKey(m_selected_key);
         if (settings) {
             DrProperty *property = settings->findPropertyFromPropertyKey( button->property(User_Property::Key).toInt() );
             if (property) {

@@ -216,7 +216,7 @@ class TPPLPartition {
         class VertexSorter{
             MonotoneVertex *vertices;
         public:
-            VertexSorter(MonotoneVertex *v) : vertices(v) {}
+            VertexSorter(MonotoneVertex *v) : vertices(v) { }
             bool operator() (long index1, long index2);
         };
         

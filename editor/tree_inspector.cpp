@@ -92,7 +92,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     // ***** Retrieve unique key of item clicked in list
     long new_key = key_list[0];
     if (new_key == c_no_key) return;                                                // Exit if no key
-    DrSettings *new_settings =  m_project->findSettingsFromKey( new_key );
+    DrSettings *new_settings =  getParentProject()->findSettingsFromKey( new_key );
             if (new_settings == nullptr) return;                                    // Or if couldnt find Entity
     DrType      new_type =      new_settings->getType();
 
@@ -125,9 +125,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         QString type_string = Dr::StringFromType(new_type);
         Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
         if (new_type == DrType::Thing) {
-            DrThing* thing = m_project->findThingFromKey(new_key);
+            DrThing* thing = getParentProject()->findThingFromKey(new_key);
             long asset_key = thing->getAssetKey();
-            QString asset_name = m_project->findAssetFromKey(asset_key)->getName();
+            QString asset_name = getParentProject()->findAssetFromKey(asset_key)->getName();
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
                                                               ", NAME: " + asset_name);
         } else {
@@ -138,7 +138,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
     // ********** If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !force_rebuild) {
-        DrThing *thing1 = dynamic_cast<DrThing*>(m_project->findSettingsFromKey(m_selected_key));
+        DrThing *thing1 = dynamic_cast<DrThing*>(getParentProject()->findSettingsFromKey(m_selected_key));
         DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
         if (thing1->getThingType() == thing2->getThingType()) {
             m_selected_key = new_key;

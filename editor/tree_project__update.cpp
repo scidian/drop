@@ -65,7 +65,7 @@ void TreeProject::updateItems(QList<DrSettings*> changed_items, QList<long> prop
 //####################################################################################
 void TreeProject::handleCollapsed(QTreeWidgetItem *item) {
     long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-    DrSettings *settings = m_project->findSettingsFromKey(key, false);
+    DrSettings *settings = getParentProject()->findSettingsFromKey(key, false);
     if (settings != nullptr) {
         if (settings->getType() == DrType::World) {
             DrWorld *world = dynamic_cast<DrWorld*>(settings);
@@ -79,7 +79,7 @@ void TreeProject::handleCollapsed(QTreeWidgetItem *item) {
 
 void TreeProject::handleExpanded(QTreeWidgetItem *item) {
     long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-    DrSettings *settings = m_project->findSettingsFromKey(key, false);
+    DrSettings *settings = getParentProject()->findSettingsFromKey(key, false);
     if (settings != nullptr) {
         if (settings->getType() == DrType::World) {
             DrWorld *world = dynamic_cast<DrWorld*>(settings);

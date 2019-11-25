@@ -72,18 +72,18 @@ void DrProject::clearProject(bool add_built_in_items) {
 //##        Functions to Delete different item types into project
 //####################################################################################
 // Removes an Animation from the Project if not used by another Asset
-void DrProject::deleteAnimation(long animation_key) {
+void DrProject::deleteAnimation(long animation_key, long ignore_asset_key) {
     if (animation_key < c_key_starting_number) return;
     DrAnimation *animation = findAnimationFromKey(animation_key);
     if (animation == nullptr) return;
 
     // See if Animations are used by any other Asset
     for (auto &asset_pair : getAssetMap()) {
+        if (asset_pair.first == ignore_asset_key) continue;
         if (asset_pair.second == nullptr) continue;
-        std::list<long> animations_used = asset_pair.second->animationsUsedByAsset();
 
         // If key is used by another Asset, don't delete
-        for (auto &check_key : animations_used) {
+        for (auto &check_key : asset_pair.second->animationsUsedByAsset()) {
             if (check_key == animation_key) return;
         }
     }
@@ -92,9 +92,24 @@ void DrProject::deleteAnimation(long animation_key) {
     for (auto frame : animation->getFrames()) {
         long image_key = frame->getKey();
         if ( image_key < c_key_starting_number) continue;
-        DrImage *image = findImageFromKey( image_key );
-        if (image == nullptr) continue;
-        deleteImage( image->getKey() );
+
+        // See if Image is used by any other Animaiton
+        for (auto &animation_pair : getAnimationMap()) {
+            if (animation_pair.first == animation_key) continue;
+            bool another_is_using_image = false;
+
+            for (auto check_frame : animation_pair.second->getFrames()) {
+                if (check_frame->getKey() == image_key) {
+                    another_is_using_image = true;
+                    break;
+                }
+            }
+            if (another_is_using_image) break;
+
+            DrImage *image = findImageFromKey( image_key );
+            if (image == nullptr) continue;
+            deleteImage( image_key );
+        }
     }
 
     // Delete Animation
@@ -102,16 +117,27 @@ void DrProject::deleteAnimation(long animation_key) {
     delete animation;
 }
 
+// Removes an Asset from the Project
+void DrProject::deleteAsset(long asset_key) {
+    DrAsset *asset = findAssetFromKey(asset_key);
+    if (asset == nullptr) return;
+    asset->deleteSource();
+    m_assets.erase(asset_key);
+    delete asset;
+}
+
 // Removes an Image from the Project
 void DrProject::deleteImage(long image_key) {
-    DrImage *image = m_images[image_key];
+    DrImage *image = findImageFromKey(image_key);
     if (image == nullptr) return;
     m_images.erase(image_key);
     delete image;
 }
 
 // Removes a World from the Project
-void DrProject::deleteWorld(DrWorld *world) {
+void DrProject::deleteWorld(long world_key) {
+    DrWorld *world = findWorldFromKey(world_key);
+    if (world == nullptr) return;
     m_worlds.erase(world->getKey());
     delete world;
 }

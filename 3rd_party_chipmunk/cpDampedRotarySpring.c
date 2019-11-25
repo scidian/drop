@@ -47,7 +47,7 @@ preStep(cpDampedRotarySpring *spring, cpFloat dt)
 	b->w += j_spring*b->i_inv;
 }
 
-static void applyCachedImpulse(cpDampedRotarySpring *spring, cpFloat dt_coef){}
+static void applyCachedImpulse(cpDampedRotarySpring *spring, cpFloat dt_coef) { }
 
 static void
 applyImpulse(cpDampedRotarySpring *spring, cpFloat dt)

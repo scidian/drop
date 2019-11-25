@@ -74,11 +74,13 @@ public:
     void                    removeAsset(long asset_key);
 
     // Function Calls
-    IEditorRelay*   getEditorRelay() { return m_editor_relay; }
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
     void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
 
     // Getters / Setters
+    IEditorRelay*           getEditorRelay() { return m_editor_relay; }
+    DrProject*              getParentProject() { return m_project; }
+
     DrFilterHoverHandler*   getHoverHandler();
     void                    setHoverHandler(DrFilterHoverHandler* hover_handler) { m_filter_hover = hover_handler; }
     long                    getSelectedKey() { return m_selected_key; }

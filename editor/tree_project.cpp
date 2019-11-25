@@ -81,7 +81,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
         // Check if item source key is still in project, if so add to map
         long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
         if (key <= 0)               { item_map[key] = item; continue; }
-        DrSettings *settings = m_project->findSettingsFromKey(key, false);
+        DrSettings *settings = getParentProject()->findSettingsFromKey(key, false);
         if (settings != nullptr)    { item_map[key] = item; continue; }
 
         // If we made it here, remove item from tree
@@ -99,7 +99,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
     QColor icon_color = Dr::GetColor(Window_Colors::Icon_Dark);
     QImage icon_image;
 
-    for (auto world_pair: m_project->getWorldMap()) {
+    for (auto world_pair: getParentProject()->getWorldMap()) {
 
         // ***** Create new Item for World if necessary
         DrWorld         *world =        world_pair.second;

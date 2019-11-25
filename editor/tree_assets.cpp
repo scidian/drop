@@ -121,7 +121,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     QFont font = Dr::CustomFont();
 
     // ***** Retrieve list of assets for project
-    AssetMap &list_assets = m_project->getAssetMap();
+    AssetMap &list_assets = getParentProject()->getAssetMap();
     int rowCount = 0;
     this->clear();
     m_asset_frames.clear();
@@ -163,7 +163,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         assets_frames[asset_type] = new QFrame();
         assets_frames[asset_type]->setObjectName("assetsContainer");
 
-        m_grid_layouts[asset_type] = new DrQLayoutFlow(m_project, assets_frames[asset_type], 8, 0, 4, 0, 0, 0);
+        m_grid_layouts[asset_type] = new DrQLayoutFlow(getParentProject(), assets_frames[asset_type], 8, 0, 4, 0, 0, 0);
     }
 
 
@@ -228,29 +228,29 @@ void TreeAssets::buildAssetTree(QString search_text) {
             switch (asset->getAssetType()) {
                 case DrAssetType::Character: {
                     long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
-                    DrAnimation *ani = m_project->findAnimationFromKey(animation_key);
+                    DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
                     if (ani != nullptr) pix = ani->getPixmapFromFirstFrame();
                     description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
                     break;
                 }
                 case DrAssetType::Object: {
                     long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
-                    DrAnimation *ani = m_project->findAnimationFromKey(animation_key);
+                    DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
                     if (ani != nullptr) pix = ani->getPixmapFromFirstFrame();
                     description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
                     break;
                 }
                 case DrAssetType::Device:
-                    pix = m_project->findDeviceFromKey( asset->getBaseKey() )->getPixmap();
+                    pix = getParentProject()->findDeviceFromKey( asset->getBaseKey() )->getPixmap();
                     description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Device[1];
                     break;
                 case DrAssetType::Effect:
-                    pix = m_project->findEffectFromKey( asset->getBaseKey() )->getPixmap();
+                    pix = getParentProject()->findEffectFromKey( asset->getBaseKey() )->getPixmap();
                     description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Effect[1];
                     break;
                 case DrAssetType::Text:
-                    ///pix = m_project->getDrFont( asset->getSourceKey() )->getFontPixmap();
-                    pix = m_project->findFontFromKey( asset->getBaseKey() )->createText( "Aa" );
+                    ///pix = getParentProject()->getDrFont( asset->getSourceKey() )->getFontPixmap();
+                    pix = getParentProject()->findFontFromKey( asset->getBaseKey() )->createText( "Aa" );
                     description = "<b>ID Key: " + QString::number(asset->getKey()) + "</b><br>" + Advisor_Info::Asset_Text[1];
                     break;
             }

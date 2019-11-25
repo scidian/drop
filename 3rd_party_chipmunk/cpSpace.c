@@ -95,7 +95,7 @@ static cpCollisionHandler cpCollisionHandlerDefault = {
 };
 
 static cpBool AlwaysCollide(cpArbiter *arb, cpSpace *space, void *data){return cpTrue;}
-static void DoNothing(cpArbiter *arb, cpSpace *space, void *data){}
+static void DoNothing(cpArbiter *arb, cpSpace *space, void *data) { }
 
 cpCollisionHandler cpCollisionHandlerDoNothing = {
 	CP_WILDCARD_COLLISION_TYPE, CP_WILDCARD_COLLISION_TYPE,

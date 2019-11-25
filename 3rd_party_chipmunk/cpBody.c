@@ -89,7 +89,7 @@ cpBodyNewStatic()
 	return body;
 }
 
-void cpBodyDestroy(cpBody *body){}
+void cpBodyDestroy(cpBody *body) { }
 
 void
 cpBodyFree(cpBody *body)

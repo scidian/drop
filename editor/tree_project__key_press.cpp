@@ -39,7 +39,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     // ***** If we dont have selected items exit, otherwise get type of selected items
     if (selectedItems().count() < 1) { QTreeWidget::keyPressEvent(event); return; }
     long        first_key = selectedItems().first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-    DrSettings *settings =  m_project->findSettingsFromKey( first_key, false );
+    DrSettings *settings =  getParentProject()->findSettingsFromKey( first_key, false );
     if (settings == nullptr)         { QTreeWidget::keyPressEvent(event); return; }
     DrType      type =      settings->getType();
 
@@ -59,7 +59,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             DrStage *new_selected_stage = nullptr;
             int stage_count = 0;
             for (auto item : selectedItems()) {
-                DrStage *stage = m_project->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+                DrStage *stage = getParentProject()->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                 if (stage == nullptr) continue;
                 DrStage *copy_stage = stage->getParentWorld()->addStageCopyFromStage(stage);
                 if (stage_count == 0) new_selected_stage = copy_stage;
@@ -79,9 +79,9 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             DrWorld *new_selected_world = nullptr;
             int world_count = 0;
             for (auto item : selectedItems()) {
-                DrWorld *world = m_project->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+                DrWorld *world = getParentProject()->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                 if (world == nullptr) continue;
-                DrWorld *copy_world = m_project->addWorldCopyFromWorld(world);
+                DrWorld *copy_world = getParentProject()->addWorldCopyFromWorld(world);
                 if (world_count == 0) new_selected_world = copy_world;
                 world_count++;
             }
@@ -122,7 +122,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                 // Check if any Stages trying to be deleted are StartStages
                 bool are_start_stages = false;
                 for (auto item : selectedItems()) {
-                    DrStage *stage = m_project->findStageFromKey( item->data(0, User_Roles::Key).toLongLong() );
+                    DrStage *stage = getParentProject()->findStageFromKey( item->data(0, User_Roles::Key).toLongLong() );
                     if (stage->isStartStage()) are_start_stages = true;
                 }
 
@@ -142,7 +142,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                         if (stage_item != nullptr) {
                             if (selectedItems().contains(stage_item) == false) {
                                 long try_stage = stage_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-                                new_selection = m_project->findStageFromKey(try_stage);
+                                new_selection = getParentProject()->findStageFromKey(try_stage);
                             }
                         }
                     }
@@ -157,7 +157,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
                     // Delete selected Stages
                     for (auto item : selectedItems()) {
-                        DrStage *stage = m_project->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+                        DrStage *stage = getParentProject()->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                         DrWorld *world = stage->getParentWorld();
                         world->deleteStage(stage);
                     }
@@ -173,7 +173,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
             // ***** Delete selected Worlds
             } else if (type == DrType::World) {
-                if ((m_project->getWorldMap().size() > 1) && (static_cast<int>(m_project->getWorldMap().size()) > selectedItems().count())) {
+                if ((getParentProject()->getWorldMap().size() > 1) && (static_cast<int>(getParentProject()->getWorldMap().size()) > selectedItems().count())) {
                     QMessageBox::StandardButton proceed;
                     proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected World(s)?", QMessageBox::Question,
                                                  "Delete World(s)?", this, QMessageBox::Yes | QMessageBox::No);
@@ -193,14 +193,14 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                         if (world_item != nullptr) {
                             if (selectedItems().contains(world_item) == false) {
                                 long try_world = world_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-                                new_selection = m_project->findWorldFromKey(try_world);
+                                new_selection = getParentProject()->findWorldFromKey(try_world);
                             }
                         }
                     }
                     // Fall back to trying next highest World in WorldMap
                     if (new_selection == nullptr) {
                         WorldMap::reverse_iterator it;
-                        for (it = m_project->getWorldMap().rbegin(); it != m_project->getWorldMap().rend(); it++) {
+                        for (it = getParentProject()->getWorldMap().rbegin(); it != getParentProject()->getWorldMap().rend(); it++) {
                             auto world_pair = it;
                             if (selected_world_keys.contains(world_pair->first) == false) {
                                 new_selection = world_pair->second;
@@ -215,8 +215,8 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
                     // Delete selected Worlds
                     for (auto item : selectedItems()) {
-                        DrWorld *world = m_project->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
-                        if (world != nullptr) m_project->deleteWorld(world);
+                        DrWorld *world = getParentProject()->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+                        if (world != nullptr) getParentProject()->deleteWorld(world->getKey());
                     }
 
                     // Rebuild Project Tree, select new shown Stage

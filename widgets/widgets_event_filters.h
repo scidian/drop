@@ -25,8 +25,8 @@ class DrFilterHoverHandler : public QObject
     Q_OBJECT
 
 public:
-    DrFilterHoverHandler(QObject *parent) : QObject(parent) {}
-    virtual ~DrFilterHoverHandler() {}
+    DrFilterHoverHandler(QObject *parent) : QObject(parent) { }
+    virtual ~DrFilterHoverHandler() { }
 
     void            attachToHoverHandler(QWidget *widget, DrProperty *property);
     void            attachToHoverHandler(QWidget *widget, QString header, QString body);

@@ -128,7 +128,7 @@ DrAsset::~DrAsset() { }
 //##    List of Animations used by Asset
 //####################################################################################
 std::list<long> DrAsset::animationsUsedByAsset() {
-    std::list<long> animation_keys_used {};
+    std::list<long> animation_keys_used { };
     for (auto &component_pair : getComponentMap()) {
         for (auto &property_pair : component_pair.second->getPropertyMap()) {
             DrProperty *property = property_pair.second;
@@ -153,8 +153,8 @@ void DrAsset::deleteSource() {
     if (getAssetType() == DrAssetType::Object || getAssetType() == DrAssetType::Character) {
 
         // Delete animations
-        for (auto &key : animationsUsedByAsset()) {
-            getParentProject()->deleteAnimation(key);
+        for (auto &animation_key : animationsUsedByAsset()) {
+            getParentProject()->deleteAnimation(animation_key, this->getKey());
         }
 
     // ***** Delete Underlying Source(s)
@@ -238,7 +238,7 @@ void DrAsset::updateAnimationProperty(QList<long> image_keys, Properties animati
     }
 
     // ***** Delete Old Animation
-    getParentProject()->deleteAnimation(old_animation);
+    getParentProject()->deleteAnimation(old_animation, this->getKey());
 }
 
 

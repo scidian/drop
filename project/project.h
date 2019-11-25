@@ -192,9 +192,10 @@ public:
     void            addDefaultAssets();
     void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
     void            clearProject(bool add_built_in_items = true);
-    void            deleteAnimation(long animation_key);
+    void            deleteAnimation(long animation_key, long ignore_asset_key);
+    void            deleteAsset(long asset_key);
     void            deleteImage(long image_key);
-    void            deleteWorld(DrWorld *world);
+    void            deleteWorld(long world_key);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);
     bool            openProjectFromFile(QString open_file);
