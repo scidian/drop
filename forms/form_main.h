@@ -26,11 +26,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMainWindow>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QScrollArea>
@@ -99,7 +98,7 @@ private:
     QWidget        *widgetCentral, *widgetAdvisor, *widgetInspector;
 
 
-    // ***** "Editor" (World Editor) Widget
+    // ***** "Editor" (World Editor) Widgets
     TreeAssets     *treeAssetEditor;                        // Shows Project Assets
     TreeProject    *treeProjectEditor;                      // Shows Project Entities
     DrScene        *sceneEditor;                            // Holds the currently selected Stage
@@ -135,10 +134,10 @@ public:
 
 
     // Interface Relay Implementations
-    virtual TreeAssets*     getAssetTree() override     { return treeAssetEditor; }
-    virtual TreeInspector*  getInspector() override     { return treeInspector; }
-    virtual TreeProject*    getProjectTree() override   { return treeProjectEditor; }
-    virtual DrView*         getStageView() override     { return viewEditor; }
+    virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
+    virtual TreeInspector*      getInspector() override     { return treeInspector; }
+    virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
+    virtual DrView*             getStageView() override     { return viewEditor; }
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> key_list, bool rebuild_only = false) override;

@@ -186,14 +186,17 @@ private:
     IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    QPushButton    *m_delete_button = nullptr;          // Little delete button
+    QPushButton    *m_delete_button = nullptr;          // Little "Delete" button
+    QPushButton    *m_edit_button = nullptr;            // Little "Edit" button
 
 public:
     explicit        DrImageHolder(IEditorRelay *editor_relay, QWidget *parent = nullptr);
 
     // Getters / Setters
-    QPushButton*        getDeleteButton() { return m_delete_button; }
-    void                setDeleteButton(QPushButton *button) { m_delete_button = button; }
+    QPushButton*        getDeleteButton()       { return m_delete_button; }
+    QPushButton*        getEditButton()         { return m_edit_button; }
+    void                setDeleteButton(QPushButton *button)    { m_delete_button = button; }
+    void                setEditButton(QPushButton *button)      { m_edit_button = button; }
 };
 
 

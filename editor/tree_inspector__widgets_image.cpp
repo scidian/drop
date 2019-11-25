@@ -15,6 +15,7 @@
 #include "editor/tree_inspector.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
+#include "forms/form_animation.h"
 #include "forms/form_popup.h"
 #include "imaging/imaging.h"
 #include "project/project.h"
@@ -81,8 +82,8 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         asset_pix->setPixmap(pixmap);
         vertical_split->addWidget( asset_pix );
 
-    // ***** Delete Button
     if (animation != nullptr) {
+        // ***** Delete Button
         QPushButton *delete_button = new QPushButton(image_frame);
         Dr::ApplyDropShadowByType(delete_button, Shadow_Types::Button_Shadow_Thin);
         delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
@@ -100,6 +101,25 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
             getEditorRelay()->buildScene( c_same_key );
             getEditorRelay()->buildAssetTree();
             getEditorRelay()->buildInspector( { getEditorRelay()->getInspector()->getSelectedKey() }, true );
+        });
+
+        // ***** Edit Button
+        QPushButton *edit_button = new QPushButton(image_frame);
+        Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);
+        edit_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+        edit_button->setObjectName("buttonImageMiniButton");
+            QPixmap edit_icon(":/assets/gui_misc/image_edit.png");
+            edit_icon = QPixmap::fromImage( DrImaging::colorizeImage(edit_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+            edit_button->setIcon( QIcon(edit_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
+        edit_button->setFixedSize(19, 17);
+        edit_button->setVisible(false);
+        image_frame->setEditButton(edit_button);
+
+        connect(edit_button, &QPushButton::clicked, [this, property, animation] () {
+
+            FormAnimation *animation_editor = new FormAnimation(this->getParentProject(), animation->getKey(), nullptr );
+            animation_editor->show();
+
         });
     }
 
@@ -137,15 +157,16 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     DrSettings *settings =  project->findSettingsFromKey(settings_key);     if (settings == nullptr) return QObject::eventFilter(object, event);
 
     if (event->type() == QEvent::Resize) {
-        if (frame->getDeleteButton() != nullptr) {
-            frame->getDeleteButton()->setGeometry( frame->width() - 26, 10, 20, 20);
-        }
+        if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setGeometry( frame->width() - 26, 10, 19, 17);
+        if (frame->getEditButton() !=   nullptr) frame->getEditButton()->setGeometry(   frame->width() - 26, 31, 19, 17);
 
     } else if (event->type() == QEvent::HoverMove || event->type() == QEvent::HoverEnter) {
         if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setVisible(true);
+        if (frame->getEditButton() !=   nullptr) frame->getEditButton()->setVisible(true);
 
     } else if (event->type() == QEvent::HoverLeave) {
         if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setVisible(false);
+        if (frame->getEditButton() !=   nullptr) frame->getEditButton()->setVisible(false);
     }
 
     // ***** Event Debugging
