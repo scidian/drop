@@ -66,7 +66,7 @@ public:
     virtual void    keyPressEvent(QKeyEvent *event) override;
 
     // Tree Building Functions
-    void                    buildAssetTree(QString search_text = "");
+    void                    buildAssetTree(QString search_text = "", );
     DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, DrAssetType asset_type);
     void                    ensureSelectedKeyVisible();
     void                    expandCollapseComponents();

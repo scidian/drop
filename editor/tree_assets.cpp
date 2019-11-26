@@ -103,7 +103,6 @@ void TreeAssets::searchTextChanged(QString new_text) {
 }
 
 
-
 //####################################################################################
 //##    Tree Building Functions
 //####################################################################################
@@ -115,7 +114,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     // ***** Initialize some QWidget helper items
     QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp_left.setHorizontalStretch(c_asset_size_left);
+    sp_left.setHorizontalStretch( c_asset_size_left);
     sp_right.setHorizontalStretch(c_asset_size_right);
 
     QFont font = Dr::CustomFont();

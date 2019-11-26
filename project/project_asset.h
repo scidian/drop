@@ -15,6 +15,18 @@ class DrFont;
 class DrProject;
 class DrPropertyCollision;
 
+
+// Local Enum
+enum class AssetTreeTypes {
+    Animations =    1,
+    Assets =        2,
+    Devices =       3,
+    Effects =       4,
+    Images =        5,
+    All =         100,
+};
+
+
 //####################################################################################
 //##    DrAsset
 //##        Class to hold an Asset for use in a Project
