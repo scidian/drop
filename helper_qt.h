@@ -30,6 +30,7 @@ QString     RemoveTrailingDecimals(double value, int max_decimal_places);
 
 // Custom Font Functions
 QFont       CustomFont();
+QFont       CustomFontLarger();
 QString     FontFamily();
 int         FontSize();
 void        LoadCustomFonts();

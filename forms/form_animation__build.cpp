@@ -1,33 +1,83 @@
 //
-//      Created by Stephens Nunnally on 3/14/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 11/25/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#include <QDockWidget>
 #include <QHeaderView>
-#include <QOpenGLWidget>
-#include <QScrollBar>
 
-#include "editor/tree_assets.h"
+#include "docks/docks.h"
 #include "editor/tree_inspector.h"
 #include "editor/tree_project.h"
-#include "editor_view/editor_item.h"
 #include "editor_view/editor_scene.h"
 #include "editor_view/editor_view.h"
-#include "forms/form_main.h"
+#include "forms/form_animation.h"
+#include "style/style.h"
+#include "widgets/widgets_event_filters.h"
 
 #include "debug.h"
-#include "globals.h"
-#include "helper.h"
 #include "helper_qt.h"
 
 
 //####################################################################################
-//##    Builds Widgets used for FormMainMode "World Editor"
+//##    Sets initial settings of FormAnimation
 //####################################################################################
-void FormMain::buildWidgetsEditor() {
+void FormAnimation::initializeFormAnimation() {
+    // ********* Initialize form and customize colors and styles
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
+
+    // ***** Main window settings
+    this->setObjectName(QStringLiteral("formAnimation"));
+    this->setWindowModality(Qt::NonModal);
+    this->setMinimumSize(QSize(900, 500));
+    this->setMouseTracking(true);
+    this->setAcceptDrops(true);
+    this->setWindowIcon(QIcon(":/assets/icon/icon256.png"));
+
+    this->setWindowTitle( tr("Animation Editor") );
+
+    this->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
+    this->setDockOptions(AnimatedDocks | AllowNestedDocks);    /// | AllowTabbedDocks | GroupedDragging);
+
+    // ***** Center window on screen, sets initial size as a percentage of screen size
+    Dr::CenterFormOnScreen(this, this, 70, 80);
+
+    // ***** Initialize hover handler
+    m_filter_hover = new DrFilterHoverHandler(this);
+    connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
+
+    // ***** Build docks, widgets, etc
+    buildCentralWidget();
+
+    dockAdvisor =       Dr::buildDockAdvisor(  m_project, this, treeAdvisor);                   // Build Advisor Dock
+    dockAssetsEditor =  Dr::buildDockAssets(   m_project, this, treeAssetEditor);               // Build Assets Dock
+    dockInspector =     Dr::buildDockInspector(m_project, this, treeInspector);                 // Build Inspector Dock
+    Dr::initializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
+
+    // ***** Set up FormAnimation for first time
+    Dr::lockDockWidth( dockAdvisor, dockAdvisor->width() );
+    Dr::lockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
+    Dr::lockDockWidth( dockInspector, dockInspector->width() );
+
+    this->setCentralWidget( widgetCentral );
+    buildAssetTree();
+    dockAssetsEditor->show();
+    buildProjectTree();
+    sceneEditor->clearStageShown();
+
+    //buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
+
+    Dr::unlockDockWidth( this, dockAdvisor );
+    Dr::unlockDockWidth( this, dockAssetsEditor );
+    Dr::unlockDockWidth( this, dockInspector );
+}
+
+
+//####################################################################################
+//##    Builds Widgets used for Animation Editor
+//####################################################################################
+void FormAnimation::buildCentralWidget() {
     QFont font = Dr::CustomFont();
 
     QSizePolicy sizePolicy(                     QSizePolicy::Preferred,         QSizePolicy::Preferred);
@@ -42,38 +92,38 @@ void FormMain::buildWidgetsEditor() {
     sizePolicyMinimum.setHorizontalStretch(0);                  sizePolicyMinimum.setVerticalStretch(0);
     sizePolicyView.setHorizontalStretch(1);                     sizePolicyView.setVerticalStretch(0);
 
-
     // ***** Initialize scene used for showing stages World Editor Mode viewEditor widget
     sceneEditor = new DrScene(this, m_project, this);
 
+
     // Connects signal used to populate scene
-    connect(this,       SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
-            sceneEditor,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+//    connect(this,       SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
+//            sceneEditor,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
 
 
     // ***** Build central widgets
-    widgetCentralEditor = new QWidget();
-    widgetCentralEditor->setObjectName(QStringLiteral("widgetCentralEditor"));
-    widgetCentralEditor->setSizePolicy(sizePolicyPreferredHorizontal);
-        QVBoxLayout *verticalLayoutCentral = new QVBoxLayout(widgetCentralEditor);
+    widgetCentral = new QWidget();
+    widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
+    widgetCentral->setSizePolicy(sizePolicyPreferredHorizontal);
+        QVBoxLayout *verticalLayoutCentral = new QVBoxLayout(widgetCentral);
         verticalLayoutCentral->setSpacing(0);
         verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayout"));
         // This sets the border with for the main view area between middle and docks
         verticalLayoutCentral->setContentsMargins(0, 0, 0, 0);
 
-        DrQSplitterColor *splitterVertical = new DrQSplitterColor(widgetCentralEditor);
+        QSplitter *splitterVertical = new QSplitter(widgetCentral);
         splitterVertical->setObjectName(QStringLiteral("splitterVertical"));
         splitterVertical->setOrientation(Qt::Vertical);
         splitterVertical->setHandleWidth(4);
 
-            widgetStage = new QWidget(splitterVertical);
+            QWidget *widgetStage = new QWidget(splitterVertical);
             widgetStage->setObjectName(QStringLiteral("widgetStage"));
                 QHBoxLayout *horizontalLayout = new QHBoxLayout(widgetStage);
                 horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
                 horizontalLayout->setSpacing(0);
                 horizontalLayout->setContentsMargins(0, 0, 0, 0);
 
-                DrQSplitterColor *splitterHorizontal = new DrQSplitterColor(widgetStage);
+                QSplitter *splitterHorizontal = new QSplitter(widgetStage);
                 splitterHorizontal->setObjectName(QStringLiteral("splitterHorizontal"));
                 splitterHorizontal->setLineWidth(0);
                 splitterHorizontal->setOrientation(Qt::Horizontal);
@@ -115,7 +165,7 @@ void FormMain::buildWidgetsEditor() {
                 splitterHorizontal->addWidget(treeProjectEditor);
 
 
-                    widgetStageView = new QWidget(splitterHorizontal);
+                    QWidget *widgetStageView = new QWidget(splitterHorizontal);
                     widgetStageView->setObjectName(QStringLiteral("widgetStageView"));
                     widgetStageView->setSizePolicy(sizePolicyView);
                     widgetStageView->setMinimumSize(QSize(100, 0));
@@ -135,11 +185,6 @@ void FormMain::buildWidgetsEditor() {
                         viewEditor->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
                         viewEditor->zoomInOut( 0 );
 
-                        ///// Possible Optimizations
-                        ///viewEditor->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-                        ///viewEditor->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-                        ///viewEditor->setCacheMode(QGraphicsView::CacheModeFlag::CacheBackground);
-
                         ///// This setting means we will decide when to call update(), controls recurssive paint events
                         ///viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
                         viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
@@ -149,36 +194,6 @@ void FormMain::buildWidgetsEditor() {
                         else
                             viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-                        if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
-                            QOpenGLWidget *gl_widget = new QOpenGLWidget();
-                            gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
-                            viewEditor->setViewport(gl_widget);
-                        }
-
-
-
-
-                        // ***** View area status bar
-                        statusBar = new QFrame(widgetStageView);
-                        statusBar->setObjectName("statusBar");
-                        statusBar->setFixedHeight(26);
-                            QHBoxLayout *status_layout = new QHBoxLayout(statusBar);
-                            status_layout->setObjectName(QStringLiteral("statusLayout"));
-                            status_layout->setSpacing(6);
-                            status_layout->setContentsMargins(6, 0, 6, 0);
-
-                            labelSelected = new QLabel("No Selection");
-                            labelSelected->setObjectName(QStringLiteral("labelSelected"));
-                            labelSelected->setAlignment(Qt::AlignmentFlag::AlignCenter);
-                            labelSelected->setFont(font);
-                            status_layout->addWidget(labelSelected);
-                            status_layout->addWidget(createToolbarSpacer(18));
-                            status_layout->addStretch();
-
-
-
-
-                    verticalLayoutView->addWidget(statusBar);
                     verticalLayoutView->addWidget(viewEditor);
 
                 splitterHorizontal->addWidget(widgetStageView);
@@ -195,29 +210,12 @@ void FormMain::buildWidgetsEditor() {
             areaBottom->setFont(font);
             areaBottom->setWidgetResizable(true);
             areaBottom->setFrameShape(QFrame::NoFrame);
-                label1 =        createLabel(areaBottom,   "label_1",            QRect( 10,  5, 220, 21),    font);
-                label2 =        createLabel(areaBottom,   "label_2",            QRect( 10, 20, 220, 21),    font);
-                label3 =        createLabel(areaBottom,   "label_3",            QRect( 10, 35, 220, 21),    font);
-                labelMouse1 =   createLabel(areaBottom,   "label_mouse_1",      QRect( 10, 50, 220, 21),    font);
-                labelMouse2 =   createLabel(areaBottom,   "label_mouse_2",      QRect( 10, 65, 220, 21),    font);
+                QLabel *label_1 = new QLabel(areaBottom);
+                label_1->setObjectName("label_1");
+                label_1->setFont(font);
 
-                labelObject1 =   createLabel(areaBottom,  "label_object_1",     QRect(240,  5, 400, 21),    font);
-                labelObject2 =   createLabel(areaBottom,  "label_object_2",     QRect(240, 20, 400, 21),    font);
-                labelObject3 =   createLabel(areaBottom,  "label_object_3",     QRect(240, 35, 400, 21),    font);
-                labelObject4 =   createLabel(areaBottom,  "label_object_4",     QRect(240, 50, 400, 21),    font);
-                labelObject5 =   createLabel(areaBottom,  "label_object_5",     QRect(240, 65, 400, 21),    font);
-
-                labelPosition =  createLabel(areaBottom,  "label_position",     QRect(560,  5, 400, 21),    font);
-                labelCenter =    createLabel(areaBottom,  "label_center",       QRect(560, 20, 400, 21),    font);
-                labelScale =     createLabel(areaBottom,  "label_scale",        QRect(560, 35, 400, 21),    font);
-                labelRotate =    createLabel(areaBottom,  "label_rotate",       QRect(560, 50, 400, 21),    font);
-                labelZOrder =    createLabel(areaBottom,  "label_z_order",      QRect(560, 65, 400, 21),    font);
-                labelPosFlag =   createLabel(areaBottom,  "label_pos_flag",     QRect(560, 80, 400, 21),    font);
-
-                labelBottom =    createLabel(areaBottom,  "label_bottom",       QRect( 10, 80, 700, 21),    font);
         splitterVertical->addWidget(areaBottom);
 
-        areaBottom->setVisible( Dr::CheckDebugFlag(Debug_Flags::Show_Bottom_Debug_Labels) );
 
         splitterVertical->setStretchFactor(0, 1);           // widgetStage (index 0) should stretch (1)
         splitterVertical->setStretchFactor(1, 0);           // areaBottom  (index 1) should not stretch (0)
@@ -225,61 +223,6 @@ void FormMain::buildWidgetsEditor() {
     verticalLayoutCentral->addWidget(splitterVertical);
 
 
-
-
-    // ***** Build left Assets Dock
-    dockAssetsEditor = new QDockWidget(this);
-    dockAssetsEditor->setWindowTitle( tr("Assets") );
-    dockAssetsEditor->setObjectName(QStringLiteral("dockAssetsEditor"));
-    dockAssetsEditor->setFont(font);
-    dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);  /// | QDockWidget::DockWidgetClosable);
-    dockAssetsEditor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-        widgetAssestEditor = new QWidget();
-        widgetAssestEditor->setObjectName(QStringLiteral("widgetAssestsEditor"));
-        widgetAssestEditor->setSizePolicy(sizePolicyPreferredVertical);
-            QVBoxLayout *verticalLayoutAsset = new QVBoxLayout(widgetAssestEditor);
-            verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
-            verticalLayoutAsset->setSpacing(0);
-            verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
-
-                // ***** Load our custom TreeAssets for the Asset List
-                treeAssetEditor = new TreeAssets(widgetAssestEditor, m_project, this);
-                treeAssetEditor->setObjectName(QStringLiteral("treeAssetEditor"));
-                treeAssetEditor->setColumnCount(1);
-                treeAssetEditor->setFont(font);
-                treeAssetEditor->setProperty("showDropIndicator", QVariant(false));
-                treeAssetEditor->setDragEnabled(false);
-                treeAssetEditor->setDragDropOverwriteMode(false);
-                treeAssetEditor->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
-                treeAssetEditor->setDefaultDropAction(Qt::DropAction::TargetMoveAction);
-                treeAssetEditor->setAlternatingRowColors(false);
-                treeAssetEditor->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-                treeAssetEditor->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectItems);
-                treeAssetEditor->setIndentation(0);
-                treeAssetEditor->setRootIsDecorated(false);
-                treeAssetEditor->setItemsExpandable(true);
-                treeAssetEditor->setExpandsOnDoubleClick(false);
-                treeAssetEditor->setHeaderHidden(true);
-                treeAssetEditor->setFrameShape(QFrame::NoFrame);
-                treeAssetEditor->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-                treeAssetEditor->setUniformRowHeights(false);
-                treeAssetEditor->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-                treeAssetEditor->verticalScrollBar()->setSingleStep(25);
-
-            verticalLayoutAsset->insertWidget(0, treeAssetEditor);
-
-        dockAssetsEditor->setWidget(widgetAssestEditor);
-
-}
-
-
-QLabel* FormMain::createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font) {
-    QLabel *new_label;
-    new_label = new QLabel(parent);
-    new_label->setObjectName(object_name);
-    new_label->setGeometry(label_rect);
-    new_label->setFont(label_font);
-    return new_label;
 }
 
 

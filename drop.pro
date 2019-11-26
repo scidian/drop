@@ -66,6 +66,9 @@ SOURCES += \
     colors/colors_palette_material.cpp \
     colors/colors_palette_rocky_rover.cpp \
     colors/colors_palette_window_themes.cpp \
+    docks/docks_build.cpp \
+    docks/docks_handle.cpp \
+    docks/docks_initialize.cpp \
     editor/tree_advisor.cpp \
     editor/tree_assets.cpp \
     editor/tree_assets__drag_drop.cpp \
@@ -140,13 +143,15 @@ SOURCES += \
     enums.cpp \
     forms/form_about.cpp \
     forms/form_animation.cpp \
+    forms/form_animation__build.cpp \
+    forms/form_animation__interface_editor.cpp \
     forms/form_blank.cpp \
     forms/form_color_magnifier.cpp \
     forms/form_expire.cpp \
     forms/form_fonts.cpp \
     forms/form_main.cpp \
     forms/form_main__build.cpp \
-    forms/form_main__build_editor.cpp \
+    forms/form_main__build_central_widget.cpp \
     forms/form_main__interface_editor.cpp \
     forms/form_main__menu.cpp \
     forms/form_main__menu_build.cpp \
@@ -271,6 +276,7 @@ HEADERS += \
     3rd_party_chipmunk/prime.h \
     colors/colors.h \
     constants_engine.h \
+    docks/docks.h \
     editor/tree_advisor.h \
     editor/tree_assets.h \
     editor/tree_inspector.h \

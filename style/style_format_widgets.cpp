@@ -39,10 +39,16 @@ void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_ce
     screen_geometry = screen->availableGeometry();
 
     QSize new_size = form_to_center->size();
-    if (width_percentage  > 0 && width_percentage  <= 100)
-        new_size.setWidth( static_cast<int>( screen_geometry.width()  * (width_percentage  / 100.0) ) );
-    if (height_percentage > 0 && height_percentage <= 100)
-        new_size.setHeight(static_cast<int>( screen_geometry.height() * (height_percentage / 100.0) ) );
+    if (width_percentage  > 0 && width_percentage  <= 100) {
+        int new_width = static_cast<int>(screen_geometry.width()  * (width_percentage  / 100.0));
+        if (new_width > 1900) new_width = 1900;
+        new_size.setWidth( new_width );
+    }
+    if (height_percentage > 0 && height_percentage <= 100) {
+        int new_height = static_cast<int>(screen_geometry.height() * (height_percentage / 100.0));
+        if (new_height > 1200) new_height = 1200;
+        new_size.setHeight( new_height );
+    }
     form_to_center->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, new_size, screen_geometry ));
 }
 

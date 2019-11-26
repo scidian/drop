@@ -25,14 +25,18 @@ QString CustomStyleSheetFormatting() {
         //################################################################################
         //##    Misc Styling
         //################################################################################
+        // Example of some custom class coloring
+        ///" .ClassNameHere {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+
+        // Splitters
+        " QSplitter#splitterVertical {      background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+        " QSplitter#splitterHorizontal {    background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
+
         // Tool tip
         " QToolTip { border: 1px solid; "
         "       border-color: " +     Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       color: " +            Dr::GetColor(Window_Colors::Shadow).name() + "; "
         "       background-color: " + Dr::GetColor(Window_Colors::Text).name() + "; }"
-
-        // Example of some custom class coloring
-        " .DrQSplitterColor {   background: " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         // Main window background and seperator
         " QMainWindow { background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }" +

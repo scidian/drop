@@ -11,6 +11,7 @@
 #include <QTimer>
 
 #include "colors/colors.h"
+#include "docks/docks.h"
 #include "editor/tree_advisor.h"
 #include "editor/tree_assets.h"
 #include "editor/tree_inspector.h"
@@ -49,21 +50,15 @@ FormMain::FormMain(QWidget *parent, QString file_to_open) : QMainWindow(parent) 
     if (init_new == false) init_new = (m_project->openProjectFromFile(file_to_open) == false);
     if (init_new) m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
 
-
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
-    initializeFormMainSettings();
-    buildMenu();
-    buildToolBar();
-    buildWidgetsShared();
-    buildWidgetsEditor();
-    initializeDockWidgets();
+    initializeFormMain();
 
     // ********** Loads project into FormMain
     setFormMainMode( Form_Main_Mode::World_Editor );
 }
 
-
+// Destructor Deletes all Widgets so that it can then safely delete Project
 FormMain::~FormMain() {
     // Wait until scene is not being changed, then delete view and scene
     qApp->blockSignals(true);

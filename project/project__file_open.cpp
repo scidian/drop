@@ -359,7 +359,7 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
                  (check_property_type == Property_Type::Positive && property->getPropertyType() == Property_Type::Double)) ) {
                 // Already assigned by Drop
                 ///k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
-                k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
+                ///k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
                 k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k] );
 
                 if (property->getPropertyKey() != static_cast<long>(Properties::Entity_Key)) {

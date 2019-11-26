@@ -95,7 +95,7 @@ private:
     TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
     TreeInspector  *treeInspector;                          // Custom classes for Inspector Window
     QDockWidget    *dockAdvisor, *dockInspector;
-    QWidget        *widgetCentral, *widgetAdvisor, *widgetInspector;
+    QWidget        *widgetCentral;
 
 
     // ***** "Editor" (World Editor) Widgets
@@ -104,7 +104,7 @@ private:
     DrScene        *sceneEditor;                            // Holds the currently selected Stage
     DrView         *viewEditor;                             // Renders the StageView
     QDockWidget    *dockAssetsEditor;
-    QWidget        *widgetCentralEditor, *widgetAssestEditor, *widgetStage, *widgetStageView;
+    QWidget        *widgetCentralEditor;
     QScrollArea    *areaBottom;
     QFrame         *statusBar;
 
@@ -168,16 +168,12 @@ private:
     void        buildMenu();
     void        buildSceneAfterLoading(long stage_key);
     void        buildToolBar();
-    void        buildWidgetsEditor();
-    void        buildWidgetsShared();
+    void        buildCentralWidgetEditor();
+    void        buildCentralWidgetMain();
     void        changePalette(Color_Scheme new_color_scheme);
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
-    void        initializeFormMainSettings();
+    void        initializeFormMain();
     void        setFormMainMode(Form_Main_Mode new_mode);
-
-    void        initializeDockWidgets();
-    void        lockDockWidth(QDockWidget *dock, int width);
-    void        unlockDockWidth(QDockWidget *dock);
 
     // File Menu Functions
     bool        askShouldSave(QString before_what);
@@ -220,23 +216,6 @@ signals:
     void        newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
 
 };
-
-
-
-//####################################################################################
-//##    DrQSplitterColor
-//##        A demo custom class to show how style sheeting works on a specific class
-//############################
-class DrQSplitterColor : public QSplitter
-{
-    Q_OBJECT
-
-public:
-    DrQSplitterColor(QWidget *parent = nullptr) : QSplitter(parent) { }
-
-};
-
-
 
 
 

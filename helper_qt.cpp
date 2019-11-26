@@ -101,6 +101,11 @@ QFont CustomFont() {
     return font;
 }
 
+QFont CustomFontLarger() {
+    QFont font(FontFamily());
+    font.setPointSize(FontSize() + 2);
+    return font;
+}
 
 //####################################################################################
 //##    These functions check the width of text that would be drawn

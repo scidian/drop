@@ -39,25 +39,26 @@ class FormAnimation : public QMainWindow, public IEditorRelay
 
 private:
     // External Borrowed Pointers
-    DrProject   *m_project;                                 // Pointer to the open project
+    DrProject   *m_project;                                             // Pointer to the open project
 
     // Local Variables
-    long         m_animation_key;                           // Project Key for Animation we wish to Edit
+    DrFilterHoverHandler   *m_filter_hover = nullptr;                   // Pointer to an event filter hover handler
+    long                    m_animation_key;                            // Project Key for Animation we wish to Edit
+
 
     // ***** Shared FormAnimation Widgets
     TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
+    TreeAssets     *treeAssetEditor;                        // Shows Project Assets
     TreeInspector  *treeInspector;                          // Custom classes for Inspector Window
-    QDockWidget    *dockAdvisor, *dockInspector;
-    QWidget        *widgetCentral, *widgetAdvisor, *widgetInspector;
+    TreeProject    *treeProjectEditor;
+    QDockWidget    *dockAdvisor, *dockAssetsEditor, *dockInspector;
+    QWidget        *widgetCentral;
 
     // ***** "Editor" (Animation Editor) Widgets
-    TreeAssets     *treeAssetEditor;                        // Shows Project Assets
     DrScene        *sceneEditor;                            // Holds the currently selected Stage
     DrView         *viewEditor;                             // Renders the StageView
-    QDockWidget    *dockAssetsEditor;
-    QWidget        *widgetCentralEditor, *widgetAssestEditor, *widgetStage, *widgetStageView;
     QScrollArea    *areaBottom;
-    QFrame         *statusBar;
+
 
 public:
     // Constructor / Destructor
@@ -71,7 +72,7 @@ public:
     // Interface Relay Implementations
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
-    virtual TreeProject*        getProjectTree() override   { return nullptr; }
+    virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual DrView*             getStageView() override     { return viewEditor; }
 
     virtual void        buildAssetTree() override;
@@ -98,6 +99,10 @@ public slots:
     virtual void        setAdvisorInfo(QString header, QString body) override;
 
 
+private:
+    // Form Building / Setup
+    void        buildCentralWidget();
+    void        initializeFormAnimation();
 
 
 };
