@@ -44,11 +44,11 @@ DrFont::DrFont(DrProject *parent_project, long key,
     p_gradient_color =  Qt::red;
 
 
-    // ***** Initialize Settings
+    // ***** Initialize Font Settings
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Font Name");
     property_name->setDescription("Name of this Font Asset.");
-    property_name->setValue(getName());
+    property_name->setValue( m_name );
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);

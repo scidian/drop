@@ -132,15 +132,15 @@ QString DrSettings::getName() {
     DrComponent *name_component;
     DrProperty  *name_property;
     switch (getType()) {
-        case DrType::World:
-        case DrType::Stage:
-        case DrType::Thing:
         case DrType::Animation:
         case DrType::Asset:
         case DrType::Device:
         case DrType::Effect:
         case DrType::Font:
         case DrType::Image:
+        case DrType::Stage:
+        case DrType::Thing:
+        case DrType::World:
             name_component = getComponent(Components::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Properties::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();

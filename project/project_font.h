@@ -55,7 +55,6 @@ public:
 
     // DrSettings Overrides
     virtual DrType      getType() override      { return DrType::Font; }
-    virtual QString     getName() override      { return m_name; }
 
     // Function Calls
     QPixmap         createText(QString text);

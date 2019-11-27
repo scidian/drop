@@ -91,23 +91,22 @@ void DrProject::deleteAnimation(long animation_key, long ignore_asset_key) {
     // Delete all Images in Animation
     for (auto frame : animation->getFrames()) {
         long image_key = frame->getKey();
-        if ( image_key < c_key_starting_number) continue;
+        if  (image_key < c_key_starting_number) continue;
 
         // See if Image is used by any other Animaiton
         for (auto &animation_pair : getAnimationMap()) {
-            if (animation_pair.first == animation_key) continue;
-            bool another_is_using_image = false;
+            if (animation_pair.first != animation_key) {
+                bool another_is_using_image = false;
 
-            for (auto check_frame : animation_pair.second->getFrames()) {
-                if (check_frame->getKey() == image_key) {
-                    another_is_using_image = true;
-                    break;
+                for (auto check_frame : animation_pair.second->getFrames()) {
+                    if (check_frame->getKey() == image_key) {
+                        another_is_using_image = true;
+                        break;
+                    }
                 }
+                if (another_is_using_image) break;
             }
-            if (another_is_using_image) break;
 
-            DrImage *image = findImageFromKey( image_key );
-            if (image == nullptr) continue;
             deleteImage( image_key );
         }
     }
@@ -121,7 +120,7 @@ void DrProject::deleteAnimation(long animation_key, long ignore_asset_key) {
 void DrProject::deleteAsset(long asset_key) {
     DrAsset *asset = findAssetFromKey(asset_key);
     if (asset == nullptr) return;
-    asset->deleteSource();
+    asset->deleteAnimations();
     m_assets.erase(asset_key);
     delete asset;
 }
@@ -132,9 +131,17 @@ void DrProject::deleteEntity(long entity_key) {
     if (entity == nullptr) return;
     switch (entity->getType()) {
         case DrType::Asset:     deleteAsset(entity_key);    break;
-        case DrType::Font:      deleteAsset(entity_key);    break;
+        case DrType::Font:      deleteFont(entity_key);     break;
         default: return;
     }
+}
+
+// Removes a Font from the Project
+void DrProject::deleteFont(long font_key) {
+    DrFont *font = findFontFromKey(font_key);
+    if (font == nullptr) return;
+    m_fonts.erase(font_key);
+    delete font;
 }
 
 // Removes an Image from the Project

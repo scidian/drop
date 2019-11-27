@@ -98,7 +98,10 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
     // ***** Duplicate Asset
     if (event->key() == Qt::Key_D) {
-        DrAsset *asset = getParentProject()->findAssetFromKey(getSelectedKey());
+        DrSettings *entity = getParentProject()->findSettingsFromKey(getSelectedKey());
+        if (entity == nullptr) return;
+        if (entity->getType() != DrType::Asset) return;
+        DrAsset *asset = dynamic_cast<DrAsset*>(entity);
         if (asset == nullptr) return;
 
         // Create new Asset, copy Settings / Components / Properties
@@ -131,10 +134,11 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     // ***** Delete Asset
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
 
-        DrSettings *entity = getParentProject()->findAssetFromKey(getSelectedKey());
+        DrSettings *entity = getParentProject()->findSettingsFromKey(getSelectedKey());
         if (entity == nullptr) return;
+        if (entity->getType() != DrType::Asset && entity->getType() != DrType::Font) return;
 
-        removeEntity(getSelectedKey());
+        removeAsset(getSelectedKey());
 
         // Select next availale item if there is one
         long new_key = c_no_key;
@@ -177,7 +181,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 //####################################################################################
 //##    Removes Entity from the Project
 //####################################################################################
-void TreeAssets::removeEntity(long entity_key) {
+void TreeAssets::removeAsset(long entity_key) {
 
     DrSettings *entity = getParentProject()->findSettingsFromKey(entity_key);
     if (entity == nullptr) return;

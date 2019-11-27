@@ -90,8 +90,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
         case DrThingType::Text: {
             DrFont *font = dynamic_cast<DrFont*>(entity);
+            QPixmap pixmap = font->createText( "Text" );
             addComponentSettingsText(new_thing_name);
-            addComponentTransform(100, 100, x, -y, DrThingType::Text);
+            addComponentTransform(pixmap.width(), pixmap.height(), x, -y, DrThingType::Text);
             addComponentLayering(z);
             break;
         }

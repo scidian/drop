@@ -53,7 +53,8 @@ public:
 
     // Function Calls
     std::list<long> animationsUsedByAsset();
-    void            deleteSource();
+    void            deleteAnimations();
+    long            getIdleAnimationKey();
     long            getIdleAnimationFirstFrameImageKey();
     void            updateAnimationProperty(QList<long> image_keys, Properties animation_property);
 

@@ -116,19 +116,23 @@ std::list<long> DrAsset::animationsUsedByAsset() {
 }
 
 //####################################################################################
-//##    Deletes Underlying Asset Source, called when DrAsset is deleted
-//##        Verify first if source is used by another DrAsset or if source is built in
+//##    Deletes Underlying Animations, called when DrAsset is deleted
+//##        Verify first if Animations are used by other DrAssets or if Animation is built in
 //####################################################################################
-void DrAsset::deleteSource() {
-    long source_to_delete = getBaseKey();
-    if ( source_to_delete < c_key_starting_number) return;
-
-    // ***** Delete Animations not used by other Assets
+void DrAsset::deleteAnimations() {
     for (auto &animation_key : animationsUsedByAsset()) {
         getParentProject()->deleteAnimation(animation_key, this->getKey());
     }
 }
 
+
+//####################################################################################
+//##    Returns Key of Idle Animation
+//####################################################################################
+long DrAsset::getIdleAnimationKey() {
+    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+    return idle_animation_key;
+}
 
 //####################################################################################
 //##    Returns Key of Image of first frame of Animation source

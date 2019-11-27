@@ -19,8 +19,9 @@ DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type
 
     m_effect_type = effect_type;
 
-    // ***** Initialize Settings
+    // ***** Initialize Effect Settings
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setEditable(false);
     property_name->setDisplayName("Effect Name");
     property_name->setDescription("Name of this Effect Asset.");
     property_name->setValue(Dr::StringFromEffectType(effect_type));

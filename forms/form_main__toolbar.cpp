@@ -46,7 +46,8 @@ void FormMain::updateToolbar() {
                 if (sceneEditor->getSelectionCount() == 1) {
                     DrThing *thing = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing();
                     if (thing != nullptr) {
-                        selected = m_project->findSettingsFromKey(thing->getAssetKey())->getName();
+                        DrSettings *settings = m_project->findSettingsFromKey(thing->getAssetKey());
+                        if (settings != nullptr) selected = settings->getName();
                     }
 
                 } else if (sceneEditor->getSelectionCount() > 1) {
@@ -57,7 +58,7 @@ void FormMain::updateToolbar() {
             } else if (treeProjectEditor->selectedItems().count() > 0) {
                 long first_key = treeProjectEditor->selectedItems().first()->data(0, User_Roles::Key).toLongLong();
                 DrSettings *settings = m_project->findSettingsFromKey(first_key);
-                if (settings) {
+                if (settings != nullptr) {
                     int selection_count = treeProjectEditor->selectedItems().count();
                     if (settings->getType() == DrType::Stage || settings->getType() == DrType::World) {
                         for (auto button : buttonsGroupEdit->buttons())     if (!button->isEnabled()) button->setEnabled(true);
@@ -75,7 +76,7 @@ void FormMain::updateToolbar() {
 
         } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != c_no_key) {
             // ***** Asset is selected
-            DrSettings *asset = m_project->findSettingsFromKey(treeAssetEditor->getSelectedKey());
+            DrSettings *asset = m_project->findSettingsFromKey(treeAssetEditor->getSelectedKey(), false);
             if (asset != nullptr) {
                 if (asset->getType() == DrType::Asset || asset->getType() == DrType::Font) {
                     for (auto button : buttonsGroupEdit->buttons()) {

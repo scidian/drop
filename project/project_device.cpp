@@ -18,8 +18,9 @@ DrDevice::DrDevice(DrProject *parent_project, long key, DrDeviceType device_type
 
     m_device_type = device_type;
 
-    // ***** Initialize Settings
+    // ***** Initialize Device Settings
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setEditable(false);
     property_name->setDisplayName("Device Name");
     property_name->setDescription("Name of this Device Asset.");
     property_name->setValue(Dr::StringFromDeviceType(device_type));

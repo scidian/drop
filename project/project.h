@@ -186,6 +186,7 @@ public:
     void            deleteAnimation(long animation_key, long ignore_asset_key);
     void            deleteAsset(long asset_key);
     void            deleteEntity(long entity_key);
+    void            deleteFont(long font_key);
     void            deleteImage(long image_key);
     void            deleteWorld(long world_key);
     void            initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test = false);

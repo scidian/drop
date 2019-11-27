@@ -53,38 +53,36 @@ void TreeAssets::ensureSelectedKeyVisible() {
 //####################################################################################
 //##    Updates Asset List (like asset names) if items have been changed
 //####################################################################################
-void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys) {
-    if (changed_items.isEmpty()) return;
-    if (property_keys.isEmpty()) return;
+void TreeAssets::updateAssetList(QList<DrSettings*> changed_entities, QList<long> property_keys) {
+    if (changed_entities.isEmpty()) return;
+    if (property_keys.isEmpty())    return;
 
     QList<DrSettings*> newly_changed_items;
     QList<Properties>  newly_changed_properties;
 
-    DrAsset *asset;
     QFrame  *text_holder;
     QLabel  *asset_name;
     QString  asset_text;
 
-    for (auto item : changed_items) {
-        long item_key = item->getKey();
+    for (auto entity : changed_entities) {
+        long entity_key = entity->getKey();
 
         for (auto frame : m_asset_frames) {
             long label_key = frame->property(User_Property::Key).toLongLong();
 
-            if (item_key == label_key) {
+            if (entity_key == label_key) {
                 for (auto property : property_keys) {
                     Properties check_property = static_cast<Properties>(property);
 
                     switch (check_property) {
                         case Properties::Entity_Name:
-                            asset = getParentProject()->findAssetFromKey(item_key);
-                            asset_text = item->getName();
+                            asset_text = entity->getName();
 
                             // Update all Things in the project that use this asset name
                             for (auto world : getParentProject()->getWorldMap()) {
                                 for (auto stage : world.second->getStageMap()) {
                                     for (auto thing : stage.second->getThingMap()) {
-                                        if (thing.second->getAssetKey() == asset->getKey()) {
+                                        if (thing.second->getAssetKey() == entity->getKey()) {
                                             thing.second->setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Name, asset_text);
                                             newly_changed_items.append(thing.second);
                                             if (!newly_changed_properties.contains(Properties::Entity_Name)) {
@@ -97,7 +95,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 
                             // Update asset name label
                             asset_name = frame->findChild<QLabel*>("assetName");
-                            if (asset_name) {
+                            if (asset_name != nullptr) {
                                 text_holder = frame->findChild<QFrame*>("textHolder");
                                 asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
                                 asset_name->setText( asset_text );

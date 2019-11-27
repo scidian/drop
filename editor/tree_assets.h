@@ -71,11 +71,11 @@ public:
     void                    ensureSelectedKeyVisible();
     void                    expandCollapseComponents();
     QList<QTreeWidgetItem*> getListOfTopLevelItems();
-    void                    removeEntity(long entity_key);
+    void                    removeAsset(long entity_key);
 
     // Function Calls
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
-    void            updateAssetList(QList<DrSettings*> changed_items, QList<long> property_keys);
+    void            updateAssetList(QList<DrSettings*> changed_entities, QList<long> property_keys);
 
     // Getters / Setters
     IEditorRelay*           getEditorRelay() { return m_editor_relay; }

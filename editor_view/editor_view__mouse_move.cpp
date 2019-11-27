@@ -172,6 +172,10 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         Dr::SetLabelText(Label_Names::Label_Pos_Flag, "Pos Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
                                                      "Pos Angle: " + QString::number(a) + QString("\t") +
                                                     "Item Count: " + QString::number(thing_count)  );
+        Dr::SetLabelText(Label_Names::Label_Object_5, "Assets: " + QString::number(m_project->getAssetMap().size()) +
+                                                    ", Images: " + QString::number(m_project->getImageMap().size()) +
+                                                    ", Animes: " + QString::number(m_project->getAnimationMap().size()) +
+                                                     ", Fonts: " + QString::number(m_project->getFontMap().size()));
     }
     // !!!!! END
 
