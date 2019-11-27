@@ -73,13 +73,13 @@ QDockWidget* buildDockAdvisor(DrProject *project, IEditorRelay *editor_relay, Tr
 //####################################################################################
 //##    Builds Assets Dock
 //####################################################################################
-QDockWidget* buildDockAssets(DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets) {
+QDockWidget* buildDockAssets(DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title) {
     QSizePolicy size_policy_preferred_vertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy_preferred_vertical.setHorizontalStretch(0);
     size_policy_preferred_vertical.setVerticalStretch(1);
 
     QDockWidget *dockAssetsEditor = new QDockWidget();
-    dockAssetsEditor->setWindowTitle( QMainWindow::tr("Assets") );
+    dockAssetsEditor->setWindowTitle( QMainWindow::tr(title.toUtf8()) );
     dockAssetsEditor->setObjectName(QStringLiteral("dockAssetsEditor"));
     dockAssetsEditor->setFont(Dr::CustomFont());
     dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);  /// | QDockWidget::DockWidgetClosable);

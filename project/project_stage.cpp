@@ -57,7 +57,7 @@ DrStage::~DrStage() {
 DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide, long key) {
     DrSettings *asset = getParentProject()->findSettingsFromKey(from_asset_key);
     if (asset == nullptr) {
-        Dr::ShowMessageBox("Error in DrStage::addThing, Could not find DrAsset to load from! \n "
+        Dr::ShowMessageBox("Error in DrStage::addThing, Could not find underlying Entity to load from! \n "
                            "New Type: " + Dr::StringFromThingType(new_type) + " \n "
                            "Asset Key: " + QString::number(from_asset_key) + ".",
                        QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());

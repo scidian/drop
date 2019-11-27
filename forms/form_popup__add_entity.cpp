@@ -111,8 +111,8 @@ void FormPopup::buildPopupAddEntity() {
         });
 
         // Adds Character / Object Asset to Project
-        connect(buttonChar,   &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Character, c_key_asset_character); });
-        connect(buttonObject, &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Object,    c_key_asset_object); });
+        connect(buttonChar,   &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Character, c_key_image_character); });
+        connect(buttonObject, &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Object,    c_key_image_object); });
 
         layout->addSpacing(4);
         layout->addWidget(buttonWorld);

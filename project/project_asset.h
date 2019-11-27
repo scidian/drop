@@ -42,13 +42,13 @@ public:
     virtual DrType  getType() override      { return DrType::Asset; }
 
     // Getters / Setters
-    DrAssetType     getAssetType()          { return m_asset_type; }
-    long            getBaseKey()            { return m_base_key; }
-
     long            getWidth()              { return m_width; }
     long            getHeight()             { return m_height; }
 
+    DrAssetType     getAssetType()          { return m_asset_type; }
     void            setAssetType(DrAssetType type)  { m_asset_type = type; }
+
+    long            getBaseKey()            { return m_base_key; }
     void            setBaseKey(long key)            { m_base_key = key; }
 
     // Function Calls

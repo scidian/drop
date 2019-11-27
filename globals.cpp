@@ -87,14 +87,20 @@ namespace Dr {
 
 
         // List of Asset Categories Being Expanded
-        Dr::SetAssetExpanded(Asset_Category::Character,    true);
-        Dr::SetAssetExpanded(Asset_Category::Device,       true);
-        Dr::SetAssetExpanded(Asset_Category::Effect,       true);
-        Dr::SetAssetExpanded(Asset_Category::Object,       true);
-        Dr::SetAssetExpanded(Asset_Category::Text,         true);
+        Dr::SetAssetExpanded(Asset_Category::Character,     true);
+        Dr::SetAssetExpanded(Asset_Category::Device,        true);
+        Dr::SetAssetExpanded(Asset_Category::Effect,        true);
+        Dr::SetAssetExpanded(Asset_Category::Object,        true);
+        Dr::SetAssetExpanded(Asset_Category::Text,          true);
 
-        Dr::SetAssetExpanded(Asset_Category::Image,        true);
-        Dr::SetAssetExpanded(Asset_Category::ImageBuiltIn, true);
+        Dr::SetAssetExpanded(Asset_Category::Image,         true);
+        Dr::SetAssetExpanded(Asset_Category::Basic,         true);
+        Dr::SetAssetExpanded(Asset_Category::Outlines,      true);
+        Dr::SetAssetExpanded(Asset_Category::Gradient,      true);
+        Dr::SetAssetExpanded(Asset_Category::Ground,        true);
+        Dr::SetAssetExpanded(Asset_Category::Polygons,      true);
+        Dr::SetAssetExpanded(Asset_Category::Shapes,        true);
+        Dr::SetAssetExpanded(Asset_Category::Isometric,     true);
 
 
         // List of Inspector Component Categories Being Expanded

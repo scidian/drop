@@ -15,8 +15,9 @@
 //####################################################################################
 //##    Constructors
 //####################################################################################
-DrImage::DrImage(DrProject *parent_project, long key, QString image_path) : DrSettings(parent_project) {
+DrImage::DrImage(DrProject *parent_project, long key, QString image_path, Asset_Category category) : DrSettings(parent_project) {
     this->setKey(key);
+    m_category = category;
 
     QFileInfo file_info(image_path);
 
@@ -27,6 +28,9 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) : DrSe
     m_simple_name.replace("_", " ");
 
     m_image = QImage(image_path).convertToFormat(QImage::Format::Format_ARGB32);
+    if (m_image.isNull()) {
+        m_image = QImage(1, 1, QImage::Format::Format_ARGB32);
+    }
 
     // Set name in DrSettings Entity properties
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
@@ -34,10 +38,12 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) : DrSe
 }
 
 // File Loading Constructor
-DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image)
+DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image, Asset_Category category)
     : DrSettings(parent_project)
 {
     this->setKey(key);
+    m_category = category;
+
     m_full_path = full_path;
     m_filename = filename;
     m_simple_name = simple_name;

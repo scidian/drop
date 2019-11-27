@@ -91,9 +91,9 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Start scrolling name if name is too wide to be shown
     } else if (event->type() == QEvent::HoverEnter) {
-        DrSettings  *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
-        if (asset == nullptr) return QObject::eventFilter(object, event);
-        QString asset_name = asset->getName();
+        DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
+        if (entity == nullptr) return QObject::eventFilter(object, event);
+        QString asset_name = entity->getName();
 
         if (asset_name != label_name->text()) {
             if (scrolling_mutex.tryLock()) {

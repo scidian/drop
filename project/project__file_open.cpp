@@ -283,7 +283,7 @@ bool DrProject::openProjectFromFile(QString open_file) {
                 }
 
                 // If we can find associated Asset, initialize Thing
-                if (findAssetFromKey(asset_key) == nullptr)           continue;
+                if (findSettingsFromKey(asset_key) == nullptr) continue;
                 stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
 
                 // Load Thing Settings, Variables

@@ -60,13 +60,13 @@ public:
     QPixmap         createText(QString text);
 
     // Getters / Setters
-    QPixmap         getPixmap()             { return m_pixmap; }
+    QPixmap         getPixmap()                     { return m_pixmap; }
 
     QRect           getCharRect(char character)     { return m_positions[character]; }
     QSize           getCharSpacing(char character)  { return m_spacing[character]; }
 
-    QString         getPropertyFontFamily() { return p_font_family; }
-    int             getPropertyFontSize()   { return p_font_size; }
+    QString         getPropertyFontFamily()         { return p_font_family; }
+    int             getPropertyFontSize()           { return p_font_size; }
     void            setPropertyFontFamily(QString family)   { p_font_family = family; }
     void            setPropertyFontSize(int size)           { p_font_size = size; }
 

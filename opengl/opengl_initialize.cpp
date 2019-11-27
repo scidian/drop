@@ -5,6 +5,9 @@
 //
 //
 //
+#include <algorithm>
+#include <set>
+
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine_mesh/engine_vertex_data.h"
@@ -12,6 +15,7 @@
 #include "imaging/imaging.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
+#include "project/project_animation.h"
 #include "project/project_asset.h"
 #include "project/project_image.h"
 #include "settings/settings.h"
@@ -62,10 +66,6 @@ void DrOpenGL::importTexture(long texture_id, QString from_asset_string) {
 
 void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
     m_engine->addTexture(texture_id, pixmap);
-
-    // ***** Produces screen shot on desktop of shrunken pixmap
-    ///DrAsset *asset = m_engine->getProject()->getAsset(texture_id);
-    ///if (asset) { if (asset->getName() == "moon plant 6") { DrImaging::averageColor(pixmap, true); } }
 
     // ***** 3D Extruded Textures
     // Create mesh
@@ -118,8 +118,20 @@ void DrOpenGL::loadBuiltInTextures() {
 //##    Load resources from project
 //####################################################################################
 void DrOpenGL::loadProjectTextures() {
-    for (auto image_pair : m_engine->getProject()->getImageMap() ) {
-        DrImage *image = image_pair.second;
+    // Build list of DrImage keys used by Project
+    std::set<long> image_keys_used;
+    for (auto &animation_pair : m_engine->getProject()->getAnimationMap()) {
+        for (auto &frame : animation_pair.second->getFrames()) {
+            long image_key = frame->getKey();
+            if (image_keys_used.find(image_key) == image_keys_used.end()) {
+                image_keys_used.insert(image_key);
+            }
+        }
+    }
+
+    // Go through Project Images and load Images being used by Project
+    for (auto &image_key : image_keys_used) {
+        DrImage *image = m_engine->getProject()->findImageFromKey(image_key);
         if (image != nullptr) {
             QPixmap pixmap = image->getPixmapFromImage();
             importTexture(image->getKey(), pixmap);

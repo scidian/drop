@@ -143,7 +143,7 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
     long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
     DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
 
-    if (animation == nullptr) return c_key_asset_empty;
+    if (animation == nullptr) return c_key_image_empty;
 
     return animation->getFrame(animation->getStartFrameNumber())->getKey();
 }

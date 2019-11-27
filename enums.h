@@ -110,7 +110,14 @@ enum class Asset_Category {
     Effect,
     Text,
     Image,
-    ImageBuiltIn,
+
+    Basic,
+    Outlines,
+    Gradient,
+    Ground,
+    Polygons,
+    Shapes,
+    Isometric,
 };
 
 
