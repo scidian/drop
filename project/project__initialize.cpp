@@ -186,31 +186,103 @@ void DrProject::addBuiltInImages() {
     this->addImage(c_key_asset_character,   path_character,     "circle.png",       "ball",             image_character);
     this->addImage(c_key_asset_object,      path_object,        "box.png",          "block",            image_object);
 
-    this->addImage(":/assets/dr_images/square_1.png",           c_key_asset_square_1);
-    this->addImage(":/assets/dr_images/square_2.png",           c_key_asset_square_2);
-    this->addImage(":/assets/dr_images/square_3.png",           c_key_asset_square_3);
-    this->addImage(":/assets/dr_images/square_4.png",           c_key_asset_square_4);
-    this->addImage(":/assets/dr_images/square_5.png",           c_key_asset_square_5);
-    this->addImage(":/assets/dr_images/square_6.png",           c_key_asset_square_6);
-    this->addImage(":/assets/dr_images/square_7.png",           c_key_asset_square_7);
+    this->addImage(":/assets/dr_images/square_1.png",               c_key_asset_square_1);
+    this->addImage(":/assets/dr_images/square_2.png",               c_key_asset_square_2);
+    this->addImage(":/assets/dr_images/square_3.png",               c_key_asset_square_3);
+    this->addImage(":/assets/dr_images/square_4.png",               c_key_asset_square_4);
+    this->addImage(":/assets/dr_images/square_5.png",               c_key_asset_square_5);
+    this->addImage(":/assets/dr_images/square_6.png",               c_key_asset_square_6);
+    this->addImage(":/assets/dr_images/square_7.png",               c_key_asset_square_7);
+    this->addImage(":/assets/dr_images/square_8.png",               c_key_asset_square_8);
+    this->addImage(":/assets/dr_images/square_9.png",               c_key_asset_square_9);
 
-    this->addImage(":/assets/dr_images/rounded_1.png",          c_key_asset_rounded_1);
-    this->addImage(":/assets/dr_images/rounded_2.png",          c_key_asset_rounded_2);
-    this->addImage(":/assets/dr_images/rounded_3.png",          c_key_asset_rounded_3);
-    this->addImage(":/assets/dr_images/rounded_4.png",          c_key_asset_rounded_4);
-    this->addImage(":/assets/dr_images/rounded_5.png",          c_key_asset_rounded_5);
-    this->addImage(":/assets/dr_images/rounded_6.png",          c_key_asset_rounded_6);
-    this->addImage(":/assets/dr_images/rounded_7.png",          c_key_asset_rounded_7);
+    this->addImage(":/assets/dr_images/rounded_1.png",              c_key_asset_rounded_1);
+    this->addImage(":/assets/dr_images/rounded_2.png",              c_key_asset_rounded_2);
+    this->addImage(":/assets/dr_images/rounded_3.png",              c_key_asset_rounded_3);
+    this->addImage(":/assets/dr_images/rounded_4.png",              c_key_asset_rounded_4);
+    this->addImage(":/assets/dr_images/rounded_5.png",              c_key_asset_rounded_5);
+    this->addImage(":/assets/dr_images/rounded_6.png",              c_key_asset_rounded_6);
+    this->addImage(":/assets/dr_images/rounded_7.png",              c_key_asset_rounded_7);
 
-    this->addImage(":/assets/dr_images/circle_1.png",           c_key_asset_circle_1);
-    this->addImage(":/assets/dr_images/circle_2.png",           c_key_asset_circle_2);
-    this->addImage(":/assets/dr_images/circle_3.png",           c_key_asset_circle_3);
-    this->addImage(":/assets/dr_images/circle_4.png",           c_key_asset_circle_4);
-    this->addImage(":/assets/dr_images/circle_5.png",           c_key_asset_circle_5);
-    this->addImage(":/assets/dr_images/circle_6.png",           c_key_asset_circle_6);
-    this->addImage(":/assets/dr_images/circle_7.png",           c_key_asset_circle_7);
+    this->addImage(":/assets/dr_images/circle_1.png",               c_key_asset_circle_1);
+    this->addImage(":/assets/dr_images/circle_2.png",               c_key_asset_circle_2);
+    this->addImage(":/assets/dr_images/circle_3.png",               c_key_asset_circle_3);
+    this->addImage(":/assets/dr_images/circle_4.png",               c_key_asset_circle_4);
+    this->addImage(":/assets/dr_images/circle_5.png",               c_key_asset_circle_5);
+    this->addImage(":/assets/dr_images/circle_6.png",               c_key_asset_circle_6);
+    this->addImage(":/assets/dr_images/circle_7.png",               c_key_asset_circle_7);
+    this->addImage(":/assets/dr_images/circle_8.png",               c_key_asset_circle_8);
+    this->addImage(":/assets/dr_images/circle_9.png",               c_key_asset_circle_9);
+
+    this->addImage(":/assets/dr_images/gradient_circle_1.png",      c_key_asset_gradient_circle_1);
+    this->addImage(":/assets/dr_images/gradient_circle_2.png",      c_key_asset_gradient_circle_2);
+    this->addImage(":/assets/dr_images/gradient_circle_3.png",      c_key_asset_gradient_circle_3);
+    this->addImage(":/assets/dr_images/gradient_circle_4.png",      c_key_asset_gradient_circle_4);
+    this->addImage(":/assets/dr_images/gradient_circle_5.png",      c_key_asset_gradient_circle_5);
+    this->addImage(":/assets/dr_images/gradient_circle_6.png",      c_key_asset_gradient_circle_6);
+
+    this->addImage(":/assets/dr_images/gradient_square_1.png",      c_key_asset_gradient_square_1);
+    this->addImage(":/assets/dr_images/gradient_square_2.png",      c_key_asset_gradient_square_2);
+    this->addImage(":/assets/dr_images/gradient_square_3.png",      c_key_asset_gradient_square_3);
+    this->addImage(":/assets/dr_images/gradient_square_4.png",      c_key_asset_gradient_square_4);
+    this->addImage(":/assets/dr_images/gradient_square_5.png",      c_key_asset_gradient_square_5);
+    this->addImage(":/assets/dr_images/gradient_square_6.png",      c_key_asset_gradient_square_6);
+    this->addImage(":/assets/dr_images/gradient_square_7.png",      c_key_asset_gradient_square_7);
+    this->addImage(":/assets/dr_images/gradient_square_8.png",      c_key_asset_gradient_square_8);
+
+    this->addImage(":/assets/dr_images/ground_1.png",               c_key_asset_ground_1);
+    this->addImage(":/assets/dr_images/ground_2.png",               c_key_asset_ground_2);
+    this->addImage(":/assets/dr_images/ground_3.png",               c_key_asset_ground_3);
+    this->addImage(":/assets/dr_images/ground_4.png",               c_key_asset_ground_4);
+    this->addImage(":/assets/dr_images/ground_5.png",               c_key_asset_ground_5);
+    this->addImage(":/assets/dr_images/ground_6.png",               c_key_asset_ground_6);
+    this->addImage(":/assets/dr_images/ground_7.png",               c_key_asset_ground_7);
+
+    this->addImage(":/assets/dr_images/frame_square_1.png",         c_key_asset_frame_square_1);
+    this->addImage(":/assets/dr_images/frame_square_2.png",         c_key_asset_frame_square_2);
+    this->addImage(":/assets/dr_images/frame_square_3.png",         c_key_asset_frame_square_3);
+    this->addImage(":/assets/dr_images/frame_circle_1.png",         c_key_asset_frame_circle_1);
+    this->addImage(":/assets/dr_images/frame_circle_2.png",         c_key_asset_frame_circle_2);
+    this->addImage(":/assets/dr_images/frame_circle_3.png",         c_key_asset_frame_circle_3);
+    this->addImage(":/assets/dr_images/frame_rounded_1.png",        c_key_asset_frame_rounded_1);
+    this->addImage(":/assets/dr_images/frame_triangle_1.png",       c_key_asset_frame_triangle_1);
+    this->addImage(":/assets/dr_images/frame_triangle_2.png",       c_key_asset_frame_triangle_2);
+
+    this->addImage(":/assets/dr_images/triangle_1.png",             c_key_asset_triangle_1);
+    this->addImage(":/assets/dr_images/triangle_2.png",             c_key_asset_triangle_2);
+    this->addImage(":/assets/dr_images/triangle_3.png",             c_key_asset_triangle_3);
+    this->addImage(":/assets/dr_images/gradient_triangle_1.png",    c_key_asset_gradient_triangle_1);
+    this->addImage(":/assets/dr_images/gradient_triangle_2.png",    c_key_asset_gradient_triangle_2);
+    this->addImage(":/assets/dr_images/gradient_triangle_3.png",    c_key_asset_gradient_triangle_3);
+
+    this->addImage(":/assets/dr_images/flat_square.png",            c_key_asset_flat_square);
+    this->addImage(":/assets/dr_images/flat_circle.png",            c_key_asset_flat_circle);
+    this->addImage(":/assets/dr_images/flat_triangle.png",          c_key_asset_flat_triangle);
+
+
+    this->addImage(":/assets/dr_images/isometric_cube_1.png",       c_key_asset_isometric_cube_1);
+    this->addImage(":/assets/dr_images/isometric_cube_2.png",       c_key_asset_isometric_cube_2);
+    this->addImage(":/assets/dr_images/isometric_cube_3.png",       c_key_asset_isometric_cube_3);
+    this->addImage(":/assets/dr_images/isometric_pyramid_1.png",    c_key_asset_isometric_pyramid_1);
+    this->addImage(":/assets/dr_images/isometric_pyramid_1.png",    c_key_asset_isometric_pyramid_2);
+    this->addImage(":/assets/dr_images/isometric_sphere_2.png",     c_key_asset_isometric_sphere_1);
+    this->addImage(":/assets/dr_images/isometric_sphere_2.png",     c_key_asset_isometric_sphere_2);
+
+
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

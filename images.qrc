@@ -209,5 +209,55 @@
         <file>assets/dr_images/square_5.png</file>
         <file>assets/dr_images/square_6.png</file>
         <file>assets/dr_images/square_7.png</file>
+        <file>assets/dr_images/gradient_circle_1.png</file>
+        <file>assets/dr_images/gradient_circle_2.png</file>
+        <file>assets/dr_images/gradient_circle_3.png</file>
+        <file>assets/dr_images/gradient_circle_4.png</file>
+        <file>assets/dr_images/gradient_circle_5.png</file>
+        <file>assets/dr_images/gradient_circle_6.png</file>
+        <file>assets/dr_images/gradient_square_1.png</file>
+        <file>assets/dr_images/gradient_square_2.png</file>
+        <file>assets/dr_images/gradient_square_3.png</file>
+        <file>assets/dr_images/gradient_square_4.png</file>
+        <file>assets/dr_images/gradient_square_5.png</file>
+        <file>assets/dr_images/gradient_square_6.png</file>
+        <file>assets/dr_images/gradient_square_7.png</file>
+        <file>assets/dr_images/gradient_square_8.png</file>
+        <file>assets/dr_images/ground_1.png</file>
+        <file>assets/dr_images/ground_2.png</file>
+        <file>assets/dr_images/ground_3.png</file>
+        <file>assets/dr_images/ground_4.png</file>
+        <file>assets/dr_images/ground_5.png</file>
+        <file>assets/dr_images/ground_6.png</file>
+        <file>assets/dr_images/ground_7.png</file>
+        <file>assets/dr_images/frame_circle_1.png</file>
+        <file>assets/dr_images/frame_circle_2.png</file>
+        <file>assets/dr_images/frame_circle_3.png</file>
+        <file>assets/dr_images/frame_rounded_1.png</file>
+        <file>assets/dr_images/frame_square_1.png</file>
+        <file>assets/dr_images/frame_square_2.png</file>
+        <file>assets/dr_images/frame_square_3.png</file>
+        <file>assets/dr_images/frame_triangle_1.png</file>
+        <file>assets/dr_images/frame_triangle_2.png</file>
+        <file>assets/dr_images/gradient_triangle_1.png</file>
+        <file>assets/dr_images/gradient_triangle_2.png</file>
+        <file>assets/dr_images/gradient_triangle_3.png</file>
+        <file>assets/dr_images/triangle_1.png</file>
+        <file>assets/dr_images/triangle_2.png</file>
+        <file>assets/dr_images/triangle_3.png</file>
+        <file>assets/dr_images/circle_8.png</file>
+        <file>assets/dr_images/circle_9.png</file>
+        <file>assets/dr_images/square_8.png</file>
+        <file>assets/dr_images/square_9.png</file>
+        <file>assets/dr_images/flat_circle.png</file>
+        <file>assets/dr_images/flat_square.png</file>
+        <file>assets/dr_images/flat_triangle.png</file>
+        <file>assets/dr_images/isometric_cube_1.png</file>
+        <file>assets/dr_images/isometric_cube_2.png</file>
+        <file>assets/dr_images/isometric_cube_3.png</file>
+        <file>assets/dr_images/isometric_sphere_1.png</file>
+        <file>assets/dr_images/isometric_sphere_2.png</file>
+        <file>assets/dr_images/isometric_pyramid_1.png</file>
+        <file>assets/dr_images/isometric_pyramid_2.png</file>
     </qresource>
 </RCC>

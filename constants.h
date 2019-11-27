@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 2/15/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -21,47 +21,105 @@
 constexpr long c_key_starting_number =  1001;       // First 1001 keys or so are reserved for built in Entities in DrProject (like default images, etc)
                                                     // ....."1001" is an easily searchable number
 
-// Built In Images
-constexpr long c_key_asset_empty =               1;         //  32 x  32    Alpha value 0 square
-constexpr long c_key_asset_character =           2;         // 256 x 256    Gray Circle
-constexpr long c_key_asset_object =              3;         // 256 x 256    Gray Box
-
-constexpr long c_key_asset_square_1 =           10;         // 128 x 128    Gray Square 1
-constexpr long c_key_asset_square_2 =           11;         // 128 x 128    Gray Square 2
-constexpr long c_key_asset_square_3 =           12;         // 128 x 128    Gray Square 3
-constexpr long c_key_asset_square_4 =           13;         // 128 x 128    Gray Square 4
-constexpr long c_key_asset_square_5 =           14;         // 128 x 128    Gray Square 5
-constexpr long c_key_asset_square_6 =           15;         // 128 x 128    Gray Square 6
-constexpr long c_key_asset_square_7 =           16;         // 128 x 128    Gray Square 7
-
-constexpr long c_key_asset_rounded_1 =          20;         // 128 x 128    Rounded Gray Square 1
-constexpr long c_key_asset_rounded_2 =          21;         // 128 x 128    Rounded Gray Square 2
-constexpr long c_key_asset_rounded_3 =          22;         // 128 x 128    Rounded Gray Square 3
-constexpr long c_key_asset_rounded_4 =          23;         // 128 x 128    Rounded Gray Square 4
-constexpr long c_key_asset_rounded_5 =          24;         // 128 x 128    Rounded Gray Square 5
-constexpr long c_key_asset_rounded_6 =          25;         // 128 x 128    Rounded Gray Square 6
-constexpr long c_key_asset_rounded_7 =          26;         // 128 x 128    Rounded Gray Square 7
-
-constexpr long c_key_asset_circle_1 =           30;         // 128 x 128    Gray Circle 1
-constexpr long c_key_asset_circle_2 =           31;         // 128 x 128    Gray Circle 2
-constexpr long c_key_asset_circle_3 =           32;         // 128 x 128    Gray Circle 3
-constexpr long c_key_asset_circle_4 =           33;         // 128 x 128    Gray Circle 4
-constexpr long c_key_asset_circle_5 =           34;         // 128 x 128    Gray Circle 5
-constexpr long c_key_asset_circle_6 =           35;         // 128 x 128    Gray Circle 6
-constexpr long c_key_asset_circle_7 =           36;         // 128 x 128    Gray Circle 7
-
-
 // Devices
-constexpr long c_key_device_camera =            400;        // Camera Device
-
+constexpr long c_key_device_camera =               400;         // Camera Device
 
 // Effects
-constexpr long c_key_effect_light =             600;        // Light Effect
-constexpr long c_key_effect_water =             601;        // Water Effect
-constexpr long c_key_effect_fire =              602;        // Fire Effect
-constexpr long c_key_effect_mirror =            603;        // Mirror Effect
-constexpr long c_key_effect_fisheye =           604;        // Fisheye Effect
-constexpr long c_key_effect_swirl =             605;        // Swirl Effect
+constexpr long c_key_effect_light =                600;         // Light Effect
+constexpr long c_key_effect_water =                601;         // Water Effect
+constexpr long c_key_effect_fire =                 602;         // Fire Effect
+constexpr long c_key_effect_mirror =               603;         // Mirror Effect
+constexpr long c_key_effect_fisheye =              604;         // Fisheye Effect
+constexpr long c_key_effect_swirl =                605;         // Swirl Effect
+
+
+// Built In Images
+constexpr long c_key_asset_empty =                   1;         //  32 x  32    Alpha value 0 square
+constexpr long c_key_asset_character =               2;         // 256 x 256    Gray Circle
+constexpr long c_key_asset_object =                  3;         // 256 x 256    Gray Box
+
+constexpr long c_key_asset_square_1 =               11;         // 128 x 128    Gray Square 1
+constexpr long c_key_asset_square_2 =               12;         // 128 x 128    Gray Square 2
+constexpr long c_key_asset_square_3 =               13;         // 128 x 128    Gray Square 3
+constexpr long c_key_asset_square_4 =               14;         // 128 x 128    Gray Square 4
+constexpr long c_key_asset_square_5 =               15;         // 128 x 128    Gray Square 5
+constexpr long c_key_asset_square_6 =               16;         // 128 x 128    Gray Square 6
+constexpr long c_key_asset_square_7 =               17;         // 128 x 128    Gray Square 7
+constexpr long c_key_asset_square_8 =               16;         // 128 x 128    Gray Square 8
+constexpr long c_key_asset_square_9 =               17;         // 128 x 128    Gray Square 9
+
+constexpr long c_key_asset_rounded_1 =              21;         // 128 x 128    Rounded Gray Square 1
+constexpr long c_key_asset_rounded_2 =              22;         // 128 x 128    Rounded Gray Square 2
+constexpr long c_key_asset_rounded_3 =              23;         // 128 x 128    Rounded Gray Square 3
+constexpr long c_key_asset_rounded_4 =              24;         // 128 x 128    Rounded Gray Square 4
+constexpr long c_key_asset_rounded_5 =              25;         // 128 x 128    Rounded Gray Square 5
+constexpr long c_key_asset_rounded_6 =              26;         // 128 x 128    Rounded Gray Square 6
+constexpr long c_key_asset_rounded_7 =              27;         // 128 x 128    Rounded Gray Square 7
+
+constexpr long c_key_asset_circle_1 =               31;         // 128 x 128    Gray Circle 1
+constexpr long c_key_asset_circle_2 =               32;         // 128 x 128    Gray Circle 2
+constexpr long c_key_asset_circle_3 =               33;         // 128 x 128    Gray Circle 3
+constexpr long c_key_asset_circle_4 =               34;         // 128 x 128    Gray Circle 4
+constexpr long c_key_asset_circle_5 =               35;         // 128 x 128    Gray Circle 5
+constexpr long c_key_asset_circle_6 =               36;         // 128 x 128    Gray Circle 6
+constexpr long c_key_asset_circle_7 =               37;         // 128 x 128    Gray Circle 7
+constexpr long c_key_asset_circle_8 =               36;         // 128 x 128    Gray Circle 8
+constexpr long c_key_asset_circle_9 =               37;         // 128 x 128    Gray Circle 9
+
+constexpr long c_key_asset_gradient_circle_1 =      41;         // 128 x 128    Gradient Circle 1
+constexpr long c_key_asset_gradient_circle_2 =      42;         // 128 x 128    Gradient Circle 2
+constexpr long c_key_asset_gradient_circle_3 =      43;         // 128 x 128    Gradient Circle 3
+constexpr long c_key_asset_gradient_circle_4 =      44;         // 128 x 128    Gradient Circle 4
+constexpr long c_key_asset_gradient_circle_5 =      45;         // 128 x 128    Gradient Circle 5
+constexpr long c_key_asset_gradient_circle_6 =      46;         // 128 x 128    Gradient Circle 6
+
+constexpr long c_key_asset_gradient_square_1 =      51;         // 128 x 128    Gradient Square 1
+constexpr long c_key_asset_gradient_square_2 =      52;         // 128 x 128    Gradient Square 2
+constexpr long c_key_asset_gradient_square_3 =      53;         // 128 x 128    Gradient Square 3
+constexpr long c_key_asset_gradient_square_4 =      54;         // 128 x 128    Gradient Square 4
+constexpr long c_key_asset_gradient_square_5 =      55;         // 128 x 128    Gradient Square 5
+constexpr long c_key_asset_gradient_square_6 =      56;         // 128 x 128    Gradient Square 6
+constexpr long c_key_asset_gradient_square_7 =      57;         // 128 x 128    Gradient Square 7
+constexpr long c_key_asset_gradient_square_8 =      58;         // 128 x 128    Gradient Square 8
+
+constexpr long c_key_asset_ground_1 =               61;         // 128 x 128    Ground Top 1
+constexpr long c_key_asset_ground_2 =               62;         // 128 x 128    Ground Top 2
+constexpr long c_key_asset_ground_3 =               63;         // 128 x 128    Ground Top 3
+constexpr long c_key_asset_ground_4 =               64;         // 128 x 128    Ground Top 4
+constexpr long c_key_asset_ground_5 =               65;         // 128 x 128    Ground Top 5
+constexpr long c_key_asset_ground_6 =               66;         // 128 x 128    Ground Top 6
+constexpr long c_key_asset_ground_7 =               67;         // 128 x 128    Ground Top 7
+
+constexpr long c_key_asset_frame_square_1 =         71;         // 128 x 128    Frame Square 1
+constexpr long c_key_asset_frame_square_2 =         72;         // 128 x 128    Frame Square 2
+constexpr long c_key_asset_frame_square_3 =         73;         // 128 x 128    Frame Square 3
+constexpr long c_key_asset_frame_circle_1 =         74;         // 128 x 128    Frame Circle 1
+constexpr long c_key_asset_frame_circle_2 =         75;         // 128 x 128    Frame Circle 2
+constexpr long c_key_asset_frame_circle_3 =         76;         // 128 x 128    Frame Circle 3
+constexpr long c_key_asset_frame_rounded_1 =        77;         // 128 x 128    Frame Rounded 1
+constexpr long c_key_asset_frame_triangle_1 =       78;         // 128 x 128    Frame Triangle 1
+constexpr long c_key_asset_frame_triangle_2 =       79;         // 128 x 128    Frame Triangle 2
+
+constexpr long c_key_asset_triangle_1 =             81;         // 128 x 128    Triangle 1
+constexpr long c_key_asset_triangle_2 =             82;         // 128 x 128    Triangle 2
+constexpr long c_key_asset_triangle_3 =             83;         // 128 x 128    Triangle 3
+constexpr long c_key_asset_gradient_triangle_1 =    84;         // 128 x 128    Gradient Triangle 1
+constexpr long c_key_asset_gradient_triangle_2 =    85;         // 128 x 128    Gradient Triangle 2
+constexpr long c_key_asset_gradient_triangle_3 =    86;         // 128 x 128    Gradient Triangle 3
+
+constexpr long c_key_asset_flat_square =            87;         // 128 x 128    Flat Square
+constexpr long c_key_asset_flat_circle =            88;         // 128 x 128    Flat Circle
+constexpr long c_key_asset_flat_triangle =          89;         // 128 x 128    Flat Triangle
+
+constexpr long c_key_asset_isometric_cube_1 =       91;         // 128 x 128    Isometric Cube 1
+constexpr long c_key_asset_isometric_cube_2 =       92;         // 128 x 128    Isometric Cube 2
+constexpr long c_key_asset_isometric_cube_3 =       93;         // 128 x 128    Isometric Cube 3
+constexpr long c_key_asset_isometric_pyramid_1 =    94;         // 128 x 128    Isometric Pyramid 1
+constexpr long c_key_asset_isometric_pyramid_2 =    95;         // 128 x 128    Isometric Pyramid 1
+constexpr long c_key_asset_isometric_sphere_1 =     96;         // 128 x 128    Isometric Sphere 1
+constexpr long c_key_asset_isometric_sphere_2 =     97;         // 128 x 128    Isometric Sphere 2
+
+
 
 
 //####################################################################################
