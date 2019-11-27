@@ -374,14 +374,14 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, A
     QList<QString> info;
 
     switch (asset_type) {
-        case Asset_Category::Character:    name = "  Characters";      icon = "tree_character.png"; info = Advisor_Info::Asset_Character;      break;
-        case Asset_Category::Object:       name = "  Objects";         icon = "tree_object.png";    info = Advisor_Info::Asset_Object;         break;
-        case Asset_Category::Device:       name = "  Devices";         icon = "tree_camera.png";    info = Advisor_Info::Asset_Device;         break;
-        case Asset_Category::Effect:       name = " Effects";          icon = "tree_effects.png";   info = Advisor_Info::Asset_Effect;         break;
-        case Asset_Category::Text:         name = "  Text";            icon = "tree_text.png";      info = Advisor_Info::Asset_Text;           break;
+        case Asset_Category::Character:    name = "  Characters";   icon = "tree_character.png"; info = Advisor_Info::Asset_Character;      break;
+        case Asset_Category::Object:       name = "  Objects";      icon = "tree_object.png";    info = Advisor_Info::Asset_Object;         break;
+        case Asset_Category::Device:       name = "  Devices";      icon = "tree_camera.png";    info = Advisor_Info::Asset_Device;         break;
+        case Asset_Category::Effect:       name = " Effects";       icon = "tree_effects.png";   info = Advisor_Info::Asset_Effect;         break;
+        case Asset_Category::Text:         name = "  Text";         icon = "tree_text.png";      info = Advisor_Info::Asset_Text;           break;
 
-        case Asset_Category::Image:        name = "  Images";          icon = "tree_effects.png";   info = Advisor_Info::Asset_Image;          break;
-        case Asset_Category::ImageBuiltIn: name = "  Included Images"; icon = "tree_effects.png";   info = Advisor_Info::Asset_Image_Built_In; break;
+        case Asset_Category::Image:        name = "  Images";       icon = "tree_effects.png";   info = Advisor_Info::Asset_Image;          break;
+        case Asset_Category::ImageBuiltIn: name = "  Built In";     icon = "tree_effects.png";   info = Advisor_Info::Asset_Image_Built_In; break;
     }
 
     QString icon_size =     "14px 14px";

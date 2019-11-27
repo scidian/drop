@@ -15,6 +15,56 @@
 
 
 //####################################################################################
+//##    Project Key Constants
+//####################################################################################
+// Starting Key
+constexpr long c_key_starting_number =  1001;       // First 1001 keys or so are reserved for built in Entities in DrProject (like default images, etc)
+                                                    // ....."1001" is an easily searchable number
+
+// Built In Images
+constexpr long c_key_asset_empty =               1;         //  32 x  32    Alpha value 0 square
+constexpr long c_key_asset_character =           2;         // 256 x 256    Gray Circle
+constexpr long c_key_asset_object =              3;         // 256 x 256    Gray Box
+
+constexpr long c_key_asset_square_1 =           10;         // 128 x 128    Gray Square 1
+constexpr long c_key_asset_square_2 =           11;         // 128 x 128    Gray Square 2
+constexpr long c_key_asset_square_3 =           12;         // 128 x 128    Gray Square 3
+constexpr long c_key_asset_square_4 =           13;         // 128 x 128    Gray Square 4
+constexpr long c_key_asset_square_5 =           14;         // 128 x 128    Gray Square 5
+constexpr long c_key_asset_square_6 =           15;         // 128 x 128    Gray Square 6
+constexpr long c_key_asset_square_7 =           16;         // 128 x 128    Gray Square 7
+
+constexpr long c_key_asset_rounded_1 =          20;         // 128 x 128    Rounded Gray Square 1
+constexpr long c_key_asset_rounded_2 =          21;         // 128 x 128    Rounded Gray Square 2
+constexpr long c_key_asset_rounded_3 =          22;         // 128 x 128    Rounded Gray Square 3
+constexpr long c_key_asset_rounded_4 =          23;         // 128 x 128    Rounded Gray Square 4
+constexpr long c_key_asset_rounded_5 =          24;         // 128 x 128    Rounded Gray Square 5
+constexpr long c_key_asset_rounded_6 =          25;         // 128 x 128    Rounded Gray Square 6
+constexpr long c_key_asset_rounded_7 =          26;         // 128 x 128    Rounded Gray Square 7
+
+constexpr long c_key_asset_circle_1 =           30;         // 128 x 128    Gray Circle 1
+constexpr long c_key_asset_circle_2 =           31;         // 128 x 128    Gray Circle 2
+constexpr long c_key_asset_circle_3 =           32;         // 128 x 128    Gray Circle 3
+constexpr long c_key_asset_circle_4 =           33;         // 128 x 128    Gray Circle 4
+constexpr long c_key_asset_circle_5 =           34;         // 128 x 128    Gray Circle 5
+constexpr long c_key_asset_circle_6 =           35;         // 128 x 128    Gray Circle 6
+constexpr long c_key_asset_circle_7 =           36;         // 128 x 128    Gray Circle 7
+
+
+// Devices
+constexpr long c_key_device_camera =            400;        // Camera Device
+
+
+// Effects
+constexpr long c_key_effect_light =             600;        // Light Effect
+constexpr long c_key_effect_water =             601;        // Water Effect
+constexpr long c_key_effect_fire =              602;        // Fire Effect
+constexpr long c_key_effect_mirror =            603;        // Mirror Effect
+constexpr long c_key_effect_fisheye =           604;        // Fisheye Effect
+constexpr long c_key_effect_swirl =             605;        // Swirl Effect
+
+
+//####################################################################################
 //##    Possible background colors for Component Categories
 //############################
 namespace Component_Colors {

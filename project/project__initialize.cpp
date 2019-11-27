@@ -173,8 +173,44 @@ void DrProject::addDefaultAssets() {
     if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
 }
 
+//####################################################################################
+//##    Adds Built In Images to Project
+//####################################################################################
+void DrProject::addBuiltInImages() {
+    QImage::Format format = QImage::Format::Format_ARGB32;
 
+    QString path_empty =     ":/assets/dr_images/empty.png";            QImage image_empty =        QImage(path_empty).convertToFormat(format);
+    QString path_character = ":/assets/dr_images/circle.png";           QImage image_character =    QImage(path_character).convertToFormat(format);
+    QString path_object =    ":/assets/dr_images/box.png";              QImage image_object =       QImage(path_object).convertToFormat(format);
+    this->addImage(c_key_asset_empty,       path_empty,         "empty.png",        "empty",            image_empty);
+    this->addImage(c_key_asset_character,   path_character,     "circle.png",       "ball",             image_character);
+    this->addImage(c_key_asset_object,      path_object,        "box.png",          "block",            image_object);
 
+    this->addImage(":/assets/dr_images/square_1.png",           c_key_asset_square_1);
+    this->addImage(":/assets/dr_images/square_2.png",           c_key_asset_square_2);
+    this->addImage(":/assets/dr_images/square_3.png",           c_key_asset_square_3);
+    this->addImage(":/assets/dr_images/square_4.png",           c_key_asset_square_4);
+    this->addImage(":/assets/dr_images/square_5.png",           c_key_asset_square_5);
+    this->addImage(":/assets/dr_images/square_6.png",           c_key_asset_square_6);
+    this->addImage(":/assets/dr_images/square_7.png",           c_key_asset_square_7);
+
+    this->addImage(":/assets/dr_images/rounded_1.png",          c_key_asset_rounded_1);
+    this->addImage(":/assets/dr_images/rounded_2.png",          c_key_asset_rounded_2);
+    this->addImage(":/assets/dr_images/rounded_3.png",          c_key_asset_rounded_3);
+    this->addImage(":/assets/dr_images/rounded_4.png",          c_key_asset_rounded_4);
+    this->addImage(":/assets/dr_images/rounded_5.png",          c_key_asset_rounded_5);
+    this->addImage(":/assets/dr_images/rounded_6.png",          c_key_asset_rounded_6);
+    this->addImage(":/assets/dr_images/rounded_7.png",          c_key_asset_rounded_7);
+
+    this->addImage(":/assets/dr_images/circle_1.png",           c_key_asset_circle_1);
+    this->addImage(":/assets/dr_images/circle_2.png",           c_key_asset_circle_2);
+    this->addImage(":/assets/dr_images/circle_3.png",           c_key_asset_circle_3);
+    this->addImage(":/assets/dr_images/circle_4.png",           c_key_asset_circle_4);
+    this->addImage(":/assets/dr_images/circle_5.png",           c_key_asset_circle_5);
+    this->addImage(":/assets/dr_images/circle_6.png",           c_key_asset_circle_6);
+    this->addImage(":/assets/dr_images/circle_7.png",           c_key_asset_circle_7);
+
+}
 
 
 

@@ -50,15 +50,7 @@ void DrProject::clearProject(bool add_built_in_items) {
 
     // Add these Images to every project for use with New Assets
     if (add_built_in_items) {
-        QImage::Format format = QImage::Format::Format_ARGB32;
-
-        QString path_empty =     ":/assets/dr_images/empty.png";        QImage image_empty =        QImage(path_empty).convertToFormat(format);
-        QString path_character = ":/assets/dr_images/circle.png";       QImage image_character =    QImage(path_character).convertToFormat(format);
-        QString path_object =    ":/assets/dr_images/box.png";          QImage image_object =       QImage(path_object).convertToFormat(format);
-
-        this->addImage(c_key_asset_empty,       path_empty,     "empty.png",  "empty",    image_empty);
-        this->addImage(c_key_asset_character,   path_character, "circle.png", "ball",     image_character);
-        this->addImage(c_key_asset_object,      path_object,    "box.png",    "block",    image_object);
+        addBuiltInImages();
     }
 
     // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 could conflict with nullptr results
@@ -198,8 +190,8 @@ long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_fam
     return new_font_key;
 }
 
-DrImage* DrProject::addImage(QString image_path) {
-    long new_image_key = getNextKey();
+DrImage* DrProject::addImage(QString image_path, long key) {
+    long new_image_key = (key == c_no_key) ? getNextKey() : key;
     m_images[new_image_key] = new DrImage(this, new_image_key, image_path);
     return m_images[new_image_key];
 }

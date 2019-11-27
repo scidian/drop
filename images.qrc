@@ -188,5 +188,26 @@
         <file>assets/gui_misc/empty_image.png</file>
         <file>assets/gui_misc/image_delete.png</file>
         <file>assets/gui_misc/image_edit.png</file>
+        <file>assets/dr_images/circle_1.png</file>
+        <file>assets/dr_images/circle_2.png</file>
+        <file>assets/dr_images/circle_3.png</file>
+        <file>assets/dr_images/circle_4.png</file>
+        <file>assets/dr_images/circle_5.png</file>
+        <file>assets/dr_images/circle_6.png</file>
+        <file>assets/dr_images/circle_7.png</file>
+        <file>assets/dr_images/rounded_1.png</file>
+        <file>assets/dr_images/rounded_2.png</file>
+        <file>assets/dr_images/rounded_3.png</file>
+        <file>assets/dr_images/rounded_4.png</file>
+        <file>assets/dr_images/rounded_5.png</file>
+        <file>assets/dr_images/rounded_6.png</file>
+        <file>assets/dr_images/rounded_7.png</file>
+        <file>assets/dr_images/square_1.png</file>
+        <file>assets/dr_images/square_2.png</file>
+        <file>assets/dr_images/square_3.png</file>
+        <file>assets/dr_images/square_4.png</file>
+        <file>assets/dr_images/square_5.png</file>
+        <file>assets/dr_images/square_6.png</file>
+        <file>assets/dr_images/square_7.png</file>
     </qresource>
 </RCC>

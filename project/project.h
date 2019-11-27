@@ -52,32 +52,6 @@ typedef std::map<Project_Options, QVariant>  OptionMap;
 
 
 //####################################################################################
-//##    Project Key Constants
-//####################################################################################
-// Starting Key
-constexpr long c_key_starting_number =  1001;       // First 1001 keys or so are reserved for built in Entities in DrProject (like default images, etc)
-                                                    // ....."1001" is an easily searchable number
-
-// Built In Images
-constexpr long c_key_asset_empty =      1;          //  32 x  32    Alpha value 0 square
-constexpr long c_key_asset_character =  2;          // 256 x 256    Gray Circle
-constexpr long c_key_asset_object =     3;          // 256 x 256    Gray Box
-
-
-// Devices
-constexpr long c_key_device_camera =    400;        // Camera Device
-
-
-// Effects
-constexpr long c_key_effect_light =     600;        // Light Effect
-constexpr long c_key_effect_water =     601;        // Water Effect
-constexpr long c_key_effect_fire =      602;        // Fire Effect
-constexpr long c_key_effect_mirror =    603;        // Mirror Effect
-constexpr long c_key_effect_fisheye =   604;        // Fisheye Effect
-constexpr long c_key_effect_swirl =     605;        // Swirl Effect
-
-
-//####################################################################################
 //##    DrProject
 //##        Class to hold data for one Project
 //############################
@@ -172,7 +146,7 @@ public:
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
-    DrImage*        addImage(QString image_path);
+    DrImage*        addImage(QString image_path, long key = c_no_key);
     long            addImage(long key, QString full_path, QString filename, QString simple_name, QImage &image);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
@@ -180,6 +154,7 @@ public:
 
 
     // Project Building
+    void            addBuiltInImages();
     void            addDefaultAssets();
     void            addSettingsToMap(DrSettings *entity, QVariantMap &map);
     void            clearProject(bool add_built_in_items = true);
