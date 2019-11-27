@@ -137,12 +137,14 @@ QString DrSettings::getName() {
         case DrType::Thing:
         case DrType::Animation:
         case DrType::Asset:
+        case DrType::Device:
+        case DrType::Effect:
+        case DrType::Font:
         case DrType::Image:
             name_component = getComponent(Components::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Properties::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();
         case DrType::Frame:     return "DrFrame - Unknown Name";
-        case DrType::Font:      return "DrFont - Unknown Name";
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
         case DrType::BaseClass: return "Base DrSettings Class";
     }

@@ -8,6 +8,10 @@
 #include <QPainter>
 
 #include "project/project_font.h"
+#include "settings/settings_component.h"
+#include "settings/settings_component_property.h"
+
+#include "constants.h"
 
 
 //####################################################################################
@@ -38,6 +42,21 @@ DrFont::DrFont(DrProject *parent_project, long key,
 
     p_gradient =        false;
     p_gradient_color =  Qt::red;
+
+
+    // ***** Initialize Settings
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Font Name");
+    property_name->setDescription("Name of this Font Asset.");
+    property_name->setValue(getName());
+
+    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
+    getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
+
+    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, getPropertyFontFamily(),
+                           "Font Family", "Font used for this text asset.", false, false);
+    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, getPropertyFontSize(),
+                           "Font Size", "Font size of this text asset.", false, false);
 }
 
 //####################################################################################

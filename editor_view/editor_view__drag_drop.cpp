@@ -61,7 +61,9 @@ void DrView::dragMoveEvent(QDragMoveEvent *event) {
         event->acceptProposedAction();
     } else if (event->mimeData()->hasUrls()) {                                          // External files
         event->acceptProposedAction();
-    } else    event->ignore();
+    } else {
+        event->ignore();
+    }
 }
 
 
@@ -110,37 +112,45 @@ void DrView::dropEvent(QDropEvent *event) {
             position = m_drop_location;
 
         // Create new Thing from drop data,                                                                 !!!!! #NOTE: Sets initial Z value of Thing
-        long     asset_key = variant_key.toInt();
-        DrAsset *asset =     m_editor_relay->currentProject()->findAssetFromKey(asset_key);
-        switch (asset->getAssetType()) {
-            case DrAssetType::Character:    thing = stage->addThing(DrThingType::Character,     asset_key, position.x(), -position.y(),   5);   break;
-            case DrAssetType::Object:       thing = stage->addThing(DrThingType::Object,        asset_key, position.x(), -position.y(),   0);   break;
-            case DrAssetType::Text:         thing = stage->addThing(DrThingType::Text,          asset_key, position.x(), -position.y(),   0);   break;
-            case DrAssetType::Effect: {
-                DrEffect *effect = m_project->findEffectFromKey( asset->getBaseKey() );
-                switch (effect->getEffectType()) {
-                    case DrEffectType::Fire:    thing = stage->addThing(DrThingType::Fire,      asset_key, position.x(), -position.y(), -10);   break;
-                    case DrEffectType::Fisheye: thing = stage->addThing(DrThingType::Fisheye,   asset_key, position.x(), -position.y(),  10);   break;
-                    case DrEffectType::Light:   thing = stage->addThing(DrThingType::Light,     asset_key, position.x(), -position.y(), -10);   break;
-                    case DrEffectType::Mirror:  thing = stage->addThing(DrThingType::Mirror,    asset_key, position.x(), -position.y(),  10);   break;
-                    case DrEffectType::Swirl:   thing = stage->addThing(DrThingType::Swirl,     asset_key, position.x(), -position.y(),  10);   break;
-                    case DrEffectType::Water:   thing = stage->addThing(DrThingType::Water,     asset_key, position.x(), -position.y(),  10);   break;
-                    case DrEffectType::Flag:    break;
-                    case DrEffectType::Rain:    break;
-                    case DrEffectType::Snow:    break;
-                    case DrEffectType::Clouds:  break;
-                    case DrEffectType::Fog:     break;
-                }
-                break;
+        long        entity_key = variant_key.toInt();
+        DrSettings *entity =     m_editor_relay->currentProject()->findSettingsFromKey(entity_key);
+
+        if (entity->getType() == DrType::Asset) {
+            DrAsset *asset = dynamic_cast<DrAsset*>(entity);
+            switch (asset->getAssetType()) {
+                case DrAssetType::Character: thing = stage->addThing(DrThingType::Character, entity_key, position.x(), -position.y(),   5); break;
+                case DrAssetType::Object:    thing = stage->addThing(DrThingType::Object,    entity_key, position.x(), -position.y(),   0); break;
             }
-            case DrAssetType::Device: {
-                DrDevice *device = m_project->findDeviceFromKey( asset->getBaseKey() );
-                switch (device->getDeviceType()) {
-                    case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    asset_key, position.x(), -position.y(), 10);   break;
-                }
-                break;
+
+        } else if (entity->getType() == DrType::Font) {
+            thing = stage->addThing(DrThingType::Text, entity_key, position.x(), -position.y(),   0);
+
+        } else if (entity->getType() == DrType::Effect) {
+            DrEffect *effect = m_project->findEffectFromKey( entity_key );
+            switch (effect->getEffectType()) {
+                case DrEffectType::Fire:    thing = stage->addThing(DrThingType::Fire,      entity_key, position.x(), -position.y(), -10);  break;
+                case DrEffectType::Fisheye: thing = stage->addThing(DrThingType::Fisheye,   entity_key, position.x(), -position.y(),  10);  break;
+                case DrEffectType::Light:   thing = stage->addThing(DrThingType::Light,     entity_key, position.x(), -position.y(), -10);  break;
+                case DrEffectType::Mirror:  thing = stage->addThing(DrThingType::Mirror,    entity_key, position.x(), -position.y(),  10);  break;
+                case DrEffectType::Swirl:   thing = stage->addThing(DrThingType::Swirl,     entity_key, position.x(), -position.y(),  10);  break;
+                case DrEffectType::Water:   thing = stage->addThing(DrThingType::Water,     entity_key, position.x(), -position.y(),  10);  break;
+                case DrEffectType::Flag:    break;
+                case DrEffectType::Rain:    break;
+                case DrEffectType::Snow:    break;
+                case DrEffectType::Clouds:  break;
+                case DrEffectType::Fog:     break;
             }
+
+        } else if (entity->getType() == DrType::Device) {
+            DrDevice *device = m_project->findDeviceFromKey( entity_key );
+            switch (device->getDeviceType()) {
+                case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    entity_key, position.x(), -position.y(),  10);  break;
+            }
+
+        } else {
+            return;
         }
+
         my_scene->addItemToSceneFromThing( thing );
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { Properties::Thing_Size } );
         if (thing_count > 0) {

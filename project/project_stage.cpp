@@ -55,7 +55,7 @@ DrStage::~DrStage() {
 //##
 //####################################################################################
 DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide, long key) {
-    DrAsset *asset = getParentProject()->findAssetFromKey(from_asset_key);
+    DrSettings *asset = getParentProject()->findSettingsFromKey(from_asset_key);
     if (asset == nullptr) {
         Dr::ShowMessageBox("Error in DrStage::addThing, Could not find DrAsset to load from! \n "
                            "New Type: " + Dr::StringFromThingType(new_type) + " \n "

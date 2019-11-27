@@ -31,6 +31,9 @@ public:
     // Constructor
     DrDevice(DrProject *parent_project, long key, DrDeviceType device_type);
 
+    // DrSettings Overrides
+    virtual DrType  getType() override      { return DrType::Device; }
+
     // Functions
     QPixmap         getPixmap();                        // Returns a pixmap for a Device in the editor based on the DrDeviceType
 

@@ -75,11 +75,12 @@ void FormMain::updateToolbar() {
 
         } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && treeAssetEditor->getSelectedKey() != c_no_key) {
             // ***** Asset is selected
-            DrAsset *asset = m_project->findAssetFromKey(treeAssetEditor->getSelectedKey());
+            DrSettings *asset = m_project->findSettingsFromKey(treeAssetEditor->getSelectedKey());
             if (asset != nullptr) {
-                if (asset->getAssetType() != DrAssetType::Effect &&
-                    asset->getAssetType() != DrAssetType::Device) {
-                    for (auto button : buttonsGroupEdit->buttons())     if (!button->isEnabled()) button->setEnabled(true);
+                if (asset->getType() == DrType::Asset || asset->getType() == DrType::Font) {
+                    for (auto button : buttonsGroupEdit->buttons()) {
+                        if (!button->isEnabled()) button->setEnabled(true);
+                    }
                 }
             }
         }

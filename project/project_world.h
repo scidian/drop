@@ -37,8 +37,10 @@ public:
     DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage = true);
     virtual ~DrWorld() override;
 
+    // DrSettings Overrides
+    virtual DrType  getType() override      { return DrType::World; }
+
     // Getters / Setters
-    virtual DrType  getType() override                  { return DrType::World; }
     StageMap&       getStageMap()                       { return m_stages; }
 
     long            getStartStageKey()                  { return m_start_stage_key; }

@@ -10,9 +10,10 @@
 #include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
-#include "project/project_world.h"
+#include "project/project_font.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
+#include "project/project_world.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -44,12 +45,13 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
                            "Asset ID Key", "ID Key of Asset this item represents.", false, false);
 
-    DrAsset *asset = getParentProject()->findAssetFromKey(from_asset_key);
+    DrSettings *entity = getParentProject()->findSettingsFromKey(from_asset_key);
 
 
     // Call to load in all the components / properties for this Stage thing
     switch (new_thing_type) {
-        case DrThingType::Character:
+        case DrThingType::Character: {
+            DrAsset *asset = dynamic_cast<DrAsset*>(entity);
             getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(false);
             getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setDisplayName("Character ID Key");
             addComponentSettingsCharacter(new_thing_name);
@@ -60,8 +62,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentAppearance();
             addComponentSpecialEffects();
             break;
-
-        case DrThingType::Object:
+        }
+        case DrThingType::Object: {
+            DrAsset *asset = dynamic_cast<DrAsset*>(entity);
             getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(false);
             getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setDisplayName("Object ID Key");
             addComponentSettingsObject(new_thing_name, should_collide);
@@ -74,6 +77,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentAppearance();
             addComponentSpecialEffects();
             break;
+        }
 
         case DrThingType::Camera:
             addComponentSettingsCamera("Camera 1");
@@ -84,11 +88,13 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(100, 100));
             break;
 
-        case DrThingType::Text:
+        case DrThingType::Text: {
+            DrFont *font = dynamic_cast<DrFont*>(entity);
             addComponentSettingsText(new_thing_name);
-            addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Text);
+            addComponentTransform(100, 100, x, -y, DrThingType::Text);
             addComponentLayering(z);
             break;
+        }
 
         // ***** DrEffectType DrThing's
         case DrThingType::Fire:

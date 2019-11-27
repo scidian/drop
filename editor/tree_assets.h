@@ -41,20 +41,20 @@ class TreeAssets: public QTreeWidget
 
 private:
     // External Borrowed Pointers
-    DrProject            *m_project;                            // Pointer to currently loaded project
-    IEditorRelay         *m_editor_relay;                       // Pointer to IEditorRelay class of parent form
+    DrProject            *m_project;                                // Pointer to currently loaded project
+    IEditorRelay         *m_editor_relay;                           // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    DrFilterHoverHandler *m_filter_hover;                       // Pointer to an event filter hover handler
+    DrFilterHoverHandler *m_filter_hover;                           // Pointer to an event filter hover handler
 
-    long                  m_selected_key = c_no_key;            // Unique Key of last clicked on Asset
+    long                  m_selected_key = c_no_key;                // Unique Key of last clicked on Asset
 
-    std::map <DrAssetType, DrQLayoutFlow*>  m_grid_layouts;     // List of the layouts so that we can sort without rebuilding
-    QList<QFrame*>                          m_asset_frames;     // List of the single row frames that contain name and pixmap labels
+    std::map <Asset_Category, DrQLayoutFlow*>   m_grid_layouts;     // List of the layouts so that we can sort without rebuilding
+    QList<QFrame*>                              m_asset_frames;     // List of the single row frames that contain name and pixmap labels
 
     QWidget              *m_search_widget;
     QVBoxLayout          *m_search_layout;
-    QLineEdit            *m_search_bar;                         // Search bar at bottom of asset dock
+    QLineEdit            *m_search_bar;                             // Search bar at bottom of asset dock
 
 public:
     // Constructor
@@ -66,12 +66,12 @@ public:
     virtual void    keyPressEvent(QKeyEvent *event) override;
 
     // Tree Building Functions
-    void                    buildAssetTree(QString search_text = "", );
-    DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, DrAssetType asset_type);
+    void                    buildAssetTree(QString search_text = "", QList<DrType> show_types = { DrType::Asset, DrType::Device, DrType::Effect, DrType::Font });
+    DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type);
     void                    ensureSelectedKeyVisible();
     void                    expandCollapseComponents();
     QList<QTreeWidgetItem*> getListOfTopLevelItems();
-    void                    removeAsset(long asset_key);
+    void                    removeEntity(long entity_key);
 
     // Function Calls
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!

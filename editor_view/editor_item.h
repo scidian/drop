@@ -14,7 +14,7 @@
 
 // Forward declarations
 class DrProject;
-class DrAsset;
+class DrSettings;
 class DrThing;
 class IEditorRelay;
 
@@ -33,10 +33,10 @@ private:
     DrThing        *m_thing = nullptr;                      // Pointer to the Thing for this item
     long            m_thing_key;                            // Stores the Thing Project Key this item represents
 
-    DrAsset        *m_asset = nullptr;                      // Pointer to the asset for this item
-    long            m_asset_key;                            // Stores the asset Project Key this item is drawn from
-    double          m_asset_width;                          // Width of asset this item is drawn from
-    double          m_asset_height;                         // Height of asset this item is drawn from
+    DrSettings     *m_asset = nullptr;                      // Pointer to the base Entity (Asset, Effect, etc) for this item
+    long            m_asset_key;                            // Stores the     base Entity Project Key this item is drawn from
+    double          m_asset_width;                          // Width of       base Entity this item is drawn from
+    double          m_asset_height;                         // Height of      base Entity this item is drawn from
 
     // Local Variables
     QPixmap         m_pixmap;                               // Pixmap used to represent this Thing, filters are applied to this
@@ -80,7 +80,7 @@ public:
 
     DrThing*                getThing()          { return m_thing; }
     long                    getThingKey()       { return m_thing_key; }
-    DrAsset*                getAsset()          { return m_asset; }
+    DrSettings*             getAsset()          { return m_asset; }
     long                    getAssetKey()       { return m_asset_key; }
 
     double                  getAssetWidth()               { return m_asset_width; }

@@ -12,7 +12,7 @@
 #include "globals.h"
 #include "interface_editor_relay.h"
 
-typedef std::map<DrAssetType, bool>     AssetMap;
+typedef std::map<Asset_Category, bool>  AssetCategoryMap;
 typedef std::map<Components,  bool>     ComponentMap;
 typedef std::map<Preferences, QVariant> PreferenceMap;
 
@@ -28,20 +28,20 @@ typedef std::map<Preferences, QVariant> PreferenceMap;
 namespace Dr {
 
     // Global variables
-    static AssetMap      asset_categories;                  // Map holding if Asset Tree Category was last Expanded
-    static ComponentMap  components;                        // Map holding if Inspector Component was last Expanded
-    static PreferenceMap options;                           // Map holding PROGRAM WIDE options (PreferenceMap type defined in globals.h)
-    static FormMain     *g_active_form_main;                // Stores active FormMain reference
-    static IEditorRelay *g_active_editor;                   // Stores active IEditorRelay reference
+    static AssetCategoryMap asset_categories;                   // Map holding if Asset Tree Category was last Expanded
+    static ComponentMap     components;                         // Map holding if Inspector Component was last Expanded
+    static PreferenceMap    options;                            // Map holding PROGRAM WIDE options (PreferenceMap type defined in globals.h)
+    static FormMain        *g_active_form_main;                 // Stores active FormMain reference
+    static IEditorRelay    *g_active_editor;                    // Stores active IEditorRelay reference
 
     QVariant    GetPreference(Preferences option_to_get)   { return options[option_to_get]; }
     void        SetPreference(Preferences option_to_set, QVariant new_value) { options[option_to_set] = new_value; }
 
-    bool        GetAssetExpanded(DrAssetType asset_type)                         { return asset_categories[asset_type]; }
-    void        SetAssetExpanded(DrAssetType asset_type, bool expanded)          { asset_categories[asset_type] = expanded; }
+    bool        GetAssetExpanded(Asset_Category asset_type)                         { return asset_categories[asset_type]; }
+    void        SetAssetExpanded(Asset_Category asset_type, bool expanded)          { asset_categories[asset_type] = expanded; }
 
-    bool        GetInspectorExpanded(Components component_to_check)              { return components[component_to_check]; }
-    void        SetInspectorExpanded(Components component_to_set, bool expanded) { components[component_to_set] = expanded; }
+    bool        GetInspectorExpanded(Components component_to_check)                 { return components[component_to_check]; }
+    void        SetInspectorExpanded(Components component_to_set, bool expanded)    { components[component_to_set] = expanded; }
 
     IEditorRelay*   GetActiveEditorRelay()                              { return g_active_editor; }
     void            SetActiveEditorRelay(IEditorRelay *editor_relay)    { g_active_editor =    editor_relay; }
@@ -87,12 +87,14 @@ namespace Dr {
 
 
         // List of Asset Categories Being Expanded
-        Dr::SetAssetExpanded(DrAssetType::Character,    true);
-        Dr::SetAssetExpanded(DrAssetType::Device,       true);
-        Dr::SetAssetExpanded(DrAssetType::Effect,       true);
-        Dr::SetAssetExpanded(DrAssetType::Object,       true);
-        Dr::SetAssetExpanded(DrAssetType::Text,         true);
+        Dr::SetAssetExpanded(Asset_Category::Character,    true);
+        Dr::SetAssetExpanded(Asset_Category::Device,       true);
+        Dr::SetAssetExpanded(Asset_Category::Effect,       true);
+        Dr::SetAssetExpanded(Asset_Category::Object,       true);
+        Dr::SetAssetExpanded(Asset_Category::Text,         true);
 
+        Dr::SetAssetExpanded(Asset_Category::Image,        true);
+        Dr::SetAssetExpanded(Asset_Category::ImageBuiltIn, true);
 
 
         // List of Inspector Component Categories Being Expanded

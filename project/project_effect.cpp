@@ -8,6 +8,7 @@
 #include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_effect.h"
+#include "settings/settings_component_property.h"
 
 
 //####################################################################################
@@ -17,6 +18,12 @@ DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type
     this->setKey(key);
 
     m_effect_type = effect_type;
+
+    // ***** Initialize Settings
+    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    property_name->setDisplayName("Effect Name");
+    property_name->setDescription("Name of this Effect Asset.");
+    property_name->setValue(Dr::StringFromEffectType(effect_type));
 }
 
 

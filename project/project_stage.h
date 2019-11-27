@@ -45,9 +45,10 @@ public:
     DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, QString new_stage_name, bool is_start_stage = false);
     virtual ~DrStage() override;
 
+    // DrSettings Overrides
+    virtual DrType  getType() override      { return DrType::Stage; }
 
     // Getters / Setters
-    virtual DrType  getType() override      { return DrType::Stage; }
     DrWorld*        getParentWorld()        { return m_parent_world; }
     ThingMap&       getThingMap()           { return m_things; }
     DrThing*        getThing(long key)      { return m_things[key]; }

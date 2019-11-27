@@ -16,17 +16,6 @@ class DrProject;
 class DrPropertyCollision;
 
 
-// Local Enum
-enum class AssetTreeTypes {
-    Animations =    1,
-    Assets =        2,
-    Devices =       3,
-    Effects =       4,
-    Images =        5,
-    All =         100,
-};
-
-
 //####################################################################################
 //##    DrAsset
 //##        Class to hold an Asset for use in a Project
@@ -37,7 +26,7 @@ private:
     // Local Variables
     DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
 
-    long            m_base_key = c_no_key;              // Holds key to source (ie. and asset pulls from an DrAnimation, DrImage, DrFont, DrEffect, etc.)
+    long            m_base_key = c_no_key;              // Holds key to source (asset pulls from an DrAnimation, DrImage)
                                                         // For more info, look at DrAsset Constructor
 
     long            m_width;
@@ -71,9 +60,6 @@ public:
     // Initialize Calls
     void        initializeAssetSettingsCharacter(QString new_name);
     void        initializeAssetSettingsObject(QString new_name);
-    void        initializeAssetSettingsDevice(QString new_name);
-    void        initializeAssetSettingsEffect(QString new_name);
-    void        initializeAssetSettingsFont(DrFont *font);
 
     void        initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key);
     void        initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape);

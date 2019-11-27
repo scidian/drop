@@ -21,7 +21,7 @@
 //  Toolbar?
 
 void FormAnimation::buildAssetTree() {
-    treeAssetEditor->buildAssetTree();
+    treeAssetEditor->buildAssetTree("", { DrType::Image });
 }
 
 

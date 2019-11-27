@@ -126,9 +126,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
         if (new_type == DrType::Thing) {
             DrThing* thing = getParentProject()->findThingFromKey(new_key);
-            long asset_key = thing->getAssetKey();
-            QString asset_name = getParentProject()->findAssetFromKey(asset_key)->getName();
-            Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(asset_key) +
+            QString asset_name = getParentProject()->findSettingsFromKey(thing->getAssetKey())->getName();
+            Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(thing->getAssetKey()) +
                                                               ", NAME: " + asset_name);
         } else {
             Dr::SetLabelText(Label_Names::Label_Object_2, "");

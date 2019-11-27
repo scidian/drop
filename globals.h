@@ -52,8 +52,8 @@ namespace Dr {
     QVariant    GetPreference(Preferences preference_to_get);
     void        SetPreference(Preferences preference_to_set, QVariant new_value);
 
-    bool        GetAssetExpanded(DrAssetType asset_type);
-    void        SetAssetExpanded(DrAssetType asset_type, bool expanded);
+    bool        GetAssetExpanded(Asset_Category asset_type);
+    void        SetAssetExpanded(Asset_Category asset_type, bool expanded);
 
     bool        GetInspectorExpanded(Components component_to_check);
     void        SetInspectorExpanded(Components component_to_set, bool expanded);

@@ -48,15 +48,13 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
     // Base Key is Project Key of underyling source:
     //      DrAssetType::Character      Refers to DrAnimation object of Asset_Animation_Idle DrProperty
     //      DrAssetType::Object         Refers to DrAnimation object of Asset_Animation_Idle DrProperty
-    //      DrAssetType::Device         Underlying DrDevice object
-    //      DrAssetType::Effect         Underlying DrEffect object
-    //      DrAssetType::Text           Underlying DrFont   object
 
     DrSettings *source = parent_project->findSettingsFromKey(base_key);
 
     DrPropertyCollision shape;
     QString     my_starting_name = "Unknown";
     QPixmap     my_starting_pixmap(":/assets/dr_images/empty.png");
+
     switch (getAssetType()) {
         case DrAssetType::Character:
         case DrAssetType::Object: {
@@ -89,30 +87,6 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             initializeAssetSettingsHealth(getAssetType());
             initializeAssetSettingsPhysics(getAssetType());
             initializeAssetSettingsControls(getAssetType());
-            break;
-        }
-        case DrAssetType::Device: {
-            DrDevice *device = getParentProject()->findDeviceFromKey(base_key);
-            if (device == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Device with key: " +
-                                                        QString::number(base_key), Dr::GetActiveFormMain());
-            my_starting_pixmap = device->getPixmap();
-            initializeAssetSettingsDevice(Dr::StringFromDeviceType(device->getDeviceType()));
-            break;
-        }
-        case DrAssetType::Effect: {
-            DrEffect *effect = getParentProject()->findEffectFromKey(base_key);
-            if (effect == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Effect with key: " +
-                                                        QString::number(base_key), Dr::GetActiveFormMain());
-            my_starting_pixmap = effect->getPixmap();
-            initializeAssetSettingsEffect(Dr::StringFromEffectType(effect->getEffectType()));
-            break;
-        }
-        case DrAssetType::Text: {
-            DrFont *font = getParentProject()->findFontFromKey(base_key);
-            if (font == nullptr) Dr::ShowErrorMessage("DrProject::addAsset", "Error! Could not find Font with key: " +
-                                                      QString::number(base_key), Dr::GetActiveFormMain());
-            my_starting_pixmap = font->getPixmap();
-            initializeAssetSettingsFont(font);
             break;
         }
     }
@@ -150,48 +124,8 @@ void DrAsset::deleteSource() {
     if ( source_to_delete < c_key_starting_number) return;
 
     // ***** Delete Animations not used by other Assets
-    if (getAssetType() == DrAssetType::Object || getAssetType() == DrAssetType::Character) {
-
-        // Delete animations
-        for (auto &animation_key : animationsUsedByAsset()) {
-            getParentProject()->deleteAnimation(animation_key, this->getKey());
-        }
-
-    // ***** Delete Underlying Source(s)
-    } else {
-        // Check all Assets for use of the same Source
-        for (auto &asset_pair : getParentProject()->getAssetMap()) {
-            DrAsset *asset_to_check = asset_pair.second;
-            if (asset_to_check == nullptr) continue;
-            if ((asset_pair.first != getKey()) && (asset_to_check->getBaseKey() == getBaseKey())) return;
-        }
-
-        switch (getAssetType()) {
-            case DrAssetType::Character:
-            case DrAssetType::Object:
-                break;
-            case DrAssetType::Device: {
-                DrDevice *device = getParentProject()->getDeviceMap()[source_to_delete];
-                if (device == nullptr) break;
-                getParentProject()->getDeviceMap().erase( source_to_delete );
-                delete device;
-                break;
-            }
-            case DrAssetType::Effect: {
-                DrEffect *effect = getParentProject()->getEffectMap()[source_to_delete];
-                if (effect == nullptr) break;
-                getParentProject()->getEffectMap().erase( source_to_delete );
-                delete effect;
-                break;
-            }
-            case DrAssetType::Text: {
-                DrFont *font = getParentProject()->getFontMap()[source_to_delete];
-                if (font == nullptr) break;
-                getParentProject()->getFontMap().erase( source_to_delete );
-                delete font;
-                break;
-            }
-        }
+    for (auto &animation_key : animationsUsedByAsset()) {
+        getParentProject()->deleteAnimation(animation_key, this->getKey());
     }
 }
 

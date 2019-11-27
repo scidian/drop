@@ -181,13 +181,14 @@ bool DrProject::openProjectFromFile(QString open_file) {
     for (int i = 0; i < asset_count; ++i) {
         settings.setArrayIndex(i);
         // Load Asset
-        QVariantMap asset_data =    settings.value("asset").value<QVariantMap>();
-        long        asset_key =     asset_data["key"].toLongLong();
-        long        base_key =      asset_data["source_key"].toLongLong();
-        DrAssetType asset_type =    static_cast<DrAssetType>(asset_data["type"].toInt());
+        QVariantMap asset_data =        settings.value("asset").value<QVariantMap>();
+        long        asset_key =         asset_data["key"].toLongLong();
+        long        base_key =          asset_data["source_key"].toLongLong();
 
-        // Dont process Built-In assets
-        if (asset_type == DrAssetType::Effect || asset_type == DrAssetType::Device) continue;
+        int         asset_type_as_int = asset_data["type"].toInt();
+        if (asset_type_as_int != Dr::EnumToInt(DrAssetType::Object) &&
+            asset_type_as_int != Dr::EnumToInt(DrAssetType::Character)) continue;
+        DrAssetType asset_type =    static_cast<DrAssetType>(asset_type_as_int);
 
         // If key doesnt already exist, initialize Asset
         if (findSettingsFromKey(asset_key, false) != nullptr) continue;
@@ -270,14 +271,14 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
                 // Make sure thing uses Built-In Device / Effect Asset Key
                 switch (thing_type) {
-                    case DrThingType::Camera:       asset_key = c_key_asset_camera;     break;
+                    case DrThingType::Camera:       asset_key = c_key_device_camera;    break;
 
-                    case DrThingType::Light:        asset_key = c_key_asset_light;      break;
-                    case DrThingType::Water:        asset_key = c_key_asset_water;      break;
-                    case DrThingType::Fire:         asset_key = c_key_asset_fire;       break;
-                    case DrThingType::Mirror:       asset_key = c_key_asset_mirror;     break;
-                    case DrThingType::Fisheye:      asset_key = c_key_asset_fisheye;    break;
-                    case DrThingType::Swirl:        asset_key = c_key_asset_swirl;      break;
+                    case DrThingType::Light:        asset_key = c_key_effect_light;     break;
+                    case DrThingType::Water:        asset_key = c_key_effect_water;     break;
+                    case DrThingType::Fire:         asset_key = c_key_effect_fire;      break;
+                    case DrThingType::Mirror:       asset_key = c_key_effect_mirror;    break;
+                    case DrThingType::Fisheye:      asset_key = c_key_effect_fisheye;   break;
+                    case DrThingType::Swirl:        asset_key = c_key_effect_swirl;     break;
                     default: ;
                 }
 

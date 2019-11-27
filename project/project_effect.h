@@ -31,6 +31,9 @@ public:
     // Constructor
     DrEffect(DrProject *parent_project, long key, DrEffectType effect_type);
 
+    // DrSettings Overrides
+    virtual DrType  getType() override      { return DrType::Effect; }
+
     // Functions
     QPixmap         getPixmap();                        // Returns a pixmap for an Effect in the editor based on the EffectType
 

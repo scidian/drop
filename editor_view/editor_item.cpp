@@ -39,100 +39,102 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     m_thing      = thing;
     m_thing_key  = thing->getKey();
     m_asset_key  = m_thing->getAssetKey();
-    m_asset      = project->findAssetFromKey(m_asset_key);
+    m_asset      = project->findSettingsFromKey(m_asset_key);
 
     m_temp_only  = is_temp_only;                            // Used for interactive resizing in QGraphicsView
 
     // Load image from asset
-    switch (m_asset->getAssetType()) {
-        case DrAssetType::Character:
-        case DrAssetType::Object: {
-            DrImage *image = m_project->findImageFromKey(m_asset->getIdleAnimationFirstFrameImageKey());
-            if (image != nullptr) m_pixmap = image->getPixmapFromImage();
-            applyFilters();                                 // Apply filters and set pixmap
-            m_asset_width =  m_asset->getWidth();           // Dimensions of associated asset, used for boundingRect
-            m_asset_height = m_asset->getHeight();
-            break;
-        }
-        case DrAssetType::Text: {
-            QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-            m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getBaseKey() )->createText( text );
-            setPixmap(m_pixmap);
-            m_asset_width =  m_pixmap.width();
-            m_asset_height = m_pixmap.height();
-            break;
+    if (m_asset->getType() == DrType::Asset) {
+        DrAsset *asset = dynamic_cast<DrAsset*>(m_asset);
+        switch (asset->getAssetType()) {
+            case DrAssetType::Character:
+            case DrAssetType::Object: {
+                DrImage *image = m_project->findImageFromKey(asset->getIdleAnimationFirstFrameImageKey());
+                if (image != nullptr) m_pixmap = image->getPixmapFromImage();
+                applyFilters();                                 // Apply filters and set pixmap
+                m_asset_width =  asset->getWidth();             // Dimensions of associated asset, used for boundingRect
+                m_asset_height = asset->getHeight();
+                break;
+            }
         }
 
-        case DrAssetType::Device:
-            switch (m_editor_relay->currentProject()->findDeviceFromKey( m_asset->getBaseKey() )->getDeviceType()) {
-                case DrDeviceType::Camera: {
-                    m_pixmap = DrImaging::drawCamera();
-                    setPixmap(m_pixmap);
-                    applyFilters();
-                    break;
-                }
-            }
-            m_asset_width =  m_pixmap.width();
-            m_asset_height = m_pixmap.height();
-            break;
+    } else if (m_asset->getType() == DrType::Font) {
+        QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+        m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() )->createText( text );
+        setPixmap(m_pixmap);
+        m_asset_width =  m_pixmap.width();
+        m_asset_height = m_pixmap.height();
 
-        case DrAssetType::Effect:
-            switch (m_editor_relay->currentProject()->findEffectFromKey( m_asset->getBaseKey() )->getEffectType()) {
-                case DrEffectType::Fire: {
-                    uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
-                    uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();
-                    uint smoke =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke)->getValue().toUInt();
-                    int  mask  =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
-                    m_pixmap = DrImaging::drawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
-                    setPixmap(m_pixmap);
-                    applyFilters();
-                    break;
-                }
-                case DrEffectType::Fisheye: {
-                    uint color =        m_thing->getComponentProperty(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawFisheye( QColor::fromRgba(color) );
-                    setPixmap(m_pixmap);
-                    applyFilters();
-                    break;
-                }
-                case DrEffectType::Light: {
-                    uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
-                    float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toList().first().toFloat();
-                    float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toList().first().toFloat();
-                    float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
-                    float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
-                    m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
-                    setPixmap(m_pixmap);
-                    break;
-                }
-                case DrEffectType::Mirror: {
-                    uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color)->getValue().toUInt();
-                    uint color_2 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
-                    setPixmap(m_pixmap);
-                    applyFilters();
-                    break;
-                }
-                case DrEffectType::Swirl: {
-                    uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color)->getValue().toUInt();
-                    float  angle = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle)->getValue().toFloat();
-                    m_pixmap = DrImaging::drawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
-                    setPixmap(m_pixmap);
-                    applyFilters();
-                    break;
-                }
-                case DrEffectType::Water: {
-                    uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
-                    uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();
-                    m_pixmap = DrImaging::drawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
-                    setPixmap(m_pixmap);
-                    applyFilters();
-                    break;
-                }
+    } else if (m_asset->getType() == DrType::Device) {
+        DrDevice *device = dynamic_cast<DrDevice*>(m_asset);
+        switch (device->getDeviceType()) {
+            case DrDeviceType::Camera: {
+                m_pixmap = DrImaging::drawCamera();
+                setPixmap(m_pixmap);
+                applyFilters();
+                break;
             }
-            m_asset_width =  m_pixmap.width();
-            m_asset_height = m_pixmap.height();
-            break;
+        }
+        m_asset_width =  m_pixmap.width();
+        m_asset_height = m_pixmap.height();
+
+    } else if (m_asset->getType() == DrType::Effect) {
+        DrEffect *effect = dynamic_cast<DrEffect*>(m_asset);
+        switch (effect->getEffectType()) {
+            case DrEffectType::Fire: {
+                uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
+                uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();
+                uint smoke =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke)->getValue().toUInt();
+                int  mask  =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
+                m_pixmap = DrImaging::drawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
+                setPixmap(m_pixmap);
+                applyFilters();
+                break;
+            }
+            case DrEffectType::Fisheye: {
+                uint color =        m_thing->getComponentProperty(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color)->getValue().toUInt();
+                m_pixmap = DrImaging::drawFisheye( QColor::fromRgba(color) );
+                setPixmap(m_pixmap);
+                applyFilters();
+                break;
+            }
+            case DrEffectType::Light: {
+                uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
+                float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toList().first().toFloat();
+                float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toList().first().toFloat();
+                float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
+                float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
+                m_pixmap = DrImaging::drawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
+                setPixmap(m_pixmap);
+                break;
+            }
+            case DrEffectType::Mirror: {
+                uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color)->getValue().toUInt();
+                uint color_2 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color)->getValue().toUInt();
+                m_pixmap = DrImaging::drawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
+                setPixmap(m_pixmap);
+                applyFilters();
+                break;
+            }
+            case DrEffectType::Swirl: {
+                uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color)->getValue().toUInt();
+                float  angle = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle)->getValue().toFloat();
+                m_pixmap = DrImaging::drawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
+                setPixmap(m_pixmap);
+                applyFilters();
+                break;
+            }
+            case DrEffectType::Water: {
+                uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
+                uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();
+                m_pixmap = DrImaging::drawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
+                setPixmap(m_pixmap);
+                applyFilters();
+                break;
+            }
+        }
+        m_asset_width =  m_pixmap.width();
+        m_asset_height = m_pixmap.height();
     }
 
 

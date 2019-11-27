@@ -93,8 +93,8 @@ void DrQLayoutFlow::sortItems() {
     std::sort(item_list.begin(), item_list.end(), [this](QLayoutItem *a, QLayoutItem *b) {
         long key_a = a->widget()->property(User_Property::Key).toLongLong();
         long key_b = b->widget()->property(User_Property::Key).toLongLong();
-        DrAsset *asset_a = this->m_project->findAssetFromKey(key_a);
-        DrAsset *asset_b = this->m_project->findAssetFromKey(key_b);
+        DrSettings *asset_a = this->m_project->findSettingsFromKey(key_a);
+        DrSettings *asset_b = this->m_project->findSettingsFromKey(key_b);
         if (asset_a == nullptr || asset_b == nullptr) return false;
         return asset_a->getName().toLower() < asset_b->getName().toLower();
     });

@@ -5,20 +5,12 @@
 //
 //
 //
-#include "3rd_party/hull_finder.h"
-#include "3rd_party/polyline_simplification.h"
-#include "engine_mesh/engine_vertex_data.h"
-#include "forms/form_main.h"
 #include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_asset.h"
-#include "project/project_effect.h"
-#include "project/project_font.h"
-#include "project/project_image.h"
-#include "project/project_world.h"
 #include "project/project_stage.h"
 #include "project/project_thing.h"
-#include "properties/property_collision.h"
+#include "project/project_world.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
@@ -98,47 +90,6 @@ void DrAsset::initializeAssetSettingsObject(QString new_name) {
 
 //    addPropertyToComponent(Components::Asset_Settings_Object, Properties::Asset_Object_One_Way_Type, Property_Type::List, 0,
 //                           "One Way Type", "Type of One Way collision for this object. <b></b>");
-}
-
-
-//####################################################################################
-//##    Device Asset Components
-//####################################################################################
-void DrAsset::initializeAssetSettingsDevice(QString new_name) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Device Name");
-    property_name->setDescription("Name of this Device Asset.");
-    property_name->setValue(new_name);
-}
-
-
-//####################################################################################
-//##    Effect Asset Components
-//####################################################################################
-void DrAsset::initializeAssetSettingsEffect(QString new_name) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Effect Name");
-    property_name->setDescription("Name of this Effect Asset.");
-    property_name->setValue(new_name);
-}
-
-
-//####################################################################################
-//##    Font Asset Components
-//####################################################################################
-void DrAsset::initializeAssetSettingsFont(DrFont *font) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
-    property_name->setDisplayName("Font Name");
-    property_name->setDescription("Name of this Font Asset.");
-    property_name->setValue(font->getName());
-
-    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
-    getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
-
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, font->getPropertyFontFamily(),
-                           "Font Family", "Font used for this text asset.", false, false);
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, font->getPropertyFontSize(),
-                           "Font Size", "Font size of this text asset.", false, false);
 }
 
 

@@ -28,9 +28,11 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //############################
 enum class DrType {
     Animation,
+        Frame,
     Asset,
+    Device,
+    Effect,
     Font,
-    Frame,
     Image,
     World,
         Stage,
@@ -39,6 +41,7 @@ enum class DrType {
     //        Background,
     //        Foreground,
 
+    //Logic,
     //Variable,
 
     //UI,
@@ -54,13 +57,25 @@ enum class DrType {
 enum class DrAssetType {
     Character,
     Object,
-    Effect,
-    Text,
+    // Action
+};
 
-    Device,
+enum class DrDeviceType {
+    Camera,
+};
 
-    //Action,
-    //Logic,
+enum class DrEffectType {
+    Light,
+    Water,
+    Fire,
+    Mirror,
+    Fisheye,
+    Swirl,
+    Flag,
+    Rain,
+    Snow,
+    Clouds,
+    Fog,
 };
 
 enum class DrThingType {
@@ -84,22 +99,18 @@ enum class DrThingType {
     //Particle,
 };
 
-enum class DrEffectType {
-    Light,
-    Water,
-    Fire,
-    Mirror,
-    Fisheye,
-    Swirl,
-    Flag,
-    Rain,
-    Snow,
-    Clouds,
-    Fog,
-};
 
-enum class DrDeviceType {
-    Camera,
+//####################################################################################
+//##    Categories for the Asset Tree
+//############################
+enum class Asset_Category {
+    Character,
+    Object,
+    Device,
+    Effect,
+    Text,
+    Image,
+    ImageBuiltIn,
 };
 
 

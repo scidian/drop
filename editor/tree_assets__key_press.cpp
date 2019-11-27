@@ -100,8 +100,6 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_D) {
         DrAsset *asset = getParentProject()->findAssetFromKey(getSelectedKey());
         if (asset == nullptr) return;
-        if (asset->getAssetType() == DrAssetType::Device) return;
-        if (asset->getAssetType() == DrAssetType::Effect) return;
 
         // Create new Asset, copy Settings / Components / Properties
         DrAsset *copy_asset = getParentProject()->addAsset( asset->getAssetType(), asset->getBaseKey() );
@@ -132,11 +130,11 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
     // ***** Delete Asset
     if (event->key() == Qt::Key_Delete || event->key() == Qt::Key_Backspace) {
-        DrAsset *asset = getParentProject()->findAssetFromKey(getSelectedKey());
-        if (asset == nullptr) return;
-        if (asset->getAssetType() == DrAssetType::Effect) return;
 
-        removeAsset(getSelectedKey());
+        DrSettings *entity = getParentProject()->findAssetFromKey(getSelectedKey());
+        if (entity == nullptr) return;
+
+        removeEntity(getSelectedKey());
 
         // Select next availale item if there is one
         long new_key = c_no_key;
@@ -177,11 +175,12 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
 
 //####################################################################################
-//##    Removes Asset from the Project
+//##    Removes Entity from the Project
 //####################################################################################
-void TreeAssets::removeAsset(long asset_key) {
-    DrAsset *asset = getParentProject()->findAssetFromKey(asset_key);
-    if (asset == nullptr) return;
+void TreeAssets::removeEntity(long entity_key) {
+
+    DrSettings *entity = getParentProject()->findSettingsFromKey(entity_key);
+    if (entity == nullptr) return;
 
     // ***** Delete all instances in project
     for (auto world_pair : getParentProject()->getWorldMap()) {
@@ -193,7 +192,7 @@ void TreeAssets::removeAsset(long asset_key) {
             QList<DrThing*> things;
             for (auto thing_pair : stage->getThingMap()) {
                 DrThing *thing = thing_pair.second;
-                if (thing->getAssetKey() == asset_key) things.append(thing);
+                if (thing->getAssetKey() == entity_key) things.append(thing);
             }
 
             // Delete them
@@ -203,8 +202,8 @@ void TreeAssets::removeAsset(long asset_key) {
         }
     }
 
-    // ***** Delete Asset / underlying source to Asset
-    getParentProject()->deleteAsset(asset->getKey());
+    // ***** Delete Entity
+    getParentProject()->deleteEntity(entity_key);
 }
 
 

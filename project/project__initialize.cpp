@@ -66,8 +66,8 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
         DrImage *image_16 = this->addImage(":/assets/test_images/dragon.png");
 
         long font_1 =   this->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
-        long font_2 =   this->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
-        long font_3 =   this->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
+                        this->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
+                        this->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
 
                                 this->addAsset(DrAssetType::Character, image_6->getKey() );         // "Ball 1"
         DrAsset *a_dragon =     this->addAsset(DrAssetType::Character, image_16->getKey() );        // "Dragon"
@@ -89,9 +89,6 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
         this->addAsset(DrAssetType::Object, image_14->getKey() );                                   // "Donut"
         this->addAsset(DrAssetType::Object, image_15->getKey() );                                   // "Shapes 2"
 
-        DrAsset *a_font =       this->addAsset(DrAssetType::Text, font_1);                          // "Test Font"
-        this->addAsset(DrAssetType::Text, font_2);                                                  // "Test Font 2"
-        this->addAsset(DrAssetType::Text, font_3);                                                  // "Test Font 3"
 
         // Add some Worlds and Stages
         this->addWorld();                                                                           // "World 2"
@@ -128,7 +125,7 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
         // Stage 2 Misc Test
         this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_square->getKey(),   600,   700,  0);
-        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Text,   a_font->getKey(),     500,   900,  0);
+        this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Text,   font_1,               500,   900,  0);
 
         this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground->getKey(),   200,  -200,  0);
         this->findWorldWithName("World 2")->getStageWithName("2")->addThing(DrThingType::Object, a_ground->getKey(),   600,  -200,  0);
@@ -165,36 +162,15 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 void DrProject::addDefaultAssets() {
 
     // ***** Add Effects
-    if (findEffectFromType(DrEffectType::Light) == nullptr) {
-        this->addEffect(DrEffectType::Light,    c_key_effect_light);
-        this->addAsset(DrAssetType::Effect,     c_key_effect_light,     c_key_asset_light);
-    }
-    if (findEffectFromType(DrEffectType::Water) == nullptr) {
-        this->addEffect(DrEffectType::Water,    c_key_effect_water);
-        this->addAsset(DrAssetType::Effect,     c_key_effect_water,     c_key_asset_water);
-    }
-    if (findEffectFromType(DrEffectType::Fire) == nullptr) {
-        this->addEffect(DrEffectType::Fire,     c_key_effect_fire);
-        this->addAsset(DrAssetType::Effect,     c_key_effect_fire,      c_key_asset_fire);
-    }
-    if (findEffectFromType(DrEffectType::Mirror) == nullptr) {
-        this->addEffect(DrEffectType::Mirror,   c_key_effect_mirror);
-        this->addAsset(DrAssetType::Effect,     c_key_effect_mirror,    c_key_asset_mirror);
-    }
-    if (findEffectFromType(DrEffectType::Fisheye) == nullptr) {
-        this->addEffect(DrEffectType::Fisheye,  c_key_effect_fisheye);
-        this->addAsset(DrAssetType::Effect,     c_key_effect_fisheye,   c_key_asset_fisheye);
-    }
-    if (findEffectFromType(DrEffectType::Swirl) == nullptr) {
-        this->addEffect(DrEffectType::Swirl,    c_key_effect_swirl);
-        this->addAsset(DrAssetType::Effect,     c_key_effect_swirl,     c_key_asset_swirl);
-    }
+    if (findEffectFromType(DrEffectType::Light) == nullptr)     this->addEffect(DrEffectType::Light,    c_key_effect_light);
+    if (findEffectFromType(DrEffectType::Water) == nullptr)     this->addEffect(DrEffectType::Water,    c_key_effect_water);
+    if (findEffectFromType(DrEffectType::Fire) == nullptr)      this->addEffect(DrEffectType::Fire,     c_key_effect_fire);
+    if (findEffectFromType(DrEffectType::Mirror) == nullptr)    this->addEffect(DrEffectType::Mirror,   c_key_effect_mirror);
+    if (findEffectFromType(DrEffectType::Fisheye) == nullptr)   this->addEffect(DrEffectType::Fisheye,  c_key_effect_fisheye);
+    if (findEffectFromType(DrEffectType::Swirl) == nullptr)     this->addEffect(DrEffectType::Swirl,    c_key_effect_swirl);
 
     // ***** Add Devices
-    if (findDeviceFromType(DrDeviceType::Camera) == nullptr) {
-        this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
-        this->addAsset(DrAssetType::Device,     c_key_device_camera,    c_key_asset_camera);
-    }
+    if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
 }
 
 

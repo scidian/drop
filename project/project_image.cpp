@@ -30,13 +30,20 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path) : DrSe
 
     // Set name in DrSettings Entity properties
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
 }
 
 // File Loading Constructor
-DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image) : DrSettings(parent_project) {
+DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString filename, QString simple_name, QImage &image)
+    : DrSettings(parent_project)
+{
     this->setKey(key);
     m_full_path = full_path;
     m_filename = filename;
     m_simple_name = simple_name;
     m_image = image;
+
+    // Set name in DrSettings Entity properties
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
 }

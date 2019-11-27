@@ -53,13 +53,14 @@ public:
     // Constructor
     DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);
 
+    // DrSettings Overrides
+    virtual DrType      getType() override      { return DrType::Font; }
+    virtual QString     getName() override      { return m_name; }
+
     // Function Calls
     QPixmap         createText(QString text);
 
     // Getters / Setters
-    virtual DrType  getType() override      { return DrType::Font; }
-    QString         getName() override      { return m_name; }
-
     QPixmap         getPixmap()             { return m_pixmap; }
 
     QRect           getCharRect(char character)     { return m_positions[character]; }

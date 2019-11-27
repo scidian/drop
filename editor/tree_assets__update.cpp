@@ -135,13 +135,13 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_items, QList<long> p
 //####################################################################################
 void TreeAssets::handleCollapsed(QTreeWidgetItem *item) {
     long type = item->data(0, User_Roles::Type).toLongLong();
-    DrAssetType asset_type = static_cast<DrAssetType>(type);
+    Asset_Category asset_type = static_cast<Asset_Category>(type);
     Dr::SetAssetExpanded(asset_type, false);
 }
 
 void TreeAssets::handleExpanded(QTreeWidgetItem *item) {
     long type = item->data(0, User_Roles::Type).toLongLong();
-    DrAssetType asset_type = static_cast<DrAssetType>(type);
+    Asset_Category asset_type = static_cast<Asset_Category>(type);
     Dr::SetAssetExpanded(asset_type, true);
 }
 
@@ -152,7 +152,7 @@ void TreeAssets::handleExpanded(QTreeWidgetItem *item) {
 void TreeAssets::expandCollapseComponents() {
     for (auto &item : getListOfTopLevelItems()) {
         long type = item->data(0, User_Roles::Type).toLongLong();
-        DrAssetType asset_type = static_cast<DrAssetType>(type);
+        Asset_Category asset_type = static_cast<Asset_Category>(type);
 
         if (Dr::GetAssetExpanded(asset_type)) {
             if (item->isExpanded() == false) {

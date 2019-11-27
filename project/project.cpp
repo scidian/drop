@@ -56,12 +56,12 @@ void DrProject::clearProject(bool add_built_in_items) {
         QString path_character = ":/assets/dr_images/circle.png";       QImage image_character =    QImage(path_character).convertToFormat(format);
         QString path_object =    ":/assets/dr_images/box.png";          QImage image_object =       QImage(path_object).convertToFormat(format);
 
-        this->addImage(c_key_asset_empty,       path_empty,     "empty.png",  "Empty",    image_empty);
-        this->addImage(c_key_asset_character,   path_character, "circle.png", "Ball",     image_character);
-        this->addImage(c_key_asset_object,      path_object,    "box.png",    "Block",    image_object);
+        this->addImage(c_key_asset_empty,       path_empty,     "empty.png",  "empty",    image_empty);
+        this->addImage(c_key_asset_character,   path_character, "circle.png", "ball",     image_character);
+        this->addImage(c_key_asset_object,      path_object,    "box.png",    "block",    image_object);
     }
 
-    // !!!!! #NOTE: Don't alllow key to start at less than 1, having an item with key 0 could conflict with nullptr results
+    // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 could conflict with nullptr results
     //              (starts at 1001)
     m_key_generator = c_key_starting_number;
 }
@@ -124,6 +124,17 @@ void DrProject::deleteAsset(long asset_key) {
     asset->deleteSource();
     m_assets.erase(asset_key);
     delete asset;
+}
+
+// Attempts to remove an Entity from the project
+void DrProject::deleteEntity(long entity_key) {
+    DrSettings *entity = findSettingsFromKey(entity_key);
+    if (entity == nullptr) return;
+    switch (entity->getType()) {
+        case DrType::Asset:     deleteAsset(entity_key);    break;
+        case DrType::Font:      deleteAsset(entity_key);    break;
+        default: return;
+    }
 }
 
 // Removes an Image from the Project

@@ -33,32 +33,40 @@
 //####################################################################################
 void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key) {
     // Get asset from project
-    DrAsset *asset = m_editor_relay->currentProject()->findAssetFromKey(asset_key);
-    if (asset == nullptr) return;
+    DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
+    if (entity == nullptr) return;
 
     // Pull pixmap of asset and scale based on current view zoom level
     QPixmap pre_pixmap = *label_pixmap->pixmap();
     QPixmap pixmap;
     QString text;
-    switch (asset->getAssetType()) {
-        case DrAssetType::Object:
-        case DrAssetType::Character: {
-            long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
-            DrAnimation *ani = asset->getParentProject()->findAnimationFromKey(animation_key);
-            if (ani != nullptr) pixmap = ani->getPixmapFromFirstFrame();
-            break;
+
+    if (entity->getType() == DrType::Asset) {
+        DrAsset *asset = dynamic_cast<DrAsset*>(entity);
+
+        switch (asset->getAssetType()) {
+            case DrAssetType::Object:
+            case DrAssetType::Character: {
+                long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+                DrAnimation *ani = asset->getParentProject()->findAnimationFromKey(animation_key);
+                if (ani != nullptr) pixmap = ani->getPixmapFromFirstFrame();
+                break;
+            }
         }
-        case DrAssetType::Device:
-            pixmap = m_editor_relay->currentProject()->findDeviceFromKey( asset->getBaseKey() )->getPixmap();
-            break;
-        case DrAssetType::Effect:
-            pixmap = m_editor_relay->currentProject()->findEffectFromKey( asset->getBaseKey() )->getPixmap();
-            break;
-        case DrAssetType::Text:
-            //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-            pixmap = m_editor_relay->currentProject()->findFontFromKey( asset->getBaseKey() )->createText( "Text" );
-            break;
+
+    } else if (entity->getType() == DrType::Device) {
+        pixmap = m_editor_relay->currentProject()->findDeviceFromKey( entity->getKey() )->getPixmap();
+
+    } else if (entity->getType() == DrType::Effect) {
+        pixmap = m_editor_relay->currentProject()->findEffectFromKey( entity->getKey() )->getPixmap();
+
+    } else if (entity->getType() == DrType::Font) {
+        //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+        pixmap = m_editor_relay->currentProject()->findFontFromKey( entity->getKey() )->createText( "Text" );
+    } else {
+        return;
     }
+
     if (pixmap.isNull()) pixmap = QPixmap(1, 1);
     pixmap = DrImaging::applySinglePixelFilter( Image_Filter_Type::Opacity, pixmap, -64);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
