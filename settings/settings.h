@@ -45,12 +45,13 @@ public:
     DrSettings(DrProject *parent_project);
     virtual ~DrSettings();
 
+    // Abstract Functions
+    virtual DrType  getType() = 0;
 
     // Getters / Setters
     DrProject*      getParentProject()      { return m_parent_project; }
 
     long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLongLong(); }
-    virtual DrType  getType()               { return DrType::BaseClass; }       // Returns different types depending on reimplementation in child class
     virtual QString getName();                                                  // Returns Name from shared "Entity_Name" component
     virtual bool    setName(QString new_name);                                  // Returns true if successful
 

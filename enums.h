@@ -50,7 +50,6 @@ enum class DrType {
     //    Joystick,
 
     NotFound,
-    BaseClass,
 };
 
 // ################## Sub Types ####################

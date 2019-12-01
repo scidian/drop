@@ -75,10 +75,12 @@ void TreeInspector::focusInEvent(QFocusEvent *) {
 //####################################################################################
 //##    Dynamically build Inspector
 //####################################################################################
-void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebuild) {
+void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebuild) {  
 
     // ***** Store current scroll bar position
-    int scroll_position = this->verticalScrollBar()->value();
+    if (m_selected_type != DrType::NotFound) {
+        m_last_scroll_position = this->verticalScrollBar()->value();
+    }
 
     // ***** If no keys were passed in, clear Inspector and exit
     if (key_list.count() == 0) {
@@ -89,11 +91,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         return;
     }
 
-    // ***** Retrieve unique key of item clicked in list
+    // ***** Retrieve unique key of item clicked in list, exit if no key
     long new_key = key_list[0];
-    if (new_key == c_no_key) return;                                                // Exit if no key
+    if (new_key == c_no_key) {              m_selected_type = DrType::NotFound;     return; }
     DrSettings *new_settings =  getParentProject()->findSettingsFromKey( new_key );
-            if (new_settings == nullptr) return;                                    // Or if couldnt find Entity
+            if (new_settings == nullptr) {  m_selected_type = DrType::NotFound;     return; }
     DrType      new_type =      new_settings->getType();
 
 
@@ -309,7 +311,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 //      CASES NOT ACCOUNTED FOR
                 //
                 //################ !!!!!!!!!!!!!!!!!!!!!!!
-                case Property_Type::Collision:                                // For Collision Shapes
+                case Property_Type::Collision:                                      // For Collision Shapes
                 case Property_Type::Icon:
                 case Property_Type::Vector3D:
 
@@ -342,6 +344,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     this->addTopLevelItem(spacer_item);
     this->setItemWidget(spacer_item, 0, spacer_label);
     this->expandItem(spacer_item);
+    spacer_item->setFlags(Qt::NoItemFlags);                                         // Stops from being selectable and changing Inspector scroll on click
 
 
     // ***** Disable / enable widgets based on property status
@@ -355,7 +358,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     expandCollapseComponents();
 
     // ***** Scroll back to previous position
-    this->verticalScrollBar()->setValue( scroll_position );
+    this->verticalScrollBar()->setValue( m_last_scroll_position );
     this->update();
 }
 

@@ -53,7 +53,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
 
     if (thing->getKey() != m_selected_key) return;
-    if (m_selected_type != DrType::Thing) return;
+    if (m_selected_type != DrType::Thing)  return;
 
     // Go through list of property widgets in inspector
     for (auto widget : m_widgets) {
@@ -199,6 +199,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
     // ***** Scroll back to previous position
     this->verticalScrollBar()->setValue( scroll_position );
+    m_last_scroll_position = scroll_position;
     this->update();
 }
 

@@ -146,7 +146,6 @@ QString DrSettings::getName() {
             return name_property->getValue().toString();
         case DrType::Frame:     return "DrFrame - Unknown Name";
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
-        case DrType::BaseClass: return "Base DrSettings Class";
     }
     return "Unknown Type, Can't Find Name";
 }

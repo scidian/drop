@@ -46,16 +46,18 @@ class TreeInspector: public QTreeWidget
 
 private:
     // External Borrowed Pointers
-    DrProject              *m_project;                      // Pointer to currently loaded project
-    IEditorRelay           *m_editor_relay;                 // Pointer to IEditorRelay class of parent form
+    DrProject              *m_project;                          // Pointer to currently loaded project
+    IEditorRelay           *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    DrFilterHoverHandler   *m_filter_hover = nullptr;       // Pointer to an event filter hover handler
+    DrFilterHoverHandler   *m_filter_hover = nullptr;           // Pointer to an event filter hover handler
 
-    QList<QWidget*>         m_widgets;                      // List of the widgets we built the last time we selected a new item
+    QList<QWidget*>         m_widgets;                          // List of the widgets we built the last time we selected a new item
 
-    long                    m_selected_key = c_no_key;      // Unique project key of currently selected item
-    DrType                  m_selected_type;                // Stores object type of currently selected item
+    long                    m_selected_key = c_no_key;          // Unique project key of currently selected item
+    DrType                  m_selected_type;                    // Stores object type of currently selected item
+
+    int                     m_last_scroll_position = 0;         // Stores last known scroll position, keeps Inspector focused at similar position
 
 public:
     explicit                TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);

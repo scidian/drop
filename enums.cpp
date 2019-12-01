@@ -44,7 +44,6 @@ QString StringFromType(DrType type) {
         case DrType::World:         return "World";
 
         case DrType::NotFound:      return "Not Found";
-        case DrType::BaseClass:     return "Base Class";
     }
     return "Unknown";
 }
