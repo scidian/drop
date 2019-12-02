@@ -292,10 +292,7 @@
         <file>assets/dr_images/shapes/gear_1.png</file>
         <file>assets/dr_images/shapes/gear_2.png</file>
         <file>assets/dr_images/shapes/ghost.png</file>
-        <file>assets/dr_images/shapes/ladder_top.png</file>
-        <file>assets/dr_images/shapes/ladder.png</file>
         <file>assets/dr_images/shapes/pie.png</file>
-        <file>assets/dr_images/shapes/star.png</file>
         <file>assets/dr_images/basic/diamond_1.png</file>
         <file>assets/dr_images/basic/diamond_2.png</file>
         <file>assets/dr_images/basic/diamond_3.png</file>
@@ -333,5 +330,52 @@
         <file>assets/dr_images/basic/half_circle_2.png</file>
         <file>assets/dr_images/outlines/cross_outline_1.png</file>
         <file>assets/dr_images/outlines/cross_outline_2.png</file>
+        <file>assets/dr_images/ground/block_1.png</file>
+        <file>assets/dr_images/ground/block_2.png</file>
+        <file>assets/dr_images/ground/box_1.png</file>
+        <file>assets/dr_images/ground/box_2.png</file>
+        <file>assets/dr_images/ground/bricks.png</file>
+        <file>assets/dr_images/ground/dirt.png</file>
+        <file>assets/dr_images/ground/ice.png</file>
+        <file>assets/dr_images/ground/sand.png</file>
+        <file>assets/dr_images/ground/stone.png</file>
+        <file>assets/dr_images/ground/tile.png</file>
+        <file>assets/dr_images/ground/water_top.png</file>
+        <file>assets/dr_images/ground/water.png</file>
+        <file>assets/dr_images/ground/wood.png</file>
+        <file>assets/dr_images/shapes/thought_bubble_1.png</file>
+        <file>assets/dr_images/shapes/thought_bubble_2.png</file>
+        <file>assets/dr_images/shapes/thought_bubble_3.png</file>
+        <file>assets/dr_images/shapes/arrow_1.png</file>
+        <file>assets/dr_images/shapes/arrow_2.png</file>
+        <file>assets/dr_images/shapes/exclamation_point.png</file>
+        <file>assets/dr_images/shapes/fish.png</file>
+        <file>assets/dr_images/shapes/question_mark.png</file>
+        <file>assets/dr_images/shapes/reset.png</file>
+        <file>assets/dr_images/ground/block_lock.png</file>
+        <file>assets/inspector_icons/comp_images_decoration.png</file>
+        <file>assets/dr_images/shapes/heart_1.png</file>
+        <file>assets/dr_images/shapes/heart_2.png</file>
+        <file>assets/dr_images/shapes/heart_half.png</file>
+        <file>assets/dr_images/shapes/star_1.png</file>
+        <file>assets/dr_images/shapes/star_2.png</file>
+        <file>assets/dr_images/shapes/star_3.png</file>
+        <file>assets/dr_images/shapes/star_4.png</file>
+        <file>assets/dr_images/decoration/cloud.png</file>
+        <file>assets/dr_images/decoration/flower_1.png</file>
+        <file>assets/dr_images/decoration/grass_1.png</file>
+        <file>assets/dr_images/decoration/grass_2.png</file>
+        <file>assets/dr_images/decoration/grass_3.png</file>
+        <file>assets/dr_images/decoration/ladder_1.png</file>
+        <file>assets/dr_images/decoration/ladder_2.png</file>
+        <file>assets/dr_images/decoration/ladder_top.png</file>
+        <file>assets/dr_images/decoration/mushroom.png</file>
+        <file>assets/dr_images/decoration/plant_1.png</file>
+        <file>assets/dr_images/decoration/plant_2.png</file>
+        <file>assets/dr_images/decoration/rock_1.png</file>
+        <file>assets/dr_images/decoration/rock_2.png</file>
+        <file>assets/dr_images/decoration/sign_1.png</file>
+        <file>assets/dr_images/decoration/sign_post.png</file>
+        <file>assets/dr_images/decoration/sun.png</file>
     </qresource>
 </RCC>

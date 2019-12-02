@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 10/10/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -307,6 +307,21 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/ground/ground_top_up_right_1.png",   c_key_image_ground_top_up_right_1,  Asset_Category::Ground);
     this->addImage(":/assets/dr_images/ground/ground_top_up_right_2.png",   c_key_image_ground_top_up_right_2,  Asset_Category::Ground);
 
+    this->addImage(":/assets/dr_images/ground/block_1.png",                 c_key_image_block_1,                Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/block_2.png",                 c_key_image_block_2,                Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/block_lock.png",              c_key_image_block_lock,             Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/box_1.png",                   c_key_image_box_1,                  Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/box_2.png",                   c_key_image_box_2,                  Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/bricks.png",                  c_key_image_bricks,                 Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/dirt.png",                    c_key_image_dirt,                   Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/ice.png",                     c_key_image_ice,                    Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/sand.png",                    c_key_image_sand,                   Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/stone.png",                   c_key_image_stone,                  Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/tile.png",                    c_key_image_tile,                   Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/water.png",                   c_key_image_water,                  Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/water_top.png",               c_key_image_water_top,              Asset_Category::Ground);
+    this->addImage(":/assets/dr_images/ground/wood.png",                    c_key_image_wood,                   Asset_Category::Ground);
+
     this->addImage(":/assets/dr_images/polygons/polygon_5_sides.png",       c_key_image_polygon_5_sides,        Asset_Category::Polygons);
     this->addImage(":/assets/dr_images/polygons/polygon_6_sides.png",       c_key_image_polygon_6_sides,        Asset_Category::Polygons);
     this->addImage(":/assets/dr_images/polygons/polygon_7_sides.png",       c_key_image_polygon_7_sides,        Asset_Category::Polygons);
@@ -317,13 +332,26 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/polygons/star_12_points.png",        c_key_image_star_12_points,         Asset_Category::Polygons);
     this->addImage(":/assets/dr_images/polygons/star_24_points.png",        c_key_image_star_24_points,         Asset_Category::Polygons);
 
-    this->addImage(":/assets/dr_images/shapes/star.png",                    c_key_image_star,                   Asset_Category::Shapes);
-    this->addImage(":/assets/dr_images/shapes/ladder.png",                  c_key_image_ladder,                 Asset_Category::Shapes);
-    this->addImage(":/assets/dr_images/shapes/ladder_top.png",              c_key_image_ladder_top,             Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/star_1.png",                  c_key_image_star_1,                 Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/star_2.png",                  c_key_image_star_2,                 Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/star_3.png",                  c_key_image_star_3,                 Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/star_4.png",                  c_key_image_star_4,                 Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/heart_1.png",                 c_key_image_heart_1,                Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/heart_2.png",                 c_key_image_heart_2,                Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/heart_half.png",              c_key_image_heart_half,             Asset_Category::Shapes);
     this->addImage(":/assets/dr_images/shapes/pie.png",                     c_key_image_pie,                    Asset_Category::Shapes);
     this->addImage(":/assets/dr_images/shapes/ghost.png",                   c_key_image_ghost,                  Asset_Category::Shapes);
     this->addImage(":/assets/dr_images/shapes/gear_1.png",                  c_key_image_gear_1,                 Asset_Category::Shapes);
     this->addImage(":/assets/dr_images/shapes/gear_2.png",                  c_key_image_gear_2,                 Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/thought_bubble_1.png",        c_key_image_thought_bubble_1,       Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/thought_bubble_2.png",        c_key_image_thought_bubble_2,       Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/thought_bubble_3.png",        c_key_image_thought_bubble_3,       Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/exclamation_point.png",       c_key_image_exclamation_point,      Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/question_mark.png",           c_key_image_question_mark,          Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/arrow_1.png",                 c_key_image_arrow_1,                Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/arrow_2.png",                 c_key_image_arrow_2,                Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/reset.png",                   c_key_image_reset,                  Asset_Category::Shapes);
+    this->addImage(":/assets/dr_images/shapes/fish.png",                    c_key_image_fish,                   Asset_Category::Shapes);
 
     this->addImage(":/assets/dr_images/isometric/isometric_cube_1.png",     c_key_image_isometric_cube_1,       Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_cube_2.png",     c_key_image_isometric_cube_2,       Asset_Category::Isometric);
@@ -337,6 +365,24 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/isometric/isometric_spikes.png",     c_key_image_isometric_spikes,       Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_column.png",     c_key_image_isometric_column,       Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_star.png",       c_key_image_isometric_star,         Asset_Category::Isometric);
+
+    this->addImage(":/assets/dr_images/decoration/cloud.png",               c_key_image_cloud,                  Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/flower_1.png",            c_key_image_flower_1,               Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/grass_1.png",             c_key_image_grass_1,                Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/grass_2.png",             c_key_image_grass_2,                Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/grass_3.png",             c_key_image_grass_3,                Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/ladder_1.png",            c_key_image_ladder_2,               Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/ladder_2.png",            c_key_image_ladder_2,               Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/ladder_top.png",          c_key_image_ladder_top,             Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/mushroom.png",            c_key_image_mushroom,               Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/plant_1.png",             c_key_image_plant_1,                Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/plant_2.png",             c_key_image_plant_2,                Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/rock_1.png",              c_key_image_rock_1,                 Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/rock_2.png",              c_key_image_rock_2,                 Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/sign_1.png",              c_key_image_sign_1,                 Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/sign_post.png",           c_key_image_sign_post,              Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/sun.png",                 c_key_image_sun,                    Asset_Category::Decoration);
+
 
 }
 

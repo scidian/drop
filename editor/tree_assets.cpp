@@ -163,6 +163,7 @@ void TreeAssets::buildAssetTree(QString search_text, QList<DrType> show_types) {
         widget_items[Asset_Category::Basic] =       new QTreeWidgetItem();
         widget_items[Asset_Category::Outlines] =    new QTreeWidgetItem();
         widget_items[Asset_Category::Gradient] =    new QTreeWidgetItem();
+        widget_items[Asset_Category::Decoration] =  new QTreeWidgetItem();
         widget_items[Asset_Category::Ground] =      new QTreeWidgetItem();
         widget_items[Asset_Category::Polygons] =    new QTreeWidgetItem();
         widget_items[Asset_Category::Shapes] =      new QTreeWidgetItem();
@@ -171,6 +172,7 @@ void TreeAssets::buildAssetTree(QString search_text, QList<DrType> show_types) {
         asset_categories.push_back( std::make_pair(Asset_Category::Basic,           widget_items[Asset_Category::Basic]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Outlines,        widget_items[Asset_Category::Outlines]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Gradient,        widget_items[Asset_Category::Gradient]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Decoration,      widget_items[Asset_Category::Decoration]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Ground,          widget_items[Asset_Category::Ground]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Polygons,        widget_items[Asset_Category::Polygons]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Shapes,          widget_items[Asset_Category::Shapes]) );
@@ -399,20 +401,21 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, A
     QList<QString> info;
 
     switch (asset_type) {
-        case Asset_Category::Character:     name = "  Characters";  icon = "comp_character.png";        info = Advisor_Info::Asset_Character;          break;
-        case Asset_Category::Object:        name = "  Objects";     icon = "comp_object.png";           info = Advisor_Info::Asset_Object;             break;
-        case Asset_Category::Device:        name = "  Devices";     icon = "comp_camera.png";           info = Advisor_Info::Asset_Device;             break;
-        case Asset_Category::Effect:        name = "  Effects";     icon = "comp_effects.png";          info = Advisor_Info::Asset_Effect;             break;
-        case Asset_Category::Text:          name = "  Text";        icon = "comp_font.png";             info = Advisor_Info::Asset_Text;               break;
+        case Asset_Category::Character:     name = "  Characters";  icon = "comp_character.png";    info = Advisor_Info::Asset_Character;       break;
+        case Asset_Category::Object:        name = "  Objects";     icon = "comp_object.png";       info = Advisor_Info::Asset_Object;          break;
+        case Asset_Category::Device:        name = "  Devices";     icon = "comp_camera.png";       info = Advisor_Info::Asset_Device;          break;
+        case Asset_Category::Effect:        name = "  Effects";     icon = "comp_effects.png";      info = Advisor_Info::Asset_Effect;          break;
+        case Asset_Category::Text:          name = "  Text";        icon = "comp_font.png";         info = Advisor_Info::Asset_Text;            break;
 
-        case Asset_Category::Image:         name = "  Images";      icon = "comp_images.png";           info = Advisor_Info::Asset_Image;              break;
-        case Asset_Category::Basic:         name = "  Basic";       icon = "comp_images_basic.png";     info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Outlines:      name = "  Outlines";    icon = "comp_images_outline.png";   info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Gradient:      name = "  Gradient";    icon = "comp_images_gradient.png";  info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Ground:        name = "  Ground";      icon = "comp_images_ground.png";    info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Polygons:      name = "  Polygons";    icon = "comp_images_polygon.png";   info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Shapes:        name = "  Shapes";      icon = "comp_images_shapes.png";    info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Isometric:     name = "  Isometric";   icon = "comp_object.png";           info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Image:         name = "  Images";      icon = "comp_images.png";               info = Advisor_Info::Asset_Image;           break;
+        case Asset_Category::Basic:         name = "  Basic";       icon = "comp_images_basic.png";         info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Outlines:      name = "  Outlines";    icon = "comp_images_outline.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Gradient:      name = "  Gradient";    icon = "comp_images_gradient.png";      info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Decoration:    name = "  Decoration";  icon = "comp_images_decoration.png";    info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Ground:        name = "  Ground";      icon = "comp_images_ground.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Polygons:      name = "  Polygons";    icon = "comp_images_polygon.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Shapes:        name = "  Shapes";      icon = "comp_images_shapes.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Isometric:     name = "  Isometric";   icon = "comp_object.png";               info = Advisor_Info::Asset_Image_Built_In;  break;
     }
 
     QString icon_size =     "20px 18px";

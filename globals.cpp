@@ -97,6 +97,7 @@ namespace Dr {
         Dr::SetAssetExpanded(Asset_Category::Basic,         true);
         Dr::SetAssetExpanded(Asset_Category::Outlines,      true);
         Dr::SetAssetExpanded(Asset_Category::Gradient,      true);
+        Dr::SetAssetExpanded(Asset_Category::Decoration,    true);
         Dr::SetAssetExpanded(Asset_Category::Ground,        true);
         Dr::SetAssetExpanded(Asset_Category::Polygons,      true);
         Dr::SetAssetExpanded(Asset_Category::Shapes,        true);

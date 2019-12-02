@@ -113,6 +113,7 @@ enum class Asset_Category {
     Basic,
     Outlines,
     Gradient,
+    Decoration,
     Ground,
     Polygons,
     Shapes,
