@@ -313,7 +313,6 @@
         <file>assets/inspector_icons/comp_images_polygon.png</file>
         <file>assets/inspector_icons/comp_images_shapes.png</file>
         <file>assets/dr_images/isometric/isometric_diamond_1.png</file>
-        <file>assets/dr_images/isometric/isometric_column.png</file>
         <file>assets/dr_images/isometric/isometric_spikes.png</file>
         <file>assets/dr_images/isometric/isometric_star.png</file>
         <file>assets/dr_images/basic/cross_1.png</file>
@@ -370,12 +369,23 @@
         <file>assets/dr_images/decoration/ladder_2.png</file>
         <file>assets/dr_images/decoration/ladder_top.png</file>
         <file>assets/dr_images/decoration/mushroom.png</file>
-        <file>assets/dr_images/decoration/plant_1.png</file>
-        <file>assets/dr_images/decoration/plant_2.png</file>
         <file>assets/dr_images/decoration/rock_1.png</file>
         <file>assets/dr_images/decoration/rock_2.png</file>
         <file>assets/dr_images/decoration/sign_1.png</file>
         <file>assets/dr_images/decoration/sign_post.png</file>
         <file>assets/dr_images/decoration/sun.png</file>
+        <file>assets/dr_images/decoration/bush_1.png</file>
+        <file>assets/dr_images/decoration/bush_2.png</file>
+        <file>assets/dr_images/decoration/bush_3.png</file>
+        <file>assets/dr_images/isometric/isometric_column_1.png</file>
+        <file>assets/dr_images/isometric/isometric_column_2.png</file>
+        <file>assets/dr_images/isometric/isometric_flower_1.png</file>
+        <file>assets/dr_images/isometric/isometric_mountain.png</file>
+        <file>assets/dr_images/isometric/isometric_mushroom.png</file>
+        <file>assets/dr_images/isometric/isometric_rock_1.png</file>
+        <file>assets/dr_images/isometric/isometric_rock_2.png</file>
+        <file>assets/dr_images/isometric/isometric_rock_3.png</file>
+        <file>assets/dr_images/isometric/isometric_tree_1.png</file>
+        <file>assets/dr_images/isometric/isometric_tree_2.png</file>
     </qresource>
 </RCC>

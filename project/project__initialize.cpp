@@ -192,7 +192,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/square_bars.png",              c_key_image_square_bars,            Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/square_flat.png",              c_key_image_square_flat,            Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/square_stripes.png",           c_key_image_square_stripes,         Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/rounded_1.png",                c_key_image_rounded_1,              Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/rounded_2.png",                c_key_image_rounded_2,              Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/rounded_3.png",                c_key_image_rounded_3,              Asset_Category::Basic);
@@ -203,7 +202,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/rounded_bars.png",             c_key_image_rounded_bars,           Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/rounded_flat.png",             c_key_image_rounded_flat,           Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/rounded_stripes.png",          c_key_image_rounded_stripes,        Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/circle_1.png",                 c_key_image_circle_1,               Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/circle_2.png",                 c_key_image_circle_2,               Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/circle_3.png",                 c_key_image_circle_3,               Asset_Category::Basic);
@@ -214,7 +212,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/circle_bars.png",              c_key_image_circle_bars,            Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/circle_flat.png",              c_key_image_circle_flat,            Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/circle_stripes.png",           c_key_image_circle_stripes,         Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/triangle_1.png",               c_key_image_triangle_1,             Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/triangle_2.png",               c_key_image_triangle_2,             Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/triangle_3.png",               c_key_image_triangle_3,             Asset_Category::Basic);
@@ -225,7 +222,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/triangle_bars.png",            c_key_image_triangle_bars,          Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/triangle_flat.png",            c_key_image_triangle_flat,          Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/triangle_stripes.png",         c_key_image_triangle_stripes,       Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/diamond_1.png",                c_key_image_diamond_1,              Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/diamond_2.png",                c_key_image_diamond_2,              Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/diamond_3.png",                c_key_image_diamond_3,              Asset_Category::Basic);
@@ -234,10 +230,8 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/diamond_bars.png",             c_key_image_diamond_bars,           Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/diamond_flat.png",             c_key_image_diamond_flat,           Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/diamond_stripes.png",          c_key_image_diamond_stripes,        Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/line_1.png",                   c_key_image_line_1,                 Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/line_2.png",                   c_key_image_line_2,                 Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/cross_1.png",                  c_key_image_cross_1,                Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/cross_2.png",                  c_key_image_cross_2,                Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/cross_3.png",                  c_key_image_cross_3,                Asset_Category::Basic);
@@ -248,7 +242,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/cross_bars.png",               c_key_image_cross_bars,             Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/cross_flat.png",               c_key_image_cross_flat,             Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/cross_stripes.png",            c_key_image_cross_stripes,          Asset_Category::Basic);
-
     this->addImage(":/assets/dr_images/basic/half_circle_1.png",            c_key_image_half_circle_1,          Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/half_circle_2.png",            c_key_image_half_circle_2,          Asset_Category::Basic);
 
@@ -302,7 +295,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/ground/ground_top_up_left_2.png",    c_key_image_ground_top_up_left_2,   Asset_Category::Ground);
     this->addImage(":/assets/dr_images/ground/ground_top_up_right_1.png",   c_key_image_ground_top_up_right_1,  Asset_Category::Ground);
     this->addImage(":/assets/dr_images/ground/ground_top_up_right_2.png",   c_key_image_ground_top_up_right_2,  Asset_Category::Ground);
-
     this->addImage(":/assets/dr_images/ground/block_1.png",                 c_key_image_block_1,                Asset_Category::Ground);
     this->addImage(":/assets/dr_images/ground/block_2.png",                 c_key_image_block_2,                Asset_Category::Ground);
     this->addImage(":/assets/dr_images/ground/block_lock.png",              c_key_image_block_lock,             Asset_Category::Ground);
@@ -359,9 +351,21 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/isometric/isometric_sphere_2.png",   c_key_image_isometric_sphere_2,     Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_diamond_1.png",  c_key_image_isometric_diamond_1,    Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_spikes.png",     c_key_image_isometric_spikes,       Asset_Category::Isometric);
-    this->addImage(":/assets/dr_images/isometric/isometric_column.png",     c_key_image_isometric_column,       Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_star.png",       c_key_image_isometric_star,         Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_column_1.png",   c_key_image_isometric_column_1,     Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_column_2.png",   c_key_image_isometric_column_2,     Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_flower_1.png",   c_key_image_isometric_flower_1,     Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_mountain.png",   c_key_image_isometric_mountain,     Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_mushroom.png",   c_key_image_isometric_mushroom,     Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_rock_1.png",     c_key_image_isometric_rock_1,       Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_rock_2.png",     c_key_image_isometric_rock_2,       Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_rock_3.png",     c_key_image_isometric_rock_3,       Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_tree_1.png",     c_key_image_isometric_tree_1,       Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_tree_2.png",     c_key_image_isometric_tree_2,       Asset_Category::Isometric);
 
+    this->addImage(":/assets/dr_images/decoration/bush_1.png",              c_key_image_bush_1,                 Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/bush_2.png",              c_key_image_bush_2,                 Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/bush_3.png",              c_key_image_bush_3,                 Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/cloud.png",               c_key_image_cloud,                  Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/flower_1.png",            c_key_image_flower_1,               Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/grass_1.png",             c_key_image_grass_1,                Asset_Category::Decoration);
@@ -371,8 +375,6 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/decoration/ladder_2.png",            c_key_image_ladder_2,               Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/ladder_top.png",          c_key_image_ladder_top,             Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/mushroom.png",            c_key_image_mushroom,               Asset_Category::Decoration);
-    this->addImage(":/assets/dr_images/decoration/plant_1.png",             c_key_image_plant_1,                Asset_Category::Decoration);
-    this->addImage(":/assets/dr_images/decoration/plant_2.png",             c_key_image_plant_2,                Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/rock_1.png",              c_key_image_rock_1,                 Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/rock_2.png",              c_key_image_rock_2,                 Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/sign_1.png",              c_key_image_sign_1,                 Asset_Category::Decoration);
