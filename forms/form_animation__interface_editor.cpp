@@ -5,6 +5,9 @@
 //
 //
 //
+#include <QDockWidget>
+
+#include "editor/tree_advisor.h"
 #include "editor/tree_assets.h"
 #include "editor_view/editor_view.h"
 #include "forms/form_animation.h"
@@ -21,10 +24,8 @@
 //  Toolbar?
 
 void FormAnimation::buildAssetTree() {
-    treeAssetEditor->buildAssetTree("", { DrType::Image });
+    treeAssetEditor->buildAssetTree("");
 }
-
-
 
 
 
@@ -45,13 +46,29 @@ double      FormAnimation::currentViewGridAngle()                   { return vie
 QPointF     FormAnimation::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
 View_Mode   FormAnimation::currentViewMode()                        { return viewEditor->currentViewMode(); }
 double      FormAnimation::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
+
 QPointF     FormAnimation::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
 
+void        FormAnimation::viewCenterOnPoint(QPointF center_point)  { viewEditor->centerOn(center_point); }
+void        FormAnimation::viewZoomToScale(double zoom_scale)       { viewEditor->zoomToScale(zoom_scale); }
 
-void        FormAnimation::viewCenterOnPoint(QPointF center_point) { };
-void        FormAnimation::viewZoomToScale(double zoom_scale) { };
+// Call to change the Advisor
+void FormAnimation::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
+void FormAnimation::setAdvisorInfo(QString header, QString body) {
+    if (dockAdvisor == nullptr) return;
+    if (treeAdvisor == nullptr) return;
+    if (dockAdvisor->isHidden()) return;                                    // If Advisor dock was closed, cancel
+    if (treeAdvisor->getAdvisorHeader() == header &&
+        treeAdvisor->getAdvisorBody() == body) return;                      // If Advisor header and body is already set to proper info, cancel
+    treeAdvisor->changeAdvisor(header, body);
+}
 
 
-void        FormAnimation::setAdvisorInfo(HeaderBodyList header_body_list) { };
-void        FormAnimation::setAdvisorInfo(QString header, QString body) { };
+
+
+
+
+
+
+
 

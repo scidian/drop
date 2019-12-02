@@ -52,13 +52,15 @@ private:
     std::map <Asset_Category, DrQLayoutFlow*>   m_grid_layouts;     // List of the layouts so that we can sort without rebuilding
     QList<QFrame*>                              m_asset_frames;     // List of the single row frames that contain name and pixmap labels
 
+    QList<DrType>         m_show_types { };                         // Types to show for this TreeAssets
+
     QWidget              *m_search_widget;
     QVBoxLayout          *m_search_layout;
     QLineEdit            *m_search_bar;                             // Search bar at bottom of asset dock
 
 public:
     // Constructor
-    explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
+    explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, QList<DrType> show_types);
 
     // Event Overrides
     virtual void    focusInEvent(QFocusEvent *event) override;
@@ -66,7 +68,7 @@ public:
     virtual void    keyPressEvent(QKeyEvent *event) override;
 
     // Tree Building Functions
-    void                    buildAssetTree(QString search_text = "", QList<DrType> show_types = { DrType::Asset, DrType::Device, DrType::Effect, DrType::Font });
+    void                    buildAssetTree(QString search_text = "");
     DrQPushButtonCategory*  createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type);
     void                    ensureSelectedKeyVisible();
     void                    expandCollapseComponents();
@@ -85,6 +87,8 @@ public:
     void                    setHoverHandler(DrFilterHoverHandler* hover_handler) { m_filter_hover = hover_handler; }
     long                    getSelectedKey() { return m_selected_key; }
     void                    setSelectedKey(long key);
+    QList<DrType>&          getShowTypes() { return m_show_types; }
+    void                    setShowTypes(QList<DrType> types) { m_show_types = types; }
 
 private slots:
     void            searchTextChanged(QString new_text);

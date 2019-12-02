@@ -23,7 +23,7 @@ class TreeProject;
 
 //####################################################################################
 //##    IEditorRelay
-//##        An interface class used to communicate between Editor Mode classes
+//##        An interface class used to communicate between Editor Mode widgets
 //############################
 class IEditorRelay
 {

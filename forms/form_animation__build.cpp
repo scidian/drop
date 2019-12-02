@@ -50,9 +50,9 @@ void FormAnimation::initializeFormAnimation() {
     // ***** Build docks, widgets, etc
     buildCentralWidget();
 
-    dockAdvisor =       Dr::buildDockAdvisor(  m_project, this, treeAdvisor);                   // Build Advisor Dock
-    dockAssetsEditor =  Dr::buildDockAssets(   m_project, this, treeAssetEditor, "Images");     // Build Assets Dock
-    dockInspector =     Dr::buildDockInspector(m_project, this, treeInspector);                 // Build Inspector Dock
+    dockAdvisor =       Dr::buildDockAdvisor(  m_project, this, treeAdvisor);                                       // Build Advisor Dock
+    dockAssetsEditor =  Dr::buildDockAssets(   m_project, this, treeAssetEditor, "Images", { DrType::Image });      // Build Assets Dock
+    dockInspector =     Dr::buildDockInspector(m_project, this, treeInspector);                                     // Build Inspector Dock
     Dr::initializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 
     // ***** Set up FormAnimation for first time

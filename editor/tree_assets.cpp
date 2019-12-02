@@ -45,8 +45,9 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                       QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
+TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, QList<DrType> types)
+    : QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay), m_show_types(types)
+{
     // Initialize hover handler
     setHoverHandler( new DrFilterHoverHandler(this) );
     connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));
@@ -107,7 +108,7 @@ void TreeAssets::searchTextChanged(QString new_text) {
 //####################################################################################
 //##    Tree Building Functions
 //####################################################################################
-void TreeAssets::buildAssetTree(QString search_text, QList<DrType> show_types) {
+void TreeAssets::buildAssetTree(QString search_text) {
 
     // Store current scroll bar position
     int scroll_position = this->verticalScrollBar()->value();
@@ -139,6 +140,7 @@ void TreeAssets::buildAssetTree(QString search_text, QList<DrType> show_types) {
 
     // Create and add Categories, !!!!! #NOTE: This code sets the Order of the Categories as well
     std::vector<std::pair <Asset_Category, QTreeWidgetItem*>> asset_categories;
+    QList<DrType> show_types = getShowTypes();
     if (show_types.contains(DrType::Asset))  {
         widget_items[Asset_Category::Character] =   new QTreeWidgetItem();
         widget_items[Asset_Category::Object] =      new QTreeWidgetItem();

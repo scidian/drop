@@ -51,6 +51,7 @@ void DrProject::clearProject(bool add_built_in_items) {
     // Add these Images to every project for use with New Assets
     if (add_built_in_items) {
         addBuiltInImages();
+        addDefaultAssets();
     }
 
     // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 could conflict with nullptr results

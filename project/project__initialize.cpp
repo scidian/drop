@@ -40,10 +40,6 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
     this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_world->getFirstStageKey()) );
 
 
-    // ***** Add Default Assets
-    addDefaultAssets();
-
-
     // ***** Build Test Project
     if (test) {
         this->setOption(Project_Options::Name, "Rocky Rover");
@@ -371,7 +367,7 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/decoration/grass_1.png",             c_key_image_grass_1,                Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/grass_2.png",             c_key_image_grass_2,                Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/grass_3.png",             c_key_image_grass_3,                Asset_Category::Decoration);
-    this->addImage(":/assets/dr_images/decoration/ladder_1.png",            c_key_image_ladder_2,               Asset_Category::Decoration);
+    this->addImage(":/assets/dr_images/decoration/ladder_1.png",            c_key_image_ladder_1,               Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/ladder_2.png",            c_key_image_ladder_2,               Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/ladder_top.png",          c_key_image_ladder_top,             Asset_Category::Decoration);
     this->addImage(":/assets/dr_images/decoration/mushroom.png",            c_key_image_mushroom,               Asset_Category::Decoration);

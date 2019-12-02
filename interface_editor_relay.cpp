@@ -17,15 +17,15 @@
 IEditorRelay::~IEditorRelay() { }
 
 
-// Updates Debug Labels with Active Widget
+//####################################################################################
+//##    Setter for Active Widget
+//##        Updates Debug Labels with Active Widget
+//####################################################################################
 void IEditorRelay::setActiveWidget(Editor_Widgets widget) {
     m_active_widget = widget;
     getAssetTree()->update();
     Dr::SetLabelText(Label_Names::Label_2, "Active Widget: " + Dr::StringFromEditorWidget(widget));
 }
-
-
-
 
 
 
