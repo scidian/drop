@@ -117,6 +117,7 @@ namespace Dr {
         Dr::SetInspectorExpanded(Components::Asset_Settings_Font,       true);
         Dr::SetInspectorExpanded(Components::Asset_Settings_Object,     true);
 
+        Dr::SetInspectorExpanded(Components::World_Settings,            true);
         Dr::SetInspectorExpanded(Components::World_Physics,             true);
 
         Dr::SetInspectorExpanded(Components::Stage_Settings,            true);

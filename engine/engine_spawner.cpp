@@ -20,7 +20,7 @@
 DrEngineSpawner::DrEngineSpawner(DrThing *thing) : m_thing_to_spawn(thing) { }
 
 DrEngineSpawner::DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location, double rate, double rate_variable,
-                                 bool spawn_instantly, int spawn_count, int spawns_remaining,
+                                 bool spawn_instantly, int spawn_count, int spawns_remaining, double spawn_chance,
                                  DrEngineThing *attached, long attached_id,
                                  double x, double y, double x_variable, double y_variable) : m_world(engine_world), m_thing_to_spawn(thing) {
     setLocation(location);
@@ -34,6 +34,7 @@ DrEngineSpawner::DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Sp
     setSpawnCount( spawn_count );
     setSpawnStartCount( spawn_count );
     setSpawnsRemaining( spawns_remaining );
+    setSpawnChance( spawn_chance );
 
     if (attached_id != c_no_key) setAttachedThingKey(attached_id);
     if (attached != nullptr)     setAttachedThing(attached);
@@ -172,9 +173,12 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
                                                                                                     // Works on macOS, but possibly undefined on other systems
             if (thing_to_spawn == nullptr) { setReadyForRemoval(); return nullptr; }
 
-            return_object = m_world->loadObjectToWorld( thing_to_spawn,
-                                                        x_pos, y_pos, x_scale, y_scale, angle,
-                                                        x_velocity, y_velocity, rotate_spawn );
+            double spawn_chance = QRandomGenerator::global()->bounded(100.0);                       // Get a random number between 0 and 100
+            if (spawn_chance <= this->getSpawnChance()) {
+                return_object = m_world->loadObjectToWorld( thing_to_spawn,
+                                                            x_pos, y_pos, x_scale, y_scale, angle,
+                                                            x_velocity, y_velocity, rotate_spawn );
+            }
             resetSpawnTime();
             setNextSpawnTimeAmount();
             if (getSpawnCount() > 0) setSpawnCount(getSpawnCount() - 1);

@@ -28,9 +28,6 @@
 // Internal Linkage (File Scope) Forward Declarations
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
 
-// Internal Constants
-constexpr double c_speed_slowdown = 0.50;                   // Multiplier to slow down object velocity, associated with m_cancel_gravity objects
-
 
 //####################################################################################
 //##    Chipmunk Collision Callbacks
@@ -45,10 +42,8 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if (object_a->shouldCollide(object_b) == false) return cpArbiterIgnore(arb);
     if (object_b->shouldCollide(object_a) == false) return cpArbiterIgnore(arb);
 
-    // Temp cancel gravity on another object if colliding and should cancel it, also slow down object on contact
+    // Temp cancel gravity on another object if colliding and should cancel it
     if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
-        cpVect vel = cpBodyGetVelocity( object_a->body );
-        cpBodySetVelocity( object_a->body, cpv(vel.x * c_speed_slowdown, vel.y * c_speed_slowdown) );
         object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );
     }
 

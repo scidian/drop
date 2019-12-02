@@ -58,6 +58,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
                 bool    spawn_instant =         thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Instantly).toBool();
                 int     spawn_type =            thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Type).toInt();
                 QPointF spawn_rate =            thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Rate).toPointF();
+                double  spawn_chance =          thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Chance).toDouble();
                 QPointF spawn_x =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Offset_X).toPointF();
                 QPointF spawn_y =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Offset_Y).toPointF();
                 QPointF pos =                   thing->getComponentPropertyValue(Components::Thing_Transform,   Properties::Thing_Position).toPointF();
@@ -67,7 +68,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
                 long attached_id = (attached_to_object) ? spawn_object[1].toLongLong() : c_no_key;
                 DrEngineSpawner *spawner;
                 spawner = new DrEngineSpawner(this, thing, static_cast<Spawn_Type>(spawn_type), DrPointF(pos.x() + offset_x, -pos.y() + offset_y),
-                                              spawn_rate.x(), spawn_rate.y(), spawn_instant, spawn_count, spawns_remaining,
+                                              spawn_rate.x(), spawn_rate.y(), spawn_instant, spawn_count, spawns_remaining, spawn_chance,
                                               nullptr, attached_id, spawn_x.x(), spawn_x.y(), spawn_y.x(), spawn_y.y());
                 DrEngineObject *object = spawner->update(0.0, 1.0, QRectF(), false);
                 if (object != nullptr) things_in_stage.push_back(object);

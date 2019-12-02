@@ -242,6 +242,20 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/basic/line_1.png",                   c_key_image_line_1,                 Asset_Category::Basic);
     this->addImage(":/assets/dr_images/basic/line_2.png",                   c_key_image_line_2,                 Asset_Category::Basic);
 
+    this->addImage(":/assets/dr_images/basic/cross_1.png",                  c_key_image_cross_1,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_2.png",                  c_key_image_cross_2,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_3.png",                  c_key_image_cross_3,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_4.png",                  c_key_image_cross_4,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_5.png",                  c_key_image_cross_5,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_6.png",                  c_key_image_cross_6,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_7.png",                  c_key_image_cross_7,                Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_bars.png",               c_key_image_cross_bars,             Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_flat.png",               c_key_image_cross_flat,             Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/cross_stripes.png",            c_key_image_cross_stripes,          Asset_Category::Basic);
+
+    this->addImage(":/assets/dr_images/basic/half_circle_1.png",            c_key_image_half_circle_1,          Asset_Category::Basic);
+    this->addImage(":/assets/dr_images/basic/half_circle_2.png",            c_key_image_half_circle_2,          Asset_Category::Basic);
+
     this->addImage(":/assets/dr_images/outlines/square_outline_1.png",      c_key_image_square_outline_1,       Asset_Category::Outlines);
     this->addImage(":/assets/dr_images/outlines/square_outline_2.png",      c_key_image_square_outline_2,       Asset_Category::Outlines);
     this->addImage(":/assets/dr_images/outlines/square_outline_3.png",      c_key_image_square_outline_3,       Asset_Category::Outlines);
@@ -256,6 +270,8 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/outlines/triangle_outline_3.png",    c_key_image_triangle_outline_3,     Asset_Category::Outlines);
     this->addImage(":/assets/dr_images/outlines/diamond_outline_1.png",     c_key_image_diamond_outline_1,      Asset_Category::Outlines);
     this->addImage(":/assets/dr_images/outlines/diamond_outline_2.png",     c_key_image_diamond_outline_2,      Asset_Category::Outlines);
+    this->addImage(":/assets/dr_images/outlines/cross_outline_1.png",       c_key_image_cross_outline_1,        Asset_Category::Outlines);
+    this->addImage(":/assets/dr_images/outlines/cross_outline_2.png",       c_key_image_cross_outline_2,        Asset_Category::Outlines);
 
     this->addImage(":/assets/dr_images/gradient/circle_linear_1.png",       c_key_image_circle_linear_1,        Asset_Category::Gradient);
     this->addImage(":/assets/dr_images/gradient/circle_linear_2.png",       c_key_image_circle_linear_2,        Asset_Category::Gradient);
@@ -317,6 +333,10 @@ void DrProject::addBuiltInImages() {
     this->addImage(":/assets/dr_images/isometric/isometric_pyramid_3.png",  c_key_image_isometric_pyramid_3,    Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_sphere_1.png",   c_key_image_isometric_sphere_1,     Asset_Category::Isometric);
     this->addImage(":/assets/dr_images/isometric/isometric_sphere_2.png",   c_key_image_isometric_sphere_2,     Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_diamond_1.png",  c_key_image_isometric_diamond_1,    Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_spikes.png",     c_key_image_isometric_spikes,       Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_column.png",     c_key_image_isometric_column,       Asset_Category::Isometric);
+    this->addImage(":/assets/dr_images/isometric/isometric_star.png",       c_key_image_isometric_star,         Asset_Category::Isometric);
 
 }
 

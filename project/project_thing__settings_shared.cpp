@@ -127,6 +127,8 @@ void DrThing::addComponentSpawn() {
                            "Spawn Immediately", "If this option is not selected, item will wait the initial Spawn Rate amount of time before spawning "
                                                 "the first time. When selected, item will spawn as soon as the event occurs and then wait Spawn Rate in between "
                                                 "the remaining spawms.");
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Chance, Property_Type::Percent, 100,
+                           "Appeance Chance", "When it is time for this item to spawn, this is the likelihood it will spawn.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, 0,
                            "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to "
                                          "spawn when corresponding buttons are pressed. ");

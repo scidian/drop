@@ -308,5 +308,30 @@
         <file>assets/dr_images/basic/line_2.png</file>
         <file>assets/dr_images/outlines/diamond_outline_1.png</file>
         <file>assets/dr_images/outlines/diamond_outline_2.png</file>
+        <file>assets/inspector_icons/comp_images_basic.png</file>
+        <file>assets/inspector_icons/comp_images_gradient.png</file>
+        <file>assets/inspector_icons/comp_images_outline.png</file>
+        <file>assets/inspector_icons/comp_images.png</file>
+        <file>assets/inspector_icons/comp_images_ground.png</file>
+        <file>assets/inspector_icons/comp_images_polygon.png</file>
+        <file>assets/inspector_icons/comp_images_shapes.png</file>
+        <file>assets/dr_images/isometric/isometric_diamond_1.png</file>
+        <file>assets/dr_images/isometric/isometric_column.png</file>
+        <file>assets/dr_images/isometric/isometric_spikes.png</file>
+        <file>assets/dr_images/isometric/isometric_star.png</file>
+        <file>assets/dr_images/basic/cross_1.png</file>
+        <file>assets/dr_images/basic/cross_2.png</file>
+        <file>assets/dr_images/basic/cross_3.png</file>
+        <file>assets/dr_images/basic/cross_4.png</file>
+        <file>assets/dr_images/basic/cross_5.png</file>
+        <file>assets/dr_images/basic/cross_6.png</file>
+        <file>assets/dr_images/basic/cross_7.png</file>
+        <file>assets/dr_images/basic/cross_bars.png</file>
+        <file>assets/dr_images/basic/cross_flat.png</file>
+        <file>assets/dr_images/basic/cross_stripes.png</file>
+        <file>assets/dr_images/basic/half_circle_1.png</file>
+        <file>assets/dr_images/basic/half_circle_2.png</file>
+        <file>assets/dr_images/outlines/cross_outline_1.png</file>
+        <file>assets/dr_images/outlines/cross_outline_2.png</file>
     </qresource>
 </RCC>

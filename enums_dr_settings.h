@@ -145,9 +145,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   238
+//##    !!!!! NEXT AVAILABLE NUMBER:   239
 //##
-//##    Checked for doubles up through 238 on 11/11/2019
+//##    Checked for doubles up through 239 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -364,6 +364,7 @@ enum class Properties {
     Thing_Spawn_Offset_X                = 193,      // variable
     Thing_Spawn_Offset_Y                = 196,      // variable
     Thing_Spawn_Instantly               = 197,      // bool
+    Thing_Spawn_Chance                  = 238,      // percent
 
     // Lighting
     Thing_Lighting_Cast_Shadows         = 66,       // bool

@@ -43,6 +43,7 @@ private:
     int             m_spawn_start_count = 1;                    // Keeps track of initial spawn count
     int             m_spawns_remaining = 1;                     // Spawns remaining, can be reset in case of Shoot or Jump button
     Spawn_Type      m_spawn_type = Spawn_Type::Permanent;       // Spawn Type (permanent, shoot button, jump button, object death, etc)
+    double          m_spawn_chance = 100.0;                     // Percentage that object will appear when spawned
 
     bool            m_attached_to_object = false;               // Is attached to object?
     long            m_attached_id_key = c_no_key;               // Attached object ID Key
@@ -63,7 +64,7 @@ public:
     DrEngineSpawner(DrThing *thing);
     DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location,
                     double rate, double rate_variable,
-                    bool spawn_instantly, int spawn_count, int spawns_remaining,
+                    bool spawn_instantly, int spawn_count, int spawns_remaining, double spawn_chance,
                     DrEngineThing *attached, long attached_id,
                     double x, double y, double x_variable, double y_variable);
     ~DrEngineSpawner() { }
@@ -94,6 +95,7 @@ public:
     const int&      getSpawnStartCount()    { return m_spawn_start_count; }
     const int&      getSpawnsRemaining()    { return m_spawns_remaining; }
     Spawn_Type      getSpawnType()          { return m_spawn_type; }
+    const double&   getSpawnChance()        { return m_spawn_chance; }
 
     const bool&     isAttached()            { return m_attached_to_object; }
     const long&     getAttachedIDKey()      { return m_attached_id_key; }
@@ -113,6 +115,7 @@ public:
     void            setSpawnStartCount(int count)           { m_spawn_start_count = count; }
     void            setSpawnsRemaining(int remaining)       { m_spawns_remaining = remaining; }
     void            setSpawnType(Spawn_Type type)           { m_spawn_type = type; }
+    void            setSpawnChance(double chance)           { m_spawn_chance = chance; }
 
     void            setAttachedThingKey(long key)           { m_attached_id_key = key; }
     void            setAttachedThing(DrEngineThing *thing);

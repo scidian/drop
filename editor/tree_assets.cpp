@@ -399,28 +399,24 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, A
     QList<QString> info;
 
     switch (asset_type) {
-        case Asset_Category::Character:     name = "  Characters";  icon = "tree_character.png";    info = Advisor_Info::Asset_Character;          break;
-        case Asset_Category::Object:        name = "  Objects";     icon = "tree_object.png";       info = Advisor_Info::Asset_Object;             break;
-        case Asset_Category::Device:        name = "  Devices";     icon = "tree_camera.png";       info = Advisor_Info::Asset_Device;             break;
-        case Asset_Category::Effect:        name = " Effects";      icon = "tree_effects.png";      info = Advisor_Info::Asset_Effect;             break;
-        case Asset_Category::Text:          name = "  Text";        icon = "tree_text.png";         info = Advisor_Info::Asset_Text;               break;
+        case Asset_Category::Character:     name = "  Characters";  icon = "comp_character.png";        info = Advisor_Info::Asset_Character;          break;
+        case Asset_Category::Object:        name = "  Objects";     icon = "comp_object.png";           info = Advisor_Info::Asset_Object;             break;
+        case Asset_Category::Device:        name = "  Devices";     icon = "comp_camera.png";           info = Advisor_Info::Asset_Device;             break;
+        case Asset_Category::Effect:        name = "  Effects";     icon = "comp_effects.png";          info = Advisor_Info::Asset_Effect;             break;
+        case Asset_Category::Text:          name = "  Text";        icon = "comp_font.png";             info = Advisor_Info::Asset_Text;               break;
 
-        case Asset_Category::Image:         name = "  Images";      icon = "tree_object.png";       info = Advisor_Info::Asset_Image;              break;
-        case Asset_Category::Basic:         name = "  Basic";       icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Outlines:      name = "  Outlines";    icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Gradient:      name = "  Gradient";    icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Ground:        name = "  Ground";      icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Polygons:      name = "  Polygons";    icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Shapes:        name = "  Shapes";      icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
-        case Asset_Category::Isometric:     name = "  Isometric";   icon = "tree_object.png";       info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Image:         name = "  Images";      icon = "comp_images.png";           info = Advisor_Info::Asset_Image;              break;
+        case Asset_Category::Basic:         name = "  Basic";       icon = "comp_images_basic.png";     info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Outlines:      name = "  Outlines";    icon = "comp_images_outline.png";   info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Gradient:      name = "  Gradient";    icon = "comp_images_gradient.png";  info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Ground:        name = "  Ground";      icon = "comp_images_ground.png";    info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Polygons:      name = "  Polygons";    icon = "comp_images_polygon.png";   info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Shapes:        name = "  Shapes";      icon = "comp_images_shapes.png";    info = Advisor_Info::Asset_Image_Built_In;     break;
+        case Asset_Category::Isometric:     name = "  Isometric";   icon = "comp_object.png";           info = Advisor_Info::Asset_Image_Built_In;     break;
     }
 
-    QString icon_size =     "14px 14px";
-    QString padding_left =  "10px";
-    if (name.toLower().contains("effects")) {
-        icon_size =     "20px 18px";
-        padding_left =  "7px";
-    }
+    QString icon_size =     "20px 18px";
+    QString padding_left =  "7px";
 
     // ***** Create Category Button
     QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
@@ -432,7 +428,7 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, A
     this->setItemWidget(item, 0, button);                                   // Apply the button to the tree item
 
     // ***** Grab Icon to use, colorize it to the current palette
-    QPixmap text_icon( ":/assets/tree_icons/" + icon );
+    QPixmap text_icon( ":/assets/inspector_icons/" + icon );
     text_icon = QPixmap::fromImage( DrImaging::colorizeImage(text_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
 
     // Alternate method of colorizing

@@ -256,8 +256,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // Increase slowdown speed while in contact with a ladder (cancel gravity object)
     if (Dr::FuzzyCompare(object->getTempGravityMultiplier(), 1.0) == false) {
-        c_drag_air    = (c_drag_air *    object->getTempGravityMultiplier()) + 0.0001;
-        c_drag_ground = (c_drag_ground * object->getTempGravityMultiplier()) + 0.0001;
+        c_drag_air    = (c_drag_air *    abs(object->getTempGravityMultiplier())) + 0.0001;
+        c_drag_ground = (c_drag_ground * abs(object->getTempGravityMultiplier())) + 0.0001;
     }
 
     // Air / Ground / Rotation Drag
@@ -309,7 +309,6 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         target_vy += actual_gravity_y;
         if (target_vy < 0) target_vy = 0;
     }
-
 
     // ********** Rotation drag
     double body_r = cpBodyGetAngularVelocity( body );
