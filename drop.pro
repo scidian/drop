@@ -276,6 +276,7 @@ HEADERS += \
     3rd_party_chipmunk/prime.h \
     colors/colors.h \
     constants_engine.h \
+    constants_keys.h \
     docks/docks.h \
     editor/tree_advisor.h \
     editor/tree_assets.h \

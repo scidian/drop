@@ -360,7 +360,6 @@
         <file>assets/dr_images/shapes/star_2.png</file>
         <file>assets/dr_images/shapes/star_3.png</file>
         <file>assets/dr_images/shapes/star_4.png</file>
-        <file>assets/dr_images/decoration/cloud.png</file>
         <file>assets/dr_images/decoration/flower_1.png</file>
         <file>assets/dr_images/decoration/grass_1.png</file>
         <file>assets/dr_images/decoration/grass_2.png</file>
@@ -387,5 +386,22 @@
         <file>assets/dr_images/isometric/isometric_rock_3.png</file>
         <file>assets/dr_images/isometric/isometric_tree_1.png</file>
         <file>assets/dr_images/isometric/isometric_tree_2.png</file>
+        <file>assets/dr_images/ground/wall_1.png</file>
+        <file>assets/dr_images/ground/wall_2.png</file>
+        <file>assets/dr_images/ground/window.png</file>
+        <file>assets/dr_images/decoration/cloud_1.png</file>
+        <file>assets/dr_images/decoration/cloud_2.png</file>
+        <file>assets/dr_images/ground/bridge_left.png</file>
+        <file>assets/dr_images/ground/bridge_mid.png</file>
+        <file>assets/dr_images/ground/bridge_right.png</file>
+        <file>assets/dr_images/ground/platform_left.png</file>
+        <file>assets/dr_images/ground/platform_mid.png</file>
+        <file>assets/dr_images/ground/platform_right.png</file>
+        <file>assets/dr_images/isometric/isometric_cube_grass.png</file>
+        <file>assets/dr_images/isometric/isometric_cube_ice.png</file>
+        <file>assets/dr_images/ground/logs.png</file>
+        <file>assets/dr_images/decoration/sign_post_top.png</file>
+        <file>assets/dr_images/shapes/arrow_3.png</file>
+        <file>assets/dr_images/decoration/sign_2.png</file>
     </qresource>
 </RCC>

@@ -9,6 +9,7 @@
 #define DRPROJECT_H
 
 #include "constants.h"
+#include "constants_keys.h"
 #include "settings/settings.h"
 
 enum class Project_Options {
