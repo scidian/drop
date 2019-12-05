@@ -14,7 +14,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_view.h"
 #include "helper.h"
-#include "model/enums_types.h"
+#include "model/enums_model_types.h"
 #include "model/project/project_thing.h"
 
 

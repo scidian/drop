@@ -15,7 +15,7 @@
 
 #include "editor/constants_editor.h"
 #include "editor/enums_editor.h"
-#include "model/enums_types.h"
+#include "model/enums_model_types.h"
 
 // Forward declarations
 class DrProject;

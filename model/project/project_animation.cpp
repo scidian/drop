@@ -49,7 +49,7 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, QLis
 
     // Add Frames
     for (auto key : image_keys) {
-        m_frames.push_back(new DrFrame(parent_project, key));
+        m_frames.push_back(new DrFrame(parent_project, { key }));
     }
 }
 
@@ -61,7 +61,7 @@ DrAnimation::~DrAnimation() {
 //##    Adds frame using given DrImage Key
 //####################################################################################
 long DrAnimation::addFrame(long image_key) {
-    m_frames.push_back(new DrFrame(getParentProject(), image_key));
+    m_frames.push_back(new DrFrame(getParentProject(), { image_key }));
     return static_cast<long>(m_frames.size());
 }
 

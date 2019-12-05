@@ -15,24 +15,24 @@
 
 
 // OpenGL Constants
-const int   c_float_size =      static_cast<int>(sizeof(GLfloat));
+const       int         c_float_size =      static_cast<int>(sizeof(GLfloat));
 
 
 // Camera Constants
-const QVector3D c_up_vector_y { 0.0, 1.0, 0.0 };
-const QVector3D c_up_vector_z { 0.0, 0.0, 1.0 };
-const float     c_near_plane =     -10000.0;
-const float     c_far_plane =       10000.0;
-const float     c_field_of_view =   52.5f;              // Close to Orthographic size when using standard widescreen ratio
-const int       c_slop_buffer_size = 5;                 // Default number of past object speeds to average together for camera follow
+const       QVector3D   c_up_vector_y { 0.0, 1.0, 0.0 };
+const       QVector3D   c_up_vector_z { 0.0, 0.0, 1.0 };
+const       float       c_near_plane =     -10000.0;
+const       float       c_far_plane =       10000.0;
+const       float       c_field_of_view =   52.5f;              // Close to Orthographic size when using standard widescreen ratio
+const       int         c_slop_buffer_size = 5;                 // Default number of past object speeds to average together for camera follow
 
 
 // 2D Light Constants
-const float     c_occluder_scale_ortho =       1.00f;   // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
-const float     c_occluder_scale_proj =        1.00f;   // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
-const int       c_desired_max_rays =           4096;    // Desired max number of rays to send out during shadow map calculations
-const int       c_desired_occluder_fbo_size =  8192;    // Desired max width and height of offscreen fbo used for shadow map
-const int       c_desired_light_fbo_size =     4096;    // Desired max width and height of offscreen fbo used for lights (and max size of lights themselves)
+const       float       c_occluder_scale_ortho =       1.00f;   // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
+const       float       c_occluder_scale_proj =        1.00f;   // Scale to use for occlusion map (higher the number, less shaky the shadows), MUST be 1.0 for now
+const       int         c_desired_max_rays =           4096;    // Desired max number of rays to send out during shadow map calculations
+const       int         c_desired_occluder_fbo_size =  8192;    // Desired max width and height of offscreen fbo used for shadow map
+const       int         c_desired_light_fbo_size =     4096;    // Desired max width and height of offscreen fbo used for lights (and max size of lights themselves)
 
 
 // Constants for calling engine addObject calls

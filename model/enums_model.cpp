@@ -5,8 +5,7 @@
 //      Functions associated with enums
 //
 //
-#include "engine/enums_engine.h"
-#include "model/enums_types.h"
+#include "model/enums_model_types.h"
 #include "model/project/project_thing.h"
 #include "model/settings/settings.h"
 

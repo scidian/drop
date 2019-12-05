@@ -13,7 +13,7 @@
 #include <QProxyStyle>
 #include <QTreeWidget>
 
-#include "model/enums_types.h"
+#include "model/enums_model_types.h"
 
 // Forward declarations
 class IEditorRelay;

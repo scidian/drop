@@ -21,7 +21,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
 #include "helper.h"
-#include "model/enums_types.h"
+#include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_effect.h"

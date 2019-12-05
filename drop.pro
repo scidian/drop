@@ -199,7 +199,7 @@ SOURCES += \
     engine/world/engine_world__update_velocity.cpp \
     helper.cpp \
     main.cpp \
-    model/enums_types.cpp \
+    model/enums_model.cpp \
     model/project/project.cpp \
     model/project/project__file_open.cpp \
     model/project/project__file_save.cpp \
@@ -318,8 +318,8 @@ HEADERS += \
     engine/world/engine_world.h \
     helper.h \
     model/constants_keys.h \
-    model/enums_properties.h \
-    model/enums_types.h \
+    model/enums_model_properties.h \
+    model/enums_model_types.h \
     model/project/project.h \
     model/project/project_animation.h \
     model/project/project_asset.h \

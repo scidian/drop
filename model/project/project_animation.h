@@ -66,7 +66,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrFrame(DrProject *parent_project, long image_key);
+    DrFrame(DrProject *parent_project, std::list<long> image_keys);
     virtual ~DrFrame() override;
 
     // Function Calls

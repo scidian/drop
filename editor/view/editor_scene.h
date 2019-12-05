@@ -15,7 +15,7 @@
 #include <QUndoStack>
 
 #include "editor/interface_editor_relay.h"
-#include "model/enums_types.h"
+#include "model/enums_model_types.h"
 
 // Forward declarations
 class DrItem;

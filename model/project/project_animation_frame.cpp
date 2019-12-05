@@ -6,7 +6,7 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"
@@ -18,13 +18,13 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrFrame::DrFrame(DrProject *parent_project, long image_key) : DrSettings(parent_project) {
-    this->setKey(image_key);
+DrFrame::DrFrame(DrProject *parent_project, std::list<long> image_keys) : DrSettings(parent_project) {
+    this->setKey(image_keys.front());
     double width = 1, height = 1;
 
-    DrImage *image = parent_project->findImageFromKey(image_key);
+    DrImage *image = parent_project->findImageFromKey(image_keys.front());
     if (image == nullptr) {
-        Dr::ShowErrorMessage("DrFrame::DrFrame", "Could not load DrImage with key: " + QString::number(image_key));
+        Dr::PrintDebug("Warning!!! DrFrame() Constructor - Could not load DrImage with key: " + std::to_string(image_keys.front()));
 
     } else {
         width =  image->getImage().width();

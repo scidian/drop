@@ -15,7 +15,9 @@
 //####################################################################################
 //##    Constructors
 //####################################################################################
-DrImage::DrImage(DrProject *parent_project, long key, QString image_path, Asset_Category category) : DrSettings(parent_project) {
+DrImage::DrImage(DrProject *parent_project, long key, QString image_path, Asset_Category category)
+    : DrSettings(parent_project)
+{
     this->setKey(key);
     m_category = category;
 

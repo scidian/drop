@@ -27,7 +27,8 @@ namespace Dr {
 //##    Debug Functionality
 //##
 //####################################################################################
-void    PrintDebug(std::string message) {
+void PrintDebug(std::string message) {
+    message += "\n";
     char *cstr = new char [message.length() + 1];
     std::strcpy(cstr, message.c_str());
     fprintf(stderr, "%s", cstr);                        // stderr is the "Error File Stream"
