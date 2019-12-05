@@ -5,7 +5,7 @@
 //      Functions associated with enums
 //
 //
-#include "project/project_thing.h"
+#include "model/project/project_thing.h"
 #include "settings/settings.h"
 
 #include "enums.h"

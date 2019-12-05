@@ -11,7 +11,7 @@
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-#include "project/project_thing.h"
+#include "model/project/project_thing.h"
 
 
 //####################################################################################

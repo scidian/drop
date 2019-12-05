@@ -6,6 +6,7 @@
 //
 //
 #include <QDebug>
+#include <QGraphicsItem>
 
 #include "editor/colors/colors.h"
 #include "editor/view/editor_scene.h"

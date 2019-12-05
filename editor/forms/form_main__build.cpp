@@ -22,8 +22,8 @@
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "project/project.h"
-#include "project/project_stage.h"
+#include "model/project/project.h"
+#include "model/project/project_stage.h"
 
 #include "debug.h"
 #include "globals.h"

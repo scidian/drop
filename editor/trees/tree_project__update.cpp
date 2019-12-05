@@ -7,10 +7,10 @@
 //
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_project.h"
-#include "project/project.h"
-#include "project/project_world.h"
-#include "project/project_stage.h"
-#include "project/project_thing.h"
+#include "model/project/project.h"
+#include "model/project/project_world.h"
+#include "model/project/project_stage.h"
+#include "model/project/project_thing.h"
 #include "settings/settings_component_property.h"
 
 

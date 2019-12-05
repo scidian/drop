@@ -5,14 +5,14 @@
 //      DrSettings Class Definitions
 //
 //
-#include "project/project.h"
-#include "project/project_asset.h"
-#include "project/project_thing.h"
+#include "editor/constants_editor.h"
+#include "model/project/project.h"
+#include "model/project/project_asset.h"
+#include "model/project/project_thing.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
-#include "constants_editor.h"
 #include "enums.h"
 #include "helper.h"
 #include "helper_qt.h"

@@ -8,6 +8,8 @@
 #ifndef ENUMS_FORM_MAIN_H
 #define ENUMS_FORM_MAIN_H
 
+#include <QList>
+#include <QString>
 
 //####################################################################################
 //##    Types of modes for Form Main
@@ -101,7 +103,6 @@ enum class Buttons_Play {
     Play,
     Play_Stage,
 };
-
 
 
 

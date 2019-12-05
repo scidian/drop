@@ -12,7 +12,7 @@
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
-#include "project/project.h"
+#include "model/project/project.h"
 
 #include "helper.h"
 

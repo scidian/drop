@@ -12,7 +12,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_view.h"
-#include "project/project_thing.h"
+#include "model/project/project_thing.h"
 
 #include "debug.h"
 #include "enums.h"

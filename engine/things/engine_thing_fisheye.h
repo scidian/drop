@@ -8,7 +8,6 @@
 #ifndef ENGINE_THING_FISHEYE_H
 #define ENGINE_THING_FISHEYE_H
 
-#include "constants_engine.h"
 #include "engine_thing.h"
 #include "globals_engine.h"
 

@@ -13,11 +13,11 @@
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-#include "project/project.h"
-#include "project/project_asset.h"
-#include "project/project_stage.h"
-#include "project/project_thing.h"
-#include "properties/property_collision.h"
+#include "model/project/project.h"
+#include "model/project/project_asset.h"
+#include "model/project/project_stage.h"
+#include "model/project/project_thing.h"
+#include "model/properties/property_collision.h"
 
 
 //####################################################################################

@@ -8,9 +8,9 @@
 #include <QWidget>
 
 #include "editor/trees/tree_assets.h"
-#include "project/project.h"
-#include "project/project_asset.h"
-#include "project/project_font.h"
+#include "model/project/project.h"
+#include "model/project/project_asset.h"
+#include "model/project/project_font.h"
 
 #include "globals.h"
 #include "helper.h"

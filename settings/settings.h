@@ -8,6 +8,8 @@
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 
+#include <QVariant>
+
 #include "enums.h"
 #include "enums_dr_settings.h"
 

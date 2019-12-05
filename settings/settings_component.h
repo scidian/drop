@@ -8,6 +8,10 @@
 #ifndef DRCOMPONENT_H
 #define DRCOMPONENT_H
 
+#include <QColor>
+
+#include <map>
+
 #include "enums.h"
 #include "enums_dr_settings.h"
 

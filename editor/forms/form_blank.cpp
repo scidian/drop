@@ -11,7 +11,7 @@
 #include "editor/forms/form_blank.h"
 #include "editor/event_filters.h"
 #include "editor/style/style.h"
-#include "project/project.h"
+#include "model/project/project.h"
 
 #include "helper.h"
 

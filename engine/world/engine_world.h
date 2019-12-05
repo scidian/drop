@@ -8,7 +8,6 @@
 #ifndef ENGINE_WORLD_H
 #define ENGINE_WORLD_H
 
-#include "constants_engine.h"
 #include "globals_engine.h"
 
 // Local Structs

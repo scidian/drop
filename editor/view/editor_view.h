@@ -12,7 +12,8 @@
 #include <QRubberBand>
 #include <QTime>
 
-#include "constants_editor.h"
+#include "editor/constants_editor.h"
+
 #include "enums.h"
 #include "enums_form_main.h"
 

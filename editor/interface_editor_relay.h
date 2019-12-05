@@ -8,7 +8,8 @@
 #ifndef I_EDITOR_RELAY_H
 #define I_EDITOR_RELAY_H
 
-#include "constants_editor.h"
+#include "editor/constants_editor.h"
+
 #include "enums.h"
 #include "enums_form_main.h"
 

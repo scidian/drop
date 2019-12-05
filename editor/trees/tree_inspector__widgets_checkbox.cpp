@@ -16,7 +16,7 @@
 #include "editor/forms/form_popup.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
-#include "project/project.h"
+#include "model/project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 

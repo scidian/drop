@@ -8,7 +8,6 @@
 #ifndef ENGINE_LIGHT_H
 #define ENGINE_LIGHT_H
 
-#include "constants_engine.h"
 #include "engine_thing_object.h"
 #include "globals_engine.h"
 

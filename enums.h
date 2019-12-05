@@ -8,7 +8,7 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-#include <QGraphicsItem>
+#include <QString>
 
 // Forward declarations
 class DrSettings;
@@ -125,8 +125,8 @@ enum class Asset_Category {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //############################
 enum User_Roles {
-    Key = Qt::UserRole,                             // Stores Object Key in User Data of widget / graphicsitem
-
+    Key = 0x0100,                               // Stores Object Key in User Data of widget / graphicsitem
+                                                // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
     Scale,      Pre_Resize_Scale,
     Rotation,   Pre_Rotate_Rotation,
     Z_Order,

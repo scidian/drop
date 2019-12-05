@@ -61,15 +61,15 @@ SOURCES += \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
-    common/test.cpp \
+    common/constants.cpp \
     common/types/point.cpp \
     common/types/pointf.cpp \
-    constants_editor.cpp \
     editor/colors/colors.cpp \
     editor/colors/palette_blank.cpp \
     editor/colors/palette_material.cpp \
     editor/colors/palette_rocky_rover.cpp \
     editor/colors/palette_window_themes.cpp \
+    editor/constants_editor.cpp \
     editor/docks/docks_build.cpp \
     editor/docks/docks_handle.cpp \
     editor/docks/docks_initialize.cpp \
@@ -199,30 +199,30 @@ SOURCES += \
     helper.cpp \
     helper_qt.cpp \
     main.cpp \
-    project/project.cpp \
-    project/project__file_open.cpp \
-    project/project__file_save.cpp \
-    project/project__initialize.cpp \
-    project/project_animation.cpp \
-    project/project_animation_frame.cpp \
-    project/project_asset.cpp \
-    project/project_asset__auto_collision.cpp \
-    project/project_asset__settings.cpp \
-    project/project_asset__settings_shared.cpp \
-    project/project_device.cpp \
-    project/project_effect.cpp \
-    project/project_font.cpp \
-    project/project_image.cpp \
-    project/project_stage.cpp \
-    project/project_stage__settings.cpp \
-    project/project_thing.cpp \
-    project/project_thing__settings.cpp \
-    project/project_thing__settings_effects.cpp \
-    project/project_thing__settings_shared.cpp \
-    project/project_thing__z_order.cpp \
-    project/project_world.cpp \
-    project/project_world__settings.cpp \
-    properties/property_collision.cpp \
+    model/project/project.cpp \
+    model/project/project__file_open.cpp \
+    model/project/project__file_save.cpp \
+    model/project/project__initialize.cpp \
+    model/project/project_animation.cpp \
+    model/project/project_animation_frame.cpp \
+    model/project/project_asset.cpp \
+    model/project/project_asset__auto_collision.cpp \
+    model/project/project_asset__settings.cpp \
+    model/project/project_asset__settings_shared.cpp \
+    model/project/project_device.cpp \
+    model/project/project_effect.cpp \
+    model/project/project_font.cpp \
+    model/project/project_image.cpp \
+    model/project/project_stage.cpp \
+    model/project/project_stage__settings.cpp \
+    model/project/project_thing.cpp \
+    model/project/project_thing__settings.cpp \
+    model/project/project_thing__settings_effects.cpp \
+    model/project/project_thing__settings_shared.cpp \
+    model/project/project_thing__z_order.cpp \
+    model/project/project_world.cpp \
+    model/project/project_world__settings.cpp \
+    model/properties/property_collision.cpp \
     settings/settings.cpp \
     settings/settings_component.cpp \
     settings/settings_component_property.cpp \
@@ -266,13 +266,11 @@ HEADERS += \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
     3rd_party/vec3.h \
-    common/test.h \
+    common/constants.h \
     common/types/point.h \
     common/types/pointf.h \
-    constants_editor.h \
-    constants_engine.h \
-    constants_keys.h \
     editor/colors/colors.h \
+    editor/constants_editor.h \
     editor/docks/docks.h \
     editor/event_filters.h \
     editor/forms/form_about.h \
@@ -295,6 +293,7 @@ HEADERS += \
     editor/view/editor_scene_undo_commands.h \
     editor/view/editor_view.h \
     editor/interface_editor_relay.h \
+    engine/constants_engine.h \
     engine/engine.h \
     engine/engine_camera.h \
     engine/engine_spawner.h \
@@ -318,17 +317,18 @@ HEADERS += \
     globals_engine.h \
     helper.h \
     helper_qt.h \
-    project/project.h \
-    project/project_animation.h \
-    project/project_asset.h \
-    project/project_device.h \
-    project/project_effect.h \
-    project/project_font.h \
-    project/project_image.h \
-    project/project_stage.h \
-    project/project_thing.h \
-    project/project_world.h \
-    properties/property_collision.h \
+    model/constants_keys.h \
+    model/project/project.h \
+    model/project/project_animation.h \
+    model/project/project_asset.h \
+    model/project/project_device.h \
+    model/project/project_effect.h \
+    model/project/project_font.h \
+    model/project/project_image.h \
+    model/project/project_stage.h \
+    model/project/project_thing.h \
+    model/project/project_world.h \
+    model/properties/property_collision.h \
     settings/settings.h \
     settings/settings_component.h \
     settings/settings_component_property.h \

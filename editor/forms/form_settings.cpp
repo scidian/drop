@@ -15,7 +15,7 @@
 #include "editor/forms/form_settings.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/style/style.h"
-#include "project/project.h"
+#include "model/project/project.h"
 
 #include "globals.h"
 #include "helper.h"

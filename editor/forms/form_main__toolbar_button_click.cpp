@@ -17,9 +17,9 @@
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "engine/form_engine.h"
-#include "project/project.h"
-#include "project/project_stage.h"
-#include "project/project_thing.h"
+#include "model/project/project.h"
+#include "model/project/project_stage.h"
+#include "model/project/project_thing.h"
 
 #include "globals.h"
 #include "helper.h"

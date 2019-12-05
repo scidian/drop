@@ -8,7 +8,6 @@
 #ifndef ENGINE_THING_H
 #define ENGINE_THING_H
 
-#include "constants_engine.h"
 #include "globals_engine.h"
 #include "helper.h"
 

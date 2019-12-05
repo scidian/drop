@@ -10,7 +10,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/trees/tree_inspector.h"
-#include "project/project.h"
+#include "model/project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"

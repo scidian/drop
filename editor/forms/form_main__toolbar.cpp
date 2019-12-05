@@ -16,9 +16,9 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "project/project.h"
-#include "project/project_asset.h"
-#include "project/project_thing.h"
+#include "model/project/project.h"
+#include "model/project/project_asset.h"
+#include "model/project/project_thing.h"
 
 #include "enums_form_main.h"
 #include "globals.h"

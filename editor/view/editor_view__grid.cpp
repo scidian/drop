@@ -11,9 +11,9 @@
 #include "editor/colors/colors.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
-#include "project/project.h"
-#include "project/project_world.h"
-#include "project/project_stage.h"
+#include "model/project/project.h"
+#include "model/project/project_world.h"
+#include "model/project/project_stage.h"
 
 #include "debug.h"
 #include "globals.h"
