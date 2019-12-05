@@ -11,9 +11,9 @@
 #include <QSpinBox>
 #include <QVector3D>
 
+#include "editor/event_filters.h"
 #include "editor/trees/tree_inspector.h"
 #include "settings/settings_component_property.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "helper.h"
 #include "helper_qt.h"

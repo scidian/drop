@@ -5,8 +5,6 @@
 //      Effect Specific Components / Properties
 //
 //
-#include "imaging/imaging.h"
-#include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"

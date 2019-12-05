@@ -9,9 +9,9 @@
 #include <QVBoxLayout>
 
 #include "editor/forms/form_blank.h"
+#include "editor/event_filters.h"
+#include "editor/style/style.h"
 #include "project/project.h"
-#include "style/style.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "helper.h"
 

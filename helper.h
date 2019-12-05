@@ -11,7 +11,8 @@
 #include <chrono>
 #include <string>
 
-#include "types/pointf.h"
+#include "common/types/pointf.h"
+
 
 // Type Definitions
 typedef std::chrono::high_resolution_clock Clock;

@@ -8,7 +8,7 @@
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
-#include "constants.h"
+#include "constants_editor.h"
 #include "constants_keys.h"
 #include "settings/settings.h"
 

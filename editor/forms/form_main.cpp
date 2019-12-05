@@ -10,9 +10,10 @@
 #include <QKeyEvent>
 #include <QTimer>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/docks/docks.h"
 #include "editor/forms/form_main.h"
+#include "editor/style/style.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -28,7 +29,6 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
-#include "style/style.h"
 
 #include "debug.h"
 #include "enums.h"

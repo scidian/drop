@@ -14,8 +14,7 @@
 
 #include <cmath>
 
-#include "colors/colors.h"
-#include "widgets/widgets.h"
+#include "editor/colors/colors.h"
 
 #include "helper.h"
 #include "helper_qt.h"

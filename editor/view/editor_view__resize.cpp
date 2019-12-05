@@ -7,12 +7,12 @@
 //
 #include <math.h>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "opengl/opengl.h"
+#include "engine/opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"

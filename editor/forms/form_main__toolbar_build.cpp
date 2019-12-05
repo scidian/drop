@@ -11,13 +11,13 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "editor/event_filters.h"
 #include "editor/forms/form_blank.h"
 #include "editor/forms/form_fonts.h"
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_popup.h"
 #include "editor/forms/form_settings.h"
-#include "style/style.h"
-#include "widgets/widgets_event_filters.h"
+#include "editor/style/style.h"
 
 #include "enums_form_main.h"
 #include "globals.h"

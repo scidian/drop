@@ -8,7 +8,7 @@
 #include <QtMath>
 #include <QScrollBar>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
 #include "project/project.h"

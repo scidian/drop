@@ -5,8 +5,9 @@
 //
 //
 //
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/style/style.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
@@ -17,7 +18,6 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
-#include "style/style.h"
 
 #include "debug.h"
 #include "helper.h"

@@ -90,7 +90,7 @@
 #include <QDateTime>
 #include <QSurfaceFormat>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_expire.h"
 

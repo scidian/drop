@@ -8,8 +8,6 @@
 #ifndef DRDEVICE_H
 #define DRDEVICE_H
 
-#include <QString>
-
 #include "settings/settings.h"
 
 // Forward Declarations

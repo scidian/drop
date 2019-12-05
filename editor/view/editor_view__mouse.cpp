@@ -10,7 +10,7 @@
 #include <QScrollBar>
 #include <QTimer>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"

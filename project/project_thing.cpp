@@ -6,8 +6,8 @@
 //
 //
 #include "editor/forms/form_main.h"
-#include "imaging/imaging.h"
-#include "opengl/opengl.h"
+#include "editor/imaging/imaging.h"
+#include "engine/opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_font.h"

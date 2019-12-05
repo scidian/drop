@@ -10,7 +10,7 @@
 #include <QKeyEvent>
 #include <QScrollBar>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/view/editor_scene.h"
@@ -26,7 +26,7 @@
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
 
-#include "constants.h"
+#include "constants_editor.h"
 #include "enums.h"
 #include "globals.h"
 #include "helper.h"

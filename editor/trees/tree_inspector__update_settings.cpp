@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QVBoxLayout>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/trees/tree_inspector.h"
 #include "project/project.h"
 #include "settings/settings.h"

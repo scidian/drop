@@ -9,9 +9,9 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include "editor/imaging/imaging.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
-#include "imaging/imaging.h"
 
 #include "helper.h"
 

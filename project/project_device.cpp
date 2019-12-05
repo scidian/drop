@@ -5,10 +5,10 @@
 //
 //
 //
-#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_device.h"
 #include "settings/settings_component_property.h"
+
 
 //####################################################################################
 //##    Constructor, Destructor

@@ -12,7 +12,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/forms/form_main.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"

@@ -14,9 +14,8 @@
 
 #include <cmath>
 
-#include "colors/colors.h"
-#include "types/pointf.h"
-#include "widgets/widgets.h"
+#include "common/types/pointf.h"
+#include "editor/colors/colors.h"
 
 #include "helper.h"
 

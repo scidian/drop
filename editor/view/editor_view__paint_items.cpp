@@ -7,7 +7,7 @@
 //
 #include <QDebug>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 

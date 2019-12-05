@@ -17,16 +17,16 @@
 #include <algorithm>
 #include <limits>
 
+#include "3rd_party/chipmunk/chipmunk.h"
 #include "3rd_party/delaunator.h"
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "3rd_party/polyline_simplification.h"
-#include "3rd_party_chipmunk/chipmunk.h"
+#include "common/types/point.h"
+#include "common/types/pointf.h"
+#include "editor/imaging/imaging.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-#include "imaging/imaging.h"
-#include "types/point.h"
-#include "types/pointf.h"
 
 #include "helper.h"
 

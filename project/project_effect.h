@@ -8,8 +8,6 @@
 #ifndef DREFFECT_H
 #define DREFFECT_H
 
-#include <QString>
-
 #include "settings/settings.h"
 
 // Forward Declarations

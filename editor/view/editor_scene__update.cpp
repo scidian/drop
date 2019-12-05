@@ -5,10 +5,10 @@
 //      Very Important File! Updates Items in the GraphicsScene based on changes elsewhere
 //
 //
+#include "editor/imaging/imaging.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
-#include "imaging/imaging.h"
-#include "opengl/opengl.h"
+#include "engine/opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_effect.h"

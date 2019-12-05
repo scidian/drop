@@ -5,7 +5,6 @@
 //
 //
 //
-#include "colors/colors.h"
 #include "project/project.h"
 #include "project/project_animation.h"
 #include "project/project_image.h"
@@ -13,7 +12,7 @@
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
-#include "constants.h"
+#include "constants_editor.h"
 #include "helper.h"
 #include "helper_qt.h"
 

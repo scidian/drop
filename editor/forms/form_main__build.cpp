@@ -11,9 +11,11 @@
 #include <QScreen>
 #include <QScrollBar>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/docks/docks.h"
+#include "editor/event_filters.h"
 #include "editor/forms/form_main.h"
+#include "editor/style/style.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -22,8 +24,6 @@
 #include "editor/view/editor_view.h"
 #include "project/project.h"
 #include "project/project_stage.h"
-#include "style/style.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "debug.h"
 #include "globals.h"

@@ -9,6 +9,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "editor/event_filters.h"
 #include "editor/forms/form_main.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_project.h"
@@ -18,7 +19,6 @@
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_thing.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "enums_form_main.h"
 #include "globals.h"

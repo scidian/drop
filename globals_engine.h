@@ -20,12 +20,13 @@
 #include <string>
 #include <vector>
 
-#include "3rd_party_chipmunk/chipmunk.h"
+#include "3rd_party/chipmunk/chipmunk.h"
 #include "3rd_party/vec3.h"
+#include "common/types/pointf.h"
+
 #include "constants_keys.h"
 #include "enums.h"
 #include "enums_engine.h"
-#include "types/pointf.h"
 
 
 // Forward declarations

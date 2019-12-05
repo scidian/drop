@@ -12,7 +12,7 @@
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
 
-#include "constants.h"
+#include "constants_editor.h"
 #include "enums.h"
 #include "helper.h"
 #include "helper_qt.h"

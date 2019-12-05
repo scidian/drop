@@ -15,12 +15,15 @@
 
 #include <cmath>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
+#include "editor/event_filters.h"
+#include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/style/style.h"
+#include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
-#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_asset.h"
 #include "project/project_world.h"
@@ -29,9 +32,6 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
-#include "style/style.h"
-#include "widgets/widgets.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "debug.h"
 #include "globals.h"
@@ -188,8 +188,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
             // Build category button
-            DrQPushButtonCategory *category_button = new DrQPushButtonCategory(QString(" ") + component->getDisplayNameQString(),
-                                                                               Qt::black, Qt::black, nullptr, category_item);
+            AssetCategoryButton *category_button = new AssetCategoryButton(QString(" ") + component->getDisplayNameQString(),
+                                                                           Qt::black, Qt::black, nullptr, category_item);
             QString button_style;
             button_style = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                                         " padding-left: 2px;"

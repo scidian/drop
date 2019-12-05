@@ -5,7 +5,6 @@
 //      DrWorld Class Definitions
 //
 //
-#include "opengl/opengl.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"

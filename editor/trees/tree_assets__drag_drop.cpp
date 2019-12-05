@@ -10,9 +10,9 @@
 #include <QMimeData>
 #include <QScreen>
 
+#include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
-#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_animation.h"
 #include "project/project_asset.h"

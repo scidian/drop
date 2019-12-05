@@ -14,10 +14,12 @@
 #include <QScrollBar>
 #include <QVBoxLayout>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
+#include "editor/event_filters.h"
+#include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/style/style.h"
 #include "editor/trees/tree_assets.h"
-#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_animation.h"
 #include "project/project_asset.h"
@@ -31,9 +33,6 @@
 #include "settings/settings.h"
 #include "settings/settings_component.h"
 #include "settings/settings_component_property.h"
-#include "style/style.h"
-#include "widgets/widgets.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "debug.h"
 #include "globals.h"
@@ -132,7 +131,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     // ***** Create new items in list to hold asset categories
     std::map <Asset_Category, QTreeWidgetItem*>       widget_items;
-    std::map <Asset_Category, DrQPushButtonCategory*> category_buttons;
+    std::map <Asset_Category, AssetCategoryButton*>   category_buttons;
     std::map <Asset_Category, QFrame*>                assets_frames;
     ///std::map <Asset_Categories, AssetFlowLayout*>  grid_layouts;
                                                     m_grid_layouts.clear();
@@ -349,8 +348,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     // ***** Create a child TreeWidgetItem attached to the TopLevel category item containing all the Assets for that category
     for (auto button_pair : category_buttons) {
-        Asset_Category          asset_type = button_pair.first;
-        DrQPushButtonCategory  *button     = button_pair.second;
+        Asset_Category       asset_type = button_pair.first;
+        AssetCategoryButton *button     = button_pair.second;
 
         // If enabled, show Asset Category
         if (button->isEnabled()) {
@@ -397,7 +396,7 @@ QList<QTreeWidgetItem*> TreeAssets::getListOfTopLevelItems() {
 //####################################################################################
 //##    Create and style a buttons to be used as a header items for the categories
 //####################################################################################
-DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type) {
+AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type) {
     QString name, icon;
     QList<QString> info;
 
@@ -424,8 +423,8 @@ DrQPushButtonCategory* TreeAssets::createCategoryButton(QTreeWidgetItem *item, A
 
     // ***** Create Category Button
     QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
-    DrQPushButtonCategory *button = new DrQPushButtonCategory(name, Dr::GetColor(Window_Colors::Text),
-                                                                    Dr::GetColor(Window_Colors::Text_Dark), nullptr, item);
+    AssetCategoryButton *button = new AssetCategoryButton(name, Dr::GetColor(Window_Colors::Text),
+                                                                Dr::GetColor(Window_Colors::Text_Dark), nullptr, item);
     button->setObjectName("buttonAssetCategory");
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);                                              // Created as false, becomes true if we add an Asset to the category

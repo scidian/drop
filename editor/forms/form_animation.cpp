@@ -7,10 +7,10 @@
 //
 #include "editor/docks/docks.h"
 #include "editor/forms/form_animation.h"
+#include "editor/style/style.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "project/project.h"
-#include "style/style.h"
 
 
 //####################################################################################

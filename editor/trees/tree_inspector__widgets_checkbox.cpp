@@ -11,14 +11,14 @@
 #include <QMenu>
 #include <QPainter>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
+#include "editor/event_filters.h"
 #include "editor/forms/form_popup.h"
+#include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
 #include "project/project.h"
 #include "settings/settings.h"
 #include "settings/settings_component_property.h"
-#include "style/style.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "helper.h"
 

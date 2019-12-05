@@ -5,7 +5,6 @@
 //
 //
 //
-#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_effect.h"
 #include "settings/settings_component_property.h"

@@ -10,12 +10,12 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
+#include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_settings.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/style/style.h"
 #include "project/project.h"
-#include "style/style.h"
-#include "widgets/widgets_event_filters.h"
 
 #include "globals.h"
 #include "helper.h"

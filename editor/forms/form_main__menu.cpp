@@ -13,7 +13,7 @@
 #include <QMessageBox>
 #include <QStandardPaths>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
 #include "editor/forms/form_about.h"
 #include "editor/forms/form_main.h"
 #include "editor/trees/tree_advisor.h"

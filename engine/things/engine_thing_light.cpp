@@ -9,9 +9,9 @@
 
 #include "engine/engine.h"
 #include "engine/form_engine.h"
+#include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_light.h"
 #include "engine/world/engine_world.h"
-#include "opengl/opengl.h"
 
 #include "helper.h"
 

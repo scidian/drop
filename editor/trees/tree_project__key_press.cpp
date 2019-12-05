@@ -11,12 +11,12 @@
 #include <QKeyEvent>
 #include <QPainter>
 
-#include "colors/colors.h"
+#include "editor/colors/colors.h"
+#include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_world.h"
 #include "project/project_stage.h"
