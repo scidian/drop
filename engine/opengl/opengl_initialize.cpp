@@ -17,8 +17,8 @@
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_image.h"
-#include "settings/settings.h"
-#include "settings/settings_component_property.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component_property.h"
 
 
 // OpenGL Constant Definitions

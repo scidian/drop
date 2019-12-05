@@ -8,7 +8,7 @@
 #ifndef ENGINE_TEXTURE_H
 #define ENGINE_TEXTURE_H
 
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
 
 
 //####################################################################################

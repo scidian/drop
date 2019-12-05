@@ -11,7 +11,7 @@
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
-#include "settings/settings_component_property.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

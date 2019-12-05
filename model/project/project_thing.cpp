@@ -6,22 +6,20 @@
 //
 //
 #include "editor/forms/form_main.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/imaging/imaging.h"
 #include "engine/opengl/opengl.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_font.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
 #include "model/project/project_world.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
-#include "debug.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

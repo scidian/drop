@@ -11,18 +11,17 @@
 
 #include "editor/event_filters.h"
 #include "editor/forms/form_main.h"
+#include "editor/globals_editor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "editor/enums_editor.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_thing.h"
-
-#include "enums_form_main.h"
-#include "globals.h"
-#include "helper.h"
 
 
 //####################################################################################

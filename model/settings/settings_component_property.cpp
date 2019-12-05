@@ -8,12 +8,11 @@
 //
 #include <QDebug>
 
-#include "model/project/project.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
 #include "helper.h"
+#include "model/project/project.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

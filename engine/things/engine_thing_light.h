@@ -8,8 +8,8 @@
 #ifndef ENGINE_LIGHT_H
 #define ENGINE_LIGHT_H
 
-#include "engine_thing_object.h"
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
+#include "engine/things/engine_thing.h"
 
 
 //####################################################################################

@@ -8,8 +8,8 @@
 #include <QRandomGenerator>
 
 #include "editor/colors/colors.h"
-#include "enums.h"
-#include "globals.h"
+#include "editor/globals_editor.h"
+#include "model/enums_types.h"
 #include "helper.h"
 
 

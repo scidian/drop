@@ -9,13 +9,13 @@
 #define EDITOR_VIEW_H
 
 #include <QGraphicsView>
+#include <QMap>
 #include <QRubberBand>
 #include <QTime>
 
 #include "editor/constants_editor.h"
-
-#include "enums.h"
-#include "enums_form_main.h"
+#include "editor/enums_editor.h"
+#include "model/enums_types.h"
 
 // Forward declarations
 class DrProject;

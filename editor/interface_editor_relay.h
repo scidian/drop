@@ -9,9 +9,8 @@
 #define I_EDITOR_RELAY_H
 
 #include "editor/constants_editor.h"
-
-#include "enums.h"
-#include "enums_form_main.h"
+#include "editor/enums_editor.h"
+#include "model/enums_types.h"
 
 // Forward declarations
 class DrThing;

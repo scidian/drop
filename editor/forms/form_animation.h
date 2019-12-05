@@ -16,7 +16,6 @@
 #include "editor/colors/colors.h"
 #include "editor/interface_editor_relay.h"
 
-
 // Necessary forward declarations
 class FormPopup;
 class TreeAssets;

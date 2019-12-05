@@ -8,7 +8,7 @@
 #ifndef ENGINE_WORLD_H
 #define ENGINE_WORLD_H
 
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
 
 // Local Structs
 struct ThingInfo {

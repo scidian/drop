@@ -8,7 +8,7 @@
 #ifndef DRASSET_H
 #define DRASSET_H
 
-#include "settings/settings.h"
+#include "model/settings/settings.h"
 
 // Forward Declarations
 class DrFont;

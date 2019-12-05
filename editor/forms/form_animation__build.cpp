@@ -7,17 +7,16 @@
 //
 #include <QHeaderView>
 
+#include "editor/debug.h"
 #include "editor/docks/docks.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_animation.h"
+#include "editor/helper_editor.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-
-#include "debug.h"
-#include "helper_qt.h"
 
 
 //####################################################################################

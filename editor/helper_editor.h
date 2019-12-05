@@ -5,8 +5,8 @@
 //      To be used with Qt Library types
 //
 //
-#ifndef HELPER_QT_H
-#define HELPER_QT_H
+#ifndef HELPER_EDITOR_H
+#define HELPER_EDITOR_H
 
 #include <QBitmap>
 #include <QLabel>
@@ -17,7 +17,7 @@
 
 
 //####################################################################################
-//##    A library of helpful functions within the global Dr namespace
+//##    A library of helpful Qt based functions within the global Dr namespace
 //############################
 namespace Dr {
 
@@ -49,7 +49,7 @@ QMessageBox::StandardButton ShowMessageBox(QString message, QMessageBox::Icon ic
 }
 
 
-#endif // HELPER_QT_H
+#endif // HELPER_EDITOR_H
 
 
 

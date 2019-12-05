@@ -12,7 +12,10 @@
 #include <QTimer>
 
 #include "editor/colors/colors.h"
+#include "editor/debug.h"
 #include "editor/forms/form_main.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -20,20 +23,16 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "helper.h"
+#include "model/enums_types.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
-#include "debug.h"
-#include "enums.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

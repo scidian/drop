@@ -12,11 +12,11 @@
 #include <QVector3D>
 
 #include "editor/event_filters.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/trees/tree_inspector.h"
-#include "settings/settings_component_property.h"
-
 #include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

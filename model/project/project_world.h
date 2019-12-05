@@ -8,7 +8,7 @@
 #ifndef DRWORLD_H
 #define DRWORLD_H
 
-#include "settings/settings.h"
+#include "model/settings/settings.h"
 
 // Forward declarations
 class DrProject;

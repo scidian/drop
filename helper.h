@@ -11,7 +11,8 @@
 #include <chrono>
 #include <string>
 
-#include "common/types/pointf.h"
+#include "model/types/point.h"
+#include "model/types/pointf.h"
 
 
 // Type Definitions

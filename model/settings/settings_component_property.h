@@ -8,8 +8,10 @@
 #ifndef DRPROPERTY_H
 #define DRPROPERTY_H
 
-#include "enums.h"
-#include "enums_dr_settings.h"
+#include <QVariant>
+
+#include "model/enums_types.h"
+#include "model/enums_properties.h"
 
 // Forward declarations
 class DrSettings;

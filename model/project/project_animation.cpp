@@ -6,15 +6,15 @@
 //
 //
 #include "editor/constants_editor.h"
+#include "editor/helper_editor.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
-#include "helper.h"
-#include "helper_qt.h"
 
 //####################################################################################
 //##    Constructor, Destructor

@@ -10,6 +10,7 @@
 
 #include <numeric>
 
+#include "editor/helper_editor.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_spawner.h"
@@ -21,9 +22,7 @@
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
-
 #include "helper.h"
-#include "helper_qt.h"
 
 
 // Local Structs

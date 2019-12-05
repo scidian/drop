@@ -12,8 +12,8 @@
 
 #include <map>
 
-#include "enums.h"
-#include "enums_dr_settings.h"
+#include "model/enums_types.h"
+#include "model/enums_properties.h"
 
 // Forward Declarations
 class DrSettings;

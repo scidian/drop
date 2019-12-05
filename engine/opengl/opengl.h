@@ -17,12 +17,11 @@
 #include <QMatrix4x4>
 #include <chrono>
 
-#include "common/types/pointf.h"
 #include "engine/constants_engine.h"
-
-#include "enums.h"
-#include "enums_engine.h"
-
+#include "engine/enums_engine.h"
+#include "model/enums_types.h"
+#include "model/types/point.h"
+#include "model/types/pointf.h"
 
 // Forward Declarations
 class DrEngine;

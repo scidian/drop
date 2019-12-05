@@ -7,13 +7,12 @@
 //
 #include <QWidget>
 
+#include "editor/globals_editor.h"
 #include "editor/trees/tree_assets.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_font.h"
-
-#include "globals.h"
-#include "helper.h"
 
 
 //####################################################################################

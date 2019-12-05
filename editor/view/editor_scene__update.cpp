@@ -5,10 +5,14 @@
 //      Very Important File! Updates Items in the GraphicsScene based on changes elsewhere
 //
 //
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/imaging/imaging.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
+#include "engine/enums_engine.h"
 #include "engine/opengl/opengl.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_effect.h"
@@ -16,14 +20,9 @@
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
-#include "enums_engine.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

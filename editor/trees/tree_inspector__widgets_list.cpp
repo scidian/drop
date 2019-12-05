@@ -16,13 +16,13 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_popup.h"
+#include "editor/globals_editor.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
-#include "model/project/project.h"
-#include "settings/settings.h"
-#include "settings/settings_component_property.h"
-
 #include "helper.h"
+#include "model/project/project.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

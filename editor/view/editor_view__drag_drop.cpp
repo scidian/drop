@@ -11,6 +11,7 @@
 #include <QDragMoveEvent>
 #include <QMimeData>
 
+#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/view/editor_scene.h"
@@ -23,8 +24,6 @@
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
 #include "model/project/project_world.h"
-
-#include "globals.h"
 
 
 //####################################################################################

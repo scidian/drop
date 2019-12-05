@@ -9,10 +9,9 @@
 
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_popup.h"
-
-#include "globals.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "helper.h"
-#include "helper_qt.h"
 
 
 //####################################################################################

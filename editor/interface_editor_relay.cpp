@@ -5,10 +5,9 @@
 //      An interface class, used to transfer messages, etc around program between widgets / classes
 //
 //
+#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
-
-#include "globals.h"
 
 
 //####################################################################################

@@ -12,11 +12,9 @@
 
 #include <list>
 
-#include "common/types/pointf.h"
-
-#include "enums_engine.h"
+#include "engine/enums_engine.h"
 #include "helper.h"
-
+#include "model/types/pointf.h"
 
 // Local Structs
 struct DrCircle {

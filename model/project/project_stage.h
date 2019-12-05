@@ -10,7 +10,7 @@
 
 #include <QPointF>
 
-#include "settings/settings.h"
+#include "model/settings/settings.h"
 
 // Forward declarations
 class DrProject;

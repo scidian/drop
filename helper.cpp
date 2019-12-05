@@ -14,10 +14,9 @@
 
 #include <cmath>
 
-#include "common/types/pointf.h"
 #include "editor/colors/colors.h"
-
 #include "helper.h"
+#include "model/types/pointf.h"
 
 
 namespace Dr {

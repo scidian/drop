@@ -8,14 +8,18 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "enums.h"
-#include "enums_dr_settings.h"
-#include "enums_form_main.h"
+#include <QVariant>
+
+#include "editor/enums_editor.h"
+#include "model/enums_types.h"
+#include "model/enums_properties.h"
+
 
 // Forward declarations
 class DrProject;
 class FormMain;
 class IEditorRelay;
+
 
 //####################################################################################
 //##    Program Wide Options / Settings / Preferences)
@@ -41,6 +45,7 @@ enum class Preferences {
     Color_Popup_History,                            // QList<QVariant> (QVariant = qRgba = unsigned int)
     Color_Popup_Tab,                                // int - 0 = Palette, 1 = History
 };
+
 
 //####################################################################################
 //##    Global function declarations

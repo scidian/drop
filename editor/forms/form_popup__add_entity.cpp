@@ -11,20 +11,19 @@
 
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_popup.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
-#include "settings/settings.h"
-
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings.h"
 
 
 //####################################################################################

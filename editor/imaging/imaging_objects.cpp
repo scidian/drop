@@ -14,13 +14,12 @@
 #include <QTime>
 #include <QVector2D>
 
-#include "common/types/point.h"
-#include "common/types/pointf.h"
 #include "editor/colors/colors.h"
+#include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
-
-#include "globals.h"
 #include "helper.h"
+#include "model/types/point.h"
+#include "model/types/pointf.h"
 
 
 namespace DrImaging

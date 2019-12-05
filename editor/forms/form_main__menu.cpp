@@ -14,8 +14,10 @@
 #include <QStandardPaths>
 
 #include "editor/colors/colors.h"
+#include "editor/debug.h"
 #include "editor/forms/form_about.h"
 #include "editor/forms/form_main.h"
+#include "editor/helper_editor.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -23,11 +25,8 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "model/project/project.h"
-
-#include "debug.h"
 #include "helper.h"
-#include "helper_qt.h"
+#include "model/project/project.h"
 
 
 //####################################################################################

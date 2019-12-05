@@ -10,19 +10,18 @@
 #include <QOpenGLWidget>
 #include <QScrollBar>
 
+#include "editor/debug.h"
 #include "editor/docks/docks.h"
 #include "editor/forms/form_main.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-
-#include "debug.h"
-#include "globals.h"
 #include "helper.h"
-#include "helper_qt.h"
 
 
 //####################################################################################

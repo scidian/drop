@@ -8,8 +8,8 @@
 #include <QFileInfo>
 
 #include "model/project/project_image.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

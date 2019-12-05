@@ -14,16 +14,15 @@
 #include <QVector3D>
 
 #include "editor/colors/colors.h"
+#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_inspector.h"
-#include "model/project/project.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
-#include "enums.h"
-#include "globals.h"
 #include "helper.h"
+#include "model/enums_types.h"
+#include "model/project/project.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

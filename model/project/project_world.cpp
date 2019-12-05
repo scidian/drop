@@ -9,11 +9,9 @@
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
-#include "debug.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

@@ -15,10 +15,9 @@
 #include <QVector3D>
 
 #include "editor/colors/colors.h"
+#include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
 #include "editor/style/style.h"
-
-#include "globals.h"
 #include "helper.h"
 
 

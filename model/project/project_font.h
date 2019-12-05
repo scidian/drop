@@ -11,7 +11,7 @@
 #include <QPixmap>
 #include <QString>
 
-#include "settings/settings.h"
+#include "model/settings/settings.h"
 
 // Forward declarations
 class DrProject;
@@ -67,8 +67,6 @@ public:
 
     QString         getPropertyFontFamily()         { return p_font_family; }
     int             getPropertyFontSize()           { return p_font_size; }
-    void            setPropertyFontFamily(QString family)   { p_font_family = family; }
-    void            setPropertyFontSize(int size)           { p_font_size = size; }
 
     void            setTestFontRects();
 

@@ -22,12 +22,11 @@
 
 #include "3rd_party/chipmunk/chipmunk.h"
 #include "3rd_party/vec3.h"
-#include "common/types/pointf.h"
 #include "engine/constants_engine.h"
+#include "engine/enums_engine.h"
 #include "model/constants_keys.h"
-
-#include "enums.h"
-#include "enums_engine.h"
+#include "model/enums_types.h"
+#include "model/types/pointf.h"
 
 
 // Forward declarations

@@ -15,8 +15,8 @@
 #include <QTextEdit>
 #include <QTreeWidget>
 
-#include "enums.h"
-#include "enums_dr_settings.h"
+#include "model/enums_types.h"
+#include "model/enums_properties.h"
 
 // Forward declarations
 class DrProject;

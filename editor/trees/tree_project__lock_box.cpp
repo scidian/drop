@@ -5,6 +5,7 @@
 //
 //
 //
+#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_project.h"
 #include "model/project/project.h"

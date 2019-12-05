@@ -16,12 +16,11 @@
 
 #include "editor/colors/colors.h"
 #include "editor/event_filters.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/interface_editor_relay.h"
-#include "settings/settings_component_property.h"
-
-#include "globals.h"
 #include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

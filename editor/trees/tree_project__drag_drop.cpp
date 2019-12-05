@@ -11,12 +11,11 @@
 #include <QMimeData>
 #include <QPainter>
 
+#include "editor/debug.h"
+#include "editor/globals_editor.h"
 #include "editor/trees/tree_project.h"
 #include "model/project/project.h"
-#include "settings/settings.h"
-
-#include "debug.h"
-#include "globals.h"
+#include "model/settings/settings.h"
 
 
 //####################################################################################

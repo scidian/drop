@@ -8,9 +8,8 @@
 #include <QApplication>
 
 #include "editor/forms/form_main.h"
+#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
-
-#include "globals.h"
 
 
 typedef std::map<Asset_Category, bool>  AssetCategoryMap;

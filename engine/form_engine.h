@@ -16,7 +16,7 @@
 #include <QTimer>
 #include <chrono>
 
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
 
 enum class Engine_Timer {
     Update,

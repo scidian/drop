@@ -15,9 +15,8 @@
 #include <QVector2D>
 
 #include "editor/colors/colors.h"
+#include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
-
-#include "globals.h"
 #include "helper.h"
 
 

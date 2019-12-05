@@ -7,17 +7,16 @@
 //
 #include <QDebug>
 
+#include "editor/globals_editor.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_scene_undo_commands.h"
 #include "editor/view/editor_view.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
-
-#include "globals.h"
-#include "helper.h"
 
 
 /*

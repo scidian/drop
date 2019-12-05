@@ -2,12 +2,12 @@
 //      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles debug flags for use in debugging / troubleshooting
+//      Handles debug flags for use in debugging / troubleshooting Editor
 //
 //
 #include <bitset>
 
-#include "debug.h"
+#include "editor/debug.h"
 
 
 namespace Dr {

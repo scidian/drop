@@ -5,12 +5,10 @@
 //      Functions associated with enums
 //
 //
+#include "engine/enums_engine.h"
+#include "model/enums_types.h"
 #include "model/project/project_thing.h"
-#include "settings/settings.h"
-
-#include "enums.h"
-#include "enums_engine.h"
-#include "enums_form_main.h"
+#include "model/settings/settings.h"
 
 
 namespace Dr {
@@ -19,16 +17,6 @@ namespace Dr {
 //####################################################################################
 //##    Returns a QString respresentaiton of the passed DrTypes type
 //####################################################################################
-QString StringFromEditorWidget(Editor_Widgets widget) {
-    switch (widget) {
-        case Editor_Widgets::ToolBar:           return "Toolbar";
-        case Editor_Widgets::Asset_Tree:        return "Asset Tree";
-        case Editor_Widgets::Stage_View:        return "Stage View";
-        case Editor_Widgets::Project_Tree:      return "Project Tree";
-        case Editor_Widgets::Inspector_Tree:    return "Inspector Tree";
-    }
-}
-
 QString StringFromType(DrType type) {
     switch (type) {
         case DrType::Animation:     return "Animation";
@@ -101,45 +89,11 @@ QString StringFromEffectType(DrEffectType type) {
     }
 }
 
-QString StringFromPositionFlag(Position_Flags flag) {
-    switch (flag) {
-        case Position_Flags::Top:           return "Top";
-        case Position_Flags::Top_Right:     return "Top Right";
-        case Position_Flags::Top_Left:      return "Top Left";
-        case Position_Flags::Bottom:        return "Bottom";
-        case Position_Flags::Bottom_Left:   return "Bottom Left";
-        case Position_Flags::Bottom_Right:  return "Bottom Right";
-        case Position_Flags::Left:          return "Left";
-        case Position_Flags::Right:         return "Right";
-        case Position_Flags::Center:        return "Center";
-        case Position_Flags::Rotate:        return "Rotate";
-        case Position_Flags::Move_Item:     return "Move Item";
-        case Position_Flags::No_Position:   return "No Position";
-    }
-}
-
-std::string StringFromBodyType(Body_Type type) {
-    switch (type) {
-        case Body_Type::Static:             return "Static";
-        case Body_Type::Dynamic:            return "Dynamic";
-        case Body_Type::Kinematic:          return "Kinematic";
-    }
-}
-
-std::string StringFromShapeType(Shape_Type type) {
-    switch (type) {
-        case Shape_Type::Segment:           return "Segment";
-        case Shape_Type::Box:               return "Box";
-        case Shape_Type::Circle:            return "Circle";
-        case Shape_Type::Polygon:           return "Polygon";
-    }
-}
-
-
 QList<long> ConvertPropertyListToLongs(QList<Properties> list) {
     QList<long> new_list;
-    for (auto item : list)
+    for (auto item : list) {
         new_list.append(static_cast<long>(item));
+    }
     return new_list;
 }
 

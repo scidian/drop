@@ -9,7 +9,7 @@
 
 #include "model/project/project.h"
 #include "model/project/project_effect.h"
-#include "settings/settings_component_property.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

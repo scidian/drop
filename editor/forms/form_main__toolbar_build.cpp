@@ -17,12 +17,11 @@
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_popup.h"
 #include "editor/forms/form_settings.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/style/style.h"
-
-#include "enums_form_main.h"
-#include "globals.h"
+#include "editor/enums_editor.h"
 #include "helper.h"
-#include "helper_qt.h"
 
 
 //####################################################################################

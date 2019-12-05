@@ -8,7 +8,7 @@
 #ifndef ENGINE_MESH_H
 #define ENGINE_MESH_H
 
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
 
 struct Vertex {
     Vec3 position;

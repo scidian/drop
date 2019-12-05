@@ -8,8 +8,8 @@
 #ifndef ENGINE_OBJECT_H
 #define ENGINE_OBJECT_H
 
-#include "engine_thing.h"
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
+#include "engine/things/engine_thing.h"
 
 
 //####################################################################################

@@ -61,18 +61,17 @@ SOURCES += \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
-    common/constants.cpp \
-    common/types/point.cpp \
-    common/types/pointf.cpp \
     editor/colors/colors.cpp \
     editor/colors/palette_blank.cpp \
     editor/colors/palette_material.cpp \
     editor/colors/palette_rocky_rover.cpp \
     editor/colors/palette_window_themes.cpp \
     editor/constants_editor.cpp \
+    editor/debug.cpp \
     editor/docks/docks_build.cpp \
     editor/docks/docks_handle.cpp \
     editor/docks/docks_initialize.cpp \
+    editor/enums_editor.cpp \
     editor/forms/form_about.cpp \
     editor/forms/form_animation.cpp \
     editor/forms/form_animation__build.cpp \
@@ -95,6 +94,8 @@ SOURCES += \
     editor/forms/form_popup__grid_snap.cpp \
     editor/forms/form_popup_colors.cpp \
     editor/forms/form_settings.cpp \
+    editor/globals_editor.cpp \
+    editor/helper_editor.cpp \
     editor/imaging/imaging_draw.cpp \
     editor/imaging/imaging_draw_devices.cpp \
     editor/imaging/imaging_draw_effects.cpp \
@@ -154,6 +155,7 @@ SOURCES += \
     engine/engine_camera.cpp \
     engine/engine_spawner.cpp \
     engine/engine_texture.cpp \
+    engine/enums_engine.cpp \
     engine/form_engine.cpp \
     engine/mesh/engine_vertex_data.cpp \
     engine/mesh/engine_vertex_data__extrude.cpp \
@@ -195,10 +197,9 @@ SOURCES += \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
-    enums.cpp \
     helper.cpp \
-    helper_qt.cpp \
     main.cpp \
+    model/enums_types.cpp \
     model/project/project.cpp \
     model/project/project__file_open.cpp \
     model/project/project__file_save.cpp \
@@ -223,11 +224,12 @@ SOURCES += \
     model/project/project_world.cpp \
     model/project/project_world__settings.cpp \
     model/properties/property_collision.cpp \
-    settings/settings.cpp \
-    settings/settings_component.cpp \
-    settings/settings_component_property.cpp \
-    debug.cpp \
-    globals.cpp
+    model/settings/settings.cpp \
+    model/settings/settings_component.cpp \
+    model/settings/settings_component_property.cpp \
+    model/types/point.cpp \
+    model/types/pointf.cpp
+
 
 HEADERS += \
     3rd_party/chipmunk/chipmunk.h \
@@ -266,12 +268,11 @@ HEADERS += \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
     3rd_party/vec3.h \
-    common/constants.h \
-    common/types/point.h \
-    common/types/pointf.h \
     editor/colors/colors.h \
     editor/constants_editor.h \
+    editor/debug.h \
     editor/docks/docks.h \
+    editor/enums_editor.h \
     editor/event_filters.h \
     editor/forms/form_about.h \
     editor/forms/form_animation.h \
@@ -282,6 +283,8 @@ HEADERS += \
     editor/forms/form_main.h \
     editor/forms/form_popup.h \
     editor/forms/form_settings.h \
+    editor/globals_editor.h \
+    editor/helper_editor.h \
     editor/imaging/imaging.h \
     editor/style/style.h \
     editor/trees/tree_advisor.h \
@@ -298,7 +301,9 @@ HEADERS += \
     engine/engine_camera.h \
     engine/engine_spawner.h \
     engine/engine_texture.h \
+    engine/enums_engine.h \
     engine/form_engine.h \
+    engine/globals_engine.h \
     engine/mesh/engine_mesh.h \
     engine/mesh/engine_vertex_data.h \
     engine/opengl/opengl.h \
@@ -311,13 +316,10 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
-    enums.h \
-    enums_dr_settings.h \
-    enums_engine.h \
-    globals_engine.h \
     helper.h \
-    helper_qt.h \
     model/constants_keys.h \
+    model/enums_properties.h \
+    model/enums_types.h \
     model/project/project.h \
     model/project/project_animation.h \
     model/project/project_asset.h \
@@ -329,12 +331,12 @@ HEADERS += \
     model/project/project_thing.h \
     model/project/project_world.h \
     model/properties/property_collision.h \
-    settings/settings.h \
-    settings/settings_component.h \
-    settings/settings_component_property.h \
-    debug.h \
-    globals.h \
-    enums_form_main.h
+    model/settings/settings.h \
+    model/settings/settings_component.h \
+    model/settings/settings_component_property.h \
+    model/types/point.h \
+    model/types/pointf.h
+
 
 FORMS +=
 

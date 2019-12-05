@@ -8,7 +8,7 @@
 #ifndef DRDEVICE_H
 #define DRDEVICE_H
 
-#include "settings/settings.h"
+#include "model/settings/settings.h"
 
 // Forward Declarations
 class DrProject;

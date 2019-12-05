@@ -8,17 +8,16 @@
 #include <QDebug>
 #include <QScrollBar>
 
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
+#include "helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
 #include "model/project/project_world.h"
-
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
 
 
 //####################################################################################

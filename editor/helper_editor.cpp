@@ -15,9 +15,8 @@
 #include <cmath>
 
 #include "editor/colors/colors.h"
-
+#include "editor/helper_editor.h"
 #include "helper.h"
-#include "helper_qt.h"
 
 
 namespace Dr {

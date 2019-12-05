@@ -7,10 +7,9 @@
 //
 #include <math.h>
 
-#include "common/types/point.h"
-#include "common/types/pointf.h"
-
 #include "helper.h"
+#include "model/types/point.h"
+#include "model/types/pointf.h"
 
 
 //####################################################################################

@@ -12,7 +12,6 @@
 #include "editor/imaging/imaging.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
-
 #include "helper.h"
 
 

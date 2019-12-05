@@ -9,13 +9,12 @@
 #include <QGraphicsItem>
 
 #include "editor/colors/colors.h"
+#include "editor/debug.h"
+#include "editor/globals_editor.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-
-#include "debug.h"
-#include "enums.h"
-#include "globals.h"
 #include "helper.h"
+#include "model/enums_types.h"
 
 
 //####################################################################################

@@ -6,12 +6,11 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
+#include "editor/helper_editor.h"
 #include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

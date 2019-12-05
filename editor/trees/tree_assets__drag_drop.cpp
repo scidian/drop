@@ -10,9 +10,12 @@
 #include <QMimeData>
 #include <QScreen>
 
+#include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
+#include "helper.h"
+#include "model/enums_types.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"
@@ -20,12 +23,8 @@
 #include "model/project/project_effect.h"
 #include "model/project/project_font.h"
 #include "model/project/project_image.h"
-#include "settings/settings.h"
-#include "settings/settings_component_property.h"
-
-#include "enums.h"
-#include "globals.h"
-#include "helper.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

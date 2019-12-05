@@ -22,13 +22,12 @@
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "3rd_party/polyline_simplification.h"
-#include "common/types/point.h"
-#include "common/types/pointf.h"
 #include "editor/imaging/imaging.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-
 #include "helper.h"
+#include "model/types/point.h"
+#include "model/types/pointf.h"
 
 
 //####################################################################################

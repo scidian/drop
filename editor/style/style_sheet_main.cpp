@@ -6,11 +6,9 @@
 //
 //
 #include "editor/colors/colors.h"
+#include "editor/helper_editor.h"
 #include "editor/style/style.h"
-
 #include "helper.h"
-#include "helper_qt.h"
-
 
 
 namespace Dr {

@@ -8,8 +8,8 @@
 #ifndef ENGINE_THING_WATER_H
 #define ENGINE_THING_WATER_H
 
-#include "engine_thing.h"
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
+#include "engine/things/engine_thing.h"
 
 
 //####################################################################################

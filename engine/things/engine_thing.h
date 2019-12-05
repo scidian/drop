@@ -8,7 +8,7 @@
 #ifndef ENGINE_THING_H
 #define ENGINE_THING_H
 
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
 #include "helper.h"
 
 

@@ -8,9 +8,14 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "editor/colors/colors.h"
+#include "editor/debug.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
+#include "helper.h"
+#include "model/enums_types.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"
@@ -20,15 +25,9 @@
 #include "model/project/project_image.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"
-#include "settings/settings.h"
-#include "settings/settings_component.h"
-#include "settings/settings_component_property.h"
-
-#include "debug.h"
-#include "enums.h"
-#include "globals.h"
-#include "helper.h"
-#include "helper_qt.h"
+#include "model/settings/settings.h"
+#include "model/settings/settings_component.h"
+#include "model/settings/settings_component_property.h"
 
 
 //####################################################################################

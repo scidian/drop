@@ -15,6 +15,7 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
+#include "engine/enums_engine.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_fire.h"
@@ -25,8 +26,6 @@
 #include "engine/things/engine_thing_swirl.h"
 #include "engine/things/engine_thing_water.h"
 #include "engine/world/engine_world.h"
-
-#include "enums_engine.h"
 #include "helper.h"
 
 

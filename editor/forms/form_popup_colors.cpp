@@ -9,11 +9,11 @@
 
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_popup.h"
+#include "editor/globals_editor.h"
+#include "editor/helper_editor.h"
 #include "editor/trees/tree_inspector.h"
-
-#include "globals.h"
 #include "helper.h"
-#include "helper_qt.h"
+
 
 //####################################################################################
 //##    Constructor

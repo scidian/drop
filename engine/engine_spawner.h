@@ -8,7 +8,7 @@
 #ifndef ENGINE_SPAWNER_H
 #define ENGINE_SPAWNER_H
 
-#include "globals_engine.h"
+#include "engine/globals_engine.h"
 
 
 //####################################################################################
