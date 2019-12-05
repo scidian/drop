@@ -27,6 +27,10 @@ typedef Clock::time_point DrTime;
 //############################
 namespace Dr {
 
+// Debug Functionality
+void    PrintDebug(std::string message);
+
+
 // Comparison Template Function, Returns number_to_check fit to within the bounds of min / max
 template<class T> T     Clamp(const T& number_to_check, const T& min, const T& max) {
     if      (number_to_check < min) return min;

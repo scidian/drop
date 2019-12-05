@@ -15,11 +15,11 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
-#include "engine/engine_world.h"
-#include "engine_things/engine_thing_light.h"
-#include "engine_things/engine_thing_object.h"
-#include "engine_things/engine_thing_water.h"
 #include "engine/form_engine.h"
+#include "engine/things/engine_thing_light.h"
+#include "engine/things/engine_thing_object.h"
+#include "engine/things/engine_thing_water.h"
+#include "engine/world/engine_world.h"
 #include "opengl/opengl.h"
 
 #include "helper.h"
@@ -65,7 +65,7 @@ void DrOpenGL::paintGL() {
     painter.end();
 
     // ***** Update FPS
-    ++m_form_engine->fps_count_render;
+    ++m_fps_count_render;
 }
 
 

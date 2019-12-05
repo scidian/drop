@@ -5,7 +5,7 @@
 //      DrThing Class Definitions
 //
 //
-#include "forms/form_main.h"
+#include "editor/forms/form_main.h"
 #include "imaging/imaging.h"
 #include "opengl/opengl.h"
 #include "project/project.h"

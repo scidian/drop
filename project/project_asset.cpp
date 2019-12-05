@@ -9,8 +9,7 @@
 
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/polyline_simplification.h"
-#include "engine_mesh/engine_vertex_data.h"
-#include "forms/form_main.h"
+#include "engine/mesh/engine_vertex_data.h"
 #include "imaging/imaging.h"
 #include "project/project.h"
 #include "project/project_animation.h"

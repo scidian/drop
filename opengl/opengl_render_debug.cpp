@@ -12,9 +12,9 @@
 
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
-#include "engine/engine_world.h"
 #include "engine/form_engine.h"
-#include "engine_things/engine_thing_object.h"
+#include "engine/things/engine_thing_object.h"
+#include "engine/world/engine_world.h"
 #include "opengl/opengl.h"
 
 #include "helper.h"
@@ -83,7 +83,7 @@ void DrOpenGL::drawDebug(QPainter &painter) {
     painter.setFont(font);
     painter.setPen( Qt::white );
     painter.drawText( QPointF(500, 20), "Distance: \t" +    QString::number(m_engine->getCurrentWorld()->getMaxDistance()) );       // Game Distance
-    painter.drawText( QPointF(20,  20), "FPS: \t" +         QString::number(m_engine->getFormEngine()->fps_render) );               // Frames per second
+    painter.drawText( QPointF(20,  20), "FPS: \t" +         QString::number(m_form_engine->fps_render) );                           // Frames per second
     painter.drawText( QPointF(20,  40), "Objects: \t" +     QString::number(m_engine->getCurrentWorld()->getThings().size()) );     // Object count
     painter.drawText( QPointF(20,  60), "Triangles: \t" +   QString::number(getTriangleCount()) );                                  // Triangle count
     painter.drawText( QPointF(20,  80), "Zoom: \t" +        QString::number(double(combinedZoomScale())) );                         // World scale

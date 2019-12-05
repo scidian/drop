@@ -8,20 +8,20 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
-#include "engine/engine_world.h"
+#include "engine/world/engine_world.h"
 #include "project/project.h"
 
 
 //####################################################################################
 //##    Constructor
 //####################################################################################
-DrEngine::DrEngine(FormEngine *form_engine, DrProject *project) : m_form_engine(form_engine), m_project(project) {
+DrEngine::DrEngine(DrProject *project, long stage_key) : m_project(project) {
+    m_stage_key = stage_key;
 
     m_current_editor_world = m_project->getOption(Project_Options::Current_World).toLongLong();
     m_current_world = m_current_editor_world;
 
     m_worlds[m_current_world] = new DrEngineWorld(this, project, this->getTextureMap(), m_current_world);
-
 }
 
 // Needs to be explicitly called by OpenGLWidget

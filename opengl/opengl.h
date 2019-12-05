@@ -79,6 +79,7 @@ private:
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
+    double          m_fps_count_render = 0.0;                   // Tracks frames per second
     long            m_triangles = 0;                            // Tracks how many triangles are drawn every frame, including occluder map draws
     double          m_add_z;                                    // Used to stop z fighting
 
@@ -127,6 +128,10 @@ public:
 #if QT_CONFIG(wheelevent)
     virtual void    wheelEvent(QWheelEvent *event) override;
 #endif
+
+    // Frames Per Second
+    double          getFpsCount() { return m_fps_count_render; }
+    void            resetFpsCount() { m_fps_count_render = 0; }
 
     // Screen Functions
     float           combinedZoomScale();

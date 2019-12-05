@@ -15,13 +15,13 @@
 #include <QTime>
 
 #include "colors/colors.h"
+#include "editor/interface_editor_relay.h"
 #include "settings/settings_component_property.h"
 #include "widgets/widgets_event_filters.h"
 
 #include "globals.h"
 #include "helper.h"
 #include "helper_qt.h"
-#include "interface_editor_relay.h"
 
 
 //####################################################################################

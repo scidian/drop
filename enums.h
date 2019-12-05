@@ -193,7 +193,6 @@ namespace Dr {
     QString     StringFromPositionFlag(Position_Flags flag);
 
     QList<long>         ConvertPropertyListToLongs(QList<Properties> list);
-    QList<DrSettings*>  ConvertItemListToSettings(QList<QGraphicsItem*> list);
 }
 
 

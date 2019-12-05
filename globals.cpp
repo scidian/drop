@@ -7,10 +7,11 @@
 //
 #include <QApplication>
 
-#include "forms/form_main.h"
+#include "editor/forms/form_main.h"
+#include "editor/interface_editor_relay.h"
 
 #include "globals.h"
-#include "interface_editor_relay.h"
+
 
 typedef std::map<Asset_Category, bool>  AssetCategoryMap;
 typedef std::map<Components,  bool>     ComponentMap;

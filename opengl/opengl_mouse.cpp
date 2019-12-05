@@ -11,10 +11,10 @@
 
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
-#include "engine/engine_world.h"
 #include "engine/form_engine.h"
-#include "engine_things/engine_thing_light.h"
-#include "engine_things/engine_thing_object.h"
+#include "engine/things/engine_thing_light.h"
+#include "engine/things/engine_thing_object.h"
+#include "engine/world/engine_world.h"
 #include "opengl/opengl.h"
 #include "project/project.h"
 

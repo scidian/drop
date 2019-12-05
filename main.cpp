@@ -91,8 +91,8 @@
 #include <QSurfaceFormat>
 
 #include "colors/colors.h"
-#include "forms/form_main.h"
-#include "forms/form_expire.h"
+#include "editor/forms/form_main.h"
+#include "editor/forms/form_expire.h"
 
 #include "debug.h"
 #include "globals.h"
@@ -169,7 +169,6 @@ int main(int argc, char *argv[]) {
         qApp->processEvents();                                      // Ensure FormMain finishes showing
         Dr::SetDoneLoading(true);                                   // Marks FormMain as finished loading
     }
-
 
     // ***** Run Program
     drop.exec();

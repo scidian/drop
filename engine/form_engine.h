@@ -53,7 +53,6 @@ private:
     Clock::time_point   m_time_frame;                           // Stores time since last paint call
     bool                m_running = false;
 
-
 public:
     // Widgets
     QWidget        *centralWidget;
@@ -62,20 +61,16 @@ public:
     QToolButton    *pushPersp,      *pushOrtho,     *push2D,        *push3D;
     QToolButton    *pushDebug1,     *pushDebug2;
 
-    const double        m_ideal_frames_per_second =  60;
+    const double        m_ideal_frames_per_second = 60;
     bool                m_wait_vsync = false;
 
     // FPS Variables
     Clock::time_point   m_time_fps = Clock::now();
-    double              fps_count_render =   0.0;
     double              fps_count_camera =   0.0;
     double              fps_count_physics =  0.0;
     double              fps_render =        60.0;
     double              fps_physics =       60.0;
     double              fps_camera =        60.0;
-
-    // Stage Variables
-    long                stage_key = c_no_key;                   // If "Play Stage" was clicked, this will hold the Key of Stage
 
     // Debug Variables
     bool                debug_shapes =      false;
@@ -86,7 +81,7 @@ public:
 
 public:
     // Constructor / Destructor
-    explicit FormEngine(DrProject *project, QWidget *parent = nullptr);
+    explicit FormEngine(DrProject *project, long stage_key = c_no_key, QWidget *parent = nullptr);
     ~FormEngine() override;
 
     // Event Overrides

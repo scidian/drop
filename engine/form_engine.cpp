@@ -18,9 +18,9 @@
 
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
-#include "engine/engine_world.h"
 #include "engine/form_engine.h"
-#include "engine_things/engine_thing_object.h"
+#include "engine/things/engine_thing_object.h"
+#include "engine/world/engine_world.h"
 #include "opengl/opengl.h"
 #include "style/style.h"
 
@@ -30,7 +30,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent), m_project(project) {
+FormEngine::FormEngine(DrProject *project, long stage_key, QWidget *parent) : QMainWindow(parent), m_project(project) {
 
     // ***** Set up initial window
     this->setAttribute( Qt::WA_DeleteOnClose, true );               // Make sure this form is deleted when it closes
@@ -43,7 +43,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
     Dr::CenterFormOnScreen(parent, this);
 
     // ***** Create an instance of the game engine
-    m_engine = new DrEngine(this, project);
+    m_engine = new DrEngine(project, stage_key);
 
     // ***** Build this form
     centralWidget = new QWidget(this);
@@ -132,6 +132,7 @@ FormEngine::FormEngine(DrProject *project, QWidget *parent) : QMainWindow(parent
 
 
         m_opengl = new DrOpenGL(centralWidget, this, m_engine);
+        m_engine->setOpenGl(m_opengl);
         connect(m_opengl, SIGNAL(frameSwapped()), this, SLOT(frameSwapped()));
         connect(m_opengl, SIGNAL(aboutToCompose()), this, SLOT(aboutToCompose()));
         ///connect(m_opengl, SIGNAL(frameSwapped()), m_opengl, SLOT(update()));             // Creates non-stop updates
@@ -263,9 +264,9 @@ void FormEngine::updateEngine() {
     // ***** Calculates Render Frames per Second
     double fps_milliseconds = getTimerMilliseconds(Engine_Timer::Fps);
     if (fps_milliseconds > 1000.0) {
-        fps_render =  fps_count_render;         fps_count_render =  0;
-        fps_physics = fps_count_physics;        fps_count_physics = 0;
-        fps_camera =  fps_count_camera;         fps_count_camera =  0;
+        fps_render =  getOpenGL()->getFpsCount();   getOpenGL()->resetFpsCount();
+        fps_physics = fps_count_physics;            fps_count_physics = 0;
+        fps_camera =  fps_count_camera;             fps_count_camera =  0;
         resetTimer(Engine_Timer::Fps);
 
         bool cam_enabled = pushCamera->isEnabled();
@@ -306,7 +307,7 @@ void FormEngine::processFrame(double milliseconds) {
     resetTimer(Engine_Timer::Update);
     m_engine->getCurrentWorld()->updateSpace(milliseconds);                         // Physics Engine
     m_engine->getCurrentWorld()->updateWorld(milliseconds);                         // Additional World / Thing Updating
-    ++m_engine->getFormEngine()->fps_count_physics;                                 // Updates Physics Frames per Second
+    fps_count_physics++;                                                            // Updates Physics Frames per Second
     m_engine->getCurrentWorld()->updateCameras();                                   // Update Camera Targets
     moveCameras();                                                                  // Move Cameras
     m_opengl->update();

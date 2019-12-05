@@ -5,13 +5,12 @@
 //      Functions associated with enums
 //
 //
-#include "editor_view/editor_item.h"
-#include "editor_view/editor_scene.h"
 #include "project/project_thing.h"
 #include "settings/settings.h"
 
 #include "enums.h"
 #include "enums_engine.h"
+#include "enums_form_main.h"
 
 
 namespace Dr {
@@ -144,15 +143,6 @@ QList<long> ConvertPropertyListToLongs(QList<Properties> list) {
     return new_list;
 }
 
-QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
-    QList<DrSettings*> new_list;
-    for (auto item : list) {
-        DrItem* as_item = dynamic_cast<DrItem*>(item);
-        DrThing* as_thing = as_item->getThing();
-        new_list.append(dynamic_cast<DrSettings*>(as_thing));
-    }
-    return new_list;
-}
 
 
 

@@ -8,9 +8,9 @@
 #include <QRandomGenerator>
 
 #include "engine/engine_spawner.h"
-#include "engine/engine_world.h"
-#include "engine_things/engine_thing.h"
-#include "engine_things/engine_thing_object.h"
+#include "engine/things/engine_thing.h"
+#include "engine/things/engine_thing_object.h"
+#include "engine/world/engine_world.h"
 #include "project/project_thing.h"
 
 

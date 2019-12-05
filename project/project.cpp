@@ -9,7 +9,7 @@
 #include <QRandomGenerator>
 #include <QTime>
 
-#include "forms/form_main.h"
+#include "editor/forms/form_main.h"
 #include "project/project.h"
 #include "project/project_animation.h"
 #include "project/project_asset.h"
