@@ -8,7 +8,6 @@
 //
 #include <QDebug>
 
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"

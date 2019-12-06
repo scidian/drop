@@ -18,7 +18,7 @@
 #include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
 #include "editor/style/style.h"
-#include "library/helper.h"
+#include "library/dr_math.h"
 
 
 namespace DrImaging

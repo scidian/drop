@@ -31,7 +31,7 @@
 
 #include <cmath>
 
-#include "library/helper.h"
+#include "library/dr_math.h"
 
 
 //####################################################################################

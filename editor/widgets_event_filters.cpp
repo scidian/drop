@@ -19,7 +19,6 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
 #include "editor/interface_editor_relay.h"
-#include "library/helper.h"
 #include "model/settings/settings_component_property.h"
 
 

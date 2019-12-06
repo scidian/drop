@@ -27,7 +27,6 @@
 #include "editor/trees/tree_inspector.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"
@@ -167,8 +166,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     for (auto component: components) {
         if (component->isTurnedOn() == false) {
             continue;
-        } else if (component->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings) ||
-                   component->getComponentKey() == Dr::EnumToInt(Components::Size_Settings)) {
+        } else if (component->getComponentKey() == static_cast<int>(Components::Hidden_Settings) ||
+                   component->getComponentKey() == static_cast<int>(Components::Size_Settings)) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
@@ -182,7 +181,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        if (component->getComponentKey() == Dr::EnumToInt(Components::Entity_Settings)) {
+        if (component->getComponentKey() == static_cast<int>(Components::Entity_Settings)) {
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {

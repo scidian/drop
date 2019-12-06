@@ -20,7 +20,6 @@
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
-#include "library/helper.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"

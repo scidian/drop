@@ -10,7 +10,6 @@
 #include <QSettings>
 
 #include "editor/globals_editor.h"
-#include "library/helper.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
@@ -82,7 +81,7 @@ void DrProject::saveProjectToFile() {
         DrEffect *effect = effect_pair.second;
         QVariantMap effect_data;
         effect_data["key"] =        QVariant::fromValue(effect->getKey());
-        effect_data["type"] =       QVariant(Dr::EnumToInt(effect->getEffectType()));
+        effect_data["type"] =       QVariant(static_cast<int>(effect->getEffectType()));
         settings.beginWriteArray("effects");
         settings.setArrayIndex(effect_count++);
         settings.setValue("effect", effect_data);
@@ -161,7 +160,7 @@ void DrProject::saveProjectToFile() {
         QVariantMap asset_data;
         asset_data["key"] =         QVariant::fromValue(asset->getKey());
         asset_data["source_key"] =  QVariant::fromValue(asset->getBaseKey());
-        asset_data["type"] =        QVariant(Dr::EnumToInt(asset->getAssetType()));
+        asset_data["type"] =        QVariant(static_cast<int>(asset->getAssetType()));
         addSettingsToMap(asset, asset_data);
         settings.beginWriteArray("assets");
         settings.setArrayIndex(asset_count++);
@@ -213,7 +212,7 @@ void DrProject::saveProjectToFile() {
                 QVariantMap thing_data;
                 thing_data["key"] =         QVariant::fromValue(thing->getKey());
                 thing_data["asset_key"] =   QVariant::fromValue(thing->getAssetKey());
-                thing_data["type"] =        QVariant(Dr::EnumToInt(thing->getThingType()));
+                thing_data["type"] =        QVariant(static_cast<int>(thing->getThingType()));
                 addSettingsToMap(thing, thing_data);
                 settings.beginWriteArray(stage_array);
                 settings.setArrayIndex(thing_count++);
@@ -250,7 +249,7 @@ void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
             map[map_key + "display_name"] = QVariant(property->getDisplayName());
             map[map_key + "description"] =  QVariant(property->getDescription());
-            map[map_key + "data_type"] =    QVariant(Dr::EnumToInt(property->getPropertyType()));
+            map[map_key + "data_type"] =    QVariant(static_cast<int>(property->getPropertyType()));
             map[map_key + "value"] =        property->getValue();
             map[map_key + "prop_key"] =     QVariant::fromValue(property->getPropertyKey());
             map[map_key + "is_hidden"] =    QVariant(property->isHidden());

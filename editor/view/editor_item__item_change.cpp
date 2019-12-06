@@ -54,7 +54,6 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
-#include "library/helper.h"
 #include "model/enums_model_types.h"
 #include "model/project/project_stage.h"
 #include "model/project/project_thing.h"

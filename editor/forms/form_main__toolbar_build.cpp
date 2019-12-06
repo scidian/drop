@@ -21,7 +21,6 @@
 #include "editor/helper_editor.h"
 #include "editor/style/style.h"
 #include "editor/enums_editor.h"
-#include "library/helper.h"
 
 
 //####################################################################################

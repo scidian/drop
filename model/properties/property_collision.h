@@ -13,8 +13,8 @@
 #include <list>
 
 #include "engine/enums_engine.h"
-#include "library/helper.h"
-#include "library/types/pointf.h"
+#include "library/dr_math.h"
+#include "library/types/dr_pointf.h"
 
 // Local Structs
 struct DrCircle {

@@ -13,7 +13,6 @@
 #include "editor/globals_editor.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "library/helper.h"
 #include "model/enums_model_types.h"
 
 

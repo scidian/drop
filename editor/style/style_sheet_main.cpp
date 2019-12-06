@@ -8,7 +8,6 @@
 #include "editor/colors/colors.h"
 #include "editor/helper_editor.h"
 #include "editor/style/style.h"
-#include "library/helper.h"
 
 
 namespace Dr {

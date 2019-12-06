@@ -8,14 +8,9 @@
 #ifndef CONSTANTS_ENGINE_H
 #define CONSTANTS_ENGINE_H
 
-#include <QOpenGLWidget>
 #include <QVector3D>
 
-#include "library/types/pointf.h"
-
-
-// OpenGL Constants
-const       int         c_float_size =      static_cast<int>(sizeof(GLfloat));
+#include "library/types/dr_pointf.h"
 
 
 // Camera Constants

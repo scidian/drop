@@ -11,7 +11,6 @@
 #include "editor/helper_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_advisor.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"

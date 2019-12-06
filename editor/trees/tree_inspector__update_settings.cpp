@@ -12,7 +12,6 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
 #include "editor/trees/tree_inspector.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"
@@ -43,8 +42,8 @@ void TreeInspector::updateLockedSettings() {
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
-        if (prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Hidden_Settings) ||
-            prop->getParentComponent()->getComponentKey() == Dr::EnumToInt(Components::Size_Settings)) {
+        if (prop->getParentComponent()->getComponentKey() == static_cast<int>(Components::Hidden_Settings) ||
+            prop->getParentComponent()->getComponentKey() == static_cast<int>(Components::Size_Settings)) {
             widget->setEnabled( true );
         } else {
             bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());

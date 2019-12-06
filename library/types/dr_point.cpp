@@ -7,9 +7,8 @@
 //
 #include <math.h>
 
-#include "library/helper.h"
-#include "library/types/point.h"
-#include "library/types/pointf.h"
+#include "library/types/dr_point.h"
+#include "library/types/dr_pointf.h"
 
 
 //####################################################################################

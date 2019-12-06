@@ -197,9 +197,11 @@ SOURCES += \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
-    library/helper.cpp \
-    library/types/point.cpp \
-    library/types/pointf.cpp \
+    library/dr_debug.cpp \
+    library/dr_math.cpp \
+    library/dr_time.cpp \
+    library/types/dr_point.cpp \
+    library/types/dr_pointf.cpp \
     main.cpp \
     model/enums_model.cpp \
     model/project/project.cpp \
@@ -316,9 +318,11 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
-    library/helper.h \
-    library/types/point.h \
-    library/types/pointf.h \
+    library/dr_debug.h \
+    library/dr_math.h \
+    library/dr_time.h \
+    library/types/dr_point.h \
+    library/types/dr_pointf.h \
     model/constants_keys.h \
     model/enums_model_properties.h \
     model/enums_model_types.h \

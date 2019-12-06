@@ -13,7 +13,6 @@
 #include "editor/globals_editor.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"

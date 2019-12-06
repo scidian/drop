@@ -13,7 +13,6 @@
 #include "engine/things/engine_thing_object.h"
 #include "engine/things/engine_thing_fire.h"
 #include "engine/world/engine_world.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 

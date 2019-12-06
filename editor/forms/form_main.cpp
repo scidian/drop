@@ -24,7 +24,6 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "library/helper.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"

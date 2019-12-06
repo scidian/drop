@@ -15,7 +15,6 @@
 #include "editor/forms/form_popup.h"
 #include "editor/globals_editor.h"
 #include "editor/style/style.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 
 

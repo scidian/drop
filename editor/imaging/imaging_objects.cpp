@@ -17,9 +17,9 @@
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
-#include "library/helper.h"
-#include "library/types/point.h"
-#include "library/types/pointf.h"
+#include "library/dr_math.h"
+#include "library/types/dr_point.h"
+#include "library/types/dr_pointf.h"
 
 
 namespace DrImaging

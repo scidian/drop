@@ -1,61 +1,15 @@
 //
-//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/6/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Helpful misc functions
 //
 //
-#include <QApplication>
-#include <QFontDatabase>
-#include <QGridLayout>
-#include <QMessageBox>
-#include <QSpacerItem>
-#include <QTime>
-
+//
 #include <cmath>
 
-#include "editor/colors/colors.h"
-#include "library/helper.h"
-#include "library/types/pointf.h"
-
+#include "library/dr_math.h"
 
 namespace Dr {
-
-
-//####################################################################################
-//##
-//##    Debug Functionality
-//##
-//####################################################################################
-void PrintDebug(std::string message) {
-    message += "\n";
-    char *cstr = new char [message.length() + 1];
-    std::strcpy(cstr, message.c_str());
-    fprintf(stderr, "%s", cstr);                        // stderr is the "Error File Stream"
-    delete [] cstr;
-}
-
-
-//####################################################################################
-//##
-//##    High-Res Timer Functions
-//##
-//####################################################################################
-double MillisecondsElapsed(const DrTime &timer) {
-    return (std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - timer).count() /  1000000.0);
-}
-double MillisecondsSinceStartOfDay() {
-    auto now =    std::chrono::system_clock::now();
-    time_t tnow = std::chrono::system_clock::to_time_t(now);
-    tm *date = std::localtime(&tnow);
-    date->tm_hour = 0;
-    date->tm_min =  0;
-    date->tm_sec =  0;
-    auto midnight = std::chrono::system_clock::from_time_t(std::mktime(date));
-    return (std::chrono::duration_cast<std::chrono::nanoseconds>(now - midnight).count() / 1000000.0);
-}
-void ResetTimer(DrTime &timer) { timer = Clock::now(); }
-
 
 
 //####################################################################################
@@ -132,10 +86,10 @@ bool IsSimilarAngle(double angle1, double angle2, double tolerance) {
 bool IsSquare(double check_angle) {
     check_angle = abs(check_angle);
     while (check_angle >= 360) check_angle -= 360;
-    if (Dr::FuzzyCompare(check_angle, 0.0))   return true;
-    if (Dr::FuzzyCompare(check_angle, 90.0))  return true;
-    if (Dr::FuzzyCompare(check_angle, 180.0)) return true;
-    if (Dr::FuzzyCompare(check_angle, 270.0)) return true;
+    if (FuzzyCompare(check_angle, 0.0))   return true;
+    if (FuzzyCompare(check_angle, 90.0))  return true;
+    if (FuzzyCompare(check_angle, 180.0)) return true;
+    if (FuzzyCompare(check_angle, 270.0)) return true;
     return false;
 }
 
@@ -151,7 +105,7 @@ bool IsRectangle(DrPointF p1, DrPointF p2, DrPointF p3, DrPointF p4) {
     dd2 = pow(cx - p2.x, 2.0) + pow(cy - p2.y, 2.0);
     dd3 = pow(cx - p3.x, 2.0) + pow(cy - p3.y, 2.0);
     dd4 = pow(cx - p4.x, 2.0) + pow(cy - p4.y, 2.0);
-    return (Dr::IsCloseTo(dd1, dd2, 0.001) && Dr::IsCloseTo(dd1, dd3, 0.001) && Dr::IsCloseTo(dd1, dd4, 0.001));
+    return (IsCloseTo(dd1, dd2, 0.001) && IsCloseTo(dd1, dd3, 0.001) && IsCloseTo(dd1, dd4, 0.001));
 }
 
 DrPointF RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, bool angle_is_in_radians) {
@@ -159,7 +113,7 @@ DrPointF RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, 
     double y_origin = origin.y;
     double x = point.x;
     double y = point.y;
-    if (angle_is_in_radians == false) angle = Dr::DegreesToRadians(angle);
+    if (angle_is_in_radians == false) angle = DegreesToRadians(angle);
 
     double x_rotated = ((x - x_origin) * cos(angle)) - ((y_origin - y) * sin(angle)) + x_origin;
     double y_rotated = ((y_origin - y) * cos(angle)) - ((x - x_origin) * sin(angle)) + y_origin;
@@ -168,10 +122,7 @@ DrPointF RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, 
 
 
 
-
-
-}   // namespace Dr
-
+}   // end namespace Dr
 
 
 

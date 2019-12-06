@@ -19,8 +19,8 @@
 
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
-#include "library/types/point.h"
-#include "library/types/pointf.h"
+#include "library/types/dr_point.h"
+#include "library/types/dr_pointf.h"
 #include "model/enums_model_types.h"
 
 // Forward Declarations
@@ -39,11 +39,14 @@ class FormEngine;
 // Type Definitions
 typedef std::chrono::high_resolution_clock Clock;
 
+// OpenGL Constants
+const  int      c_float_size =      static_cast<int>(sizeof(GLfloat));
+
 // Open GL Globals - defined in opengl_initialize.cpp
-extern int  g_max_texture_size;
-extern int  g_max_rays;
-extern int  g_max_occluder_fbo_size;
-extern int  g_max_light_fbo_size;
+extern int      g_max_texture_size;
+extern int      g_max_rays;
+extern int      g_max_occluder_fbo_size;
+extern int      g_max_light_fbo_size;
 
 // VBO Constants
 #define PROGRAM_VERTEX_ATTRIBUTE        0

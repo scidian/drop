@@ -6,7 +6,7 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "library/helper.h"
+#include "library/dr_debug.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"

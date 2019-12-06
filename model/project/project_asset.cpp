@@ -8,7 +8,6 @@
 #include <QDebug>
 
 #include "editor/helper_editor.h"
-#include "library/helper.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
@@ -156,7 +155,7 @@ void DrAsset::updateAnimationProperty(QList<long> image_keys, Properties animati
     DrAnimation *animation = getParentProject()->addAnimation(image_keys);    
     property->setValue( QVariant::fromValue(animation->getKey()) );
 
-    if (property->getPropertyKey() == Dr::EnumToInt(Properties::Asset_Animation_Idle)) {
+    if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) {
         QPixmap      new_pixmap = animation->getPixmapFromFirstFrame();
         m_width =    new_pixmap.width();
         m_height =   new_pixmap.height();

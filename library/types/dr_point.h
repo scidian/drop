@@ -3,7 +3,8 @@
 //
 //  File:
 //      Useful 2D Point Class with Integers, adapted from HullFinder
-//
+//  Note:
+//      To be Engine compatible, this file does NOT, and should NOT #include any Qt Library types
 //
 #ifndef DR_POINT_H
 #define DR_POINT_H

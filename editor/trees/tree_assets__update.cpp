@@ -12,7 +12,6 @@
 #include "editor/helper_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
-#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"

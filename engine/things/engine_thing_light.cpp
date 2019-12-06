@@ -12,7 +12,6 @@
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_light.h"
 #include "engine/world/engine_world.h"
-#include "library/helper.h"
 
 
 //####################################################################################

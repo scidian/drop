@@ -17,7 +17,7 @@
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
-#include "library/helper.h"
+#include "library/dr_math.h"
 
 
 namespace DrImaging
@@ -39,8 +39,8 @@ QImage applySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image
     int table[ 256 ];
     for ( int i = 0; i < 256; ++i ) {
         switch (filter) {
-            case Image_Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                      break;
-            case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 128) / 128 ) + 127, 0, 255 );     break;
+            case Image_Filter_Type::Brightness:   table[i] = Dr::Clamp( i + value, 0, 255 );                                    break;
+            case Image_Filter_Type::Contrast:     table[i] = Dr::Clamp( (( i - 127 ) * (value + 128) / 128 ) + 127, 0, 255 );   break;
             default: ;
         }
     }

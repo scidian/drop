@@ -7,7 +7,6 @@
 //
 #include "editor/constants_editor.h"
 #include "editor/helper_editor.h"
-#include "library/helper.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
@@ -170,17 +169,17 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            "Touch Drag", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be dragged by mouse / touch? If so, how much force "
                                          "to apply? <br><br> <b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!");
 
-    QList<QVariant> sling_properties  { Dr::EnumToInt(Properties::Asset_Slingshot_Arrow_Image),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Arrow_Offset),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Arrow_Scale),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Tail_Image),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Tail_Offset),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Tail_Scale),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Max_Distance),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Force_Multiplier),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Future_1),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Future_2),
-                                        Dr::EnumToInt(Properties::Asset_Slingshot_Future_3) };
+    QList<QVariant> sling_properties  { static_cast<int>(Properties::Asset_Slingshot_Arrow_Image),
+                                        static_cast<int>(Properties::Asset_Slingshot_Arrow_Offset),
+                                        static_cast<int>(Properties::Asset_Slingshot_Arrow_Scale),
+                                        static_cast<int>(Properties::Asset_Slingshot_Tail_Image),
+                                        static_cast<int>(Properties::Asset_Slingshot_Tail_Offset),
+                                        static_cast<int>(Properties::Asset_Slingshot_Tail_Scale),
+                                        static_cast<int>(Properties::Asset_Slingshot_Max_Distance),
+                                        static_cast<int>(Properties::Asset_Slingshot_Force_Multiplier),
+                                        static_cast<int>(Properties::Asset_Slingshot_Future_1),
+                                        static_cast<int>(Properties::Asset_Slingshot_Future_2),
+                                        static_cast<int>(Properties::Asset_Slingshot_Future_3) };
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Enabled, Property_Type::Enabled, QList<QVariant>({false, sling_properties }),
                            "Touch Slingshot", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be shot by slingshot control? "
                                               "<br><br> <b>NOTE:</b> Object Type must be <b>Dynamic</b> to use this setting!");

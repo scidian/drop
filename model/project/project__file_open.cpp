@@ -12,7 +12,6 @@
 #include <QStandardPaths>
 
 #include "editor/helper_editor.h"
-#include "library/helper.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
@@ -185,8 +184,8 @@ bool DrProject::openProjectFromFile(QString open_file) {
         long        base_key =          asset_data["source_key"].toLongLong();
 
         int         asset_type_as_int = asset_data["type"].toInt();
-        if (asset_type_as_int != Dr::EnumToInt(DrAssetType::Object) &&
-            asset_type_as_int != Dr::EnumToInt(DrAssetType::Character)) continue;
+        if (asset_type_as_int != static_cast<int>(DrAssetType::Object) &&
+            asset_type_as_int != static_cast<int>(DrAssetType::Character)) continue;
         DrAssetType asset_type =    static_cast<DrAssetType>(asset_type_as_int);
 
         // If key doesnt already exist, initialize Asset

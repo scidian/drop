@@ -9,7 +9,7 @@
 #define ENGINE_THING_H
 
 #include "engine/globals_engine.h"
-#include "library/helper.h"
+#include "library/dr_time.h"
 
 
 // Type Definitions

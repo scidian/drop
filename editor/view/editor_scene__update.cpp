@@ -12,7 +12,7 @@
 #include "editor/view/editor_scene.h"
 #include "engine/enums_engine.h"
 #include "engine/opengl/opengl.h"
-#include "library/helper.h"
+#include "library/dr_math.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_effect.h"

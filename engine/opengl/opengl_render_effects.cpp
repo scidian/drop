@@ -24,7 +24,6 @@
 #include "engine/things/engine_thing_swirl.h"
 #include "engine/things/engine_thing_water.h"
 #include "engine/world/engine_world.h"
-#include "library/helper.h"
 
 
 //####################################################################################

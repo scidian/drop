@@ -11,7 +11,6 @@
 #include "editor/forms/form_popup.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
-#include "library/helper.h"
 
 
 //####################################################################################
