@@ -5,8 +5,6 @@
 //
 //
 //
-#include <QDebug>
-#include <QPainter>
 #include <QPixmap>
 
 #include "editor/imaging/imaging.h"

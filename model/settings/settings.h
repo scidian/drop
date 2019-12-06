@@ -10,6 +10,8 @@
 
 #include <QVariant>
 
+#include <map>
+
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
 

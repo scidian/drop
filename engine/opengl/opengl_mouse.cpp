@@ -7,7 +7,6 @@
 //
 #include <QtMath>
 #include <QMouseEvent>
-#include <QRandomGenerator>
 
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
@@ -16,6 +15,7 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "library/dr_random.h"
 #include "model/project/project.h"
 
 
@@ -42,13 +42,13 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     if (m_form_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 50; i++ ) {
-                double vel_x = QRandomGenerator::global()->bounded(-100, 100);
-                double vel_y = QRandomGenerator::global()->bounded( 100, 500);
+                double vel_x = Dr::RandomDouble(-100, 100);
+                double vel_y = Dr::RandomDouble( 100, 500);
 
                 double ball_radius =  m_engine->getTexture(Asset_Textures::Ball)->width()  / 2.0;
 
                 DrEngineObject *circle;
-                if (QRandomGenerator::global()->bounded(0, 2) == 0) {
+                if (Dr::RandomBool()) {
                     circle = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
                 } else {
                     ///circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
@@ -138,10 +138,10 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 block->setDepth(61);
                 world->addThing(block);
 
-                double hue = QRandomGenerator::global()->bounded(1.0);
+                double hue = Dr::RandomDouble(0.0, 1.0);
                 block->hue = static_cast<float>(hue);
 
-                ///double saturation = QRandomGenerator::global()->bounded(0.5) - 0.125;
+                ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
                 ///block->saturation = static_cast<float>(saturation);
             }
         }

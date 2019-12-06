@@ -5,9 +5,6 @@
 //
 //
 //
-#include <QtMath>
-#include <QRandomGenerator>
-
 #include "engine/engine.h"
 #include "engine/things/engine_thing_fire.h"
 #include "engine/things/engine_thing_fisheye.h"

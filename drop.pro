@@ -200,6 +200,7 @@ SOURCES += \
     library/dr_containers.cpp \
     library/dr_debug.cpp \
     library/dr_math.cpp \
+    library/dr_random.cpp \
     library/dr_time.cpp \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
@@ -322,6 +323,7 @@ HEADERS += \
     library/dr_containers.h \
     library/dr_debug.h \
     library/dr_math.h \
+    library/dr_random.h \
     library/dr_time.h \
     library/types/dr_point.h \
     library/types/dr_pointf.h \

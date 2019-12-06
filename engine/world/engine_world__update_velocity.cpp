@@ -5,9 +5,6 @@
 //
 //
 //
-#include <QtMath>
-#include <QRandomGenerator>
-
 #include <numeric>
 
 #include "editor/helper_editor.h"
@@ -19,6 +16,7 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "library/dr_math.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
@@ -77,7 +75,7 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
 
     // Figure out new velocity based on current object angle
     if (object->getUseAngleVelocity()) {
-        double  angle =     qRadiansToDegrees( cpBodyGetAngle(body) );
+        double  angle =     Dr::RadiansToDegrees( cpBodyGetAngle(body) );
         double  x_scale =   (object->getScaleX() < 0.f) ? -1.0 : 1.0;
         double  y_scale =   (object->getScaleY() < 0.f) ? -1.0 : 1.0;
         QPointF original =  QPointF( object->getOriginalVelocityX(), object->getOriginalVelocityY() );

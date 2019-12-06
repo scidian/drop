@@ -21,9 +21,9 @@ namespace Dr {
 //####################################################################################
 //##    Time Functions
 //############################
-double                  MillisecondsElapsed(const DrTime &timer);
-double                  MillisecondsSinceStartOfDay();
-void                    ResetTimer(DrTime &timer);
+double      MillisecondsElapsed(const DrTime &timer);
+double      MillisecondsSinceStartOfDay();
+void        ResetTimer(DrTime &timer);
 
 
 

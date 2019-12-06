@@ -5,9 +5,6 @@
 //
 //
 //
-#include <QtMath>
-#include <QRandomGenerator>
-
 #include <numeric>
 
 #include "editor/helper_editor.h"
@@ -19,6 +16,7 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "library/dr_random.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
@@ -213,7 +211,7 @@ void DrEngineWorld::addStage() {
     if (stages.count() >= 1) {
         DrStage *stage = nullptr;
         int stage_count = static_cast<int>(stages.size());
-        int stage_num = QRandomGenerator::global()->bounded(0, stage_count);
+        int stage_num = Dr::RandomInt(0, stage_count);
             stage = stages[stage_num];
 
         QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)

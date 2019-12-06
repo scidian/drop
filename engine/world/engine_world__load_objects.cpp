@@ -5,13 +5,10 @@
 //
 //
 //
-#include <QtMath>
-#include <QDebug>
-#include <QRandomGenerator>
-
 #include "engine/engine.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "library/dr_random.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
@@ -49,12 +46,12 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
     QPointF y_axis_speed =  thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed).toPointF();
     bool   billboard =      thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Billboard).toBool();
     object->set3DType(static_cast<Convert_3D_Type>(convert_type));
-    object->setAngleX( x_axis_rotate.x() + (QRandomGenerator::global()->bounded(x_axis_rotate.y() * 2.0) - x_axis_rotate.y()) );
-    object->setAngleY( y_axis_rotate.x() + (QRandomGenerator::global()->bounded(y_axis_rotate.y() * 2.0) - y_axis_rotate.y()) );
+    object->setAngleX( x_axis_rotate.x() + (Dr::RandomDouble(0.0, x_axis_rotate.y() * 2.0) - x_axis_rotate.y()) );
+    object->setAngleY( y_axis_rotate.x() + (Dr::RandomDouble(0.0, y_axis_rotate.y() * 2.0) - y_axis_rotate.y()) );
     object->setBillboard( billboard );
     object->setDepth(depth);
-    object->setRotateSpeedX( (x_axis_speed.x() + (QRandomGenerator::global()->bounded(x_axis_speed.y() * 2.0) - x_axis_speed.y())) / 100.0 );
-    object->setRotateSpeedY( (y_axis_speed.x() + (QRandomGenerator::global()->bounded(y_axis_speed.y() * 2.0) - y_axis_speed.y())) / 100.0 );
+    object->setRotateSpeedX( (x_axis_speed.x() + (Dr::RandomDouble(0.0, x_axis_speed.y() * 2.0) - x_axis_speed.y())) / 100.0 );
+    object->setRotateSpeedY( (y_axis_speed.x() + (Dr::RandomDouble(0.0, y_axis_speed.y() * 2.0) - y_axis_speed.y())) / 100.0 );
 }
 
 
@@ -194,8 +191,8 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     // ***** Adjust loading position from Spawn Offset
     QPointF     spawn_off_x =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
     QPointF     spawn_off_y =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();
-    double spawn_x = spawn_off_x.x() + (QRandomGenerator::global()->bounded(spawn_off_x.y() * 2.0) - spawn_off_x.y());
-    double spawn_y = spawn_off_y.x() + (QRandomGenerator::global()->bounded(spawn_off_y.y() * 2.0) - spawn_off_y.y());
+    double spawn_x = spawn_off_x.x() + (Dr::RandomDouble(0.0, spawn_off_x.y() * 2.0) - spawn_off_x.y());
+    double spawn_y = spawn_off_y.x() + (Dr::RandomDouble(0.0, spawn_off_y.y() * 2.0) - spawn_off_y.y());
     DrPointF spawn_rotate;
     QTransform t = QTransform().rotate(rotate_spawn);
     QPointF spawn_angle = t.map( QPointF(spawn_x * scale_x, spawn_y * scale_y) );
@@ -249,10 +246,10 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     bool    angle_player =      thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Player).toBool();
 
     cpVect velocity;
-    velocity.x = vel_x.x() + (QRandomGenerator::global()->bounded(vel_x.y() * 2.0) - vel_x.y());
-    velocity.y = vel_y.x() + (QRandomGenerator::global()->bounded(vel_y.y() * 2.0) - vel_y.y());
-    double deg_angular = rotation_vel.x() + (QRandomGenerator::global()->bounded(rotation_vel.y() * 2.0) - rotation_vel.y());
-    double rad_angular = qDegreesToRadians( deg_angular );
+    velocity.x = vel_x.x() + (Dr::RandomDouble(0.0, vel_x.y() * 2.0) - vel_x.y());
+    velocity.y = vel_y.x() + (Dr::RandomDouble(0.0, vel_y.y() * 2.0) - vel_y.y());
+    double deg_angular = rotation_vel.x() + (Dr::RandomDouble(0.0, rotation_vel.y() * 2.0) - rotation_vel.y());
+    double rad_angular = Dr::DegreesToRadians( deg_angular );
 
     // Attach KinematicUpdateVelocity callback function
     if (body_type == Body_Type::Kinematic) {

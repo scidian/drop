@@ -11,7 +11,6 @@
 #include <QMatrix4x4>
 #include <QPainter>
 #include <QPixmap>
-#include <QRandomGenerator>
 #include <QStandardPaths>
 
 #include <algorithm>

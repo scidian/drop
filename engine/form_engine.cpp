@@ -12,7 +12,6 @@
 #include <QLayout>
 #include <QMessageBox>
 #include <QOpenGLWidget>
-#include <QRandomGenerator>
 #include <QTimer>
 #include <QWindow>
 

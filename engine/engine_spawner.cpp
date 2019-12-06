@@ -5,12 +5,11 @@
 //
 //
 //
-#include <QRandomGenerator>
-
 #include "engine/engine_spawner.h"
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "library/dr_random.h"
 #include "model/project/project_thing.h"
 
 
@@ -62,7 +61,7 @@ void DrEngineSpawner::setAttachedThing(DrEngineThing *thing)  {
 }
 
 void DrEngineSpawner::setNextSpawnTimeAmount() {
-    double wait_time = getSpawnRate() + (QRandomGenerator::global()->bounded(getSpawnRateVariable() * 2.0) - getSpawnRateVariable());
+    double wait_time = getSpawnRate() + (Dr::RandomDouble(0.0, getSpawnRateVariable() * 2.0) - getSpawnRateVariable());
     if (wait_time < 0) wait_time = 0;
     m_next_spawn = wait_time;
 }
@@ -173,7 +172,7 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
                                                                                                     // Works on macOS, but possibly undefined on other systems
             if (thing_to_spawn == nullptr) { setReadyForRemoval(); return nullptr; }
 
-            double spawn_chance = QRandomGenerator::global()->bounded(100.0);                       // Get a random number between 0 and 100
+            double spawn_chance = Dr::RandomDouble(0.0, 100.0);                                     // Get a random number between 0 and 100
             if (spawn_chance <= this->getSpawnChance()) {
                 return_object = m_world->loadObjectToWorld( thing_to_spawn,
                                                             x_pos, y_pos, x_scale, y_scale, angle,
