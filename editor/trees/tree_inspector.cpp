@@ -106,9 +106,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             DrThing *thing = dynamic_cast<DrThing*>(new_settings);
             if (thing != nullptr) {
                 m_editor_relay->setAdvisorInfo(new_settings->getName(), "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
-                                               Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType()) );
+                                               QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
             } else {
-                m_editor_relay->setAdvisorInfo(new_settings->getName(), Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType()) );
+                m_editor_relay->setAdvisorInfo(new_settings->getName(), QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
             }
             break;
         }
@@ -122,8 +122,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Inspector_Build)) {
-        QString type_string = Dr::StringFromType(new_type);
-        Dr::SetLabelText(Label_Names::Label_Object_1, "KEY: " + QString::number( new_key ) + ", TYPE: " + type_string);
+        std::string type_string = Dr::StringFromType(new_type);
+        Dr::SetLabelText(Label_Names::Label_Object_1, QString::fromStdString("KEY: " + std::to_string( new_key ) + ", TYPE: " + type_string));
         if (new_type == DrType::Thing) {
             DrThing* thing = getParentProject()->findThingFromKey(new_key);
             QString asset_name = getParentProject()->findSettingsFromKey(thing->getAssetKey())->getName();

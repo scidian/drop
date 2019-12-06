@@ -132,8 +132,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;
     long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.count() > 0) {
-        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    if (object->animation_idle_keys.size() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<size_t>(object->animation_idle_frame - 1)];
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return;
@@ -367,8 +367,8 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;
     long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.count() > 0) {
-        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    if (object->animation_idle_keys.size() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<size_t>(object->animation_idle_frame - 1)];
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return;
@@ -466,8 +466,8 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;
     long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.count() > 0) {
-        texture_number = object->animation_idle_keys[static_cast<int>(object->animation_idle_frame - 1)];
+    if (object->animation_idle_keys.size() > 0) {
+        texture_number = object->animation_idle_keys[static_cast<size_t>(object->animation_idle_frame - 1)];
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return true;

@@ -110,8 +110,8 @@ void FormMain::buttonGroupTransformClicked(int id) {
     Buttons_Transform clicked = static_cast<Buttons_Transform>(id);
 
     if (clicked == Buttons_Transform::Reset_Object) {
-        QList<DrSettings*> settings;
-        QList<Properties>  properties { Properties::Thing_Scale, Properties::Thing_Rotation };
+        std::list<DrSettings*> settings;
+        std::list<Properties>  properties { Properties::Thing_Scale, Properties::Thing_Rotation };
 
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);
@@ -119,7 +119,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
             DrThing  *thing = dritem->getThing();
             if (thing == nullptr) continue;
 
-            settings.append(thing);
+            settings.push_back(thing);
             thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, QPointF(1, 1));
             thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation, 0);
         }

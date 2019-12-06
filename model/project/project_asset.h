@@ -56,7 +56,7 @@ public:
     void            deleteAnimations();
     long            getIdleAnimationKey();
     long            getIdleAnimationFirstFrameImageKey();
-    void            updateAnimationProperty(QList<long> image_keys, Properties animation_property);
+    void            updateAnimationProperty(std::list<long> image_keys, Properties animation_property);
 
     // Initialize Calls
     void        initializeAssetSettingsCharacter(QString new_name);

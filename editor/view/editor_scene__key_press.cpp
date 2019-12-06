@@ -117,21 +117,21 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         // Get current Stage selected items as list of Things
         DrStage *stage = m_current_stage;
         if (stage == nullptr) return;
-        QList<DrThing*> selected_things = getSelectionItemsAsThings();
+        std::list<DrThing*> selected_things = getSelectionItemsAsThings().toStdList();
 
         // ***** Send to Front
         if (key_pressed == Qt::Key_Greater) {
-            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
             for (auto &thing : things) {
-                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).first() != thing->getKey()) {
+                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).front() != thing->getKey()) {
                     thing->moveForward();
                 }
             }
 
         // ***** Send Forward
         } else if (key_pressed == Qt::Key_Period) {
-            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
-            int i = 0;
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+            size_t i = 0;
             for (auto thing : things) {
                 if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
                     thing->moveForward();
@@ -141,17 +141,17 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Send to Back
         } else if (key_pressed == Qt::Key_Less) {
-            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
             for (auto &thing : things) {
-                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).last() != thing->getKey()) {
+                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).back() != thing->getKey()) {
                     thing->moveBackward();
                 }
             }
 
         // ***** Send Backward
         } else if (key_pressed == Qt::Key_Comma) {
-            QList<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
-            int i = stage->thingKeysSortedByZOrder(Qt::DescendingOrder).count() - 1;
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+            size_t i = stage->thingKeysSortedByZOrder(Qt::DescendingOrder).size() - 1;
             for (auto thing : things) {
                 if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
                     thing->moveBackward();

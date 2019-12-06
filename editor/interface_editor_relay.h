@@ -47,7 +47,7 @@ public:
     virtual void        buildProjectTree() = 0;
     virtual void        buildScene(long stage_key) = 0;
 
-    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) = 0;
+    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<Properties> property_keys) = 0;
     virtual void        updateInspectorEnabledProperties() = 0;
     virtual void        updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list = QList<long>{ }) = 0;
 

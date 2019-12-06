@@ -87,10 +87,10 @@ void FormMain::buildScene(long stage_key) {
     sceneEditor->scene_mutex.unlock();
 }
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items, QList<Properties> property_keys) {
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<Properties> property_keys) {
     // If theres notthing to update, go ahead and get out now
-    if (changed_items.isEmpty()) return;
-    if (property_keys.isEmpty()) return;
+    if (changed_items.empty()) return;
+    if (property_keys.empty()) return;
 
     // Don't update Inspector constantly while objects are being moved around, very slow
     if (currentViewMode() == View_Mode::Disable_Update) return;
@@ -99,7 +99,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, Q
     if (currentViewMode() == View_Mode::Rotating)       return;
 
     // Convert list to longs
-    QList<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
+    std::list<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
 
     // ***** This order is semi important, best not to try and change it
     if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);

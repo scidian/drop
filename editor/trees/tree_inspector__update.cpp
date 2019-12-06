@@ -17,6 +17,7 @@
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/dr_containers.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
@@ -30,12 +31,12 @@
 //##
 //##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
-void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(QList<long> property_keys_to_update) {
+void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(std::list<long> property_keys_to_update) {
     updateInspectorPropertyBoxes( { getParentProject()->findSettingsFromKey(m_selected_key) }, property_keys_to_update);
 }
 
-void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_items, QList<long> property_keys_to_update) {
-    if (changed_items.isEmpty()) return;
+void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_items, std::list<long> property_keys_to_update) {
+    if (changed_items.empty()) return;
     // ***** #NOTE: Don't do the following!
     // *****        This function is designed so that all properties update if empty list is passed in!
     ///if (property_keys_to_update.isEmpty()) return;
@@ -45,7 +46,7 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
 
 
     // !!!!! #TEMP: Need to be more than just one item represented in Inspector
-    DrSettings* thing = changed_items.first();
+    DrSettings* thing = changed_items.front();
     if (thing == nullptr) return;
     // !!!!!
 
@@ -57,8 +58,8 @@ void TreeInspector::updateInspectorPropertyBoxes(QList<DrSettings*> changed_item
     for (auto widget : m_widgets) {
         long prop_key = widget->property(User_Property::Key).toInt();
 
-        if (property_keys_to_update.contains(prop_key) == false &&
-            property_keys_to_update.count() != 0) continue;
+        if (Dr::ListContains(property_keys_to_update, prop_key) == false &&
+            property_keys_to_update.size() != 0) continue;
 
         DrProperty *prop = thing->findPropertyFromPropertyKey(prop_key);
         if (prop == nullptr) continue;

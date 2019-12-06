@@ -49,7 +49,7 @@ DrProperty* DrComponent::getProperty(long setting) {
                            "Component Name: \t" + this->getDisplayName() + "\n"
                            "Component ID: \t" +   QString::number(this->getComponentKey()) + "\n"
                            "Object Name: \t" + this->m_parent_settings->getName() + "\n"
-                           "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + "\n");
+                           "Object Type: \t" + QString::fromStdString(Dr::StringFromType(this->m_parent_settings->getType())) + "\n");
     }
     return m_properties[setting];
 }

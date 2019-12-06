@@ -5,6 +5,8 @@
 //      DrStage Class Definitions
 //
 //
+#include <deque>
+
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
@@ -54,7 +56,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     DrSettings *asset = getParentProject()->findSettingsFromKey(from_asset_key);
     if (asset == nullptr) {
         Dr::ShowMessageBox("Error in DrStage::addThing, Could not find underlying Entity to load from! \n "
-                           "New Type: " + Dr::StringFromThingType(new_type) + " \n "
+                           "New Type: " + QString::fromStdString(Dr::StringFromThingType(new_type)) + " \n "
                            "Asset Key: " + QString::number(from_asset_key) + ".",
                        QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
@@ -83,7 +85,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         ///    break;
 
         default:
-            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! New Type: " + Dr::StringFromThingType(new_type),
+            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! New Type: " + QString::fromStdString(Dr::StringFromThingType(new_type)),
                                QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 
@@ -103,8 +105,8 @@ void DrStage::deleteThing(DrThing *&thing) {
 //####################################################################################
 //##    Returns a list of Thing keys contained in stage, sorted from high z value to low
 //####################################################################################
-QList<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {
-    QList<long> z_ordered_keys;
+std::vector<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {
+    std::vector<long> z_ordered_keys;
     for (auto thing : thingsSortedByZOrder(sort_order))
         z_ordered_keys.push_back(thing->getKey());
     return z_ordered_keys;
@@ -113,7 +115,7 @@ QList<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {
 //####################################################################################
 //##    Returns a list of Things contained in stage, sorted from high z value to low
 //####################################################################################
-QList<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things, QList<DrThing*> just_these_things) {
+std::vector<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things, std::list<DrThing*> just_these_things) {
     // Make a Vector of pairs for sorting
     std::vector<std::pair<double, DrThing*>> zorder_key_pair;
     if (all_things) {
@@ -128,7 +130,7 @@ QList<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bool all
     std::sort(zorder_key_pair.begin(), zorder_key_pair.end());
 
     // Copy sorted Map into List
-    QList<DrThing*> z_ordered_things;
+    std::deque<DrThing*> z_ordered_things;
     for (auto one_pair : zorder_key_pair)
         z_ordered_things.push_front(one_pair.second);
 
@@ -136,7 +138,7 @@ QList<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bool all
     if (sort_order == Qt::SortOrder::AscendingOrder)
         std::reverse(z_ordered_things.begin(), z_ordered_things.end());
 
-    return z_ordered_things;
+    return { z_ordered_things.begin(), z_ordered_things.end() };
 }
 
 

@@ -42,7 +42,7 @@ bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) 
     animation_idle_last_change += time_passed;
     if (animation_idle_last_change > (1000.0 / animation_speed)) {
         animation_idle_frame++;
-        if (animation_idle_frame > animation_idle_keys.count()) animation_idle_frame = 1;
+        if (animation_idle_frame > static_cast<long>(animation_idle_keys.size())) animation_idle_frame = 1;
         animation_idle_last_change = 0;
     }
 

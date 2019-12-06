@@ -8,7 +8,8 @@
 #ifndef ENUMS_TYPES_H
 #define ENUMS_TYPES_H
 
-#include <QString>
+#include <list>
+#include <string>
 
 // Forward declarations
 class       DrSettings;
@@ -125,13 +126,13 @@ enum class Asset_Category {
 //##    Some public forward function declarations for some enum functions
 //############################
 namespace Dr {
-    QString         StringFromType(DrType type);
-    QString         StringFromAssetType(DrAssetType type);
-    QString         StringFromDeviceType(DrDeviceType type);
-    QString         StringFromEffectType(DrEffectType type);
-    QString         StringFromThingType(DrThingType type);
+    std::string         StringFromType(DrType type);
+    std::string         StringFromAssetType(DrAssetType type);
+    std::string         StringFromDeviceType(DrDeviceType type);
+    std::string         StringFromEffectType(DrEffectType type);
+    std::string         StringFromThingType(DrThingType type);
 
-    QList<long>     ConvertPropertyListToLongs(QList<Properties> list);
+    std::list<long>     ConvertPropertyListToLongs(std::list<Properties> list);
 }
 
 

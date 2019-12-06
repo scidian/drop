@@ -143,7 +143,7 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
 //####################################################################################
 //##    Updates Default Animation Images / Collsion Shape
 //####################################################################################
-void DrAsset::updateAnimationProperty(QList<long> image_keys, Properties animation_property) {
+void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties animation_property) {
     if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
 
     // ***** Get existing DrProperty to Replace

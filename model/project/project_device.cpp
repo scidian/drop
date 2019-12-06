@@ -25,7 +25,7 @@ DrDevice::DrDevice(DrProject *parent_project, long key, DrDeviceType device_type
     property_name->setEditable(false);
     property_name->setDisplayName("Device Name");
     property_name->setDescription("Name of this Device Asset.");
-    property_name->setValue(Dr::StringFromDeviceType(device_type));
+    property_name->setValue( QString::fromStdString(Dr::StringFromDeviceType(device_type)) );
 }
 
 

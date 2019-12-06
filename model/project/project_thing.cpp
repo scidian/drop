@@ -139,7 +139,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
 
         default:
-            Dr::ShowMessageBox("Error in DrThing Constructor, DrThingType not handled! Type: " + Dr::StringFromThingType(new_thing_type),
+            Dr::ShowMessageBox("Error in DrThing Constructor, DrThingType not handled! Type: " + QString::fromStdString(Dr::StringFromThingType(new_thing_type)),
                                QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 

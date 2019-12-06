@@ -14,13 +14,17 @@
 
 namespace Dr {
 
-// Prints to the console
+
+//####################################################################################
+//##    Prints to Console
+//############################
 void    PrintDebug(std::string message);
 
 
-}
 
 
+
+}   // end namespace Dr
 
 #endif // DR_DEBUG_H
 

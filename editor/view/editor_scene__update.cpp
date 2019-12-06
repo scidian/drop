@@ -29,8 +29,8 @@
 //##    Called after some change has been made to items on another widget besides
 //##    the QGraphicsView, updates the items in the scene
 //####################################################################################
-void DrScene::updateChangesInScene(QList<DrSettings*> changed_items, QList<long> property_keys) {
-    if (changed_items.isEmpty()) return;
+void DrScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::list<long> property_keys) {
+    if (changed_items.empty()) return;
 
     for (auto settings_item : changed_items) {
         DrType my_type = settings_item->getType();
@@ -81,7 +81,7 @@ void DrScene::updateItemZValues() {
 //####################################################################################
 //##    Updates the item in the scene based on the new property_keys
 //####################################################################################
-void DrScene::updateItemInScene(DrSettings* changed_item, QList<long> property_keys) {
+void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> property_keys) {
     DrThing *thing = dynamic_cast<DrThing*>(changed_item);
     if (thing == nullptr) return;
     DrItem  *item =  thing->getDrItem();

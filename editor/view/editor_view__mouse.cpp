@@ -234,7 +234,7 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
         if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
             m_editor_relay->updateEditorWidgetsAfterItemChange(
-                        Editor_Widgets::Stage_View, ConvertItemListToSettings(my_scene->getSelectionItems()),
+                        Editor_Widgets::Stage_View, ConvertItemListToSettings(my_scene->getSelectionItems()).toStdList(),
                         { Properties::Thing_Position, Properties::Thing_Size, Properties::Thing_Scale, Properties::Thing_Rotation });
         }
 

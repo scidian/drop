@@ -197,6 +197,7 @@ SOURCES += \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
+    library/dr_containers.cpp \
     library/dr_debug.cpp \
     library/dr_math.cpp \
     library/dr_time.cpp \
@@ -318,6 +319,7 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
+    library/dr_containers.h \
     library/dr_debug.h \
     library/dr_math.h \
     library/dr_time.h \

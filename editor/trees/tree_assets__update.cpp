@@ -12,6 +12,7 @@
 #include "editor/helper_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
+#include "library/dr_containers.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"
@@ -50,12 +51,12 @@ void TreeAssets::ensureSelectedKeyVisible() {
 //####################################################################################
 //##    Updates Asset List (like asset names) if items have been changed
 //####################################################################################
-void TreeAssets::updateAssetList(QList<DrSettings*> changed_entities, QList<long> property_keys) {
-    if (changed_entities.isEmpty()) return;
-    if (property_keys.isEmpty())    return;
+void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::list<long> property_keys) {
+    if (changed_entities.empty()) return;
+    if (property_keys.empty())    return;
 
-    QList<DrSettings*> newly_changed_items;
-    QList<Properties>  newly_changed_properties;
+    std::list<DrSettings*> newly_changed_items;
+    std::list<Properties>  newly_changed_properties;
 
     QFrame  *text_holder;
     QLabel  *asset_name;
@@ -81,9 +82,9 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_entities, QList<long
                                     for (auto thing : stage.second->getThingMap()) {
                                         if (thing.second->getAssetKey() == entity->getKey()) {
                                             thing.second->setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Name, asset_text);
-                                            newly_changed_items.append(thing.second);
-                                            if (!newly_changed_properties.contains(Properties::Entity_Name)) {
-                                                newly_changed_properties.append(Properties::Entity_Name);
+                                            newly_changed_items.push_back(thing.second);
+                                            if (Dr::ListContains(newly_changed_properties, Properties::Entity_Name) == false) {
+                                                newly_changed_properties.push_back(Properties::Entity_Name);
                                             }
                                         }
                                     }
@@ -119,7 +120,7 @@ void TreeAssets::updateAssetList(QList<DrSettings*> changed_entities, QList<long
     update();
 
     // ***** If some assets were changed, and items were updated, update those items in the other widgets
-    if (newly_changed_items.isEmpty() == false) {
+    if (newly_changed_items.empty() == false) {
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, newly_changed_items, newly_changed_properties);
     }
 }

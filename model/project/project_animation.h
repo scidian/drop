@@ -35,7 +35,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrAnimation(DrProject *parent_project, long new_animation_key, QList<long> image_keys);
+    DrAnimation(DrProject *parent_project, long new_animation_key, std::list<long> image_keys);
     virtual ~DrAnimation() override;
 
     // DrSettings Virtual Overrides

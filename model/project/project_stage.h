@@ -70,10 +70,10 @@ public:
     DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide = true, long key = c_no_key);
     void            deleteThing(DrThing *&thing) ;
 
-    QList<long>     thingKeysSortedByZOrder(Qt::SortOrder sort_order);
-    QList<DrThing*> thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things = true, QList<DrThing*> just_these_things = { });
-    void            initializeStageSettings(QString new_name);
-    void            removeGraphicsItemReferences();
+    std::vector<long>       thingKeysSortedByZOrder(Qt::SortOrder sort_order);
+    std::vector<DrThing*>   thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things = true, std::list<DrThing*> just_these_things = { });
+    void                    initializeStageSettings(QString new_name);
+    void                    removeGraphicsItemReferences();
 
 };
 

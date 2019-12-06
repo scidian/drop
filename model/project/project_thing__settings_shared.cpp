@@ -22,11 +22,13 @@
 //##    Transform Components
 //####################################################################################
 void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
-    addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the " + Dr::StringFromThingType(type) + " "
+    QString type_string = QString::fromStdString(Dr::StringFromThingType(type));
+
+    addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the " + type_string + " "
                                                            "in the Stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
 
-    QString position_text = "Location of the " + Dr::StringFromThingType(type) + " within the current Stage.";
+    QString position_text = "Location of the " + type_string + " within the current Stage.";
     if (type == DrThingType::Camera) {
         position_text = "Point at which Camera is looking at.";
     }
@@ -40,7 +42,7 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0, transform_title, transform_text);
 
-    QString size_text = "Width and Height of the " + Dr::StringFromThingType(type) + " in pixels, affected by Scale property.";
+    QString size_text = "Width and Height of the " + type_string + " in pixels, affected by Scale property.";
     if (type == DrThingType::Light) {
         size_text = "Width and Height of the Light in pixels, affected by Scale property. "
                     "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
@@ -49,7 +51,7 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height), "Size", size_text);
 
-    QString scale_text = "X and Y scale of the " + Dr::StringFromThingType(type) + " within the Stage.";
+    QString scale_text = "X and Y scale of the " + type_string + " within the Stage.";
     if (type== DrThingType::Camera) {
         scale_text = "X and Y scale settings have no effect on Cameras.";
     }

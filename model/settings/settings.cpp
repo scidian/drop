@@ -96,7 +96,7 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
                            "Component not found in current object \n\n"
                            "Component ID: \t" + QString::number(component) + "\n"
                            "Object Name: \t" + this->getName() + ". \n"
-                           "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+                           "Object Type: \t" + QString::fromStdString(Dr::StringFromType(this->getType())) + "\n");
     }
     return m_components[component]->getProperty(property);
 }

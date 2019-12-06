@@ -34,8 +34,8 @@ void FormAnimation::buildInspector(QList<long> key_list, bool rebuild_only) { };
 void FormAnimation::buildProjectTree() { };
 void FormAnimation::buildScene(long stage_key) { };
 
-void FormAnimation::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, QList<DrSettings*> changed_items,
-                                                       QList<Properties> property_keys) { };
+void FormAnimation::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
+                                                       std::list<Properties> property_keys) { };
 void FormAnimation::updateInspectorEnabledProperties() { };
 void FormAnimation::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) { };
 

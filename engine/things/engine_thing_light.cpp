@@ -49,7 +49,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long origina
 
 
 DrEngineLight::~DrEngineLight() {
-    getWorld()->mark_light_as_deleted << getKey();
+    getWorld()->mark_light_as_deleted.push_back( getKey() );
 }
 
 

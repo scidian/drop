@@ -38,7 +38,7 @@ DrEngineThing* DrEngineWorld::findThingByKey(long key) {
 //####################################################################################
 //##    Adds Things to the World
 //####################################################################################
-void DrEngineWorld::addThings(QList<DrEngineThing*> things) {
+void DrEngineWorld::addThings(std::list<DrEngineThing*> things) {
     for (auto thing : things) {
         addThing(thing);
     }

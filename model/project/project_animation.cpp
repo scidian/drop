@@ -18,18 +18,18 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, QList<long> image_keys)
+DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, std::list<long> image_keys)
         : DrSettings(parent_project) {
     this->setKey(new_animation_key);
 
     QString new_animation_name = "Empty";
 
     // If passed Image Keys, use name from first image, create DrFrames
-    if (image_keys.count() > 0) {
+    if (image_keys.size() > 0) {
         // Get first image from image keys so we can use it's name
-        DrImage *first_image = parent_project->findImageFromKey(image_keys.first());
+        DrImage *first_image = parent_project->findImageFromKey(image_keys.front());
         if (first_image == nullptr) {
-            Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + QString::number(image_keys.first()) );
+            Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + QString::number(image_keys.front()) );
         }
 
         // Remove trailing numbers and spaces from name

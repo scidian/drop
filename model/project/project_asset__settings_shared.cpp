@@ -66,7 +66,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
 //##    Animation Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key) {
-    QString type = Dr::StringFromAssetType(asset_type);
+    QString type = QString::fromStdString(Dr::StringFromAssetType(asset_type));
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
@@ -127,13 +127,13 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
 //##    Physics Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
-    QString type = Dr::StringFromAssetType(asset_type);
+    QString type = QString::fromStdString(Dr::StringFromAssetType(asset_type));
 
     addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
 
     addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Gravity_Scale, Property_Type::PointF, QPointF(1.0, 1.0),
-                           "Gravity Scale", "Changes how gravity affects this " + Dr::StringFromAssetType(asset_type) + ". Set to (0, 0) to "
+                           "Gravity Scale", "Changes how gravity affects this " + type + ". Set to (0, 0) to "
                                             "ignore gravity comepletely. Also great for making balloons.");
     // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
     addPropertyToComponent(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction,
@@ -154,7 +154,7 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
 //##    Controls Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
-    QString type = Dr::StringFromAssetType(asset_type);
+    QString type = QString::fromStdString(Dr::StringFromAssetType(asset_type));
 
     addComponent(Components::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::Brown_Sugar, true);
     getComponent(Components::Asset_Controls)->setIcon(Component_Icons::Controls);
@@ -162,11 +162,11 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     // BoolDouble QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage,
                            Property_Type::BoolDouble, QList<QVariant>({false, 1.0, -1000000000, 1000000000, 1, "Damage: "}),
-                           "Touch Damage", "Should this " + Dr::StringFromAssetType(asset_type) + " take damage when touched / tapped / clicked with the mouse? "
+                           "Touch Damage", "Should this " + type + " take damage when touched / tapped / clicked with the mouse? "
                                            "If so, how much damage? Can be negative (i.e. healing).");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag,
                            Property_Type::BoolDouble, QList<QVariant>({false, 100.0, -1000000000, 1000000000, 10, "Force: "}),
-                           "Touch Drag", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be dragged by mouse / touch? If so, how much force "
+                           "Touch Drag", "Should this " + type + " be able to be dragged by mouse / touch? If so, how much force "
                                          "to apply? <br><br> <b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!");
 
     QList<QVariant> sling_properties  { static_cast<int>(Properties::Asset_Slingshot_Arrow_Image),
@@ -181,7 +181,7 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                                         static_cast<int>(Properties::Asset_Slingshot_Future_2),
                                         static_cast<int>(Properties::Asset_Slingshot_Future_3) };
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Enabled, Property_Type::Enabled, QList<QVariant>({false, sling_properties }),
-                           "Touch Slingshot", "Should this " + Dr::StringFromAssetType(asset_type) + " be able to be shot by slingshot control? "
+                           "Touch Slingshot", "Should this " + type + " be able to be shot by slingshot control? "
                                               "<br><br> <b>NOTE:</b> Object Type must be <b>Dynamic</b> to use this setting!");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Force_Multiplier, Property_Type::Double, 1.0,
                            "Force Multiplier", "Force multiplier can be used to increase or decrease power of slingshot.");
@@ -190,18 +190,18 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Image, Property_Type::Image, c_no_key,
                            "Slingshot Arrow", "Image used to show direction of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Offset, Property_Type::PositiveDouble, 100.0,
-                           "Arrow Offset", "Distance to render Slingshot Arrow away from this " + Dr::StringFromAssetType(asset_type) );
+                           "Arrow Offset", "Distance to render Slingshot Arrow away from this " + type );
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Arrow_Scale, Property_Type::PositiveScaleF, QPointF(1.0, 1.0),
                            "Arrow Scale", "Scale used to render Slingshot Arrow.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Image, Property_Type::Image, c_no_key,
                            "Slingshot Tail", "Image used to show pull back of slingshot.");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Offset, Property_Type::PositiveDouble, 100.0,
-                           "Tail Offset", "Distance to start rendering Slingshot Tail away from this " + Dr::StringFromAssetType(asset_type) );
+                           "Tail Offset", "Distance to start rendering Slingshot Tail away from this " + type );
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Tail_Scale, Property_Type::PositiveScaleF, QPointF(1.0, 1.0),
                            "Tail Scale", "Scale used to render Slingshot Tail.");
 
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,
-                           "Motor Speed", "Speed at which this " + Dr::StringFromAssetType(asset_type) + " rotates when Motor Buttons are pressed.");
+                           "Motor Speed", "Speed at which this " + type + " rotates when Motor Buttons are pressed.");
 
 }
 

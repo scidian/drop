@@ -78,7 +78,7 @@ public:
 
     // Function Calls
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
-    void            updateAssetList(QList<DrSettings*> changed_entities, QList<long> property_keys);
+    void            updateAssetList(std::list<DrSettings*> changed_entities, std::list<long> property_keys);
 
     // Getters / Setters
     IEditorRelay*           getEditorRelay() { return m_editor_relay; }

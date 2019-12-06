@@ -5,13 +5,13 @@
 //      DrProject Class Definitions
 //
 //
-#include <QDebug>
 #include <QRandomGenerator>
 #include <QTime>
 
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
+#include "library/dr_debug.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"
@@ -156,7 +156,7 @@ void DrProject::deleteWorld(long world_key) {
 //##    Add
 //##        Functions to Add different item types into project
 //####################################################################################
-DrAnimation* DrProject::addAnimation(QList<long> source_image_keys, long key) {
+DrAnimation* DrProject::addAnimation(std::list<long> source_image_keys, long key) {
     long new_animation_key = (key == c_no_key) ? getNextKey() : key;
     m_animations[new_animation_key] = new DrAnimation(this, new_animation_key, source_image_keys);
     return m_animations[new_animation_key];
@@ -166,7 +166,7 @@ DrAsset* DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, 
     long new_asset_key = (key == c_no_key) ? getNextKey() : key;
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, source_image_key);
     if (new_asset_key <= 0) {
-        qDebug() << "DrProject::addAsset() strange number!!! Key: " << new_asset_key << ", Type: " << Dr::StringFromAssetType(new_asset_type);
+        Dr::PrintDebug("DrProject::addAsset() strange number!!! Key: " + std::to_string(new_asset_key) + ", Type: " + Dr::StringFromAssetType(new_asset_type) );
     }
     return m_assets[new_asset_key];
 }
@@ -421,36 +421,6 @@ DrWorld* DrProject::findWorldWithName(QString world_name) {
         if (compare_name == world_name) { return world_pair.second; }
     }
     return nullptr;
-}
-
-
-//####################################################################################
-//##    Tests find function for speed so we can test speed of std::map vs std::unordered_map, etc
-//####################################################################################
-QString DrProject::testSpeedFindSettings(int test_size) {
-    // Show some initial data
-    int     number_of_assets = int(m_key_generator) - 1;
-    QString results =   "Find Speed Test \n---------------\n"
-                        "Number of Assets in Project: " + QString::number(number_of_assets) + "\n"
-                        "Newest Asset Name: " + findSettingsFromKey(number_of_assets)->getName() + "\n"
-                        "Newest Asset Type: " + Dr::StringFromType(findSettingsFromKey(number_of_assets)->getType()) + "\n"
-                        "First  Asset Name: " + findSettingsFromKey(c_key_starting_number)->getName() + "\n"
-                        "First  Asset Type: " + Dr::StringFromType(findSettingsFromKey(c_key_starting_number)->getType()) + "\n\n"
-                        "Number of iterations tested: " + QString::number(test_size) + "\n";
-
-    // Create a vector of random keys to find
-    QVector<int> keys;
-    for (int i = 0; i < test_size; i++)
-        keys.append( QRandomGenerator::global()->bounded(c_key_starting_number, number_of_assets) );
-
-    // Find the random keys within the project
-    QTime timer;
-    timer.restart();
-    for (auto key : keys)
-        findSettingsFromKey(key);
-    results += "Total milliseconds taken to find all settings in project: " + QString::number(timer.elapsed()) + "\n\n";
-
-    return results;
 }
 
 

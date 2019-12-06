@@ -16,7 +16,7 @@ namespace Dr {
 //####################################################################################
 //##    Returns a QString respresentaiton of the passed DrTypes type
 //####################################################################################
-QString StringFromType(DrType type) {
+std::string StringFromType(DrType type) {
     switch (type) {
         case DrType::Animation:     return "Animation";
         case DrType::Asset:         return "Asset";
@@ -34,7 +34,7 @@ QString StringFromType(DrType type) {
     return "Unknown";
 }
 
-QString StringFromAssetType(DrAssetType type) {
+std::string StringFromAssetType(DrAssetType type) {
     switch (type) {
         case DrAssetType::Object:       return "Object Asset";
         case DrAssetType::Character:    return "Character Asset";
@@ -44,7 +44,7 @@ QString StringFromAssetType(DrAssetType type) {
     return "Unknown";
 }
 
-QString StringFromThingType(DrThingType type) {
+std::string StringFromThingType(DrThingType type) {
     switch (type) {
         case DrThingType::None:         return "None";
         case DrThingType::Character:    return "Character";
@@ -66,13 +66,13 @@ QString StringFromThingType(DrThingType type) {
     }
 }
 
-QString StringFromDeviceType(DrDeviceType type) {
+std::string StringFromDeviceType(DrDeviceType type) {
     switch (type) {
         case DrDeviceType::Camera:      return "Camera";
     }
 }
 
-QString StringFromEffectType(DrEffectType type) {
+std::string StringFromEffectType(DrEffectType type) {
     switch (type) {
         case DrEffectType::Light:       return "Light";
         case DrEffectType::Water:       return "Water";
@@ -88,10 +88,10 @@ QString StringFromEffectType(DrEffectType type) {
     }
 }
 
-QList<long> ConvertPropertyListToLongs(QList<Properties> list) {
-    QList<long> new_list;
+std::list<long> ConvertPropertyListToLongs(std::list<Properties> list) {
+    std::list<long> new_list;
     for (auto item : list) {
-        new_list.append(static_cast<long>(item));
+        new_list.push_back(static_cast<long>(item));
     }
     return new_list;
 }

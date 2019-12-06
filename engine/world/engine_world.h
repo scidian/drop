@@ -127,7 +127,7 @@ public:
 
     long            effect_count = 0;                           // Stores number of effects being rendered
     long            light_count = 0;                            // Stores number of lights in scene
-    QList<long>     mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
+    std::list<long> mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
 
     // !!!!! #TEMP: Variables
     Demo_Player     demo_player = Demo_Player::Jump;
@@ -169,7 +169,7 @@ public:
     void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void            addStage();
     void            addThing(DrEngineThing *thing);
-    void            addThings(QList<DrEngineThing*> things);
+    void            addThings(std::list<DrEngineThing*> things);
     void            buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
     void            clearWorld();
     int             countCharacters();

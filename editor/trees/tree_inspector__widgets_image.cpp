@@ -240,7 +240,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             DrAsset *asset = dynamic_cast<DrAsset*>(settings);
 
             // Add Images, Update Animation
-            QList<long> image_keys;
+            std::list<long> image_keys;
             for (auto file_path : file_paths) {
                 DrImage *image = project->addImage(file_path);
                 image_keys.push_back( image->getKey() );

@@ -145,7 +145,7 @@ public:
     DrWorld*        findWorldWithName(QString world_name);
 
     // Children Creation Calls
-    DrAnimation*    addAnimation(QList<long> source_image_keys, long key = c_no_key);
+    DrAnimation*    addAnimation(std::list<long> source_image_keys, long key = c_no_key);
     DrAsset*        addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
@@ -172,7 +172,6 @@ public:
     void            loadSettingsFromMap(DrSettings *entity, QVariantMap &map);
     bool            openProjectFromFile(QString open_file);
     void            saveProjectToFile();
-    QString         testSpeedFindSettings(int test_size);
 
 };
 

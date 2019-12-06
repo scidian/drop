@@ -25,7 +25,7 @@ DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type
     property_name->setEditable(false);
     property_name->setDisplayName("Effect Name");
     property_name->setDescription("Name of this Effect Asset.");
-    property_name->setValue(Dr::StringFromEffectType(effect_type));
+    property_name->setValue( QString::fromStdString(Dr::StringFromEffectType(effect_type)) );
 }
 
 

@@ -20,7 +20,7 @@
 //####################################################################################
 //##    Sets Z-Order and appropriate Sub Order
 //####################################################################################
-void ShiftOrder(QList<OrderInfo> &order_info, int needs_to_be_empty) {
+void ShiftOrder(std::list<OrderInfo> &order_info, int needs_to_be_empty) {
     for (auto &order : order_info) {
         if (order.sub_order == needs_to_be_empty) {
             ShiftOrder(order_info, needs_to_be_empty + 1);
@@ -40,12 +40,12 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
     setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, QVariant::fromValue(z_order));
 
     // ***** Get list of sub orders along same Z-Axis
-    QList<OrderInfo> order_info;
+    std::list<OrderInfo> order_info;
     for (auto &thing_pair : m_parent_stage->getThingMap()) {
         if (thing_pair.first == getKey()) continue;
         double thing_z =   thing_pair.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
         int    thing_sub = thing_pair.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
-        if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { order_info.append(OrderInfo { thing_pair.first, thing_pair.second, thing_sub }); }
+        if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { order_info.push_back(OrderInfo { thing_pair.first, thing_pair.second, thing_sub }); }
     }
 
     // ***** Start at back
@@ -69,12 +69,12 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
     setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, QVariant(sub_z_order));
 
     // ***** Fill in any empty spaces
-    QList<DrThing*> things_sorted;
+    std::list<DrThing*> things_sorted;
     for (auto thing : m_parent_stage->thingsSortedByZOrder(Qt::DescendingOrder)) {
         double thing_z = thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
-        if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { things_sorted.append(thing); }
+        if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { things_sorted.push_back(thing); }
     }
-    int i = things_sorted.count();
+    int i = static_cast<int>(things_sorted.size());
     for (auto thing : things_sorted) {
         thing->setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, QVariant(i));
         i--;
@@ -86,17 +86,17 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
 //##    Move Z-Order / Sub Order
 //####################################################################################
 void DrThing::moveBackward() {
-    QList<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+    std::vector<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
 
     // Find Things position within the Stage
     int my_position = 0;
-    for (int i = 0; i < list.count(); i++) {
-        if (list[i] == getKey()) my_position = i;
+    for (size_t i = 0; i < list.size(); i++) {
+        if (list[i] == getKey()) my_position = static_cast<int>(i);
     }
-    if (my_position == (list.count() - 1)) return;      // Already in the back
+    if (my_position == static_cast<int>(list.size() - 1)) return;      // Already in the back
 
     // Find out Z Info on next lowest Thing
-    long back_of_key =  list[my_position + 1];
+    long back_of_key =  list[static_cast<size_t>(my_position + 1)];
     DrThing *thing =    getParentProject()->findThingFromKey(back_of_key);
     if (thing == nullptr) return;
 
@@ -107,17 +107,17 @@ void DrThing::moveBackward() {
 }
 
 void DrThing::moveForward() {
-    QList<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+    std::vector<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
 
     // Find Things position within the Stage
     int my_position = 0;
-    for (int i = 0; i < list.count(); i++) {
-        if (list[i] == getKey()) my_position = i;
+    for (size_t i = 0; i < list.size(); i++) {
+        if (list[i] == getKey()) my_position = static_cast<int>(i);
     }
     if (my_position == 0) return;                       // Already in the front
 
     // Find out Z Info on next highest Thing
-    long front_of_key = list[my_position - 1];
+    long front_of_key = list[static_cast<size_t>(my_position - 1)];
     DrThing *thing =    getParentProject()->findThingFromKey(front_of_key);
     if (thing == nullptr) return;
 
