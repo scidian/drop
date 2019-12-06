@@ -12,7 +12,7 @@
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
-#include "helper.h"
+#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"

@@ -17,7 +17,7 @@
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_inspector.h"
-#include "helper.h"
+#include "library/helper.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"

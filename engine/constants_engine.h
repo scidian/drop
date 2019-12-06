@@ -11,7 +11,7 @@
 #include <QOpenGLWidget>
 #include <QVector3D>
 
-#include "model/types/pointf.h"
+#include "library/types/pointf.h"
 
 
 // OpenGL Constants

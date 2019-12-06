@@ -53,6 +53,14 @@ highp float sampleShadow(highp vec2 coord_in, highp float r) {
 
 
 //####################################################################################
+//##    Pseudo-random number, that is between 0.0 and 0.999999 inclusive
+//####################################################################################
+float random (vec2 xy) {
+    return fract(sin(dot(xy, vec2(11.2345, 81.456))) * 42758.12);
+}
+
+
+//####################################################################################
 //##    Main Shader Function
 //####################################################################################
 void main(void) {
@@ -154,10 +162,17 @@ void main(void) {
 
         highp float shade = (falloff - sum) * (u_light_shadows / 100.0);
         falloff -= shade;
+        falloff = clamp(falloff, 0.0, 1.0);
     }
 
-    // Multiply by light color
-    gl_FragColor = vec4(u_color, opacity) * vec4(falloff, falloff, falloff, falloff);
+    // Multiply by light color, add some noise to light color to reduce appearance of rings
+    float reduce_rings = (random(coordinates) - 0.5);
+          reduce_rings *= 0.01 * (1.0 / ((falloff + 0.1)));                                 // Increase noise on darker areas
+
+    vec3  light_color =  clamp(u_color + reduce_rings, 0.0, 1.0);
+          falloff =      clamp(falloff + reduce_rings, 0.0, 1.0);
+
+    gl_FragColor = vec4(light_color, opacity) * vec4(falloff);
 
 }
 

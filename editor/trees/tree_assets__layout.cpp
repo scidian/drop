@@ -9,7 +9,7 @@
 
 #include "editor/globals_editor.h"
 #include "editor/trees/tree_assets.h"
-#include "helper.h"
+#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_font.h"

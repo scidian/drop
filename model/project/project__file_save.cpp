@@ -10,7 +10,7 @@
 #include <QSettings>
 
 #include "editor/globals_editor.h"
-#include "helper.h"
+#include "library/helper.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"

@@ -19,9 +19,9 @@
 
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
+#include "library/types/point.h"
+#include "library/types/pointf.h"
 #include "model/enums_model_types.h"
-#include "model/types/point.h"
-#include "model/types/pointf.h"
 
 // Forward Declarations
 class DrEngine;

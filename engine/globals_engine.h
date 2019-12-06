@@ -24,9 +24,9 @@
 #include "3rd_party/vec3.h"
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
+#include "library/types/pointf.h"
 #include "model/constants_keys.h"
 #include "model/enums_model_types.h"
-#include "model/types/pointf.h"
 
 
 // Forward declarations

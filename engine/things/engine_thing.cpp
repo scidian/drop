@@ -7,7 +7,7 @@
 //
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 //####################################################################################

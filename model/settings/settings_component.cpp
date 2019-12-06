@@ -7,7 +7,7 @@
 //
 #include "editor/constants_editor.h"
 #include "editor/helper_editor.h"
-#include "helper.h"
+#include "library/helper.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"
 #include "model/settings/settings_component_property.h"

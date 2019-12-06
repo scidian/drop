@@ -17,7 +17,7 @@
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 namespace DrImaging

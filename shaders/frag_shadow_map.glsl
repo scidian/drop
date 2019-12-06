@@ -32,11 +32,12 @@ highp float unpackColor(highp vec3 color) {
     return (color.r * 255.0) + (color.g * 255.0) * 256.0 + (color.b * 255.0) * 256.0 * 256.0;
 }
 
+
 //####################################################################################
-//##    Returns a random number, that is between 0.0 and 0.999999 inclusive
+//##    Pseudo-random number, that is between 0.0 and 0.999999 inclusive
 //####################################################################################
-float random(vec2 p) {
-    return fract(cos(dot(p, vec2(23.14069263277926, 2.665144142690225))) * 12345.6789);
+float random (vec2 xy) {
+    return fract(sin(dot(xy, vec2(11.2345, 81.456))) * 42758.12);
 }
 
 

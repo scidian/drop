@@ -48,7 +48,7 @@ enum class Winding_Orientation {
 class HullFinder
 {
 public:
-    HullFinder();
+    HullFinder() { }
 
     static double IsLeft(DrPointF p0, DrPointF p1, DrPointF p2);
     static bool IsPointInsidePolygon(DrPointF v, const QVector<DrPointF> &polygon);

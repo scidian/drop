@@ -19,10 +19,10 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
-#include "helper.h"
 
 
 // Local Structs

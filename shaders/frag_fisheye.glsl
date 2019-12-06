@@ -79,6 +79,14 @@ highp float calculateRotationAngleInRadians(vec2 center_point, vec2 target_point
 
 
 //####################################################################################
+//##    Pseudo-random number, that is between 0.0 and 0.999999 inclusive
+//####################################################################################
+float random (vec2 xy) {
+    return fract(sin(dot(xy, vec2(11.2345, 81.456))) * 42758.12);
+}
+
+
+//####################################################################################
 //##    Main Shader Function
 //####################################################################################
 void main( void ) {
@@ -148,9 +156,11 @@ void main( void ) {
     //uv = lens_center + normalize(dist) * asin(radius) / (3.14159 * 0.5);                                                  // ASINR
     coords = rotate(vec2(uv.x, uv.y), lens_center, -rotation);
 
-    // Mix in overlay_color and lens texture
+    // Mix in overlay_color and lens texture, add some noise to start color to reduce appearance of rings
     vec4 lens = texture2D(u_texture, coords);
-    lens = vec4( mix(lens.rgb, start_color, color_tint * (1.0 - (radius / lens_size)*0.75)), 1.0 );
+    vec3 noise_color = start_color + vec3((random(coords) - 0.5) * 0.025);
+         noise_color = clamp(noise_color, 0.0, 1.0);
+    lens = vec4( mix(lens.rgb, noise_color, color_tint * (1.0 - (radius / lens_size)*0.75)), 1.0 );
 
 
     // ***** Bit Depth (0.0 to 256.0)

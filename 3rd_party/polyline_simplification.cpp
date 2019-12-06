@@ -14,7 +14,7 @@
 #include <utility>
 
 #include "3rd_party/polyline_simplification.h"
-#include "model/types/pointf.h"
+#include "library/types/pointf.h"
 
 
 double PerpendicularDistance(const DrPointF &pt, const DrPointF &line_start, const DrPointF &line_end) {

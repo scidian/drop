@@ -21,7 +21,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 //####################################################################################

@@ -4,11 +4,9 @@
 //
 //
 #include "3rd_party/hull_finder.h"
-#include "helper.h"
-#include "model/types/pointf.h"
+#include "library/helper.h"
+#include "library/types/pointf.h"
 
-
-HullFinder::HullFinder() { }
 
 double HullFinder::IsLeft(DrPointF p0, DrPointF p1, DrPointF p2) {
     return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);

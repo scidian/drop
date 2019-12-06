@@ -12,7 +12,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
 #include "editor/trees/tree_inspector.h"
-#include "helper.h"
+#include "library/helper.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"

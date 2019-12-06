@@ -96,7 +96,7 @@
 #include "editor/forms/form_expire.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 //####################################################################################

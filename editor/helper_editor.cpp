@@ -16,7 +16,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/helper_editor.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 namespace Dr {

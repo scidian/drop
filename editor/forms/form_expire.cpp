@@ -14,7 +14,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_expire.h"
 #include "editor/style/style.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 //####################################################################################

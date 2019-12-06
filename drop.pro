@@ -197,7 +197,9 @@ SOURCES += \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
-    helper.cpp \
+    library/helper.cpp \
+    library/types/point.cpp \
+    library/types/pointf.cpp \
     main.cpp \
     model/enums_model.cpp \
     model/project/project.cpp \
@@ -226,9 +228,7 @@ SOURCES += \
     model/properties/property_collision.cpp \
     model/settings/settings.cpp \
     model/settings/settings_component.cpp \
-    model/settings/settings_component_property.cpp \
-    model/types/point.cpp \
-    model/types/pointf.cpp
+    model/settings/settings_component_property.cpp
 
 
 HEADERS += \
@@ -316,7 +316,9 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
-    helper.h \
+    library/helper.h \
+    library/types/point.h \
+    library/types/pointf.h \
     model/constants_keys.h \
     model/enums_model_properties.h \
     model/enums_model_types.h \
@@ -333,9 +335,7 @@ HEADERS += \
     model/properties/property_collision.h \
     model/settings/settings.h \
     model/settings/settings_component.h \
-    model/settings/settings_component_property.h \
-    model/types/point.h \
-    model/types/pointf.h
+    model/settings/settings_component_property.h
 
 
 FORMS +=

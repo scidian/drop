@@ -9,8 +9,8 @@
 
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
+#include "library/helper.h"
 #include "model/enums_model_types.h"
-#include "helper.h"
 
 
 typedef std::map<Color_Scheme,   std::map<Window_Colors, QColor>> Color_Scheme_Map;

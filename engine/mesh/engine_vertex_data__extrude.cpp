@@ -25,9 +25,9 @@
 #include "editor/imaging/imaging.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-#include "helper.h"
-#include "model/types/point.h"
-#include "model/types/pointf.h"
+#include "library/helper.h"
+#include "library/types/point.h"
+#include "library/types/pointf.h"
 
 
 //####################################################################################

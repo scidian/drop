@@ -5,16 +5,12 @@
 //
 //
 //
-#include <QtMath>
-#include <QDebug>
-#include <QPainter>
-#include <QPixmap>
 #include <QMatrix4x4>
 
 #include "editor/imaging/imaging.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-#include "helper.h"
+#include "library/helper.h"
 
 
 //####################################################################################
