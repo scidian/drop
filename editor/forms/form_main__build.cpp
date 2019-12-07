@@ -59,11 +59,11 @@ void FormMain::initializeFormMain() {
     buildCentralWidgetMain();
     buildCentralWidgetEditor();
 
-    dockAdvisor =       Dr::buildDockAdvisor(  m_project, this, treeAdvisor);                                           // Build Advisor Dock
-    dockAssetsEditor =  Dr::buildDockAssets(   m_project, this, treeAssetEditor, "Assets",
+    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);                                           // Build Advisor Dock
+    dockAssetsEditor =  Dr::BuildDockAssets(   m_project, this, treeAssetEditor, "Assets",
                                              { DrType::Asset, DrType::Device, DrType::Effect, DrType::Font });          // Build Assets Dock
-    dockInspector =     Dr::buildDockInspector(m_project, this, treeInspector);                                         // Build Inspector Dock
-    Dr::initializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
+    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);                                         // Build Inspector Dock
+    Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 }
 
 
@@ -75,9 +75,9 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     Form_Main_Mode old_mode = m_current_mode;
     m_current_mode = new_mode;
 
-    Dr::lockDockWidth( dockAdvisor, dockAdvisor->width() );
-    Dr::lockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
-    Dr::lockDockWidth( dockInspector, dockInspector->width() );
+    Dr::LockDockWidth( dockAdvisor, dockAdvisor->width() );
+    Dr::LockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
+    Dr::LockDockWidth( dockInspector, dockInspector->width() );
 
     // ***** If we aren't loading for the first time, clear previous layout and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Form_Main_Mode::Program_Loading)) {
@@ -123,9 +123,9 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     QApplication::processEvents();
     Dr::SetDoneLoading(true);
 
-    Dr::unlockDockWidth( this, dockAdvisor );
-    Dr::unlockDockWidth( this, dockAssetsEditor );
-    Dr::unlockDockWidth( this, dockInspector );
+    Dr::UnlockDockWidth( this, dockAdvisor );
+    Dr::UnlockDockWidth( this, dockAssetsEditor );
+    Dr::UnlockDockWidth( this, dockInspector );
     buttonGroupModeSetChecked(int(new_mode));
 }
 

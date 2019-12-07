@@ -72,7 +72,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         DrAnimation *animation = getParentProject()->findAnimationFromKey(property->getValue().toLongLong());
         if (animation == nullptr) {
             pixmap = QPixmap(":/assets/gui_misc/empty_image.png").scaled(QSize(64, 64), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            pixmap = DrImaging::applySinglePixelFilter(Image_Filter_Type::Opacity, pixmap, -100);
+            pixmap = DrImaging::ApplySinglePixelFilter(Image_Filter_Type::Opacity, pixmap, -100);
         } else {
             pixmap = animation->getPixmapFromFirstFrame();
             pixmap = pixmap.scaled(QSize(frame_width, frame_height - 20), Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -87,7 +87,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
         delete_button->setObjectName("buttonImageMiniButton");
             QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
-            delete_icon = QPixmap::fromImage( DrImaging::colorizeImage(delete_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+            delete_icon = QPixmap::fromImage( DrImaging::ColorizeImage(delete_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
             delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
         delete_button->setFixedSize(19, 17);
         delete_button->setVisible(false);
@@ -107,7 +107,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         edit_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
         edit_button->setObjectName("buttonImageMiniButton");
             QPixmap edit_icon(":/assets/gui_misc/image_edit.png");
-            edit_icon = QPixmap::fromImage( DrImaging::colorizeImage(edit_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+            edit_icon = QPixmap::fromImage( DrImaging::ColorizeImage(edit_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
             edit_button->setIcon( QIcon(edit_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
         edit_button->setFixedSize(19, 17);
         edit_button->setVisible(false);

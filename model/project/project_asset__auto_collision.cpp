@@ -23,7 +23,7 @@ DrPropertyCollision autoCollisionShape(QPixmap pixmap) {
     // ***** Break pixmap into seperate images for each object in image
     QVector<QImage> images;
     QVector<QRect>  rects;
-    DrImaging::findObjectsInImage(pixmap.toImage(), images, rects, 0.9);
+    DrImaging::FindObjectsInImage(pixmap.toImage(), images, rects, 0.9);
 
     // ***** Creates a box polygon for use with complicated / not complicated enough images
     QVector<DrPointF> box;
@@ -40,7 +40,7 @@ DrPropertyCollision autoCollisionShape(QPixmap pixmap) {
             if (image.width() < 1 || image.height() < 1) continue;
 
             // Trace edge of image
-            QVector<DrPointF> points = DrImaging::traceImageOutline(image);
+            QVector<DrPointF> points = DrImaging::TraceImageOutline(image);
             double plus_one_pixel_percent_x = 1.0 + (1.50 / image.width());
             double plus_one_pixel_percent_y = 1.0 + (1.50 / image.height());
             for (auto &point : points) {

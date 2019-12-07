@@ -23,10 +23,6 @@
 #ifndef HULLFINDER_H
 #define HULLFINDER_H
 
-#include <QList>
-#include <QVector>
-#include <QMap>
-
 #include <math.h>
 #include <vector>
 
@@ -51,16 +47,16 @@ public:
     HullFinder() { }
 
     static double       IsLeft(DrPointF p0, DrPointF p1, DrPointF p2);
-    static bool         IsPointInsidePolygon(DrPointF v, const QVector<DrPointF> &polygon);
+    static bool         IsPointInsidePolygon(DrPointF v, const std::vector<DrPointF> &polygon);
     static bool         CheckEdgeIntersection(const DrPointF &p1, const DrPointF &p2, const DrPointF &p3, const DrPointF &p4);
-    static bool         CheckEdgeIntersection(const QVector<DrPointF> &hull, DrPointF curEdgeStart, DrPointF curEdgeEnd, DrPointF checkEdgeStart, DrPointF checkEdgeEnd);
-    static DrPointF     NearestInnerPoint(DrPointF edgeStart, DrPointF edgeEnd, const QVector<DrPointF> & points, const QVector<DrPointF> & hull, bool *found);
-    static QVector<DrPointF>    FindConvexHull(const QVector<DrPointF> &points);
-    static QVector<DrPointF>    FindConcaveHull(const QVector<DrPointF> &points, double N);
+    static bool         CheckEdgeIntersection(const std::vector<DrPointF> &hull, DrPointF curEdgeStart, DrPointF curEdgeEnd, DrPointF checkEdgeStart, DrPointF checkEdgeEnd);
+    static DrPointF     NearestInnerPoint(DrPointF edgeStart, DrPointF edgeEnd, const std::vector<DrPointF> & points, const std::vector<DrPointF> & hull, bool *found);
+    static std::vector<DrPointF>    FindConvexHull(const std::vector<DrPointF> &points);
+    static std::vector<DrPointF>    FindConcaveHull(const std::vector<DrPointF> &points, double N);
 
     // Functions Added by Stevinz
-    static void                 EnsureWindingOrientation(QVector<DrPointF> &points, Winding_Orientation direction_desired);
-    static Winding_Orientation  FindWindingOrientation(const QVector<DrPointF> &points);
+    static void                     EnsureWindingOrientation(std::vector<DrPointF> &points, Winding_Orientation direction_desired);
+    static Winding_Orientation      FindWindingOrientation(const std::vector<DrPointF> &points);
 };
 
 #endif // HULLFINDER_H

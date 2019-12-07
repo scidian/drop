@@ -403,5 +403,23 @@
         <file>assets/dr_images/decoration/sign_post_top.png</file>
         <file>assets/dr_images/shapes/arrow_3.png</file>
         <file>assets/dr_images/decoration/sign_2.png</file>
+        <file>assets/dr_images/decoration/sign_warning.png</file>
+        <file>assets/dr_images/basic/slope_left.png</file>
+        <file>assets/dr_images/basic/slope_right.png</file>
+        <file>assets/dr_images/ground/bricks_left.png</file>
+        <file>assets/dr_images/ground/bricks_right.png</file>
+        <file>assets/dr_images/ground/dirt_block.png</file>
+        <file>assets/dr_images/ground/dirt_left.png</file>
+        <file>assets/dr_images/ground/dirt_right.png</file>
+        <file>assets/dr_images/ground/ice_left.png</file>
+        <file>assets/dr_images/ground/ice_right.png</file>
+        <file>assets/dr_images/ground/sand_left.png</file>
+        <file>assets/dr_images/ground/sand_right.png</file>
+        <file>assets/dr_images/ground/stone_left.png</file>
+        <file>assets/dr_images/ground/stone_right.png</file>
+        <file>assets/dr_images/ground/tile_left.png</file>
+        <file>assets/dr_images/ground/tile_right.png</file>
+        <file>assets/dr_images/ground/wood_left.png</file>
+        <file>assets/dr_images/ground/wood_right.png</file>
     </qresource>
 </RCC>

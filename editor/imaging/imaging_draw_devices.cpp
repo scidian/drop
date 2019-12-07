@@ -28,7 +28,7 @@ namespace DrImaging
 //##    Draws a Rounded Square Icon with middle_icon in the middle for displaying
 //##    various devices / controls in the Editor
 //####################################################################################
-QPixmap drawFixedIcon(QPixmap &middle_icon) {
+QPixmap DrawFixedIcon(QPixmap &middle_icon) {
     QColor back_color =     Dr::GetColor(Window_Colors::Button_Light);
     QColor border_color =   Dr::GetColor(Window_Colors::Midlight);
     back_color.setAlphaF( 0.75 );
@@ -65,9 +65,9 @@ QPixmap drawFixedIcon(QPixmap &middle_icon) {
 //####################################################################################
 //##    Draws a DrDeviceType::Camera as a Pixmap
 //####################################################################################
-QPixmap drawCamera() {
+QPixmap DrawCamera() {
     QPixmap icon = QPixmap(":/assets/asset_types/camera.png");
-    return drawFixedIcon(icon);
+    return DrawFixedIcon(icon);
 }
 
 

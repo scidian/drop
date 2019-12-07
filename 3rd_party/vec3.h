@@ -52,11 +52,11 @@ struct Vec3 {
 
 
     // Common Vec3 Types
-    static Vec3 unit_x()        { return Vec3(float(1), float(0), float(0)); }
-    static Vec3 unit_y()        { return Vec3(float(0), float(1), float(0)); }
-    static Vec3 unit_z()        { return Vec3(float(0), float(0), float(1)); }
+    static Vec3 unitX()        { return Vec3(float(1), float(0), float(0)); }
+    static Vec3 unitY()        { return Vec3(float(0), float(1), float(0)); }
+    static Vec3 unitZ()        { return Vec3(float(0), float(0), float(1)); }
     static Vec3 zero()          { return Vec3(float(0), float(0), float(0)); }
-    static Vec3 unit_scale()    { return Vec3(float(1), float(1), float(1)); }
+    static Vec3 unitScale()    { return Vec3(float(1), float(1), float(1)); }
 
 
     //############################ Overload Operators - Additions
@@ -208,16 +208,16 @@ struct Vec3 {
         return (this->dot(v_)) / (this->cross(v_)).norm();
     }
 
-    float norm_squared() const {
+    float normSquared() const {
         return dot(*this);
     }
 
     Vec3 normalized() const {
-        return (*this) * (float(1)/std::sqrt(norm_squared()));
+        return (*this) * (float(1)/std::sqrt(normSquared()));
     }
 
     float normalize() {
-        float l = std::sqrt(norm_squared());
+        float l = std::sqrt(normSquared());
         float f = float(1) / l;
         x *= f;
         y *= f;
@@ -225,8 +225,8 @@ struct Vec3 {
         return l;
     }
 
-    float safe_normalize(const float eps = 1e-10f) {
-        float l = std::sqrt(norm_squared());
+    float safeNormalize(const float eps = 1e-10f) {
+        float l = std::sqrt(normSquared());
         if(l > eps){
             float f = float(1) / l;
             x *= f;
@@ -242,7 +242,7 @@ struct Vec3 {
     }
 
     float norm() const {
-        return std::sqrt(norm_squared());
+        return std::sqrt(normSquared());
     }
 
 

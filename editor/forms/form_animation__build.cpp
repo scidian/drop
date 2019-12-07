@@ -49,15 +49,15 @@ void FormAnimation::initializeFormAnimation() {
     // ***** Build docks, widgets, etc
     buildCentralWidget();
 
-    dockAdvisor =       Dr::buildDockAdvisor(  m_project, this, treeAdvisor);                                       // Build Advisor Dock
-    dockAssetsEditor =  Dr::buildDockAssets(   m_project, this, treeAssetEditor, "Images", { DrType::Image });      // Build Assets Dock
-    dockInspector =     Dr::buildDockInspector(m_project, this, treeInspector);                                     // Build Inspector Dock
-    Dr::initializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
+    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);                                       // Build Advisor Dock
+    dockAssetsEditor =  Dr::BuildDockAssets(   m_project, this, treeAssetEditor, "Images", { DrType::Image });      // Build Assets Dock
+    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);                                     // Build Inspector Dock
+    Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 
     // ***** Set up FormAnimation for first time
-    Dr::lockDockWidth( dockAdvisor, dockAdvisor->width() );
-    Dr::lockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
-    Dr::lockDockWidth( dockInspector, dockInspector->width() );
+    Dr::LockDockWidth( dockAdvisor, dockAdvisor->width() );
+    Dr::LockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
+    Dr::LockDockWidth( dockInspector, dockInspector->width() );
 
     this->setCentralWidget( widgetCentral );
     buildAssetTree();
@@ -67,9 +67,9 @@ void FormAnimation::initializeFormAnimation() {
 
     //buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
 
-    Dr::unlockDockWidth( this, dockAdvisor );
-    Dr::unlockDockWidth( this, dockAssetsEditor );
-    Dr::unlockDockWidth( this, dockInspector );
+    Dr::UnlockDockWidth( this, dockAdvisor );
+    Dr::UnlockDockWidth( this, dockAssetsEditor );
+    Dr::UnlockDockWidth( this, dockInspector );
 }
 
 

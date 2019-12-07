@@ -57,50 +57,50 @@ enum class Flood_Fill_Type {
 //############################
 namespace DrImaging {
 
-    // Basic Drawing
-    void    copyImage(QImage &dest_image, QImage &source_image, QRect rect) ;
-    void    fillImage(QImage &image, QColor color, QRect rect);
+    // ***** Basic Drawing
+    void    CopyImage(QImage &dest_image, QImage &source_image, QRect rect) ;
+    void    FillImage(QImage &image, QColor color, QRect rect);
 
 
-    // Misc Image Functions
-    QColor              averageColor(const QPixmap &pixmap, bool screen_shot = false);
-    QVector<QRgb*>      getScanLines(QImage &image);
-    float*              imageBitsAsFloat(const QImage &from_image);
-    QVector<DrPointF>   outlinePointList(const QImage &from_image);
-    QVector<DrPointF>   traceImageOutline(const QImage &from_image);
+    // ***** Misc Image Functions
+    QColor              AverageColor(const QPixmap &pixmap, bool screen_shot = false);
+    QVector<QRgb*>      GetScanLines(QImage &image);
+    float*              ImageBitsAsFloat(const QImage &from_image);
+    QVector<DrPointF>   OutlinePointList(const QImage &from_image);
+    QVector<DrPointF>   TraceImageOutline(const QImage &from_image);
 
 
-    // Filters
-    QPixmap applySinglePixelFilter( Image_Filter_Type filter, const QPixmap &from_pixmap, int value);
-    QImage  applySinglePixelFilter( Image_Filter_Type filter, const QImage  &from_image,  int value);
+    // ***** Filters
+    QPixmap ApplySinglePixelFilter( Image_Filter_Type filter, const QPixmap &from_pixmap, int value);
+    QImage  ApplySinglePixelFilter( Image_Filter_Type filter, const QImage  &from_image,  int value);
 
-    QPixmap applyPixelation( const QPixmap &from_pixmap, QPointF data_pair );
-    QImage  applyPixelation( const QImage  &from_image,  QPointF data_pair );
+    QPixmap ApplyPixelation( const QPixmap &from_pixmap, QPointF data_pair );
+    QImage  ApplyPixelation( const QImage  &from_image,  QPointF data_pair );
 
-    QImage  colorizeImage(const QImage &from_image, QColor new_color);
+    QImage  ColorizeImage(const QImage &from_image, QColor new_color);
+    QImage  CheckOpacityTolerance(const QImage &from_image);
 
+    // ***** Draw Images for DrEffects
+    QPixmap DrawFibonacci(QColor background_color, QColor pen_color);
 
-    // Draw Images for DrEffects
-    QPixmap drawFibonacci(QColor background_color, QColor pen_color);
-
-    QPixmap drawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask);
-    QPixmap drawFisheye(QColor color);
-    QPixmap drawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
-    QPixmap drawMirror(QColor top_color, QColor bottom_color);
-    QPixmap drawSwirl(QColor top_color, double angle);
-    QPixmap drawWater(QColor top_color, QColor bottom_color);
+    QPixmap DrawFire(QColor color_1, QColor color_2, QColor smoke, Fire_Mask mask);
+    QPixmap DrawFisheye(QColor color);
+    QPixmap DrawLight(QColor color, int diameter, float cone_start, float cone_end, float intensity, float blur);
+    QPixmap DrawMirror(QColor top_color, QColor bottom_color);
+    QPixmap DrawSwirl(QColor top_color, double angle);
+    QPixmap DrawWater(QColor top_color, QColor bottom_color);
 
 
     // Draw Images for DrDevices
-    QPixmap drawFixedIcon(QPixmap &middle_icon);
-    QPixmap drawCamera();
+    QPixmap DrawFixedIcon(QPixmap &middle_icon);
+    QPixmap DrawCamera();
 
 
-    // Object Counting / Fill (a la Ravens Project)
-    QImage  blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
-    void    fillBorder(QImage &image, QColor fill_color, QRect rect);
-    int     findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert = true);
-    QImage  floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
+    // ***** Object Counting / Fill (a la Ravens Project)
+    QImage  BlackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
+    void    FillBorder(QImage &image, QColor fill_color, QRect rect);
+    int     FindObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert = true);
+    QImage  FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
                       int &flood_pixel_count, QRect &flood_rect);
 
 

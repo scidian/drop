@@ -22,14 +22,14 @@ enum class DrType;
 namespace Dr {
 
     // Building Shared Dock Widgets
-    QDockWidget*        buildDockAdvisor(   DrProject *project, IEditorRelay *editor_relay, TreeAdvisor *&tree_advisor);
-    QDockWidget*        buildDockAssets(    DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types);
-    QDockWidget*        buildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) ;
+    QDockWidget*        BuildDockAdvisor(   DrProject *project, IEditorRelay *editor_relay, TreeAdvisor *&tree_advisor);
+    QDockWidget*        BuildDockAssets(    DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types);
+    QDockWidget*        BuildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) ;
 
     // Handling Shared Dock Widgets
-    void        initializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector);
-    void        lockDockWidth(QDockWidget *&dock, int width);
-    void        unlockDockWidth(QMainWindow *window, QDockWidget *&dock);
+    void        InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector);
+    void        LockDockWidth(QDockWidget *&dock, int width);
+    void        UnlockDockWidth(QMainWindow *window, QDockWidget *&dock);
 
 
 }   // namespace Dr

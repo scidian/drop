@@ -109,6 +109,8 @@ constexpr long c_key_image_cross_flat =             369;         // 128 x 128   
 constexpr long c_key_image_cross_stripes =          370;         // 128 x 128    Cross Stripes
 constexpr long c_key_image_half_circle_1 =          371;         // 128 x 128    Half Circle 1
 constexpr long c_key_image_half_circle_2 =          372;         // 128 x 128    Half Circle 2
+constexpr long c_key_image_slope_left =             373;         // 128 x 128    Slope Left
+constexpr long c_key_image_slope_right =            374;         // 128 x 128    Slope Right
 
 
 //####################################################################################
@@ -239,24 +241,39 @@ constexpr long c_key_image_block_lock =             617;        // 128 x 128    
 constexpr long c_key_image_box_1 =                  618;        // 128 x 128    Box 1
 constexpr long c_key_image_box_2 =                  619;        // 128 x 128    Box 2
 constexpr long c_key_image_bricks =                 620;        // 128 x 128    Bricks
-constexpr long c_key_image_dirt =                   621;        // 128 x 128    Dirt
-constexpr long c_key_image_ice =                    622;        // 128 x 128    Ice
-constexpr long c_key_image_sand =                   623;        // 128 x 128    Sand
-constexpr long c_key_image_stone =                  624;        // 128 x 128    Stone
-constexpr long c_key_image_tile =                   625;        // 128 x 128    Tile
-constexpr long c_key_image_water =                  626;        // 128 x 128    Water
-constexpr long c_key_image_water_top =              627;        // 128 x 128    Water Top
-constexpr long c_key_image_wood =                   628;        // 128 x 128    Wood
-constexpr long c_key_image_wall_1 =                 629;        // 128 x 128    Background Wall 1
-constexpr long c_key_image_wall_2 =                 630;        // 128 x 128    Background Wall 2
-constexpr long c_key_image_window =                 631;        // 128 x 128    Window
-constexpr long c_key_image_bridge_left =            632;        // 128 x 128    Bridge Left
-constexpr long c_key_image_bridge_mid =             633;        // 128 x 128    Bridge Middle
-constexpr long c_key_image_bridge_right =           634;        // 128 x 128    Bridge Right
-constexpr long c_key_image_platform_left =          635;        // 128 x 128    Platform Left
-constexpr long c_key_image_platform_mid =           636;        // 128 x 128    Platform Middle
-constexpr long c_key_image_platform_right =         637;        // 128 x 128    Platform Right
-constexpr long c_key_image_logs =                   638;        // 128 x 128    Bridge Logs
+constexpr long c_key_image_bricks_left =            621;        // 128 x 128    Bricks
+constexpr long c_key_image_bricks_right =           622;        // 128 x 128    Bricks
+constexpr long c_key_image_dirt =                   623;        // 128 x 128    Dirt
+constexpr long c_key_image_dirt_block =             624;        // 128 x 128    Dirt
+constexpr long c_key_image_dirt_left =              625;        // 128 x 128    Dirt
+constexpr long c_key_image_dirt_right =             626;        // 128 x 128    Dirt
+constexpr long c_key_image_ice =                    627;        // 128 x 128    Ice
+constexpr long c_key_image_ice_left =               628;        // 128 x 128    Ice
+constexpr long c_key_image_ice_right =              629;        // 128 x 128    Ice
+constexpr long c_key_image_sand =                   630;        // 128 x 128    Sand
+constexpr long c_key_image_sand_left =              631;        // 128 x 128    Sand
+constexpr long c_key_image_sand_right =             632;        // 128 x 128    Sand
+constexpr long c_key_image_stone =                  633;        // 128 x 128    Stone
+constexpr long c_key_image_stone_left =             634;        // 128 x 128    Stone
+constexpr long c_key_image_stone_right =            635;        // 128 x 128    Stone
+constexpr long c_key_image_tile =                   636;        // 128 x 128    Tile
+constexpr long c_key_image_tile_left =              637;        // 128 x 128    Tile
+constexpr long c_key_image_tile_right =             638;        // 128 x 128    Tile
+constexpr long c_key_image_water =                  639;        // 128 x 128    Water
+constexpr long c_key_image_water_top =              640;        // 128 x 128    Water Top
+constexpr long c_key_image_wood =                   641;        // 128 x 128    Wood
+constexpr long c_key_image_wood_left =              642;        // 128 x 128    Wood
+constexpr long c_key_image_wood_right =             643;        // 128 x 128    Wood
+constexpr long c_key_image_wall_1 =                 644;        // 128 x 128    Background Wall 1
+constexpr long c_key_image_wall_2 =                 645;        // 128 x 128    Background Wall 2
+constexpr long c_key_image_window =                 646;        // 128 x 128    Window
+constexpr long c_key_image_bridge_left =            647;        // 128 x 128    Bridge Left
+constexpr long c_key_image_bridge_mid =             648;        // 128 x 128    Bridge Middle
+constexpr long c_key_image_bridge_right =           649;        // 128 x 128    Bridge Right
+constexpr long c_key_image_platform_left =          650;        // 128 x 128    Platform Left
+constexpr long c_key_image_platform_mid =           651;        // 128 x 128    Platform Middle
+constexpr long c_key_image_platform_right =         652;        // 128 x 128    Platform Right
+constexpr long c_key_image_logs =                   653;        // 128 x 128    Bridge Logs
 
 
 //####################################################################################
@@ -281,7 +298,8 @@ constexpr long c_key_image_sign_1 =                 716;        // 128 x 128    
 constexpr long c_key_image_sign_2 =                 717;        // 128 x 128    Sign Arrow
 constexpr long c_key_image_sign_post =              718;        // 128 x 128    Sign Post
 constexpr long c_key_image_sign_post_top =          719;        // 128 x 128    Sign Post Top
-constexpr long c_key_image_sun =                    720;        // 128 x 128    Sun
+constexpr long c_key_image_sign_warning =           720;        // 128 x 128    Sign Warning
+constexpr long c_key_image_sun =                    721;        // 128 x 128    Sun
 
 //##    Items                            750-799
 

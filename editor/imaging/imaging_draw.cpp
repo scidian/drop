@@ -25,9 +25,9 @@ namespace DrImaging
 //####################################################################################
 //##    Copies rect from source_image to dest_image
 //####################################################################################
-void copyImage(QImage &dest_image, QImage &source_image, QRect rect) {
-    QVector<QRgb*> dest_lines =   getScanLines(dest_image);
-    QVector<QRgb*> source_lines = getScanLines(source_image);
+void CopyImage(QImage &dest_image, QImage &source_image, QRect rect) {
+    QVector<QRgb*> dest_lines =   GetScanLines(dest_image);
+    QVector<QRgb*> source_lines = GetScanLines(source_image);
 
     for (int y = rect.y(); y < rect.y() + rect.height(); ++y) {
         for (int x = rect.x(); x < rect.x() + rect.width(); ++x) {
@@ -39,8 +39,8 @@ void copyImage(QImage &dest_image, QImage &source_image, QRect rect) {
 //####################################################################################
 //##    Fills image with color inside rect
 //####################################################################################
-void fillImage(QImage &image, QColor color, QRect rect) {
-    QVector<QRgb*> lines = getScanLines(image);
+void FillImage(QImage &image, QColor color, QRect rect) {
+    QVector<QRgb*> lines = GetScanLines(image);
 
     for (int y = rect.y(); y < rect.y() + rect.height(); ++y) {
         for (int x = rect.x(); x < rect.x() + rect.width(); ++x) {

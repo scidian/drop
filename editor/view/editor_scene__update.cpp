@@ -249,7 +249,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
                 QColor sm = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt());
                 int  mask = item->getThing()->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
-                item->setPixmap( DrImaging::drawFire(cs, ce, sm, static_cast<Fire_Mask>(mask)) );
+                item->setPixmap( DrImaging::DrawFire(cs, ce, sm, static_cast<Fire_Mask>(mask)) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
@@ -259,7 +259,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
 
             case Properties::Thing_Fisheye_Color: {
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
-                item->setPixmap( DrImaging::drawFisheye(ce) );
+                item->setPixmap( DrImaging::DrawFisheye(ce) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 item->applyFilters();
@@ -276,7 +276,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 float  cone_end =    item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toFloat();
                 float  intensity =   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
                 float  blur =        item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-                item->setPixmap( DrImaging::drawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
+                item->setPixmap( DrImaging::DrawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 break;
@@ -286,7 +286,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             case Properties::Thing_Mirror_End_Color: {
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
-                item->setPixmap( DrImaging::drawMirror(cs, ce) );
+                item->setPixmap( DrImaging::DrawMirror(cs, ce) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
@@ -298,7 +298,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             case Properties::Thing_Swirl_Angle: {
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
                 float  a =                   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
-                item->setPixmap( DrImaging::drawSwirl(cs, static_cast<double>(a)) );
+                item->setPixmap( DrImaging::DrawSwirl(cs, static_cast<double>(a)) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
@@ -310,7 +310,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             case Properties::Thing_Water_End_Color: {
                 QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
                 QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
-                item->setPixmap( DrImaging::drawWater(cs, ce) );
+                item->setPixmap( DrImaging::DrawWater(cs, ce) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );

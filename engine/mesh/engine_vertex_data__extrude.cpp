@@ -37,8 +37,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
     // ***** Break pixmap into seperate images for each object in image
     QVector<QImage> images;
     QVector<QRect>  rects;
-    DrImaging::findObjectsInImage(pixmap.toImage(), images, rects, 0.9);
-    ///images.push_back( DrImaging::blackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
+    DrImaging::FindObjectsInImage(pixmap.toImage(), images, rects, 0.9);
+    ///images.push_back( DrImaging::BlackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     // ***** Go through each image (object) and add triangles for it
     for (int image_number = 0; image_number < images.count(); image_number++) {
@@ -46,7 +46,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         if (image.width() < 1 || image.height() < 1) continue;
 
         // ***** Trace edge of image
-        QVector<DrPointF> points = DrImaging::traceImageOutline(image);
+        QVector<DrPointF> points = DrImaging::TraceImageOutline(image);
 
         // Smooth point list
         points = smoothPoints( points, 5, 5.0, 0.5 );
@@ -55,7 +55,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
 
         // Check winding
-        HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
+        HullFinder::EnsureWindingOrientation(points.toStdVector(), Winding_Orientation::CounterClockwise);
 
         // Old Way of Simplifying Points on Similar Slopes
         ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
@@ -64,19 +64,19 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
         // ***** Copy image and finds holes as seperate outlines
         QImage holes = image.copy(rects[image_number]);
-        DrImaging::fillBorder(holes, c_color_white, holes.rect());          // Ensures only holes are left as black spots
+        DrImaging::FillBorder(holes, c_color_white, holes.rect());          // Ensures only holes are left as black spots
 
         // Breaks holes into seperate images for each Hole
         QVector<QImage> hole_images;
         QVector<QRect>  hole_rects;
-        DrImaging::findObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
+        DrImaging::FindObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
 
         // Go through each image (Hole) create list for it
         QVector<QVector<DrPointF>> hole_list;
         for (int hole_number = 0; hole_number < hole_images.count(); hole_number++) {
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
-            QVector<DrPointF> one_hole = DrImaging::traceImageOutline(hole);
+            QVector<DrPointF> one_hole = DrImaging::TraceImageOutline(hole);
             // Add in sub image offset to points
             for (auto &point : one_hole) {
                 point.x += rects[image_number].x();

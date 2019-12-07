@@ -22,7 +22,7 @@ namespace Dr {
 //####################################################################################
 //##    Builds Advisor Dock
 //####################################################################################
-QDockWidget* buildDockAdvisor(DrProject *project, IEditorRelay *editor_relay, TreeAdvisor *&tree_advisor) {
+QDockWidget* BuildDockAdvisor(DrProject *project, IEditorRelay *editor_relay, TreeAdvisor *&tree_advisor) {
     QSizePolicy size_policy_less(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy_less.setHorizontalStretch(1);
     size_policy_less.setVerticalStretch(1);
@@ -72,7 +72,7 @@ QDockWidget* buildDockAdvisor(DrProject *project, IEditorRelay *editor_relay, Tr
 //####################################################################################
 //##    Builds Assets Dock
 //####################################################################################
-QDockWidget* buildDockAssets(DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types) {
+QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types) {
     QSizePolicy size_policy_preferred_vertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy_preferred_vertical.setHorizontalStretch(0);
     size_policy_preferred_vertical.setVerticalStretch(1);
@@ -125,7 +125,7 @@ QDockWidget* buildDockAssets(DrProject *project, IEditorRelay *editor_relay, Tre
 //####################################################################################
 //##    Builds Inspector Dock
 //####################################################################################
-QDockWidget* buildDockInspector(DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) {
+QDockWidget* BuildDockInspector(DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) {
     QSizePolicy size_policy_preferred_vertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy_preferred_vertical.setHorizontalStretch(0);
     size_policy_preferred_vertical.setVerticalStretch(1);

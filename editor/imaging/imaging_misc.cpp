@@ -30,7 +30,7 @@ namespace DrImaging
 //####################################################################################
 //##    Returns array of scanlines that are a direct access to QImage pixels
 //####################################################################################
-QVector<QRgb*> getScanLines(QImage &image) {
+QVector<QRgb*> GetScanLines(QImage &image) {
     QVector<QRgb*> lines;
 
     if (image.format() != QImage::Format::Format_ARGB32)
@@ -55,7 +55,7 @@ QVector<QRgb*> getScanLines(QImage &image) {
 //####################################################################################
 //##    Returns average color of a Pixmap
 //####################################################################################
-QColor averageColor(const QPixmap &pixmap, bool screen_shot) {
+QColor AverageColor(const QPixmap &pixmap, bool screen_shot) {
     QPixmap  one(20, 20);
              one.fill(Qt::transparent);
     QPainter painter(&one);
@@ -97,9 +97,9 @@ QColor averageColor(const QPixmap &pixmap, bool screen_shot) {
 //####################################################################################
 //##    Returns an array of bits from an Image as aRgb float values
 //####################################################################################
-float* imageBitsAsFloat(const QImage &from_image) {
+float* ImageBitsAsFloat(const QImage &from_image) {
     QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
+    QVector<QRgb*> lines = GetScanLines(image);
 
     // Method #1
     ///float *out = static_cast<float*>( malloc(static_cast<std::size_t>(image.width() * image.height()) * sizeof(float)) );

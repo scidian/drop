@@ -15,11 +15,11 @@ namespace Dr {
 //####################################################################################
 //##    Keeps docks from changing width while QMainWindow is changed around
 //####################################################################################
-void lockDockWidth(QDockWidget *&dock, int width) {
+void LockDockWidth(QDockWidget *&dock, int width) {
     dock->setFixedWidth( width );
 }
 
-void unlockDockWidth(QMainWindow *window, QDockWidget *&dock) {
+void UnlockDockWidth(QMainWindow *window, QDockWidget *&dock) {
     int pre_width = dock->width();
     dock->setMaximumSize(622, QWIDGETSIZE_MAX);
 

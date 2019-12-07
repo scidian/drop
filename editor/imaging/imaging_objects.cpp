@@ -32,9 +32,9 @@ namespace DrImaging
 //##        NORMAL  (inverse == false): transparent areas are black, objects are white
 //##        INVERSE (inverse == true) : transparent areas are white, objects are black
 //####################################################################################
-QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse) {
+QImage BlackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse) {
     QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
+    QVector<QRgb*> lines = GetScanLines(image);
 
     unsigned int color1, color2;
     if (inverse) {
@@ -66,16 +66,16 @@ QImage blackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, 
 #define FLOOD_WAS_PROCESSED         1
 #define FLOOD_MARKED_FOR_PROCESS    2
 
-QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
+QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
                  int &flood_pixel_count, QRect &flood_rect) {
     flood_pixel_count = 0;
 
     // Get scan lines
     QImage flood =      from_image.copy();
     QImage processed =  from_image.copy();
-    QVector<QRgb*> image_lines =     getScanLines(from_image);
-    QVector<QRgb*> flood_lines =     getScanLines(flood);
-    QVector<QRgb*> processed_lines = getScanLines(processed);
+    QVector<QRgb*> image_lines =     GetScanLines(from_image);
+    QVector<QRgb*> flood_lines =     GetScanLines(flood);
+    QVector<QRgb*> processed_lines = GetScanLines(processed);
 
     // Check if start point is in range    
     flood_rect = QRect(0, 0, 0, 0);
@@ -166,8 +166,8 @@ QImage floodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
 //##    Fill border
 //##        Traces Border of 'rect' and makes sure to fill in any c_color_black areas with fill_color
 //####################################################################################
-void fillBorder(QImage &image, QColor fill_color, QRect rect) {
-    QVector<QRgb*> lines = DrImaging::getScanLines(image);
+void FillBorder(QImage &image, QColor fill_color, QRect rect) {
+    QVector<QRgb*> lines = DrImaging::GetScanLines(image);
     QRect  fill_rect;
     int    fill_qty;
 
@@ -175,10 +175,10 @@ void fillBorder(QImage &image, QColor fill_color, QRect rect) {
     int y2 = rect.y() + rect.height() - 1;
     for (int x = rect.x(); x < rect.x() + rect.width(); x++) {
         if (lines[y1][x] == c_color_black) {
-            DrImaging::floodFill(image, x, y1, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            DrImaging::FloodFill(image, x, y1, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
         if (lines[y2][x] == c_color_black) {
-            DrImaging::floodFill(image, x, y2, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            DrImaging::FloodFill(image, x, y2, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
     }
 
@@ -186,10 +186,10 @@ void fillBorder(QImage &image, QColor fill_color, QRect rect) {
     int x2 = rect.x() + rect.width() - 1;
     for (int y = rect.y(); y < rect.y() + rect.height(); y++) {
         if (lines[y][x1] == c_color_black) {
-            DrImaging::floodFill(image, x1, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            DrImaging::FloodFill(image, x1, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
         if (lines[y][x2] == c_color_black) {
-            DrImaging::floodFill(image, x2, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            DrImaging::FloodFill(image, x2, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
     }
 }
@@ -202,11 +202,11 @@ void fillBorder(QImage &image, QColor fill_color, QRect rect) {
 //##            Black where around the ouside of of the object, and the object itself is white.
 //##        Rects of images are returned in 'rects'
 //####################################################################################
-int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert) {
+int FindObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert) {
     QImage black_white;
-    if (convert) black_white = blackAndWhiteFromAlpha(image, alpha_tolerance, true);
+    if (convert) black_white = BlackAndWhiteFromAlpha(image, alpha_tolerance, true);
     else         black_white = image;
-    QVector<QRgb*>  lines = getScanLines(black_white);
+    QVector<QRgb*>  lines = GetScanLines(black_white);
     int object_count = 0;
 
     // Loop through every pixel in image, if we find a spot that has an object,
@@ -216,7 +216,7 @@ int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
             if (lines[y][x] == c_color_black) {
                 QRect  rect;
                 int    flood_pixel_count;
-                QImage flood_fill = floodFill(black_white, x, y, c_color_white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
+                QImage flood_fill = FloodFill(black_white, x, y, c_color_white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
                 if (flood_pixel_count > 1) {
                     rects.push_back( rect );
                     images.push_back( flood_fill );
@@ -232,7 +232,7 @@ int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
 //####################################################################################
 //##    Returns a clockwise list of points representing an alpha outline of an image
 //##        !!!!! #NOTE: Image passed in should be black and white,
-//##                     probably from DrImageing::blackAndWhiteFromAlpha()
+//##                     probably from DrImageing::BlackAndWhiteFromAlpha()
 //####################################################################################
 #define TRACE_NOT_BORDER            0           // Pixels that are not near the edge
 #define TRACE_START_PIXEL           1           // Starting pixel
@@ -240,12 +240,12 @@ int findObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
 #define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
 #define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
 
-QVector<DrPointF> traceImageOutline(const QImage &from_image) {
+QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
     // Initialize images
     QImage image = from_image;
     QImage processed =  from_image.copy();
-    QVector<QRgb*> image_lines =        getScanLines(image);
-    QVector<QRgb*> processed_lines =    getScanLines(processed);
+    QVector<QRgb*> image_lines =        GetScanLines(image);
+    QVector<QRgb*> processed_lines =    GetScanLines(processed);
     int border_pixel_count = 0;
 
     // Initialize point array, verify image size
@@ -371,11 +371,11 @@ QVector<DrPointF> traceImageOutline(const QImage &from_image) {
 //####################################################################################
 //##    Returns a mostly random list of points of possible edges of an image
 //##        !!!!! #NOTE: Image passed in should be black and white
-//##                     (i.e. from DrImageing::blackAndWhiteFromAlpha())
+//##                     (i.e. from DrImageing::BlackAndWhiteFromAlpha())
 //####################################################################################
-QVector<DrPointF> outlinePointList(const QImage &from_image) {
+QVector<DrPointF> OutlinePointList(const QImage &from_image) {
     QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
+    QVector<QRgb*> lines = GetScanLines(image);
 
     QVector<DrPointF> points;
     points.clear();

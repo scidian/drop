@@ -213,6 +213,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                     new_object->copyEntitySettings(drthing);
                     new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, QPointF(new_x, new_y));
                     new_object->setZOrderWithSub(new_z, Z_Insert::At_Position, sub_z + 1);
+                    this->updateItemZValues();
 
                     list_new_items.append( this->addItemToSceneFromThing(new_object) );
                     break;

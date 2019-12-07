@@ -39,15 +39,17 @@ public:
     bool        operator==(const DrPointF &other) const;
 
     // Functions
-    double DotProduct(const DrPointF &other) const;
-    double DistanceSquared(const DrPointF &to) const;
-    double Distance(const DrPointF &to) const;
-    double Distance(const DrPointF &segment_start, const DrPointF &segment_end) const;
-    double DecisionDistance(const std::vector<DrPointF> &points) const;
+    double      dotProduct(const DrPointF &other) const;
+    double      distanceSquared(const DrPointF &to) const;
+    double      distance(const DrPointF &to) const;
+    double      distance(const DrPointF &segment_start, const DrPointF &segment_end) const;
+    double      decisionDistance(const std::vector<DrPointF> &points) const;
 
     // Conversions
-    DrPoint toPoint();
+    DrPoint     toPoint();
 };
+
+
 
 
 #endif // DR_POINT_F_H

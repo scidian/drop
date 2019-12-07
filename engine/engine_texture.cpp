@@ -25,13 +25,13 @@ DrEngineTexture::DrEngineTexture(QPixmap &from_pixmap) {
 void DrEngineTexture::loadTexture(QPixmap &from_pixmap) {
 
     // Calculate and save average color of texture
-    m_average_color = DrImaging::averageColor(from_pixmap);
+    m_average_color = DrImaging::AverageColor(from_pixmap);
 
     // Load image - #NOTE: QImage is mirrored vertically to account for the fact that OpenGL and QImage use opposite directions for the y axis
     QImage image = from_pixmap.toImage().mirrored();
     image = image.convertToFormat( QImage::Format_ARGB32 );                                             // Convert image to a standard format
     ///image = image.convertToFormat( QImage::Format_ARGB32_Premultiplied );                            // Doesn't work right for our textures, causes white outlines
-    image = DrImaging::applySinglePixelFilter( Image_Filter_Type::Premultiplied_Alpha, image, 0 );      // Create alpha premultiplied texture
+    image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Premultiplied_Alpha, image, 0 );      // Create alpha premultiplied texture
 
     // Create new texture
     m_texture = new QOpenGLTexture( image );

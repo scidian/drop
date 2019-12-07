@@ -430,7 +430,7 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
 
     // ***** Grab Icon to use, colorize it to the current palette
     QPixmap text_icon( ":/assets/inspector_icons/" + icon );
-    text_icon = QPixmap::fromImage( DrImaging::colorizeImage(text_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+    text_icon = QPixmap::fromImage( DrImaging::ColorizeImage(text_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
 
     // Alternate method of colorizing
     ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();

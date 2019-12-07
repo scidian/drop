@@ -107,7 +107,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
             world_item = new QTreeWidgetItem(this);
             last_added = world_item;
             icon_image = QPixmap(":/assets/tree_icons/tree_world.png").toImage();
-            world_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
+            world_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::ColorizeImage(icon_image, icon_color))));
             world_item->setText(COLUMN_TITLE, "World: " + world->getName());
             world_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(world->getKey()));
             world_item->setExpanded( world->getExpanded() );
@@ -124,7 +124,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                 stage_item = new QTreeWidgetItem(world_item);
                 last_added = stage_item;
                 icon_image = QPixmap(":/assets/tree_icons/tree_stage.png").toImage();
-                stage_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
+                stage_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::ColorizeImage(icon_image, icon_color))));
                 stage_item->setText(COLUMN_TITLE, "Stage: " + stage->getName());
                 stage_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(stage->getKey()));                
                 stage_item->setExpanded( stage->getExpanded() );
@@ -157,7 +157,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                         case DrThingType::Swirl:     icon_image = QPixmap(":/assets/tree_icons/tree_swirl.png").toImage();              break;
                         case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();              break;
                     }
-                    thing_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::colorizeImage(icon_image, icon_color))));
+                    thing_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(DrImaging::ColorizeImage(icon_image, icon_color))));
                     thing_item->setText(COLUMN_TITLE, thing->getName());
                     thing_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(thing->getKey()));
                 }

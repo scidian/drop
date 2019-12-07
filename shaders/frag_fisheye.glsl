@@ -158,7 +158,7 @@ void main( void ) {
 
     // Mix in overlay_color and lens texture, add some noise to start color to reduce appearance of rings
     vec4 lens = texture2D(u_texture, coords);
-    vec3 noise_color = start_color + vec3((random(coords) - 0.5) * 0.025);
+    vec3 noise_color = start_color + vec3((random(coords) - 0.5) * 0.05);
          noise_color = clamp(noise_color, 0.0, 1.0);
     lens = vec4( mix(lens.rgb, noise_color, color_tint * (1.0 - (radius / lens_size)*0.75)), 1.0 );
 

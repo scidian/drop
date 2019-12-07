@@ -16,7 +16,7 @@ namespace Dr {
 //####################################################################################
 //##    Lays out docks for the first time
 //####################################################################################
-void initializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector) {
+void InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector) {
     // Starting width, if screen size is small, decrease starting width of assets to make more room (to single column)
     if (window->geometry().width() < 1300) {
         dock_assets->setFixedWidth( 124 );

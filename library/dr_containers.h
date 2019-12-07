@@ -21,11 +21,19 @@ namespace Dr {
 //####################################################################################
 //##    List Functions
 //############################
-template<class T> bool ListContains(std::list<T> &my_list, T variable_to_check) {
+template<class T> bool ListContains(const std::list<T> &my_list, T variable_to_check) {
     bool found = (std::find(my_list.begin(), my_list.end(), variable_to_check) != my_list.end());
     return found;
 }
 
+
+//####################################################################################
+//##    Vector Functions
+//############################
+template<class T> bool VectorContains(const std::vector<T> &my_vector, T variable_to_check) {
+    bool found = (std::find(my_vector.begin(), my_vector.end(), variable_to_check) != my_vector.end());
+    return found;
+}
 
 
 

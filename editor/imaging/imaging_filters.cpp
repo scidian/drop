@@ -28,13 +28,13 @@ namespace DrImaging
 //##    Loops through image and changes one pixel at a time based on a
 //##    premultiplied table
 //####################################################################################
-QPixmap applySinglePixelFilter(Image_Filter_Type filter, const QPixmap &from_pixmap, int value) {
-    return QPixmap::fromImage(applySinglePixelFilter(filter, from_pixmap.toImage(), value));
+QPixmap ApplySinglePixelFilter(Image_Filter_Type filter, const QPixmap &from_pixmap, int value) {
+    return QPixmap::fromImage(ApplySinglePixelFilter(filter, from_pixmap.toImage(), value));
 }
 
-QImage applySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image, int value) {
+QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image, int value) {
     QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
+    QVector<QRgb*> lines = GetScanLines(image);
 
     int table[ 256 ];
     for ( int i = 0; i < 256; ++i ) {
@@ -103,13 +103,13 @@ QImage applySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image
 //####################################################################################
 //##    Pixelates Image
 //####################################################################################
-QPixmap applyPixelation(const QPixmap &from_pixmap, QPointF data_pair) {
-    return QPixmap::fromImage( applyPixelation(from_pixmap.toImage(), data_pair ));
+QPixmap ApplyPixelation(const QPixmap &from_pixmap, QPointF data_pair) {
+    return QPixmap::fromImage( ApplyPixelation(from_pixmap.toImage(), data_pair ));
 }
 
-QImage applyPixelation(const QImage &from_image, QPointF data_pair) {
+QImage ApplyPixelation(const QImage &from_image, QPointF data_pair) {
     QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
+    QVector<QRgb*> lines = GetScanLines(image);
 
     for (int y = 0; y < image.height(); ++y) {
         for (int x = 0; x < image.width(); ++x) {
@@ -129,9 +129,9 @@ QImage applyPixelation(const QImage &from_image, QPointF data_pair) {
 //####################################################################################
 //##    Replace all colors in image to new_color
 //####################################################################################
-QImage colorizeImage(const QImage &from_image, QColor new_color) {
+QImage ColorizeImage(const QImage &from_image, QColor new_color) {
     QImage image = from_image;
-    QVector<QRgb*> lines = getScanLines(image);
+    QVector<QRgb*> lines = GetScanLines(image);
 
     for (int y = 0; y < image.height(); ++y) {
         for (int x = 0; x < image.width(); ++x) {
@@ -147,6 +147,30 @@ QImage colorizeImage(const QImage &from_image, QColor new_color) {
     }
     return image;
 }
+
+
+
+//####################################################################################
+//##    Sets any pixels <= 2 opacity to zero for easier GraphicsItem shapes
+//####################################################################################
+QImage CheckOpacityTolerance(const QImage &from_image) {
+    QImage image = from_image;
+    QVector<QRgb*> lines = GetScanLines(image);
+
+    for (int y = 0; y < image.height(); ++y) {
+        for (int x = 0; x < image.width(); ++x) {
+            QColor color = QColor::fromRgba( lines[y][x] );
+
+            if (color.alpha() <= 2) {
+                color.setAlpha(0);
+                lines[y][x] = color.rgba();
+            }
+        }
+    }
+    return image;
+}
+
+
 
 
 }   // End DrImaging Namespace
