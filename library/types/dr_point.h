@@ -32,12 +32,12 @@ public:
     DrPoint(double x_, double y_);
 
     // Operator Overloads
-    DrPoint & operator=(const DrPoint &other);
-    DrPoint operator+(const DrPoint &other) const;
-    DrPoint operator-(const DrPoint &other) const;
-    DrPoint operator*(int k) const;
-    DrPoint operator/(int k) const;
-    bool    operator==(const DrPoint &other) const;
+    DrPoint&    operator=(const DrPoint &other);
+    DrPoint     operator+(const DrPoint &other) const;
+    DrPoint     operator-(const DrPoint &other) const;
+    DrPoint     operator*(int k) const;
+    DrPoint     operator/(int k) const;
+    bool        operator==(const DrPoint &other) const;
 
     // Conversions
     DrPointF toPointF();

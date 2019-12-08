@@ -54,15 +54,15 @@ public:
 
 
     // Operator Overloads for file saving
-    bool operator==(const DrPropertyCollision &o){
+    bool operator==(const DrPropertyCollision &o) {
         return Dr::FuzzyCompare(o.m_direction, this->m_direction);
     }
 
-    friend QDataStream &operator<<(QDataStream &out, const DrPropertyCollision &rhs){
+    friend QDataStream& operator<<(QDataStream &out, const DrPropertyCollision &rhs) {
         out << rhs.m_direction;
         return out;
     }
-    friend QDataStream &operator>>(QDataStream &in, DrPropertyCollision &rhs){
+    friend QDataStream& operator>>(QDataStream &in, DrPropertyCollision &rhs) {
         in >> rhs.m_direction;
         return in;
     }

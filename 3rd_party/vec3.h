@@ -60,18 +60,18 @@ struct Vec3 {
 
 
     //############################ Overload Operators - Additions
-    Vec3 operator + (const Vec3 &v_) const {
+    Vec3 operator+(const Vec3 &v_) const {
         return Vec3(x+v_.x, y+v_.y, z+v_.z);
     }
 
-    Vec3& operator += (const Vec3 &v_) {
+    Vec3& operator+=(const Vec3 &v_) {
         x += v_.x;
         y += v_.y;
         z += v_.z;
         return *this;
     }
 
-    Vec3 operator + (float f_) const {
+    Vec3 operator+(float f_) const {
         return Vec3(x+f_, y+f_, z+f_);
     }
 
@@ -80,7 +80,7 @@ struct Vec3 {
         return Vec3(d_+vec.x, d_+vec.y, d_+vec.z);
     }
 
-    Vec3& operator+= (float f_) {
+    Vec3& operator+=(float f_) {
         x += f_;
         y += f_;
         z += f_;
@@ -93,7 +93,7 @@ struct Vec3 {
         return Vec3(x-v_.x, y-v_.y, z-v_.z);
     }
 
-    Vec3& operator-= (const Vec3& v_) {
+    Vec3& operator-=(const Vec3& v_) {
         x -= v_.x;
         y -= v_.y;
         z -= v_.z;
@@ -112,7 +112,7 @@ struct Vec3 {
         return Vec3(d_-vec.x, d_-vec.y, d_-vec.z);
     }
 
-    Vec3& operator-= (float f_) {
+    Vec3& operator-=(float f_) {
         x -= f_;
         y -= f_;
         z -= f_;
@@ -121,7 +121,7 @@ struct Vec3 {
 
 
     //############################ Overload Operators - Comparisons
-    bool operator!= (const Vec3 &v_) const {
+    bool operator!=(const Vec3 &v_) const {
         return (Dr::IsCloseTo(x, v_.x, 0.001f) == false) || (Dr::IsCloseTo(y, v_.y, 0.001f) == false) || (Dr::IsCloseTo(z, v_.z, 0.001f) == false);
     }
 
@@ -130,7 +130,7 @@ struct Vec3 {
     }
 
     // No mathematical meaning, but useful to use Vec3 in std::map
-    bool operator< (const Vec3& v_) const {
+    bool operator<(const Vec3& v_) const {
         if (Dr::IsCloseTo(x, v_.x, 0.001f) == false)
             return x < v_.x;
         else if (Dr::IsCloseTo(y, v_.y, 0.001f) == false)
@@ -187,7 +187,7 @@ struct Vec3 {
     }
 
 
-    //############################ Operators on vector
+    //############################ Operators on Vector3
     // Cross product
     Vec3 cross(const Vec3& v_) const {
         return Vec3(y*v_.z-z*v_.y, z*v_.x-x*v_.z, x*v_.y-y*v_.x);
