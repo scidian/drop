@@ -19,6 +19,7 @@
 #include "editor/imaging/imaging.h"
 #include "editor/style/style.h"
 #include "library/dr_math.h"
+#include "library/dr_random.h"
 
 
 namespace DrImaging
@@ -89,13 +90,19 @@ QPixmap DrawLight(QColor color, int diameter, float cone_start, float cone_end, 
             }
 
             // Multiply the intensity by our distance, which gives us a radial falloff
-            float amount = Dr::Lerp(1.0f, 0.0f, r) * intensity;
+            double amount = Dr::Lerp(1.0, 0.0, static_cast<double>(r)) * static_cast<double>(intensity);
+
+            // Add some noise to reduce rings
+            double random_r = (Dr::RandomDouble(0.0, 10.0) - 5.0);
+            double random_g = (Dr::RandomDouble(0.0, 10.0) - 5.0);
+            double random_b = (Dr::RandomDouble(0.0, 10.0) - 5.0);
+            double random_a = (Dr::RandomDouble(0.0, 10.0) - 5.0);
 
             // Multiply by light color
-            int red =   Dr::Clamp(static_cast<int>(color.red() * amount),      0, 255 );
-            int green = Dr::Clamp(static_cast<int>(color.green() * amount),    0, 255 );
-            int blue =  Dr::Clamp(static_cast<int>(color.blue() * amount),     0, 255 );
-            int alpha = Dr::Clamp(static_cast<int>(255.0f * opacity * amount), 0, 255 );
+            int red =   Dr::Clamp(static_cast<int>((color.red() * amount)   + random_r),  0, 255 );
+            int green = Dr::Clamp(static_cast<int>((color.green() * amount) + random_g),  0, 255 );
+            int blue =  Dr::Clamp(static_cast<int>((color.blue() * amount)  + random_b),  0, 255 );
+            int alpha = Dr::Clamp(static_cast<int>((255.0 * static_cast<double>(opacity) * amount) + random_a), 0, 255 );
 
             QColor new_color = QColor(red, green, blue, 255);
             new_color.setAlpha(alpha);
