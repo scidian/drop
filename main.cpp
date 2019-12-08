@@ -46,6 +46,20 @@
 //      !!!!! #FIXME:               Needs to be fixed at some point
 //
 //
+//
+//  Large Libraries:
+//      Boost -                     Only using boost::any for now
+//      Chipmunk -                  Physics, very good. Eventually look into Bullet for 3D
+//      Qt -                        Eventually for Editor ONLY!!!!!
+//
+//  Small Static Libraries
+//      Delaunator -                Delaunay Triangulation of 2D Points, creates list of triangles connecting set of points
+//      Hull Finder -               Attempts to find concave hull from a collection of Points
+//      Poly Partition -            Polygon Partioning and Triangulation
+//      Polyline Simplification -   D implementation of the Ramer-Douglas-Peucker algorithm for smoothing lines in a set of points
+//
+//
+//
 //  Main Components
 //  ---------------
 //  FormMain                        Modes:  World Map: World / UI Layout
@@ -56,6 +70,7 @@
 //                                        FUTURE: Puzzle World Editor
 //
 //      FormAbout                   About Box
+//      FormAnimation               Animation Frame editor for Asset animations
 //      FormFonts                   Create / View Fonts for Use in Project
 //      FormPlayground              Physics Playground
 //      FormSettings                View / edit project settings
@@ -74,16 +89,12 @@
 //      FormPopupColors             Custom color popup, palette tab and color history
 //
 //
-//
-//
-//
 //  Future:
 //      FormNewObject               Choose from different square / circle types with various bevels, coloring, corners, etc
 //      FormStartup                 Pick Recent Project, News, Create New Project / Select Template
 //      FormImageEditor             Draw shapes, objects for use in Assets, vectors, custom format, export
 //      FormParticleEditor          Make custom particles
 //      FormSoundEditor
-//      FormAnimationEditor
 //
 //
 #include <QApplication>

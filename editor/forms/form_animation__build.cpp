@@ -143,7 +143,7 @@ void FormAnimation::buildCentralWidget() {
                     treeProjectEditor->setMinimumSize(QSize(190, 0));
                     treeProjectEditor->setMaximumWidth(400);
                     treeProjectEditor->setFont(font);
-                    treeProjectEditor->setProperty("showDropIndicator", QVariant(false));
+                    treeProjectEditor->setProperty("showDropIndicator", false);
                     treeProjectEditor->setDragEnabled(true);
                     treeProjectEditor->setDragDropOverwriteMode(false);
                     treeProjectEditor->setDragDropMode(QAbstractItemView::DragDropMode::InternalMove);

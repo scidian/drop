@@ -187,6 +187,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     int         collide_with =  thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collision_Group).toInt();
     int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
 
+
     // ***** Adjust loading position from Spawn Offset
     QPointF     spawn_off_x =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
     QPointF     spawn_off_y =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();

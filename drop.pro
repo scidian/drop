@@ -216,6 +216,7 @@ SOURCES += \
     library/dr_time.cpp \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
+    library/types/dr_variant.cpp \
     main.cpp \
     model/enums_model.cpp \
     model/project/project.cpp \
@@ -284,6 +285,194 @@ HEADERS += \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
     3rd_party/vec3.h \
+    boost/any.hpp \
+    boost/assert.hpp \
+    boost/config.hpp \
+    boost/config/abi/borland_prefix.hpp \
+    boost/config/abi/borland_suffix.hpp \
+    boost/config/abi/msvc_prefix.hpp \
+    boost/config/abi/msvc_suffix.hpp \
+    boost/config/abi_prefix.hpp \
+    boost/config/abi_suffix.hpp \
+    boost/config/auto_link.hpp \
+    boost/config/compiler/borland.hpp \
+    boost/config/compiler/clang.hpp \
+    boost/config/compiler/codegear.hpp \
+    boost/config/compiler/comeau.hpp \
+    boost/config/compiler/common_edg.hpp \
+    boost/config/compiler/compaq_cxx.hpp \
+    boost/config/compiler/cray.hpp \
+    boost/config/compiler/diab.hpp \
+    boost/config/compiler/digitalmars.hpp \
+    boost/config/compiler/gcc.hpp \
+    boost/config/compiler/gcc_xml.hpp \
+    boost/config/compiler/greenhills.hpp \
+    boost/config/compiler/hp_acc.hpp \
+    boost/config/compiler/intel.hpp \
+    boost/config/compiler/kai.hpp \
+    boost/config/compiler/metrowerks.hpp \
+    boost/config/compiler/mpw.hpp \
+    boost/config/compiler/nvcc.hpp \
+    boost/config/compiler/pathscale.hpp \
+    boost/config/compiler/pgi.hpp \
+    boost/config/compiler/sgi_mipspro.hpp \
+    boost/config/compiler/sunpro_cc.hpp \
+    boost/config/compiler/vacpp.hpp \
+    boost/config/compiler/visualc.hpp \
+    boost/config/compiler/xlcpp.hpp \
+    boost/config/compiler/xlcpp_zos.hpp \
+    boost/config/detail/posix_features.hpp \
+    boost/config/detail/select_compiler_config.hpp \
+    boost/config/detail/select_platform_config.hpp \
+    boost/config/detail/select_stdlib_config.hpp \
+    boost/config/detail/suffix.hpp \
+    boost/config/header_deprecated.hpp \
+    boost/config/helper_macros.hpp \
+    boost/config/no_tr1/cmath.hpp \
+    boost/config/no_tr1/complex.hpp \
+    boost/config/no_tr1/functional.hpp \
+    boost/config/no_tr1/memory.hpp \
+    boost/config/no_tr1/utility.hpp \
+    boost/config/platform/aix.hpp \
+    boost/config/platform/amigaos.hpp \
+    boost/config/platform/beos.hpp \
+    boost/config/platform/bsd.hpp \
+    boost/config/platform/cloudabi.hpp \
+    boost/config/platform/cray.hpp \
+    boost/config/platform/cygwin.hpp \
+    boost/config/platform/haiku.hpp \
+    boost/config/platform/hpux.hpp \
+    boost/config/platform/irix.hpp \
+    boost/config/platform/linux.hpp \
+    boost/config/platform/macos.hpp \
+    boost/config/platform/qnxnto.hpp \
+    boost/config/platform/solaris.hpp \
+    boost/config/platform/symbian.hpp \
+    boost/config/platform/vms.hpp \
+    boost/config/platform/vxworks.hpp \
+    boost/config/platform/win32.hpp \
+    boost/config/platform/zos.hpp \
+    boost/config/pragma_message.hpp \
+    boost/config/requires_threads.hpp \
+    boost/config/stdlib/dinkumware.hpp \
+    boost/config/stdlib/libcomo.hpp \
+    boost/config/stdlib/libcpp.hpp \
+    boost/config/stdlib/libstdcpp3.hpp \
+    boost/config/stdlib/modena.hpp \
+    boost/config/stdlib/msl.hpp \
+    boost/config/stdlib/roguewave.hpp \
+    boost/config/stdlib/sgi.hpp \
+    boost/config/stdlib/stlport.hpp \
+    boost/config/stdlib/vacpp.hpp \
+    boost/config/stdlib/xlcpp_zos.hpp \
+    boost/config/user.hpp \
+    boost/config/warning_disable.hpp \
+    boost/config/workaround.hpp \
+    boost/container_hash/detail/float_functions.hpp \
+    boost/container_hash/detail/hash_float.hpp \
+    boost/container_hash/detail/limits.hpp \
+    boost/container_hash/extensions.hpp \
+    boost/container_hash/hash.hpp \
+    boost/container_hash/hash_fwd.hpp \
+    boost/core/addressof.hpp \
+    boost/core/demangle.hpp \
+    boost/core/enable_if.hpp \
+    boost/core/no_exceptions_support.hpp \
+    boost/cstdint.hpp \
+    boost/current_function.hpp \
+    boost/detail/container_fwd.hpp \
+    boost/detail/workaround.hpp \
+    boost/exception/exception.hpp \
+    boost/integer/static_log2.hpp \
+    boost/integer_fwd.hpp \
+    boost/limits.hpp \
+    boost/move/algo/move.hpp \
+    boost/move/algorithm.hpp \
+    boost/move/core.hpp \
+    boost/move/detail/config_begin.hpp \
+    boost/move/detail/config_end.hpp \
+    boost/move/detail/iterator_to_raw_pointer.hpp \
+    boost/move/detail/iterator_traits.hpp \
+    boost/move/detail/meta_utils.hpp \
+    boost/move/detail/meta_utils_core.hpp \
+    boost/move/detail/pointer_element.hpp \
+    boost/move/detail/std_ns_begin.hpp \
+    boost/move/detail/std_ns_end.hpp \
+    boost/move/detail/to_raw_pointer.hpp \
+    boost/move/detail/type_traits.hpp \
+    boost/move/detail/workaround.hpp \
+    boost/move/iterator.hpp \
+    boost/move/move.hpp \
+    boost/move/traits.hpp \
+    boost/move/utility.hpp \
+    boost/move/utility_core.hpp \
+    boost/preprocessor/config/config.hpp \
+    boost/preprocessor/facilities/expand.hpp \
+    boost/static_assert.hpp \
+    boost/throw_exception.hpp \
+    boost/type_index.hpp \
+    boost/type_index/ctti_type_index.hpp \
+    boost/type_index/detail/compile_time_type_info.hpp \
+    boost/type_index/detail/ctti_register_class.hpp \
+    boost/type_index/detail/stl_register_class.hpp \
+    boost/type_index/stl_type_index.hpp \
+    boost/type_index/type_index_facade.hpp \
+    boost/type_traits/add_const.hpp \
+    boost/type_traits/add_lvalue_reference.hpp \
+    boost/type_traits/add_pointer.hpp \
+    boost/type_traits/add_reference.hpp \
+    boost/type_traits/add_rvalue_reference.hpp \
+    boost/type_traits/add_volatile.hpp \
+    boost/type_traits/conditional.hpp \
+    boost/type_traits/decay.hpp \
+    boost/type_traits/declval.hpp \
+    boost/type_traits/detail/config.hpp \
+    boost/type_traits/detail/is_function_cxx_03.hpp \
+    boost/type_traits/detail/is_function_cxx_11.hpp \
+    boost/type_traits/detail/is_function_msvc10_fix.hpp \
+    boost/type_traits/detail/is_function_ptr_helper.hpp \
+    boost/type_traits/detail/is_function_ptr_tester.hpp \
+    boost/type_traits/detail/is_mem_fun_pointer_impl.hpp \
+    boost/type_traits/detail/is_mem_fun_pointer_tester.hpp \
+    boost/type_traits/detail/is_member_function_pointer_cxx_03.hpp \
+    boost/type_traits/detail/is_member_function_pointer_cxx_11.hpp \
+    boost/type_traits/detail/is_rvalue_reference_msvc10_fix.hpp \
+    boost/type_traits/detail/yes_no_type.hpp \
+    boost/type_traits/integral_constant.hpp \
+    boost/type_traits/intrinsics.hpp \
+    boost/type_traits/is_abstract.hpp \
+    boost/type_traits/is_arithmetic.hpp \
+    boost/type_traits/is_array.hpp \
+    boost/type_traits/is_class.hpp \
+    boost/type_traits/is_complete.hpp \
+    boost/type_traits/is_const.hpp \
+    boost/type_traits/is_convertible.hpp \
+    boost/type_traits/is_enum.hpp \
+    boost/type_traits/is_floating_point.hpp \
+    boost/type_traits/is_function.hpp \
+    boost/type_traits/is_integral.hpp \
+    boost/type_traits/is_lvalue_reference.hpp \
+    boost/type_traits/is_member_function_pointer.hpp \
+    boost/type_traits/is_member_pointer.hpp \
+    boost/type_traits/is_pointer.hpp \
+    boost/type_traits/is_polymorphic.hpp \
+    boost/type_traits/is_reference.hpp \
+    boost/type_traits/is_rvalue_reference.hpp \
+    boost/type_traits/is_same.hpp \
+    boost/type_traits/is_scalar.hpp \
+    boost/type_traits/is_signed.hpp \
+    boost/type_traits/is_union.hpp \
+    boost/type_traits/is_unsigned.hpp \
+    boost/type_traits/is_void.hpp \
+    boost/type_traits/is_volatile.hpp \
+    boost/type_traits/make_signed.hpp \
+    boost/type_traits/remove_bounds.hpp \
+    boost/type_traits/remove_cv.hpp \
+    boost/type_traits/remove_extent.hpp \
+    boost/type_traits/remove_reference.hpp \
+    boost/type_traits/type_identity.hpp \
+    boost/utility/enable_if.hpp \
+    boost/version.hpp \
     editor/colors/colors.h \
     editor/constants_editor.h \
     editor/debug.h \
@@ -339,6 +528,7 @@ HEADERS += \
     library/dr_time.h \
     library/types/dr_point.h \
     library/types/dr_pointf.h \
+    library/types/dr_variant.h \
     model/constants_keys.h \
     model/enums_model_properties.h \
     model/enums_model_types.h \

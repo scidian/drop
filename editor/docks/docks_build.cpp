@@ -48,7 +48,7 @@ QDockWidget* BuildDockAdvisor(DrProject *project, IEditorRelay *editor_relay, Tr
                 tree_advisor->setObjectName(QStringLiteral("treeAdvisor"));
                 tree_advisor->setColumnCount(1);
                 tree_advisor->setFont(Dr::CustomFontLarger());
-                tree_advisor->setProperty("showDropIndicator", QVariant(false));
+                tree_advisor->setProperty("showDropIndicator", false);
                 tree_advisor->setDragEnabled(false);
                 tree_advisor->setDragDropOverwriteMode(false);
                 tree_advisor->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
@@ -96,7 +96,7 @@ QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, Tre
                 tree_assets->setObjectName(QStringLiteral("treeAssetEditor"));
                 tree_assets->setColumnCount(1);
                 tree_assets->setFont(Dr::CustomFont());
-                tree_assets->setProperty("showDropIndicator", QVariant(false));
+                tree_assets->setProperty("showDropIndicator", false);
                 tree_assets->setDragEnabled(false);
                 tree_assets->setDragDropOverwriteMode(false);
                 tree_assets->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
@@ -150,7 +150,7 @@ QDockWidget* BuildDockInspector(DrProject *project, IEditorRelay *editor_relay, 
                 tree_inspector->setObjectName(QStringLiteral("treeObject"));
                 tree_inspector->setColumnCount(1);
                 tree_inspector->setFont(Dr::CustomFont());
-                tree_inspector->setProperty("showDropIndicator", QVariant(false));
+                tree_inspector->setProperty("showDropIndicator", false);
                 tree_inspector->setDragEnabled(false);
                 tree_inspector->setDragDropOverwriteMode(false);
                 tree_inspector->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);

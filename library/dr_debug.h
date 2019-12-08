@@ -18,7 +18,7 @@ namespace Dr {
 //####################################################################################
 //##    Prints to Console
 //############################
-void        PrintDebug(std::string message);
+void        PrintDebug(const std::string message);
 
 
 

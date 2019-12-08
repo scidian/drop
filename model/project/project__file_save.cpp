@@ -56,9 +56,9 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Options
     QVariantMap options;
-    options["version_major"] =  Dr::GetPreference(Preferences::Version_Major);
-    options["version_minor"] =  Dr::GetPreference(Preferences::Version_Minor);
-    options["version_build"] =  Dr::GetPreference(Preferences::Version_Build);
+    options["version_major"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Major).toString() );
+    options["version_minor"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Minor).toString() );
+    options["version_build"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Build).toString() );
     options["key_generator"] =  QVariant::fromValue(m_key_generator);
     options["name"] =           getOption(Project_Options::Name);
     options["file_path"] =      getOption(Project_Options::File_Name_Path);

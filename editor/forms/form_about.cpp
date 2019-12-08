@@ -61,9 +61,9 @@ void FormAbout::resizeEvent(QResizeEvent *event) {
 //##    Builds interior widget of FormAbout
 //####################################################################################
 void FormAbout::buildForm() {
-    QString version = Dr::GetPreference(Preferences::Version_Major).toString() + "." +
-                      Dr::GetPreference(Preferences::Version_Minor).toString() + "." +
-                      Dr::GetPreference(Preferences::Version_Build).toString();
+    std::string version = Dr::GetPreference(Preferences::Version_Major).toString() + "." +
+                          Dr::GetPreference(Preferences::Version_Minor).toString() + "." +
+                          Dr::GetPreference(Preferences::Version_Build).toString();
 
     // ***** Build Form
     QVBoxLayout *layout = new QVBoxLayout(this);

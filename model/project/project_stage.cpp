@@ -131,12 +131,14 @@ std::vector<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bo
 
     // Copy sorted Map into List
     std::deque<DrThing*> z_ordered_things;
-    for (auto one_pair : zorder_key_pair)
+    for (auto one_pair : zorder_key_pair) {
         z_ordered_things.push_front(one_pair.second);
+    }
 
     // Reverse if Ascending
-    if (sort_order == Qt::SortOrder::AscendingOrder)
+    if (sort_order == Qt::SortOrder::AscendingOrder) {
         std::reverse(z_ordered_things.begin(), z_ordered_things.end());
+    }
 
     return { z_ordered_things.begin(), z_ordered_things.end() };
 }

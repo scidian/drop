@@ -8,9 +8,10 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <QVariant>
+#include <QCursor>
 
 #include "editor/enums_editor.h"
+#include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
 
@@ -42,7 +43,7 @@ enum class Preferences {
 
     World_Editor_Snap_To_Center_Of_Selection_Box,   // bool
 
-    Color_Popup_History,                            // QList<QVariant> (QVariant = qRgba = unsigned int)
+    Color_Popup_History,                            // std::vector<DrVariant> (DrVariant = qRgba = unsigned int)
     Color_Popup_Tab,                                // int - 0 = Palette, 1 = History
 };
 
@@ -54,8 +55,8 @@ namespace Dr {
 
     void        LoadPreferences();
 
-    QVariant    GetPreference(Preferences preference_to_get);
-    void        SetPreference(Preferences preference_to_set, QVariant new_value);
+    DrVariant   GetPreference(Preferences preference_to_get);
+    void        SetPreference(Preferences preference_to_set, DrVariant new_value);
 
     bool        GetAssetExpanded(Asset_Category asset_type);
     void        SetAssetExpanded(Asset_Category asset_type, bool expanded);

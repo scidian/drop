@@ -12,11 +12,11 @@
 #include "library/dr_math.h"
 #include "model/enums_model_types.h"
 
-
 typedef std::map<Color_Scheme,   std::map<Window_Colors, QColor>> Color_Scheme_Map;
 typedef std::map<Color_Palettes, Palette_Info> Color_Palette_Map;
 
 namespace Dr {
+
 
 //####################################################################################
 //##    Local Static Variables
@@ -71,27 +71,27 @@ bool            GetPaletteShowInList(Color_Palettes palette)    { return g_color
 //####################################################################################
 void AddToColorHistory(QColor color) {
     // Load old color history list (up to 36 colors)
-    QList<QVariant> variant_list = Dr::GetPreference(Preferences::Color_Popup_History).toList();
+    std::vector<DrVariant> variant_vector = Dr::GetPreference(Preferences::Color_Popup_History).toVector();
 
     // Creat new list and add color as first item
-    QList<QVariant> color_list;
-    color_list.append( color.rgba() );
+    std::vector<DrVariant> color_vector;
+    color_vector.push_back( color.rgba() );
 
     // Add all the old colors skipping the lastest color
-    for (auto item : variant_list) {
+    for (auto item : variant_vector) {
         QRgb rgba = QRgb(item.toUInt());
-        if (color.rgb() != rgba)
-            color_list.append( rgba );
+        if (color.rgb() != rgba) {
+            color_vector.push_back( rgba );
+        }
     }
 
     // Make sure list is <= 36 items
-    while (color_list.count() > 36)
-        color_list.removeLast();
+    while (color_vector.size() > 36) {
+        color_vector.pop_back();
+    }
 
     // Store new color list in preferences
-    QVariant colors;
-    colors.setValue( color_list );
-    Dr::SetPreference(Preferences::Color_Popup_History, colors);
+    Dr::SetPreference(Preferences::Color_Popup_History, color_vector);
 }
 
 

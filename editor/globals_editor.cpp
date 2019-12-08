@@ -11,10 +11,9 @@
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 
-
-typedef std::map<Asset_Category, bool>  AssetCategoryMap;
-typedef std::map<Components,  bool>     ComponentMap;
-typedef std::map<Preferences, QVariant> PreferenceMap;
+typedef std::map<Asset_Category, bool>      AssetCategoryMap;
+typedef std::map<Components,  bool>         ComponentMap;
+typedef std::map<Preferences, DrVariant>    PreferenceMap;
 
 //####################################################################################
 //##    These functions can be used globally without passing around an interface pointer
@@ -34,8 +33,8 @@ namespace Dr {
     static FormMain        *g_active_form_main;                 // Stores active FormMain reference
     static IEditorRelay    *g_active_editor;                    // Stores active IEditorRelay reference
 
-    QVariant    GetPreference(Preferences option_to_get)   { return options[option_to_get]; }
-    void        SetPreference(Preferences option_to_set, QVariant new_value) { options[option_to_set] = new_value; }
+    DrVariant   GetPreference(Preferences option_to_get)                        { return options[option_to_get]; }
+    void        SetPreference(Preferences option_to_set, DrVariant new_value)   { options[option_to_set] = new_value; }
 
     bool        GetAssetExpanded(Asset_Category asset_type)                         { return asset_categories[asset_type]; }
     void        SetAssetExpanded(Asset_Category asset_type, bool expanded)          { asset_categories[asset_type] = expanded; }
@@ -77,7 +76,7 @@ namespace Dr {
 
         // Stored Color History
         ///QVariant colors;
-        ///colors.setValue( QList<QVariant> { qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) } );
+        ///colors.setValue( std::vector<DrVariant> { qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) } );
         ///Dr::SetPreference(Preferences::Color_Popup_History, colors);
         Dr::AddToColorHistory( Qt::red   );
         Dr::AddToColorHistory( Qt::green );

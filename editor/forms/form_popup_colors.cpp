@@ -128,10 +128,10 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
     int y = (horizontal) ? columns : rows;
 
     // Find color history if necessary
-    QList<QVariant> history;
+    std::vector<DrVariant> history;
     if (type == Colors::History) {
-        history = Dr::GetPreference(Preferences::Color_Popup_History).toList();
-        if (history.count() < 1) return color_block;
+        history = Dr::GetPreference(Preferences::Color_Popup_History).toVector();
+        if (history.size() < 1) return color_block;
     }
 
     // Loop through array and make a grid of color labels
@@ -160,7 +160,7 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
                         }
                         break;
                     case Colors::History:
-                        color = QColor::fromRgba( history.at(color_index).toUInt() );
+                        color = QColor::fromRgba( history .at(color_index).toUInt() );
                         ++color_index;
                         break;
                 }
@@ -183,12 +183,12 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
             button->setToolTip( color_as_string );
             button->setStyleSheet( createButtonStyleSheet(color, border) );
 
-            if (type == Colors::History) {  if (color_index >= history.count()) break;
+            if (type == Colors::History) {  if (color_index >= static_cast<int>(history.size())) break;
             } else {                        if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;  }
         }
         color_index += mid_step;
 
-        if (type == Colors::History) {      if (color_index >= history.count()) break;
+        if (type == Colors::History) {      if (color_index >= static_cast<int>(history.size())) break;
         } else {                            if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;  }
     }
 
