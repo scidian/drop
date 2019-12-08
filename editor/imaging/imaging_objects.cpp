@@ -34,7 +34,7 @@ namespace DrImaging
 //####################################################################################
 QImage BlackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
     unsigned int color1, color2;
     if (inverse) {
@@ -45,8 +45,8 @@ QImage BlackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, 
         color2 = c_color_white;
     }
 
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < image.height(); ++y) {
+        for (size_t x = 0; x < image.width(); ++x) {
             lines[y][x] = (QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance) ? color1 : color2;
         }
     }
@@ -73,9 +73,9 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
     // Get scan lines
     QImage flood =      from_image.copy();
     QImage processed =  from_image.copy();
-    QVector<QRgb*> image_lines =     GetScanLines(from_image);
-    QVector<QRgb*> flood_lines =     GetScanLines(flood);
-    QVector<QRgb*> processed_lines = GetScanLines(processed);
+    std::vector<QRgb*> image_lines =     GetScanLines(from_image);
+    std::vector<QRgb*> flood_lines =     GetScanLines(flood);
+    std::vector<QRgb*> processed_lines = GetScanLines(processed);
 
     // Check if start point is in range    
     flood_rect = QRect(0, 0, 0, 0);
@@ -92,15 +92,16 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
 
     // Get starting color, set processed image to all zeros
     QColor start_color = QColor::fromRgba(image_lines[at_y][at_x]);
-    for (int y = 0; y < from_image.height(); ++y) {
-        for (int x = 0; x < from_image.width(); ++x) {
+
+    for (size_t y = 0; y < from_image.height(); ++y) {
+        for (size_t x = 0; x < from_image.width(); ++x) {
             flood_lines[y][x] = 0;
             processed_lines[y][x] = FLOOD_NOT_PROCESSED;
         }
     }
 
     // Push starting point onto vector
-    QVector<DrPoint> points; points.clear();
+    std::vector<DrPoint> points; points.clear();
     points.push_back(DrPoint(at_x, at_y));
     bool processed_some;
 
@@ -155,7 +156,7 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
             else
                 ++it;
         }
-    } while ((points.count() > 0) && processed_some);
+    } while ((points.size() > 0) && processed_some);
 
     flood_rect = QRect(min_x, min_y, (max_x - min_x) + 1, (max_y - min_y) + 1);
     return flood;
@@ -167,7 +168,7 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
 //##        Traces Border of 'rect' and makes sure to fill in any c_color_black areas with fill_color
 //####################################################################################
 void FillBorder(QImage &image, QColor fill_color, QRect rect) {
-    QVector<QRgb*> lines = DrImaging::GetScanLines(image);
+    std::vector<QRgb*> lines = DrImaging::GetScanLines(image);
     QRect  fill_rect;
     int    fill_qty;
 
@@ -202,21 +203,21 @@ void FillBorder(QImage &image, QColor fill_color, QRect rect) {
 //##            Black where around the ouside of of the object, and the object itself is white.
 //##        Rects of images are returned in 'rects'
 //####################################################################################
-int FindObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert) {
+int FindObjectsInImage(const QImage &image, std::vector<QImage> &images, std::vector<QRect> &rects, double alpha_tolerance, bool convert) {
     QImage black_white;
     if (convert) black_white = BlackAndWhiteFromAlpha(image, alpha_tolerance, true);
     else         black_white = image;
-    QVector<QRgb*>  lines = GetScanLines(black_white);
+    std::vector<QRgb*> lines = GetScanLines(black_white);
     int object_count = 0;
 
     // Loop through every pixel in image, if we find a spot that has an object,
     // flood fill that spot and add the resulting image shape to the array of object images
-    for (int x = 0; x < black_white.width(); ++x) {
-        for (int y = 0; y < black_white.height(); ++y) {
+    for (size_t x = 0; x < black_white.width(); ++x) {
+        for (size_t y = 0; y < black_white.height(); ++y) {
             if (lines[y][x] == c_color_black) {
                 QRect  rect;
                 int    flood_pixel_count;
-                QImage flood_fill = FloodFill(black_white, x, y, c_color_white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
+                QImage flood_fill = FloodFill(black_white, int(x), int(y), c_color_white, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
                 if (flood_pixel_count > 1) {
                     rects.push_back( rect );
                     images.push_back( flood_fill );
@@ -240,24 +241,25 @@ int FindObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRe
 #define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
 #define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
 
-QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
+std::vector<DrPointF> TraceImageOutline(const QImage &from_image) {
     // Initialize images
     QImage image = from_image;
-    QImage processed =  from_image.copy();
-    QVector<QRgb*> image_lines =        GetScanLines(image);
-    QVector<QRgb*> processed_lines =    GetScanLines(processed);
+    QImage processed = from_image.copy();
+    std::vector<QRgb*> image_lines =        GetScanLines(image);
+    std::vector<QRgb*> processed_lines =    GetScanLines(processed);
     int border_pixel_count = 0;
 
     // Initialize point array, verify image size
-    QVector<DrPoint> points; points.clear();
-    if (image.width() < 1 || image.height() < 1) return QVector<DrPointF> { };
+    std::vector<DrPoint> points; points.clear();
+    if (image.width() < 1 || image.height() < 1) return std::vector<DrPointF> { };
 
     // ***** Find starting point, and also set processed image bits
     //       !!!!! #NOTE: Important that y loop is on top, we need to come at pixel from the left
     DrPoint last_point;
     bool has_start_point = false;
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+
+    for (size_t y = 0; y < image.height(); ++y) {
+        for (size_t x = 0; x < image.width(); ++x) {
             // If pixel is part of the exterior, it cannot be part of the border
             if (image_lines[y][x] == c_color_black) {
                 processed_lines[y][x] = TRACE_NOT_BORDER;
@@ -269,8 +271,8 @@ QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
             if (x == 0 || y == 0 || x == (image.width() - 1) || y == (image.height() - 1)) {
                 can_be_border = true;
             } else {
-                for (int i = x - 1; i <= x + 1; ++i) {
-                    for (int j = y - 1; j <= y + 1; ++j) {
+                for (size_t i = x - 1; i <= x + 1; ++i) {
+                    for (size_t j = y - 1; j <= y + 1; ++j) {
                         if (image_lines[j][i] == c_color_black) can_be_border = true;
                     }
                 }
@@ -285,24 +287,24 @@ QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
                 processed_lines[y][x] = TRACE_NOT_PROCESSED;
                 ++border_pixel_count;
                 if (!has_start_point) {
-                    points.push_back(DrPoint(x, y));
-                    last_point = DrPoint(x - 1, y);
+                    points.push_back(DrPoint(static_cast<int>(x), static_cast<int>(y)));
+                    last_point = DrPoint(static_cast<int>(x - 1), static_cast<int>(y));
                     processed_lines[y][x] = TRACE_START_PIXEL;
                     has_start_point = true;
                 }
             }
         }
     }
-    if (border_pixel_count < 3) return QVector<DrPointF> { };
+    if (border_pixel_count < 3) return std::vector<DrPointF> { };
 
 
     // ***** Find outline points
-    QVector<DrPoint> surround;
+    std::vector<DrPoint> surround;
     bool back_at_start;
     do {
         // Collect list of points around current point
         surround.clear();
-        DrPoint current_point = points.last();
+        DrPoint current_point = points.back();
         int x_start = (current_point.x > 0) ?                       current_point.x - 1 : 0;
         int x_end =   (current_point.x < from_image.width() - 1)  ? current_point.x + 1 : from_image.width()  - 1;
         int y_start = (current_point.y > 0) ?                       current_point.y - 1 : 0;
@@ -345,7 +347,7 @@ QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
         }
 
         // If we found an angle, we found our next point, add it to the list
-        if (surround.count() > 0) {
+        if (surround.size() > 0) {
             if (processed_lines[current_point.y][current_point.x] == TRACE_NOT_PROCESSED)
                 processed_lines[current_point.y][current_point.x] = TRACE_PROCESSED_ONCE;
             else if (processed_lines[current_point.y][current_point.x] == TRACE_PROCESSED_ONCE)
@@ -355,13 +357,13 @@ QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
         }
 
         // Check if we're back at start and no more options
-        back_at_start = (processed_lines[points.last().y][points.last().x] == TRACE_START_PIXEL);
+        back_at_start = (processed_lines[points.back().y][points.back().x] == TRACE_START_PIXEL);
 
-    } while ((surround.count() > 0) && !back_at_start);
+    } while ((surround.size() > 0) && !back_at_start);
 
     // ***** Convert to DrPointF array and return
-    QVector<DrPointF> hull_points;
-    for (int i = 0; i < points.count(); ++i) {
+    std::vector<DrPointF> hull_points;
+    for (size_t i = 0; i < points.size(); ++i) {
         hull_points.push_back(DrPointF(points[i].x, points[i].y));
     }
     return hull_points;
@@ -373,11 +375,11 @@ QVector<DrPointF> TraceImageOutline(const QImage &from_image) {
 //##        !!!!! #NOTE: Image passed in should be black and white
 //##                     (i.e. from DrImageing::BlackAndWhiteFromAlpha())
 //####################################################################################
-QVector<DrPointF> OutlinePointList(const QImage &from_image) {
+std::vector<DrPointF> OutlinePointList(const QImage &from_image) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
-    QVector<DrPointF> points;
+    std::vector<DrPointF> points;
     points.clear();
 
     // Loop through every pixel to see if is possibly on border

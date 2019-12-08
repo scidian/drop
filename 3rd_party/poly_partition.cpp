@@ -77,7 +77,7 @@ TPPLPoly::TPPLPoly(const TPPLPoly &src) : TPPLPoly() {
 	hole = src.hole;
 	numpoints = src.numpoints;
 
-	if(numpoints > 0) {
+    if (numpoints > 0) {
 		points = new TPPLPoint[numpoints];
         memcpy(points, src.points, static_cast<std::size_t>(numpoints) * sizeof(TPPLPoint));
 	}
@@ -88,7 +88,7 @@ TPPLPoly& TPPLPoly::operator=(const TPPLPoly &src) {
 	hole = src.hole;
 	numpoints = src.numpoints;
 	
-	if(numpoints > 0) {
+    if (numpoints > 0) {
 		points = new TPPLPoint[numpoints];
         memcpy(points, src.points, static_cast<std::size_t>(numpoints) * sizeof(TPPLPoint));
 	}

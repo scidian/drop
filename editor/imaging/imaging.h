@@ -63,11 +63,11 @@ namespace DrImaging {
 
 
     // ***** Misc Image Functions
-    QColor              AverageColor(const QPixmap &pixmap, bool screen_shot = false);
-    QVector<QRgb*>      GetScanLines(QImage &image);
-    float*              ImageBitsAsFloat(const QImage &from_image);
-    QVector<DrPointF>   OutlinePointList(const QImage &from_image);
-    QVector<DrPointF>   TraceImageOutline(const QImage &from_image);
+    QColor                  AverageColor(const QPixmap &pixmap, bool screen_shot = false);
+    std::vector<QRgb*>      GetScanLines(QImage &image);
+    float*                  ImageBitsAsFloat(const QImage &from_image);
+    std::vector<DrPointF>   OutlinePointList(const QImage &from_image);
+    std::vector<DrPointF>   TraceImageOutline(const QImage &from_image);
 
 
     // ***** Filters
@@ -99,7 +99,7 @@ namespace DrImaging {
     // ***** Object Counting / Fill (a la Ravens Project)
     QImage  BlackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, bool inverse = false);
     void    FillBorder(QImage &image, QColor fill_color, QRect rect);
-    int     FindObjectsInImage(const QImage &image, QVector<QImage> &images, QVector<QRect> &rects, double alpha_tolerance, bool convert = true);
+    int     FindObjectsInImage(const QImage &image, std::vector<QImage> &images, std::vector<QRect> &rects, double alpha_tolerance, bool convert = true);
     QImage  FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
                       int &flood_pixel_count, QRect &flood_rect);
 

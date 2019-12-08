@@ -172,16 +172,16 @@ public:
     virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
 
     // Shape Creation
-    void                addShapeBox(double width, double height);
-    void                addShapeBox(cpBB box);
-    void                addShapeBoxFromTexture(long texture_number);
-    void                addShapeCircle(double circle_radius, DrPointF shape_offset);
-    void                addShapeCircleFromTexture(long texture_number);
-    void                addShapeTriangleFromTexture(long texture_number);
-    void                addShapePolygon(const QVector<DrPointF> &points);
-    void                addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
-    void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
-    QVector<DrPointF>   createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
+    void                    addShapeBox(double width, double height);
+    void                    addShapeBox(cpBB box);
+    void                    addShapeBoxFromTexture(long texture_number);
+    void                    addShapeCircle(double circle_radius, DrPointF shape_offset);
+    void                    addShapeCircleFromTexture(long texture_number);
+    void                    addShapeTriangleFromTexture(long texture_number);
+    void                    addShapePolygon(const std::vector<DrPointF> &points);
+    void                    addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
+    void                    applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
+    std::vector<DrPointF>   createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
 
 
 

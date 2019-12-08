@@ -26,8 +26,8 @@ namespace DrImaging
 //##    Copies rect from source_image to dest_image
 //####################################################################################
 void CopyImage(QImage &dest_image, QImage &source_image, QRect rect) {
-    QVector<QRgb*> dest_lines =   GetScanLines(dest_image);
-    QVector<QRgb*> source_lines = GetScanLines(source_image);
+    std::vector<QRgb*> dest_lines =   GetScanLines(dest_image);
+    std::vector<QRgb*> source_lines = GetScanLines(source_image);
 
     for (int y = rect.y(); y < rect.y() + rect.height(); ++y) {
         for (int x = rect.x(); x < rect.x() + rect.width(); ++x) {
@@ -40,7 +40,7 @@ void CopyImage(QImage &dest_image, QImage &source_image, QRect rect) {
 //##    Fills image with color inside rect
 //####################################################################################
 void FillImage(QImage &image, QColor color, QRect rect) {
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
     for (int y = rect.y(); y < rect.y() + rect.height(); ++y) {
         for (int x = rect.x(); x < rect.x() + rect.width(); ++x) {

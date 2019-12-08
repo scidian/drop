@@ -173,20 +173,20 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
     } else if (new_player_type == Demo_Player::Car) {
         // Add body
-        QVector<DrPointF> points;
-        points.append( DrPointF( -45.5,  -5.0 ));
-        points.append( DrPointF( -45.5,  18.0 ));
-        points.append( DrPointF( -54.5,  18.0 ));
-        points.append( DrPointF( -57.0,  -5.0 ));
-        points.append( DrPointF( -57.0, -24.0 ));
-        points.append( DrPointF(  58.5, -24.0 ));
-        points.append( DrPointF(  50.5,  -5.0 ));
-        points.append( DrPointF(  48.0,  16.0 ));
-        points.append( DrPointF(  37.0,  23.0 ));
-        points.append( DrPointF(  31.0,  23.0 ));
-        points.append( DrPointF(  20.0,  16.0 ));
-        points.append( DrPointF(   5.5,  16.0 ));
-        points.append( DrPointF(   5.5,  -5.0 ));
+        std::vector<DrPointF> points;
+        points.push_back( DrPointF( -45.5,  -5.0 ));
+        points.push_back( DrPointF( -45.5,  18.0 ));
+        points.push_back( DrPointF( -54.5,  18.0 ));
+        points.push_back( DrPointF( -57.0,  -5.0 ));
+        points.push_back( DrPointF( -57.0, -24.0 ));
+        points.push_back( DrPointF(  58.5, -24.0 ));
+        points.push_back( DrPointF(  50.5,  -5.0 ));
+        points.push_back( DrPointF(  48.0,  16.0 ));
+        points.push_back( DrPointF(  37.0,  23.0 ));
+        points.push_back( DrPointF(  31.0,  23.0 ));
+        points.push_back( DrPointF(  20.0,  16.0 ));
+        points.push_back( DrPointF(   5.5,  16.0 ));
+        points.push_back( DrPointF(   5.5,  -5.0 ));
         DrEngineObject *rover = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true);
         rover->addShapePolygon(points);
         rover->setDepth(30);

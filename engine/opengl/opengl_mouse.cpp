@@ -61,13 +61,13 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             }
         } else if (event->button() & Qt::RightButton) {
             // Polygon shape points should be counter-clockwise
-            QVector<DrPointF> points;
-            points.append( DrPointF( 20, -55) );    // Right Bottom
-            points.append( DrPointF( 45,  15) );    // Right Middle
-            points.append( DrPointF(  5,  60) );    // Top
-            points.append( DrPointF(-10, -30) );    // Left Mid Middle Concave <-- point is ignored by Chipmunk
-            points.append( DrPointF(-46, -10) );    // Left Middle
-            points.append( DrPointF(-38, -55) );    // Left Bottom
+            std::vector<DrPointF> points;
+            points.push_back( DrPointF( 20, -55) );     // Right Bottom
+            points.push_back( DrPointF( 45,  15) );     // Right Middle
+            points.push_back( DrPointF(  5,  60) );     // Top
+            points.push_back( DrPointF(-10, -30) );     // Left Mid Middle Concave <-- point is ignored by Chipmunk
+            points.push_back( DrPointF(-46, -10) );     // Left Middle
+            points.push_back( DrPointF(-38, -55) );     // Left Bottom
 
             DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPointF(2, .5));
             plant->addShapePolygon(points);

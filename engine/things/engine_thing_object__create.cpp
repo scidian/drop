@@ -19,13 +19,13 @@
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-QVector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
-    QVector<DrPointF> ellipse;
+std::vector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
+    std::vector<DrPointF> ellipse;
     int count = point_count;
     for (int i = 0; i < count; i++) {
         QTransform t = QTransform().translate(center.x, center.y).rotate(i * 360.0 / count);
         QPointF point = t.map(QPointF( 0, radius));
-        ellipse.append( DrPointF(point.x(), point.y()) );
+        ellipse.push_back( DrPointF(point.x(), point.y()) );
     }
     return ellipse;
 }
@@ -52,7 +52,7 @@ void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
 void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
     if (Dr::FuzzyCompare(abs(this->getScaleX()), abs(this->getScaleY())) == false) {
-        QVector<DrPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
+        std::vector<DrPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
         addShapePolygon(points);
     } else {
         double  radius = circle_radius * static_cast<double>(abs(this->getScaleX()));
@@ -80,7 +80,7 @@ void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
         addShapeCircle(radius, DrPointF(0, 0));
     // Image is Rectangular, needs ellipse
     } else {
-        QVector<DrPointF> points = createEllipseFromCircle(DrPointF(0, 0), radius, 18);
+        std::vector<DrPointF> points = createEllipseFromCircle(DrPointF(0, 0), radius, 18);
         for (auto &point : points) {
             point.y *= ratio;
         }
@@ -91,10 +91,10 @@ void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
 void DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
     double width =  getWorld()->getTexture(texture_number)->width();
     double height = getWorld()->getTexture(texture_number)->height();
-    QVector<DrPointF> points;
-    points.append(DrPointF(       0.0, +height/2.0));
-    points.append(DrPointF(-width/2.0, -height/2.0));
-    points.append(DrPointF( width/2.0, -height/2.0));
+    std::vector<DrPointF> points;
+    points.push_back(DrPointF(       0.0, +height/2.0));
+    points.push_back(DrPointF(-width/2.0, -height/2.0));
+    points.push_back(DrPointF( width/2.0, -height/2.0));
     addShapePolygon(points);
 }
 
@@ -104,13 +104,13 @@ void DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
     applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
-void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
+void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
 
     // Apply scale to points, verify Winding
     int old_point_count =static_cast<int>(points.size());
     double scale_x = static_cast<double>(this->getScaleX());
     double scale_y = static_cast<double>(this->getScaleY());
-    QVector<DrPointF> scaled_points;
+    std::vector<DrPointF> scaled_points;
     for (auto &point : points) {
         scaled_points.push_back( DrPointF(point.x * scale_x, point.y * scale_y) );
     }
@@ -118,13 +118,13 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
 
     // Copy polygon Vertices into a scaled cpVect array, and scaled TPPLPoly array
     TPPLPoly            poly;   poly.Init(old_point_count);
-    std::vector<cpVect> verts;  verts.resize( static_cast<size_t>(old_point_count) );
+    std::vector<cpVect> verts;  verts.resize(old_point_count);
     for (int i = 0; i < old_point_count; i++) {
         double x = scaled_points[i].x;
         double y = scaled_points[i].y;
         poly[i].x = x;
         poly[i].y = y;
-        verts[static_cast<size_t>(i)] = cpv(x, y);
+        verts[i] = cpv(x, y);
     }
 
     // Calculate the convex hull of a given set of points. Returns the count of points in the hull. Result must be a pointer to a cpVect array
@@ -132,7 +132,7 @@ void DrEngineObject::addShapePolygon(const QVector<DrPointF> &points) {
     // where the first vertex in the hull came from (i.e. verts[first] == result[0]). Tolerance (tol) is the allowed amount to shrink the hull when
     // simplifying it. A tolerance of 0.0 creates an exact hull.
     int first = 0;
-    std::vector<cpVect> hull { }; hull.resize(  static_cast<size_t>(old_point_count) );             // Temporary array for ConvexHull call below
+    std::vector<cpVect> hull { }; hull.resize(old_point_count);                 // Temporary array for ConvexHull call below
     int new_point_count = cpConvexHull(old_point_count, verts.data(), hull.data(), &first, 0.0);
 
     // !!!!! #NOTE: For Chipmunk Polygon Shapes, points must be in Counter-Clockwise Winding !!!!!

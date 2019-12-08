@@ -173,7 +173,7 @@ inline bool in_circle(
             ap * (ex * fy - ey * fx)) < 0.0;
 }
 
-constexpr double EPSILON = std::numeric_limits<double>::epsilon();
+constexpr double      EPSILON =       std::numeric_limits<double>::epsilon();
 constexpr std::size_t INVALID_INDEX = std::numeric_limits<std::size_t>::max();
 
 inline bool check_pts_equal(double x1, double y1, double x2, double y2) {

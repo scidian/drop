@@ -62,8 +62,8 @@ public:
     void    initializeTextureQuad();
 
     // Helper Functions
-    static  QVector<DrPointF>   simplifyPoints(const QVector<DrPointF> &outline_points, double tolerance, int test_count, bool average = false);
-    static  QVector<DrPointF>   smoothPoints(const QVector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight);
+    static  std::vector<DrPointF>   simplifyPoints(const std::vector<DrPointF> &outline_points, double tolerance, int test_count, bool average = false);
+    static  std::vector<DrPointF>   smoothPoints(const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight);
 
     Mesh                        getMesh(NeighborMap &neighbors);
     Vertex                      getVertex(int vertex_number);
@@ -72,8 +72,8 @@ public:
 
 
     // Extrusion Functions
-    void    extrudeFacePolygon(const QVector<DrPointF> &outline_points, int width, int height, int steps);
-    void    triangulateFace(const QVector<DrPointF> &outline_points, const QVector<QVector<DrPointF>> &hole_list,
+    void    extrudeFacePolygon(const std::vector<DrPointF> &outline_points, int width, int height, int steps);
+    void    triangulateFace(const std::vector<DrPointF> &outline_points, const std::vector<std::vector<DrPointF>> &hole_list,
                             const QImage &black_and_white, bool wireframe, Trianglulation type);
 
     // Building Functions

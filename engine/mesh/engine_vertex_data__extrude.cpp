@@ -35,27 +35,27 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
     m_data.resize(100 * c_vertex_length);
 
     // ***** Break pixmap into seperate images for each object in image
-    QVector<QImage> images;
-    QVector<QRect>  rects;
+    std::vector<QImage> images;
+    std::vector<QRect>  rects;
     DrImaging::FindObjectsInImage(pixmap.toImage(), images, rects, 0.9);
     ///images.push_back( DrImaging::BlackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     // ***** Go through each image (object) and add triangles for it
-    for (int image_number = 0; image_number < images.count(); image_number++) {
+    for (int image_number = 0; image_number < images.size(); image_number++) {
         QImage &image = images[image_number];
         if (image.width() < 1 || image.height() < 1) continue;
 
         // ***** Trace edge of image
-        QVector<DrPointF> points = DrImaging::TraceImageOutline(image);
+        std::vector<DrPointF> points = DrImaging::TraceImageOutline(image);
 
         // Smooth point list
         points = smoothPoints( points, 5, 5.0, 0.5 );
 
         // Run Polyline Simplification algorithm
-        points = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(points.toStdVector(), 0.1) );
+        points = PolylineSimplification::RamerDouglasPeucker(points, 0.1);
 
         // Check winding
-        HullFinder::EnsureWindingOrientation(points.toStdVector(), Winding_Orientation::CounterClockwise);
+        HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
 
         // Old Way of Simplifying Points on Similar Slopes
         ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
@@ -67,23 +67,23 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         DrImaging::FillBorder(holes, c_color_white, holes.rect());          // Ensures only holes are left as black spots
 
         // Breaks holes into seperate images for each Hole
-        QVector<QImage> hole_images;
-        QVector<QRect>  hole_rects;
+        std::vector<QImage> hole_images;
+        std::vector<QRect>  hole_rects;
         DrImaging::FindObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
 
         // Go through each image (Hole) create list for it
-        QVector<QVector<DrPointF>> hole_list;
-        for (int hole_number = 0; hole_number < hole_images.count(); hole_number++) {
+        std::vector<std::vector<DrPointF>> hole_list;
+        for (int hole_number = 0; hole_number < hole_images.size(); hole_number++) {
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
-            QVector<DrPointF> one_hole = DrImaging::TraceImageOutline(hole);
+            std::vector<DrPointF> one_hole = DrImaging::TraceImageOutline(hole);
             // Add in sub image offset to points
             for (auto &point : one_hole) {
                 point.x += rects[image_number].x();
                 point.y += rects[image_number].y();
             }
             one_hole = smoothPoints( one_hole, 5, 5.0, 0.5 );
-            one_hole = QVector<DrPointF>::fromStdVector( PolylineSimplification::RamerDouglasPeucker(one_hole.toStdVector(), 0.1) );
+            one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);
             HullFinder::EnsureWindingOrientation(one_hole, Winding_Orientation::Clockwise);
             hole_list.push_back(one_hole);
         }
@@ -117,17 +117,17 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 //##                    0.01 looks nice for most objects, 1.0 looks good for #KEYWORD: "low poly", "low-poly"
 //##        test_count: how many points to test before we just go ahead and add a point
 //####################################################################################
-QVector<DrPointF> DrEngineVertexData::simplifyPoints(const QVector<DrPointF> &outline_points, double tolerance, int test_count, bool average) {
-    QVector<DrPointF> simple_points;
-    if (outline_points.count()  > 0) simple_points.push_back(outline_points[0]);            // Add first point
-    if (outline_points.count() == 2) simple_points.push_back(outline_points[1]);            // Add second / last point if only two points
-    if (outline_points.count()  > 2) {
+std::vector<DrPointF> DrEngineVertexData::simplifyPoints(const std::vector<DrPointF> &outline_points, double tolerance, int test_count, bool average) {
+    std::vector<DrPointF> simple_points;
+    if (outline_points.size()  > 0) simple_points.push_back(outline_points[0]);            // Add first point
+    if (outline_points.size() == 2) simple_points.push_back(outline_points[1]);            // Add second / last point if only two points
+    if (outline_points.size()  > 2) {
         int at_point =      0;
         int next_point =    1;
         int check_point  =  2;
 
         // Loop through points finding lines and eliminating duplicate points among them
-        while (at_point < outline_points.count() - 1) {
+        while (at_point < outline_points.size() - 1) {
             bool found_next_end_point =false;
             int  count = 0;
             do {
@@ -169,7 +169,7 @@ QVector<DrPointF> DrEngineVertexData::simplifyPoints(const QVector<DrPointF> &ou
                 ++check_point;
 
                 // Check point is at the end
-                if (check_point == outline_points.count()) {
+                if (check_point == outline_points.size()) {
                     found_next_end_point = true;
                     at_point = check_point - 1;
                     simple_points.push_back(outline_points[at_point]);
@@ -186,11 +186,11 @@ QVector<DrPointF> DrEngineVertexData::simplifyPoints(const QVector<DrPointF> &ou
 //##    Smooth / Curve a collection of points representing a 2D outline
 //####################################################################################
 // Returns a point from a vector with wrap around coverage of vector indices
-DrPointF pointAt(const QVector<DrPointF> &point_list, int index) {
+DrPointF pointAt(const std::vector<DrPointF> &point_list, int index) {
     if (index < 0)
-        return point_list[index + point_list.count()];
-    else if (index >= point_list.count())
-        return point_list[index - point_list.count()];
+        return point_list[index + point_list.size()];
+    else if (index >= point_list.size())
+        return point_list[index - point_list.size()];
     else
         return point_list[index];
 }
@@ -198,15 +198,15 @@ DrPointF pointAt(const QVector<DrPointF> &point_list, int index) {
 const double c_smooth_min_size = 50.0;
 
 // Smooths points, neighbors is in each direction (so 1 is index +/- 1 more point in each direction
-QVector<DrPointF> DrEngineVertexData::smoothPoints(const QVector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight) {
-    QVector<DrPointF> smooth_points;
+std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight) {
+    std::vector<DrPointF> smooth_points;
 
     // Check size of polygon, accomodate smoothing for small images
     double x_min = outline_points[0].x;
     double x_max = outline_points[0].x;
     double y_min = outline_points[0].y;
     double y_max = outline_points[0].y;
-    for (int i = 0; i < outline_points.count(); i++) {
+    for (int i = 0; i < outline_points.size(); i++) {
         if (outline_points[i].x < x_min) x_min = outline_points[i].x;
         if (outline_points[i].x > x_max) x_max = outline_points[i].x;
         if (outline_points[i].y < y_min) y_min = outline_points[i].y;
@@ -221,8 +221,8 @@ QVector<DrPointF> DrEngineVertexData::smoothPoints(const QVector<DrPointF> &outl
     }
 
     // If not enough neighbors, just return starting polygon
-    if (outline_points.count() <= neighbors) {
-        for (int i = 0; i < outline_points.count(); ++i)
+    if (outline_points.size() <= neighbors) {
+        for (int i = 0; i < outline_points.size(); ++i)
             smooth_points.push_back(outline_points[i]);
         return smooth_points;
     }
@@ -230,7 +230,7 @@ QVector<DrPointF> DrEngineVertexData::smoothPoints(const QVector<DrPointF> &outl
     // Go through and smooth the points (simple average)
     const double c_sharp_angle = 120.0;
 
-    for (int i = 0; i < outline_points.count(); i++) {
+    for (int i = 0; i < outline_points.size(); i++) {
         // Current Point
         DrPointF this_point = outline_points[i];
         double total_used = 1.0;
@@ -290,7 +290,7 @@ QVector<DrPointF> DrEngineVertexData::smoothPoints(const QVector<DrPointF> &outl
 //####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::triangulateFace(const QVector<DrPointF> &outline_points, const QVector<QVector<DrPointF>> &hole_list,
+void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_points, const std::vector<std::vector<DrPointF>> &hole_list,
                                          const QImage &black_and_white, bool wireframe, Trianglulation type) {
     int width =  black_and_white.width();
     int height = black_and_white.height();
@@ -298,10 +298,10 @@ void DrEngineVertexData::triangulateFace(const QVector<DrPointF> &outline_points
     double h2d = height / 2.0;
 
     // ***** Copy DrPointFs into TPPLPoly
-    if (outline_points.count() < 3) return;
+    if (outline_points.size() < 3) return;
     std::list<TPPLPoly> testpolys, result;
-    TPPLPoly poly; poly.Init(outline_points.count());
-    for (int i = 0; i < outline_points.count(); i++) {
+    TPPLPoly poly; poly.Init(outline_points.size());
+    for (int i = 0; i < outline_points.size(); i++) {
         poly[i].x = outline_points[i].x;
         poly[i].y = outline_points[i].y;
     }
@@ -403,7 +403,7 @@ void DrEngineVertexData::triangulateFace(const QVector<DrPointF> &outline_points
 
         // Delaunay Trianglulation returns a collection of triangles filling a convex hull of a collection of points.
         // So no we have to go through the triangles returned and remove any that are over transparent areas of our object.
-        for (std::size_t i = 0; i < d.triangles.size(); i += 3) {
+        for (size_t i = 0; i < d.triangles.size(); i += 3) {
             double x1 = d.coords[2 * d.triangles[i + 0]];
             double y1 = d.coords[2 * d.triangles[i + 0] + 1];
             double x2 = d.coords[2 * d.triangles[i + 1]];
@@ -449,14 +449,14 @@ void DrEngineVertexData::triangulateFace(const QVector<DrPointF> &outline_points
 //####################################################################################
 //##    Add Extrusion Triangles to Vertex Data
 //####################################################################################
-void DrEngineVertexData::extrudeFacePolygon(const QVector<DrPointF> &outline_points, int width, int height, int steps) {
+void DrEngineVertexData::extrudeFacePolygon(const std::vector<DrPointF> &outline_points, int width, int height, int steps) {
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
-    for (int i = 0; i < outline_points.count(); i++) {
+    for (int i = 0; i < outline_points.size(); i++) {
         int point1 = i + 1;
         int point2 = i;
-        if (point1 >= outline_points.count()) point1 = 0;
+        if (point1 >= outline_points.size()) point1 = 0;
 
         GLfloat  x1 = static_cast<GLfloat>(         outline_points[point1].x);
         GLfloat  y1 = static_cast<GLfloat>(height - outline_points[point1].y);

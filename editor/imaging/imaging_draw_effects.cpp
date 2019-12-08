@@ -39,7 +39,7 @@ QPixmap DrawLight(QColor color, int diameter, float cone_start, float cone_end, 
     light.fill(Qt::transparent);
 
     QImage image = light.toImage();
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
     float cone_1 = qDegreesToRadians(cone_start);
     float cone_2 = qDegreesToRadians(cone_end);
@@ -241,17 +241,17 @@ QPixmap DrawFibonacci(QColor background_color, QColor pen_color) {
     spiral.moveTo(0, 0);
 
     // Create a fibonacci sequence
-    QVector<double> fib;
-    fib.append(1.0);
-    fib.append(2.0);
+    std::vector<double> fib;
+    fib.push_back(1.0);
+    fib.push_back(2.0);
     double adjust = 1.00;                                   // Minimum of 0.5
-    for (int i = 2; i < 40; ++i) {
-        fib.append( (fib[i - 2] + fib[i - 1]) * adjust );
+    for (size_t i = 2; i < 40; ++i) {
+        fib.push_back( (fib[i - 2] + fib[i - 1]) * adjust );
     }
 
     // Draw the fibonacci spiral
     int angle = 180;
-    for (int i = 0; i < fib.length() - 1; ++i) {
+    for (size_t i = 0; i < fib.size() - 1; ++i) {
         QRectF arc = QRectF( spiral.currentPosition().x() - fib[i], spiral.currentPosition().y() - fib[i], fib[i] * 2.0, fib[i] * 2.0 );
         painter.drawArc( arc, angle * 16, 90 * 16 );
         spiral.arcTo( arc, angle, 90.0 );
@@ -299,14 +299,14 @@ QPixmap DrawSwirl(QColor color, double angle) {
     // Swirl the image
     QImage source = swirl.toImage();
     QImage dest   = swirl.toImage();
-    QVector<QRgb*> source_lines =   GetScanLines(source);
-    QVector<QRgb*> dest_lines =     GetScanLines(dest);
+    std::vector<QRgb*> source_lines =   GetScanLines(source);
+    std::vector<QRgb*> dest_lines =     GetScanLines(dest);
 
     // Loop through every pixel and perform swirl
     double radius = width / 2.0;
     angle /= 100.0;
-    for( int y = 0; y < source.height(); ++y ) {
-        for( int x = 0; x < source.width(); ++x ) {
+    for (size_t y = 0; y < source.height(); ++y ) {
+        for (size_t x = 0; x < source.width(); ++x ) {
             QPointF center   { width / 2.0, height / 2.0 };
             QPointF tex_size { width / 1.0, height / 1.0 };
             QPointF tc { double(x), double(y) };
@@ -323,7 +323,7 @@ QPixmap DrawSwirl(QColor color, double angle) {
             int fx = static_cast<int>(tc.x());
             int fy = static_cast<int>(tc.y());
             if (fx >= 0 && fx < source.width() && fy >= 0 && fy < source.height())
-                dest_lines[y][x] = source_lines[fx][fy];
+                dest_lines[y][x] = source_lines[static_cast<size_t>(fx)][static_cast<size_t>(fy)];
         }
     }
 

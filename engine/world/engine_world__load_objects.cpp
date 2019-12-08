@@ -153,8 +153,7 @@ void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *obje
         QVariant shapes =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
         DrPropertyCollision shape = shapes.value<DrPropertyCollision>();
         for (auto poly : shape.getPolygons()) {
-            QVector<DrPointF> points = QVector<DrPointF>::fromStdVector(poly);
-            object->addShapePolygon(points);
+            object->addShapePolygon(poly);
         }
     } else if (shape == Collision_Shape::Circle) {
         object->addShapeCircleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );

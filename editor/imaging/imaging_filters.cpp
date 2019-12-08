@@ -34,7 +34,7 @@ QPixmap ApplySinglePixelFilter(Image_Filter_Type filter, const QPixmap &from_pix
 
 QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image, int value) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
     int table[ 256 ];
     for ( int i = 0; i < 256; ++i ) {
@@ -45,8 +45,8 @@ QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image
         }
     }
 
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < image.height(); ++y) {
+        for (size_t x = 0; x < image.width(); ++x) {
 
             // Grab the current pixel color
             QColor color = QColor::fromRgba( lines[y][x] );
@@ -109,17 +109,17 @@ QPixmap ApplyPixelation(const QPixmap &from_pixmap, QPointF data_pair) {
 
 QImage ApplyPixelation(const QImage &from_image, QPointF data_pair) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < image.height(); ++y) {
+        for (size_t x = 0; x < image.width(); ++x) {
             double dx = data_pair.x();
             double dy = data_pair.y();
 
             double x_coord = Dr::Clamp( dx * floor(x / dx) + (dx / 2.0), 0.0, image.width() - 1.0);
             double y_coord = Dr::Clamp( dy * floor(y / dy) + (dy / 2.0), 0.0, image.height() - 1.0);
 
-            lines[y][x] = lines[static_cast<int>(y_coord)][static_cast<int>(x_coord)];
+            lines[y][x] = lines[static_cast<size_t>(y_coord)][static_cast<size_t>(x_coord)];
         }
     }
     return image;
@@ -131,10 +131,10 @@ QImage ApplyPixelation(const QImage &from_image, QPointF data_pair) {
 //####################################################################################
 QImage ColorizeImage(const QImage &from_image, QColor new_color) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < image.height(); ++y) {
+        for (size_t x = 0; x < image.width(); ++x) {
             QColor color = QColor::fromRgba( lines[y][x] );
 
             if (color.alpha() > 10) {
@@ -155,10 +155,10 @@ QImage ColorizeImage(const QImage &from_image, QColor new_color) {
 //####################################################################################
 QImage CheckOpacityTolerance(const QImage &from_image) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
-    for (int y = 0; y < image.height(); ++y) {
-        for (int x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < image.height(); ++y) {
+        for (size_t x = 0; x < image.width(); ++x) {
             QColor color = QColor::fromRgba( lines[y][x] );
 
             if (color.alpha() <= 2) {

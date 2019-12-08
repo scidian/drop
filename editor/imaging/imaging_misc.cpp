@@ -30,8 +30,8 @@ namespace DrImaging
 //####################################################################################
 //##    Returns array of scanlines that are a direct access to QImage pixels
 //####################################################################################
-QVector<QRgb*> GetScanLines(QImage &image) {
-    QVector<QRgb*> lines;
+std::vector<QRgb*> GetScanLines(QImage &image) {
+    std::vector<QRgb*> lines;
 
     if (image.format() != QImage::Format::Format_ARGB32)
         image = image.convertToFormat( QImage::Format_ARGB32 );
@@ -43,7 +43,7 @@ QVector<QRgb*> GetScanLines(QImage &image) {
 
             // Grab all the scan lines
             for (int y = 0; y < image.height(); ++y)
-                lines.append( reinterpret_cast<QRgb*>(image.scanLine(y)) );
+                lines.push_back( reinterpret_cast<QRgb*>(image.scanLine(y)) );
 
         } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
     } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
@@ -99,13 +99,13 @@ QColor AverageColor(const QPixmap &pixmap, bool screen_shot) {
 //####################################################################################
 float* ImageBitsAsFloat(const QImage &from_image) {
     QImage image = from_image;
-    QVector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = GetScanLines(image);
 
     // Method #1
     ///float *out = static_cast<float*>( malloc(static_cast<std::size_t>(image.width() * image.height()) * sizeof(float)) );
     ///int index = 0;
-    ///for (int y = 0; y < image.height(); ++y) {
-    ///    for (int x = 0; x < image.width(); ++x) {
+    ///for (size_t y = 0; y < image.height(); ++y) {
+    ///    for (size_t x = 0; x < image.width(); ++x) {
     ///        out[index] = lines[y][x];
     ///        index++;
     ///    }

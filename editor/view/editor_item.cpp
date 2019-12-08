@@ -243,8 +243,10 @@ void DrItem::applyFilters() {
     if ( contrast   != 0 ) new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Contrast, new_image, contrast );
     if ( brightness != 0 ) new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Brightness, new_image, brightness );
 
+    // Make all mostly transparent pixels fully transparent, better QGraphicsItem.shape() mouse select / grab
     new_image = DrImaging::CheckOpacityTolerance(new_image);
 
+    // Set updated image as Pixmap
     setPixmap( QPixmap::fromImage(new_image) );
 }
 

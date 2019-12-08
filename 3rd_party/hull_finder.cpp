@@ -38,11 +38,11 @@ bool HullFinder::CheckEdgeIntersection(const DrPointF &p0, const DrPointF &p1, c
 }
 
 bool HullFinder::CheckEdgeIntersection(const std::vector<DrPointF> &hull, DrPointF curEdgeStart, DrPointF curEdgeEnd, DrPointF checkEdgeStart, DrPointF checkEdgeEnd) {
-    for (int i = 0; i < static_cast<int>(hull.size()) - 2; i++) {
+    for (int i = 0; i < hull.size() - 2; i++) {
         int e1 = i;
         int e2 = i + 1;
-        DrPointF p1 = hull[static_cast<size_t>(e1)];
-        DrPointF p2 = hull[static_cast<size_t>(e2)];
+        DrPointF p1 = hull[e1];
+        DrPointF p2 = hull[e2];
 
         if (curEdgeStart == p1 && curEdgeEnd == p2) {
             continue;
@@ -109,63 +109,64 @@ std::vector<DrPointF> HullFinder::FindConvexHull(const std::vector<DrPointF> &Dr
     // Get the indices of Points with min x-coord and min|max y-coord
     int minmin = 0, minmax;
     double xmin = P[0].x;
-    for (i = 1; i < static_cast<int>(P.size()); i++)
-        if (Dr::FuzzyCompare(P[static_cast<size_t>(i)].x, xmin) == false) break;
+    for (i = 1; i < P.size(); i++) {
+        if (Dr::FuzzyCompare(P[i].x, xmin) == false) break;
+    }
     minmax = i - 1;
-    if (minmax == static_cast<int>(P.size()) - 1) {                                 // degenerate case: all x-coords == xmin
-        H.push_back(P[static_cast<size_t>(minmin)]);
-        if (Dr::FuzzyCompare(P[static_cast<size_t>(minmax)].y, P[static_cast<size_t>(minmin)].y) == false)      // a nontrivial segment
-            H.push_back(P[static_cast<size_t>(minmax)]);
-        H.push_back(P[static_cast<size_t>(minmin)]);                                // add polygon end point
+    if (minmax == P.size() - 1) {                                                   // degenerate case: all x-coords == xmin
+        H.push_back(P[minmin]);
+        if (Dr::FuzzyCompare(P[minmax].y, P[minmin].y) == false)                    // a nontrivial segment
+            H.push_back(P[minmax]);
+        H.push_back(P[minmin]);                                                     // add polygon end point
         return H;
     }
 
     // Get the indices of Points with max x-coord and min|max y-coord
     int maxmin, maxmax = static_cast<int>(P.size()) - 1;
     double xmax = P.back().x;
-    for (i = static_cast<int>(P.size()) - 2; i >= 0; i--)
-        if (Dr::FuzzyCompare(P[static_cast<size_t>(i)].x, xmax) == false) break;
+    for (i = static_cast<int>(P.size()) - 2; i >= 0; i--) {
+        if (Dr::FuzzyCompare(P[i].x, xmax) == false) break;
+    }
     maxmin = i+1;
 
     // Compute the lower hull on the stack H
-    H.push_back(P[static_cast<size_t>(minmin)]);                                    // push  minmin point onto stack
+    H.push_back(P[minmin]);                                                         // push  minmin point onto stack
     i = minmax;
     while (++i <= maxmin) {
         // the lower line joins P[minmin]  with P[maxmin]
         if (IsLeft(P[minmin], P[maxmin], P[i]) >= 0 && i < maxmin)
             continue;                                                               // ignore P[i] above or on the lower line
 
-        while (H.size() > 1)                                                        // there are at least 2 points on the stack
-        {
+        while (H.size() > 1) {                                                      // there are at least 2 points on the stack
             // test if  P[i] is left of the line at the stack top
-            if (IsLeft(H[H.size() - 2], H.back(), P[static_cast<size_t>(i)]) > 0)
+            if (IsLeft(H[H.size() - 2], H.back(), P[i]) > 0)
                 break;                                                              // P[i] is a new hull  vertex
             H.pop_back();                                                           // pop top point off  stack
         }
-        H.push_back(P[static_cast<size_t>(i)]);                                     // push P[i] onto stack
+        H.push_back(P[i]);                                                          // push P[i] onto stack
     }
 
     // Next, compute the upper hull on the stack H above  the bottom hull
     if (maxmax != maxmin)                                                           // if  distinct xmax points
-         H.push_back(P[static_cast<size_t>(maxmax)]);                               // push maxmax point onto stack
+         H.push_back(P[maxmax]);                                                    // push maxmax point onto stack
     int bot = static_cast<int>(H.size());                                           // the bottom point of the upper hull stack
     i = maxmin;
     while (--i >= minmax) {
         // the upper line joins P[maxmax]  with P[minmax]
-        if (IsLeft( P[maxmax], P[minmax], P[i])  >= 0 && i > minmax)
+        if (IsLeft( P[maxmax], P[minmax], P[i]) >= 0 && i > minmax)
             continue;                                                               // ignore P[i] below or on the upper line
 
         while (static_cast<int>(H.size()) > bot)                                    // at least 2 points on the upper stack
         {
             // test if  P[i] is left of the line at the stack top
-            if (IsLeft(H[H.size() - 2], H.back(), P[static_cast<size_t>(i)]) > 0)
+            if (IsLeft(H[H.size() - 2], H.back(), P[i]) > 0)
                 break;                                                              // P[i] is a new hull  vertex
             H.pop_back();                                                           // pop top point off stack
         }
-        H.push_back(P[static_cast<size_t>(i)]);                                     // push P[i] onto stack
+        H.push_back(P[i]);                                                          // push P[i] onto stack
     }
     if (minmax != minmin)
-        H.push_back(P[static_cast<size_t>(minmin)]);                                // push joining end point onto stack
+        H.push_back(P[minmin]);                                                     // push joining end point onto stack
 
     return H;
 }
