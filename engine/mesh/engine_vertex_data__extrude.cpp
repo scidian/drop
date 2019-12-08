@@ -41,7 +41,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
     ///images.push_back( DrImaging::BlackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     // ***** Go through each image (object) and add triangles for it
-    for (int image_number = 0; image_number < images.size(); image_number++) {
+    for (int image_number = 0; image_number < static_cast<int>(images.size()); image_number++) {
         QImage &image = images[image_number];
         if (image.width() < 1 || image.height() < 1) continue;
 
@@ -73,7 +73,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
         // Go through each image (Hole) create list for it
         std::vector<std::vector<DrPointF>> hole_list;
-        for (int hole_number = 0; hole_number < hole_images.size(); hole_number++) {
+        for (int hole_number = 0; hole_number < static_cast<int>(hole_images.size()); hole_number++) {
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
             std::vector<DrPointF> one_hole = DrImaging::TraceImageOutline(hole);
@@ -127,7 +127,7 @@ std::vector<DrPointF> DrEngineVertexData::simplifyPoints(const std::vector<DrPoi
         int check_point  =  2;
 
         // Loop through points finding lines and eliminating duplicate points among them
-        while (at_point < outline_points.size() - 1) {
+        while (at_point < static_cast<int>(outline_points.size()) - 1) {
             bool found_next_end_point =false;
             int  count = 0;
             do {
@@ -169,7 +169,7 @@ std::vector<DrPointF> DrEngineVertexData::simplifyPoints(const std::vector<DrPoi
                 ++check_point;
 
                 // Check point is at the end
-                if (check_point == outline_points.size()) {
+                if (check_point == static_cast<int>(outline_points.size())) {
                     found_next_end_point = true;
                     at_point = check_point - 1;
                     simple_points.push_back(outline_points[at_point]);
@@ -189,7 +189,7 @@ std::vector<DrPointF> DrEngineVertexData::simplifyPoints(const std::vector<DrPoi
 DrPointF pointAt(const std::vector<DrPointF> &point_list, int index) {
     if (index < 0)
         return point_list[index + point_list.size()];
-    else if (index >= point_list.size())
+    else if (index >= static_cast<int>(point_list.size()))
         return point_list[index - point_list.size()];
     else
         return point_list[index];
@@ -206,7 +206,7 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
     double x_max = outline_points[0].x;
     double y_min = outline_points[0].y;
     double y_max = outline_points[0].y;
-    for (int i = 0; i < outline_points.size(); i++) {
+    for (int i = 0; i < static_cast<int>(outline_points.size()); i++) {
         if (outline_points[i].x < x_min) x_min = outline_points[i].x;
         if (outline_points[i].x > x_max) x_max = outline_points[i].x;
         if (outline_points[i].y < y_min) y_min = outline_points[i].y;
@@ -221,8 +221,8 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
     }
 
     // If not enough neighbors, just return starting polygon
-    if (outline_points.size() <= neighbors) {
-        for (int i = 0; i < outline_points.size(); ++i)
+    if (static_cast<int>(outline_points.size()) <= neighbors) {
+        for (int i = 0; i < static_cast<int>(outline_points.size()); ++i)
             smooth_points.push_back(outline_points[i]);
         return smooth_points;
     }
@@ -230,7 +230,7 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
     // Go through and smooth the points (simple average)
     const double c_sharp_angle = 120.0;
 
-    for (int i = 0; i < outline_points.size(); i++) {
+    for (int i = 0; i < static_cast<int>(outline_points.size()); i++) {
         // Current Point
         DrPointF this_point = outline_points[i];
         double total_used = 1.0;
@@ -301,7 +301,7 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
     if (outline_points.size() < 3) return;
     std::list<TPPLPoly> testpolys, result;
     TPPLPoly poly; poly.Init(outline_points.size());
-    for (int i = 0; i < outline_points.size(); i++) {
+    for (int i = 0; i < static_cast<int>(outline_points.size()); i++) {
         poly[i].x = outline_points[i].x;
         poly[i].y = outline_points[i].y;
     }
@@ -453,10 +453,10 @@ void DrEngineVertexData::extrudeFacePolygon(const std::vector<DrPointF> &outline
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
-    for (int i = 0; i < outline_points.size(); i++) {
+    for (int i = 0; i < static_cast<int>(outline_points.size()); i++) {
         int point1 = i + 1;
         int point2 = i;
-        if (point1 >= outline_points.size()) point1 = 0;
+        if (point1 >= static_cast<int>(outline_points.size())) point1 = 0;
 
         GLfloat  x1 = static_cast<GLfloat>(         outline_points[point1].x);
         GLfloat  y1 = static_cast<GLfloat>(height - outline_points[point1].y);

@@ -45,8 +45,8 @@ QImage BlackAndWhiteFromAlpha(const QImage &from_image, double alpha_tolerance, 
         color2 = c_color_white;
     }
 
-    for (size_t y = 0; y < image.height(); ++y) {
-        for (size_t x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
             lines[y][x] = (QColor::fromRgba(lines[y][x]).alphaF() < alpha_tolerance) ? color1 : color2;
         }
     }
@@ -93,8 +93,8 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
     // Get starting color, set processed image to all zeros
     QColor start_color = QColor::fromRgba(image_lines[at_y][at_x]);
 
-    for (size_t y = 0; y < from_image.height(); ++y) {
-        for (size_t x = 0; x < from_image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(from_image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(from_image.width()); ++x) {
             flood_lines[y][x] = 0;
             processed_lines[y][x] = FLOOD_NOT_PROCESSED;
         }
@@ -212,8 +212,8 @@ int FindObjectsInImage(const QImage &image, std::vector<QImage> &images, std::ve
 
     // Loop through every pixel in image, if we find a spot that has an object,
     // flood fill that spot and add the resulting image shape to the array of object images
-    for (size_t x = 0; x < black_white.width(); ++x) {
-        for (size_t y = 0; y < black_white.height(); ++y) {
+    for (size_t x = 0; x < static_cast<size_t>(black_white.width()); ++x) {
+        for (size_t y = 0; y < static_cast<size_t>(black_white.height()); ++y) {
             if (lines[y][x] == c_color_black) {
                 QRect  rect;
                 int    flood_pixel_count;
@@ -258,8 +258,8 @@ std::vector<DrPointF> TraceImageOutline(const QImage &from_image) {
     DrPoint last_point;
     bool has_start_point = false;
 
-    for (size_t y = 0; y < image.height(); ++y) {
-        for (size_t x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
             // If pixel is part of the exterior, it cannot be part of the border
             if (image_lines[y][x] == c_color_black) {
                 processed_lines[y][x] = TRACE_NOT_BORDER;
@@ -268,7 +268,7 @@ std::vector<DrPointF> TraceImageOutline(const QImage &from_image) {
 
             // Run through all pixels this pixel is touching to see if any are transparent (i.e. c_color_black)
             bool can_be_border = false;
-            if (x == 0 || y == 0 || x == (image.width() - 1) || y == (image.height() - 1)) {
+            if (x == 0 || y == 0 || x == static_cast<size_t>(image.width() - 1) || y == static_cast<size_t>(image.height() - 1)) {
                 can_be_border = true;
             } else {
                 for (size_t i = x - 1; i <= x + 1; ++i) {

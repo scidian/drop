@@ -305,8 +305,8 @@ QPixmap DrawSwirl(QColor color, double angle) {
     // Loop through every pixel and perform swirl
     double radius = width / 2.0;
     angle /= 100.0;
-    for (size_t y = 0; y < source.height(); ++y ) {
-        for (size_t x = 0; x < source.width(); ++x ) {
+    for (size_t y = 0; y < static_cast<size_t>(source.height()); ++y ) {
+        for (size_t x = 0; x < static_cast<size_t>(source.width()); ++x ) {
             QPointF center   { width / 2.0, height / 2.0 };
             QPointF tex_size { width / 1.0, height / 1.0 };
             QPointF tc { double(x), double(y) };

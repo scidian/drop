@@ -45,8 +45,8 @@ QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image
         }
     }
 
-    for (size_t y = 0; y < image.height(); ++y) {
-        for (size_t x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
 
             // Grab the current pixel color
             QColor color = QColor::fromRgba( lines[y][x] );
@@ -111,8 +111,8 @@ QImage ApplyPixelation(const QImage &from_image, QPointF data_pair) {
     QImage image = from_image;
     std::vector<QRgb*> lines = GetScanLines(image);
 
-    for (size_t y = 0; y < image.height(); ++y) {
-        for (size_t x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
             double dx = data_pair.x();
             double dy = data_pair.y();
 
@@ -133,8 +133,8 @@ QImage ColorizeImage(const QImage &from_image, QColor new_color) {
     QImage image = from_image;
     std::vector<QRgb*> lines = GetScanLines(image);
 
-    for (size_t y = 0; y < image.height(); ++y) {
-        for (size_t x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
             QColor color = QColor::fromRgba( lines[y][x] );
 
             if (color.alpha() > 10) {
@@ -157,8 +157,8 @@ QImage CheckOpacityTolerance(const QImage &from_image) {
     QImage image = from_image;
     std::vector<QRgb*> lines = GetScanLines(image);
 
-    for (size_t y = 0; y < image.height(); ++y) {
-        for (size_t x = 0; x < image.width(); ++x) {
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
             QColor color = QColor::fromRgba( lines[y][x] );
 
             if (color.alpha() <= 2) {

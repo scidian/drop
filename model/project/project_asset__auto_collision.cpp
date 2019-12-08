@@ -35,7 +35,7 @@ DrPropertyCollision autoCollisionShape(QPixmap pixmap) {
 
     // ***** Go through each image (object) and Polygon for it
     if (images.size() < 50) {
-        for (int image_number = 0; image_number < images.size(); image_number++) {
+        for (int image_number = 0; image_number < static_cast<int>(images.size()); image_number++) {
             QImage &image = images[image_number];
             if (image.width() < 1 || image.height() < 1) continue;
 

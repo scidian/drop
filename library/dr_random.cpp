@@ -27,8 +27,8 @@ double RandomDouble(double lower, double upper) {
     static unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
     static std::default_random_engine generator (seed);
 
-    std::uniform_int_distribution<double> distribution(lower, upper);
-    return distribution(generator);
+    std::uniform_int_distribution<double> distribution(lower * 10000.0, upper * 10000.0);
+    return (distribution(generator) / 10000.0);
 }
 
 // Returns a random true / false

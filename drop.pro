@@ -32,7 +32,7 @@ QMAKE_CFLAGS    += -std=c99
 
 ##### C++ Make Flags
 QMAKE_CXXFLAGS  += -Wno-sign-conversion
-QMAKE_CXXFLAGS  += -Wno-sign-compare
+#QMAKE_CXXFLAGS  += -Wno-sign-compare
 #QMAKE_CXXFLAGS  += -Wno-padded
 #QMAKE_CXXFLAGS  += -Wno-unused-function
 

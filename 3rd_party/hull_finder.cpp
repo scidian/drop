@@ -38,7 +38,7 @@ bool HullFinder::CheckEdgeIntersection(const DrPointF &p0, const DrPointF &p1, c
 }
 
 bool HullFinder::CheckEdgeIntersection(const std::vector<DrPointF> &hull, DrPointF curEdgeStart, DrPointF curEdgeEnd, DrPointF checkEdgeStart, DrPointF checkEdgeEnd) {
-    for (int i = 0; i < hull.size() - 2; i++) {
+    for (int i = 0; i < static_cast<int>(hull.size()) - 2; i++) {
         int e1 = i;
         int e2 = i + 1;
         DrPointF p1 = hull[e1];
@@ -109,11 +109,11 @@ std::vector<DrPointF> HullFinder::FindConvexHull(const std::vector<DrPointF> &Dr
     // Get the indices of Points with min x-coord and min|max y-coord
     int minmin = 0, minmax;
     double xmin = P[0].x;
-    for (i = 1; i < P.size(); i++) {
+    for (i = 1; i < static_cast<int>(P.size()); i++) {
         if (Dr::FuzzyCompare(P[i].x, xmin) == false) break;
     }
     minmax = i - 1;
-    if (minmax == P.size() - 1) {                                                   // degenerate case: all x-coords == xmin
+    if (minmax == static_cast<int>(P.size()) - 1) {                                                   // degenerate case: all x-coords == xmin
         H.push_back(P[minmin]);
         if (Dr::FuzzyCompare(P[minmax].y, P[minmin].y) == false)                    // a nontrivial segment
             H.push_back(P[minmax]);
