@@ -174,7 +174,6 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
             case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
             case Property_Type::Image:                                  // Project Key to DrAnimation
             case Property_Type::Icon:
-            case Property_Type::Vector3D:
 
                 //################ !!!!!!!!!!!!!!!!!!!!!!!
                 //
@@ -311,7 +310,6 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
             case Property_Type::Image:                                  // Project Key to DrAnimation
             case Property_Type::Icon:
-            case Property_Type::Vector3D:
 
                 break;
         }

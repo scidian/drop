@@ -16,51 +16,54 @@
 //##
 //############################
 enum class Property_Type {
-    Enabled         = 29,   // bool             QList<QVariant> of 2 values, bool for enabled or not, and a QList of Properties that are included
+    Enabled         = 29,   // list<variant>    True or False, when True shows additional properties
+                            //                      2 values: bool for enabled or not, and a std::list<int> (of Properties) that are included
 
     Bool            =  0,   // bool             True or False
-    BoolDouble      =  1,   // bool w/double    True or False, and when True shows double spinbox
-                            //                  QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
-    BoolInt         =  28,  // bool w/int       True or False, and when True shows int spinbox
-                            //                  QList<QVariant> of 6 values: bool, int value,    min, max, int step size,    string spinText
+    BoolDouble      =  1,   // list<variant>    True or False, when True shows double spinbox
+                            //                      6 values: bool, double value, min, max, double step size, string spinText
+    BoolInt         =  28,  // list<variant>    True or False, when True shows int spinbox
+                            //                      6 values: bool, int value,    min, max, int step size,    string spinText
 
     Int             =  2,   // long             Integer
     Positive        =  3,   // long             Integer >= 0
-    RangedInt       =  4,   // long             QList<QVariant> of 4 values: long, min long value, max long value, long step size
+    RangedInt       =  4,   // list<variant>    Integer >= min and <= max
+                            //                      4 values: long, long min value, long max value, long step size
 
-    Double          =  5,   // double           Floating point number
-    Angle           =  6,   // double           Floating point for showing degrees, shows degree symbol in spinbox
-    PositiveDouble  =  7,   // double           Floating point number >= 0.0
-    RangedDouble    =  8,   // double           QList<QVariant> of 4 values, double, min double value, max double value, double step size
-    Slider          =  9,   // double w/slider  QList<QVariant> of 5 values, double, min double value, max double value, double step size, string suffix ("%", etc)
-    Percent         = 10,   // double w/slider  Floating point from 0.0 to 100.0, shows percent symbol
+    Double          =  5,   // double           Decimal
+    Angle           =  6,   // double           Decimal for showing degrees, shows degree symbol in spinbox
+    PositiveDouble  =  7,   // double           Decimal >= 0.0
+    RangedDouble    =  8,   // list<variant>    Decimal >= min and <= max
+                            //                      4 values: double, double min value, double max value, double step size
+    Slider          =  9,   // list<variant>    Decimal >= min and <= max, with a slider
+                            //                      5 values: double, double min value, double max value, double step size, string suffix ("%", etc)
+    Percent         = 10,   // double           Decimal from 0.0 to 100.0, shows percent symbol, with a slider
 
-    String          = 11,   // QString          Uses QLineEdit
-    Textbox         = 12,   // QString          Uses QTextEdit for multi-line htmnl text input
+    String          = 11,   // string           Uses QLineEdit
+    Textbox         = 12,   // string           Uses QTextEdit for multi-line html text input
 
-    PointF          = 13,   // QPointF          Floating pair x and y
-    PositionF       = 14,   // QPointF          Floating pair x and y, used for object positions in scene
+    PointF          = 13,   // pointF           Decimal pair x and y
+    PositionF       = 14,   // pointF           Decimal pair x and y, used for object positions in scene
                             //                      Y is shown flipped (i.e. * -1), Chipmunk uses different coordinate system than Qt
                             //                      Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
                             //                                    updateInspectorPropertyBoxes(), updateToolTipData()
-    ScaleF          = 15,   // QPointF          Floating pair x and y, has smaller increment step in spin box
-    PositiveScaleF  = 30,   // QPointF          Floating pair x and y, both numbers are >= 0.0
-    SizeF           = 16,   // QPointF          Floating pair w and h
-    PositiveSizeF   = 17,   // QPointF          Floating pair w and h, both numbers are >= 1.0
-    Point3D         = 27,   // QVector3D        Floating point trio, x, y, z
+    ScaleF          = 15,   // pointF           Decimal pair x and y, has smaller increment step in spin box
+    PositiveScaleF  = 30,   // pointF           Decimal pair x and y, both numbers are >= 0.0
+    SizeF           = 16,   // pointF           Decimal pair w and h
+    PositiveSizeF   = 17,   // pointF           Decimal pair w and h, both numbers are >= 1.0
+    Point3D         = 27,   // QVector3D        Decimal point trio, x, y, z
 
-    GridF           = 18,   // QPointF          Floating pair x and y, minimum value of c_minimum_grid_size  for both x and y
-    GridScaleF      = 19,   // QPointF          Floating pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable        = 20,   // QPointF          Floating point pair, number followed by a +/- number
+    GridF           = 18,   // pointF           Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
+    GridScaleF      = 19,   // pointF           Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
+    Variable        = 20,   // pointF           Decimal point pair, number followed by a +/- number
 
-    List            = 21,   // enum list
+    List            = 21,   // long             Index of a particular enum list
 
     Collision       = 22,   // DrPropertyCollision      For Collision Shapes
-    Color           = 23,   // QColor.rgba()            For Colors
-    Image           = 24,   // QPixmap
-    Icon            = 25,   // QPixmap
+    Color           = 23,   // unsigned int     For colors (compatible with QColor.rgba())
+    Image           = 24,   // long             Index of a particular DrAnimation within the Project
 
-    Vector3D        = 26,   // QVector3D        X, Y, Z
+    Icon            = 25,   // NOT IMPLEMENTED
 };
 
 

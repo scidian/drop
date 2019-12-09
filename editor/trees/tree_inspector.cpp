@@ -311,7 +311,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 //################ !!!!!!!!!!!!!!!!!!!!!!!
                 case Property_Type::Collision:                                      // For Collision Shapes
                 case Property_Type::Icon:
-                case Property_Type::Vector3D:
 
                     break;
             }
