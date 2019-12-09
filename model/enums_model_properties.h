@@ -9,7 +9,7 @@
 #define ENUMS_DR_SETTINGS_H
 
 //####################################################################################
-//##    Used to track what the QVariant m_value data type really is
+//##    Used to track what the DrVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
 //##    !!!!! NEXT AVAILABLE NUMBER:    31

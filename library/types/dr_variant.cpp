@@ -88,7 +88,7 @@ std::vector<DrVariant> DrVariant::toVector() {
             return { as_deque.begin(), as_deque.end() };
         }
         catch (const boost::bad_any_cast &) {
-            Dr::PrintDebug(std::string("Type: ") + getType());
+            ///Dr::PrintDebug(std::string("Type: ") + getType());
             return std::vector<DrVariant>();
         }
     }

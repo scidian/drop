@@ -26,7 +26,7 @@
 #	include <android/log.h>
 #endif
 
-#include "chipmunk_private.h"
+#include "3rd_party/chipmunk/chipmunk_private.h"
 
 void
 cpMessage(const char *condition, const char *file, int line, int isError, int isHardError, const char *message, ...)
