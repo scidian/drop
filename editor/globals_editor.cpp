@@ -75,8 +75,7 @@ namespace Dr {
 
 
         // Stored Color History
-        ///QVariant colors;
-        ///colors.setValue( std::vector<DrVariant> { qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) } );
+        ///DrVariant colors = std::vector<DrVariant>({ qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) });
         ///Dr::SetPreference(Preferences::Color_Popup_History, colors);
         Dr::AddToColorHistory( Qt::red   );
         Dr::AddToColorHistory( Qt::green );
@@ -104,7 +103,6 @@ namespace Dr {
 
 
         // List of Inspector Component Categories Being Expanded
-        QList<QVariant> expanded_list;
         for (int i = 0; i < static_cast<int>(Components::Total); ++i) {
             Dr::SetInspectorExpanded(static_cast<Components>(i),        false);
         }

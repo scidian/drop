@@ -40,8 +40,8 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
 
     if (check_type == Property_Type::Enabled) {
-        QList<QVariant> prop_list = property->getValue().toList();
-        if (prop_list.count() > 0) check->setChecked(prop_list[0].toBool());
+        std::vector<DrVariant> prop_list = property->getValue().toVector();
+        if (prop_list.size() > 0) check->setChecked(prop_list[0].toBool());
     } else {
         check->setChecked(property->getValue().toBool());
     }
@@ -57,7 +57,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 
 //####################################################################################
 //##    Pair of Check Box / Double Spin Box, uses Property_Type::BoolDouble
-//##        QList<QVariant> of 6 values: bool, double value, min, max, double step size, string spinText
+//##        std::vector<DrVariant> of 6 values: bool, double value, min, max, double step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
     long property_key = property->getPropertyKey();
@@ -81,17 +81,17 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
     check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    check_left->setChecked(property->getValue().toList()[0].toBool());
+    check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
-    DrQTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toList()[1].toDouble());
+    DrQTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toVector()[1].toDouble());
     spin_right->setObjectName("spinBool");
     spin_right->setFixedHeight(22);
-    spin_right->setPrefix(property->getValue().toList()[5].toString());
-    spin_right->setRange(property->getValue().toList()[2].toDouble(), property->getValue().toList()[3].toDouble());
-    spin_right->setSingleStep(property->getValue().toList()[4].toDouble());
+    spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
+    spin_right->setRange(property->getValue().toVector()[2].toDouble(), property->getValue().toVector()[3].toDouble());
+    spin_right->setSingleStep(property->getValue().toVector()[4].toDouble());
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    spin_right->setEnabled(property->getValue().toList()[0].toBool());
+    spin_right->setEnabled(property->getValue().toVector()[0].toBool());
 
     horizontal_split->addWidget(check_left);
     horizontal_split->addWidget(spin_right);
@@ -118,7 +118,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 
 //####################################################################################
 //##    Pair of Check Box / In Spin Box, uses Property_Type::BoolInt
-//##        QList<QVariant> of 6 values: bool, int value, min, max, int step size, string spinText
+//##        std::vector<DrVariant> of 6 values: bool, int value, min, max, int step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
     long property_key = property->getPropertyKey();
@@ -143,7 +143,7 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
     check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    check_left->setChecked(property->getValue().toList()[0].toBool());
+    check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
     QSpinBox *spin_right = new QSpinBox();
@@ -153,12 +153,12 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     spin_right->setMinimumWidth(50);
     spin_right->setFixedHeight(22);
     spin_right->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
-    spin_right->setPrefix(property->getValue().toList()[5].toString());
-    spin_right->setRange(property->getValue().toList()[2].toInt(), property->getValue().toList()[3].toInt());
-    spin_right->setSingleStep(property->getValue().toList()[4].toInt());
-    spin_right->setValue(property->getValue().toList()[1].toInt());
+    spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
+    spin_right->setRange(property->getValue().toVector()[2].toInt(), property->getValue().toVector()[3].toInt());
+    spin_right->setSingleStep(property->getValue().toVector()[4].toInt());
+    spin_right->setValue(property->getValue().toVector()[1].toInt());
     spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    spin_right->setEnabled(property->getValue().toList()[0].toBool());
+    spin_right->setEnabled(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(spin_right, property);
 
     horizontal_split->addWidget(check_left);

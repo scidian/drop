@@ -70,7 +70,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 
         switch (prop->getPropertyType()) {
             case Property_Type::Enabled:
-                dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toList()[0].toBool());
+                dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toVector()[0].toBool());
                 break;
 
             case Property_Type::Bool:
@@ -79,16 +79,16 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 
             case Property_Type::BoolDouble:
                 if (widget->property(User_Property::Order).toInt() == 0)
-                    dynamic_cast<QCheckBox*>(widget)->setChecked( prop->getValue().toList()[0].toBool() );
+                    dynamic_cast<QCheckBox*>(widget)->setChecked( prop->getValue().toVector()[0].toBool() );
                 else
-                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toList()[1].toDouble() );
+                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toVector()[1].toDouble() );
                 break;
 
             case Property_Type::BoolInt:
                 if (widget->property(User_Property::Order).toInt() == 0)
-                    dynamic_cast<QCheckBox*>(widget)->setChecked( prop->getValue().toList()[0].toBool() );
+                    dynamic_cast<QCheckBox*>(widget)->setChecked( prop->getValue().toVector()[0].toBool() );
                 else
-                    dynamic_cast<QSpinBox*>(widget)->setValue( prop->getValue().toList()[1].toInt() );
+                    dynamic_cast<QSpinBox*>(widget)->setValue( prop->getValue().toVector()[1].toInt() );
                 break;
 
             case Property_Type::Int:
@@ -97,7 +97,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
                 break;
 
             case Property_Type::RangedInt:
-                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toList().first().toInt() );
+                dynamic_cast<QSpinBox*>(widget)->setValue(prop->getValue().toVector()[0].toInt() );
                 break;
 
             case Property_Type::Double:
@@ -113,17 +113,17 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
             case Property_Type::RangedDouble:
             case Property_Type::Slider:
                 if (widget->property(User_Property::Order).toInt() == 2)
-                    dynamic_cast<QSlider*>(widget)->setValue( prop->getValue().toList().first().toInt() );
+                    dynamic_cast<QSlider*>(widget)->setValue( prop->getValue().toVector()[0].toInt() );
                 else
-                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toList().first().toDouble() );
+                    dynamic_cast<QDoubleSpinBox*>(widget)->setValue( prop->getValue().toVector()[0].toDouble() );
                 break;
 
             case Property_Type::String:
-                dynamic_cast<QLineEdit*>(widget)->setText(prop->getValue().toString());
+                dynamic_cast<QLineEdit*>(widget)->setText( QString::fromStdString(prop->getValue().toString()) );
                 break;
 
             case Property_Type::Textbox:
-                dynamic_cast<QTextEdit*>(widget)->setText(prop->getValue().toString());
+                dynamic_cast<QTextEdit*>(widget)->setText( QString::fromStdString(prop->getValue().toString()) );
                 break;
 
             case Property_Type::PositionF:
@@ -137,18 +137,19 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
             case Property_Type::Variable: {
                 QDoubleSpinBox *doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
                 if (doublespin->property(User_Property::Order).toInt() == 0)
-                    doublespin->setValue(prop->getValue().toPointF().x());
+                    doublespin->setValue(prop->getValue().toPointF().x);
                 else
                     if (prop->getPropertyType() == Property_Type::PositionF)
-                        doublespin->setValue(prop->getValue().toPointF().y() * -1);
+                        doublespin->setValue(prop->getValue().toPointF().y * -1);
                     else
-                        doublespin->setValue(prop->getValue().toPointF().y());
+                        doublespin->setValue(prop->getValue().toPointF().y);
                 break;
             }
 
             case Property_Type::Point3D: {
                 QDoubleSpinBox *doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
-                QVector3D prop_value = prop->getValue().value<QVector3D>();
+                std::vector<DrVariant> point3D = prop->getValue().toVector();
+                QVector3D prop_value = QVector3D(point3D[0].toFloat(), point3D[1].toFloat(), point3D[2].toFloat());
                 if (doublespin->property(User_Property::Order).toInt() == 0)
                     doublespin->setValue( static_cast<double>(prop_value.x()) );
                 else if (doublespin->property(User_Property::Order).toInt() == 1)
@@ -210,18 +211,18 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 //##    Updates the appropriate DrSettings DrProperty Values of the item changed
 //##        in the Inspector after a new value has been accepted
 //####################################################################################
-void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order) {
+void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;
     DrSettings *settings = getParentProject()->findSettingsFromKey( m_selected_key );
 
-    QPointF temp_pointf;
+    DrPointF temp_pointf;
 
     if (settings != nullptr) {
         DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
 
         switch (property->getPropertyType()) {
             case Property_Type::Enabled: {
-                QList<QVariant> enabled_list = property->getValue().toList();
+                std::vector<DrVariant> enabled_list = property->getValue().toVector();
                 enabled_list[0] = new_value;
                 property->setValue(enabled_list);
                 updateSubProperties();
@@ -242,14 +243,14 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
                 break;
 
             case Property_Type::BoolDouble: {
-                QList<QVariant> ranged_list = property->getValue().toList();
+                std::vector<DrVariant> ranged_list = property->getValue().toVector();
                 ranged_list[static_cast<int>(sub_order)] = new_value;
                 property->setValue(ranged_list);
                 break;
             }
 
             case Property_Type::BoolInt: {
-                QList<QVariant> ranged_list = property->getValue().toList();
+                std::vector<DrVariant> ranged_list = property->getValue().toVector();
                 ranged_list[static_cast<int>(sub_order)] = new_value;
                 property->setValue(ranged_list);
                 break;
@@ -258,7 +259,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::RangedInt:
             case Property_Type::RangedDouble:
             case Property_Type::Slider: {
-                QList<QVariant> ranged_list = property->getValue().toList();
+                std::vector<DrVariant> ranged_list = property->getValue().toVector();
                 ranged_list[0] = new_value;
                 property->setValue(ranged_list);
                 break;
@@ -275,25 +276,26 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, QVariant new_v
             case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
                 temp_pointf = property->getValue().toPointF();
                 if (sub_order == 0)
-                    temp_pointf.setX( new_value.toDouble() );
+                    temp_pointf.x = new_value.toDouble();
                 else {
                     if (property->getPropertyType() == Property_Type::PositionF)
-                        temp_pointf.setY( new_value.toDouble() * -1);
+                        temp_pointf.y = new_value.toDouble() * -1;
                     else
-                        temp_pointf.setY( new_value.toDouble() );
+                        temp_pointf.y = new_value.toDouble();
                 }
                 property->setValue(temp_pointf);
                 break;
 
             case Property_Type::Point3D: {
-                QVector3D point = property->getValue().value<QVector3D>();
+                std::vector<DrVariant> point3D = property->getValue().toVector();
+                QVector3D point = QVector3D(point3D[0].toFloat(), point3D[1].toFloat(), point3D[2].toFloat());
                 if (sub_order == 0)
                     point.setX( static_cast<float>(new_value.toDouble()) );
                 else if (sub_order == 1)
                     point.setY( static_cast<float>(new_value.toDouble()) );
                 else
                     point.setZ( static_cast<float>(new_value.toDouble()) );
-                property->setValue(point);
+                property->setValue( std::vector<DrVariant>({ point.x(), point.y(), point.z() }) );
                 break;
             }
 

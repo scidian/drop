@@ -32,7 +32,7 @@ void DrOpenGL::process2DLights() {
     }
 
     // ***** Process shadow casting lights
-    if (m_shadow_lights.count() > 0) {
+    if (m_shadow_lights.size() > 0) {
         // Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
         bindOccluderMapBuffer();
         glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
@@ -105,7 +105,7 @@ int DrOpenGL::findNeededShadowMaps() {
         if (thing->getThingType() != DrThingType::Light) continue;
 
         DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
-        if (light->light_type == Light_Type::Glow) m_glow_lights.append(light);
+        if (light->light_type == Light_Type::Glow) m_glow_lights.push_back(light);
         light_count++;
 
         // Calculate size of light texture (fbo)
@@ -150,7 +150,7 @@ int DrOpenGL::findNeededShadowMaps() {
 
         // If light needs shadows and is visible, add to shadow processing list
         if (light->draw_shadows && light->isInView())
-            m_shadow_lights.append(light);
+            m_shadow_lights.push_back(light);
     }
     return light_count;
 }
@@ -258,9 +258,11 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 //##    Renders Glow Lights on Glow fbo
 //####################################################################################
 void DrOpenGL::drawGlowLights() {
+    Blend_Mode mode = m_engine->getCurrentWorld()->getGlowBlendMode();
+
     // If no lights and ambient light is 50% (normal) exit now, otherwise bind Glow Light Buffer
     double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
-    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001)) return;
+    if (m_glow_lights.size() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001) && mode == Blend_Mode::Standard) return;
     bindGlowLightsBuffer(static_cast<float>(ambient_light));
 
     // Standard blend function

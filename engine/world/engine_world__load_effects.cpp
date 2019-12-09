@@ -34,18 +34,18 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
 
     QColor      start_color =       QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
-    float       zoom =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom).toList().first().toFloat();
+    float       zoom =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom).toVector()[0].toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     DrEngineFisheye *lens = new DrEngineFisheye(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                 info.z_order, info.angle, info.opacity, info.size,
                                                 start_color, tint, zoom );
     addThing( lens );
     lens->bitrate = bit_rate;
-    lens->pixel_x = static_cast<float>(pixelation.x());
-    lens->pixel_y = static_cast<float>(pixelation.y());
+    lens->pixel_x = static_cast<float>(pixelation.x);
+    lens->pixel_y = static_cast<float>(pixelation.y);
 }
 
 
@@ -64,8 +64,8 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     float       wave =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy).toFloat() / 100.f;
     float       speed =             thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed).toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     // Find out original QPixmap size used in editor
     info.size.x = info.size.x / info.scale.x;
@@ -75,8 +75,8 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
                                           static_cast<Fire_Mask>(mask), color_1, color_2, smoke, intensity, smooth, wave, speed);
     addThing( fire );
     fire->bitrate = bit_rate;
-    fire->pixel_x = static_cast<float>(pixelation.x());
-    fire->pixel_y = static_cast<float>(pixelation.y());
+    fire->pixel_x = static_cast<float>(pixelation.x);
+    fire->pixel_y = static_cast<float>(pixelation.y);
 
     // ***** 3D Settings
     loadThing3DSettings(thing, fire);
@@ -91,8 +91,8 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
     QColor      light_color =   QColor::fromRgba(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
     int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
 
-    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toList().first().toDouble();
-    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toDouble();
+    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toDouble();
+    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toDouble();
     float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
     float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
     float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
@@ -121,18 +121,18 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
     float       color_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint).toFloat() / 100.0f;
     float       blur =              thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur).toFloat();
     float       blur_stretch =      thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch).toFloat();
-    float       scale =             thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale).toList().first().toFloat();
+    float       scale =             thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale).toVector()[0].toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     DrEngineMirror *mirror = new DrEngineMirror(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                 info.z_order, info.angle, info.opacity, info.size,
                                                 color_1, color_2, color_tint, blur, blur_stretch, scale );
     addThing( mirror );
     mirror->bitrate = bit_rate;
-    mirror->pixel_x = static_cast<float>(pixelation.x());
-    mirror->pixel_y = static_cast<float>(pixelation.y());
+    mirror->pixel_x = static_cast<float>(pixelation.x);
+    mirror->pixel_y = static_cast<float>(pixelation.y);
 }
 
 
@@ -146,16 +146,16 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint).toFloat() / 100.0f;
     float       rotation =          thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     DrEngineSwirl *swirl = new DrEngineSwirl(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.angle, info.opacity, info.size,
                                              start_color, tint, rotation );
     addThing( swirl );
     swirl->bitrate = bit_rate;
-    swirl->pixel_x = static_cast<float>(pixelation.x());
-    swirl->pixel_y = static_cast<float>(pixelation.y());
+    swirl->pixel_x = static_cast<float>(pixelation.x);
+    swirl->pixel_y = static_cast<float>(pixelation.y);
 }
 
 
@@ -191,8 +191,8 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       foam_height =   thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
     bool        foam_flat =     thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Is_Flat).toBool();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toList().first().toInt();
-    QPointF     pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     DrEngineWater *water = new DrEngineWater(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.angle, info.opacity, info.size,
@@ -204,8 +204,8 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
                                              refract_1, refract_2, refract_3, foam_refract, move_speed );
     addThing( water );
     water->bitrate = bit_rate;
-    water->pixel_x = static_cast<float>(pixelation.x());
-    water->pixel_y = static_cast<float>(pixelation.y());
+    water->pixel_x = static_cast<float>(pixelation.x);
+    water->pixel_y = static_cast<float>(pixelation.y);
 }
 
 

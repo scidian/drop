@@ -250,7 +250,10 @@ void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
             map[map_key + "display_name"] = QVariant(property->getDisplayName());
             map[map_key + "description"] =  QVariant(property->getDescription());
             map[map_key + "data_type"] =    QVariant(static_cast<int>(property->getPropertyType()));
-            map[map_key + "value"] =        property->getValue();
+
+// !!!!! #NEED_FIX_VARIANT_UPDATE
+//            map[map_key + "value"] =      property->getValue();
+
             map[map_key + "prop_key"] =     QVariant::fromValue(property->getPropertyKey());
             map[map_key + "is_hidden"] =    QVariant(property->isHidden());
             map[map_key + "is_editable"] =  QVariant(property->isEditable());

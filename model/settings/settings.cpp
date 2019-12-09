@@ -62,9 +62,9 @@ void DrSettings::addComponentSizeSettings() {
     getComponent(Components::Size_Settings)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Size_Settings, Properties::Size_Keep_Square, Property_Type::Bool, false,
                            "Keep Square?", "Should this item be forced to stay square?");
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Max_Size, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Max_Size, Property_Type::PointF, DrPointF(0, 0),
                            "Max Size", "Maximum size of item while it's in the Editor. A value of zero signifies no maximum size.");
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Min_Size, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Size_Settings, Properties::Size_Min_Size, Property_Type::PointF, DrPointF(0, 0),
                            "Min Size", "Minimum size of item while it's in the Editor. A value of zero signifies  no minimum size.");
 }
 
@@ -72,17 +72,17 @@ void DrSettings::addComponentSizeSettings() {
 //####################################################################################
 //##    Component / Property fetching
 //####################################################################################
-void DrSettings::setComponentPropertyValue(long component, long property, QVariant value) {
+void DrSettings::setComponentPropertyValue(long component, long property, DrVariant value) {
     m_components[component]->getProperty(property)->setValue(value);
 }
-void DrSettings::setComponentPropertyValue(Components component, Properties property, QVariant value) {
+void DrSettings::setComponentPropertyValue(Components component, Properties property, DrVariant value) {
     m_components[static_cast<long>(component)]->getProperty(property)->setValue(value);
 }
 
-QVariant DrSettings::getComponentPropertyValue(long component, long property) {
+DrVariant DrSettings::getComponentPropertyValue(long component, long property) {
     return getComponentProperty(component, property)->getValue();
 }
-QVariant DrSettings::getComponentPropertyValue(Components component, Properties property) {
+DrVariant DrSettings::getComponentPropertyValue(Components component, Properties property) {
     return getComponentProperty(static_cast<long>(component), static_cast<long>(property))->getValue();
 }
 DrProperty* DrSettings::getComponentProperty(Components component, Properties property) {
@@ -141,7 +141,7 @@ QString DrSettings::getName() {
         case DrType::World:
             name_component = getComponent(Components::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Properties::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
-            return name_property->getValue().toString();
+            return QString::fromStdString(name_property->getValue().toString());
         case DrType::Frame:     return "DrFrame - Unknown Name";
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
     }
@@ -154,7 +154,7 @@ bool DrSettings::setName(QString new_name) {
     DrProperty  *name_property;
     name_component = getComponent(Components::Entity_Settings);                     if (name_component == nullptr) return false;
     name_property  = name_component->getProperty(Properties::Entity_Name);          if (name_property == nullptr)  return false;
-    name_property->setValue(new_name);
+    name_property->setValue(new_name.toStdString());
     return true;
 }
 
@@ -170,7 +170,7 @@ DrComponent* DrSettings::addComponent(Components component, QString display_name
 }
 
 DrProperty* DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
-                                               QVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
+                                               DrVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
     DrProperty *prop = m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
     return prop;
 }

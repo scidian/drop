@@ -73,8 +73,8 @@ public:
 
     // Size Limits
     bool            keepSquare()        { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square).toBool(); }
-    QPointF         maxSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size).toPointF();  }
-    QPointF         minSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size).toPointF();  }
+    DrPointF        maxSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size).toPointF();  }
+    DrPointF        minSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size).toPointF();  }
 
     // Z-Ordering
     void            moveBackward();

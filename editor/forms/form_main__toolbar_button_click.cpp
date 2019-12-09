@@ -120,7 +120,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
             if (thing == nullptr) continue;
 
             settings.push_back(thing);
-            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, QPointF(1, 1));
+            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, DrPointF(1, 1));
             thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation, 0);
         }
         sceneEditor->resetSelectionGroup();

@@ -9,9 +9,9 @@
 #define DRCOMPONENT_H
 
 #include <QColor>
+#include <QString>
 
-#include <map>
-
+#include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
 
@@ -82,7 +82,7 @@ public:
     // Building Calls
     DrProperty* addProperty(Properties     property_number,
                             Property_Type  type,
-                            QVariant       value,
+                            DrVariant      value,
                             QString        display_name,
                             QString        description,
                             bool           is_hidden = false,

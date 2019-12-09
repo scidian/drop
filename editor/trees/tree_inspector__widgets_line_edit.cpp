@@ -34,13 +34,13 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     long property_key = property->getPropertyKey();
 
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    edit->setText(property->getValue().toString());
+    edit->setText(QString::fromStdString(property->getValue().toString()));
 
     getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
-             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->text() ); });
+             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->text().toStdString() ); });
 
     return edit;
 }
@@ -58,13 +58,13 @@ QTextEdit* TreeInspector::createTextEdit(DrProperty *property, QFont &font, QSiz
     long property_key = property->getPropertyKey();
 
     edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-    edit->setText(property->getValue().toString());
+    edit->setText(QString::fromStdString(property->getValue().toString()));
 
     getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QTextEdit::textChanged,
-             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->toPlainText() ); }); /// edit->toHtml() ); });
+             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->toPlainText().toStdString()); }); /// edit->toHtml() ); });
 
     return edit;
 }

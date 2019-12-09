@@ -92,13 +92,12 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
 
     // ***** Some local item variables, prepping for update
     QTransform transform;
-    QPointF position  = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-    QPointF scale     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-    QPointF size      = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
-    double  angle     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
-    double  pre_angle = item->data(User_Roles::Rotation).toDouble();
-    double  transform_scale_x, transform_scale_y;
-    QString text;
+    DrPointF position  = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    DrPointF scale     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+    DrPointF size      = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+    double   angle     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+    double   pre_angle = item->data(User_Roles::Rotation).toDouble();
+    double   transform_scale_x, transform_scale_y;
 
     // ***** Turn off itemChange() signals to stop recursive calling
     bool flags_enabled_before = item->itemChangeFlagsEnabled();
@@ -108,19 +107,19 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
     for (auto one_property : property_keys) {
         Properties  property    = static_cast<Properties>(one_property);
         DrProperty *dr_property = thing->findPropertyFromPropertyKey(one_property);
-        QVariant    new_value   = dr_property->getValue();
+        DrVariant   new_value   = dr_property->getValue();
 
 
         switch (property) {
 
             case Properties::Hidden_Hide_From_Trees:
-                if (new_value == true) {
+                if (new_value.toBool() == true) {
                     thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked, true);
                 }
                 m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Item_Locked });
                 break;
             case Properties::Hidden_Item_Locked:
-                if (new_value == false) {
+                if (new_value.toBool() == false) {
                     if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool() == true) {
                         thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, false);
                     }
@@ -155,7 +154,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             }
 
             case Properties::Thing_Position:
-                setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+                setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
                 break;
 
             case Properties::Thing_Size:
@@ -165,30 +164,30 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 // ***** Also limits max size
                 //       #KEYWORD: "keep square", "lock size", "same size", "limit size"
                 bool    pretest = false;
-                bool    has_max_x = !(Dr::FuzzyCompare(thing->maxSize().x(), 0.0)),     has_max_y = !(Dr::FuzzyCompare(thing->maxSize().y(), 0.0));
-                bool    has_min_x = !(Dr::FuzzyCompare(thing->minSize().x(), 0.0)),     has_min_y = !(Dr::FuzzyCompare(thing->minSize().y(), 0.0));
+                bool    has_max_x = !(Dr::FuzzyCompare(thing->maxSize().x, 0.0)),   has_max_y = !(Dr::FuzzyCompare(thing->maxSize().y, 0.0));
+                bool    has_min_x = !(Dr::FuzzyCompare(thing->minSize().x, 0.0)),   has_min_y = !(Dr::FuzzyCompare(thing->minSize().y, 0.0));
                 bool    keep_square = thing->keepSquare();
 
                 if (keep_square || has_max_x || has_max_y || has_min_x || has_min_y) {
                     if (property == Properties::Thing_Size) {
-                        if (has_max_x && size.x() > thing->maxSize().x()) size.setX( thing->maxSize().x() );
-                        if (has_min_x && size.x() < thing->minSize().x()) size.setX( thing->minSize().x() );
-                        if (has_max_y && size.y() > thing->maxSize().y()) size.setY( thing->maxSize().y() );
-                        if (has_min_y && size.y() < thing->minSize().y()) size.setY( thing->minSize().y() );
+                        if (has_max_x && size.x > thing->maxSize().x) size.x = thing->maxSize().x;
+                        if (has_min_x && size.x < thing->minSize().x) size.x = thing->minSize().x;
+                        if (has_max_y && size.y > thing->maxSize().y) size.y = thing->maxSize().y;
+                        if (has_min_y && size.y < thing->minSize().y) size.y = thing->minSize().y;
                         if (keep_square) {
-                            if (Dr::IsCloseTo(scale.y(), size.y() / item->getAssetHeight(), 0.001))     size.setY(size.x());
-                            else                                                                        size.setX(size.y());
+                            if (Dr::IsCloseTo(scale.y, size.y / item->getAssetHeight(), 0.001)) size.y = size.x;
+                            else                                                                size.x = size.y;
                         }
                         pretest = true;
 
                     } else if (property == Properties::Thing_Scale) {
-                        if (has_max_x && scale.x() * item->getAssetWidth() >  thing->maxSize().x()) scale.setX( thing->maxSize().x() / item->getAssetWidth());
-                        if (has_min_x && scale.x() * item->getAssetWidth() <  thing->minSize().x()) scale.setX( thing->minSize().x() / item->getAssetWidth());
-                        if (has_max_y && scale.y() * item->getAssetHeight() > thing->maxSize().y()) scale.setY( thing->maxSize().y() / item->getAssetHeight());
-                        if (has_min_y && scale.y() * item->getAssetHeight() < thing->minSize().y()) scale.setY( thing->minSize().y() / item->getAssetHeight());
+                        if (has_max_x && scale.x * item->getAssetWidth() >  thing->maxSize().x) scale.x = thing->maxSize().x / item->getAssetWidth();
+                        if (has_min_x && scale.x * item->getAssetWidth() <  thing->minSize().x) scale.x = thing->minSize().x / item->getAssetWidth();
+                        if (has_max_y && scale.y * item->getAssetHeight() > thing->maxSize().y) scale.y = thing->maxSize().y / item->getAssetHeight();
+                        if (has_min_y && scale.y * item->getAssetHeight() < thing->minSize().y) scale.y = thing->minSize().y / item->getAssetHeight();
                         if (keep_square) {
-                            if (Dr::IsCloseTo(size.y(), scale.y() * item->getAssetHeight(), 0.001))     scale.setY(scale.x());
-                            else                                                                        scale.setX(scale.y());
+                            if (Dr::IsCloseTo(size.y, scale.y * item->getAssetHeight(), 0.001)) scale.y = scale.x;
+                            else                                                                scale.x = scale.y;
                         }
                         pretest = true;
                     }
@@ -196,22 +195,22 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
 
                 // ***** If property that changed was size, calculate the proper scale based on size
                 if (property == Properties::Thing_Size) {
-                        scale.setX( size.x() / item->getAssetWidth()  );
-                        scale.setY( size.y() / item->getAssetHeight() );
+                    scale.x = size.x / item->getAssetWidth();
+                    scale.y = size.y / item->getAssetHeight();
                 // Otherwise calculate the size based on the scale
                 } else {
-                        size.setX(  scale.x() * item->getAssetWidth() );
-                        size.setY(  scale.y() * item->getAssetHeight() );
+                    size.x = scale.x * item->getAssetWidth();
+                    size.y = scale.y * item->getAssetHeight();
                 }
 
                 // ***** Store the item transform data, one of which will have been new. Then recalculate the transform and move the object
-                item->setData(User_Roles::Scale, scale );
+                item->setData(User_Roles::Scale, QPointF(scale.x, scale.y) );
                 item->setData(User_Roles::Rotation, angle );
-                transform_scale_x = Dr::CheckScaleNotZero(scale.x());
-                transform_scale_y = Dr::CheckScaleNotZero(scale.y());
+                transform_scale_x = Dr::CheckScaleNotZero(scale.x);
+                transform_scale_y = Dr::CheckScaleNotZero(scale.y);
                 transform = QTransform().rotate(angle).scale(transform_scale_x, transform_scale_y);
                 item->setTransform(transform);
-                setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+                setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
 
                 // ***** If size or scale was changed, update the other and update the widgets in the Inspector
                 if (property == Properties::Thing_Size || pretest) {
@@ -258,8 +257,9 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             }
 
             case Properties::Thing_Fisheye_Color: {
-                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
-                item->setPixmap( DrImaging::DrawFisheye(ce) );
+                uint color =        item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt();
+                item->setPixmap( DrImaging::DrawFisheye( QColor::fromRgba(color) ) );
+                item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 item->applyFilters();
@@ -272,8 +272,8 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             case Properties::Thing_Light_Intensity:
             case Properties::Thing_Light_Blur: {
                 QColor light_color = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-                float  cone_start =  item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toList().first().toFloat();
-                float  cone_end =    item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toList().first().toFloat();
+                float  cone_start =  item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toFloat();
+                float  cone_end =    item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toFloat();
                 float  intensity =   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
                 float  blur =        item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
                 item->setPixmap( DrImaging::DrawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
@@ -318,14 +318,15 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 break;
             }
 
-            case Properties::Thing_Text_User_Text:
-                text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+            case Properties::Thing_Text_User_Text: {
+                std::string text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
                 if (text == "") text = " ";
-                item->setPixmap( m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getKey() )->createText( text ));
+                item->setPixmap( m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getKey() )->createText( QString::fromStdString(text) ));
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
-                setPositionByOrigin(item, Position_Flags::Center, position.x(), position.y());
+                setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
                 break;
+            }
 
             default: ;
         }

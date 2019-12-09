@@ -24,20 +24,20 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");
     property_name->setDescription("Name of this Character Asset.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, QPointF(2000, 2000),
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed, Property_Type::PointF, DrPointF(2000, 2000),
                            "Max Speed", "Maximum movement speed of this Character in the x and y direction.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed, Property_Type::PointF, DrPointF(0, 0),
                            "Forced Speed", "Forced movement speed of this Character in the x and y direction.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed, Property_Type::PointF, QPointF(400, 400),
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed, Property_Type::PointF, DrPointF(400, 400),
                            "Move Speed", "Button / Joystick movement speed of this Character in the x and y direction.");
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Angle_Movement, Property_Type::Bool, false,
                            "Relative Angle?", "Should the rotation of this Character affect the movement speed forces? Good for moving in first person.");
-    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, QPointF(0, 250),
+    addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force, Property_Type::PointF, DrPointF(0, 250),
                            "Jump Force", "Force of jump button in the x and y direction");
 
     addPropertyToComponent(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout, Property_Type::Double, 800,
@@ -79,7 +79,7 @@ void DrAsset::initializeAssetSettingsObject(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Object Name");
     property_name->setDescription("Name of this Object Asset.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
 //    addComponent(Components::Asset_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
 //    getComponent(Components::Asset_Settings_Object)->setIcon(Component_Icons::Object);

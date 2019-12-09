@@ -25,7 +25,7 @@ void DrStage::initializeStageSettings(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Stage Name");
     property_name->setDescription("Name of this Stage.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for this Stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
@@ -47,11 +47,11 @@ void DrStage::initializeStageSettings(QString new_name) {
     getComponent(Components::Stage_Grid)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, 0,
                            "Grid Style", "Visual style of alignment grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, DrPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at. Allows for small adjustments of enitre grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, QPointF(50, 50),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, DrPointF(50, 50),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::GridScaleF, QPointF(1, 1),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::GridScaleF, DrPointF(1, 1),
                            "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");

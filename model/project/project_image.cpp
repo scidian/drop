@@ -35,7 +35,7 @@ DrImage::DrImage(DrProject *parent_project, long key, QString image_path, Asset_
     }
 
     // Set name in DrSettings Entity properties
-    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name.toStdString());
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
 }
 
@@ -52,6 +52,6 @@ DrImage::DrImage(DrProject *parent_project, long key, QString full_path, QString
     m_image = image;
 
     // Set name in DrSettings Entity properties
-    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
+    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name.toStdString());
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
 }

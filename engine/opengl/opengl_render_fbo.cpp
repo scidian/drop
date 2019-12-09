@@ -157,17 +157,17 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
     glBindTexture(GL_TEXTURE_2D, upper->texture());
 
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
-    m_screen_shader.setUniformValue( u_screen_matrix, orthoMatrix(lower->width(), lower->height()) );
+    m_screen_shader.setUniformValue(        u_screen_matrix, orthoMatrix(lower->width(), lower->height()) );
 
     // Set Texture Coordinates for Shader
-    m_screen_shader.setAttributeArray(    a_screen_texture_coord, m_quad_texture_coordinates.data(), 2 );
-    m_screen_shader.enableAttributeArray( a_screen_texture_coord );
+    m_screen_shader.setAttributeArray(      a_screen_texture_coord, m_quad_texture_coordinates.data(), 2 );
+    m_screen_shader.enableAttributeArray(   a_screen_texture_coord );
 
     // Load vertices for this object
     QVector<GLfloat> vertices;
     setQuadVertices(vertices, lower->width(), lower->height(), QPointF(0, 0), 0.0f);
-    m_screen_shader.setAttributeArray(    a_screen_vertex, vertices.data(), 3 );
-    m_screen_shader.enableAttributeArray( a_screen_vertex );
+    m_screen_shader.setAttributeArray(      a_screen_vertex, vertices.data(), 3 );
+    m_screen_shader.enableAttributeArray(   a_screen_vertex );
 
     // Set variables for shader
     m_screen_shader.setUniformValue( u_screen_width,    static_cast<float>(lower->width()) );

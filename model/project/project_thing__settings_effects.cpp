@@ -64,7 +64,7 @@ void DrThing::addComponentSettingsFisheye() {
                            "Color", "Color tint for this Lens.");
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
                            "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
-    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom, Property_Type::RangedDouble, QList<QVariant>({ 2.25, 0.0, 10.0, 0.25 }),
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom, Property_Type::RangedDouble, std::vector<DrVariant>({ 2.25, 0.0, 10.0, 0.25 }),
                            "Lens Zoom", "How much to zoom the Fisheye Lens. Default is 2.25. Ranged from 0 to 10.");
 }
 
@@ -85,9 +85,9 @@ void DrThing::addComponentSettingsLight(QColor color) {
                                          "<b>Glow</b> - Provides diffuse lighting, no z-ordering available. ");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
                            "Light Color", "The Color for this Light.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, "°"}),
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start, Property_Type::Slider, std::vector<DrVariant>({0, 0, 360, 5, "°"}),
                            "Cone Start", "Starting angle of light, Cone Angles travel in counter-clockwise direction.");
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End, Property_Type::Slider, QList<QVariant>({360, 0, 360, 5, "°"}),
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End, Property_Type::Slider, std::vector<DrVariant>({360, 0, 360, 5, "°"}),
                            "Cone End", "Ending angle of light, Cone Angles travel in counter-clockwise direction.");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How intense the light is starting from the middle out.");
@@ -127,7 +127,7 @@ void DrThing::addComponentSettingsMirror() {
                            "Scatter", "Amount to scatter reflection.");
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch, Property_Type::Double, 0.0,
                            "Scatter Stretch", "Amount to increase scatter away from start of mirror.");
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale, Property_Type::RangedDouble, QList<QVariant>({ 1.0, 0.1, 100000.0, 0.1 }),
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale, Property_Type::RangedDouble, std::vector<DrVariant>({ 1.0, 0.1, 100000.0, 0.1 }),
                            "Scatter Scale", "How much to scale the scatter noise. Default is 1.0. Must be greater than 0.");
 }
 

@@ -15,6 +15,7 @@
 
 #include "editor/constants_editor.h"
 #include "editor/enums_editor.h"
+#include "library/types/dr_pointf.h"
 #include "model/enums_model_types.h"
 
 // Forward declarations
@@ -92,9 +93,9 @@ private:
 
     // Grid Style Variables (currently re-populated from DrView::updateGrid by way of updateEditorWidgetsAfterItemChange -> DrScene::updateChangesInScene)
     Grid_Style   m_grid_style { Grid_Style::Lines };                // Grid type to display
-    QPointF      m_grid_origin { 0, 0 };                            // Origin point of grid in scene
-    QPointF      m_grid_size { 50, 50 };                            // Grid size
-    QPointF      m_grid_scale { 1, 1 };                             // X and Y scaling for after grid has been rotated
+    DrPointF     m_grid_origin { 0, 0 };                            // Origin point of grid in scene
+    DrPointF     m_grid_size { 50, 50 };                            // Grid size
+    DrPointF     m_grid_scale { 1, 1 };                             // X and Y scaling for after grid has been rotated
     double       m_grid_rotate = 0;                                 // Rotation of grid lines
     QColor       m_grid_color;                                      // Grid color
     bool         m_back_color_use = false;                          // Should we use background color?
@@ -214,7 +215,7 @@ public:
 
     // Grid Functions
     double          currentGridAngle() { return m_grid_rotate; }
-    QPointF         currentGridScale() { return m_grid_scale; }
+    DrPointF        currentGridScale() { return m_grid_scale; }
     static QRectF   gameFrame(DrProject *project);
     void            recalculateGrid();
     QPointF         roundToGrid(QPointF point_in_scene);

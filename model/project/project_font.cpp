@@ -47,12 +47,12 @@ DrFont::DrFont(DrProject *parent_project, long key,
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Font Name");
     property_name->setDescription("Name of this Font Asset.");
-    property_name->setValue( m_name );
+    property_name->setValue( m_name.toStdString() );
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
 
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, getPropertyFontFamily(),
+    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, getPropertyFontFamily().toStdString(),
                            "Font Family", "Font used for this text asset.", false, false);
     addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, getPropertyFontSize(),
                            "Font Size", "Font size of this text asset.", false, false);

@@ -26,7 +26,7 @@ QMatrix4x4 DrOpenGL::orthoMatrix(float width, float height) {
     float top =    +(height / 2.0f);
     float bottom = -(height / 2.0f);
     QMatrix4x4 m;
-    m.ortho( left, right, bottom, top, c_near_plane, c_far_plane);
+    m.ortho(left, right, bottom, top, c_near_plane, c_far_plane);
     return m;
 }
 

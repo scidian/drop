@@ -81,7 +81,7 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                                 for (auto stage : world.second->getStageMap()) {
                                     for (auto thing : stage.second->getThingMap()) {
                                         if (thing.second->getAssetKey() == entity->getKey()) {
-                                            thing.second->setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Name, asset_text);
+                                            thing.second->setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Name, asset_text.toStdString());
                                             newly_changed_items.push_back(thing.second);
                                             if (Dr::ListContains(newly_changed_properties, Properties::Entity_Name) == false) {
                                                 newly_changed_properties.push_back(Properties::Entity_Name);

@@ -62,7 +62,7 @@ DrProperty* DrComponent::getProperty(long setting) {
 //####################################################################################
 DrProperty* DrComponent::addProperty(Properties setting,
                                      Property_Type type,
-                                     QVariant value,
+                                     DrVariant value,
                                      QString display_name,
                                      QString description,
                                      bool is_hidden,

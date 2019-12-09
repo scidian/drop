@@ -51,7 +51,7 @@ void TreeInspector::updateLockedSettings() {
             if ( prop->getPropertyType() == Property_Type::BoolDouble ||
                  prop->getPropertyType() == Property_Type::BoolInt) {
                 if (widget->property(User_Property::Order).toInt() == 1) {
-                    if (prop->getValue().toList().first().toBool() == false) enabled = false;
+                    if (prop->getValue().toVector()[0].toBool() == false) enabled = false;
                 }
             }
 
@@ -83,7 +83,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
         QFrame *properties_frame = dynamic_cast<QFrame*>(property_widget);                      if (properties_frame == nullptr) continue;
         QVBoxLayout *property_layout = dynamic_cast<QVBoxLayout*>(properties_frame->layout());  if (property_layout == nullptr) continue;
 
-        QList<QVariant> affected { };
+        std::vector<DrVariant> affected { };
         int  last_found = -1;
         bool enabled = true;
 
@@ -97,15 +97,20 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
 
             // We found a property that has sub properties, enabled / disable sub properties based on if on or off
             if (prop->getPropertyType() == Property_Type::Enabled) {
-                QList<QVariant> prop_value = prop->getValue().toList();
-                if (prop_value.count() == 2) {
+                std::vector<DrVariant> prop_value = prop->getValue().toVector();
+                if (prop_value.size() == 2) {
                     enabled =  prop_value[0].toBool();
-                    affected = prop_value[1].toList();
+                    affected = prop_value[1].toVector();
                     last_found = i;
                 }
             } else {
                 if (last_found != -1) {
-                    if (affected.contains(QVariant::fromValue(prop->getPropertyKey()))) {
+
+                    std::vector<long> affected_as_longs;
+                    for (auto variant : affected)
+                        affected_as_longs.push_back(variant.toLong());
+
+                    if ( Dr::VectorContains(affected_as_longs, prop->getPropertyKey()) ) {
                         row->setStyleSheet("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }");
                         row->setVisible(enabled);
                         changed = true;

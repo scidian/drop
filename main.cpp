@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
     // ***** Version
     Dr::SetPreference(Preferences::Version_Major, "1");
     Dr::SetPreference(Preferences::Version_Minor, "0");
-    Dr::SetPreference(Preferences::Version_Build, "0004");
+    Dr::SetPreference(Preferences::Version_Build, "0005");
 
     // ***** Temporary-ish options
     Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
@@ -194,10 +194,13 @@ int main(int argc, char *argv[]) {
 //##
 //####################################################################################
 //##
+//##
+//##    v 1.0.0005 - Migrating away from Qt for engine and model, save files broken
 //##    v 1.0.0004 - Adding built in Images
 //##    v 1.0.0003 - Post Space Shooter Droplet
 //##    v 1.0.0002 - Version for Space Shooter Droplet
 //##    v 1.0.0001 - Initial release with Platformer Droplet
+//##
 //##
 
 

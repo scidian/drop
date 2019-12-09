@@ -150,7 +150,7 @@ bool DrOpenGL::drawGlowBuffer() {
 
     // If no lights and ambient light is 50% (normal) exit now
     double ambient_light = m_engine->getCurrentWorld()->getAmbientLight() / 100.0;
-    if (m_glow_lights.count() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001) && mode == Blend_Mode::Standard) return true;
+    if (m_glow_lights.size() <= 0 && Dr::IsCloseTo(0.5, ambient_light, .001) && mode == Blend_Mode::Standard) return true;
 
     // Blend functions, in order of best
     if (mode == Blend_Mode::Standard) {

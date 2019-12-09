@@ -359,15 +359,15 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     //       #KEYWORD: "keep square", "lock size", "same size", "limit size"
     if (original->getThing() != nullptr) {
         DrThing* thing = original->getThing();
-        bool    has_max_x = !(Dr::FuzzyCompare(thing->maxSize().x(), 0.0)),     has_max_y = !(Dr::FuzzyCompare(thing->maxSize().y(), 0.0));
-        bool    has_min_x = !(Dr::FuzzyCompare(thing->minSize().x(), 0.0)),     has_min_y = !(Dr::FuzzyCompare(thing->minSize().y(), 0.0));
+        bool    has_max_x = !(Dr::FuzzyCompare(thing->maxSize().x, 0.0)),     has_max_y = !(Dr::FuzzyCompare(thing->maxSize().y, 0.0));
+        bool    has_min_x = !(Dr::FuzzyCompare(thing->minSize().x, 0.0)),     has_min_y = !(Dr::FuzzyCompare(thing->minSize().y, 0.0));
         bool    keep_square = thing->keepSquare();
 
         if (keep_square || has_max_x || has_max_y || has_min_x || has_min_y) {
-            if (has_max_y && new_scale_y * original->getAssetHeight() > thing->maxSize().y()) new_scale_y = thing->maxSize().y() / original->getAssetHeight();
-            if (has_min_y && new_scale_y * original->getAssetHeight() < thing->minSize().y()) new_scale_y = thing->minSize().y() / original->getAssetHeight();
-            if (has_max_x && new_scale_x * original->getAssetWidth()  > thing->maxSize().x()) new_scale_x = thing->maxSize().x() / original->getAssetWidth();
-            if (has_min_x && new_scale_x * original->getAssetWidth()  < thing->minSize().x()) new_scale_x = thing->minSize().x() / original->getAssetWidth();
+            if (has_max_y && new_scale_y * original->getAssetHeight() > thing->maxSize().y) new_scale_y = thing->maxSize().y / original->getAssetHeight();
+            if (has_min_y && new_scale_y * original->getAssetHeight() < thing->minSize().y) new_scale_y = thing->minSize().y / original->getAssetHeight();
+            if (has_max_x && new_scale_x * original->getAssetWidth()  > thing->maxSize().x) new_scale_x = thing->maxSize().x / original->getAssetWidth();
+            if (has_min_x && new_scale_x * original->getAssetWidth()  < thing->minSize().x) new_scale_x = thing->minSize().x / original->getAssetWidth();
 
             if (keep_square) {
                 if (Dr::FuzzyCompare(start_scale.x(), new_scale_x))

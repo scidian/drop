@@ -88,8 +88,8 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     m_damping =             world->getComponentPropertyValue(Components::World_Physics, Properties::World_Drag).toDouble();
     m_friction =            world->getComponentPropertyValue(Components::World_Physics, Properties::World_Friction).toDouble();
     m_bounce =              world->getComponentPropertyValue(Components::World_Physics, Properties::World_Bounce).toDouble();
-    QPointF get_gravity =   world->getComponentPropertyValue(Components::World_Physics, Properties::World_Gravity).toPointF();
-    m_gravity = cpv(get_gravity.x(), get_gravity.y());
+    DrPointF get_gravity =  world->getComponentPropertyValue(Components::World_Physics, Properties::World_Gravity).toPointF();
+    m_gravity = cpv(get_gravity.x, get_gravity.y);
 
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
@@ -103,24 +103,24 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     m_glow_light_z_order =  world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Layer).toDouble();
     m_glow_blend_mode =     world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Blend).toInt();
 
-    bitrate =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toList().first().toInt();
-    QPointF pixelation =    world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
-    pixel_x =               static_cast<float>(pixelation.x());
-    pixel_y =               static_cast<float>(pixelation.y());
-    brightness =        world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Brightness).toList().first().toInt() / 255.f;
-    contrast =          world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Contrast).toList().first().toInt() / 255.f;
-    saturation =        world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Saturation).toList().first().toInt() / 255.f;
-    hue =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Hue).toList().first().toInt() / 360.f;
+    bitrate =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF pixelation =   world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
+    pixel_x =               static_cast<float>(pixelation.x);
+    pixel_y =               static_cast<float>(pixelation.y);
+    brightness =        world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Brightness).toVector()[0].toInt() / 255.f;
+    contrast =          world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Contrast).toVector()[0].toInt() / 255.f;
+    saturation =        world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Saturation).toVector()[0].toInt() / 255.f;
+    hue =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Hue).toVector()[0].toInt() / 360.f;
     grayscale =         world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Grayscale).toBool();
     negative =          world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Negative).toBool();
 
     bool draw_3D =      world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Convert_3D).toBool();
     render_mode =       draw_3D ? Render_Mode::Mode_3D : Render_Mode::Mode_2D;
     wireframe =         world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toBool();
-    cartoon =           world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[0].toBool();
-    cartoon_width =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toList()[1].toFloat();
-    cross_hatch =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toList()[0].toBool();
-    cross_hatch_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toList()[1].toFloat();
+    cartoon =           world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toVector()[0].toBool();
+    cartoon_width =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toVector()[1].toFloat();
+    cross_hatch =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toVector()[0].toBool();
+    cross_hatch_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toVector()[1].toFloat();
     wavy =              world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
 
 

@@ -37,7 +37,7 @@ double DrThing::getZOrderWithSub() {
 }
 
 void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
-    setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, QVariant::fromValue(z_order));
+    setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, z_order);
 
     // ***** Get list of sub orders along same Z-Axis
     std::list<OrderInfo> order_info;
@@ -66,7 +66,7 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
     }
 
     // ***** Set this Things sub order
-    setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, QVariant(sub_z_order));
+    setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, sub_z_order);
 
     // ***** Fill in any empty spaces
     std::list<DrThing*> things_sorted;
@@ -76,7 +76,7 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
     }
     int i = static_cast<int>(things_sorted.size());
     for (auto thing : things_sorted) {
-        thing->setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, QVariant(i));
+        thing->setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, i);
         i--;
     }
 }

@@ -7,6 +7,7 @@
 //
 #include "editor/constants_editor.h"
 #include "engine/opengl/opengl.h"
+#include "library/types/dr_variant.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"
@@ -23,7 +24,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("World Name");
     property_name->setDescription("Name of this World.");
-    property_name->setValue(new_name);
+    property_name->setValue( new_name.toStdString() );
 
     addComponent(Components::World_Settings, "World Settings", "Settings for this World.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
@@ -55,7 +56,7 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Physics, Properties::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
                            "Time Warp", "Physics update time multiplier, affects the speed the world changes. Default value of 1.0 is Normal speed. A value of 0.5 "
                                         "will halve the speed, a value of 2.0 will double it. Generally keep this less than 10.");
-    addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, QPointF(0.0, -1000.0),
+    addPropertyToComponent(Components::World_Physics, Properties::World_Gravity, Property_Type::PointF, DrPointF(0.0, -1000.0),
                            "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and Objects will "
                                       "fall down; a value of 1000 for Y and Objects will fall up.");
     addPropertyToComponent(Components::World_Physics, Properties::World_Drag, Property_Type::PositiveDouble, 0.9,
@@ -83,18 +84,18 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Purple_Royal, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::RangedInt, QList<QVariant>({ 256, 0, 256, 8 }),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::RangedInt, std::vector<DrVariant>({ 256, 0, 256, 8 }),
                            "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, QPointF(1.0, 1.0),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, DrPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
                            "Brightness", "How light / dark this world should appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Contrast, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Contrast, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
                            "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Saturation, Property_Type::Slider, QList<QVariant>({0, -255, 255, 5, ""}),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Saturation, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
                            "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Hue, Property_Type::Slider, QList<QVariant>({0, 0, 360, 5, ""}),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Hue, Property_Type::Slider, std::vector<DrVariant>({0, 0, 360, 5, ""}),
                            "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Grayscale, Property_Type::Bool, false,
                            "Grayscale", "Should this world be shown grayscale?");
@@ -109,10 +110,10 @@ void DrWorld::initializeWorldSettings(QString new_name) {
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
                            "Wireframe", "Renders all the world's objects as outlines.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon,
-                           Property_Type::BoolDouble, QList<QVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch,
-                           Property_Type::BoolDouble, QList<QVariant>({false, 10.0, 1.0, 100, 5.0, "Hatch Width: "}),
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 10.0, 1.0, 100, 5.0, "Hatch Width: "}),
                            "Cross Hatch", "Gives the world a sketched look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");

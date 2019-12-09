@@ -39,7 +39,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
     getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
-    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, QVariant::fromValue(from_asset_key),
+    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, from_asset_key,
                            "Asset ID Key", "ID Key of Asset this item represents.", false, false);
 
     DrSettings *entity = getParentProject()->findSettingsFromKey(from_asset_key);
@@ -77,12 +77,12 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
         }
 
         case DrThingType::Camera:
-            addComponentSettingsCamera("Camera 1");
+            addComponentSettingsCamera("Camera");
             addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Camera);
             addComponentLayering(z, 100.0, false);
             addComponentAppearance(true, false);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, QPointF(100, 100));
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(100, 100));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, DrPointF(100, 100));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, DrPointF(100, 100));
             break;
 
         case DrThingType::Text: {
@@ -115,8 +115,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Light);
             addComponentLayering(z);
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, QPointF( c_desired_light_fbo_size,  c_desired_light_fbo_size));
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, QPointF(-c_desired_light_fbo_size, -c_desired_light_fbo_size));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, DrPointF( c_desired_light_fbo_size,  c_desired_light_fbo_size));
+            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, DrPointF(-c_desired_light_fbo_size, -c_desired_light_fbo_size));
             break;
         case DrThingType::Mirror:
             addComponentSettingsMirror();

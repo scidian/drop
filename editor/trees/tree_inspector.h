@@ -15,6 +15,7 @@
 #include <QTextEdit>
 #include <QTreeWidget>
 
+#include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
 
@@ -74,7 +75,7 @@ public:
     void                    updateInspectorPropertyBoxesOfSelectedItem(std::list<long> property_keys_to_update);
     void                    updateLockedSettings();
     void                    updateSubProperties(bool called_from_build = false);
-    void                    updateSettingsFromNewValue(long property_key, QVariant new_value, long sub_order = 0);
+    void                    updateSettingsFromNewValue(long property_key, DrVariant new_value, long sub_order = 0);
 
     // Getters and Setters
     DrProject*              getParentProject()  { return m_project; }

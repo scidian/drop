@@ -58,11 +58,11 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         Dr::ShowMessageBox("Error in DrStage::addThing, Could not find underlying Entity to load from! \n "
                            "New Type: " + QString::fromStdString(Dr::StringFromThingType(new_type)) + " \n "
                            "Asset Key: " + QString::number(from_asset_key) + ".",
-                       QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
+                            QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 
     // Figure out name for Thing
-    QString new_name;
+    std::string new_name;
     switch (new_type) {
         // Thing Types
         case DrThingType::Character:
@@ -91,7 +91,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
 
     long new_thing_key = (key == c_no_key) ? getParentProject()->getNextKey() : key;
     m_things[new_thing_key] = new DrThing(getParentProject(), m_parent_world, this, new_thing_key,
-                                          new_name, new_type, from_asset_key, x, y, z, should_collide);
+                                          QString::fromStdString(new_name), new_type, from_asset_key, x, y, z, should_collide);
     return m_things[new_thing_key];
 }
 

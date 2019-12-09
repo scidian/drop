@@ -87,7 +87,7 @@ void DrAnimation::initializeAnimationSettings(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Animation Name");
     property_name->setDescription("Name of this Animation.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Animation_Settings, "Animation Settings", "Settings for this Animation.", Component_Colors::White_Snow, true);
     getComponent(Components::Animation_Settings)->setIcon(Component_Icons::Animation);

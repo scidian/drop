@@ -153,7 +153,7 @@ public:
     QVector3D&              getCameraPosition()     { return m_camera_position; }
     void                    setCameraPosition(QVector3D position) { m_camera_position = position; }
     void                    setCameraPosition(float x, float y, float z) { m_camera_position = QVector3D(x, y, z); }
-    void                    setCameraPositionXY(QPointF point) { m_camera_position = QVector3D(float(point.x()), float(point.y()), m_camera_position.z()); }
+    void                    setCameraPositionXY(DrPointF point) { m_camera_position = QVector3D(float(point.x), float(point.y), m_camera_position.z()); }
 
     QVector3D&              getCameraRotation()     { return m_camera_rotation; }
     void                    setCameraRotation(QVector3D rotation) { m_camera_rotation = rotation; }

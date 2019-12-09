@@ -155,7 +155,7 @@ void FormMain::updateInspectorEnabledProperties() {
 
 DrProject*  FormMain::currentProject()                         { return m_project; }
 double      FormMain::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
-QPointF     FormMain::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
+QPointF     FormMain::currentViewGridScale()                   { return QPointF(viewEditor->currentGridScale().x, viewEditor->currentGridScale().y); }
 View_Mode   FormMain::currentViewMode()                        { return viewEditor->currentViewMode(); }
 double      FormMain::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
 QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }

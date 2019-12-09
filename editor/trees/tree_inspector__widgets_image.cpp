@@ -69,7 +69,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
         QPixmap pixmap;
-        DrAnimation *animation = getParentProject()->findAnimationFromKey(property->getValue().toLongLong());
+        DrAnimation *animation = getParentProject()->findAnimationFromKey(property->getValue().toLong());
         if (animation == nullptr) {
             pixmap = QPixmap(":/assets/gui_misc/empty_image.png").scaled(QSize(64, 64), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             pixmap = DrImaging::ApplySinglePixelFilter(Image_Filter_Type::Opacity, pixmap, -100);
@@ -253,8 +253,8 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                     for (auto thing_pair : stage_pair.second->getThingMap()) {
                         DrThing *thing = thing_pair.second;
                         if (thing->getAssetKey() == settings_key) {
-                            QPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-                            QPointF new_size(width * scale.x(), height * scale.y());
+                            DrPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+                            DrPointF new_size(width * scale.x, height * scale.y);
                             thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, new_size);
                         }
                     }

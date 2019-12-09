@@ -43,7 +43,7 @@ void FormAnimation::updateItemSelection(Editor_Widgets selected_from, QList<long
 
 DrProject*  FormAnimation::currentProject()                         { return m_project; }
 double      FormAnimation::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
-QPointF     FormAnimation::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
+QPointF     FormAnimation::currentViewGridScale()                   { return QPointF(viewEditor->currentGridScale().x, viewEditor->currentGridScale().y); }
 View_Mode   FormAnimation::currentViewMode()                        { return viewEditor->currentViewMode(); }
 double      FormAnimation::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
 

@@ -24,7 +24,7 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Camera Name");
     property_name->setDescription("Name of this Camera.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
     getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
@@ -36,9 +36,9 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active, Property_Type::Bool, true,
                            "Set As Active?", "If set to true and Camera is in a Start Stage, this camera will attempt to be the Active Game Camera when this "
                                              "world starts. Only one Camera should be set as Active in each Start Stage.");
-    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed, Property_Type::PointF, DrPointF(0, 0),
                            "Camera Speed", "Fixed movement speed of camera.");
-    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation, Property_Type::PointF, DrPointF(0, 0),
                            "Camera Rotation", "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector, Property_Type::List, 0,
@@ -57,15 +57,15 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");
     property_name->setDescription("Name of this Character.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, QPointF(0, 100),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, DrPointF(0, 100),
                            "Camera Offset", "Every Character has a Camera attached which always looks directly at the Character. "
                                             "The Camera Offset allows for the camera to look at a point offset from the Character in 2D space.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, QPointF(0, 0),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, DrPointF(0, 0),
                            "Camera Rotation", "Every Character has a Camera attached which always looks directly at the Character. "
                                               "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
@@ -76,7 +76,7 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. Generally less than 10.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::SizeF, QPointF(50, 50),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::SizeF, DrPointF(50, 50),
                            "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
                                          "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
                                          "camera starts to move.");
@@ -96,7 +96,7 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Object Name");
     property_name->setDescription("Name of this Object.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
@@ -123,7 +123,7 @@ void DrThing::addComponentSettingsText(QString new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Text Name");
     property_name->setDescription("Name of this Text Box.");
-    property_name->setValue(new_name);
+    property_name->setValue(new_name.toStdString());
 
     addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for this Text Box.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);

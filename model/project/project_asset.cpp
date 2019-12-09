@@ -98,8 +98,8 @@ std::list<long> DrAsset::animationsUsedByAsset() {
         for (auto &property_pair : component_pair.second->getPropertyMap()) {
             DrProperty *property = property_pair.second;
             if (property->getPropertyType() == Property_Type::Image) {
-                if (property->getValue().toLongLong() >= c_key_starting_number)
-                    animation_keys_used.push_back(property->getValue().toLongLong());
+                if (property->getValue().toLong() >= c_key_starting_number)
+                    animation_keys_used.push_back(property->getValue().toLong());
             }
         }
     }
@@ -121,7 +121,7 @@ void DrAsset::deleteAnimations() {
 //##    Returns Key of Idle Animation
 //####################################################################################
 long DrAsset::getIdleAnimationKey() {
-    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
     return idle_animation_key;
 }
 
@@ -131,7 +131,7 @@ long DrAsset::getIdleAnimationKey() {
 long DrAsset::getIdleAnimationFirstFrameImageKey() {
     ///DrAnimation *animation = getParentProject()->findAnimationFromKey(getBaseKey());
 
-    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
     DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
 
     if (animation == nullptr) return c_key_image_empty;
@@ -149,11 +149,11 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties ani
     // ***** Get existing DrProperty to Replace
     DrProperty *property =   findPropertyFromPropertyKey(animation_property);
     if (property == nullptr) return;
-    long old_animation = property->getValue().toLongLong();
+    long old_animation = property->getValue().toLong();
 
     // ***** Create new animation from new image keys
     DrAnimation *animation = getParentProject()->addAnimation(image_keys);    
-    property->setValue( QVariant::fromValue(animation->getKey()) );
+    property->setValue( animation->getKey() );
 
     if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) {
         QPixmap      new_pixmap = animation->getPixmapFromFirstFrame();
@@ -163,7 +163,7 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties ani
 
         // Calculate new image collision shape
         DrPropertyCollision shape = autoCollisionShape(new_pixmap);
-        setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, QVariant::fromValue<DrPropertyCollision>(shape));
+        setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, shape);
     }
 
     // ***** Delete Old Animation

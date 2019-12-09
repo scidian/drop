@@ -65,11 +65,11 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         key_pressed == Qt::Key_Left ||
         key_pressed == Qt::Key_Right) {
         if (m_current_stage == nullptr) return;
-        QPointF grid_scale = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
-        QPointF grid_size =  m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+        DrPointF grid_scale = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
+        DrPointF grid_size =  m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
 
         // Amount to move items when arrow keys are pressed
-        QPointF move_by (grid_size.x() * grid_scale.x(), grid_size.y() * grid_scale.y());
+        QPointF move_by (grid_size.x * grid_scale.x, grid_size.y * grid_scale.y);
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) {
             if        (m_key_timers[key_pressed].elapsed() <  750) {    move_by.setX(   1.0 );  move_by.setY(   1.0 );
             } else if (m_key_timers[key_pressed].elapsed() < 1500) {    move_by.setX(   5.0 );  move_by.setY(   5.0 );
@@ -199,8 +199,8 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                 case Qt::Key::Key_A:
                 case Qt::Key::Key_S:
                 case Qt::Key::Key_D:
-                    new_x = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().x();
-                    new_y = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().y();
+                    new_x = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().x;
+                    new_y = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().y;
                     new_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
                     sub_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Sub_Z_Order).toInt();
 
@@ -211,7 +211,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
                     new_object = drstage->addThing(drthing->getThingType(), drthing->getAssetKey(), new_x, new_y, new_z);
                     new_object->copyEntitySettings(drthing);
-                    new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, QPointF(new_x, new_y));
+                    new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, DrPointF(new_x, new_y));
                     new_object->setZOrderWithSub(new_z, Z_Insert::At_Position, sub_z + 1);
                     this->updateItemZValues();
 

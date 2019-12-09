@@ -50,26 +50,26 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             // ***** Load Thing
             case DrThingType::Object: {
                 // Load Spawning Info
-                int spawn_count =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Count).toInt();
+                int spawn_count =                   thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Count).toInt();
                 if (spawn_count == 0)   continue;
                 int spawns_remaining =  spawn_count;
 
-                QList<QVariant> spawn_object =  thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_At_Object).toList();
-                bool    spawn_instant =         thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Instantly).toBool();
-                int     spawn_type =            thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Type).toInt();
-                QPointF spawn_rate =            thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Rate).toPointF();
-                double  spawn_chance =          thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Chance).toDouble();
-                QPointF spawn_x =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Offset_X).toPointF();
-                QPointF spawn_y =               thing->getComponentPropertyValue(Components::Thing_Spawn,       Properties::Thing_Spawn_Offset_Y).toPointF();
-                QPointF pos =                   thing->getComponentPropertyValue(Components::Thing_Transform,   Properties::Thing_Position).toPointF();
-                bool attached_to_object = spawn_object[0].toBool();
+                std::vector<DrVariant> spawn_obj =  thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_At_Object).toVector();
+                bool        spawn_instant =         thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Instantly).toBool();
+                int         spawn_type =            thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Type).toInt();
+                DrPointF    spawn_rate =            thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Rate).toPointF();
+                double      spawn_chance =          thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Chance).toDouble();
+                DrPointF    spawn_x =               thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Offset_X).toPointF();
+                DrPointF    spawn_y =               thing->getComponentPropertyValue(Components::Thing_Spawn,     Properties::Thing_Spawn_Offset_Y).toPointF();
+                DrPointF    pos =                   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+                bool attached_to_object = spawn_obj[0].toBool();
 
                 // Add Spawner to list for processing when scene finishes loading
-                long attached_id = (attached_to_object) ? spawn_object[1].toLongLong() : c_no_key;
+                long attached_id = (attached_to_object) ? spawn_obj[1].toLong() : c_no_key;
                 DrEngineSpawner *spawner;
-                spawner = new DrEngineSpawner(this, thing, static_cast<Spawn_Type>(spawn_type), DrPointF(pos.x() + offset_x, -pos.y() + offset_y),
-                                              spawn_rate.x(), spawn_rate.y(), spawn_instant, spawn_count, spawns_remaining, spawn_chance,
-                                              nullptr, attached_id, spawn_x.x(), spawn_x.y(), spawn_y.x(), spawn_y.y());
+                spawner = new DrEngineSpawner(this, thing, static_cast<Spawn_Type>(spawn_type), DrPointF(pos.x + offset_x, -pos.y + offset_y),
+                                              spawn_rate.x, spawn_rate.y, spawn_instant, spawn_count, spawns_remaining, spawn_chance,
+                                              nullptr, attached_id, spawn_x.x, spawn_x.y, spawn_y.x, spawn_y.y);
                 DrEngineObject *object = spawner->update(0.0, 1.0, QRectF(), false);
                 if (object != nullptr) things_in_stage.push_back(object);
                 spawners.push_back(spawner);
@@ -134,16 +134,16 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double offset_y) {
     ThingInfo   info =          loadThingBasicInfo( thing );
     bool        wants_active =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active).toBool();
-    QPointF     cam_speed =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed).toPointF();
-    QPointF     cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
+    DrPointF    cam_speed =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed).toPointF();
+    DrPointF    cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
     double      cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
     int         up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
 
     float x = static_cast<float>( info.position.x + offset_x);
     float y = static_cast<float>(-info.position.y + offset_y);
     DrEngineCamera *camera = addCamera(0, x, y, c_default_camera_z);
-    camera->setSpeed( cam_speed.x(), cam_speed.y(), 0.0 );
-    camera->setRotation( cam_rotation.x(), cam_rotation.y(), info.angle );
+    camera->setSpeed( cam_speed.x, cam_speed.y, 0.0 );
+    camera->setRotation( cam_rotation.x, cam_rotation.y, info.angle );
     camera->setWantActive( wants_active );
     camera->setZoom( cam_zoom );
     camera->setUpVector( static_cast<Up_Vector>(up_vector) );

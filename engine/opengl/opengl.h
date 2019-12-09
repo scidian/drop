@@ -109,8 +109,8 @@ private:
     std::map<long, QOpenGLFramebufferObject*> m_shadows;        // Off screen Frame Buffer Objects for Light 1D Shadow Maps
 
     // Vectors to keep track of lights
-    QVector<DrEngineLight*> m_shadow_lights;
-    QVector<DrEngineLight*> m_glow_lights;
+    std::vector<DrEngineLight*> m_shadow_lights;
+    std::vector<DrEngineLight*> m_glow_lights;
 
 
 public:

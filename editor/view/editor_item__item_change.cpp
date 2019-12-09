@@ -106,7 +106,10 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         // ***** Calculate new center location based on starting center of item and difference between starting pos() and new passed in new_pos
         } else {
             QPointF old_center = QPointF(0, 0);
-            if (m_thing != nullptr) old_center = m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+            if (m_thing != nullptr) {
+                DrPointF oc = m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+                old_center = QPointF(oc.x, oc.y);
+            }
             QPointF new_center = old_center - (pos() - new_pos);
             QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );                // Align new desired center to grid
 
@@ -127,7 +130,7 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         ///QPointF new_center = t.map( boundingRect().center() ) + new_pos;
 
         QPointF new_center = mapToScene( boundingRect().center() );
-        m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, new_center);
+        m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, DrPointF(new_center.x(), new_center.y()));
 
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { Properties::Thing_Position });
 
@@ -143,8 +146,8 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
         double size_y = m_asset_height * (scale.y());
 
         m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation, angle);
-        m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale );
-        m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, QPointF(size_x, size_y));
+        m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, DrPointF(scale.x(), scale.y()) );
+        m_thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, DrPointF(size_x, size_y));
 
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { Properties::Thing_Size,
                                                                                                       Properties::Thing_Scale,

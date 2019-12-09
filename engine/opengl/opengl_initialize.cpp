@@ -301,8 +301,8 @@ void DrOpenGL::loadShaders() {
     m_light_shader.link();
 
     // Vertex Shader Input
-    a_light_vertex =          m_light_shader.attributeLocation(     "vertex" );
-    a_light_texture_coord =       m_light_shader.attributeLocation( "texture_coordinates" );
+    a_light_vertex =            m_light_shader.attributeLocation(   "vertex" );
+    a_light_texture_coord =     m_light_shader.attributeLocation(   "texture_coordinates" );
     u_light_matrix =            m_light_shader.uniformLocation(     "u_matrix" );
 
     // Fragment Shader Input

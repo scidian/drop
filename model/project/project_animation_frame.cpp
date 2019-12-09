@@ -7,6 +7,7 @@
 //
 #include "editor/constants_editor.h"
 #include "library/dr_debug.h"
+#include "library/types/dr_pointf.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"
@@ -45,16 +46,16 @@ void DrFrame::addComponentTransform(double width, double height, double x, doubl
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
 
     QString position_text = "Location of Image within the current Frame.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, QPointF(x, y), "Position", position_text);
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, DrPointF(x, y), "Position", position_text);
 
     QString transform_text = "Rotation, in degrees, of Image on the Z Axis.";
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0, "Rotation", transform_text);
 
     QString size_text = "Width and Height of Image in pixels, affected by Scale property.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, QPointF(width, height), "Size", size_text);
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, DrPointF(width, height), "Size", size_text);
 
     QString scale_text = "X and Y scale of Image within the current Frame.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, QPointF(1, 1), "Scale", scale_text);
+    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, DrPointF(1, 1), "Scale", scale_text);
 }
 
 

@@ -259,20 +259,20 @@ void TreeAssets::buildAssetTree(QString search_text) {
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             QString description;
-            QString hidden_txt = entity->getComponentProperty(Components::Hidden_Settings, Properties::Hidden_Advisor_Description)->getValue().toString();
+            std::string hidden_txt = entity->getComponentProperty(Components::Hidden_Settings, Properties::Hidden_Advisor_Description)->getValue().toString();
 
             if (entity->getType() == DrType::Asset) {
                 DrAsset *asset = dynamic_cast<DrAsset*>(entity);
                 switch (asset->getAssetType()) {
                     case DrAssetType::Character: {
-                        long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+                        long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
                         DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
                         if (ani != nullptr) pix = ani->getPixmapFromFirstFrame();
                         description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
                         break;
                     }
                     case DrAssetType::Object: {
-                        long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+                        long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
                         DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
                         if (ani != nullptr) pix = ani->getPixmapFromFirstFrame();
                         description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
@@ -305,7 +305,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
                     description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image[1];
                 }
             }
-            description += "<br>" + hidden_txt;
+            description += "<br>" + QString::fromStdString(hidden_txt);
             getHoverHandler()->attachToHoverHandler(single_asset, entity_name, description);
 
             QLabel *asset_pix = new QLabel(single_asset);

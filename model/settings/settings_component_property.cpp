@@ -4,10 +4,6 @@
 //  File:
 //      DrProperty Class Definitions
 //
-//      !!!!! #TODO: Replace 'QVariant' value with our own 'void *' value to use outside of Qt Framework
-//
-#include <QDebug>
-
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"
@@ -22,7 +18,7 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
                        QString          display_name,
                        QString          description,
                        Property_Type    type,
-                       QVariant         value,
+                       DrVariant        value,
                        long             new_key,
                        bool             is_hidden,
                        bool             is_editable) {
@@ -47,9 +43,6 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
 void DrProperty::setValueInternal() {
     m_parent_settings->getParentProject()->setHasSaved(false);
 
-    // Debug Logging
-    ///qDebug() << "Entity: " << getParentSettings()->getName() << ", Comp: " << m_parent_component->getDisplayName() <<
-    ///            ", Prop: " << getDisplayName() << ", Value: " << getValue();
 }
 
 

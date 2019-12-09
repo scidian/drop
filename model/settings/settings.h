@@ -8,10 +8,10 @@
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 
-#include <QVariant>
+#include <QColor>
+#include <QString>
 
-#include <map>
-
+#include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
 
@@ -42,7 +42,7 @@ private:
 
 
 protected:       // so derived classes can access
-    void         setKey (long new_key) { setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key, QVariant::fromValue(new_key)); }
+    void         setKey (long new_key) { setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key, DrVariant(new_key)); }
 
 public:
     // Constructor / Destructor
@@ -55,7 +55,7 @@ public:
     // Getters / Setters
     DrProject*      getParentProject()      { return m_parent_project; }
 
-    long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLongLong(); }
+    long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLong(); }
     virtual QString getName();                                                  // Returns Name from shared "Entity_Name" component
     virtual bool    setName(QString new_name);                                  // Returns true if successful
 
@@ -74,11 +74,11 @@ public:
     DrComponent*    getComponent(Components component)  { return m_components[static_cast<long>(component)]; }
     DrProperty*     getComponentProperty(long component, long property);
     DrProperty*     getComponentProperty(Components component, Properties property);
-    QVariant        getComponentPropertyValue(long component, long property);
-    QVariant        getComponentPropertyValue(Components component, Properties property);
+    DrVariant       getComponentPropertyValue(long component, long property);
+    DrVariant       getComponentPropertyValue(Components component, Properties property);
 
-    void            setComponentPropertyValue(long component, long property, QVariant value);
-    void            setComponentPropertyValue(Components component, Properties property, QVariant value);
+    void            setComponentPropertyValue(long component, long property, DrVariant value);
+    void            setComponentPropertyValue(Components component, Properties property, DrVariant value);
 
     // Component / Property Searching
     DrComponent*    findComponentFromPropertyKey(long property_key_to_find);
@@ -88,7 +88,7 @@ public:
 
     // Component / Property Building
     DrComponent*    addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
-    DrProperty*     addPropertyToComponent(Components component, Properties property_number, Property_Type type, QVariant value,
+    DrProperty*     addPropertyToComponent(Components component, Properties property_number, Property_Type type, DrVariant value,
                                            QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();

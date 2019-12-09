@@ -43,8 +43,6 @@ bool DrProject::openProjectFromFile(QString open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
     qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
-    qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrShapeList");               // !!!!! OLD !!!!!
-
 
     // ***** Open File
     QSettings settings(open_file, QSettings::Format::IniFormat);

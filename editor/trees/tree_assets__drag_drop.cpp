@@ -46,7 +46,7 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
         switch (asset->getAssetType()) {
             case DrAssetType::Object:
             case DrAssetType::Character: {
-                long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLongLong();
+                long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
                 DrAnimation *ani = asset->getParentProject()->findAnimationFromKey(animation_key);
                 if (ani != nullptr) pixmap = ani->getPixmapFromFirstFrame();
                 break;

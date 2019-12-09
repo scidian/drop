@@ -58,8 +58,8 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
         }
 
     } else if (m_asset->getType() == DrType::Font) {
-        QString text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-        m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() )->createText( text );
+        std::string text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+        m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() )->createText( QString::fromStdString(text) );
         setPixmap(m_pixmap);
         m_asset_width =  m_pixmap.width();
         m_asset_height = m_pixmap.height();
@@ -99,8 +99,8 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             }
             case DrEffectType::Light: {
                 uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
-                float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toList().first().toFloat();
-                float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toList().first().toFloat();
+                float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toVector()[0].toFloat();
+                float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toVector()[0].toFloat();
                 float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
                 float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
                 m_pixmap = DrImaging::DrawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
@@ -139,25 +139,25 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     // Store some initial user data
     setData(User_Roles::Name, m_asset->getName() );
-    QString description = m_thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Advisor_Description).toString();
-    if (description == "") description = QString::fromStdString(Dr::StringFromThingType(m_thing->getThingType()) );
-    setData(User_Roles::Type, description);
+    std::string description = m_thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Advisor_Description).toString();
+    if (description == "") description = Dr::StringFromThingType(m_thing->getThingType());
+    setData(User_Roles::Type, QString::fromStdString(description) );
     setData(User_Roles::Key, QVariant::fromValue(m_thing_key));
 
-    double  angle =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Rotation)->getValue().toDouble();
-    QPointF scale =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Scale)->getValue().toPointF();
-    double  z_order = m_thing->getZOrderWithSub();
-    double  opacity = m_thing->getComponentProperty(Components::Thing_Layering,  Properties::Thing_Opacity)->getValue().toDouble();
+    double   angle =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Rotation)->getValue().toDouble();
+    DrPointF scale =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Scale)->getValue().toPointF();
+    double   z_order = m_thing->getZOrderWithSub();
+    double   opacity = m_thing->getComponentProperty(Components::Thing_Layering,  Properties::Thing_Opacity)->getValue().toDouble();
     setData(User_Roles::Rotation, angle);
-    setData(User_Roles::Scale,    scale);
+    setData(User_Roles::Scale,    QPointF(scale.x, scale.y) );
     setData(User_Roles::Z_Order,  z_order);
     setData(User_Roles::Opacity,  opacity);
     setZValue(  z_order );
 
     // Adjust item to proper transform
     QPointF center = boundingRect().center();
-    double transform_scale_x = Dr::CheckScaleNotZero(scale.x());
-    double transform_scale_y = Dr::CheckScaleNotZero(scale.y());
+    double transform_scale_x = Dr::CheckScaleNotZero(scale.x);
+    double transform_scale_y = Dr::CheckScaleNotZero(scale.y);
     QTransform t = QTransform()
             .translate(center.x(), center.y())
             .rotate(angle)
@@ -166,9 +166,9 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     setTransform(t);
 
     // Load starting position
-    QPointF start_pos = m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Position)->getValue().toPointF();
-    m_start_x = start_pos.x();
-    m_start_y = start_pos.y();
+    DrPointF start_pos = m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Position)->getValue().toPointF();
+    m_start_x = start_pos.x;
+    m_start_y = start_pos.y;
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
         setTransformationMode(Qt::SmoothTransformation);                            // Turn on anti aliasing
@@ -223,16 +223,16 @@ void DrItem::applyFilters() {
 
     if (m_thing == nullptr) return;
 
-    int     brightness = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toList().first().toInt();
-    int     contrast   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toList().first().toInt();
-    int     hue        = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toList().first().toInt();
-    int     saturation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toList().first().toInt();
-    bool    grayscale  = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
-    bool    negative   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
-    QPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    int      brightness = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toVector()[0].toInt();
+    int      contrast   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toVector()[0].toInt();
+    int      hue        = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toVector()[0].toInt();
+    int      saturation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toVector()[0].toInt();
+    bool     grayscale  = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
+    bool     negative   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
+    DrPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
-    if (pixelation.x() > 1.0 || pixelation.y() > 1.0)
-                           new_image = DrImaging::ApplyPixelation( new_image, pixelation );
+    if (pixelation.x > 1.0 || pixelation.y > 1.0)
+                           new_image = DrImaging::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );
     if ( negative )        new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Negative, new_image, 0 );
     if ( grayscale )       new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Grayscale, new_image, 0 );
 

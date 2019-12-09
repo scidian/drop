@@ -25,7 +25,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
 
     int property_value;
     if (spin_type == Property_Type::RangedInt)
-        property_value = property->getValue().toList().first().toInt();
+        property_value = property->getValue().toVector()[0].toInt();
     else
         property_value = property->getValue().toInt();
 
@@ -38,8 +38,8 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
         case Property_Type::Int:            spin->setRange(-100000000, 100000000);      spin->setSingleStep(  5 );      break;
         case Property_Type::Positive:       spin->setRange(0, 100000000);               spin->setSingleStep(  5 );      break;
         case Property_Type::RangedInt:
-            spin->setRange(property->getValue().toList().at(1).toInt(), property->getValue().toList().at(2).toInt());
-            spin->setSingleStep(property->getValue().toList().at(3).toInt());
+            spin->setRange(property->getValue().toVector()[1].toInt(), property->getValue().toVector()[2].toInt());
+            spin->setSingleStep(property->getValue().toVector()[3].toInt());
             break;
         default:                            spin->setRange(-100000000, 100000000);
     }
@@ -73,7 +73,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
 
     double property_value;
     if (spin_type == Property_Type::RangedDouble)
-        property_value = property->getValue().toList().first().toDouble();
+        property_value = property->getValue().toVector()[0].toDouble();
     else
         property_value = property->getValue().toDouble();
 
@@ -89,8 +89,8 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
         case Property_Type::Percent:        spin->setRange(0, 100);     spin->setSuffix("%");   spin->setSingleStep(5);     break;
         case Property_Type::Angle:          spin->setRange(-360, 360);  spin->setSuffix("°");   spin->setSingleStep(5);     break;
         case Property_Type::RangedDouble:
-            spin->setRange(property->getValue().toList().at(1).toDouble(), property->getValue().toList().at(2).toDouble());
-            spin->setSingleStep(property->getValue().toList().at(3).toDouble());
+            spin->setRange(property->getValue().toVector()[1].toDouble(), property->getValue().toVector()[2].toDouble());
+            spin->setSingleStep(property->getValue().toVector()[3].toDouble());
             break;
         default:                            spin->setRange(-100000000, 100000000);
     }
@@ -129,13 +129,13 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    DrQTripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
+    DrQTripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x);
     DrQTripleSpinBox *spin_right;
 
     if (spin_type == Property_Type::PositionF)
-        spin_right  = initializeEmptySpinBox(property, font, -1 * property->getValue().toPointF().y());
+        spin_right  = initializeEmptySpinBox(property, font, -1 * property->getValue().toPointF().y);
     else
-        spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
+        spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y);
 
     spin_left->setFixedHeight(22);
     spin_right->setFixedHeight(22);
@@ -220,10 +220,10 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    QVector3D property_value = property->getValue().value<QVector3D>();
-    double x = static_cast<double>(property_value.x());
-    double y = static_cast<double>(property_value.y());
-    double z = static_cast<double>(property_value.z());
+    std::vector<DrVariant> point3D = property->getValue().toVector();
+    double x = static_cast<double>(point3D[0].toDouble());
+    double y = static_cast<double>(point3D[1].toDouble());
+    double z = static_cast<double>(point3D[2].toDouble());
 
     DrQTripleSpinBox *spin_x = initializeEmptySpinBox(property, font, x);
     DrQTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, y);
@@ -295,7 +295,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    DrQTripleSpinBox *spin_left  = initializeEmptySpinBox(property, font, property->getValue().toPointF().x());
+    DrQTripleSpinBox *spin_left  = initializeEmptySpinBox(property, font, property->getValue().toPointF().x);
     size_policy.setHorizontalStretch(4);
     spin_left->setSizePolicy(size_policy);
 
@@ -304,7 +304,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     size_policy.setHorizontalStretch(1);
     variable_sign->setSizePolicy(size_policy);
     getHoverHandler()->attachToHoverHandler(variable_sign, Advisor_Info::Variable_Widget);
-    DrQTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y());
+    DrQTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y);
     spin_right->setMinimum(0);
     size_policy.setHorizontalStretch(3);
     spin_right->setSizePolicy(size_policy);
@@ -370,7 +370,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
 
     double property_value;
     if (spin_type == Property_Type::Slider)
-        property_value = property->getValue().toList().first().toDouble();
+        property_value = property->getValue().toVector()[0].toDouble();
     else
         property_value = property->getValue().toDouble();
 
@@ -396,10 +396,10 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
             case Property_Type::Percent:        spin->setRange(   0, 100); spin->setSuffix("%");    spin->setSingleStep(5);     break;
             case Property_Type::Angle:          spin->setRange(-360, 360); spin->setSuffix("°");    spin->setSingleStep(5);     break;
             case Property_Type::Slider:
-                spin->setRange(property->getValue().toList().at(1).toDouble(),
-                               property->getValue().toList().at(2).toDouble());
-                spin->setSingleStep(property->getValue().toList().at(3).toDouble());
-                spin->setSuffix(property->getValue().toList().at(4).toString());
+                spin->setRange(property->getValue().toVector()[1].toDouble(),
+                               property->getValue().toVector()[2].toDouble());
+                spin->setSingleStep(property->getValue().toVector()[3].toDouble());
+                spin->setSuffix( QString::fromStdString(property->getValue().toVector()[4].toString()) );
                 break;
 
             default:                            spin->setRange(-100000000, 100000000);
