@@ -179,7 +179,8 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                                                 static_cast<int>(Properties::Asset_Slingshot_Future_1),
                                                 static_cast<int>(Properties::Asset_Slingshot_Future_2),
                                                 static_cast<int>(Properties::Asset_Slingshot_Future_3) };
-    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Enabled, Property_Type::Enabled, std::vector<DrVariant>({false, sling_properties }),
+    addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Enabled, Property_Type::BoolEnabled,
+                           std::vector<DrVariant>({false, sling_properties }),
                            "Touch Slingshot", "Should this " + type + " be able to be shot by slingshot control? "
                                               "<br><br> <b>NOTE:</b> Object Type must be <b>Dynamic</b> to use this setting!");
     addPropertyToComponent(Components::Asset_Controls, Properties::Asset_Slingshot_Force_Multiplier, Property_Type::Double, 1.0,

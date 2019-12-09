@@ -69,7 +69,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
         widget->blockSignals(true);
 
         switch (prop->getPropertyType()) {
-            case Property_Type::Enabled:
+            case Property_Type::BoolEnabled:
                 dynamic_cast<QCheckBox*>(widget)->setChecked(prop->getValue().toVector()[0].toBool());
                 break;
 
@@ -221,7 +221,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_
         DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
 
         switch (property->getPropertyType()) {
-            case Property_Type::Enabled: {
+            case Property_Type::BoolEnabled: {
                 std::vector<DrVariant> enabled_list = property->getValue().toVector();
                 enabled_list[0] = new_value;
                 property->setValue(enabled_list);

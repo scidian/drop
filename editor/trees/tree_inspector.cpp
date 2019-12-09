@@ -268,7 +268,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             DrProperty *prop = property;
 
             switch (property->getPropertyType()) {
-                case Property_Type::Enabled:        new_widget = createCheckBox(            prop, fp, sp_right, Property_Type::Enabled);        break;
+                case Property_Type::BoolEnabled:    new_widget = createCheckBox(            prop, fp, sp_right, Property_Type::BoolEnabled);    break;
                 case Property_Type::Bool:           new_widget = createCheckBox(            prop, fp, sp_right, Property_Type::Bool);           break;
                 case Property_Type::BoolDouble:     new_widget = createCheckBoxSpinBoxPair( prop, fp, sp_right);                                break;
                 case Property_Type::BoolInt:        new_widget = createCheckBoxIntBoxPair(  prop, fp, sp_right);                                break;
@@ -347,7 +347,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     // ***** Disable / enable widgets based on property status
     updateLockedSettings();
 
-    // ***** Hide / show rows depending on sub property types (Property_Type::Enabled) being true / false
+    // ***** Hide / show rows depending on sub property types (Property_Type::BoolEnabled) being true / false
     bool calling_from_build = true;
     updateSubProperties(calling_from_build);
 

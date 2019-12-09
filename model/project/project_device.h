@@ -8,6 +8,8 @@
 #ifndef DRDEVICE_H
 #define DRDEVICE_H
 
+#include <QPixmap>
+
 #include "model/settings/settings.h"
 
 // Forward Declarations

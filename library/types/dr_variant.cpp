@@ -201,14 +201,10 @@ std::vector<DrVariant> DrVariant::toVector() {
 //####################################################################################
 // Try to return from DrPoint, otherwise DrPointF, otherwise return Point(0,0)
 DrPoint DrVariant::toPoint() {
-    try {
-        return boost::any_cast<DrPoint>(m_value);
-    }
+    try { return boost::any_cast<DrPoint>(m_value); }
     catch (const boost::bad_any_cast &) {
-        try {
-            DrPointF pointf = boost::any_cast<DrPointF>(m_value);
-            return DrPoint(pointf.x, pointf.y);
-        }
+        try { DrPointF pointf = boost::any_cast<DrPointF>(m_value);
+              return DrPoint(pointf.x, pointf.y); }
         catch (const boost::bad_any_cast &) {
             return DrPoint();
         }
@@ -216,14 +212,10 @@ DrPoint DrVariant::toPoint() {
 }
 // Try to return from DrPointF, otherwise DrPoint, otherwise return Point(0,0)
 DrPointF DrVariant::toPointF() {
-    try {
-        return boost::any_cast<DrPointF>(m_value);
-    }
+    try { return boost::any_cast<DrPointF>(m_value); }
     catch (const boost::bad_any_cast &) {
-        try {
-            DrPoint point = boost::any_cast<DrPoint>(m_value);
-            return DrPointF(point.x, point.y);
-        }
+        try { DrPoint point = boost::any_cast<DrPoint>(m_value);
+              return DrPointF(point.x, point.y); }
         catch (const boost::bad_any_cast &) {
             return DrPointF();
         }

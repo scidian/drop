@@ -96,7 +96,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
             if (prop == nullptr) continue;
 
             // We found a property that has sub properties, enabled / disable sub properties based on if on or off
-            if (prop->getPropertyType() == Property_Type::Enabled) {
+            if (prop->getPropertyType() == Property_Type::BoolEnabled) {
                 std::vector<DrVariant> prop_value = prop->getValue().toVector();
                 if (prop_value.size() == 2) {
                     enabled =  prop_value[0].toBool();

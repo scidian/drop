@@ -39,7 +39,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
     check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
 
-    if (check_type == Property_Type::Enabled) {
+    if (check_type == Property_Type::BoolEnabled) {
         std::vector<DrVariant> prop_list = property->getValue().toVector();
         if (prop_list.size() > 0) check->setChecked(prop_list[0].toBool());
     } else {

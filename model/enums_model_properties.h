@@ -16,58 +16,58 @@
 //##
 //############################
 enum class Property_Type {
-    Enabled         = 29,   // vector<variant>      True or False, when True shows additional properties
+
+    Bool            =  1,   // bool                 True or False
+    BoolDouble      =  2,   // vector<variant>      True or False, when True shows double spinbox
+                            //                          6 values: bool, double value, min, max, double step size, string spinText
+    BoolInt         =  3,   // vector<variant>      True or False, when True shows int spinbox
+                            //                          6 values: bool, int value,    min, max, int step size,    string spinText
+    BoolEnabled     =  4,   // vector<variant>      True or False, when True shows additional properties
                             //                          2 values: bool for enabled or not, and a std::vector<DrVariant(int)> (of Properties) that are included
 
-    Bool            =  0,   // bool                 True or False
-    BoolDouble      =  1,   // vector<variant>      True or False, when True shows double spinbox
-                            //                          6 values: bool, double value, min, max, double step size, string spinText
-    BoolInt         =  28,  // vector<variant>      True or False, when True shows int spinbox
-                            //                          6 values: bool, int value,    min, max, int step size,    string spinText
-
-    Int             =  2,   // long                 Integer
-    Positive        =  3,   // long                 Integer >= 0
-    RangedInt       =  4,   // vector<variant>      Integer >= min and <= max
+    Int             =  5,   // long                 Integer
+    Positive        =  6,   // long                 Integer >= 0
+    RangedInt       =  7,   // vector<variant>      Integer >= min and <= max
                             //                          4 values: long, long min value, long max value, long step size
 
-    Double          =  5,   // double               Decimal
-    Angle           =  6,   // double               Decimal for showing degrees, shows degree symbol in spinbox
-    PositiveDouble  =  7,   // double               Decimal >= 0.0
-    RangedDouble    =  8,   // vector<variant>      Decimal >= min and <= max
+    Double          =  8,   // double               Decimal
+    Angle           =  9,   // double               Decimal for showing degrees, shows degree symbol in spinbox
+    PositiveDouble  = 10,   // double               Decimal >= 0.0
+    RangedDouble    = 11,   // vector<variant>      Decimal >= min and <= max
                             //                          4 values: double, double min value, double max value, double step size
-    Slider          =  9,   // vector<variant>      Decimal >= min and <= max, with a slider
+    Slider          = 12,   // vector<variant>      Decimal >= min and <= max, with a slider
                             //                          5 values: double, double min value, double max value, double step size, string suffix ("%", etc)
-    Percent         = 10,   // double               Decimal from 0.0 to 100.0, shows percent symbol, with a slider
+    Percent         = 13,   // double               Decimal from 0.0 to 100.0, shows percent symbol, with a slider
 
-    String          = 11,   // string               Uses QLineEdit
-    Textbox         = 12,   // string               Uses QTextEdit for multi-line html text input
+    String          = 14,   // string               Uses QLineEdit
+    Textbox         = 15,   // string               Uses QTextEdit for multi-line html text input
 
-    PointF          = 13,   // pointF               Decimal pair x and y
-    PositionF       = 14,   // pointF               Decimal pair x and y, used for object positions in scene
+    PointF          = 16,   // pointF               Decimal pair x and y
+    PositionF       = 17,   // pointF               Decimal pair x and y, used for object positions in scene
                             //                          Y is shown flipped (i.e. * -1), Chipmunk uses different coordinate system than Qt
                             //                          Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
                             //                                        updateInspectorPropertyBoxes(), updateToolTipData()
-    ScaleF          = 15,   // pointF               Decimal pair x and y, has smaller increment step in spin box
-    PositiveScaleF  = 30,   // pointF               Decimal pair x and y, both numbers are >= 0.0
-    SizeF           = 16,   // pointF               Decimal pair w and h
-    PositiveSizeF   = 17,   // pointF               Decimal pair w and h, both numbers are >= 1.0
-    Point3D         = 27,   // vector<variant>      Decimal point trio, x, y, z
+    ScaleF          = 18,   // pointF               Decimal pair x and y, has smaller increment step in spin box
+    PositiveScaleF  = 19,   // pointF               Decimal pair x and y, both numbers are >= 0.0
+    SizeF           = 20,   // pointF               Decimal pair w and h
+    PositiveSizeF   = 21,   // pointF               Decimal pair w and h, both numbers are >= 1.0
+    Point3D         = 22,   // vector<variant>      Decimal point trio, x, y, z
                             //                          3 values: double x, double y, double z
 
-    GridF           = 18,   // pointF               Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
-    GridScaleF      = 19,   // pointF               Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable        = 20,   // pointF               Decimal point pair, number followed by a +/- number
+    GridF           = 23,   // pointF               Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
+    GridScaleF      = 24,   // pointF               Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
+    Variable        = 25,   // pointF               Decimal point pair, number followed by a +/- number
 
-    List            = 21,   // long                 Index of a particular enum list
+    List            = 26,   // long                 Index of a particular enum list
 
-    Color           = 23,   // unsigned int         For colors (compatible with QColor.rgba())
-    Image           = 24,   // long                 Index of a particular DrAnimation within the Project
+    Color           = 27,   // unsigned int         For colors (compatible with QColor.rgba())
+    Image           = 28,   // long                 Index of a particular DrAnimation within the Project
 
-    Collision       = 22,   // DrPropertyCollision  For Collision Shapes
+    Collision       = 29,   // DrPropertyCollision  For Collision Shapes
 
 
     // !!!!! NOT IMPLEMENTED:
-    Icon            = 25,   // -----
+    Icon            = 30,   // -----
 };
 
 
