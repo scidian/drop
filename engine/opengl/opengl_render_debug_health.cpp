@@ -124,7 +124,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
         for (int i = 0; i < hp.length(); i++) {
 
             // Set Texture Coordinates
-            setNumberTextureCoordinates(hp.at(i), texture_coordinates);
+            setNumberTextureCoordinates( QString(hp.at(i)).toStdString(), texture_coordinates);
 
             // Set Vertices
             setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));
@@ -150,7 +150,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
 }
 
 
-void DrOpenGL::setNumberTextureCoordinates(QString letter, std::vector<float> &c) {
+void DrOpenGL::setNumberTextureCoordinates(std::string letter, std::vector<float> &c) {
     //                        Top Right                     Top Left                    Bottom Right                Bottom Left
     if      (letter == "1") { c[0] = 0.25; c[1] = 1.00;     c[2] = 0.00; c[3] = 1.00;   c[4] = 0.25; c[5] = 0.75;   c[6] = 0.00; c[7] = 0.75; }
     else if (letter == "2") { c[0] = 0.50; c[1] = 1.00;     c[2] = 0.25; c[3] = 1.00;   c[4] = 0.50; c[5] = 0.75;   c[6] = 0.25; c[7] = 0.75; }

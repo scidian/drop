@@ -5,8 +5,6 @@
 //      DrAsset Class Definitions
 //
 //
-#include <QDebug>
-
 #include "editor/helper_editor.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"

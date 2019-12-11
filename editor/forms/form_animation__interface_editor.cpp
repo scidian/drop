@@ -49,7 +49,7 @@ double      FormAnimation::currentViewZoom()                        { return vie
 
 QPointF     FormAnimation::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
 
-void        FormAnimation::viewCenterOnPoint(QPointF center_point)  { viewEditor->centerOn(center_point); }
+void        FormAnimation::viewCenterOnPoint(DrPointF center_point) { viewEditor->centerOn(QPointF(center_point.x, center_point.y)); }
 void        FormAnimation::viewZoomToScale(double zoom_scale)       { viewEditor->zoomToScale(zoom_scale); }
 
 // Call to change the Advisor

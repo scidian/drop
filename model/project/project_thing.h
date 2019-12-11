@@ -8,8 +8,6 @@
 #ifndef DRTHING_H
 #define DRTHING_H
 
-#include <QPointF>
-
 #include "model/settings/settings.h"
 
 // Forward declarations

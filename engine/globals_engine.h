@@ -11,7 +11,6 @@
 #include <QColor>
 #include <QOpenGLTexture>
 #include <QPixmap>
-#include <QString>
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
@@ -68,7 +67,7 @@ extern DrPointF      g_player_position;                 // Stores active player 
 
 extern DrPointF      g_mouse_position;                  // Stores last known mouse position
 
-extern QString       g_info;                            // Used to draw some debug text onto the Engine screen
+extern std::string   g_info;                            // Used to draw some debug text onto the Engine screen
 
 
 #endif // GLOBALS_ENGINE_H

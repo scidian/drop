@@ -8,8 +8,6 @@
 #ifndef DRSTAGE_H
 #define DRSTAGE_H
 
-#include <QPointF>
-
 #include "model/settings/settings.h"
 
 // Forward declarations
@@ -38,7 +36,7 @@ private:
     bool        m_is_start_stage;                           // True if this is the first stage in a world
 
     bool        m_expanded = true;                          // Wether or not this is expanded in the Project Tree
-    QPointF     m_center_view_point {0, 0};                 // Holds center point the View was on last time this Stage was shown
+    DrPointF    m_center_view_point {0, 0};                 // Holds center point the View was on last time this Stage was shown
     double      m_zoom_level = 0.5;                         // Holds zoom level   the View was on last time this Stage was shown
 
 
@@ -59,10 +57,10 @@ public:
     void            setIsStartStage(bool is_start_stage)    { m_is_start_stage = is_start_stage; }
 
     bool            getExpanded()           { return m_expanded; }
-    QPointF         getViewCenterPoint()    { return m_center_view_point; }
+    DrPointF        getViewCenterPoint()    { return m_center_view_point; }
     double          getViewZoomLevel()      { return m_zoom_level; }
     void            setExpanded(bool expanded)              { m_expanded = expanded; }
-    void            setViewCenterPoint(QPointF new_point)   { m_center_view_point = new_point; }
+    void            setViewCenterPoint(DrPointF new_point)  { m_center_view_point = new_point; }
     void            setViewZoomLevel(double zoom)           { m_zoom_level = zoom; }
 
 

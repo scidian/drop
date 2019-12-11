@@ -58,8 +58,8 @@ void DrOpenGL::initializeGL() {
 //####################################################################################
 //##    Adds texture to Engine and creates 3D Extruded VBO for texture
 //####################################################################################
-void DrOpenGL::importTexture(long texture_id, QString from_asset_string) {
-    QPixmap pix = QPixmap(from_asset_string);
+void DrOpenGL::importTexture(long texture_id, std::string from_asset_string) {
+    QPixmap pix = QPixmap(QString::fromStdString(from_asset_string));
     importTexture(texture_id, pix);
 }
 

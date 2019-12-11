@@ -27,7 +27,7 @@ DrPointF        g_player_position = DrPointF(0, 0);
 
 DrPointF        g_mouse_position = DrPointF(0, 0);
 
-QString         g_info = "";
+std::string     g_info = "";
 
 
 //####################################################################################

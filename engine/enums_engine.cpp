@@ -12,7 +12,7 @@ namespace Dr {
 
 
 //####################################################################################
-//##    Returns a QString respresentaiton of the passed Editor Enum
+//##    Returns a std::string respresentaiton of the passed Editor Enum
 //####################################################################################
 std::string StringFromBodyType(Body_Type type) {
     switch (type) {

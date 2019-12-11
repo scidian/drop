@@ -123,10 +123,11 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
 
     // ***** Center the view on the new stage
     double  new_zoom_scale = new_stage->getViewZoomLevel();
-    QPointF new_center = new_stage->getViewCenterPoint();
-    if (new_center == QPointF(0, 0)) {
+    DrPointF new_center = new_stage->getViewCenterPoint();
+    if (new_center == DrPointF(0, 0)) {
         double half_height;
-        new_center = DrView::stageBoundingRect(m_project, new_stage, half_height).center();
+        QPointF q_new_center = DrView::stageBoundingRect(m_project, new_stage, half_height).center();
+        new_center = DrPointF(q_new_center.x(), q_new_center.y());
         new_stage->setViewCenterPoint( new_center );
     }
     m_scene->getEditorRelay()->viewCenterOnPoint( new_center );

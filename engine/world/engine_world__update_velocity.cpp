@@ -68,9 +68,9 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
         if (angle_diff < 10.0) new_spin *= (angle_diff / 10.0);
         cpBodySetAngularVelocity(body, new_spin);
 
-        ///g_info = "Angle 1: " +      QString::number(angle1,     'f', 2) +
-        ///       ", Angle 3: " +      QString::number(angle2,     'f', 2) +
-        ///       ", Angle Diff: " +   QString::number(angle_diff, 'f', 2);
+        ///g_info = "Angle 1: " +      std::to_string(angle1,     'f', 2) +
+        ///       ", Angle 3: " +      std::to_string(angle2,     'f', 2) +
+        ///       ", Angle Diff: " +   std::to_string(angle_diff, 'f', 2);
     }
 
     // Figure out new velocity based on current object angle

@@ -163,10 +163,10 @@ QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEdit
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
-void FormMain::viewCenterOnPoint(QPointF center_point) {
-    viewEditor->centerOn(center_point);
+void FormMain::viewCenterOnPoint(DrPointF center_point) {
+    viewEditor->centerOn(QPointF(center_point.x, center_point.y));
     QTimer::singleShot(0, this, [this, center_point] {
-        this->centerViewTimer(center_point);
+        this->centerViewTimer(QPointF(center_point.x, center_point.y));
         viewEditor->setHasShownAScene(true);
     } );
 }

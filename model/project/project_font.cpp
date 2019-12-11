@@ -37,7 +37,7 @@ DrFont::DrFont(DrProject *parent_project, long key,
 
     p_shadow = false;
     p_shadow_color =    QColor(205, 205, 205, 128);
-    p_shadow_offset =   QPoint(4, -4);
+    p_shadow_offset =   DrPoint(4, -4);
 
     p_gradient =        false;
     p_gradient_color =  Qt::red;

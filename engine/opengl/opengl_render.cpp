@@ -29,7 +29,7 @@
 void DrOpenGL::paintGL() {    
     // ***** Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
-    ///m_engine->info = QString::fromUtf8(reinterpret_cast<const char*>(ver));
+    ///g_info = std::string(reinterpret_cast<const char*>(ver));
 
     // ***** Update Camera / View Matrix
     updateViewMatrix(m_engine->getCurrentWorld()->render_type);

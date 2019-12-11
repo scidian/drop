@@ -42,7 +42,7 @@ private:
 
     bool        p_shadow;
     QColor      p_shadow_color;
-    QPoint      p_shadow_offset;
+    DrPoint     p_shadow_offset;
 
     bool        p_gradient;
     QColor      p_gradient_color;

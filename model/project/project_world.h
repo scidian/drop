@@ -8,8 +8,6 @@
 #ifndef DRWORLD_H
 #define DRWORLD_H
 
-#include <QPointF>
-
 #include "model/settings/settings.h"
 
 // Forward declarations
@@ -56,7 +54,7 @@ public:
 
     // Function Calls
     DrStage*    addStage(std::string new_stage_name = std::string(""));
-    DrStage*    addStage(long stage_key, bool is_start_stage, QPointF center_point, double zoom_scale);
+    DrStage*    addStage(long stage_key, bool is_start_stage, DrPointF center_point, double zoom_scale);
     DrStage*    addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage = false);
     void        deleteStage(DrStage *stage);
     void        initializeWorldSettings(std::string new_name);

@@ -191,8 +191,6 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
         }
     } while (found_camera == false);
 
-    g_info = "Cam Following Key: " + QString::number((*it).second->getThingFollowingKey());
-
     // If not active camera already, switch cameras
     long new_key = (*it).second->getKey();
     if (new_key != m_active_camera) {

@@ -19,6 +19,7 @@
 
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
+#include "library/dr_string.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
 #include "model/enums_model_types.h"
@@ -152,7 +153,7 @@ public:
     void            zoomToScale(double scale);
 
     // Initialization Calls
-    void            importTexture(long texture_id, QString from_asset_string);
+    void            importTexture(long texture_id, std::string from_asset_string);
     void            importTexture(long texture_id, QPixmap &pixmap);
     void            loadBuiltInModels();
     void            loadBuiltInTextures();
@@ -195,7 +196,7 @@ public:
     void            releaseDefaultAttributeBuffer();
     void            setDefaultAttributeBuffer(QOpenGLBuffer *buffer);
     void            setShaderDefaultValues(float texture_width, float texture_height);
-    void            setNumberTextureCoordinates(QString letter, std::vector<float> &texture_coordinates);
+    void            setNumberTextureCoordinates(std::string letter, std::vector<float> &texture_coordinates);
     void            setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z);
     void            setQuadRotatedVertices(QVector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
                                            QVector3D &bot_left, QVector3D &bot_right, QVector3D position);

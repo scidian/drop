@@ -244,7 +244,7 @@ bool DrProject::openProjectFromFile(std::string open_file) {
 
             // If key doesnt already exist, initialize Stage
             if (findSettingsFromKey(stage_key, false) != nullptr) continue;
-            world->addStage(stage_key, start_stage, center_point, zoom_scale);
+            world->addStage(stage_key, start_stage, DrPointF(center_point.x(), center_point.y()), zoom_scale);
 
             // Load Stage Settings, Variables
             DrStage *stage = findStageFromKey(stage_key);
