@@ -50,9 +50,9 @@ namespace Dr {
 
     void            SetLabelText(Label_Names label, QString text)       { if (g_active_form_main) g_active_form_main->setLabelText(label, text); }
 
-    void    ClearCursor() { while (QApplication::overrideCursor()) qApp->restoreOverrideCursor(); }
-    void    HideCursor()               { qApp->setOverrideCursor( Qt::BlankCursor ); }
-    void    SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
+    void        ClearCursor() { while (QApplication::overrideCursor()) qApp->restoreOverrideCursor(); }
+    void        HideCursor()               { qApp->setOverrideCursor( Qt::BlankCursor ); }
+    void        SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
 
 
     // ########## Load saved preferences

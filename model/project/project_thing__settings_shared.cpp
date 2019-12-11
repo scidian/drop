@@ -22,27 +22,27 @@
 //##    Transform Components
 //####################################################################################
 void DrThing::addComponentTransform(double width, double height, double x, double y, DrThingType type) {
-    QString type_string = QString::fromStdString(Dr::StringFromThingType(type));
+    std::string type_string = Dr::StringFromThingType(type);
 
     addComponent(Components::Thing_Transform, "Transform", "Sets the physical size and angle of the " + type_string + " "
                                                            "in the Stage.", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
 
-    QString position_text = "Location of the " + type_string + " within the current Stage.";
+    std::string position_text = "Location of the " + type_string + " within the current Stage.";
     if (type == DrThingType::Camera) {
         position_text = "Point at which Camera is looking at.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, DrPointF(x, y), "Position", position_text);
 
-    QString transform_title = "Rotation Z";
-    QString transform_text =  "Starting rotation, in degrees, of item on the Z Axis. Does affect physics collision shape.";
+    std::string transform_title = "Rotation Z";
+    std::string transform_text =  "Starting rotation, in degrees, of item on the Z Axis. Does affect physics collision shape.";
     if (type == DrThingType::Camera) {
         transform_title = "Camera Tilt";
         transform_text =  "Starting tilt / rotation of Camera on the Z Axis.";
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0, transform_title, transform_text);
 
-    QString size_text = "Width and Height of the " + type_string + " in pixels, affected by Scale property.";
+    std::string size_text = "Width and Height of the " + type_string + " in pixels, affected by Scale property.";
     if (type == DrThingType::Light) {
         size_text = "Width and Height of the Light in pixels, affected by Scale property. "
                     "<br><b>NOTE:</b> For best performace on older devices, Light size is best kept under 4096.";
@@ -51,7 +51,7 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     }
     addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, DrPointF(width, height), "Size", size_text);
 
-    QString scale_text = "X and Y scale of the " + type_string + " within the Stage.";
+    std::string scale_text = "X and Y scale of the " + type_string + " within the Stage.";
     if (type== DrThingType::Camera) {
         scale_text = "X and Y scale settings have no effect on Cameras.";
     }
@@ -69,7 +69,7 @@ void DrThing::addComponentLayering(double z, double opacity, bool show_component
 
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
                            "Z-Order", "Arrangement of item along the z axis in the Stage. Should be between the near and far clipping planes (" +
-                                      QString::number(double(c_near_plane)) + " and " + QString::number(double(c_far_plane)) + ") to be visible.");
+                                      std::to_string(double(c_near_plane)) + " and " + std::to_string(double(c_far_plane)) + ") to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,
                            "Sub Order", "Arrangement of item compared to other items within the same Z-Order.", true, false);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,

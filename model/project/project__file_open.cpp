@@ -10,6 +10,7 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QVariantMap>
 
 #include "editor/helper_editor.h"
 #include "model/properties/property_collision.h"
@@ -27,6 +28,10 @@
 #include "model/settings/settings_component_property.h"
 
 
+// Local File Scope Functions
+void    loadSettingsFromMap(DrSettings *entity, QVariantMap &map);
+
+
 //####################################################################################
 //##    Checks if map has Key
 //####################################################################################
@@ -39,13 +44,13 @@ bool checkMapHasKey(QVariantMap &map, QString key) {
 //####################################################################################
 //##    Opens a Project File, returns false if unsuccessful
 //####################################################################################
-bool DrProject::openProjectFromFile(QString open_file) {
+bool DrProject::openProjectFromFile(std::string open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
     qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
 
     // ***** Open File
-    QSettings settings(open_file, QSettings::Format::IniFormat);
+    QSettings settings(QString::fromStdString(open_file), QSettings::Format::IniFormat);
 
 
     // ***** Read Options
@@ -61,13 +66,13 @@ bool DrProject::openProjectFromFile(QString open_file) {
     // ***** Test for a basic property, if doesnt have this probably not a valid save file, return false
     if (checkMapHasKey(options, "name") == false) return false;
 
-    setOption(Project_Options::Name,            options["name"]);
-    setOption(Project_Options::File_Name_Path,  QVariant(open_file)); ///options["file_path"]);
-    setOption(Project_Options::Current_World,   options["current_world"]);
-    setOption(Project_Options::Current_Stage,   options["current_stage"]);
-    setOption(Project_Options::Orientation,     options["orientation"]);
-    setOption(Project_Options::Width,           options["width"]);
-    setOption(Project_Options::Height,          options["height"]);
+    setOption(Project_Options::Name,            options["name"].toString());
+    setOption(Project_Options::File_Name_Path,  open_file);
+    setOption(Project_Options::Current_World,   options["current_world"].toInt());
+    setOption(Project_Options::Current_Stage,   options["current_stage"].toInt());
+    setOption(Project_Options::Orientation,     options["orientation"].toInt());
+    setOption(Project_Options::Width,           options["width"].toInt());
+    setOption(Project_Options::Height,          options["height"].toInt());
     settings.endArray();
 
 
@@ -99,9 +104,9 @@ bool DrProject::openProjectFromFile(QString open_file) {
         // Load Image
         QVariantMap image_data =    settings.value("image").value<QVariantMap>();
         long        image_key =     image_data["key"].toLongLong();
-        QString     full_path =     image_data["full_path"].toString();
-        QString     filename =      image_data["filename"].toString();
-        QString     simple_name =   image_data["simple_name"].toString();
+        std::string full_path =     image_data["full_path"].toString().toStdString();
+        std::string filename =      image_data["filename"].toString().toStdString();
+        std::string simple_name =   image_data["simple_name"].toString().toStdString();
         QImage      image =         image_data["image"].value<QPixmap>().toImage().convertToFormat(QImage::Format_ARGB32);
 
         // If key doesnt already exist, initialize Image
@@ -160,8 +165,8 @@ bool DrProject::openProjectFromFile(QString open_file) {
         // Load Font
         QVariantMap font_data =     settings.value("font").value<QVariantMap>();
         long        font_key =      font_data["key"].toLongLong();
-        QString     name =          font_data["font_name"].toString();
-        QString     family =        font_data["font_family"].toString();
+        std::string name =          font_data["font_name"].toString().toStdString();
+        std::string family =        font_data["font_family"].toString().toStdString();
         int         font_size =     font_data["font_size"].toInt();
         QPixmap     pix =           font_data["image"].value<QPixmap>();
 
@@ -309,7 +314,7 @@ bool DrProject::openProjectFromFile(QString open_file) {
 //####################################################################################
 //##    Load all Components / Properties Settings
 //####################################################################################
-void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
+void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     // ***** Load class variables
     entity->setLocked(  map["locked"].toBool() );
     entity->setVisible( map["visible"].toBool() );
@@ -319,9 +324,9 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::number(component->getComponentKey()) + ":";
         QString k;
-        ///k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString()   );
-        k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString()   );
-        ///k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString()   );
+        ///k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString().toStdString()   );
+        k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString().toStdString()   );
+        ///k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString().toStdString()   );
         ///k = map_key + "color";              if (checkMapHasKey(map, k)) component->setColor(        QColor::fromRgba(map[k].toUInt())   );
         k = map_key + "turned_on";          if (checkMapHasKey(map, k)) component->setOnOrOff(      map[k].toBool()     );
         ///k = map_key + "comp_key";           if (checkMapHasKey(map, k)) component->setComponentKey( map[k].toLongLong() );
@@ -331,11 +336,13 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
             DrProperty *property = property_pair.second;
 
 
+
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrPropertyCollision class
             if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Image_Shape)) continue;
 
             // !!!!! #NOTE: Base Key / Idle Animation is set upon Asset Creation
             if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) continue;
+
 
 
             // ***** Check data type is the same as we were expecting
@@ -357,7 +364,16 @@ void DrProject::loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
                 // Already assigned by Drop
                 ///k = map_key + "display_name";   if (checkMapHasKey(map, k)) property->setDisplayName(   map[k].toString() );
                 ///k = map_key + "description";    if (checkMapHasKey(map, k)) property->setDescription(   map[k].toString() );
-                k = map_key + "value";          if (checkMapHasKey(map, k)) property->setValue(         map[k] );
+                k = map_key + "value";
+                if (checkMapHasKey(map, k)) {
+                    switch (check_property_type) {
+                        case Property_Type::Bool:       property->setValue( map[k].toBool() );      break;
+                        case Property_Type::Int:        property->setValue( map[k].toInt() );       break;
+                        case Property_Type::Double:     property->setValue( map[k].toDouble() );    break;
+                    }
+
+
+                }
 
                 if (property->getPropertyKey() != static_cast<long>(Properties::Entity_Key)) {
                     k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );

@@ -9,6 +9,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_editor.h"
 #include "library/dr_debug.h"
+#include "library/dr_containers.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"
@@ -180,18 +181,18 @@ long DrProject::addEffect(DrEffectType effect_type, long key) {
     return new_effect_key;
 }
 
-long DrProject::addFont(QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects, long key) {
+long DrProject::addFont(std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects, long key) {
     long new_font_key = (key == c_no_key) ? getNextKey() : key;
     m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, font_family, font_size, use_test_rects);
     return new_font_key;
 }
 
-DrImage* DrProject::addImage(QString image_path, long key, Asset_Category category) {
+DrImage* DrProject::addImage(std::string image_path, long key, Asset_Category category) {
     long new_image_key = (key == c_no_key) ? getNextKey() : key;
     m_images[new_image_key] = new DrImage(this, new_image_key, image_path, category);
     return m_images[new_image_key];
 }
-long DrProject::addImage(long key, QString full_path, QString filename, QString simple_name, QImage &image, Asset_Category category) {
+long DrProject::addImage(long key, std::string full_path, std::string filename, std::string simple_name, QImage &image, Asset_Category category) {
     m_images[key] = new DrImage(this, key, full_path, filename, simple_name, image, category);
     return key;
 }
@@ -199,10 +200,10 @@ long DrProject::addImage(long key, QString full_path, QString filename, QString 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World
 DrWorld* DrProject::addWorld() {
     int test_num = static_cast<int>(m_worlds.size());
-    QString new_name;
+    std::string new_name;
     do {
         ++test_num;
-        new_name = "World " + QString::number(test_num);
+        new_name = "World " + std::to_string(test_num);
     } while (findWorldWithName(new_name) != nullptr);
 
     long new_world_key = getNextKey();
@@ -224,12 +225,12 @@ DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world) {
     copy_world->copyEntitySettings(from_world);
 
     // Find name for Copy World
-    QString new_name;
-    bool    has_name;
-    int     i = 1;
+    std::string new_name;
+    bool has_name;
+    int  i = 1;
     do {
         has_name = false;
-        new_name = (i == 1) ? from_world->getName() + " copy" : from_world->getName() + " copy (" + QString::number(i) + ")";
+        new_name = (i == 1) ? from_world->getName() + " copy" : from_world->getName() + " copy (" + std::to_string(i) + ")";
         for (auto &world_pair : getWorldMap()) {
             if (world_pair.second->getName() == new_name) has_name = true;
         }
@@ -257,7 +258,7 @@ DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world) {
 //####################################################################################
 
 // Returns a pointer to the Base DrSettings class of the item with the specified key
-DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, QString custom_error) {
+DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, std::string custom_error) {
     AnimationMap::iterator animation_iter = m_animations.find(check_key);
     if (animation_iter != m_animations.end())   return animation_iter->second;
 
@@ -294,11 +295,11 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, QS
 
     if (show_warning) {
         if (custom_error == "") custom_error = "No more info available...";
-        Dr::ShowMessageBox("WARNING: Did not find key (" + QString::number(check_key) +
+        Dr::ShowMessageBox(std::string("WARNING: Did not find key (" + std::to_string(check_key) +
                            ") in project! \n"
-                           "Last key used in project: " + QString::number(m_key_generator - 1) + "!\n\n"
-                           "This warning called from \"DrProject::findChildSettingsFromKey\"" + "\n\n" + custom_error,
-                           QMessageBox::Icon::Warning, "Warning!", Dr::GetActiveFormMain());
+                           "Last key used in project: " + std::to_string(m_key_generator - 1) + "!\n\n"
+                           "This warning called from \"DrProject::findChildSettingsFromKey\"" + "\n\n" + custom_error),
+                           QMessageBox::Icon::Warning, std::string("Warning!"), Dr::GetActiveFormMain());
     }
     return nullptr;
 }
@@ -411,8 +412,8 @@ DrWorld* DrProject::findWorldFromKey(long check_key) {
 }
 
 // Returns a pointer to the World with the mathcing name
-DrWorld* DrProject::findWorldWithName(QString world_name) {
-    QString compare_name;
+DrWorld* DrProject::findWorldWithName(std::string world_name) {
+    std::string compare_name;
     for (auto world_pair: m_worlds) {
         compare_name = world_pair.second->getName();
         if (compare_name == world_name) { return world_pair.second; }

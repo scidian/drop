@@ -88,7 +88,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     QString redo_name = "ERROR";
     if (displayed) {
         displayed->removeGraphicsItemReferences();
-        redo_name = displayed->getName();
+        redo_name = QString::fromStdString(displayed->getName());
     }
 
     // ***** Load stage we're changing to
@@ -109,8 +109,8 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
 
     m_scene->setCurrentStageShown(new_stage);
     m_scene->setCurrentStageKeyShown(m_new_stage_key);
-    m_project->setOption(Project_Options::Current_World, QVariant::fromValue(new_stage->getParentWorld()->getKey()) );
-    m_project->setOption(Project_Options::Current_Stage, QVariant::fromValue(new_stage->getKey()) );
+    m_project->setOption(Project_Options::Current_World, new_stage->getParentWorld()->getKey());
+    m_project->setOption(Project_Options::Current_Stage, new_stage->getKey());
 
     emit m_scene->setViewRect(new_view_rect);
     emit m_scene->updateGrid();
@@ -135,7 +135,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
 
     // ***** Set Undo / Redo text
     if (is_undo)    return "Redo Select Stage " + redo_name;
-    else            return "Undo Select Stage " + new_stage->getName();
+    else            return "Undo Select Stage " + QString::fromStdString(new_stage->getName());
 }
 
 DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {

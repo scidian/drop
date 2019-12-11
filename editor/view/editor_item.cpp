@@ -59,7 +59,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     } else if (m_asset->getType() == DrType::Font) {
         std::string text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-        m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() )->createText( QString::fromStdString(text) );
+        m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() )->createText( text );
         setPixmap(m_pixmap);
         m_asset_width =  m_pixmap.width();
         m_asset_height = m_pixmap.height();
@@ -138,7 +138,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
 
     // Store some initial user data
-    setData(User_Roles::Name, m_asset->getName() );
+    setData(User_Roles::Name, QString::fromStdString(m_asset->getName()) );
     std::string description = m_thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromThingType(m_thing->getThingType());
     setData(User_Roles::Type, QString::fromStdString(description) );

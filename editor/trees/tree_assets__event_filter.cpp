@@ -91,7 +91,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
         if (entity == nullptr) return QObject::eventFilter(object, event);
-        QString asset_name = entity->getName();
+        QString asset_name = QString::fromStdString(entity->getName());
 
         if (asset_name != label_name->text()) {
             if (scrolling_mutex.tryLock()) {

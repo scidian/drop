@@ -111,13 +111,13 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         int     i = 1;
         do {
             has_name = false;
-            new_name = (i == 1) ? copy_asset->getName() + " copy" :  copy_asset->getName() + " copy (" + QString::number(i) + ")";
+            new_name = (i == 1) ? QString::fromStdString(copy_asset->getName()) + " copy" : QString::fromStdString(copy_asset->getName()) + " copy (" + QString::number(i) + ")";
             for (auto &asset_pair : getParentProject()->getAssetMap()) {
-                if (asset_pair.second->getName() == new_name) has_name = true;
+                if (asset_pair.second->getName() == new_name.toStdString()) has_name = true;
             }
             i++;
         } while (has_name != false);
-        copy_asset->setName( new_name );
+        copy_asset->setName( new_name.toStdString() );
 
         // Update EditorRelay widgets
         m_editor_relay->buildAssetTree();

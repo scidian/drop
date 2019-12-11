@@ -24,7 +24,7 @@
 //##    Constructor, Destructor
 //####################################################################################
 DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
-                 long new_stage_key, QString new_stage_name, bool is_start_stage) : DrSettings(parent_project) {
+                 long new_stage_key, std::string new_stage_name, bool is_start_stage) : DrSettings(parent_project) {
     m_parent_world = parent_world;                  // pointer to parent World
 
     this->setKey(new_stage_key);                    // assign key passed in from key generator, this key matches key in parent World map container
@@ -56,8 +56,8 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     DrSettings *asset = getParentProject()->findSettingsFromKey(from_asset_key);
     if (asset == nullptr) {
         Dr::ShowMessageBox("Error in DrStage::addThing, Could not find underlying Entity to load from! \n "
-                           "New Type: " + QString::fromStdString(Dr::StringFromThingType(new_type)) + " \n "
-                           "Asset Key: " + QString::number(from_asset_key) + ".",
+                           "New Type: " + Dr::StringFromThingType(new_type) + " \n "
+                           "Asset Key: " + std::to_string(from_asset_key) + ".",
                             QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 
@@ -81,17 +81,17 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
             break;
 
         ///case DrThingType::Camera:
-        ///    "Camera " + QString::number(static_cast<long>(m_things.size() + 1));
+        ///    "Camera " + std::to_string(static_cast<long>(m_things.size() + 1));
         ///    break;
 
         default:
-            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! New Type: " + QString::fromStdString(Dr::StringFromThingType(new_type)),
+            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! New Type: " + Dr::StringFromThingType(new_type),
                                QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 
     long new_thing_key = (key == c_no_key) ? getParentProject()->getNextKey() : key;
     m_things[new_thing_key] = new DrThing(getParentProject(), m_parent_world, this, new_thing_key,
-                                          QString::fromStdString(new_name), new_type, from_asset_key, x, y, z, should_collide);
+                                          new_name, new_type, from_asset_key, x, y, z, should_collide);
     return m_things[new_thing_key];
 }
 

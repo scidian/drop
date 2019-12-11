@@ -55,39 +55,39 @@ namespace Component_Colors {
 //############################
 namespace Component_Icons {
     // General Components
-    const QString None          { QString("") };
-    const QString Name          { QString(":/assets/inspector_icons/comp_name.png") };
-    const QString Hidden        { QString(":/assets/inspector_icons/comp_hidden.png") };
-    const QString Settings      { QString(":/assets/inspector_icons/comp_settings.png") };
-    const QString Physics       { QString(":/assets/inspector_icons/comp_physics.png") };
-    const QString Transform     { QString(":/assets/inspector_icons/comp_transform.png") };
-    const QString Layering      { QString(":/assets/inspector_icons/comp_layering.png") };
-    const QString Movement      { QString(":/assets/inspector_icons/comp_movement.png") };
-    const QString Spawn         { QString(":/assets/inspector_icons/comp_spawn.png") };
-    const QString Appearance    { QString(":/assets/inspector_icons/comp_appearance.png") };
-    const QString Collide       { QString(":/assets/inspector_icons/comp_collide.png") };
-    const QString Animation     { QString(":/assets/inspector_icons/comp_animation.png") };
-    const QString Effects       { QString(":/assets/inspector_icons/comp_effects.png") };
-    const QString Health        { QString(":/assets/inspector_icons/comp_health.png") };
-    const QString Controls      { QString(":/assets/inspector_icons/comp_controls.png") };
+    const std::string None          { std::string("") };
+    const std::string Name          { std::string(":/assets/inspector_icons/comp_name.png") };
+    const std::string Hidden        { std::string(":/assets/inspector_icons/comp_hidden.png") };
+    const std::string Settings      { std::string(":/assets/inspector_icons/comp_settings.png") };
+    const std::string Physics       { std::string(":/assets/inspector_icons/comp_physics.png") };
+    const std::string Transform     { std::string(":/assets/inspector_icons/comp_transform.png") };
+    const std::string Layering      { std::string(":/assets/inspector_icons/comp_layering.png") };
+    const std::string Movement      { std::string(":/assets/inspector_icons/comp_movement.png") };
+    const std::string Spawn         { std::string(":/assets/inspector_icons/comp_spawn.png") };
+    const std::string Appearance    { std::string(":/assets/inspector_icons/comp_appearance.png") };
+    const std::string Collide       { std::string(":/assets/inspector_icons/comp_collide.png") };
+    const std::string Animation     { std::string(":/assets/inspector_icons/comp_animation.png") };
+    const std::string Effects       { std::string(":/assets/inspector_icons/comp_effects.png") };
+    const std::string Health        { std::string(":/assets/inspector_icons/comp_health.png") };
+    const std::string Controls      { std::string(":/assets/inspector_icons/comp_controls.png") };
 
     // Thing Components
-    const QString Camera        { QString(":/assets/inspector_icons/comp_camera.png") };
-    const QString Character     { QString(":/assets/inspector_icons/comp_character.png") };
-    const QString Font          { QString(":/assets/inspector_icons/comp_font.png") };
-    const QString Object        { QString(":/assets/inspector_icons/comp_object.png") };
+    const std::string Camera        { std::string(":/assets/inspector_icons/comp_camera.png") };
+    const std::string Character     { std::string(":/assets/inspector_icons/comp_character.png") };
+    const std::string Font          { std::string(":/assets/inspector_icons/comp_font.png") };
+    const std::string Object        { std::string(":/assets/inspector_icons/comp_object.png") };
 
     // Effect Components
-    const QString Fire          { QString(":/assets/inspector_icons/comp_fire.png") };
-    const QString Fisheye       { QString(":/assets/inspector_icons/comp_fisheye.png") };
-    const QString Light         { QString(":/assets/inspector_icons/comp_light.png") };
-    const QString Mirror        { QString(":/assets/inspector_icons/comp_mirror.png") };
-    const QString Swirl         { QString(":/assets/inspector_icons/comp_swirl.png") };
-    const QString Water         { QString(":/assets/inspector_icons/comp_water.png") };
-    const QString Water_Ripple  { QString(":/assets/inspector_icons/comp_water_ripple.png") };
-    const QString Water_Wave    { QString(":/assets/inspector_icons/comp_water_wave.png") };
-    const QString Water_Refract { QString(":/assets/inspector_icons/comp_water_refract.png") };
-    const QString Water_Foam    { QString(":/assets/inspector_icons/comp_water_foam.png") };
+    const std::string Fire          { std::string(":/assets/inspector_icons/comp_fire.png") };
+    const std::string Fisheye       { std::string(":/assets/inspector_icons/comp_fisheye.png") };
+    const std::string Light         { std::string(":/assets/inspector_icons/comp_light.png") };
+    const std::string Mirror        { std::string(":/assets/inspector_icons/comp_mirror.png") };
+    const std::string Swirl         { std::string(":/assets/inspector_icons/comp_swirl.png") };
+    const std::string Water         { std::string(":/assets/inspector_icons/comp_water.png") };
+    const std::string Water_Ripple  { std::string(":/assets/inspector_icons/comp_water_ripple.png") };
+    const std::string Water_Wave    { std::string(":/assets/inspector_icons/comp_water_wave.png") };
+    const std::string Water_Refract { std::string(":/assets/inspector_icons/comp_water_refract.png") };
+    const std::string Water_Foam    { std::string(":/assets/inspector_icons/comp_water_foam.png") };
 };
 
 
@@ -217,8 +217,8 @@ namespace Advisor_Info {
 namespace Error_Code {
 
     // Class DrSettings Related
-    const QString NoComponent          { "S001" };
-    const QString NoProperty           { "S002" };
+    const std::string NoComponent          { "S001" };
+    const std::string NoProperty           { "S002" };
 
 }
 

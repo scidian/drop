@@ -179,7 +179,7 @@ void DrEngineWorld::addStage() {
     DrWorld *world = m_project->findWorldFromKey(m_world);
 
     // Find a list of possible Stages to pick from
-    QVector<DrStage*> stages;
+    std::vector<DrStage*> stages;
     for (auto &stage_pair : world->getStageMap()) {
         DrStage *stage = stage_pair.second;
         if (stage == nullptr) continue;
@@ -194,21 +194,21 @@ void DrEngineWorld::addStage() {
         // "Play Stage" Mode
         if (m_engine->getStageKey() != c_no_key) {
             if (stage->getKey() == m_engine->getStageKey()) {
-                stages.append(stage_pair.second);
+                stages.push_back(stage_pair.second);
             }
 
         // Normal Mode
-        } else if (stage_enabled && stage->getName() != "Start Stage") {
+        } else if (stage_enabled && (stage->isStartStage() == false)) {
             if (m_loaded_to > stage_start) {
                 if (m_loaded_to < stage_end || stage_end <= 0) {
-                    stages.append(stage_pair.second);
+                    stages.push_back(stage_pair.second);
                 }
             }
         }
     }
 
     // If there is at least one other stage available, load it up
-    if (stages.count() >= 1) {
+    if (stages.size() >= 1) {
         DrStage *stage = nullptr;
         int stage_count = static_cast<int>(stages.size());
         int stage_num = Dr::RandomInt(0, stage_count);

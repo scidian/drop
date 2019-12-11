@@ -34,7 +34,7 @@ void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 
     } else if (event->key() == Qt::Key::Key_P) {
         QString file_name = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
-        file_name += "/" + m_engine->getProject()->getOption(Project_Options::Name).toString();
+        file_name += "/" + QString::fromStdString(m_engine->getProject()->getOption(Project_Options::Name).toString());
         file_name += " - " + QDateTime::currentDateTime().toString("yyyy-MM-dd-hhmmss-zzz") + ".png";
         this->grabFramebuffer().save( file_name );
 

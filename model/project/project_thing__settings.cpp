@@ -20,11 +20,11 @@
 //####################################################################################
 //##    Camera Components
 //####################################################################################
-void DrThing::addComponentSettingsCamera(QString new_name) {
+void DrThing::addComponentSettingsCamera(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Camera Name");
     property_name->setDescription("Name of this Camera.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
     getComponent(Components::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
@@ -53,11 +53,11 @@ void DrThing::addComponentSettingsCamera(QString new_name) {
 //####################################################################################
 //##    Character Components
 //####################################################################################
-void DrThing::addComponentSettingsCharacter(QString new_name) {
+void DrThing::addComponentSettingsCharacter(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");
     property_name->setDescription("Name of this Character.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
@@ -92,11 +92,11 @@ void DrThing::addComponentSettingsCharacter(QString new_name) {
 //####################################################################################
 //##    Object Components
 //####################################################################################
-void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) {
+void DrThing::addComponentSettingsObject(std::string new_name, bool should_collide) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Object Name");
     property_name->setDescription("Name of this Object.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
@@ -119,11 +119,11 @@ void DrThing::addComponentSettingsObject(QString new_name, bool should_collide) 
 //####################################################################################
 //##    Text Components
 //####################################################################################
-void DrThing::addComponentSettingsText(QString new_name) {
+void DrThing::addComponentSettingsText(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Text Name");
     property_name->setDescription("Name of this Text Box.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Thing_Settings_Text, "Text Settings", "Settings for this Text Box.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Settings_Text)->setIcon(Component_Icons::Font);

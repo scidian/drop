@@ -9,10 +9,14 @@
 
 #include "dr_random.h"
 
-
 namespace Dr {
 
 
+//####################################################################################
+//##
+//##    Random Functions
+//##
+//####################################################################################
 // Returns a number between lower (inclusive) and upper (exclusive)
 int RandomInt(int lower, int upper) {
     static unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
@@ -39,7 +43,6 @@ bool RandomBool() {
     std::uniform_int_distribution<int> distribution(1, 2);
     return (distribution(generator) == 1);
 }
-
 
 
 

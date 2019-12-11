@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QSettings>
+#include <QVariantMap>
 
 #include "editor/globals_editor.h"
 #include "model/properties/property_collision.h"
@@ -23,6 +24,10 @@
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"
 #include "model/settings/settings_component_property.h"
+
+
+// Local File Scope Functions
+void    addSettingsToMap(DrSettings *entity, QVariantMap &map);
 
 
 //####################################################################################
@@ -48,7 +53,7 @@ void DrProject::saveProjectToFile() {
 
 
     // ***** Open File for Writing
-    QString   filename = getOption(Project_Options::File_Name_Path).toString();
+    QString   filename = QString::fromStdString(getOption(Project_Options::File_Name_Path).toString());
     QSettings settings(filename, QSettings::Format::IniFormat);
               ///if (settings.isWritable() == false) return;
               settings.clear();
@@ -56,17 +61,17 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Options
     QVariantMap options;
-    options["version_major"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Major).toString() );
-    options["version_minor"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Minor).toString() );
-    options["version_build"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Build).toString() );
+    options["version_major"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Major).toString());
+    options["version_minor"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Minor).toString());
+    options["version_build"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Build).toString());
     options["key_generator"] =  QVariant::fromValue(m_key_generator);
-    options["name"] =           getOption(Project_Options::Name);
-    options["file_path"] =      getOption(Project_Options::File_Name_Path);
-    options["current_world"] =  getOption(Project_Options::Current_World);
-    options["current_stage"] =  getOption(Project_Options::Current_Stage);
-    options["orientation"] =    getOption(Project_Options::Orientation);
-    options["width"] =          getOption(Project_Options::Width);
-    options["height"] =         getOption(Project_Options::Height);
+    options["name"] =           QString::fromStdString( getOption(Project_Options::Name).toString());
+    options["file_path"] =      QString::fromStdString( getOption(Project_Options::File_Name_Path).toString());
+    options["current_world"] =  QVariant::fromValue(getOption(Project_Options::Current_World).toInt());
+    options["current_stage"] =  QVariant::fromValue(getOption(Project_Options::Current_Stage).toInt());
+    options["orientation"] =    QVariant::fromValue(getOption(Project_Options::Orientation).toInt());
+    options["width"] =          QVariant::fromValue(getOption(Project_Options::Width).toInt());
+    options["height"] =         QVariant::fromValue(getOption(Project_Options::Height).toInt());
     settings.beginWriteArray("options");
     settings.setArrayIndex(0);
     settings.setValue("options", options);
@@ -97,9 +102,9 @@ void DrProject::saveProjectToFile() {
         DrImage *image = image_pair.second;
         QVariantMap image_data;
         image_data["key"] =         QVariant::fromValue(image->getKey());
-        image_data["full_path"] =   QVariant(image->getFullPath());
-        image_data["filename"] =    QVariant(image->getFilename());
-        image_data["simple_name"] = QVariant(image->getSimplifiedName());
+        image_data["full_path"] =   QString::fromStdString(image->getFullPath());
+        image_data["filename"] =    QString::fromStdString(image->getFilename());
+        image_data["simple_name"] = QString::fromStdString(image->getSimplifiedName());
         image_data["image"] =       QVariant(QPixmap::fromImage(image->getImage()));
         settings.beginWriteArray("images");
         settings.setArrayIndex(image_count++);
@@ -141,8 +146,8 @@ void DrProject::saveProjectToFile() {
         DrFont *font = font_pair.second;
         QVariantMap font_data;
         font_data["key"] =          QVariant::fromValue(font->getKey());
-        font_data["font_name"] =    QVariant(font->getName());
-        font_data["font_family"] =  QVariant(font->getPropertyFontFamily());
+        font_data["font_name"] =    QString::fromStdString(font->getName());
+        font_data["font_family"] =  QString::fromStdString(font->getPropertyFontFamily());
         font_data["font_size"] =    QVariant(font->getPropertyFontSize());
         font_data["image"] =        QVariant(font->getPixmap());
         settings.beginWriteArray("fonts");
@@ -231,15 +236,15 @@ void DrProject::saveProjectToFile() {
 //####################################################################################
 //##    Copy all Components / Properties into QVariantMap for saving
 //####################################################################################
-void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
+void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
     map["locked"] =  QVariant::fromValue(entity->isLocked());
     map["visible"] = QVariant::fromValue(entity->isVisible());
     for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::number(component->getComponentKey()) + ":";
-        map[map_key + "display_name"] = QVariant(component->getDisplayName());
-        map[map_key + "description"] =  QVariant(component->getDescription());
-        map[map_key + "icon"] =         QVariant(component->getIcon());
+        map[map_key + "display_name"] = QString::fromStdString(component->getDisplayName());
+        map[map_key + "description"] =  QString::fromStdString(component->getDescription());
+        map[map_key + "icon"] =         QString::fromStdString(component->getIcon());
         map[map_key + "color"] =        QVariant(component->getColor().rgba());
         map[map_key + "turned_on"] =    QVariant(component->isTurnedOn());
         map[map_key + "comp_key"] =     QVariant::fromValue(component->getComponentKey());
@@ -247,8 +252,8 @@ void DrProject::addSettingsToMap(DrSettings *entity, QVariantMap &map) {
         for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
-            map[map_key + "display_name"] = QVariant(property->getDisplayName());
-            map[map_key + "description"] =  QVariant(property->getDescription());
+            map[map_key + "display_name"] = QString::fromStdString(property->getDisplayName());
+            map[map_key + "description"] =  QString::fromStdString(property->getDescription());
             map[map_key + "data_type"] =    QVariant(static_cast<int>(property->getPropertyType()));
 
 // !!!!! #NEED_FIX_VARIANT_UPDATE

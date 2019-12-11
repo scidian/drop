@@ -43,8 +43,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
     DrSettings *source = parent_project->findSettingsFromKey(base_key);
 
     DrPropertyCollision shape;
-    QString     my_starting_name = "Unknown";
-    QPixmap     my_starting_pixmap(":/assets/dr_images/empty.png");
+    std::string     my_starting_name = "Unknown";
+    QPixmap         my_starting_pixmap(":/assets/dr_images/empty.png");
 
     switch (getAssetType()) {
         case DrAssetType::Character:
@@ -55,11 +55,11 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             if (source != nullptr) {
                 if (source->getType() == DrType::Image) {
                     animation = parent_project->addAnimation({ base_key });
-                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not create animation from image: " + QString::number(base_key));
+                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not create animation from image: " + std::to_string(base_key));
                     m_base_key = animation->getKey();
                 } else if (source->getType() == DrType::Animation) {
                     animation = dynamic_cast<DrAnimation*>(source);
-                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + QString::number(base_key));
+                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + std::to_string(base_key));
                 }
                 my_starting_pixmap = animation->getPixmapFromFirstFrame();
                 my_starting_name =   animation->getName();

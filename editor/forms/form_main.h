@@ -121,7 +121,7 @@ private:
 
 public:
     // Constructor / Destructor
-    explicit FormMain(QWidget *parent = nullptr, QString file_to_open = "");
+    explicit FormMain(QWidget *parent = nullptr, std::string file_to_open = "");
     virtual ~FormMain() override;
 
     // Misc functions

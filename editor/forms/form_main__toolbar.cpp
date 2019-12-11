@@ -45,7 +45,7 @@ void FormMain::updateToolbar() {
                     DrThing *thing = dynamic_cast<DrItem*>( sceneEditor->getSelectionItems().first() )->getThing();
                     if (thing != nullptr) {
                         DrSettings *settings = m_project->findSettingsFromKey(thing->getAssetKey());
-                        if (settings != nullptr) selected = settings->getName();
+                        if (settings != nullptr) selected = QString::fromStdString(settings->getName());
                     }
 
                 } else if (sceneEditor->getSelectionCount() > 1) {
@@ -62,8 +62,8 @@ void FormMain::updateToolbar() {
                         for (auto button : buttonsGroupEdit->buttons())     if (!button->isEnabled()) button->setEnabled(true);
 
                         if (selection_count == 1) {
-                            if (settings->getType() == DrType::Stage) selected = "Stage: " + settings->getName();
-                            if (settings->getType() == DrType::World) selected = "World: " + settings->getName();
+                            if (settings->getType() == DrType::Stage) selected = "Stage: " + QString::fromStdString(settings->getName());
+                            if (settings->getType() == DrType::World) selected = "World: " + QString::fromStdString(settings->getName());
                         } else {
                             if (settings->getType() == DrType::Stage) selected = QString::number( selection_count ) + " Stages";
                             if (settings->getType() == DrType::World) selected = QString::number( selection_count ) + " Worlds";

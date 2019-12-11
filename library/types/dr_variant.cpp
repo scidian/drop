@@ -162,6 +162,10 @@ unsigned int DrVariant::toUInt() {
 //##    Std Data Type Returns
 //####################################################################################
 std::string DrVariant::toString() {
+
+    // #NOTE: Alternate type casting check, however, wary of consistent type names across platforms
+    ///if (m_value.type() == typeid(std::string)) {
+
     try { return boost::any_cast<std::string>(m_value); }
     catch (const boost::bad_any_cast &) {
         try { return std::string(boost::any_cast<const char*>(m_value)); }

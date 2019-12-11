@@ -20,11 +20,11 @@
 //####################################################################################
 //##    Character Asset Components
 //####################################################################################
-void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
+void DrAsset::initializeAssetSettingsCharacter(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Character Name");
     property_name->setDescription("Name of this Character Asset.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Asset_Settings_Character)->setIcon(Component_Icons::Character);
@@ -75,11 +75,11 @@ void DrAsset::initializeAssetSettingsCharacter(QString new_name) {
 //####################################################################################
 //##    Object Asset Components
 //####################################################################################
-void DrAsset::initializeAssetSettingsObject(QString new_name) {
+void DrAsset::initializeAssetSettingsObject(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Object Name");
     property_name->setDescription("Name of this Object Asset.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
 //    addComponent(Components::Asset_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
 //    getComponent(Components::Asset_Settings_Object)->setIcon(Component_Icons::Object);

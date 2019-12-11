@@ -55,7 +55,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         getHoverHandler()->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
         QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
         color_button->setToolTip( color_as_string );
-        color_button->setProperty(User_Property::Body, property->getDescription() + "<br><br><b>Selected:</b> " + color_as_string);
+        color_button->setProperty(User_Property::Body, QString::fromStdString(property->getDescription()) + "<br><br><b>Selected:</b> " + color_as_string);
 
         addToWidgetList(color_button);
         color_layout->addWidget(color_button);
@@ -125,7 +125,7 @@ void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
         if (settings) {
             DrProperty *property = settings->findPropertyFromPropertyKey( button->property(User_Property::Key).toInt() );
             if (property) {
-                button->setProperty(User_Property::Body, property->getDescription() + "<br><br><b>Selected:</b> " + color_as_string);
+                button->setProperty(User_Property::Body, QString::fromStdString(property->getDescription()) + "<br><br><b>Selected:</b> " + color_as_string);
             }
         }
     }

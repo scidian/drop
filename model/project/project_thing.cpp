@@ -25,7 +25,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
-                 long new_thing_key, QString new_thing_name, DrThingType new_thing_type,
+                 long new_thing_key, std::string new_thing_name, DrThingType new_thing_type,
                  long from_asset_key,
                  double x, double y, double z,
                  bool should_collide) : DrSettings(parent_project) {
@@ -139,7 +139,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
 
         default:
-            Dr::ShowMessageBox("Error in DrThing Constructor, DrThingType not handled! Type: " + QString::fromStdString(Dr::StringFromThingType(new_thing_type)),
+            Dr::ShowMessageBox("Error in DrThing Constructor, DrThingType not handled! Type: " + Dr::StringFromThingType(new_thing_type),
                                QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
     }
 

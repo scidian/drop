@@ -56,22 +56,22 @@ bool DrFilterHoverHandler::eventFilter(QObject *obj, QEvent *event) {
 
 //      Sets AdvisorInfo widget user properties
 void DrFilterHoverHandler::attachToHoverHandler(QWidget *widget, DrProperty *property) {
-    widget->setProperty(User_Property::Header, property->getDisplayName());
-    widget->setProperty(User_Property::Body, property->getDescription());
+    widget->setProperty(User_Property::Header,  QString::fromStdString(property->getDisplayName()));
+    widget->setProperty(User_Property::Body,    QString::fromStdString(property->getDescription()));
     widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
     widget->installEventFilter(this);
 }
 
 void DrFilterHoverHandler::attachToHoverHandler(QWidget *widget, QString header, QString body) {
-    widget->setProperty(User_Property::Header, header);
-    widget->setProperty(User_Property::Body, body);
+    widget->setProperty(User_Property::Header,  header);
+    widget->setProperty(User_Property::Body,    body);
     widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
     widget->installEventFilter(this);
 }
 
 void DrFilterHoverHandler::attachToHoverHandler(QWidget *widget, HeaderBodyList header_body_list) {
-    widget->setProperty(User_Property::Header, header_body_list[0]);
-    widget->setProperty(User_Property::Body, header_body_list[1]);
+    widget->setProperty(User_Property::Header,  header_body_list[0]);
+    widget->setProperty(User_Property::Body,    header_body_list[1]);
     widget->setAttribute(Qt::WidgetAttribute::WA_Hover, true);
     widget->installEventFilter(this);
 }

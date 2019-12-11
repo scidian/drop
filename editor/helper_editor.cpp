@@ -135,9 +135,9 @@ QString StringFromBool(bool boolean) { return boolean? "True" : "False"; }
 //####################################################################################
 //##    Shows a modal Error Message
 //####################################################################################
-void ShowErrorMessage(QString function_name, QString error_message, QWidget *parent) {
-    QString error = "Error from " + function_name + "(): " + error_message;
-    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", error, QMessageBox::Ok, parent);
+void ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent) {
+    std::string error = "Error from " + function_name + "(): " + error_message;
+    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", QString::fromStdString(error), QMessageBox::Ok, parent);
     msg_box.exec();
 }
 
@@ -145,16 +145,16 @@ void ShowErrorMessage(QString function_name, QString error_message, QWidget *par
 //####################################################################################
 //##    Show a Modal Message Box with Icon or Pixmap
 //####################################################################################
-QMessageBox::StandardButton ShowMessageBox(QString message, QPixmap pixmap, QString title, QWidget *parent,
+QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title, QWidget *parent,
                                            QMessageBox::StandardButtons buttons) {
-    QMessageBox msg_box(QMessageBox::Icon::NoIcon, title, message, buttons, parent);
+    QMessageBox msg_box(QMessageBox::Icon::NoIcon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
     msg_box.setIconPixmap(pixmap);
     return static_cast<QMessageBox::StandardButton>(msg_box.exec());
 }
 
-QMessageBox::StandardButton ShowMessageBox(QString message, QMessageBox::Icon icon, QString title, QWidget *parent,
+QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon, std::string title, QWidget *parent,
                                            QMessageBox::StandardButtons buttons) {
-    QMessageBox msg_box(icon, title, message, buttons, parent);
+    QMessageBox msg_box(icon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
     return static_cast<QMessageBox::StandardButton>(msg_box.exec());
 }
 

@@ -94,9 +94,9 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
     if (it == m_components.end()) {
         Dr::ShowMessageBox("ERROR! CODE: " + Error_Code::NoComponent + "\n\n"
                            "Component not found in current object \n\n"
-                           "Component ID: \t" + QString::number(component) + "\n"
+                           "Component ID: \t" + std::to_string(component) + "\n"
                            "Object Name: \t" + this->getName() + ". \n"
-                           "Object Type: \t" + QString::fromStdString(Dr::StringFromType(this->getType())) + "\n");
+                           "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
     }
     return m_components[component]->getProperty(property);
 }
@@ -126,7 +126,7 @@ DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find)
 //####################################################################################
 //##    Returns Name / Sets Name from shared "Entity_Name" component
 //####################################################################################
-QString DrSettings::getName() {
+std::string DrSettings::getName() {
     DrComponent *name_component;
     DrProperty  *name_property;
     switch (getType()) {
@@ -141,7 +141,7 @@ QString DrSettings::getName() {
         case DrType::World:
             name_component = getComponent(Components::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Properties::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
-            return QString::fromStdString(name_property->getValue().toString());
+            return name_property->getValue().toString();
         case DrType::Frame:     return "DrFrame - Unknown Name";
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
     }
@@ -149,12 +149,12 @@ QString DrSettings::getName() {
 }
 
 // Sets Name from shared "Entity_Name" component, returns true if successful
-bool DrSettings::setName(QString new_name) {
+bool DrSettings::setName(std::string new_name) {
     DrComponent *name_component;
     DrProperty  *name_property;
     name_component = getComponent(Components::Entity_Settings);                     if (name_component == nullptr) return false;
     name_property  = name_component->getProperty(Properties::Entity_Name);          if (name_property == nullptr)  return false;
-    name_property->setValue(new_name.toStdString());
+    name_property->setValue(new_name);
     return true;
 }
 
@@ -162,7 +162,7 @@ bool DrSettings::setName(QString new_name) {
 //####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
-DrComponent* DrSettings::addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on) {
+DrComponent* DrSettings::addComponent(Components component, std::string display_name, std::string description, QColor color, bool is_turned_on) {
     DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
     comp->setListOrder( static_cast<int>(m_components.size()) );
     m_components[static_cast<long>(component)] = comp;
@@ -170,7 +170,7 @@ DrComponent* DrSettings::addComponent(Components component, QString display_name
 }
 
 DrProperty* DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
-                                               DrVariant value, QString display_name, QString description, bool is_hidden, bool is_editable) {
+                                               DrVariant value, std::string display_name, std::string description, bool is_hidden, bool is_editable) {
     DrProperty *prop = m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
     return prop;
 }

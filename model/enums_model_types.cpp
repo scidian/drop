@@ -13,7 +13,7 @@ namespace Dr {
 
 
 //####################################################################################
-//##    Returns a QString respresentaiton of the passed DrTypes type
+//##    Returns a std::string respresentation of the passed DrTypes type
 //####################################################################################
 std::string StringFromType(DrType type) {
     switch (type) {

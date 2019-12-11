@@ -145,7 +145,7 @@ QString findEmptyAssetName(AssetMap &asset_map, DrAssetType type, int count) {
 
         for (auto asset_pair : asset_map) {
             if (asset_pair.second->getAssetType() == type) {
-                if (asset_pair.second->getName() == new_name) {
+                if (asset_pair.second->getName() == new_name.toStdString()) {
                     already_exists = true;
                 }
             }
@@ -174,7 +174,7 @@ void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
         }
     }
     QString new_name = findEmptyAssetName(m_project->getAssetMap(), asset_type, asset_count);
-    asset->setName( new_name );
+    asset->setName( new_name.toStdString() );
 
     // Update EditorRelay widgets
     editor->buildAssetTree();

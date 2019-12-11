@@ -25,7 +25,7 @@
 //##    Collision Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape) {
-    QString    type = "Thing";
+    std::string type = "Thing";
     int start_shape_type = 0;
     if (asset_type == DrAssetType::Character) {
         type = "Character";
@@ -65,7 +65,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
 //##    Animation Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key) {
-    QString type = QString::fromStdString(Dr::StringFromAssetType(asset_type));
+    std::string type = Dr::StringFromAssetType(asset_type);
 
     addComponent(Components::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Blue_Yonder, true);
     getComponent(Components::Asset_Animation)->setIcon(Component_Icons::Animation);
@@ -84,7 +84,7 @@ void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle
 //##    Health Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points) {
-    QString type = "Thing";
+    std::string type = "Thing";
     if (asset_type == DrAssetType::Character)   type = "Character";
     if (asset_type == DrAssetType::Object)      type = "Object";
 
@@ -126,7 +126,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
 //##    Physics Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
-    QString type = QString::fromStdString(Dr::StringFromAssetType(asset_type));
+    std::string type = Dr::StringFromAssetType(asset_type);
 
     addComponent(Components::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Physics)->setIcon(Component_Icons::Physics);
@@ -153,7 +153,7 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
 //##    Controls Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
-    QString type = QString::fromStdString(Dr::StringFromAssetType(asset_type));
+    std::string type = Dr::StringFromAssetType(asset_type);
 
     addComponent(Components::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::Brown_Sugar, true);
     getComponent(Components::Asset_Controls)->setIcon(Component_Icons::Controls);

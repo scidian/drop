@@ -44,7 +44,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, QString new_stage_name, bool is_start_stage = false);
+    DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, std::string new_stage_name, bool is_start_stage = false);
     virtual ~DrStage() override;
 
     // DrSettings Overrides
@@ -72,7 +72,7 @@ public:
 
     std::vector<long>       thingKeysSortedByZOrder(Qt::SortOrder sort_order);
     std::vector<DrThing*>   thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things = true, std::list<DrThing*> just_these_things = { });
-    void                    initializeStageSettings(QString new_name);
+    void                    initializeStageSettings(std::string new_name);
     void                    removeGraphicsItemReferences();
 
 };

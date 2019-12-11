@@ -17,7 +17,7 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage) : DrSettings(parent_project) {
+DrWorld::DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage) : DrSettings(parent_project) {
     this->setKey(key);
 
     initializeWorldSettings(new_world_name);
@@ -45,13 +45,13 @@ void DrWorld::deleteStage(DrStage *stage) {
 //##    Adds a Stage
 //####################################################################################
 // Adds a Stage to the map container, assigns name based on current stage count
-DrStage* DrWorld::addStage(QString new_stage_name) {
+DrStage* DrWorld::addStage(std::string new_stage_name) {
     bool need_start_stage = false;
     if (m_stages.size() < 1) {
         need_start_stage = true;
         new_stage_name = "Start Stage";
-    } else if (new_stage_name == "") {
-        new_stage_name = QString::number(static_cast<long>(m_stages.size() + 1));
+    } else if (new_stage_name.empty()) {
+        new_stage_name = std::to_string(static_cast<long>(m_stages.size() + 1));
     }
 
     long new_stage_key = getParentProject()->getNextKey();
@@ -80,12 +80,12 @@ DrStage* DrWorld::addStageCopyFromStage(DrStage *from_stage, bool copy_into_star
     }
 
     // Find a new name for Stage
-    QString new_name;
+    std::string new_name;
     bool    has_name;
     int     name_count = 1;
     do {
         has_name = false;
-        new_name = (name_count == 1) ? from_stage->getName() + " copy" : from_stage->getName() + " copy (" + QString::number(name_count) + ")";
+        new_name = (name_count == 1) ? from_stage->getName() + " copy" : from_stage->getName() + " copy (" + std::to_string(name_count) + ")";
         for (auto &stage_pair : getStageMap()) {
             if (stage_pair.second->getName() == new_name) has_name = true;
         }
@@ -117,8 +117,8 @@ DrStage* DrWorld::getStageFromKey(long from_stage_key) {
 }
 
 // Returns a pointer to the World with the mathcing name
-DrStage* DrWorld::getStageWithName(QString stage_name) {
-    QString compare_name;
+DrStage* DrWorld::getStageWithName(std::string stage_name) {
+    std::string compare_name;
     for (auto i: m_stages) {
         compare_name = i.second->getName();
         if (compare_name == stage_name) { return i.second; }

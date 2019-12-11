@@ -10,7 +10,6 @@
 
 #include <QImage>
 #include <QPixmap>
-#include <QString>
 
 #include "model/settings/settings.h"
 
@@ -43,7 +42,7 @@ public:
 
     // Function Calls
     long        addFrame(long image_key);
-    void        initializeAnimationSettings(QString new_name);
+    void        initializeAnimationSettings(std::string new_name);
 
     // Getters / Setters
     QPixmap                 getPixmapFromFirstFrame();

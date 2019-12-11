@@ -321,7 +321,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             case Properties::Thing_Text_User_Text: {
                 std::string text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
                 if (text == "") text = " ";
-                item->setPixmap( m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getKey() )->createText( QString::fromStdString(text) ));
+                item->setPixmap( m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getKey() )->createText( text ));
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);

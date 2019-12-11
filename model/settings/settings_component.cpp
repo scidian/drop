@@ -15,12 +15,12 @@
 //####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
-DrComponent::DrComponent(DrSettings *parent_settings,
-                         QString new_display_name,
-                         QString new_description,
-                         QColor new_color,
-                         long new_key,
-                         bool new_turned_on) {
+DrComponent::DrComponent(DrSettings    *parent_settings,
+                         std::string    new_display_name,
+                         std::string    new_description,
+                         QColor         new_color,
+                         long           new_key,
+                         bool           new_turned_on) {
     m_parent_settings = parent_settings;
 
     m_display_name = new_display_name;
@@ -45,11 +45,11 @@ DrProperty* DrComponent::getProperty(long setting) {
     if (it == m_properties.end()) {
         Dr::ShowMessageBox("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
                            "Property not found in object / component \n\n"
-                           "Property ID: \t" +    QString::number(setting) + "\n"
+                           "Property ID: \t" +    std::to_string(setting) + "\n"
                            "Component Name: \t" + this->getDisplayName() + "\n"
-                           "Component ID: \t" +   QString::number(this->getComponentKey()) + "\n"
+                           "Component ID: \t" +   std::to_string(this->getComponentKey()) + "\n"
                            "Object Name: \t" + this->m_parent_settings->getName() + "\n"
-                           "Object Type: \t" + QString::fromStdString(Dr::StringFromType(this->m_parent_settings->getType())) + "\n");
+                           "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + "\n");
     }
     return m_properties[setting];
 }
@@ -63,8 +63,8 @@ DrProperty* DrComponent::getProperty(long setting) {
 DrProperty* DrComponent::addProperty(Properties setting,
                                      Property_Type type,
                                      DrVariant value,
-                                     QString display_name,
-                                     QString description,
+                                     std::string display_name,
+                                     std::string description,
                                      bool is_hidden,
                                      bool is_editable) {
     DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, static_cast<int>(setting), is_hidden, is_editable);

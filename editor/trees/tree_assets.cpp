@@ -208,7 +208,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Image))  { for (auto image_pair :  list_images)  { if (image_pair.first > c_no_key)  entities.push_back(image_pair.second); } }
 
     std::sort(entities.begin(), entities.end(), [](DrSettings *a, DrSettings *b) {
-        return a->getName().toLower() < b->getName().toLower();
+        return QString::fromStdString(a->getName()).toLower() < QString::fromStdString(b->getName()).toLower();
     });
 
 
@@ -220,7 +220,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
-        QString entity_name = entity->getName();
+        QString entity_name = QString::fromStdString(entity->getName());
         if (!entity_name.toLower().contains(search_text.toLower())) continue;
 
         QSize frame_size = QSize(100, 66);

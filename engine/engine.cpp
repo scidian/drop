@@ -18,7 +18,7 @@
 DrEngine::DrEngine(DrProject *project, long stage_key) : m_project(project) {
     m_stage_key = stage_key;
 
-    m_current_editor_world = m_project->getOption(Project_Options::Current_World).toLongLong();
+    m_current_editor_world = m_project->getOption(Project_Options::Current_World).toLong();
     m_current_world = m_current_editor_world;
 
     m_worlds[m_current_world] = new DrEngineWorld(this, project, this->getTextureMap(), m_current_world);

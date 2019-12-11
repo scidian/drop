@@ -49,7 +49,7 @@ public:
     void            setAssetType(DrAssetType type)  { m_asset_type = type; }
 
     long            getBaseKey()            { return m_base_key; }
-    void            setBaseKey(long key)            { m_base_key = key; }
+    void            setBaseKey(long key)    { m_base_key = key; }
 
     // Function Calls
     std::list<long> animationsUsedByAsset();
@@ -59,8 +59,8 @@ public:
     void            updateAnimationProperty(std::list<long> image_keys, Properties animation_property);
 
     // Initialize Calls
-    void        initializeAssetSettingsCharacter(QString new_name);
-    void        initializeAssetSettingsObject(QString new_name);
+    void        initializeAssetSettingsCharacter(std::string new_name);
+    void        initializeAssetSettingsObject(std::string new_name);
 
     void        initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key);
     void        initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape);

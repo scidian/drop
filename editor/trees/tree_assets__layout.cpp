@@ -94,7 +94,7 @@ void AssetFlowLayout::sortItems() {
         DrSettings *asset_a = this->m_project->findSettingsFromKey(key_a);
         DrSettings *asset_b = this->m_project->findSettingsFromKey(key_b);
         if (asset_a == nullptr || asset_b == nullptr) return false;
-        return asset_a->getName().toLower() < asset_b->getName().toLower();
+        return QString::fromStdString(asset_a->getName()).toLower() < QString::fromStdString(asset_b->getName()).toLower();
     });
 }
 

@@ -17,7 +17,7 @@
 //##    Constructor
 //####################################################################################
 DrFont::DrFont(DrProject *parent_project, long key,
-               QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects) : DrSettings(parent_project) {
+               std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects) : DrSettings(parent_project) {
     this->setKey(key);
 
     m_name =   font_name;
@@ -47,12 +47,12 @@ DrFont::DrFont(DrProject *parent_project, long key,
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Font Name");
     property_name->setDescription("Name of this Font Asset.");
-    property_name->setValue( m_name.toStdString() );
+    property_name->setValue(m_name);
 
     addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
 
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, getPropertyFontFamily().toStdString(),
+    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, getPropertyFontFamily(),
                            "Font Family", "Font used for this text asset.", false, false);
     addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, getPropertyFontSize(),
                            "Font Size", "Font size of this text asset.", false, false);
@@ -62,11 +62,11 @@ DrFont::DrFont(DrProject *parent_project, long key,
 //##    Create Text
 //####################################################################################
 // !!! Need to incorporate letter spacing
-QPixmap DrFont::createText(QString text) {
+QPixmap DrFont::createText(std::string text) {
     int width = 0;
     int height = m_positions['A'].height();
-    for (int i = 0; i < text.length(); i++) {
-        width += m_positions[ text.at(i).toLatin1() ].width();
+    for (int i = 0; i < static_cast<int>(text.length()); i++) {
+        width += m_positions[ text.at(i) ].width();
     }
     if (width ==  0) width =  1;
     if (height == 0) height = 1;
@@ -77,8 +77,8 @@ QPixmap DrFont::createText(QString text) {
     painter.setPen(Qt::NoPen);
 
     int x = 0;
-    for (int i = 0; i < text.length(); i++) {
-        char letter = text.at(i).toLatin1();
+    for (int i = 0; i < static_cast<int>(text.length()); i++) {
+        char letter = text.at(i);
         int  letter_width = m_positions[letter].width();
 
         painter.drawPixmap( QRect(x, 0, letter_width, height), m_pixmap, m_positions[letter] );

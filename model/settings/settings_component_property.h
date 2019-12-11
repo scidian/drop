@@ -8,8 +8,6 @@
 #ifndef DRPROPERTY_H
 #define DRPROPERTY_H
 
-#include <QString>
-
 #include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
@@ -26,28 +24,28 @@ class DrProperty
 {
 private:
     // External Borrowed Pointers
-    DrSettings   *m_parent_settings;
-    DrComponent  *m_parent_component;
+    DrSettings     *m_parent_settings;
+    DrComponent    *m_parent_component;
 
     // The 7 Parts of Data for Every Property
-    QString       m_display_name =      "Unknown Property";                     // Name to be displayed in Editor
-    QString       m_description =       "No description";                       // Description to be displayed in Editor
-    Property_Type m_property_type =     Property_Type::String;                  // Variable type of 'm_value'
-    DrVariant     m_value =             QString::fromStdString("0");            // The stored data this property represents
-    long          m_property_key =      0;                                      // The unique id of this property within the parent object
-    bool          m_is_hidden =         false;                                  // Should this appear in the Inspector
-    bool          m_is_editable =       true;                                   // Should this be editable in the Inspector
+    std::string     m_display_name =      "Unknown Property";                   // Name to be displayed in Editor
+    std::string     m_description =       "No description";                     // Description to be displayed in Editor
+    Property_Type   m_property_type =     Property_Type::String;                // Variable type of 'm_value'
+    DrVariant       m_value =             std::string("0");                     // The stored data this property represents
+    long            m_property_key =      0;                                    // The unique id of this property within the parent object
+    bool            m_is_hidden =         false;                                // Should this appear in the Inspector
+    bool            m_is_editable =       true;                                 // Should this be editable in the Inspector
 
     // For now this is not stored, assignined during creation in void DrComponent::addProperty()
     // Used for sorting in Object Inspector
-    int           m_list_order = 0;
+    int             m_list_order = 0;
 
 public:
     // Constructor / Destructor
     DrProperty(DrSettings      *parent_settings,
                DrComponent     *parent_component,
-               QString          display_name,
-               QString          description,
+               std::string      display_name,
+               std::string      description,
                Property_Type    type,
                DrVariant        value,
                long             new_key,
@@ -58,16 +56,16 @@ public:
     DrSettings*     getParentSettings() { return m_parent_settings; }
     DrComponent*    getParentComponent() { return m_parent_component; }
 
-    QString         getDisplayName() { return m_display_name; }
-    QString         getDescription() { return m_description; }
+    std::string     getDisplayName() { return m_display_name; }
+    std::string     getDescription() { return m_description; }
     Property_Type   getPropertyType() { return m_property_type; }
     DrVariant       getValue() { return m_value; }
     long            getPropertyKey() { return m_property_key; }
     bool            isHidden() { return m_is_hidden; }
     bool            isEditable() { return m_is_editable; }
 
-    void            setDisplayName(QString new_display_name) { m_display_name = new_display_name; }
-    void            setDescription(QString new_description) { m_description = new_description; }
+    void            setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
+    void            setDescription(std::string new_description) { m_description = new_description; }
     void            setPropertyType(Property_Type new_type) { m_property_type = new_type; }
     void            setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
     void            setEditable(bool is_editable) { m_is_editable = is_editable; }
@@ -78,11 +76,10 @@ public:
 
 
     //####################################################################################
-    //##    Function template allows any type to be passed in and assigned to QVariant
+    //##    Function template allows any type to be passed in and assigned to DrVariant
     //##
     //##    !!!!! #NOTE: Setting a value here means the data model has changed !!!!!
-    //##                 This implies we need to save if closing Drop,
-    //##                 or store change in Undo / Redo stack !!!!!
+    //##                 This implies we need to save if closing Drop, or store change in Undo / Redo stack !!!!!
     //####################################################################################
     template <class T>
     void setValue(T new_value) {

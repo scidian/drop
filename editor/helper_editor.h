@@ -41,10 +41,10 @@ QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 
 QString     StringFromBool(bool boolean);
 
 // User Interaction
-void                        ShowErrorMessage(QString function_name, QString error_message, QWidget *parent = nullptr);
-QMessageBox::StandardButton ShowMessageBox(QString message, QPixmap pixmap, QString title = "", QWidget *parent = nullptr,
+void                        ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent = nullptr);
+QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title = "", QWidget *parent = nullptr,
                                            QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
-QMessageBox::StandardButton ShowMessageBox(QString message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, QString title = "", QWidget *parent = nullptr,
+QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, std::string title = "", QWidget *parent = nullptr,
                                            QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
 }
 

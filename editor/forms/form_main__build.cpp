@@ -101,7 +101,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     switch (new_mode) {
         case Form_Main_Mode::World_Editor:
             Dr::SetDoneLoading(false);
-                setWindowTitle( tr("Drop") + " - " + m_project->getOption(Project_Options::Name).toString() );
+                setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
                 this->setCentralWidget( widgetCentralEditor );
                 buildAssetTree();
                 dockAssetsEditor->show();

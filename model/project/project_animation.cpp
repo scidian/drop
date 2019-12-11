@@ -7,6 +7,7 @@
 //
 #include "editor/constants_editor.h"
 #include "editor/helper_editor.h"
+#include "library/dr_string.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"
@@ -22,24 +23,23 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, std:
         : DrSettings(parent_project) {
     this->setKey(new_animation_key);
 
-    QString new_animation_name = "Empty";
+    std::string new_animation_name = "Empty";
 
     // If passed Image Keys, use name from first image, create DrFrames
     if (image_keys.size() > 0) {
         // Get first image from image keys so we can use it's name
         DrImage *first_image = parent_project->findImageFromKey(image_keys.front());
         if (first_image == nullptr) {
-            Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + QString::number(image_keys.front()) );
+            Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + std::to_string(image_keys.front()) );
         }
 
         // Remove trailing numbers and spaces from name
         new_animation_name = first_image->getSimplifiedName();
-        bool is_number;
-        new_animation_name.right(1).toInt(&is_number);
+        bool is_number = Dr::IsInteger( Dr::Right(new_animation_name, 1) );
         while (new_animation_name.length() > 1 && is_number) {
-            new_animation_name = new_animation_name.left(new_animation_name.length() - 1);
-            new_animation_name.right(1).toInt(&is_number);
-            if (new_animation_name.right(1) == QString(" ")) is_number = true;
+            new_animation_name = Dr::Left(new_animation_name, (new_animation_name.length() - 1));
+            is_number = Dr::IsInteger( Dr::Right(new_animation_name, 1) );
+            if (Dr::Right(new_animation_name, 1) == std::string(" ")) is_number = true;
         }
     }
 
@@ -83,11 +83,11 @@ QPixmap DrAnimation::getPixmapFromFirstFrame() {
 //####################################################################################
 //##    Property loading - initializeAnimationSettings
 //####################################################################################
-void DrAnimation::initializeAnimationSettings(QString new_name) {
+void DrAnimation::initializeAnimationSettings(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Animation Name");
     property_name->setDescription("Name of this Animation.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Animation_Settings, "Animation Settings", "Settings for this Animation.", Component_Colors::White_Snow, true);
     getComponent(Components::Animation_Settings)->setIcon(Component_Icons::Animation);

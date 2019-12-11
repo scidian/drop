@@ -8,6 +8,8 @@
 #ifndef DRWORLD_H
 #define DRWORLD_H
 
+#include <QPointF>
+
 #include "model/settings/settings.h"
 
 // Forward declarations
@@ -34,7 +36,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrWorld(DrProject *parent_project, long key, QString new_world_name, bool add_start_stage = true);
+    DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage = true);
     virtual ~DrWorld() override;
 
     // DrSettings Overrides
@@ -53,15 +55,15 @@ public:
     void            setExpanded(bool expanded) { m_expanded = expanded; }
 
     // Function Calls
-    DrStage*    addStage(QString new_stage_name = "");
+    DrStage*    addStage(std::string new_stage_name = std::string(""));
     DrStage*    addStage(long stage_key, bool is_start_stage, QPointF center_point, double zoom_scale);
     DrStage*    addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage = false);
     void        deleteStage(DrStage *stage);
-    void        initializeWorldSettings(QString new_name);
+    void        initializeWorldSettings(std::string new_name);
 
     long        getFirstStageKey();
     DrStage*    getStageFromKey(long from_stage_key);
-    DrStage*    getStageWithName(QString stage_name);
+    DrStage*    getStageWithName(std::string stage_name);
 
 
 };

@@ -15,8 +15,8 @@
 //####################################################################################
 DrProperty::DrProperty(DrSettings      *parent_settings,
                        DrComponent     *parent_component,
-                       QString          display_name,
-                       QString          description,
+                       std::string      display_name,
+                       std::string      description,
                        Property_Type    type,
                        DrVariant        value,
                        long             new_key,

@@ -213,7 +213,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
             long item_key = check_item->data(User_Roles::Key).toLongLong();
             DrThing *thing = m_project->findThingFromKey(item_key);
             if (thing != nullptr) {
-                header =    thing->getName();
+                header =    QString::fromStdString(thing->getName());
                 body =      "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
                             check_item->data(User_Roles::Type).toString();
                 m_editor_relay->setAdvisorInfo(header, body);

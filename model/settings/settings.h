@@ -9,7 +9,6 @@
 #define DRSETTINGS_H
 
 #include <QColor>
-#include <QString>
 
 #include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
@@ -53,17 +52,17 @@ public:
     virtual DrType  getType() = 0;
 
     // Getters / Setters
-    DrProject*      getParentProject()      { return m_parent_project; }
+    DrProject*          getParentProject()      { return m_parent_project; }
 
-    long            getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLong(); }
-    virtual QString getName();                                                  // Returns Name from shared "Entity_Name" component
-    virtual bool    setName(QString new_name);                                  // Returns true if successful
+    long                getKey()                { return getComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Key).toLong(); }
+    virtual std::string getName();                                                  // Returns Name from shared "Entity_Name" component
+    virtual bool        setName(std::string new_name);                              // Returns true if successful
 
-    bool            isLocked()                  { return (m_is_locked ||
-                                                          getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()); }
-    bool            isVisible()                 { return m_is_visible; }
-    void            setLocked(bool locked)      { m_is_locked = locked; }
-    void            setVisible(bool visible)    { m_is_visible = visible; }
+    bool                isLocked()                  { return (m_is_locked ||
+                                                              getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()); }
+    bool                isVisible()                 { return m_is_visible; }
+    void                setLocked(bool locked)      { m_is_locked = locked; }
+    void                setVisible(bool visible)    { m_is_visible = visible; }
 
 
     // Component Handling
@@ -87,9 +86,9 @@ public:
     DrProperty*     findPropertyFromPropertyKey(Properties property_key_to_find);
 
     // Component / Property Building
-    DrComponent*    addComponent(Components component, QString display_name, QString description, QColor color, bool is_turned_on);
+    DrComponent*    addComponent(Components component, std::string display_name, std::string description, QColor color, bool is_turned_on);
     DrProperty*     addPropertyToComponent(Components component, Properties property_number, Property_Type type, DrVariant value,
-                                           QString display_name, QString description, bool is_hidden = false, bool is_editable = true);
+                                           std::string display_name, std::string description, bool is_hidden = false, bool is_editable = true);
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();
     void            addComponentSizeSettings();

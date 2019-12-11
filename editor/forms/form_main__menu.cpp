@@ -53,7 +53,7 @@ void FormMain::menuOpen() {
     }
 
     // Grab directory from current save file, if no save file yet, use Desktop location
-    QString directory = m_project->getOption(Project_Options::File_Name_Path).toString();
+    QString directory = QString::fromStdString(m_project->getOption(Project_Options::File_Name_Path).toString());
     if (directory == "") {
         directory = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
     }
@@ -68,7 +68,7 @@ void FormMain::menuOpen() {
     if (!open_file.isEmpty()) {
         setFormMainMode( Form_Main_Mode::Clear );
         m_project->clearProject();
-        m_project->openProjectFromFile(open_file);
+        m_project->openProjectFromFile(open_file.toStdString());
         treeAssetEditor->clear();
         treeProjectEditor->clear();
         setFormMainMode( Form_Main_Mode::World_Editor );
@@ -79,7 +79,7 @@ void FormMain::menuOpen() {
 bool FormMain::askShouldSave(QString before_what) {
     if (m_project == nullptr) return true;
     if (m_project->hasSaved() == false && m_project->isTestOnly() == false) {
-        QMessageBox::StandardButton ask = Dr::ShowMessageBox("Project has changed, would you like to save the changes before " + before_what + "?",
+        QMessageBox::StandardButton ask = Dr::ShowMessageBox("Project has changed, would you like to save the changes before " + before_what.toStdString() + "?",
                                                              QMessageBox::Icon::Warning, "Save Changes?", this,
                                                              QMessageBox::Button::Cancel | QMessageBox::No | QMessageBox::Yes);
         if (ask == QMessageBox::StandardButton::Cancel) return false;
@@ -90,10 +90,10 @@ bool FormMain::askShouldSave(QString before_what) {
 
 void FormMain::menuSave(bool save_as) {
     // Grab Filename from Project Settings, if is empty need Save As dialog anyways
-    QString full_path = m_project->getOption(Project_Options::File_Name_Path).toString();
+    QString full_path = QString::fromStdString(m_project->getOption(Project_Options::File_Name_Path).toString());
     if (full_path == "") {
         QString directory = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
-        QString filename =  m_project->getOption(Project_Options::Name).toString();
+        QString filename =  QString::fromStdString(m_project->getOption(Project_Options::Name).toString());
         full_path = directory + "/" + filename + ".drop";
         save_as = true;
     }
@@ -107,7 +107,7 @@ void FormMain::menuSave(bool save_as) {
     }
 
     // Save the file
-    m_project->setOption(Project_Options::File_Name_Path, full_path);
+    m_project->setOption(Project_Options::File_Name_Path, full_path.toStdString());
     m_project->saveProjectToFile();
 }
 
@@ -184,7 +184,7 @@ void FormMain::menuListChildren() {
     for (auto widget : findChildren<QWidget *>()) {
         widget_list += widget->objectName() + ", ";
     }
-    Dr::ShowMessageBox(widget_list);
+    Dr::ShowMessageBox(widget_list.toStdString());
 }
 
 

@@ -53,7 +53,7 @@ private:
 public:
     // Constructor / Destructor
     explicit DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_thing_key,
-                     QString new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, double z, bool should_collide = true);
+                     std::string new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, double z, bool should_collide = true);
     virtual ~DrThing() override;
 
     // DrSettings Base Class Overrides
@@ -93,10 +93,10 @@ public:
     void    addComponentTransform(double width, double height, double x, double y, DrThingType type);
 
     // Thing Specific Components
-    void    addComponentSettingsCamera(QString new_name);
-    void    addComponentSettingsCharacter(QString new_name);
-    void    addComponentSettingsObject(QString new_name, bool should_collide = true);
-    void    addComponentSettingsText(QString new_name);
+    void    addComponentSettingsCamera(std::string new_name);
+    void    addComponentSettingsCharacter(std::string new_name);
+    void    addComponentSettingsObject(std::string new_name, bool should_collide = true);
+    void    addComponentSettingsText(std::string new_name);
 
     // Effect Specific Components
     void    addComponentSettingsFire();

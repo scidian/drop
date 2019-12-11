@@ -74,7 +74,7 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
 
                     switch (check_property) {
                         case Properties::Entity_Name:
-                            asset_text = entity->getName();
+                            asset_text = QString::fromStdString(entity->getName());
 
                             // Update all Things in the project that use this asset name
                             for (auto world : getParentProject()->getWorldMap()) {

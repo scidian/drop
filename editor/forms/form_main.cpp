@@ -38,7 +38,7 @@
 //####################################################################################
 //##    Constructor / Destructor for Main Window
 //####################################################################################
-FormMain::FormMain(QWidget *parent, QString file_to_open) : QMainWindow(parent) {
+FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(parent) {
 
     // ********** Initialize new project, load DrProject options
     m_project = new DrProject();

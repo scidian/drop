@@ -33,7 +33,7 @@ void TreeProject::updateItems(std::list<DrSettings*> changed_items, std::list<lo
             Properties check_property = static_cast<Properties>(property);
 
             if (check_property == Properties::Entity_Name) {
-                QString new_name = entity->getName();
+                QString new_name = QString::fromStdString(entity->getName());
                 if (entity->getType() == DrType::World) new_name = "World: " + new_name;
                 if (entity->getType() == DrType::Stage) new_name = "Stage: " + new_name;
                 item_in_tree->setText(COLUMN_TITLE, new_name);

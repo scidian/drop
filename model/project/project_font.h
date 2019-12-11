@@ -9,7 +9,6 @@
 #define DRFONT_H
 
 #include <QPixmap>
-#include <QString>
 
 #include "model/settings/settings.h"
 
@@ -28,11 +27,11 @@ private:
     std::map<char, QRect>   m_positions;                    // Holds rects for each character in the pixmap
     std::map<char, QSize>   m_spacing;                      // Horizontal and vertical spacing for each character
 
-    QString                 m_name;                         // Name of this font within the Project
+    std::string             m_name;                         // Name of this font within the Project
 
 
     // Font Properties - NEED TO INCORPORATE FOR EDITOR
-    QString     p_font_family;              // Font to use
+    std::string p_font_family;              // Font to use
     int         p_font_size;                // Point size
     int         p_font_padding;             // Extra letter spacing
     QColor      p_main_color;               // Main font color
@@ -51,13 +50,13 @@ private:
 
 public:
     // Constructor
-    DrFont(DrProject *parent_project, long key, QString font_name, QPixmap font_pixmap, QString font_family, int font_size, bool use_test_rects = false);
+    DrFont(DrProject *parent_project, long key, std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects = false);
 
     // DrSettings Overrides
     virtual DrType      getType() override      { return DrType::Font; }
 
     // Function Calls
-    QPixmap         createText(QString text);
+    QPixmap         createText(std::string text);
 
     // Getters / Setters
     QPixmap         getPixmap()                     { return m_pixmap; }
@@ -65,7 +64,7 @@ public:
     QRect           getCharRect(char character)     { return m_positions[character]; }
     QSize           getCharSpacing(char character)  { return m_spacing[character]; }
 
-    QString         getPropertyFontFamily()         { return p_font_family; }
+    std::string     getPropertyFontFamily()         { return p_font_family; }
     int             getPropertyFontSize()           { return p_font_size; }
 
     void            setTestFontRects();

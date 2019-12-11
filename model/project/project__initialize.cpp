@@ -16,7 +16,7 @@
 //####################################################################################
 //##    Creates skeleton of a new Project
 //####################################################################################
-void DrProject::initializeNewProject(QString project_name, Orientation orientation, int width, int height, bool test) {
+void DrProject::initializeNewProject(std::string project_name, Orientation orientation, int width, int height, bool test) {
 
     // ***** Important! Clear Project / Reset Key Generator / Add Embedded Images
     this->clearProject();
@@ -27,7 +27,7 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
 
     // ***** Set Project Options
     this->setOption(Project_Options::Name,              project_name);
-    this->setOption(Project_Options::File_Name_Path,    "");
+    this->setOption(Project_Options::File_Name_Path,    std::string(""));
     this->setOption(Project_Options::Orientation,       static_cast<int>(orientation));
     this->setOption(Project_Options::Width,             width);
     this->setOption(Project_Options::Height,            height);
@@ -36,13 +36,13 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
     // ***** Add Initial World
     DrWorld *world_1 = this->addWorld();
     DrWorld *current_world = world_1;
-    this->setOption(Project_Options::Current_World, QVariant::fromValue(world_1->getKey()));
-    this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_world->getFirstStageKey()) );
+    this->setOption(Project_Options::Current_World, world_1->getKey());
+    this->setOption(Project_Options::Current_Stage, current_world->getFirstStageKey());
 
 
     // ***** Build Test Project
     if (test) {
-        this->setOption(Project_Options::Name, "Rocky Rover");
+        this->setOption(Project_Options::Name, std::string("Rocky Rover"));
 
         DrImage *image_1  = this->addImage(":/assets/test_images/test_square.png");
         DrImage *image_2  = this->addImage(":/assets/test_images/ground_fill.png");
@@ -142,8 +142,8 @@ void DrProject::initializeNewProject(QString project_name, Orientation orientati
         this->findWorldWithName("World 2")->getStageWithName("4")->addThing(DrThingType::Object, a_ground->getKey(),  1000,  -200,  0);
 
         DrStage* current_stage = this->findWorldWithName("World 2")->getStageFromKey(start_stage);
-        this->setOption(Project_Options::Current_Stage, QVariant::fromValue(current_stage->getKey()) );
-        this->setOption(Project_Options::Current_World, QVariant::fromValue(current_stage->getParentWorld()->getKey()) );
+        this->setOption(Project_Options::Current_Stage, current_stage->getKey());
+        this->setOption(Project_Options::Current_World, current_stage->getParentWorld()->getKey());
     }   // End Test Project
 
 
@@ -175,9 +175,9 @@ void DrProject::addDefaultAssets() {
 void DrProject::addBuiltInImages() {
     QImage::Format format = QImage::Format::Format_ARGB32;
 
-    QString path_empty =     ":/assets/dr_images/empty.png";            QImage image_empty =        QImage(path_empty).convertToFormat(format);
-    QString path_character = ":/assets/dr_images/circle.png";           QImage image_character =    QImage(path_character).convertToFormat(format);
-    QString path_object =    ":/assets/dr_images/box.png";              QImage image_object =       QImage(path_object).convertToFormat(format);
+    std::string path_empty =     ":/assets/dr_images/empty.png";        QImage image_empty =        QImage(QString::fromStdString(path_empty)).convertToFormat(format);
+    std::string path_character = ":/assets/dr_images/circle.png";       QImage image_character =    QImage(QString::fromStdString(path_character)).convertToFormat(format);
+    std::string path_object =    ":/assets/dr_images/box.png";          QImage image_object =       QImage(QString::fromStdString(path_object)).convertToFormat(format);
     this->addImage(c_key_image_empty,       path_empty,         "empty.png",        "empty",            image_empty);
     this->addImage(c_key_image_character,   path_character,     "circle.png",       "ball",             image_character);
     this->addImage(c_key_image_object,      path_object,        "box.png",          "block",            image_object);

@@ -242,8 +242,8 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             // Add Images, Update Animation
             std::list<long> image_keys;
             for (auto file_path : file_paths) {
-                DrImage *image = project->addImage(file_path);
-                image_keys.push_back( image->getKey() );
+                DrImage *image = project->addImage(file_path.toStdString());
+                image_keys.push_back(image->getKey());
             }
             asset->updateAnimationProperty( image_keys, static_cast<Properties>(property->getPropertyKey()) );
 

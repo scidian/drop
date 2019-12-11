@@ -105,10 +105,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         case DrType::Thing: {
             DrThing *thing = dynamic_cast<DrThing*>(new_settings);
             if (thing != nullptr) {
-                m_editor_relay->setAdvisorInfo(new_settings->getName(), "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
+                m_editor_relay->setAdvisorInfo(QString::fromStdString(new_settings->getName()), "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
                                                QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
             } else {
-                m_editor_relay->setAdvisorInfo(new_settings->getName(), QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
+                m_editor_relay->setAdvisorInfo(QString::fromStdString(new_settings->getName()),
+                                               QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
             }
             break;
         }
@@ -126,7 +127,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         Dr::SetLabelText(Label_Names::Label_Object_1, QString::fromStdString("KEY: " + std::to_string( new_key ) + ", TYPE: " + type_string));
         if (new_type == DrType::Thing) {
             DrThing* thing = getParentProject()->findThingFromKey(new_key);
-            QString asset_name = getParentProject()->findSettingsFromKey(thing->getAssetKey())->getName();
+            QString asset_name = QString::fromStdString(getParentProject()->findSettingsFromKey(thing->getAssetKey())->getName());
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(thing->getAssetKey()) +
                                                               ", NAME: " + asset_name);
         } else {
@@ -186,7 +187,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
             // Build category button
-            AssetCategoryButton *category_button = new AssetCategoryButton(QString(" ") + component->getDisplayNameQString(),
+            AssetCategoryButton *category_button = new AssetCategoryButton(QString(" ") + QString::fromStdString(component->getDisplayName()),
                                                                            Qt::black, Qt::black, nullptr, category_item);
             QString button_style;
             button_style = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
@@ -206,7 +207,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                                           " QPushButton:hover:!pressed { color: " + component->getColor().lighter(200).name() + "; } "
                                           " QPushButton:pressed { color: " + component->getColor().darker(250).name() + "; } ");
             // Assign icon to category button
-            QPixmap cat_icon(component->getIcon());
+            QPixmap cat_icon(QString::fromStdString(component->getIcon()));
             QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
             drop_shadow->setColor(component->getColor().darker(200));
             drop_shadow->setOffset( -4, 4 );
@@ -215,7 +216,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             category_button->setStyleSheet(button_style);
 
             // Add the button widget to the tree item
-            getHoverHandler()->attachToHoverHandler(category_button, component->getDisplayName(), component->getDescription());
+            getHoverHandler()->attachToHoverHandler(category_button,
+                                                    QString::fromStdString(component->getDisplayName()),
+                                                    QString::fromStdString(component->getDescription()));
             grid->addWidget(category_button);
         }
         this->setItemWidget(category_item, 0, button_frame);
@@ -251,7 +254,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(4,2,4,2);
 
-            QLabel *property_name = new QLabel(property->getDisplayName());
+            QLabel *property_name = new QLabel(QString::fromStdString(property->getDisplayName()));
             QFont fp = Dr::CustomFont();
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);

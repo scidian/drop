@@ -21,11 +21,11 @@
 //####################################################################################
 //##    Property loading - initializeStageSettings
 //####################################################################################
-void DrStage::initializeStageSettings(QString new_name) {
+void DrStage::initializeStageSettings(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Stage Name");
     property_name->setDescription("Name of this Stage.");
-    property_name->setValue(new_name.toStdString());
+    property_name->setValue(new_name);
 
     addComponent(Components::Stage_Settings, "Stage Settings", "Settings for this Stage.", Component_Colors::White_Snow, true);
     getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
