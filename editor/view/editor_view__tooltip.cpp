@@ -7,7 +7,7 @@
 //
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/style/style.h"
 #include "editor/view/editor_item.h"

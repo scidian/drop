@@ -6,7 +6,8 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
+#include "engine/enums_engine.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"
@@ -29,7 +30,7 @@ void DrThing::addComponentSettingsFire() {
     addComponent(Components::Thing_Settings_Fire, "Fire Settings", "Settings for this Fire.", Component_Colors::Red_Faded, true);
     getComponent(Components::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
 
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, static_cast<int>(Fire_Mask::Torch),
                            "Shape", "Defines a shape mask to use for the Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(255,   0, 0, 255).rgba(),
                            "Top Color", "Top color of this Fire.");
@@ -80,7 +81,7 @@ void DrThing::addComponentSettingsLight(QColor color) {
     addComponent(Components::Thing_Settings_Light, "Light Settings", "Settings for this Light.", Component_Colors::Mellow_Yellow, true);
     getComponent(Components::Thing_Settings_Light)->setIcon(Component_Icons::Light);
 
-    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Type, Property_Type::List, static_cast<int>(Light_Type::Opaque),
                            "Light Type", "<b>Opaque</b> - Solid texture, does not provide lighting. <br> "
                                          "<b>Glow</b> - Provides diffuse lighting, no z-ordering available. ");
     addPropertyToComponent(Components::Thing_Settings_Light, Properties::Thing_Light_Color, Property_Type::Color, color.rgba(),
@@ -165,7 +166,7 @@ void DrThing::addComponentSettingsWater() {
     addComponent(Components::Thing_Settings_Water, "Water Settings", "Settings for this Water.", Component_Colors::Blue_Drop_1, true);
     getComponent(Components::Thing_Settings_Water)->setIcon(Component_Icons::Water);
 
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, 1,
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, static_cast<int>(Water_Texture::Ripples),
                            "Texture", "Defines a texture to use for the water surface, can give the Water several different looks.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, QColor(41, 182, 246, 255).rgba(),
                            "Start Color", "Color tint for the top of this Water.");

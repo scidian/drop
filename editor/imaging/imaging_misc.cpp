@@ -18,7 +18,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "library/dr_math.h"
 

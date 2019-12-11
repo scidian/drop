@@ -11,6 +11,7 @@
 #include <QVariantMap>
 
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
@@ -148,8 +149,8 @@ void DrProject::saveProjectToFile() {
         font_data["key"] =          QVariant::fromValue(font->getKey());
         font_data["font_name"] =    QString::fromStdString(font->getName());
         font_data["font_family"] =  QString::fromStdString(font->getPropertyFontFamily());
-        font_data["font_size"] =    QVariant(font->getPropertyFontSize());
-        font_data["image"] =        QVariant(font->getPixmap());
+        font_data["font_size"] =    QVariant::fromValue(font->getPropertyFontSize());
+        font_data["image"] =        font->getPixmap();
         settings.beginWriteArray("fonts");
         settings.setArrayIndex(font_count++);
         settings.setValue("font", font_data);
@@ -165,7 +166,7 @@ void DrProject::saveProjectToFile() {
         QVariantMap asset_data;
         asset_data["key"] =         QVariant::fromValue(asset->getKey());
         asset_data["source_key"] =  QVariant::fromValue(asset->getBaseKey());
-        asset_data["type"] =        QVariant(static_cast<int>(asset->getAssetType()));
+        asset_data["type"] =        QVariant::fromValue(static_cast<int>(asset->getAssetType()));
         addSettingsToMap(asset, asset_data);
         settings.beginWriteArray("assets");
         settings.setArrayIndex(asset_count++);
@@ -183,7 +184,7 @@ void DrProject::saveProjectToFile() {
         world_data["key"] =             QVariant::fromValue(world->getKey());
         world_data["start_stage"] =     QVariant::fromValue(world->getStartStageKey());
         world_data["editor_stage"] =    QVariant::fromValue(world->getLastStageShownKey());
-        world_data["tree_expanded"] =   QVariant(world->getExpanded());
+        world_data["tree_expanded"] =   QVariant::fromValue(world->getExpanded());
         addSettingsToMap(world, world_data);
         settings.beginWriteArray("worlds");
         settings.setArrayIndex(world_count++);
@@ -198,10 +199,10 @@ void DrProject::saveProjectToFile() {
             DrStage *stage = stage_pair.second;
             QVariantMap stage_data;
             stage_data["key"] =             QVariant::fromValue(stage->getKey());
-            stage_data["tree_expanded"] =   QVariant(stage->getExpanded());
-            stage_data["is_start_stage"] =  QVariant(stage->isStartStage());
-            stage_data["center_point"] =    QPointF(stage->getViewCenterPoint().x, stage->getViewCenterPoint().y);
-            stage_data["zoom_scale"] =      QVariant(stage->getViewZoomLevel());
+            stage_data["tree_expanded"] =   QVariant::fromValue(stage->getExpanded());
+            stage_data["is_start_stage"] =  QVariant::fromValue(stage->isStartStage());
+            stage_data["center_point"] =    Dr::ToQPointF(stage->getViewCenterPoint());
+            stage_data["zoom_scale"] =      QVariant::fromValue(stage->getViewZoomLevel());
             addSettingsToMap(stage, stage_data);
             settings.beginWriteArray(world_array);
             settings.setArrayIndex(stage_count++);
@@ -217,7 +218,7 @@ void DrProject::saveProjectToFile() {
                 QVariantMap thing_data;
                 thing_data["key"] =         QVariant::fromValue(thing->getKey());
                 thing_data["asset_key"] =   QVariant::fromValue(thing->getAssetKey());
-                thing_data["type"] =        QVariant(static_cast<int>(thing->getThingType()));
+                thing_data["type"] =        QVariant::fromValue(static_cast<int>(thing->getThingType()));
                 addSettingsToMap(thing, thing_data);
                 settings.beginWriteArray(stage_array);
                 settings.setArrayIndex(thing_count++);
@@ -245,8 +246,8 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
         map[map_key + "display_name"] = QString::fromStdString(component->getDisplayName());
         map[map_key + "description"] =  QString::fromStdString(component->getDescription());
         map[map_key + "icon"] =         QString::fromStdString(component->getIcon());
-        map[map_key + "color"] =        QVariant(component->getColor().rgba());
-        map[map_key + "turned_on"] =    QVariant(component->isTurnedOn());
+        map[map_key + "color"] =        QVariant::fromValue(component->getColor().rgba());
+        map[map_key + "turned_on"] =    QVariant::fromValue(component->isTurnedOn());
         map[map_key + "comp_key"] =     QVariant::fromValue(component->getComponentKey());
 
         for (auto property_pair : component->getPropertyMap()) {
@@ -254,14 +255,14 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
             QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
             map[map_key + "display_name"] = QString::fromStdString(property->getDisplayName());
             map[map_key + "description"] =  QString::fromStdString(property->getDescription());
-            map[map_key + "data_type"] =    QVariant(static_cast<int>(property->getPropertyType()));
+            map[map_key + "data_type"] =    QVariant::fromValue(static_cast<int>(property->getPropertyType()));
 
 // !!!!! #NEED_FIX_VARIANT_UPDATE
 //            map[map_key + "value"] =      property->getValue();
 
             map[map_key + "prop_key"] =     QVariant::fromValue(property->getPropertyKey());
-            map[map_key + "is_hidden"] =    QVariant(property->isHidden());
-            map[map_key + "is_editable"] =  QVariant(property->isEditable());
+            map[map_key + "is_hidden"] =    QVariant::fromValue(property->isHidden());
+            map[map_key + "is_editable"] =  QVariant::fromValue(property->isEditable());
         }
     }
 }

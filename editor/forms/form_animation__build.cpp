@@ -11,7 +11,7 @@
 #include "editor/docks/docks.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_animation.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"

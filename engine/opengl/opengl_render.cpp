@@ -70,7 +70,7 @@ void DrOpenGL::paintGL() {
 //####################################################################################
 //##    Returns list of vertices at z plane from size passed in
 //####################################################################################
-void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float height, QPointF center, float z) {
+void DrOpenGL::setQuadVertices(std::vector<GLfloat> &vertices, float width, float height, QPointF center, float z) {
     float left =   static_cast<float>(center.x()) - (width  / 2.0f);
     float right =  static_cast<float>(center.x()) + (width  / 2.0f);
     float top =    static_cast<float>(center.y()) + (height / 2.0f);
@@ -91,7 +91,7 @@ void DrOpenGL::setQuadVertices(QVector<GLfloat> &vertices, float width, float he
 //####################################################################################
 //##    Returns list of vertices at z plane from 4 corners
 //####################################################################################
-void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
+void DrOpenGL::setQuadRotatedVertices(std::vector<GLfloat> &vertices,
                                       QVector3D &top_right, QVector3D &top_left,
                                       QVector3D &bot_left,  QVector3D &bot_right,
                                       QVector3D position) {
@@ -107,7 +107,7 @@ void DrOpenGL::setQuadRotatedVertices(QVector<GLfloat> &vertices,
 //####################################################################################
 //##    Calculates rotated, z-ordered vertices for a DrEngineThing
 //####################################################################################
-void DrOpenGL::getThingVertices(QVector<GLfloat> &vertices, DrEngineThing *thing, double width, double height, float extra_scale_x, float extra_scale_y) {
+void DrOpenGL::getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *thing, double width, double height, float extra_scale_x, float extra_scale_y) {
     // ***** Get object position data
     DrPointF center = thing->getPosition();
     float   x, y, z;

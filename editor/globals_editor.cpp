@@ -71,7 +71,7 @@ namespace Dr {
         Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid,         true);
         Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,            false);
 
-        Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
+        Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
 
 
         // Stored Color History

@@ -5,9 +5,6 @@
 //
 //
 //
-#include <QApplication>
-#include <QDebug>
-
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
@@ -55,10 +52,10 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
 
 
     // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
-    QVector<Collision_Type> collide_types { Collision_Type::Damage_None,
-                                            Collision_Type::Damage_Player,
-                                            Collision_Type::Damage_Enemy,
-                                            Collision_Type::Damage_All };
+    std::vector<Collision_Type> collide_types { Collision_Type::Damage_None,
+                                                Collision_Type::Damage_Player,
+                                                Collision_Type::Damage_Enemy,
+                                                Collision_Type::Damage_All };
     for (Collision_Type collision : collide_types) {
         cpCollisionHandler *custom_collision_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(collision));
         custom_collision_handler->beginFunc =    BeginFuncWildcard;

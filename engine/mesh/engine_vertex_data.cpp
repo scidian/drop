@@ -169,7 +169,7 @@ void DrEngineVertexData::initializeTextureCone() {
 //##        Vec3 Barycentric Coordinates (gives shader a number between 0.0 and 1.0 to lerp to)
 //####################################################################################
 void DrEngineVertexData::add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle_Point point_number) {
-    if (m_count + c_vertex_length > m_data.count()) m_data.resize(m_data.count() + (100 * c_vertex_length));
+    if (static_cast<size_t>(m_count + c_vertex_length) > m_data.size()) m_data.resize(m_data.size() + (100 * c_vertex_length));
     GLfloat *p = m_data.data() + m_count;
     *p++ = vertex.x();                  // 0 - x
     *p++ = vertex.y();                  // 1 - y

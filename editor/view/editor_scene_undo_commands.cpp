@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_scene_undo_commands.h"
@@ -126,11 +127,10 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     DrPointF new_center = new_stage->getViewCenterPoint();
     if (new_center == DrPointF(0, 0)) {
         double half_height;
-        QPointF q_new_center = DrView::stageBoundingRect(m_project, new_stage, half_height).center();
-        new_center = DrPointF(q_new_center.x(), q_new_center.y());
+        new_center = Dr::FromQPointF(DrView::stageBoundingRect(m_project, new_stage, half_height).center());
         new_stage->setViewCenterPoint( new_center );
     }
-    m_scene->getEditorRelay()->viewCenterOnPoint( new_center );
+    m_scene->getEditorRelay()->viewCenterOnPoint( Dr::ToQPointF(new_center) );
     m_scene->getEditorRelay()->viewZoomToScale( new_zoom_scale );
     m_scene->getEditorRelay()->updateItemSelection(Editor_Widgets::Project_Tree);
 

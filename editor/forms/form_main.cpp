@@ -15,7 +15,7 @@
 #include "editor/docks/docks.h"
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"

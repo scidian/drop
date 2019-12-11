@@ -6,7 +6,7 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "engine/opengl/opengl.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
@@ -126,7 +126,7 @@ void DrThing::addComponentSpawn() {
                                                 "the remaining spawms.");
     addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Chance, Property_Type::Percent, 100,
                            "Appeance Chance", "When it is time for this item to spawn, this is the likelihood it will spawn.");
-    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Spawn, Properties::Thing_Spawn_Type, Property_Type::List, static_cast<int>(Spawn_Type::Permanent),
                            "Spawn Type", "What causes this item to spawn. Permanent is the default. Selecting Shoot or Jump will cause item to "
                                          "spawn when corresponding buttons are pressed. ");
     // std::vector<DrVariant> of 6 values: bool, int value,    min, max, int step size,    string spinText
@@ -154,7 +154,7 @@ void DrThing::addComponent3D() {
                                                         Component_Colors::Brown_Sugar, true);
     getComponent(Components::Thing_3D)->setIcon(Component_Icons::Object);
 
-    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Type, Property_Type::List, static_cast<int>(Convert_3D_Type::Extrusion),
                            "Type", "How this object is represented in 3D. The texture can be Extruded (pulled) into the 3rd dimension. Or it can "
                                    "be Wrapped onto a Cube.");
     addPropertyToComponent(Components::Thing_3D, Properties::Thing_3D_Depth, Property_Type::PositiveDouble, 50.0,

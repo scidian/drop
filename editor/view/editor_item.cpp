@@ -10,7 +10,7 @@
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
@@ -81,10 +81,10 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
         DrEffect *effect = dynamic_cast<DrEffect*>(m_asset);
         switch (effect->getEffectType()) {
             case DrEffectType::Fire: {
-                uint color_1 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1)->getValue().toUInt();
-                uint color_2 =      m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2)->getValue().toUInt();
-                uint smoke =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke)->getValue().toUInt();
-                int  mask  =        m_thing->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
+                uint color_1 =      m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt();
+                uint color_2 =      m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt();
+                uint smoke =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt();
+                int  mask  =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape).toInt();
                 m_pixmap = DrImaging::DrawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
                 setPixmap(m_pixmap);
                 applyFilters();
@@ -98,34 +98,34 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                 break;
             }
             case DrEffectType::Light: {
-                uint light_color =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Color)->getValue().toUInt();
-                float cone_start =  m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start)->getValue().toVector()[0].toFloat();
-                float cone_end =    m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End)->getValue().toVector()[0].toFloat();
-                float intensity =   m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity)->getValue().toFloat();
-                float blur =        m_thing->getComponentProperty(Components::Thing_Settings_Light, Properties::Thing_Light_Blur)->getValue().toFloat();
+                uint light_color =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt();
+                float cone_start =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toFloat();
+                float cone_end =    m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toFloat();
+                float intensity =   m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
+                float blur =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
                 m_pixmap = DrImaging::DrawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
                 setPixmap(m_pixmap);
                 break;
             }
             case DrEffectType::Mirror: {
-                uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color)->getValue().toUInt();
-                uint color_2 = m_thing->getComponentProperty(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color)->getValue().toUInt();
+                uint color_1 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt();
+                uint color_2 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt();
                 m_pixmap = DrImaging::DrawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Swirl: {
-                uint color_1 = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color)->getValue().toUInt();
-                float  angle = m_thing->getComponentProperty(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle)->getValue().toFloat();
+                uint color_1 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt();
+                float  angle = m_thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
                 m_pixmap = DrImaging::DrawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Water: {
-                uint start_color =  m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color)->getValue().toUInt();
-                uint end_color =    m_thing->getComponentProperty(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color)->getValue().toUInt();
+                uint start_color =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt();
+                uint end_color =    m_thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt();
                 m_pixmap = DrImaging::DrawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
                 setPixmap(m_pixmap);
                 applyFilters();
@@ -144,10 +144,10 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     setData(User_Roles::Type, QString::fromStdString(description) );
     setData(User_Roles::Key, QVariant::fromValue(m_thing_key));
 
-    double   angle =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Rotation)->getValue().toDouble();
-    DrPointF scale =   m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Scale)->getValue().toPointF();
+    double   angle =   m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+    DrPointF scale =   m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
     double   z_order = m_thing->getZOrderWithSub();
-    double   opacity = m_thing->getComponentProperty(Components::Thing_Layering,  Properties::Thing_Opacity)->getValue().toDouble();
+    double   opacity = m_thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toDouble();
     setData(User_Roles::Rotation, angle);
     setData(User_Roles::Scale,    QPointF(scale.x, scale.y) );
     setData(User_Roles::Z_Order,  z_order);
@@ -166,7 +166,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     setTransform(t);
 
     // Load starting position
-    DrPointF start_pos = m_thing->getComponentProperty(Components::Thing_Transform, Properties::Thing_Position)->getValue().toPointF();
+    DrPointF start_pos = m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     m_start_x = start_pos.x;
     m_start_y = start_pos.y;
 

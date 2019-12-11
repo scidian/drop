@@ -42,15 +42,15 @@ enum class Triangle_Point {
 class DrEngineVertexData
 {
 private:
-    QVector<GLfloat>    m_data;
-    int                 m_count;
+    std::vector<GLfloat>    m_data;
+    int                     m_count;
 
 public:
     // Constructor
     DrEngineVertexData();
 
     // Properties
-    const GLfloat  *constData() const {     return m_data.constData(); }
+    const GLfloat  *constData() const {     return m_data.data(); }
     int             count() const {         return m_count; }
     int             triangleCount() const { return vertexCount() / 3; }
     int             vertexCount() const {   return m_count / c_vertex_length; }

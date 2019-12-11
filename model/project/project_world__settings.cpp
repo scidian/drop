@@ -44,7 +44,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
 
     addComponent(Components::World_Camera, "Camera", "Camera settings for this World.", Component_Colors::Pink_Pearl, true);
     getComponent(Components::World_Camera)->setIcon(Component_Icons::Camera);
-    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Type, Property_Type::List, 1,
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Type, Property_Type::List, static_cast<int>(Render_Type::Orthographic),
                            "Projection Type", "Sets the projection type of Camera's for this World. ");
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Switch_Speed, Property_Type::PositiveDouble, 1.0,
                            "Switching Speed", "Multiplier to affect how fast Camera switching happens. A value lower than 1.0 will decrease switching "
@@ -77,7 +77,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Layer, Property_Type::Double, 50.0,
                            "Light Layer", "Location along the z axis (Z-Order) to draw Glow Lights. Should be between " +
                                           std::to_string(double(c_near_plane)) + " and " + std::to_string(double(c_far_plane)) + " to be visible.");
-    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Blend, Property_Type::List, 0,
+    addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Blend, Property_Type::List, static_cast<int>(Blend_Mode::Standard),
                            "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
                                          "oversaturation or be better for dark scenes.");
 

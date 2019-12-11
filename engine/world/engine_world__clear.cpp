@@ -22,13 +22,13 @@
 //##    Chipmunk Callbacks
 //##        Clears bodies / shapes / constraints
 //####################################################################################
-static void ShapeFreeWrap(cpSpace *space, cpShape *shape, void *) { cpSpaceRemoveShape(space, shape);   cpShapeFree(shape); }
-static void ConstraintFreeWrap(cpSpace *space, cpConstraint *constraint, void *) { cpSpaceRemoveConstraint(space, constraint); cpConstraintFree(constraint); }
-static void BodyFreeWrap(cpSpace *space, cpBody *body, void *) { cpSpaceRemoveBody(space, body); cpBodyFree(body); }
+static void ShapeFreeWrap(cpSpace *space, cpShape *shape, void *)                   { cpSpaceRemoveShape(space, shape); cpShapeFree(shape); }
+static void ConstraintFreeWrap(cpSpace *space, cpConstraint *constraint, void *)    { cpSpaceRemoveConstraint(space, constraint); cpConstraintFree(constraint); }
+static void BodyFreeWrap(cpSpace *space, cpBody *body, void *)                      { cpSpaceRemoveBody(space, body); cpBodyFree(body); }
 
-static void PostShapeFree(cpShape *shape, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ShapeFreeWrap), shape, nullptr); }
-static void PostConstraintFree(cpConstraint *constraint, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ConstraintFreeWrap), constraint, nullptr); }
-static void PostBodyFree(cpBody *body, cpSpace *space) { cpSpaceAddPostStepCallback(space, cpPostStepFunc(BodyFreeWrap), body, nullptr); }
+static void PostShapeFree(cpShape *shape, cpSpace *space)                   { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ShapeFreeWrap), shape, nullptr); }
+static void PostConstraintFree(cpConstraint *constraint, cpSpace *space)    { cpSpaceAddPostStepCallback(space, cpPostStepFunc(ConstraintFreeWrap), constraint, nullptr); }
+static void PostBodyFree(cpBody *body, cpSpace *space)                      { cpSpaceAddPostStepCallback(space, cpPostStepFunc(BodyFreeWrap), body, nullptr); }
 
 // Safe and future proof way to remove and free all objects that have been added to the space
 static void ChipmunkFreeSpaceChildren(cpSpace *space) {

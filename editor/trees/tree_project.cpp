@@ -14,7 +14,7 @@
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_project.h"

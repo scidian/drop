@@ -112,7 +112,7 @@ SOURCES += \
     editor/forms/form_popup_colors.cpp \
     editor/forms/form_settings.cpp \
     editor/globals_editor.cpp \
-    editor/helper_editor.cpp \
+    editor/helper_library.cpp \
     editor/imaging/imaging_draw.cpp \
     editor/imaging/imaging_draw_devices.cpp \
     editor/imaging/imaging_draw_effects.cpp \
@@ -495,7 +495,7 @@ HEADERS += \
     editor/forms/form_popup.h \
     editor/forms/form_settings.h \
     editor/globals_editor.h \
-    editor/helper_editor.h \
+    editor/helper_library.h \
     editor/imaging/imaging.h \
     editor/style/style.h \
     editor/trees/tree_advisor.h \

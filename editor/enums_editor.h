@@ -34,8 +34,8 @@ namespace User_Property {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //############################
 enum User_Roles {
-    Key = 0x0100,                               // Stores Object Key in User Data of widget / graphicsitem
-                                                // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
+    Key = 0x0100,                                           // Stores Object Key in User Data of widget / graphicsitem
+                                                            // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
     Scale,      Pre_Resize_Scale,
     Rotation,   Pre_Rotate_Rotation,
     Z_Order,
@@ -55,17 +55,18 @@ enum User_Roles {
 //##    Types of modes for Form Main
 //############################
 enum class Form_Main_Mode {
-    Program_Loading,
+    Clear                       = 0,
+    Program_Loading             = 1,
 
-    World_Map,                  // "Map"
-    World_Editor,               // "Editor" (Physics)
-    UI_Editor,                  // "UI"
+    World_Map                   = 2,                        // "Map"
+    World_Editor                = 3,                        // "Editor" (Physics)
+    UI_Editor                   = 4,                        // "UI"
 
-    Stage_Map,
-    // App_Editor,
-    // Puzzle_World_Editor,
+    Stage_Map                   = 5,
+    // App_Editor               = 6,
+    // Puzzle_World_Editor      = 7,
 
-    Clear,
+
 };
 
 
@@ -88,18 +89,18 @@ enum class Editor_Widgets {
 //##                            Probably still best to leave Top thru Bottom_Right as values 0 thru 7
 //############################
 enum class Position_Flags {                                 // !!!!! Order is important
-    Top          = 0,
-    Bottom       = 1,
-    Right        = 2,
-    Left         = 3,
-    Top_Left     = 4,
-    Bottom_Left  = 5,
-    Top_Right    = 6,
-    Bottom_Right = 7,
-    Center,
-    Rotate,
-    Move_Item,
-    No_Position,
+    Top                 =  0,
+    Bottom              =  1,
+    Right               =  2,
+    Left                =  3,
+    Top_Left            =  4,
+    Bottom_Left         =  5,
+    Top_Right           =  6,
+    Bottom_Right        =  7,
+    Center              =  8,
+    Rotate              =  9,
+    Move_Item           = 10,
+    No_Position         = 11,
 };
 
 
@@ -108,14 +109,14 @@ enum class Position_Flags {                                 // !!!!! Order is im
 //############################
 enum class View_Mode {
     None,
-    Disable_Update,     // Special mode to disallow updates
-    Selecting,          // Rubber band selection
-    Resizing,           // Changing items size
-    Rotating,           // Rotating items
-    Translating,        // Moving item(s) around
-    Dragging,           // Moving scene with space bar
-    Zooming,            // Zooming in / out of view
-    Holding_Keys,       // Holding arrow keys to move or layering keys
+    Disable_Update,                 // Special mode to disallow updates
+    Selecting,                      // Rubber band selection
+    Resizing,                       // Changing items size
+    Rotating,                       // Rotating items
+    Translating,                    // Moving item(s) around
+    Dragging,                       // Moving scene with space bar
+    Zooming,                        // Zooming in / out of view
+    Holding_Keys,                   // Holding arrow keys to move or layering keys
 };
 
 

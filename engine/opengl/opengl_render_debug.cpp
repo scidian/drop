@@ -23,17 +23,19 @@
 //##        Grabs data from Space
 //####################################################################################
 // Used for Arbiter iterator to get a list of all arbiters (collision points) attached to a body
-static void GetBodyContactPoints(cpBody *, cpArbiter *arb, QVector<QPointF> *point_list) {
+static void GetBodyContactPoints(cpBody *, cpArbiter *arb, std::vector<QPointF> *point_list) {
     cpContactPointSet contact = cpArbiterGetContactPointSet( arb );
-    point_list->append( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
+    point_list->push_back( QPointF( contact.points->pointA.x, contact.points->pointA.y ) );
 }
 // Used for Arbiter iterator to get a list of Normals (angles) of all arbiters (collision points) attached to a body
-static void GetBodyContactNormals(cpBody *, cpArbiter *arb, QVector<cpVect> *normal_list) {
+static void GetBodyContactNormals(cpBody *, cpArbiter *arb, std::vector<cpVect> *normal_list) {
     cpVect normal = cpArbiterGetNormal( arb );
-    normal_list->append( normal );
+    normal_list->push_back( normal );
 }
 // Used for constraint iterator to get a list of all Constraints (joints) in cpSpace
-static void GetSpaceJointList(cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
+static void GetSpaceJointList(cpConstraint *constraint, std::vector<cpConstraint*> *joint_list) {
+    joint_list->push_back(constraint);
+}
 
 
 //####################################################################################
@@ -274,7 +276,7 @@ void DrOpenGL::drawDebugJoints(QPainter &painter) {
     painter.setPen( pen );
 
     // Get a list of the constraints in the Space
-    QVector<cpConstraint*> joint_list;
+    std::vector<cpConstraint*> joint_list;
     joint_list.clear();
     cpSpaceEachConstraint(m_engine->getCurrentWorld()->getSpace(), cpSpaceConstraintIteratorFunc(GetSpaceJointList), &joint_list);
 
@@ -317,12 +319,12 @@ void DrOpenGL::drawDebugCollisions(QPainter &painter) {
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
         if ( object->body_type != Body_Type::Dynamic)        continue;
 
-        QVector<QPointF> point_list;    point_list.clear();
-        QVector<cpVect>  normal_list;   normal_list.clear();
+        std::vector<QPointF> point_list;    point_list.clear();
+        std::vector<cpVect>  normal_list;   normal_list.clear();
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
 
-        for (int i = 0; i < point_list.size(); i++) {
+        for (int i = 0; i < static_cast<int>(point_list.size()); i++) {
             QPointF contact = point_list[i];
             QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
 

@@ -10,7 +10,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"

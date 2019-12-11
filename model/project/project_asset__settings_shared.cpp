@@ -6,7 +6,7 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
@@ -26,10 +26,10 @@
 //####################################################################################
 void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropertyCollision &shape) {
     std::string type = "Thing";
-    int start_shape_type = 0;
+    Collision_Shape start_shape_type = Collision_Shape::Image;
     if (asset_type == DrAssetType::Character) {
         type = "Character";
-        start_shape_type = 1;
+        start_shape_type = Collision_Shape::Circle;
     } else if (asset_type == DrAssetType::Object) {
         type = "Object";
     }
@@ -37,7 +37,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
     addComponent(Components::Asset_Collision, "Collision", "Collision settings for this " + type + ".", Component_Colors::Green_SeaGrass, true);
     getComponent(Components::Asset_Collision)->setIcon(Component_Icons::Collide);
 
-    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, start_shape_type,
+    addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Shape, Property_Type::List, static_cast<int>(start_shape_type),
                            "Collision Shape", "Shape of the " + type + " as it interacts with other Assets in the world. Can be calculated "
                                               "automatically from the <b>Image Shape</b>. Characters are best as <b>Circle</b> and ground and platforms "
                                               "work nicely as <b>Square</b>.");
@@ -46,7 +46,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
                            "Image Shape", "Stores auto generated Image Shape.", true, false);
 
     if (asset_type == DrAssetType::Object) {
-        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, 0,
+        addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type, Property_Type::List, static_cast<int>(One_Way::None),
                                "One Way Type", "Type of One Way collision for this Object. <br>"
                                                "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
                                                "<b>Weak_Spot</b> - Only takes damage from one direction.");
@@ -107,7 +107,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Delay,      Property_Type::Int, 100,
                            "Death Delay",   "Time it takes (in milliseconds) for this " + type + " to die after Health becomes zero. " + type + " no "
                                             "longer deals damage while dying, but does continue to provide physics collisions.");
-    addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Animation,  Property_Type::List, 1,
+    addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Animation,  Property_Type::List, static_cast<int>(Death_Animation::Fade),
                            "Death Animation", "Animation for " + type + " as it dissappears from the game.");
     addPropertyToComponent(Components::Asset_Health, Properties::Asset_Health_Death_Duration,   Property_Type::Int, 750,
                            "Death Duration", "Duration (in milliseconds) of Death Animation, like to fade away, or shrink away, etc. "

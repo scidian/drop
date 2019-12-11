@@ -15,8 +15,8 @@
 #include <cmath>
 
 #include "editor/colors/colors.h"
-#include "editor/helper_editor.h"
-
+#include "editor/helper_library.h"
+#include "library/types/dr_variant.h"
 
 namespace Dr {
 
@@ -29,8 +29,11 @@ static QString  g_font_family_bold;             // Keeps family name of our cust
 
 
 //####################################################################################
-//##    Returns System time as string
+//##
+//##    Time Functions
+//##
 //####################################################################################
+// Returns System time as string
 QString CurrentTimeAsString() {
     return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
 }
@@ -38,19 +41,18 @@ QString CurrentTimeAsString() {
 
 
 //####################################################################################
-//##    Makes sure scale is not zero so we don't mess up QGraphicsItem transform
+//##
+//##    Comparison Functions
+//##
 //####################################################################################
+// Makes sure scale is not zero so we don't mess up QGraphicsItem transform
 double CheckScaleNotZero(double scale_to_check) {
     if (scale_to_check <  .001 && scale_to_check >= 0) scale_to_check =  .001;
     if (scale_to_check > -.001 && scale_to_check <= 0) scale_to_check = -.001;
     return scale_to_check;
 }
 
-
-
-//####################################################################################
-//##    Trims double to max_decimal_places, and then removes any trailing zeros
-//####################################################################################
+// Trims double to max_decimal_places, and then removes any trailing zeros
 QString RemoveTrailingDecimals(double value, int max_decimal_places) {
     double int_part, decimal_part = 0;
 
@@ -104,10 +106,13 @@ QFont CustomFontLarger() {
     return font;
 }
 
+
 //####################################################################################
-//##    These functions check the width of text that would be drawn
-//##    with a particular font
+//##
+//##    String Functions
+//##
 //####################################################################################
+// Check the width of text that would be drawn with a particular font
 int CheckFontWidth(QFont font, QString text_to_check) {
     QFontMetrics font_metrics { font };
     return font_metrics.horizontalAdvance( text_to_check );
@@ -129,22 +134,35 @@ QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool 
     return text;
 }
 
-QString StringFromBool(bool boolean) { return boolean? "True" : "False"; }
+QString StringFromBool(bool boolean)        { return boolean? "True" : "False"; }
+
 
 
 //####################################################################################
-//##    Shows a modal Error Message
+//##
+//##    DrLibrary Conversion
+//##
 //####################################################################################
+DrPoint     FromQPoint(QPoint point)        { return DrPoint(point.x(), point.y()); }
+DrPointF    FromQPointF(QPointF pointf)     { return DrPointF(pointf.x(), pointf.y()); }
+QPoint      ToQPoint(DrPoint point)         { return QPoint(point.x, point.y); }
+QPointF     ToQPointF(DrPointF pointf)      { return QPointF(pointf.x, pointf.y); }
+
+
+
+//####################################################################################
+//##
+//##    User Interaction
+//##
+//####################################################################################
+// Shows a modal Error Message
 void ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent) {
     std::string error = "Error from " + function_name + "(): " + error_message;
     QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", QString::fromStdString(error), QMessageBox::Ok, parent);
     msg_box.exec();
 }
 
-
-//####################################################################################
-//##    Show a Modal Message Box with Icon or Pixmap
-//####################################################################################
+// Show a Modal Message Box with Icon or Pixmap
 QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title, QWidget *parent,
                                            QMessageBox::StandardButtons buttons) {
     QMessageBox msg_box(QMessageBox::Icon::NoIcon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
@@ -157,8 +175,6 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
     QMessageBox msg_box(icon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
     return static_cast<QMessageBox::StandardButton>(msg_box.exec());
 }
-
-
 
 
 

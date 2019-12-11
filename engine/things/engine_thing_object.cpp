@@ -22,8 +22,8 @@
 //##    Chipmunk Callbacks
 //####################################################################################
 // Iterators to get a list of all constraints, shapes, etc attached to a body
-static void GetBodyJointList(cpBody *, cpConstraint *constraint, QVector<cpConstraint*> *joint_list) { joint_list->append(constraint); }
-static void GetBodyShapeList(cpBody *, cpShape *shape, QVector<cpShape*> *shape_list) { shape_list->append(shape); }
+static void GetBodyJointList(cpBody *, cpConstraint *constraint, std::vector<cpConstraint*> *joint_list) { joint_list->push_back(constraint); }
+static void GetBodyShapeList(cpBody *, cpShape *shape, std::vector<cpShape*> *shape_list) { shape_list->push_back(shape); }
 
 
 //####################################################################################
@@ -101,13 +101,13 @@ DrEngineObject::~DrEngineObject() {
     if (body != nullptr) {
         cpSpace *space = cpBodyGetSpace(body);
 
-        QVector<cpShape*> shape_list;
+        std::vector<cpShape*> shape_list;
         cpBodyEachShape(body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
         for (auto shape : shape_list) {
             cpSpaceRemoveShape(space, shape);
             cpShapeFree(shape);
         }
-        QVector<cpConstraint*> joint_list;
+        std::vector<cpConstraint*> joint_list;
         cpBodyEachConstraint(body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
         for (auto joint : joint_list) {
             cpSpaceRemoveConstraint(space, joint);

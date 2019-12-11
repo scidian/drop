@@ -6,7 +6,7 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"
@@ -84,8 +84,8 @@ void DrAsset::initializeAssetSettingsObject(std::string new_name) {
 //    addComponent(Components::Asset_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
 //    getComponent(Components::Asset_Settings_Object)->setIcon(Component_Icons::Object);
 
-//    addPropertyToComponent(Components::Asset_Settings_Object, Properties::Asset_Object_One_Way_Type, Property_Type::List, 0,
-//                           "One Way Type", "Type of One Way collision for this object. <b></b>");
+
+
 }
 
 

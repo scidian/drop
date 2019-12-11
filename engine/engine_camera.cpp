@@ -313,10 +313,11 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     setSpeed(       QVector3D(0, 0, 0) );
     setRotation(    c_default_camera_rot );
 
-    setBufferSize(  buffer_size);
-    m_avg_speed_x.clear();  m_avg_speed_x.fill(0, buffer_size);                 // Zero out average speed vector
-    m_avg_speed_y.clear();  m_avg_speed_y.fill(0, buffer_size);                 // Zero out average speed vector
-    m_avg_speed_z.clear();  m_avg_speed_z.fill(0, buffer_size);                 // Zero out average speed vector
+    // Zero out average speed vectors
+    setBufferSize( buffer_size);
+    m_avg_speed_x.resize(buffer_size); std::fill(m_avg_speed_x.begin(), m_avg_speed_x.end(), 0);
+    m_avg_speed_y.resize(buffer_size); std::fill(m_avg_speed_y.begin(), m_avg_speed_y.end(), 0);
+    m_avg_speed_z.resize(buffer_size); std::fill(m_avg_speed_z.begin(), m_avg_speed_z.end(), 0);
 }
 
 
@@ -399,19 +400,19 @@ void DrEngineCamera::updateCamera() {
     double average_y = 0;
     double average_z = 0;
     if (update_x) {
-        while (m_avg_speed_x.count() < m_buffer_size + 1)
+        while (m_avg_speed_x.size() <static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
         m_avg_speed_x.pop_front();
         if (m_avg_speed_x.size() > 0) average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
     }
     if (update_y) {
-        while (m_avg_speed_y.count() < m_buffer_size + 1)
+        while (m_avg_speed_y.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
         m_avg_speed_y.pop_front();
         if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
     }
     if (update_z) {
-        while (m_avg_speed_z.count() < m_buffer_size + 1)
+        while (m_avg_speed_z.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
         m_avg_speed_z.pop_front();
         if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();

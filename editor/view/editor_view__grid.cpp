@@ -10,6 +10,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
+#include "editor/helper_library.h"
 #include "editor/globals_editor.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
@@ -34,9 +35,9 @@ void DrView::updateGrid() {
     scene()->setSceneRect( scene()->sceneRect().united(stage_rect) );
 
     // Update Grid Properties
-    m_grid_origin =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF();
-    m_grid_size =       stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
-    m_grid_scale =      stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
+    m_grid_origin =     Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF());
+    m_grid_size =       Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF());
+    m_grid_scale =      Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF());
     m_grid_rotate =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
     m_grid_color =      Dr::GetColor(Window_Colors::Background_Light);
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
@@ -70,18 +71,18 @@ QPointF DrView::roundToGrid(QPointF point_in_scene) {
     QPointF rounded_center = point_in_scene;
 
     // Divide by scale to equalize mouse position to scaling being applied after rounding
-    rounded_center.setX( rounded_center.x() / m_grid_scale.x );
-    rounded_center.setY( rounded_center.y() / m_grid_scale.y );
+    rounded_center.setX( rounded_center.x() / m_grid_scale.x() );
+    rounded_center.setY( rounded_center.y() / m_grid_scale.y() );
 
     // Remove rotation, round new position to nearest grid step, and add rotation back
     rounded_center = remove_angle.map ( rounded_center );
-    rounded_center.setX( round((rounded_center.x() - m_grid_origin.x) / m_grid_size.x) * m_grid_size.x + m_grid_origin.x);
-    rounded_center.setY( round((rounded_center.y() - m_grid_origin.y) / m_grid_size.y) * m_grid_size.y + m_grid_origin.y);
+    rounded_center.setX( round((rounded_center.x() - m_grid_origin.x()) / m_grid_size.x()) * m_grid_size.x() + m_grid_origin.x());
+    rounded_center.setY( round((rounded_center.y() - m_grid_origin.y()) / m_grid_size.y()) * m_grid_size.y() + m_grid_origin.y());
     rounded_center = add_angle.map ( rounded_center );
 
     // Apply grid scale to new position
-    rounded_center.setX( rounded_center.x() * m_grid_scale.x );
-    rounded_center.setY( rounded_center.y() * m_grid_scale.y );
+    rounded_center.setX( rounded_center.x() * m_grid_scale.x() );
+    rounded_center.setY( rounded_center.y() * m_grid_scale.y() );
 
     return rounded_center;
 }
@@ -183,8 +184,8 @@ void DrView::recalculateGrid() {
 
     // ***** Create viewport bounding rect, calculate grid drawing origin point
     QRectF  viewport_rect = QRectF( QPointF(view_min_x, view_min_y), QPointF(view_max_x, view_max_y) );
-    double origin_x = round((viewport_rect.center().x() - m_grid_origin.x) / m_grid_size.x) * m_grid_size.x + m_grid_origin.x;
-    double origin_y = round((viewport_rect.center().y() - m_grid_origin.y) / m_grid_size.y) * m_grid_size.y + m_grid_origin.y;
+    double origin_x = round((viewport_rect.center().x() - m_grid_origin.x()) / m_grid_size.x()) * m_grid_size.x() + m_grid_origin.x();
+    double origin_y = round((viewport_rect.center().y() - m_grid_origin.y()) / m_grid_size.y()) * m_grid_size.y() + m_grid_origin.y();
     m_grid_view_rect = viewport_rect;
 
 
@@ -195,11 +196,11 @@ void DrView::recalculateGrid() {
     ///if  (m_zoom_scale <= .10) allow_dots = false;
 
     // Step sizes (affected by zoom)
-    double step_x = m_grid_size.x;
-    double step_y = m_grid_size.y;
+    double step_x = m_grid_size.x();
+    double step_y = m_grid_size.y();
     double min = (m_grid_style == Grid_Style::Dots) ? 10.0 : 4.0;
-    if (step_x * m_zoom_scale * m_grid_scale.x < min)    step_x = min / (m_zoom_scale * m_grid_scale.x);
-    if (step_y * m_zoom_scale * m_grid_scale.y < min)    step_y = min / (m_zoom_scale * m_grid_scale.y);
+    if (step_x * m_zoom_scale * m_grid_scale.x() < min)    step_x = min / (m_zoom_scale * m_grid_scale.x());
+    if (step_y * m_zoom_scale * m_grid_scale.y() < min)    step_y = min / (m_zoom_scale * m_grid_scale.y());
 
 
     // ********** Calculate lines and dots
@@ -208,7 +209,7 @@ void DrView::recalculateGrid() {
     double adjust = 2;///1.44;
 
     // Add in some buffering for rotation, and negate the effects of the scaling
-    double smaller_scale = (m_grid_scale.x < m_grid_scale.y) ? m_grid_scale.x : m_grid_scale.y;
+    double smaller_scale = (m_grid_scale.x() < m_grid_scale.y()) ? m_grid_scale.x() : m_grid_scale.y();
     max_x += abs(max_x * adjust / smaller_scale) - abs(max_x);
     max_y += abs(max_y * adjust / smaller_scale) - abs(max_y);
     min_x -= abs(min_x * adjust / smaller_scale) - abs(min_x);
@@ -268,13 +269,13 @@ void DrView::recalculateGrid() {
 
     // Fit center of viewport to grid
     QPointF center1 = viewport_rect.center();
-    center1.setX(round((center1.x() - m_grid_origin.x) / m_grid_size.x) * m_grid_size.x + m_grid_origin.x);
-    center1.setY(round((center1.y() - m_grid_origin.y) / m_grid_size.y) * m_grid_size.y + m_grid_origin.y);
+    center1.setX(round((center1.x() - m_grid_origin.x()) / m_grid_size.x()) * m_grid_size.x() + m_grid_origin.x());
+    center1.setY(round((center1.y() - m_grid_origin.y()) / m_grid_size.y()) * m_grid_size.y() + m_grid_origin.y());
 
     // Fit center of bounding box to grid, then rotate bounding box
     QPointF center3 = bounding_box.center();
-    center3.setX(round((center3.x() - m_grid_origin.x) / m_grid_size.x) * m_grid_size.x + m_grid_origin.x);
-    center3.setY(round((center3.y() - m_grid_origin.y) / m_grid_size.y) * m_grid_size.y + m_grid_origin.y);
+    center3.setX(round((center3.x() - m_grid_origin.x()) / m_grid_size.x()) * m_grid_size.x() + m_grid_origin.x());
+    center3.setY(round((center3.y() - m_grid_origin.y()) / m_grid_size.y()) * m_grid_size.y() + m_grid_origin.y());
     QPointF center2 = add_angle.map ( center3 );
 
     // Calculate difference between start center and new center
@@ -282,11 +283,11 @@ void DrView::recalculateGrid() {
 
     // Align new desired center to grid
     QPointF rounded_center = remove_angle.map ( QPointF(diff.x(), diff.y()) );
-    rounded_center.setX( round((rounded_center.x()) / m_grid_size.x) * m_grid_size.x );
-    rounded_center.setY( round((rounded_center.y()) / m_grid_size.y) * m_grid_size.y );
+    rounded_center.setX( round((rounded_center.x()) / m_grid_size.x()) * m_grid_size.x() );
+    rounded_center.setY( round((rounded_center.y()) / m_grid_size.y()) * m_grid_size.y() );
     rounded_center = add_angle.map ( rounded_center );
     QTransform slide = QTransform().translate( -rounded_center.x(), -rounded_center.y() );
-    QTransform scale = QTransform().scale(m_grid_scale.x, m_grid_scale.y);
+    QTransform scale = QTransform().scale(m_grid_scale.x(), m_grid_scale.y());
 
     // Apply the rotation and translation transforms to the new lines
     for (auto &line: new_lines) {

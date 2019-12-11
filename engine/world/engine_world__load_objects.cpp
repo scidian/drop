@@ -224,15 +224,8 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
 
     // ***** Set collision type
-    Collision_Type collision_type = Collision_Type::Damage_None;
-    long           damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
-    switch (damage_type) {
-        case 0: collision_type = Collision_Type::Damage_None;   break;
-        case 1: collision_type = Collision_Type::Damage_Player; break;
-        case 2: collision_type = Collision_Type::Damage_Enemy;  break;
-        case 3: collision_type = Collision_Type::Damage_All;    break;
-    }
-    block->setCollisionType(collision_type);
+    long     damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
+    block->setCollisionType(static_cast<Collision_Type>(damage_type));
     block->setGravityScale( DrPointF(gravity_scale.x, gravity_scale.y) );
 
     // ***** Velocity settings

@@ -33,7 +33,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     button->setFont(font);
     button->setSizePolicy(size_policy);
 
-    long   property_key =  property->getPropertyKey();
+    long property_key = property->getPropertyKey();
 
     QStringList options;
     if          (property_key == static_cast<int>(Properties::Thing_Object_Damage)) {
@@ -130,13 +130,13 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         action->setProperty(User_Property::Order, QVariant::fromValue(string_count));
 
         // Create a callback function to update DrSettings when a new value is selected
-        connect(action,   &QAction::triggered, [this, button, action, property_key]() {
+        connect(action, &QAction::triggered, [this, button, action, property_key]() {
             button->setText(action->text());
             this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
         });
 
         if (property_key == static_cast<int>(Properties::Thing_Object_Damage)) {
-            connect(action,   &QAction::hovered, [this, string_count]() {
+            connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Damage_None[0],     Advisor_Info::Damage_None[1]);          break;
                     case 1: this->setAdvisorInfo( Advisor_Info::Damage_Player[0],   Advisor_Info::Damage_Player[1]);        break;
@@ -147,7 +147,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         }
 
         if (property_key == static_cast<int>(Properties::Thing_Object_Physics_Type)) {
-            connect(action,   &QAction::hovered, [this, string_count]() {
+            connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Object_Static[0],    Advisor_Info::Object_Static[1]);       break;
                     case 1: this->setAdvisorInfo( Advisor_Info::Object_Kinematic[0], Advisor_Info::Object_Kinematic[1]);    break;
@@ -157,7 +157,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         }
 
         if (property_key == static_cast<int>(Properties::Thing_Light_Type)) {
-            connect(action,   &QAction::hovered, [this, string_count]() {
+            connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Light_Opaque[0],    Advisor_Info::Light_Opaque[1]);          break;
                     case 1: this->setAdvisorInfo( Advisor_Info::Light_Glow[0],      Advisor_Info::Light_Glow[1]);           break;

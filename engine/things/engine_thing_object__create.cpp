@@ -10,7 +10,7 @@
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "library/dr_debug.h"

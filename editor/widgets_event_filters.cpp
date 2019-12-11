@@ -17,7 +17,7 @@
 #include "editor/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "model/settings/settings_component_property.h"
 

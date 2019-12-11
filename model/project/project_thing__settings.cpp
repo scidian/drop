@@ -6,7 +6,8 @@
 //
 //
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
+#include "engine/enums_engine.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"
@@ -41,7 +42,7 @@ void DrThing::addComponentSettingsCamera(std::string new_name) {
     addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation, Property_Type::PointF, DrPointF(0, 0),
                            "Camera Rotation", "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
-    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector, Property_Type::List, static_cast<int>(Up_Vector::Y),
                            "Camera Up Vector", "Default for most games / styles of gameplay is for a Y Axis Up Vector. "
                                                "If making a First Person style game, rotate camera X or Y to between 75 and 90 degrees and "
                                                "set Up Vector to Z Axis.");
@@ -69,7 +70,7 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
                            "Camera Rotation", "Every Character has a Camera attached which always looks directly at the Character. "
                                               "This setting is the camera rotation of that Camera. The "
                                               "<b>X</b> value changes <b>Up / Down</b> rotation, <b>Y</b> changes <b>Left / Right</b> rotation.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector, Property_Type::List, static_cast<int>(Up_Vector::Y),
                            "Camera Up Vector", "Default for most games / styles of gameplay is for a Y Axis Up Vector. "
                                                "If making a First Person style game, rotate camera X or Y to between 75 and 90 degrees and "
                                                "set Up Vector to Z Axis.");
@@ -101,17 +102,17 @@ void DrThing::addComponentSettingsObject(std::string new_name, bool should_colli
     addComponent(Components::Thing_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Object)->setIcon(Component_Icons::Object);
 
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type, Property_Type::List, static_cast<int>(Body_Type::Static),
                            "Object Type", "<b>Static</b> - Can not move. <br> "
                                           "<b>Kinematic</b> - Moves at fixed speed. <br> "
                                           "<b>Dynamic</b> - Physics object.");
     addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collide, Property_Type::Bool, should_collide,
                            "Physics Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
                                                "still provide damage and sound reponses when coming into contact with other Objects.");
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collision_Group, Property_Type::List, 1,
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Collision_Group, Property_Type::List, static_cast<int>(Collision_Groups::All),
                            "Collide With", "What types of other items should this Object collide with. Objects types not selected will not provide "
                                            "physics or damage collision responses.");
-    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Damage, Property_Type::List, 0,
+    addPropertyToComponent(Components::Thing_Settings_Object, Properties::Thing_Object_Damage, Property_Type::List, static_cast<int>(Collision_Type::Damage_None),
                            "Damage Type", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "
                                           "Object will be treated as an enemy and vice versa.");
 }

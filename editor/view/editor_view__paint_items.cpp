@@ -198,7 +198,7 @@ void DrView::paintItemCenters(QPainter &painter) {
 void DrView::paintCrossHairs(QPainter &painter, QPoint center) {
     QTransform t = QTransform()
             .translate(center.x(), center.y())
-            .scale(m_grid_scale.x, m_grid_scale.y)
+            .scale(m_grid_scale.x(), m_grid_scale.y())
             .rotate(m_grid_rotate)
             .translate(-center.x(), -center.y());
 

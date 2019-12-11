@@ -10,7 +10,7 @@
 
 #include <cmath>
 
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
@@ -103,7 +103,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
 
         // ***** Create Texture Coordinate and Vertex arrays
         std::vector<float> texture_coordinates;
-        QVector<GLfloat> vertices;
+        std::vector<GLfloat> vertices;
         texture_coordinates.clear();
         vertices.clear();
         texture_coordinates.resize( static_cast<std::size_t>(8 * hp.length()) );

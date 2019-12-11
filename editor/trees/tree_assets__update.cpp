@@ -9,7 +9,7 @@
 #include <QScrollBar>
 
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
 #include "library/dr_containers.h"

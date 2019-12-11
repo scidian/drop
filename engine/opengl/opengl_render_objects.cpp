@@ -110,7 +110,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     ///        skip_object = true;
     ///}
     ///if (skip_object) return;
-    if (object->shapes.count() > 0) {
+    if (object->shapes.size() > 0) {
         if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
     }
 
@@ -353,7 +353,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     if (object == nullptr) return;
 
     // Don't draw Segments (lines)
-    if (object->shapes.count() > 0) {
+    if (object->shapes.size() > 0) {
         if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
     }
 
@@ -490,7 +490,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     // ***** Load vertices for this object
     float flip_x = (object->isFlippedX()) ? -animation_scale : animation_scale;
     float flip_y = (object->isFlippedY()) ? -animation_scale : animation_scale;
-    QVector<GLfloat> vertices;
+    std::vector<GLfloat> vertices;
     getThingVertices(vertices, object, texture_width, texture_height, flip_x, flip_y);
     m_occluder_shader.setAttributeArray(    a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );

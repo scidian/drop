@@ -5,7 +5,7 @@
 //
 //
 //
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "library/dr_math.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"

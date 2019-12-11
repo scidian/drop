@@ -7,7 +7,7 @@
 //
 #include "editor/colors/colors.h"
 #include "editor/constants_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"
@@ -45,11 +45,11 @@ void DrStage::initializeStageSettings(std::string new_name) {
                                                  "to 45 degrees, and set \"Grid Scale\" X value twice the size \"Grid Scale\" Y value (i.e. X: 2, Y: 1).",
                                                  Component_Colors::Pink_Pearl, true);
     getComponent(Components::Stage_Grid)->setIcon(Component_Icons::Transform);
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, 0,
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, static_cast<int>(0),
                            "Grid Style", "Visual style of alignment grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, DrPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at. Allows for small adjustments of enitre grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, DrPointF(50, 50),
+    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, DrPointF(32, 32),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::GridScaleF, DrPointF(1, 1),
                            "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");

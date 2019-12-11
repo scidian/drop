@@ -17,7 +17,7 @@
 #include "editor/debug.h"
 #include "editor/forms/form_about.h"
 #include "editor/forms/form_main.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"

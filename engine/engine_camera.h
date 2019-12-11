@@ -46,9 +46,9 @@ private:
 
     Up_Vector       m_up_vector = Up_Vector::Y;                 // Up Vector of Camera, usually Y, Z for first person
 
-    QVector<double> m_avg_speed_x;                              // Average x speed of object this camera is following
-    QVector<double> m_avg_speed_y;                              // Average y speed of object this camera is following
-    QVector<double> m_avg_speed_z;                              // Average z speed of object this camera is following
+    std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
+    std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
+    std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
 
 
 public:

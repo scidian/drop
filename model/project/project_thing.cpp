@@ -7,7 +7,7 @@
 //
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "engine/opengl/opengl.h"
 #include "model/project/project.h"

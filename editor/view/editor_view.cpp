@@ -10,7 +10,7 @@
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_view.h"
@@ -118,7 +118,7 @@ void DrView::resizeEvent(QResizeEvent *event) {
     if (my_scene->getCurrentStageShown() == nullptr) return;
     if (hasShownAScene() == false) return;
 
-    m_editor_relay->viewCenterOnPoint( my_scene->getCurrentStageShown()->getViewCenterPoint() );
+    m_editor_relay->viewCenterOnPoint( Dr::ToQPointF(my_scene->getCurrentStageShown()->getViewCenterPoint()) );
 }
 
 

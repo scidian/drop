@@ -20,18 +20,17 @@ class DrEngineObject : public DrEngineThing
 {
 public:
     // Object Body and Shapes
-    cpBody             *body = nullptr;             // Physical Body of object
-    Body_Type           body_type;                  // Body_Type
+    cpBody                 *body = nullptr;                 // Physical Body of object
+    Body_Type               body_type;                      // Body_Type
 
-    QVector<cpShape*>   shapes;                     // Collision Shapes of object
-    ShapeMap            shape_type;                 // Shape Types of Shapes of Object
+    std::vector<cpShape*>   shapes;                         // Collision Shapes of object
+    ShapeMap                shape_type;                     // Shape Types of Shapes of Object
 
 
-
-    std::deque<long>    animation_idle_keys;                    // Image frame keys
-    long                animation_idle_frame = 1;               // Current frame
-    double              animation_speed = 15;                   // Frames per second
-    double              animation_idle_last_change = 0;         // Milliseconds since last change frame
+    std::deque<long>    animation_idle_keys;                // Image frame keys
+    long                animation_idle_frame = 1;           // Current frame
+    double              animation_speed = 15;               // Frames per second
+    double              animation_idle_last_change = 0;     // Milliseconds since last change frame
 
 
 private:

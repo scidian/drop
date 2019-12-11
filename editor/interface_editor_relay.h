@@ -58,7 +58,7 @@ public:
     virtual View_Mode   currentViewMode() = 0;
     virtual double      currentViewZoom() = 0;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) = 0;
-    virtual void        viewCenterOnPoint(DrPointF center_point) = 0;
+    virtual void        viewCenterOnPoint(QPointF center_point) = 0;
     virtual void        viewZoomToScale(double zoom_scale) = 0;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;

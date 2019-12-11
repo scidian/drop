@@ -10,7 +10,7 @@
 #include <QVBoxLayout>
 
 #include "editor/docks/docks.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"

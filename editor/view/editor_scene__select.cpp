@@ -6,7 +6,7 @@
 //
 //
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "library/dr_math.h"

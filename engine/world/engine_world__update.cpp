@@ -7,7 +7,7 @@
 //
 #include <numeric>
 
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_spawner.h"

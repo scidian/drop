@@ -75,76 +75,74 @@ enum class Property_Type {
 //##    Possible DrComponents for DrSettings
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:                    43,
-//##    !!!!! MUST ALSO CHANGE:     Components::Total = 43 !!!!!
+//##    !!!!! NEXT AVAILABLE NUMBER:                    44,
+//##    !!!!! MUST ALSO CHANGE:     Components::Total = 44 !!!!!
 //##
 //############################
 enum class Components {
 
     // ***** General Components
     Entity_Settings                     = 0,
-    Hidden_Settings                     = 1,
-    Size_Settings                       = 37,
-
+    Local_Variables                     = 1,
+    Hidden_Settings                     = 2,
+    Size_Settings                       = 3,
 
     // ***** DrAnimation Components
-    Animation_Settings                  = 41,
-    Frame_Settings                      = 42,
+    Animation_Settings                  = 4,
 
+    // ***** DrFrame Components
+    Frame_Settings                      = 5,
 
     // ***** DrAsset Components
-    Asset_Settings_Character            = 2,
-    Asset_Settings_Object               = 3,
-    Asset_Settings_Font                 = 4,
+    Asset_Collision                     = 6,
+    Asset_Animation                     = 7,
+    Asset_Health                        = 8,
+    Asset_Physics                       = 9,
+    Asset_Controls                      = 10,
 
-    Asset_Collision                     = 5,
-    Asset_Animation                     = 6,
-    Asset_Health                        = 34,
-    Asset_Physics                       = 35,
-    Asset_Controls                      = 40,
-
+    Asset_Settings_Character            = 11,
+    Asset_Settings_Object               = 12,
+    Asset_Settings_Font                 = 13,
 
     // ***** DrWorld Components
-    World_Settings                      = 7,
-    World_Physics                       = 8,
-    World_Lighting                      = 9,
-    World_Camera                        = 38,
-    World_Appearance                    = 10,
-    World_Special_Effects               = 11,
-
+    World_Settings                      = 14,
+    World_Physics                       = 15,
+    World_Lighting                      = 16,
+    World_Camera                        = 17,
+    World_Appearance                    = 18,
+    World_Special_Effects               = 19,
 
     // ***** DrStage Components
-    Stage_Settings                      = 12,
-    Stage_Grid                          = 13,
-
+    Stage_Settings                      = 20,
+    Stage_Grid                          = 21,
 
     // ***** DrThing Components
-    Thing_Settings_Camera               = 14,
-    Thing_Settings_Character            = 36,
-    Thing_Settings_Object               = 15,
-    Thing_Settings_Text                 = 16,
+    Thing_Transform                     = 22,
+    Thing_Layering                      = 23,
+    Thing_Movement                      = 24,
+    Thing_Spawn                         = 25,
+    Thing_Lighting                      = 26,
+    Thing_3D                            = 27,
+    Thing_Appearance                    = 28,
+    Thing_Special_Effects               = 29,
 
-    Thing_Settings_Fire                 = 17,
-    Thing_Settings_Fisheye              = 18,
-    Thing_Settings_Light                = 19,
-    Thing_Settings_Mirror               = 20,
-    Thing_Settings_Swirl                = 21,
-    Thing_Settings_Water                = 22,
-    Thing_Settings_Water_Ripple         = 23,
-    Thing_Settings_Water_Wave           = 24,
-    Thing_Settings_Water_Refract        = 25,
-    Thing_Settings_Water_Foam           = 26,
+    Thing_Settings_Camera               = 30,
+    Thing_Settings_Character            = 31,
+    Thing_Settings_Object               = 32,
+    Thing_Settings_Text                 = 33,
 
-    Thing_Transform                     = 27,
-    Thing_Layering                      = 28,
-    Thing_Movement                      = 29,
-    Thing_Spawn                         = 39,
-    Thing_Lighting                      = 30,
-    Thing_3D                            = 31,
-    Thing_Appearance                    = 32,
-    Thing_Special_Effects               = 33,
+    Thing_Settings_Fire                 = 34,
+    Thing_Settings_Fisheye              = 35,
+    Thing_Settings_Light                = 36,
+    Thing_Settings_Mirror               = 37,
+    Thing_Settings_Swirl                = 38,
+    Thing_Settings_Water                = 39,
+    Thing_Settings_Water_Ripple         = 40,
+    Thing_Settings_Water_Wave           = 41,
+    Thing_Settings_Water_Refract        = 42,
+    Thing_Settings_Water_Foam           = 43,
 
-    Total = 43,
+    Total = 44,
 };
 
 
@@ -152,9 +150,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   239
+//##    !!!!! NEXT AVAILABLE NUMBER:   238
 //##
-//##    Checked for doubles up through 239 on 11/11/2019
+//##    Checked for doubles up through 238 on 11/11/2019
 //############################
 enum class Properties {
 
@@ -169,333 +167,333 @@ enum class Properties {
     Hidden_Hide_From_Trees              = 5,        // bool
 
     // ******************** Size Properties, for locking shape / size in editor
-    Size_Keep_Square                    = 167,      // bool
-    Size_Max_Size                       = 168,      // pointf
-    Size_Min_Size                       = 169,      // pointf
+    Size_Keep_Square                    = 6,        // bool
+    Size_Max_Size                       = 7,        // pointf
+    Size_Min_Size                       = 8,        // pointf
 
 
     // ******************** DrAnimation Components
     // Animation_Settings
-    Animation_Settings_Speed            = 216,      // double
-    Animation_Settings_Loops            = 217,      // int
-    Animation_Settings_Start_Frame      = 218,      // positive int
-    Animation_Settings_Future_1         = 219,
-    Animation_Settings_Future_2         = 220,
-    Animation_Settings_Future_3         = 221,
+    Animation_Settings_Speed            = 9,        // double
+    Animation_Settings_Loops            = 10,       // int
+    Animation_Settings_Start_Frame      = 11,       // positive int
+    Animation_Settings_Future_1         = 12,
+    Animation_Settings_Future_2         = 13,
+    Animation_Settings_Future_3         = 14,
 
 
 
     // ******************** DrAsset Component Properties
     // Asset_Settings_Character
-    Asset_Character_Max_Speed           = 6,        // pointf
-    Asset_Character_Forced_Speed        = 7,        // pointf
-    Asset_Character_Move_Speed          = 8,        // pointf
-    Asset_Character_Angle_Movement      = 184,      // bool
-    Asset_Character_Jump_Force          = 9,        // pointf
-    Asset_Character_Jump_Timeout        = 10,       // positive int
-    Asset_Character_Jump_Counter        = 11,       // int
+    Asset_Character_Max_Speed           = 15,       // pointf
+    Asset_Character_Forced_Speed        = 16,       // pointf
+    Asset_Character_Move_Speed          = 17,       // pointf
+    Asset_Character_Angle_Movement      = 18,       // bool
+    Asset_Character_Jump_Force          = 19,       // pointf
+    Asset_Character_Jump_Timeout        = 20,       // positive int
+    Asset_Character_Jump_Counter        = 21,       // int
 
-    Asset_Character_Jump_Air            = 12,       // bool
-    Asset_Character_Jump_Wall           = 13,       // bool
+    Asset_Character_Jump_Air            = 22,       // bool
+    Asset_Character_Jump_Wall           = 23,       // bool
 
-    Asset_Character_Acceleration        = 188,      // positive double
-    Asset_Character_Air_Drag            = 14,       // positive double
-    Asset_Character_Ground_Drag         = 15,       // positive double
-    Asset_Character_Rotation_Drag       = 16,       // positive double
+    Asset_Character_Acceleration        = 24,       // positive double
+    Asset_Character_Air_Drag            = 25,       // positive double
+    Asset_Character_Ground_Drag         = 26,       // positive double
+    Asset_Character_Rotation_Drag       = 27,       // positive double
 
-    Asset_Character_Flip_Image_X        = 159,      // bool
-    Asset_Character_Flip_Image_Y        = 160,      // bool
-    Asset_Character_Mouse_Rotate        = 200,      // bool
+    Asset_Character_Flip_Image_X        = 28,       // bool
+    Asset_Character_Flip_Image_Y        = 29,       // bool
+    Asset_Character_Mouse_Rotate        = 30,       // bool
 
     // Asset_Settings_Object
 
 
     // Asset_Settings_Font
-    Asset_Font_Family                   = 19,
-    Asset_Font_Size                     = 20,
+    Asset_Font_Family                   = 31,
+    Asset_Font_Size                     = 32,
 
     // Asset_Collision
-    Asset_Collision_Shape               = 21,       // list, enum class Collision_Shape (image shape, circle, square, triangle)
-    Asset_Collision_One_Way_Type        = 141,      // list, enum class One_Way (none, pass_through, weak_spot)
-    Asset_Collision_One_Way_Direction   = 142,      // point
-    Asset_Collision_Gravity_Multiplier  = 143,      // double
-    Asset_Collision_Image_Shape         = 155,      // DrPropertyCollision (polygons)
-    Asset_Collision_Circles             = 156,      // future use storing circles?
-    Asset_Collision_Squares             = 157,      // future use storing squares?
-    Asset_Collision_Polygons            = 158,      // future use storing polygons?
-    Asset_Collision_Surface_Velocity    = 161,      // future use storing polygons?
+    Asset_Collision_Shape               = 33,       // list, enum class Collision_Shape (image shape, circle, square, triangle)
+    Asset_Collision_One_Way_Type        = 34,       // list, enum class One_Way (none, pass_through, weak_spot)
+    Asset_Collision_One_Way_Direction   = 35,       // point
+    Asset_Collision_Gravity_Multiplier  = 36,       // double
+    Asset_Collision_Image_Shape         = 37,       // DrPropertyCollision (polygons)
+    Asset_Collision_Circles             = 38,       // future use storing circles?
+    Asset_Collision_Squares             = 39,       // future use storing squares?
+    Asset_Collision_Polygons            = 40,       // future use storing polygons?
+    Asset_Collision_Surface_Velocity    = 41,       // future use storing polygons?
 
     // Asset_Animation
-    Asset_Animation_Idle                = 22,        // image
-    Asset_Animation_Walking             = 222,       // image
-    Asset_Animation_Running             = 223,       // image
-    Asset_Animation_Taking_Damage       = 224,       // image
-    Asset_Animation_Death               = 225,       // image
-    Asset_Animation_Invincible          = 226,       // image
-    Asset_Animation_Shooting_A          = 227,       // image
-    Asset_Animation_Shooting_B          = 228,       // image
-    Asset_Animation_Jumping             = 229,       // image
-    Asset_Animation_Sliding             = 230,       // image
-    Asset_Animation_Dashing             = 231,       // image
-    Asset_Animation_Crouching           = 232,       // image
-    Asset_Animation_Future_01           = 233,       // image
-    Asset_Animation_Future_02           = 234,       // image
-    Asset_Animation_Future_03           = 235,       // image
-    Asset_Animation_Future_04           = 236,       // image
-    Asset_Animation_Future_05           = 237,       // image
+    Asset_Animation_Idle                = 42,       // image
+    Asset_Animation_Walking             = 43,       // image
+    Asset_Animation_Running             = 44,       // image
+    Asset_Animation_Taking_Damage       = 45,       // image
+    Asset_Animation_Death               = 46,       // image
+    Asset_Animation_Invincible          = 47,       // image
+    Asset_Animation_Shooting_A          = 48,       // image
+    Asset_Animation_Shooting_B          = 49,       // image
+    Asset_Animation_Jumping             = 50,       // image
+    Asset_Animation_Sliding             = 51,       // image
+    Asset_Animation_Dashing             = 52,       // image
+    Asset_Animation_Crouching           = 53,       // image
+    Asset_Animation_Future_01           = 54,       // image
+    Asset_Animation_Future_02           = 55,       // image
+    Asset_Animation_Future_03           = 56,       // image
+    Asset_Animation_Future_04           = 57,       // image
+    Asset_Animation_Future_05           = 58,       // image
 
     // Asset_Health
-    Asset_Health_Max_Health             = 144,      // double
-    Asset_Health_Health                 = 145,      // double
-    Asset_Health_Damage                 = 146,      // double
-    Asset_Health_Damage_Delay           = 147,      // int
-    Asset_Health_Auto_Damage            = 148,      // double
-    Asset_Health_Death_Delay            = 149,      // int
-    Asset_Health_Fade_On_Death          = 150,      // bool
-    Asset_Health_Death_Animation        = 164,      // list, enum class Death_Animation (none, fade, shrink)
-    Asset_Health_Death_Duration         = 151,      // int (used to be called Asset_Health_Fade_Delay)
-    Asset_Health_Damage_Recoil          = 152,      // double
-    Asset_Health_Invincible             = 153,      // bool
-    Asset_Health_Death_Touch            = 154,      // bool
+    Asset_Health_Max_Health             = 59,       // double
+    Asset_Health_Health                 = 60,       // double
+    Asset_Health_Damage                 = 61,       // double
+    Asset_Health_Damage_Delay           = 62,       // int
+    Asset_Health_Auto_Damage            = 63,       // double
+    Asset_Health_Death_Delay            = 64,       // int
+    Asset_Health_Fade_On_Death          = 65,       // bool
+    Asset_Health_Death_Animation        = 66,       // list, enum class Death_Animation (none, fade, shrink)
+    Asset_Health_Death_Duration         = 67,       // int (used to be called Asset_Health_Fade_Delay)
+    Asset_Health_Damage_Recoil          = 68,       // double
+    Asset_Health_Invincible             = 69,       // bool
+    Asset_Health_Death_Touch            = 70,       // bool
 
     // Asset_Physics
-    Asset_Physics_Gravity_Scale         = 18,       // bool
-    Asset_Physics_Custom_Friction       = 162,      // bool double combo
-    Asset_Physics_Custom_Bounce         = 163,      // bool double combo
-    Asset_Physics_Can_Rotate            = 17,       // bool
+    Asset_Physics_Gravity_Scale         = 71,       // bool
+    Asset_Physics_Custom_Friction       = 72,       // bool double combo
+    Asset_Physics_Custom_Bounce         = 73,       // bool double combo
+    Asset_Physics_Can_Rotate            = 74,       // bool
 
     // Asset_Controls
-    Asset_Controls_Touch_Damage         = 202,      // bool double
-    Asset_Controls_Touch_Drag           = 203,      // bool
+    Asset_Controls_Touch_Damage         = 75,       // bool double
+    Asset_Controls_Touch_Drag           = 76,       // bool
 
-    Asset_Slingshot_Enabled             = 204,      // enabled
-    Asset_Slingshot_Arrow_Image         = 205,      // image
-    Asset_Slingshot_Arrow_Offset        = 206,      // positive double
-    Asset_Slingshot_Arrow_Scale         = 207,      // positive scalef
-    Asset_Slingshot_Tail_Image          = 208,      // image
-    Asset_Slingshot_Tail_Offset         = 209,      // positive double
-    Asset_Slingshot_Tail_Scale          = 210,      // positive scalef
-    Asset_Slingshot_Max_Distance        = 211,      // positive double
-    Asset_Slingshot_Force_Multiplier    = 212,      // double
-    Asset_Slingshot_Future_1            = 213,      // future
-    Asset_Slingshot_Future_2            = 214,      // future
-    Asset_Slingshot_Future_3            = 215,      // future
+    Asset_Slingshot_Enabled             = 77,       // enabled
+    Asset_Slingshot_Arrow_Image         = 78,       // image
+    Asset_Slingshot_Arrow_Offset        = 79,       // positive double
+    Asset_Slingshot_Arrow_Scale         = 80,       // positive scalef
+    Asset_Slingshot_Tail_Image          = 81,       // image
+    Asset_Slingshot_Tail_Offset         = 82,       // positive double
+    Asset_Slingshot_Tail_Scale          = 83,       // positive scalef
+    Asset_Slingshot_Max_Distance        = 84,       // positive double
+    Asset_Slingshot_Force_Multiplier    = 85,       // double
+    Asset_Slingshot_Future_1            = 86,       // future
+    Asset_Slingshot_Future_2            = 87,       // future
+    Asset_Slingshot_Future_3            = 88,       // future
 
-    Asset_Controls_Rotate_Speed         = 181,      // double
+    Asset_Controls_Rotate_Speed         = 89,       // double
 
 
     // ******************** DrWorld Component Properties
     // Settings
-    World_Game_Direction                = 23,       // double
-    World_Score_Multiplier              = 24,       // double
-    World_Deletion_Threshold            = 166,      // positive int
-    World_Use_Background_Color          = 25,       // bool
-    World_Background_Color              = 26,       // color
+    World_Game_Direction                = 90,       // double
+    World_Score_Multiplier              = 91,       // double
+    World_Deletion_Threshold            = 92,       // positive int
+    World_Use_Background_Color          = 93,       // bool
+    World_Background_Color              = 94,       // color
 
     // Physics
-    World_Gravity                       = 27,       // pointf (x, y)
-    World_Time_Warp                     = 28,       // double
-    World_Friction                      = 29,       // double
-    World_Drag                          = 30,       // double
-    World_Bounce                        = 31,       // double
+    World_Gravity                       = 95,       // pointf (x, y)
+    World_Time_Warp                     = 96,       // double
+    World_Friction                      = 97,       // double
+    World_Drag                          = 98,       // double
+    World_Bounce                        = 99,       // double
 
     // Lighting
-    World_Light_Ambient                 = 32,       // double
-    World_Light_Layer                   = 33,       // percent
-    World_Light_Blend                   = 34,       // list, enum class Blend_Mode
+    World_Light_Ambient                 = 100,      // double
+    World_Light_Layer                   = 101,      // percent
+    World_Light_Blend                   = 102,      // list, enum class Blend_Mode
 
     // Camera
-    World_Camera_Type                   = 174,      // list, enum class Render_Type
-    World_Camera_Slop                   = 177,      // percent
-    World_Camera_Switch_Speed           = 175,      // positive double
+    World_Camera_Type                   = 103,      // list, enum class Render_Type
+    World_Camera_Slop                   = 104,      // percent
+    World_Camera_Switch_Speed           = 105,      // positive double
 
     // Appearance
-    World_Filter_Bitrate                = 35,       // ranged int, 0 to 256
-    World_Filter_Pixelation             = 36,       // positive size
-    World_Filter_Brightness             = 37,       // slider
-    World_Filter_Contrast               = 38,       // slider
-    World_Filter_Saturation             = 39,       // slider
-    World_Filter_Hue                    = 40,       // slider
-    World_Filter_Grayscale              = 41,       // bool
-    World_Filter_Negative               = 42,       // bool
+    World_Filter_Bitrate                = 106,      // ranged int, 0 to 256
+    World_Filter_Pixelation             = 107,      // positive size
+    World_Filter_Brightness             = 108,      // slider
+    World_Filter_Contrast               = 109,      // slider
+    World_Filter_Saturation             = 110,      // slider
+    World_Filter_Hue                    = 111,      // slider
+    World_Filter_Grayscale              = 112,      // bool
+    World_Filter_Negative               = 113,      // bool
 
     // Special Effects
-    World_Filter_Convert_3D             = 171,      // bool
-    World_Filter_Wireframe              = 43,       // bool
-    World_Filter_Cartoon                = 44,       // bool double combo
-    World_Filter_Cross_Hatch            = 194,      // bool double combo
-    World_Filter_Wavy                   = 45,       // bool
+    World_Filter_Convert_3D             = 114,      // bool
+    World_Filter_Wireframe              = 115,      // bool
+    World_Filter_Cartoon                = 116,      // bool double combo
+    World_Filter_Cross_Hatch            = 117,      // bool double combo
+    World_Filter_Wavy                   = 118,      // bool
 
 
     // ******************** DrStage Component Properties
     // Settings
-    Stage_Enabled                       = 201,      // bool
-    Stage_Start                         = 46,       // positive
-    Stage_End                           = 47,       // positive
-    Stage_Size                          = 48,       // positive
-    Stage_Cooldown                      = 49,       // positive
+    Stage_Enabled                       = 119,      // bool
+    Stage_Start                         = 120,      // positive
+    Stage_End                           = 121,      // positive
+    Stage_Size                          = 122,      // positive
+    Stage_Cooldown                      = 123,      // positive
 
     // Grid
-    Stage_Grid_Style                    = 50,       // list, enum class Grid_Style (Lines,  Dots)
-    Stage_Grid_Origin_Point             = 51,       // pointf
-    Stage_Grid_Size                     = 52,       // sizef
-    Stage_Grid_Scale                    = 53,       // scale
-    Stage_Grid_Rotation                 = 54,       // angle
-    Stage_Grid_Color                    = 55,       // color
+    Stage_Grid_Style                    = 124,      // list, enum class Grid_Style (Lines,  Dots)
+    Stage_Grid_Origin_Point             = 125,      // pointf
+    Stage_Grid_Size                     = 126,      // sizef
+    Stage_Grid_Scale                    = 127,      // scale
+    Stage_Grid_Rotation                 = 128,      // angle
+    Stage_Grid_Color                    = 129,      // color
 
 
     // ******************** DrThing Component Properties
     // Transform
-    Thing_Position                      = 56,       // positionf
-    Thing_Rotation                      = 57,       // angle
-    Thing_Size                          = 58,       // sizef
-    Thing_Scale                         = 59,       // scale
+    Thing_Position                      = 130,      // positionf
+    Thing_Rotation                      = 131,      // angle
+    Thing_Size                          = 132,      // sizef
+    Thing_Scale                         = 133,      // scale
 
     // Layering
-    Thing_Z_Order                       = 60,       // double
-    Thing_Sub_Z_Order                   = 139,      // int
-    Thing_Opacity                       = 140,      // percent
+    Thing_Z_Order                       = 134,      // double
+    Thing_Sub_Z_Order                   = 135,      // int
+    Thing_Opacity                       = 136,      // percent
 
     // Movement
-    Thing_Velocity_X                    = 62,       // variable
-    Thing_Velocity_Y                    = 63,       // variable
-    Thing_Spin_Velocity                 = 64,       // variable
-    Thing_Angle_Velocity                = 65,       // bool
-    Thing_Angle_Player                  = 199,      // bool
+    Thing_Velocity_X                    = 137,      // variable
+    Thing_Velocity_Y                    = 138,      // variable
+    Thing_Spin_Velocity                 = 139,      // variable
+    Thing_Angle_Velocity                = 140,      // bool
+    Thing_Angle_Player                  = 141,      // bool
 
     // Spawn
-    Thing_Spawn_Rate                    = 189,      // variable
-    Thing_Spawn_Count                   = 190,      // int
-    Thing_Spawn_Type                    = 191,      // list, enum class Spawn_Type
-    Thing_Spawn_At_Object               = 192,      // bool int combo
-    Thing_Spawn_Offset_X                = 193,      // variable
-    Thing_Spawn_Offset_Y                = 196,      // variable
-    Thing_Spawn_Instantly               = 197,      // bool
-    Thing_Spawn_Chance                  = 238,      // percent
+    Thing_Spawn_Rate                    = 142,      // variable
+    Thing_Spawn_Count                   = 143,      // int
+    Thing_Spawn_Type                    = 144,      // list, enum class Spawn_Type
+    Thing_Spawn_At_Object               = 145,      // bool int combo
+    Thing_Spawn_Offset_X                = 146,      // variable
+    Thing_Spawn_Offset_Y                = 147,      // variable
+    Thing_Spawn_Instantly               = 148,      // bool
+    Thing_Spawn_Chance                  = 149,      // percent
 
     // Lighting
-    Thing_Lighting_Cast_Shadows         = 66,       // bool
+    Thing_Lighting_Cast_Shadows         = 150,      // bool
 
     // Appearance
-    Thing_Filter_Bitrate                = 67,       // ranged int, 0 to 256
-    Thing_Filter_Pixelation             = 68,       // positive size
-    Thing_Filter_Brightness             = 69,       // slider
-    Thing_Filter_Contrast               = 70,       // slider
-    Thing_Filter_Saturation             = 71,       // slider
-    Thing_Filter_Hue                    = 72,       // slider, 0 to 360
-    Thing_Filter_Grayscale              = 73,       // bool
-    Thing_Filter_Negative               = 74,       // bool
+    Thing_Filter_Bitrate                = 151,      // ranged int, 0 to 256
+    Thing_Filter_Pixelation             = 152,      // positive size
+    Thing_Filter_Brightness             = 153,      // slider
+    Thing_Filter_Contrast               = 154,      // slider
+    Thing_Filter_Saturation             = 155,      // slider
+    Thing_Filter_Hue                    = 156,      // slider, 0 to 360
+    Thing_Filter_Grayscale              = 157,      // bool
+    Thing_Filter_Negative               = 158,      // bool
 
     // Special Effects
-    Thing_Filter_Convert_3D             = 198,      // bool
-    Thing_Filter_Wireframe              = 75,       // bool
-    Thing_Filter_Cartoon                = 187,      // bool double combo
-    Thing_Filter_Cross_Hatch            = 195,      // bool double combo
+    Thing_Filter_Convert_3D             = 159,      // bool
+    Thing_Filter_Wireframe              = 160,      // bool
+    Thing_Filter_Cartoon                = 161,      // bool double combo
+    Thing_Filter_Cross_Hatch            = 162,      // bool double combo
 
     // 3D Variables
-    Thing_3D_Type                       = 76,       // list, enum class Convert_3D_Type (extrusion, cube, cone, none)
-    Thing_3D_Depth                      = 77,       // positive double
-    Thing_3D_X_Axis_Rotation            = 78,       // variable
-    Thing_3D_Y_Axis_Rotation            = 79,       // variable
-    Thing_3D_X_Axis_Speed               = 80,       // variable
-    Thing_3D_Y_Axis_Speed               = 81,       // variable
-    Thing_3D_Billboard                  = 82,       // bool
+    Thing_3D_Type                       = 163,      // list, enum class Convert_3D_Type (extrusion, cube, cone, none)
+    Thing_3D_Depth                      = 164,      // positive double
+    Thing_3D_X_Axis_Rotation            = 165,      // variable
+    Thing_3D_Y_Axis_Rotation            = 166,      // variable
+    Thing_3D_X_Axis_Speed               = 167,      // variable
+    Thing_3D_Y_Axis_Speed               = 168,      // variable
+    Thing_3D_Billboard                  = 169,      // bool
 
 
     // ********** Thing Specific
     // Camera Settings
-    Thing_Camera_Set_As_Active          = 178,      // bool
-    Thing_Camera_Speed                  = 179,      // pointf
-    Thing_Camera_Rotation               = 180,      // pointf
-    Thing_Camera_Up_Vector              = 183,      // list, enum class Up_Vector
-    Thing_Camera_Zoom                   = 83,       // double
+    Thing_Camera_Set_As_Active          = 170,      // bool
+    Thing_Camera_Speed                  = 171,      // pointf
+    Thing_Camera_Rotation               = 172,      // pointf
+    Thing_Camera_Up_Vector              = 173,      // list, enum class Up_Vector
+    Thing_Camera_Zoom                   = 174,      // double
 
     // Character Settings
-    Thing_Character_Camera_Position     = 170,      // pointf
-    Thing_Character_Camera_Rotation     = 165,      // pointf
-    Thing_Character_Camera_Tilt         = 172,      // double
-    Thing_Character_Camera_Up_Vector    = 182,      // list, enum class Up_Vector
-    Thing_Character_Camera_Zoom         = 173,      // double
-    Thing_Character_Camera_Lag          = 176,      // double
-    Thing_Character_Camera_Match_Angle  = 185,      // bool
+    Thing_Character_Camera_Position     = 175,      // pointf
+    Thing_Character_Camera_Rotation     = 176,      // pointf
+    Thing_Character_Camera_Tilt         = 177,      // double
+    Thing_Character_Camera_Up_Vector    = 178,      // list, enum class Up_Vector
+    Thing_Character_Camera_Zoom         = 179,      // double
+    Thing_Character_Camera_Lag          = 180,      // double
+    Thing_Character_Camera_Match_Angle  = 181,      // bool
 
     // Object Settings
-    Thing_Object_Physics_Type           = 84,       // list, enum class Body_Type (Static, Kinematic, Dynamic)
-    Thing_Object_Collide                = 85,       // bool
-    Thing_Object_Collision_Group        = 186,      // list, enum class Collision_Group (none, all, active players, players, enemies)
-    Thing_Object_Damage                 = 86,       // list, enum class Collision_Type (none, player, enemy, all)
+    Thing_Object_Physics_Type           = 182,      // list, enum class Body_Type (Static, Kinematic, Dynamic)
+    Thing_Object_Collide                = 183,      // bool
+    Thing_Object_Collision_Group        = 184,      // list, enum class Collision_Group (none, all, active players, players, enemies)
+    Thing_Object_Damage                 = 185,      // list, enum class Collision_Type (none, player, enemy, all)
 
     // Text Settings
-    Thing_Text_User_Text                = 87,       // string
+    Thing_Text_User_Text                = 186,      // string
 
 
     // ********** Effect Specific
     // Fire Settings
-    Thing_Fire_Shape                    = 88,       // list, enum class Fire_Mask
-    Thing_Fire_Color_1                  = 89,       // color
-    Thing_Fire_Color_2                  = 90,       // color
-    Thing_Fire_Color_Smoke              = 91,       // color
-    Thing_Fire_Intensity                = 92,       // percent
-    Thing_Fire_Smoothness               = 93,       // percent
-    Thing_Fire_Wavy                     = 94,       // percent
-    Thing_Fire_Speed                    = 95,       // ranged double, 1.0 to ?
+    Thing_Fire_Shape                    = 187,      // list, enum class Fire_Mask
+    Thing_Fire_Color_1                  = 188,      // color
+    Thing_Fire_Color_2                  = 189,      // color
+    Thing_Fire_Color_Smoke              = 190,      // color
+    Thing_Fire_Intensity                = 191,      // percent
+    Thing_Fire_Smoothness               = 192,      // percent
+    Thing_Fire_Wavy                     = 193,      // percent
+    Thing_Fire_Speed                    = 194,      // ranged double, 1.0 to ?
 
     // Fisheye Settings
-    Thing_Fisheye_Color                 = 96,       // color
-    Thing_Fisheye_Color_Tint            = 97,       // percent
-    Thing_Fisheye_Lens_Zoom             = 98,       // ranged double, 0 to 10
+    Thing_Fisheye_Color                 = 195,      // color
+    Thing_Fisheye_Color_Tint            = 196,      // percent
+    Thing_Fisheye_Lens_Zoom             = 197,      // ranged double, 0 to 10
 
     // Light Settings
-    Thing_Light_Type                    = 99,       // list, enum class Light_Type (Opaque, Glow)
-    Thing_Light_Color                   = 100,      // color
-    Thing_Light_Cone_Start              = 101,      // slider, 0 to 360
-    Thing_Light_Cone_End                = 102,      // slider, 0 to 360
-    Thing_Light_Intensity               = 103,      // percent, 0 to 100
-    Thing_Light_Blur                    = 104,      // percent, 0 to 100
-    Thing_Light_Draw_Shadows            = 105,      // bool
-    Thing_Light_Shadows                 = 106,      // percent, 0 to 100
-    Thing_Light_Pulse                   = 107,      // double
-    Thing_Light_Pulse_Speed             = 108,      // double
+    Thing_Light_Type                    = 198,      // list, enum class Light_Type (Opaque, Glow)
+    Thing_Light_Color                   = 199,      // color
+    Thing_Light_Cone_Start              = 200,      // slider, 0 to 360
+    Thing_Light_Cone_End                = 201,      // slider, 0 to 360
+    Thing_Light_Intensity               = 202,      // percent, 0 to 100
+    Thing_Light_Blur                    = 203,      // percent, 0 to 100
+    Thing_Light_Draw_Shadows            = 204,      // bool
+    Thing_Light_Shadows                 = 205,      // percent, 0 to 100
+    Thing_Light_Pulse                   = 206,      // double
+    Thing_Light_Pulse_Speed             = 207,      // double
 
     // Mirror Settings
-    Thing_Mirror_Start_Color            = 109,      // color
-    Thing_Mirror_End_Color              = 110,      // color
-    Thing_Mirror_Color_Tint             = 111,      // percent
-    Thing_Mirror_Blur                   = 112,      // double
-    Thing_Mirror_Blur_Stretch           = 113,      // double
-    Thing_Mirror_Scale                  = 114,      // ranged double, 0.001 to no limit
+    Thing_Mirror_Start_Color            = 208,      // color
+    Thing_Mirror_End_Color              = 209,      // color
+    Thing_Mirror_Color_Tint             = 210,      // percent
+    Thing_Mirror_Blur                   = 211,      // double
+    Thing_Mirror_Blur_Stretch           = 212,      // double
+    Thing_Mirror_Scale                  = 213,      // ranged double, 0.001 to no limit
 
     // Swirl Settings
-    Thing_Swirl_Start_Color             = 115,      // color
-    Thing_Swirl_Color_Tint              = 116,      // percent
-    Thing_Swirl_Angle                   = 117,      // double
+    Thing_Swirl_Start_Color             = 214,      // color
+    Thing_Swirl_Color_Tint              = 215,      // percent
+    Thing_Swirl_Angle                   = 216,      // double
 
     // Water Settings
-    Thing_Water_Texture                 = 118,      // list, enum class Water_Texture
-    Thing_Water_Start_Color             = 119,      // color
-    Thing_Water_End_Color               = 120,      // color
-    Thing_Water_Color_Tint              = 121,      // percent
-    Thing_Water_Reflection              = 122,      // percent
-    Thing_Water_Movement_Speed          = 123,      // double
-    Thing_Water_Ripple_Frequency        = 124,      // double
-    Thing_Water_Ripple_Speed            = 125,      // double
-    Thing_Water_Ripple_Amplitude        = 126,      // double
-    Thing_Water_Ripple_Stretch          = 127,      // double
-    Thing_Water_Wave_Frequency          = 128,      // double
-    Thing_Water_Wave_Speed              = 129,      // double
-    Thing_Water_Wave_Amplitude          = 130,      // double
+    Thing_Water_Texture                 = 217,      // list, enum class Water_Texture
+    Thing_Water_Start_Color             = 218,      // color
+    Thing_Water_End_Color               = 219,      // color
+    Thing_Water_Color_Tint              = 220,      // percent
+    Thing_Water_Reflection              = 221,      // percent
+    Thing_Water_Movement_Speed          = 222,      // double
+    Thing_Water_Ripple_Frequency        = 223,      // double
+    Thing_Water_Ripple_Speed            = 224,      // double
+    Thing_Water_Ripple_Amplitude        = 225,      // double
+    Thing_Water_Ripple_Stretch          = 226,      // double
+    Thing_Water_Wave_Frequency          = 227,      // double
+    Thing_Water_Wave_Speed              = 228,      // double
+    Thing_Water_Wave_Amplitude          = 229,      // double
 
     // Water Refract Settings
-    Thing_Water_Refract_Reflection      = 131,      // percent
-    Thing_Water_Refract_Underwater      = 132,      // percent
-    Thing_Water_Refract_Texture         = 133,      // percent
-    Thing_Water_Refract_Foam            = 134,      // percent
+    Thing_Water_Refract_Reflection      = 230,      // percent
+    Thing_Water_Refract_Underwater      = 231,      // percent
+    Thing_Water_Refract_Texture         = 232,      // percent
+    Thing_Water_Refract_Foam            = 233,      // percent
 
     // Water Foam Settings
-    Thing_Water_Surface_Color           = 135,      // color
-    Thing_Water_Surface_Tint            = 136,      // percent
-    Thing_Water_Surface_Height          = 137,      // double
-    Thing_Water_Surface_Is_Flat         = 138,      // bool
+    Thing_Water_Surface_Color           = 234,      // color
+    Thing_Water_Surface_Tint            = 235,      // percent
+    Thing_Water_Surface_Height          = 236,      // double
+    Thing_Water_Surface_Is_Flat         = 237,      // bool
 
 };
 

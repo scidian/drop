@@ -15,7 +15,7 @@
 #include "editor/debug.h"
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -155,7 +155,7 @@ void FormMain::updateInspectorEnabledProperties() {
 
 DrProject*  FormMain::currentProject()                         { return m_project; }
 double      FormMain::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
-QPointF     FormMain::currentViewGridScale()                   { return QPointF(viewEditor->currentGridScale().x, viewEditor->currentGridScale().y); }
+QPointF     FormMain::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
 View_Mode   FormMain::currentViewMode()                        { return viewEditor->currentViewMode(); }
 double      FormMain::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
 QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
@@ -163,10 +163,10 @@ QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEdit
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
-void FormMain::viewCenterOnPoint(DrPointF center_point) {
-    viewEditor->centerOn(QPointF(center_point.x, center_point.y));
+void FormMain::viewCenterOnPoint(QPointF center_point) {
+    viewEditor->centerOn(center_point);
     QTimer::singleShot(0, this, [this, center_point] {
-        this->centerViewTimer(QPointF(center_point.x, center_point.y));
+        this->centerViewTimer(center_point);
         viewEditor->setHasShownAScene(true);
     } );
 }

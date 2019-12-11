@@ -8,6 +8,7 @@
 #include <QDockWidget>
 
 #include "editor/forms/form_animation.h"
+#include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/view/editor_view.h"
@@ -43,13 +44,13 @@ void FormAnimation::updateItemSelection(Editor_Widgets selected_from, QList<long
 
 DrProject*  FormAnimation::currentProject()                         { return m_project; }
 double      FormAnimation::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
-QPointF     FormAnimation::currentViewGridScale()                   { return QPointF(viewEditor->currentGridScale().x, viewEditor->currentGridScale().y); }
+QPointF     FormAnimation::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
 View_Mode   FormAnimation::currentViewMode()                        { return viewEditor->currentViewMode(); }
 double      FormAnimation::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
 
 QPointF     FormAnimation::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
 
-void        FormAnimation::viewCenterOnPoint(DrPointF center_point) { viewEditor->centerOn(QPointF(center_point.x, center_point.y)); }
+void        FormAnimation::viewCenterOnPoint(QPointF center_point)  { viewEditor->centerOn(center_point); }
 void        FormAnimation::viewZoomToScale(double zoom_scale)       { viewEditor->zoomToScale(zoom_scale); }
 
 // Call to change the Advisor

@@ -11,7 +11,6 @@
 #include <QColor>
 #include <QOpenGLTexture>
 #include <QPixmap>
-#include <QVector>
 #include <QVector2D>
 #include <QVector3D>
 

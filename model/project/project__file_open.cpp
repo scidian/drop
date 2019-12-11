@@ -12,7 +12,7 @@
 #include <QStandardPaths>
 #include <QVariantMap>
 
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"

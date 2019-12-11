@@ -15,7 +15,7 @@
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
-#include "editor/helper_editor.h"
+#include "editor/helper_library.h"
 
 
 constexpr int c_text_box_height = 35;
