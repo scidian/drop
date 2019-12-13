@@ -63,7 +63,7 @@ float random (vec2 xy) {
 //####################################################################################
 //##    Main Shader Function
 //####################################################################################
-void main(void) {
+void main( void ) {
 
     // User Inputs
     highp float shrink =      u_light_diameter / u_light_fitted;

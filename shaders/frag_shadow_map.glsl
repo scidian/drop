@@ -44,7 +44,7 @@ float random (vec2 xy) {
 //####################################################################################
 //##    Main Shader Function
 //####################################################################################
-void main(void) {        
+void main( void ) {
 
     highp float distance =     1.0;
     highp float rays =         u_ray_count;             // Width of 1D Shadow Map (i.e. number of rays to send out)

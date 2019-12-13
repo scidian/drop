@@ -127,13 +127,13 @@ QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage, double &hal
     QLineF frame_left(      game_frame.topLeft(),     game_frame.bottomLeft()   );
     QLineF frame_right(     game_frame.topRight(),    game_frame.bottomRight()  );
     QPointF border_intersect;
-    if (       line_down.intersect(frame_top, &border_intersect) ==     QLineF::BoundedIntersection) {
+    if (       line_down.intersects(frame_top, &border_intersect) ==    QLineF::BoundedIntersection) {
         half_height = QLineF(QPointF(0, 0), border_intersect).length();
-    } else if (line_down.intersect(frame_bottom, &border_intersect) ==  QLineF::BoundedIntersection) {
+    } else if (line_down.intersects(frame_bottom, &border_intersect) == QLineF::BoundedIntersection) {
         half_height = QLineF(QPointF(0, 0), border_intersect).length();
-    } else if (line_down.intersect(frame_left, &border_intersect) ==    QLineF::BoundedIntersection) {
+    } else if (line_down.intersects(frame_left, &border_intersect) ==   QLineF::BoundedIntersection) {
         half_height = QLineF(QPointF(0, 0), border_intersect).length();
-    } else if (line_down.intersect(frame_right, &border_intersect) ==   QLineF::BoundedIntersection) {
+    } else if (line_down.intersects(frame_right, &border_intersect) ==  QLineF::BoundedIntersection) {
         half_height = QLineF(QPointF(0, 0), border_intersect).length();
     }
 

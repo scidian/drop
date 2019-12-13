@@ -8,10 +8,10 @@
 #ifndef EDITOR_VIEW_H
 #define EDITOR_VIEW_H
 
+#include <QElapsedTimer>
 #include <QGraphicsView>
 #include <QMap>
 #include <QRubberBand>
-#include <QTime>
 
 #include "editor/constants_editor.h"
 #include "editor/enums_editor.h"
@@ -78,10 +78,10 @@ private:
     const QPixmap p_rotate = QPixmap(":/assets/gui_misc/handle_rotate.png");
 
     // Display Variables
-    int          m_zoom = 200; // (50%)                             // Zoom level of current view, 200 is 50% - 250 is 100%
-    double       m_zoom_scale = 0.5;                                // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
-    QTime        m_zoom_timer;                                      // Used to auto hide zoom tool tip after time has passed
-    int          m_rotate = 0;                              // NOT IMPLEMENTED: Rotation of current view
+    int             m_zoom = 200; // (50%)                          // Zoom level of current view, 200 is 50% - 250 is 100%
+    double          m_zoom_scale = 0.5;                             // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    QElapsedTimer   m_zoom_timer;                                   // Used to auto hide zoom tool tip after time has passed
+    int             m_rotate = 0;                               // NOT IMPLEMENTED: Rotation of current view
 
     // Grid Drawing Variables
     QVector<QPointF> m_grid_points;                                 // Holds latest calculated grid points
@@ -142,7 +142,7 @@ private:
     QList<QGraphicsItem*>           m_items_keep;                   // Stores list of items to keep on top of rubber band items (with control key)
 
     // View_Mode::Translating Variables
-    QTime                           m_origin_timer;                 // Tracks time since mouse down to help buffer movement while selecting
+    QElapsedTimer                   m_origin_timer;                 // Tracks time since mouse down to help buffer movement while selecting
     bool                            m_allow_movement = false;       // Used along with m_origin_timer to help buffer movement while selecting
     bool                            m_hide_bounding = false;        // True when moving items to stop bounding box from updating and painting
 
@@ -164,7 +164,7 @@ private:
     // !!!!! #DEBUG: Debugging Variables
     long                            m_debug_fps = 0;         // #DEBUG
     long                            m_debug_fps_last;        // #DEBUG
-    QTime                           m_debug_timer;           // #DEBUG
+    QElapsedTimer                   m_debug_timer;           // #DEBUG
 
 
 

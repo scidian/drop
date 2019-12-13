@@ -8,6 +8,7 @@
 #ifndef EDITOR_SCENE_H
 #define EDITOR_SCENE_H
 
+#include <QElapsedTimer>
 #include <QGraphicsScene>
 #include <QMutex>
 #include <QTime>
@@ -54,8 +55,8 @@ private:
     QPointF                 m_move_adjustment;              // Amount to move items by during translation
 
     // Timers for holding keys down
-    QMap<Qt::Key, QTime>    m_key_timers;
-    QMap<Qt::Key, bool>     m_key_down;
+    QMap<Qt::Key, QElapsedTimer>    m_key_timers;
+    QMap<Qt::Key, bool>             m_key_down;
 
 
 public:

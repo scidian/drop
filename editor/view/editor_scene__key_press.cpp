@@ -53,7 +53,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
     // ***** Start tracking time key has been pressed
     Qt::Key key_pressed = static_cast<Qt::Key>(event->key());
     if (m_key_down[key_pressed] == false) {
-        m_key_timers[key_pressed] = QTime();
+        m_key_timers[key_pressed] = QElapsedTimer();
         m_key_timers[key_pressed].restart();
         m_key_down[key_pressed] = true;
     }
@@ -117,7 +117,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         // Get current Stage selected items as list of Things
         DrStage *stage = m_current_stage;
         if (stage == nullptr) return;
-        std::list<DrThing*> selected_things = getSelectionItemsAsThings().toStdList();
+        std::list<DrThing*> selected_things = { getSelectionItemsAsThings().begin(), getSelectionItemsAsThings().end() };       // Convert toStdList()
 
         // ***** Send to Front
         if (key_pressed == Qt::Key_Greater) {
