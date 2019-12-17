@@ -3,6 +3,7 @@
 //
 //  File:
 //
+//      !!!!! Updating calls to native glCalls, commenting Qt calls as "#NO_QT" !!!!!
 //
 //
 #include <QSurfaceFormat>

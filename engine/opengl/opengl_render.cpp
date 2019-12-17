@@ -47,7 +47,15 @@ void DrOpenGL::paintGL() {
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
     drawSpace();                                                                    // Render cpSpace Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
-    QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
+
+    // #NO_QT: As original QOpenGlWidget calls
+    ///QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
+    // Standard OpenGL Calls
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_render_fbo->handle());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_texture_fbo->handle());
+    glBlitFramebuffer(0, 0, m_render_fbo->width(), m_render_fbo->height(), 0, 0, m_render_fbo->width(), m_render_fbo->height(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+
 
     // ***** Bind default Qt FrameBuffer, Clear and Render FBO to screen buffer as a textured quad, with post processing available
     QOpenGLFramebufferObject::bindDefault();

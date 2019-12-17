@@ -4,14 +4,15 @@
 ##           by Scidian Software
 ##
 ############################
-TARGET =    Drop
+TARGET   =  Drop
 TEMPLATE =  app
-CONFIG +=   c++11
 
-##  C Make Flags
+CONFIG  +=  c++11
+
+##  C Compiler Flags
 QMAKE_CFLAGS    += -std=c99
 
-##  C++ Make Flags
+##  C++ Compiler Flags
 QMAKE_CXXFLAGS  += -Wno-sign-conversion
 
 
@@ -22,23 +23,16 @@ QMAKE_CXXFLAGS  += -Wno-sign-conversion
 CONFIG  += drop_editor
 
 CONFIG(drop_editor){
-    QT              +=  core gui
+    QT  +=  core gui
+    QT  += widgets
 
-    greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-    # The following define makes your compiler show warnings if you use
-    # any feature of Qt which has been marked as deprecated (the exact warnings
-    # depend on your compiler). Please consult the documentation of the
-    # deprecated API in order to know how to port your code away from it.
+    # Show warnings if using any feature of Qt which has been marked as deprecated
     DEFINES         +=  QT_DEPRECATED_WARNINGS
 
-    # You can also make your code fail to compile if you use deprecated APIs.
-    # In order to do so, uncomment the following line.
-    # You can also select to disable deprecated APIs only up to a certain version of Qt.
+    # Fail to compile if using deprecated APIs.
+    # Also possible to disable deprecated APIs only up to a certain version of Qt.
     #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 }
-
-
 
 
 # Default rules for deployment.
@@ -46,17 +40,22 @@ qnx:  target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+
+##### Resource Files
 RESOURCES += \
     images.qrc \
     shaders.qrc
 
+
+##### Other Included Files
 DISTFILES += \
     drop_icon.ico \
     drop_icons.icns
 
+
+##### Icon Files for Project
 ICON = drop_icons.icns
 RC_ICONS = drop_icon.ico
-
 
 
 ##### Additional PATHs
