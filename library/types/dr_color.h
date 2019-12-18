@@ -11,12 +11,34 @@
 
 #include <string>
 
-// Struct for Hue, Saturation, Value
+
+//####################################################################################
+//##    Easy Colors
+//############################
+namespace Dr {
+    enum Colors {
+        transparent =   0x00000000,
+        white =         0xFFFFFFFF,
+        black =         0xFF000000,
+        red =           0xFFFF0000,
+        green =         0xFF00FF00,
+        blue =          0xFF0000FF,
+        magenta =       0xFFFF00FF,
+        cyan =          0xFF00FFFF,
+        yellow =        0xFFFFFF00,
+    };
+}
+
+
+//####################################################################################
+//##    Struct for Hue, Saturation, Value
+//############################
 struct DrHsv {
     int hue =           0;     // 0 to 36000
     int saturation =    0;     // 0 to 255
     int value =         0;     // 0 to 255
 };
+
 
 //####################################################################################
 //##    DrColor
@@ -78,24 +100,6 @@ public:
     bool        operator==  (const DrColor &other) const;
 
 };
-
-
-//####################################################################################
-//##    Easy Colors
-//############################
-namespace Dr {
-    enum Colors {
-        transparent =   0x00000000,
-        white =         0xFFFFFFFF,
-        black =         0xFF000000,
-        red =           0xFFFF0000,
-        green =         0xFF00FF00,
-        blue =          0xFF0000FF,
-        magenta =       0xFFFF00FF,
-        cyan =          0xFF00FFFF,
-        yellow =        0xFFFFFF00,
-    };
-}
 
 
 #endif // DR_COLOR_H

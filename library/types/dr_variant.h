@@ -10,6 +10,7 @@
 
 #include "boost/any.hpp"
 #include "library/types/dr_color.h"
+#include "library/types/dr_image.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
 #include "library/types/dr_rect.h"
@@ -20,7 +21,7 @@
 
 //####################################################################################
 //##    DrVariant
-//##        Holds anything
+//##        Holds anything, mostly wrapper for boost::any
 //############################
 class DrVariant
 {
@@ -54,6 +55,7 @@ public:
     std::vector<DrVariant>  toVector();
 
     DrColor                 toColor();
+    DrImage                 toImage();
     DrPoint                 toPoint();
     DrPointF                toPointF();
     DrRect                  toRect();

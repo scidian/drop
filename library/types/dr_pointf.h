@@ -16,7 +16,7 @@ class DrPoint;
 
 //####################################################################################
 //##    DrPointF
-//##        Useful 2D Point Class, adapted from HullFinder
+//##        Useful 2D double Point Class, adapted from HullFinder
 //############################
 class DrPointF
 {

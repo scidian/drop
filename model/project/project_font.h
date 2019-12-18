@@ -30,7 +30,7 @@ private:
     // Local Variables
     QPixmap                 m_pixmap;                       // Stored font pixmap
     std::map<char, DrRect>  m_positions;                    // Holds rects for each character in the pixmap
-    std::map<char, QSize>   m_spacing;                      // Horizontal and vertical spacing for each character
+    std::map<char, QPoint>  m_spacing;                      // Horizontal and vertical spacing for each character
 
     std::string             m_name;                         // Name of this font within the Project
 
@@ -66,7 +66,7 @@ public:
     QPixmap             getPixmap()                     { return m_pixmap; }
 
     DrRect              getCharRect(char character)     { return m_positions[character]; }
-    QSize               getCharSpacing(char character)  { return m_spacing[character]; }
+    QPoint              getCharSpacing(char character)  { return m_spacing[character]; }
 
     std::string         getPropertyFontFamily()         { return p_font_family; }
     int                 getPropertyFontSize()           { return p_font_size; }

@@ -144,16 +144,28 @@ QString StringFromBool(bool boolean)        { return boolean? "True" : "False"; 
 //##    DrLibrary Conversion
 //##
 //####################################################################################
-DrPoint     FromQPoint(QPoint point)        { return DrPoint(point.x(), point.y()); }
-DrPointF    FromQPointF(QPointF pointf)     { return DrPointF(pointf.x(), pointf.y()); }
-QPoint      ToQPoint(DrPoint point)         { return QPoint(point.x, point.y); }
-QPointF     ToQPointF(DrPointF pointf)      { return QPointF(pointf.x, pointf.y); }
+DrColor     FromQColor(QColor &color)       { return DrColor(color.red(), color.green(), color.blue(), color.alpha()); }
+DrImage     FromQImage(QImage &image)       {
+    DrImage dr_image;
+    dr_image.loadFromMemory(image.constBits(), static_cast<int>(image.sizeInBytes()));
+    return dr_image;
+}
+DrPoint     FromQPoint(QPoint &point)       { return DrPoint(point.x(), point.y()); }
+DrPointF    FromQPointF(QPointF &pointf)    { return DrPointF(pointf.x(), pointf.y()); }
 
-DrColor     FromQColor(QColor color)        { return DrColor(color.red(), color.green(), color.blue(), color.alpha()); }
-QColor      ToQColor(DrColor color)         { return QColor(color.red(), color.green(), color.blue(), color.alpha()); }
+QColor      ToQColor(DrColor &color)        { return QColor(color.red(), color.green(), color.blue(), color.alpha()); }
+QImage      ToQImage(DrImage &image)        { return QImage(image.data.data(), image.width, image.height, QImage::Format::Format_ARGB32); }
+QPoint      ToQPoint(DrPoint &point)        { return QPoint(point.x, point.y); }
+QPointF     ToQPointF(DrPointF &pointf)     { return QPointF(pointf.x, pointf.y); }
 
+
+//####################################################################################
+//##
+//##    Qt Comparison
+//##
+//####################################################################################
 // Compares 2 colors, returns true if they are the same
-bool SameQColor(QColor color1, QColor color2, double tolerance) {
+bool SameQColor(QColor &color1, QColor &color2, double tolerance) {
     return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
              Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
              Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&

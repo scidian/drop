@@ -244,6 +244,7 @@ SOURCES += \
     library/dr_string.cpp \
     library/dr_time.cpp \
     library/types/dr_color.cpp \
+    library/types/dr_image.cpp \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
     library/types/dr_rect.cpp \
@@ -941,6 +942,7 @@ HEADERS += \
     library/dr_string.h \
     library/dr_time.h \
     library/types/dr_color.h \
+    library/types/dr_image.h \
     library/types/dr_point.h \
     library/types/dr_pointf.h \
     library/types/dr_rect.h \

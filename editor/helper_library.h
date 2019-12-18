@@ -17,6 +17,7 @@
 
 // Forward Declarations
 class DrColor;
+class DrImage;
 class DrPoint;
 class DrPointF;
 class DrVariant;
@@ -52,14 +53,19 @@ QString     StringFromBool(bool boolean);
 
 
 // DrLibrary Conversion
-DrPoint     FromQPoint(QPoint point);
-DrPointF    FromQPointF(QPointF pointf);
-QPoint      ToQPoint(DrPoint point);
-QPointF     ToQPointF(DrPointF pointf);
+DrColor     FromQColor(QColor &color);
+DrImage     FromQImage(QImage &image);
+DrPoint     FromQPoint(QPoint &point);
+DrPointF    FromQPointF(QPointF &pointf);
 
-DrColor     FromQColor(QColor color);
-QColor      ToQColor(DrColor color);
-bool        SameQColor(QColor color1, QColor color2, double tolerance);
+QColor      ToQColor(DrColor &color);
+QImage      ToQImage(DrImage &image);
+QPoint      ToQPoint(DrPoint &point);
+QPointF     ToQPointF(DrPointF &pointf);
+
+
+// Qt Comparison
+bool        SameQColor(QColor &color1, QColor &color2, double tolerance);
 
 
 // User Interaction

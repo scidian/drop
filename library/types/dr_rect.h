@@ -39,6 +39,9 @@ public:
     DrRectF         toRectF();
     glm::vec4       toGlmVec4();
 
+    // Operator Overloads
+    DrRectF&        operator=   (const DrRectF &other);
+
     // Getters
     DrPoint         topLeft();
     DrPoint         topRight();
