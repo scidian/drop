@@ -7,7 +7,6 @@
 //
 #include <QtMath>
 #include <QDateTime>
-#include <QDebug>
 #include <QMatrix4x4>
 #include <QPainter>
 #include <QPixmap>

@@ -8,6 +8,8 @@
 #ifndef ENGINE_MESH_H
 #define ENGINE_MESH_H
 
+#include "3rd_party/glm/vec2.hpp"
+#include "3rd_party/glm/vec3.hpp"
 #include "engine/globals_engine.h"
 #include "library/types/dr_vec3.h"
 

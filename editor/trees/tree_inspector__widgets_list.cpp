@@ -68,10 +68,10 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Square")
                 << tr("Triangle");
     } else if   (property_key == static_cast<int>(Properties::Thing_3D_Type)) {
-        options << tr("Extruded")
+        options << tr("None")
+                << tr("Extruded")
                 << tr("Wrapped Cube")
-                << tr("Pyramid")
-                << tr("None");
+                << tr("Pyramid");
     } else if   (property_key == static_cast<int>(Properties::Asset_Collision_One_Way_Type)) {
         options << tr("None")
                 << tr("Pass Through")

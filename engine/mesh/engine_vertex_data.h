@@ -77,7 +77,7 @@ public:
                             const QImage &black_and_white, bool wireframe, Trianglulation type);
 
     // Building Functions
-    void    add(const QVector3D &vertex, const QVector3D &normal, const QVector2D &text_coord, Triangle_Point point_number);
+    void    add(const glm::vec3 &vertex, const glm::vec3 &normal, const glm::vec2 &text_coord, Triangle_Point point_number);
     void    extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
                     GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2, int steps = 1);
     void    cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
