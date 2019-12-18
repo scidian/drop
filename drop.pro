@@ -878,6 +878,9 @@ HEADERS += \
     3rd_party/hull_finder.h \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
+    3rd_party/stb/stb_image.h \
+    3rd_party/stb/stb_image_resize.h \
+    3rd_party/stb/stb_image_write.h \
     editor/colors/colors.h \
     editor/constants_editor.h \
     editor/debug.h \
