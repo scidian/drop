@@ -8,6 +8,9 @@
 #include <QVector3D>
 #include <QDebug>
 
+#include "glm/ext.hpp"
+#include "glm/glm.hpp"
+
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
@@ -37,20 +40,31 @@ QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMa
 QPointF DrOpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))); }
 QPointF DrOpenGL::mapToScreen(float  x, float  y, float  z) { return mapToScreen( QVector3D(x, y, z )); }
 QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
-    QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos, y_pos, z_pos;
     x_pos = point3D.x();
     y_pos = point3D.y();
     z_pos = point3D.z();
-    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
-    return QPointF( static_cast<double>(vec.x()),  static_cast<double>((height() * devicePixelRatio()) - vec.y()) );
+
+    // Old Qt Way
+    ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
+    ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
+
+    // Better Glm Way - No Qt
+    glm::vec4 view(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    glm::vec3 object(x_pos, y_pos, z_pos);
+    glm::mat4 model(glm::make_mat4(m_view.data()) );
+    glm::mat4 proj( glm::make_mat4(m_projection.data()) );
+    glm::vec3 v = glm::project(object, model, proj, view);
+
+    return QPointF( static_cast<double>(v.x),  static_cast<double>((height() * devicePixelRatio()) - v.y) );
 }
 
 QVector3D DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
 QVector3D DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
 QVector3D DrOpenGL::mapFromScreen(QPointF point) {
-    QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos = static_cast<float>(             point.x()  * devicePixelRatio() );
     float y_pos = static_cast<float>( (height() - point.y()) * devicePixelRatio() );
@@ -84,18 +98,28 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
     // !!!!! #NOTE: This won't work too great if z plane 0 is not in view
     // **********
 
-    // Unproject at near and far plane
-    QVector3D near_plane, far_plane;
-    near_plane = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_view, m_projection, viewport);
-    far_plane =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_view, m_projection, viewport);
+    // ***** Unproject at near and far plane
+    // Old Qt Way
+    ///QVector3D near_plane, far_plane;
+    ///near_plane = QVector3D( x_pos, y_pos, 0.0f ).unproject( m_view, m_projection, viewport);
+    ///far_plane =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_view, m_projection, viewport);
+
+    // Better Glm Way - No Qt
+    glm::vec4 view(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    glm::vec3 window_near(x_pos, y_pos, 0.0f);
+    glm::vec3 window_far( x_pos, y_pos, 1.0f);
+    glm::mat4 model(glm::make_mat4(m_view.data()) );
+    glm::mat4 proj( glm::make_mat4(m_projection.data()) );
+    glm::vec3 near_plane = glm::unProject(window_near, model, proj, view);
+    glm::vec3 far_plane =  glm::unProject(window_far,  model, proj, view);
 
     // Find distance to z plane 0 as a percentage, and interpolate between the two near and far plane mouse points
-    float z_total = abs(near_plane.z()) + abs(far_plane.z());
-    float z_percent = abs(near_plane.z() / z_total);
-    float nx = near_plane.x() + (z_percent * (far_plane.x() - near_plane.x()));
-    float ny = near_plane.y() + (z_percent * (far_plane.y() - near_plane.y()));
-    vec = QVector3D(nx, ny, 0);
+    float z_total = abs(near_plane.z) + abs(far_plane.z);
+    float z_percent = abs(near_plane.z / z_total);
+    float nx = near_plane.x + (z_percent * (far_plane.x - near_plane.x));
+    float ny = near_plane.y + (z_percent * (far_plane.y - near_plane.y));
 
+    vec = QVector3D(nx, ny, 0);
     ///qDebug() << "Near: " << near << "  -  Far: " << far << "  -  Vec: " << vec;
 
     return vec;

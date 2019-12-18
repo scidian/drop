@@ -1,7 +1,7 @@
 //
 // Description:     Polyline Simplification, 2D implementation of the Ramer-Douglas-Peucker algorithm
 // Author:          Tim Sheerman-Chase
-// License:         Released under CC0
+// License:         CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
 // Source(s):       https://gist.github.com/TimSC/0813573d77734bcb6f2cd2cf6cc7aa51
 //                  https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
 //
