@@ -148,14 +148,13 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 
             case Property_Type::Point3D: {
                 QDoubleSpinBox *doublespin = dynamic_cast<QDoubleSpinBox*>(widget);
-                std::vector<DrVariant> point3D = prop->getValue().toVector();
-                QVector3D prop_value = QVector3D(point3D[0].toFloat(), point3D[1].toFloat(), point3D[2].toFloat());
+                DrVec3 point3D = prop->getValue().toVec3();
                 if (doublespin->property(User_Property::Order).toInt() == 0)
-                    doublespin->setValue( static_cast<double>(prop_value.x()) );
+                    doublespin->setValue( static_cast<double>(point3D.x) );
                 else if (doublespin->property(User_Property::Order).toInt() == 1)
-                    doublespin->setValue( static_cast<double>(prop_value.y()) );
-                else
-                    doublespin->setValue( static_cast<double>(prop_value.z()) );
+                    doublespin->setValue( static_cast<double>(point3D.y) );
+                else if (doublespin->property(User_Property::Order).toInt() == 2)
+                    doublespin->setValue( static_cast<double>(point3D.z) );
                 break;
             }
 
@@ -168,7 +167,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 
             case Property_Type::Color: {
                 QPushButton *pushbutton = dynamic_cast<QPushButton*>(widget);
-                this->updateColorButton( pushbutton, QColor::fromRgba(prop->getValue().toUInt()) );
+                this->updateColorButton( pushbutton, QColor::fromRgba(prop->getValue().toColor().rgba()) );
                 break;
             }
 
@@ -287,15 +286,14 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_
                 break;
 
             case Property_Type::Point3D: {
-                std::vector<DrVariant> point3D = property->getValue().toVector();
-                QVector3D point = QVector3D(point3D[0].toFloat(), point3D[1].toFloat(), point3D[2].toFloat());
+                DrVec3 point3D = property->getValue().toVec3();
                 if (sub_order == 0)
-                    point.setX( static_cast<float>(new_value.toDouble()) );
+                    point3D.x = new_value.toFloat();
                 else if (sub_order == 1)
-                    point.setY( static_cast<float>(new_value.toDouble()) );
-                else
-                    point.setZ( static_cast<float>(new_value.toDouble()) );
-                property->setValue( std::vector<DrVariant>({ point.x(), point.y(), point.z() }) );
+                    point3D.y = new_value.toFloat();
+                else if (sub_order == 2)
+                    point3D.z = new_value.toFloat();
+                property->setValue( point3D );
                 break;
             }
 

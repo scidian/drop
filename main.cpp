@@ -48,15 +48,21 @@
 //
 //
 //  Large Libraries:
-//      Boost -                     Only using boost::any for now
-//      Chipmunk -                  Physics, very good. Eventually look into Bullet for 3D
-//      Qt -                        Eventually for Editor ONLY!!!!!
+//      Boost -                     Boost   Only using boost::any for now
+//      Chipmunk -                  MIT     Physics, very good. Eventually look into Bullet for 3D
+//      Glm -                       MIT     Amazing vector / matrix math Library
+//      Qt -                        LGPL    Eventually for Editor ONLY!!!!!
 //
 //  Small Static Libraries
-//      Delaunator -                Delaunay Triangulation of 2D Points, creates list of triangles connecting set of points
-//      Hull Finder -               Attempts to find concave hull from a collection of Points
-//      Poly Partition -            Polygon Partioning and Triangulation
-//      Polyline Simplification -   D implementation of the Ramer-Douglas-Peucker algorithm for smoothing lines in a set of points
+//      Delaunator -                MIT     Delaunay Triangulation of 2D Points, creates list of triangles connecting set of points
+//      Hull Finder -               WTF     Attempts to find concave hull from a collection of Points
+//      Poly Partition -            MIT     Polygon Partioning and Triangulation
+//      Polyline Simplification -   CC0     Implementation of the Ramer-Douglas-Peucker algorithm for smoothing lines in a set of points
+//      Simplex Noise (glsl)        MIT     For Fire Shader
+//
+//  Assets
+//      Font:   Aileron             CC0     Main Editor Font
+//
 //
 //
 //

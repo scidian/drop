@@ -11,6 +11,7 @@
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "model/enums_model_types.h"
@@ -22,7 +23,7 @@
 void DrView::paintItemOutlines(QPainter &painter) {
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
-    QBrush pen_brush(Dr::GetColor(Window_Colors::Icon_Light));
+    QBrush pen_brush( Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) );
     painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
@@ -60,7 +61,7 @@ void DrView::paintItemOutlines(QPainter &painter) {
 void DrView::paintBoundingBox(QPainter &painter) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 1));
 
     // ***** Map item bounding box to screen so we can draw it
     QPolygonF polygon = my_scene->getSelectionBox();
@@ -80,7 +81,7 @@ void DrView::paintBoundingBox(QPainter &painter) {
 //##    PAINT: Paints handles onto view
 //####################################################################################
 void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
-    painter.setBrush(Dr::GetColor(Window_Colors::Icon_Light));
+    painter.setBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)));
     painter.resetTransform();
 
     QList<Position_Flags> handles {
@@ -134,7 +135,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::Antialiasing, false);
 
-    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 1));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 1));
 
     // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
     if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
@@ -213,9 +214,9 @@ void DrView::paintCrossHairs(QPainter &painter, QPoint center) {
     lines.append( t.map (line) );
 
     painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(Dr::GetColor(Window_Colors::Text_Light), 4));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 4));
     painter.drawLines(lines);
-    painter.setPen(QPen(Dr::GetColor(Window_Colors::Shadow), 2));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)), 2));
     painter.drawLines(lines);
 
 }

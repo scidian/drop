@@ -11,9 +11,8 @@
 #include <QPixmap>
 
 #include "engine/enums_engine.h"
-
-// Forward Declarations
-class DrPointF;
+#include "library/types/dr_color.h"
+#include "library/types/dr_pointf.h"
 
 // Image Constants
 const int   c_image_size =   600;           // Size of graphic to use for effects (water, mirror, fire, fisheye, swirl, etc.)
@@ -63,7 +62,7 @@ namespace DrImaging {
 
 
     // ***** Misc Image Functions
-    QColor                  AverageColor(const QPixmap &pixmap, bool screen_shot = false);
+    DrColor                 AverageColor(const QPixmap &pixmap, bool screen_shot = false);
     std::vector<QRgb*>      GetScanLines(QImage &image);
     float*                  ImageBitsAsFloat(const QImage &from_image);
     std::vector<DrPointF>   OutlinePointList(const QImage &from_image);

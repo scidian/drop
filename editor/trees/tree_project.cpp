@@ -94,7 +94,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
 
 
     // ********** Go through Project and add items as necessary
-    QColor icon_color = Dr::GetColor(Window_Colors::Icon_Dark);
+    QColor icon_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark));
     QImage icon_image;
 
     for (auto world_pair: getParentProject()->getWorldMap()) {

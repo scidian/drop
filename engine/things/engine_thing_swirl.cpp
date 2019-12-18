@@ -13,7 +13,7 @@
 //####################################################################################
 DrEngineSwirl::DrEngineSwirl(DrEngineWorld *world, long unique_key, long original_key,
                              double x, double y, double z, double angle, float opacity, DrPointF size,
-                             QColor color, float tint, float rotation_amount) :
+                             DrColor color, float tint, float rotation_amount) :
     DrEngineThing(world, unique_key, original_key) {
 
     this->setAngle(angle);

@@ -111,7 +111,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentAppearance(true);
             break;
         case DrThingType::Light:
-            addComponentSettingsLight(Qt::white);
+            addComponentSettingsLight(Dr::white);
             addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Light);
             addComponentLayering(z);
             setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);

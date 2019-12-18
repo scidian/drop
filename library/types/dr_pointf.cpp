@@ -28,7 +28,7 @@ DrPointF::DrPointF(double x_, double y_) {
 //####################################################################################
 //##    Overload Operators
 //####################################################################################
-DrPointF & DrPointF::operator=(const DrPointF &other) {
+DrPointF& DrPointF::operator=(const DrPointF &other) {
     x = other.x;
     y = other.y;
     return *this;

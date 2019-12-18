@@ -10,6 +10,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_view.h"
@@ -69,11 +70,11 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     } else {
         if (Dr::FuzzyCompare(painter->opacity(), 1.0) == false) painter->setOpacity(1);
 
-        QPen comestic_pen = QPen(Dr::GetColor(Window_Colors::Icon_Dark), 0, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin );
+        QPen comestic_pen = QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark)), 0, Qt::PenStyle::SolidLine, Qt::PenCapStyle::FlatCap, Qt::PenJoinStyle::MiterJoin );
         comestic_pen.setCosmetic(true);
         painter->setPen( comestic_pen );
 
-        QColor brush_color = Dr::GetColor(Window_Colors::Icon_Dark);
+        QColor brush_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark));
         brush_color.setAlpha(96);
         QBrush scaled_brush = QBrush(brush_color, Qt::BrushStyle::DiagCrossPattern );   //Qt::BrushStyle::SolidPattern);
         scaled_brush.setTransform(QTransform(painter->worldTransform().inverted()));

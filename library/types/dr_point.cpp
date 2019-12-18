@@ -38,7 +38,7 @@ DrPoint::DrPoint(double x_, double y_) {
 //####################################################################################
 //##    Overload Operators
 //####################################################################################
-DrPoint & DrPoint::operator=(const DrPoint &other) {
+DrPoint& DrPoint::operator=(const DrPoint &other) {
     x = other.x;
     y = other.y;
     return *this;

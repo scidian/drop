@@ -396,7 +396,7 @@ QList<QTreeWidgetItem*> TreeAssets::getListOfTopLevelItems() {
 //####################################################################################
 AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type) {
     QString name, icon;
-    QList<QString> info;
+    std::vector<QString> info;
 
     switch (asset_type) {
         case Asset_Category::Character:     name = "  Characters";  icon = "comp_character.png";    info = Advisor_Info::Asset_Character;       break;
@@ -421,8 +421,8 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
 
     // ***** Create Category Button
     QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
-    AssetCategoryButton *button = new AssetCategoryButton(name, Dr::GetColor(Window_Colors::Text),
-                                                                Dr::GetColor(Window_Colors::Text_Dark), nullptr, item);
+    AssetCategoryButton *button = new AssetCategoryButton(name, Dr::ToQColor(Dr::GetColor(Window_Colors::Text)),
+                                                                Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), nullptr, item);
     button->setObjectName("buttonAssetCategory");
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);                                              // Created as false, becomes true if we add an Asset to the category
@@ -430,7 +430,7 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
 
     // ***** Grab Icon to use, colorize it to the current palette
     QPixmap text_icon( ":/assets/inspector_icons/" + icon );
-    text_icon = QPixmap::fromImage( DrImaging::ColorizeImage(text_icon.toImage(), Dr::GetColor(Window_Colors::Text)) );
+    text_icon = QPixmap::fromImage( DrImaging::ColorizeImage(text_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
 
     // Alternate method of colorizing
     ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
@@ -438,8 +438,8 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
     ///text_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(text_icon.toImage(), colorize, 0) );
 
     QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
-    drop_shadow->setColor( Dr::GetColor(Window_Colors::Shadow) );
-    drop_shadow->setColor( Dr::GetColor(Window_Colors::Button_Light).darker(200) );
+    drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
+    drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light)).darker(200) );
     drop_shadow->setOffset( -4, 4 );
     text_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(text_icon.toImage(), drop_shadow, 0) );
 

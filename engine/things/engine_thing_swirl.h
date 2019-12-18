@@ -20,14 +20,14 @@ class DrEngineSwirl : public DrEngineThing
 {
 public:
     // Swirl Settings
-    QColor          start_color = QColor(128, 128, 255);        // Color tint of lens
+    DrColor          start_color = DrColor(128, 128, 255);      // Color tint of lens
     float           color_tint = 0.5f;                          // Color tint percentage     0 to  1
     float           rotation;                                   // Amount of rotation for Swirl
 
 public:
     // Constructor / Destructor
     DrEngineSwirl(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
-                  QColor color, float tint, float rotation_amount);
+                  DrColor color, float tint, float rotation_amount);
     virtual ~DrEngineSwirl() override;
 
     // Abstract Engine Thing Overrides

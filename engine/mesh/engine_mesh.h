@@ -9,12 +9,14 @@
 #define ENGINE_MESH_H
 
 #include "engine/globals_engine.h"
+#include "library/types/dr_vec3.h"
+
 
 struct Vertex {
-    Vec3 position;
-    Vec3 normal;
-    Vec3 texture_coords;        // Vec2, Only uses x and y
-    Vec3 barycentric;
+    DrVec3      position;
+    DrVec3      normal;
+    DrVec3      texture_coords;             // Only using x and y
+    DrVec3      barycentric;
 };
 
 struct Triangle {

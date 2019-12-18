@@ -8,45 +8,44 @@
 #ifndef CONSTANTS_EDITOR_H
 #define CONSTANTS_EDITOR_H
 
-#include <QColor>
-#include <QCursor>
-#include <QPixmap>
 #include <QString>
+
+#include "library/types/dr_color.h"
 
 
 //####################################################################################
 //##    Possible background colors for Component Categories
 //############################
 namespace Component_Colors {
-    const QColor White_Snow         { QColor(255, 252, 249, 255) };
-    const QColor Silver_Snow        { QColor(192, 188, 183, 255) };
-    const QColor Darkness           { QColor( 40,  33,  33, 255) };
+    const DrColor White_Snow        { DrColor(255, 252, 249, 255) };
+    const DrColor Silver_Snow       { DrColor(192, 188, 183, 255) };
+    const DrColor Darkness          { DrColor( 40,  33,  33, 255) };
 
-    const QColor Orange_Pastel      { QColor(250, 146,   0, 255) };
+    const DrColor Orange_Pastel     { DrColor(250, 146,   0, 255) };
 
-    const QColor Pink_Pearl         { QColor(228, 180, 194, 255) };
-    const QColor Red_Faded          { QColor(255, 105, 120, 255) };
+    const DrColor Pink_Pearl        { DrColor(228, 180, 194, 255) };
+    const DrColor Red_Faded         { DrColor(255, 105, 120, 255) };
 
-    const QColor Red_Tuscan         { QColor(104,  71,  86, 255) };
-    const QColor Purple_Pastel      { QColor(176, 161, 186, 255) };
-    const QColor Purple_Royal       { QColor(126,  87, 194, 255) };
-    const QColor Blue_Yonder        { QColor(165, 181, 191, 255) };
-    const QColor Blue_Royal         { QColor( 57, 120, 237, 255) };
+    const DrColor Red_Tuscan        { DrColor(104,  71,  86, 255) };
+    const DrColor Purple_Pastel     { DrColor(176, 161, 186, 255) };
+    const DrColor Purple_Royal      { DrColor(126,  87, 194, 255) };
+    const DrColor Blue_Yonder       { DrColor(165, 181, 191, 255) };
+    const DrColor Blue_Royal        { DrColor( 57, 120, 237, 255) };
 
-    const QColor Green_SeaGrass     { QColor(154, 225, 157, 255) };
-    const QColor Green_Sickness     { QColor(203, 240,  19, 255) };
+    const DrColor Green_SeaGrass    { DrColor(154, 225, 157, 255) };
+    const DrColor Green_Sickness    { DrColor(203, 240,  19, 255) };
 
-    const QColor Mustard_Yellow     { QColor(255, 200,  87, 255) };
-    const QColor Mellow_Yellow      { QColor(250, 223, 127, 255) };
+    const DrColor Mustard_Yellow    { DrColor(255, 200,  87, 255) };
+    const DrColor Mellow_Yellow     { DrColor(250, 223, 127, 255) };
 
-    const QColor Brown_Sugar        { QColor(165, 117,  72, 255) };
-    const QColor Beige_Apricot      { QColor(252, 215, 173, 255) };
+    const DrColor Brown_Sugar       { DrColor(165, 117,  72, 255) };
+    const DrColor Beige_Apricot     { DrColor(252, 215, 173, 255) };
 
-    const QColor Blue_Drop_1        { QColor(  0, 150, 145, 255) };
-    const QColor Blue_Drop_2        { QColor(  0, 180, 175, 255) };
-    const QColor Blue_Drop_3        { QColor(  0, 225, 219, 255) };
-    const QColor Blue_Drop_4        { QColor( 96, 255, 248, 255) };
-    const QColor Blue_Drop_5        { QColor(192, 255, 248, 255) };
+    const DrColor Blue_Drop_1       { DrColor(  0, 150, 145, 255) };
+    const DrColor Blue_Drop_2       { DrColor(  0, 180, 175, 255) };
+    const DrColor Blue_Drop_3       { DrColor(  0, 225, 219, 255) };
+    const DrColor Blue_Drop_4       { DrColor( 96, 255, 248, 255) };
+    const DrColor Blue_Drop_5       { DrColor(192, 255, 248, 255) };
 };
 
 
@@ -95,7 +94,7 @@ namespace Component_Icons {
 //####################################################################################
 //##    Possible Headers and Descriptions for items within editor
 //############################
-typedef QList<QString> HeaderBodyList;
+typedef std::vector<QString> HeaderBodyList;
 
 namespace Advisor_Info {
 
@@ -213,7 +212,6 @@ namespace Advisor_Info {
 //####################################################################################
 //##    Local Error Codes
 //############################
-
 namespace Error_Code {
 
     // Class DrSettings Related
@@ -221,22 +219,6 @@ namespace Error_Code {
     const std::string NoProperty           { "S002" };
 
 }
-
-
-//####################################################################################
-//##    Mouse cursors to use throughout Project, defined in constants.cpp
-//############################
-namespace Mouse_Cursors {
-    QCursor sizeVertical();
-    QCursor size022();
-    QCursor size045();
-    QCursor size067();
-    QCursor sizeHorizontal();
-    QCursor size112();
-    QCursor size135();
-    QCursor size157();
-    QCursor rotateAll();
-};
 
 
 

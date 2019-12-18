@@ -43,9 +43,10 @@ DrViewToolTip::DrViewToolTip(QWidget *parent) : QWidget(parent) {
 
 void DrViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data) {
     m_tip_type = type;
-    this->setStyleSheet(" QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+    this->setStyleSheet(QString::fromStdString(
+                        " QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
                         "                   stop:0 " + Dr::GetColor(Window_Colors::Button_Light).name() + ", "
-                        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Light).name() + "); } " );
+                        "                   stop:1 " + Dr::GetColor(Window_Colors::Background_Light).name() + "); } " ));
     clearMask();
 
     switch (m_tip_type) {
@@ -107,7 +108,7 @@ void DrViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset)
     QFont font = painter.font();
     font.setPointSize ( Dr::FontSize() + 1 );
     painter.setFont(font);
-    painter.setPen(Dr::GetColor(Window_Colors::Text_Light));
+    painter.setPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)));
 
     int w = this->geometry().width();
     int h = this->geometry().height();

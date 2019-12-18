@@ -16,7 +16,7 @@ namespace Dr {
 //################################################################################
 //##    Toolbar Style Sheet
 //################################################################################
-QString StyleSheetToolBar() {
+std::string StyleSheetToolBar() {
     return
     // Toolbar
     " QToolBar { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
@@ -103,7 +103,7 @@ QString StyleSheetToolBar() {
     " QMenu#menuToolbarOptions { "
     "      padding-top: 4px; padding-bottom: 4px; "
     "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-    "      font-size: " + QString::number(Dr::FontSize()) + "px; "
+    "      font-size: " + std::to_string(Dr::FontSize()) + "px; "
     "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
     "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
     "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
@@ -145,7 +145,7 @@ QString StyleSheetToolBar() {
 //################################################################################
 //##    Formatting for "Mode" toolbar buttons
 //################################################################################
-QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name) {
+std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name) {
     return
     " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
     "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
@@ -166,17 +166,17 @@ QString StyleSheetToolBarModeButton(QString button_name, QString icon_name, QStr
 //################################################################################
 //##    Formatting for normal toolbar buttons
 //################################################################################
-QString StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
+std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_unchecked, std::string icon_checked, std::string icon_disabled,
                                  int padding, int tl, int tr, int bl, int br, bool checkable) {
-    QString text =
+    std::string text =
         " QToolButton#" + button_name + "          { image: url(:/assets/toolbar_icons/toolbar_" + icon_unchecked + "); "
-                                        "            padding: " + QString::number(padding) + "px; } "
+                                        "            padding: " + std::to_string(padding) + "px; } "
         " QToolButton#" + button_name + ":checked  { image: url(:/assets/toolbar_icons/toolbar_" + icon_checked + ");    } "
         " QToolButton#" + button_name + ":disabled { image: url(:/assets/toolbar_icons/toolbar_" + icon_disabled + ");   } "
-        " QToolButton#" + button_name + " { border-top-left-radius: " +     QString::number(tl) + "px;  "
-                                        "   border-top-right-radius: " +    QString::number(tr) + "px;  "
-                                        "   border-bottom-left-radius: " +  QString::number(bl) + "px;  "
-                                        "   border-bottom-right-radius: " + QString::number(br) + "px; } ";
+        " QToolButton#" + button_name + " { border-top-left-radius: " +     std::to_string(tl) + "px;  "
+                                        "   border-top-right-radius: " +    std::to_string(tr) + "px;  "
+                                        "   border-bottom-left-radius: " +  std::to_string(bl) + "px;  "
+                                        "   border-bottom-right-radius: " + std::to_string(br) + "px; } ";
 
     if (checkable) { text +=
         " QToolButton#" + button_name + ":checked { border: 1px solid; "

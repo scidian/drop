@@ -17,7 +17,7 @@ namespace Dr {
 //####################################################################################
 QString CustomStyleSheetFormatting() {
 
-    QString style_sheet = QString(
+    std::string style_sheet = std::string(
 
         //################################################################################
         //##    Misc Styling
@@ -172,7 +172,7 @@ QString CustomStyleSheetFormatting() {
         //################################################################################
         //##    Dock Widgets - Stacked Dock TabBars
         //################################################################################
-        " QDockWidget { font-size: " + QString::number(Dr::FontSize()) + "px; font: bold; "
+        " QDockWidget { font-size: " + std::to_string(Dr::FontSize()) + "px; font: bold; "
         "               color: " + Dr::GetColor(Window_Colors::Header_Text).name() + "; } "
         " QDockWidget::title { "
         "       text-align: center; "
@@ -187,12 +187,12 @@ QString CustomStyleSheetFormatting() {
         "       color: " +      Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
-        "       font-size: " + QString::number(Dr::FontSize()) + "px; } "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; } "
         " QTabBar::tab:selected { "
         "       color: " +      Dr::GetColor(Window_Colors::Text_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
-        "       font-size: " + QString::number(Dr::FontSize()) + "px; } "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; } "
 
 
         //################################################################################
@@ -354,7 +354,7 @@ QString CustomStyleSheetFormatting() {
 //        "       border-radius: 0px; }"
         " QPushButton#buttonImageMiniButton {            border: 1px solid; border-radius: 4px; "
         "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border-color: " +
+        "       border-color: " +                
                 (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Background_Light).darker(130) :
                                                                Dr::GetColor(Window_Colors::Background_Light).lighter(200)).name() +
                                    Dr::GetColor(Window_Colors::Background_Light).darker(130).name() +
@@ -379,7 +379,7 @@ QString CustomStyleSheetFormatting() {
         " QMenu#menuComboBox { "
         "       padding-top: 4px; padding-bottom: 4px; "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "       font-size: " + QString::number(Dr::FontSize()) + "px; "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
         "       border: " + Dr::BorderWidth() + " solid; margin: 0px; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
@@ -479,19 +479,19 @@ QString CustomStyleSheetFormatting() {
 
     style_sheet += Dr::StyleSheetToolBar();
 
-    return style_sheet;
+    return QString::fromStdString(style_sheet);
 }
 
 
 //################################################################################
 //##    Cool sunken box kinda look
 //################################################################################
-QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight) {
-    QString top1 = QString::number(double(top_percent)        / 100.0);
-    QString top2 = QString::number(double(top_percent + 1)    / 100.0);
-    QString bot1 = QString::number(double(bottom_percent)     / 100.0);
-    QString bot2 = QString::number(double(bottom_percent + 1) / 100.0);
-    QColor middle, top;
+std::string StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight) {
+    std::string top1 = std::to_string(double(top_percent)        / 100.0);
+    std::string top2 = std::to_string(double(top_percent + 1)    / 100.0);
+    std::string bot1 = std::to_string(double(bottom_percent)     / 100.0);
+    std::string bot2 = std::to_string(double(bottom_percent + 1) / 100.0);
+    DrColor middle, top;
     if (!highlight) {
         middle = Dr::GetColor(Window_Colors::Background_Dark);
         top =    Dr::GetColor(Window_Colors::Background_Dark).darker(150);
@@ -504,23 +504,23 @@ QString StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, 
            "            stop:" + top1 + top.name() + ", "
            "            stop:" + top2 + middle.name() + ", "
            "            stop:" + bot1 + middle.name() + ", "
-           "            stop:" + bot2 + Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + ", "
-           "            stop:1 " +      Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + "); "
-           "          border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).darker(150).name()+ " " +
-                                        Dr::GetColor(Window_Colors::Background_Light).name() + " " +
-                                        Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + "; ";
+           "            stop:" + bot2 + Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + ", "
+           "            stop:1 " +      Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + "); "
+           "          border-color: " + Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + " " +
+                                        Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name()+ " " +
+                                        Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light))).name() + " " +
+                                        Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + "; ";
 }
 
 //################################################################################
 //##    Cool popped out box kinda look
 //################################################################################
-QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent, int bottom_percent, bool highlight) {
-    QString top1 = QString::number(double(top_percent)        / 100.0);
-    QString top2 = QString::number(double(top_percent + 1)    / 100.0);
-    QString bot1 = QString::number(double(bottom_percent)     / 100.0);
-    QString bot2 = QString::number(double(bottom_percent + 1) / 100.0);
-    QColor middle;
+std::string StyleSheetPoppedOutBackgroundBorder(DrColor background_color, DrColor border_color, int top_percent, int bottom_percent, bool highlight) {
+    std::string top1 = std::to_string(double(top_percent)        / 100.0);
+    std::string top2 = std::to_string(double(top_percent + 1)    / 100.0);
+    std::string bot1 = std::to_string(double(bottom_percent)     / 100.0);
+    std::string bot2 = std::to_string(double(bottom_percent + 1) / 100.0);
+    DrColor middle;
     if (!highlight) middle = background_color;
     else            middle = background_color;
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
@@ -537,45 +537,45 @@ QString StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor bord
 //################################################################################
 //##    Generates the style sheet for use with Color, Color Dropper and Color Dialog buttons
 //################################################################################
-QString StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
-                              int tl_radius, int tr_radius, int bl_radius, int br_radius,
-                              bool left_border, bool right_border, QString name) {
-    QString style =
-    " QPushButton" + name + " { height: 20px; padding-top: 0px;"
-    "   color: " + text_color.name() + "; "
-    "   border-top: " +    Dr::BorderWidth() + " solid; "
-    "   border-bottom: " + Dr::BorderWidth() + " solid; ";
+std::string StyleSheetColorButton(DrColor color, DrColor text_color, DrColor highlight,
+                                  int tl_radius, int tr_radius, int bl_radius, int br_radius,
+                                  bool left_border, bool right_border, std::string name) {
+    std::string style =
+        " QPushButton" + name + " { height: 20px; padding-top: 0px;"
+        "   color: " + text_color.name() + "; "
+        "   border-top: " +    Dr::BorderWidth() + " solid; "
+        "   border-bottom: " + Dr::BorderWidth() + " solid; ";
 
-    if (left_border)  style += "   border-left: " +   Dr::BorderWidth() + " solid; ";
-    else              style += "   border-left: 0px; ";
-    if (right_border) style += "   border-right: " +   Dr::BorderWidth() + " solid; ";
-    else              style += "   border-right: 0px; ";
+        if (left_border)  style += "   border-left: " +   Dr::BorderWidth() + " solid; ";
+        else              style += "   border-left: 0px; ";
+        if (right_border) style += "   border-right: " +   Dr::BorderWidth() + " solid; ";
+        else              style += "   border-right: 0px; ";
 
-    style +=
-    "   border-top-left-radius:     " + QString::number(tl_radius) + "px; "
-    "   border-bottom-left-radius:  " + QString::number(bl_radius) + "px; "
-    "   border-top-right-radius:    " + QString::number(tr_radius) + "px; "
-    "   border-bottom-right-radius: " + QString::number(br_radius) + "px; "
-    "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-    "       stop:0.00 " + color.lighter(200).name() + ", "
-    "       stop:0.09 " + color.lighter(200).name() + ", "
-    "       stop:0.10 " + color.name() + ", "
-    "       stop:0.92 " + color.name() + ", "
-    "       stop:0.93 " + color.darker(300).name() + ", "
-    "       stop:1.00 " + color.darker(300).name() + "); "
-    "   border-color: " + color.darker(300).name() + "; "
-    "   border-bottom-color: " + color.darker(400).name() + "; } "
-    " QPushButton" + name + ":hover {   color: " + highlight.name() + "; } "
-    " QPushButton" + name + ":pressed { padding-top: 1px; "
-    "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-    "       stop:0.00 " + color.darker(300).name() + ", "
-    "       stop:0.09 " + color.darker(300).name() + ", "
-    "       stop:0.10 " + color.name() + ", "
-    "       stop:0.92 " + color.name() + ", "
-    "       stop:0.93 " + color.darker(300).name() + ", "
-    "       stop:1.00 " + color.darker(300).name() + "); "
-    "   border-color: " + color.darker(300).name() + "; "
-    "   border-bottom-color: " + Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + "; } ";
+        style +=
+        "   border-top-left-radius:     " + std::to_string(tl_radius) + "px; "
+        "   border-bottom-left-radius:  " + std::to_string(bl_radius) + "px; "
+        "   border-top-right-radius:    " + std::to_string(tr_radius) + "px; "
+        "   border-bottom-right-radius: " + std::to_string(br_radius) + "px; "
+        "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "       stop:0.00 " + color.lighter(200).name() + ", "
+        "       stop:0.09 " + color.lighter(200).name() + ", "
+        "       stop:0.10 " + color.name() + ", "
+        "       stop:0.92 " + color.name() + ", "
+        "       stop:0.93 " + color.darker(300).name() + ", "
+        "       stop:1.00 " + color.darker(300).name() + "); "
+        "   border-color: " + color.darker(300).name() + "; "
+        "   border-bottom-color: " + color.darker(400).name() + "; } "
+        " QPushButton" + name + ":hover {   color: " + highlight.name() + "; } "
+        " QPushButton" + name + ":pressed { padding-top: 1px; "
+        "   background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "       stop:0.00 " + color.darker(300).name() + ", "
+        "       stop:0.09 " + color.darker(300).name() + ", "
+        "       stop:0.10 " + color.name() + ", "
+        "       stop:0.92 " + color.name() + ", "
+        "       stop:0.93 " + color.darker(300).name() + ", "
+        "       stop:1.00 " + color.darker(300).name() + "); "
+        "   border-color: " + color.darker(300).name() + "; "
+        "   border-bottom-color: " + Dr::GetColor(Window_Colors::Background_Dark).lighter(200).name() + "; } ";
 
     return style;
 }

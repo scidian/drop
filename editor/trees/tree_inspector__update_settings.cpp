@@ -111,7 +111,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
                         affected_as_longs.push_back(variant.toLong());
 
                     if ( Dr::VectorContains(affected_as_longs, prop->getPropertyKey()) ) {
-                        row->setStyleSheet("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }");
+                        row->setStyleSheet(QString::fromStdString("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"));
                         row->setVisible(enabled);
                         changed = true;
                     }

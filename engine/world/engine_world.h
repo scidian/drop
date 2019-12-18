@@ -109,7 +109,7 @@ private:
     double          m_glow_light_z_order = 0.0;     // Z-Ordering for Glow Lights
     int             m_glow_blend_mode = 0;          // enum class Blend_Mode decides how light layer is applied to screen
 
-    QColor          m_background_color {0,0,0,1};   // Background color to use to clear screen during render
+    DrColor         m_background_color;             // Background color to use to clear screen during render
     double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
     DrPointF        m_game_start {0, 0};            // Origin point start stage loaded at
     double          m_game_distance = 0.0;          // Keeps track of distance traveled linearly from the start
@@ -250,7 +250,7 @@ public:
 
     const double&       getDeleteThresholdX()       { return m_delete_threshold_x; }
     const double&       getDeleteThresholdY()       { return m_delete_threshold_y; }
-    const QColor&       getBackgroundColor()        { return m_background_color; }
+    DrColor&            getBackgroundColor()        { return m_background_color; }
     const double&       getAmbientLight()           { return m_ambient_light; }
     const double&       getGlowZOrder()             { return m_glow_light_z_order; }
     Blend_Mode          getGlowBlendMode()          { return static_cast<Blend_Mode>(m_glow_blend_mode); }
@@ -265,12 +265,12 @@ public:
     void                setFriction(cpFloat new_friction) { m_friction = new_friction; }
     void                setBounce(cpFloat new_bounce) { m_bounce = new_bounce; }
 
-    void                setDeleteThresholdX(double new_x)    { m_delete_threshold_x = new_x; }
-    void                setDeleteThresholdY(double new_y)    { m_delete_threshold_y = new_y; }
-    void                setBackgroundColor(QColor new_color) { m_background_color = new_color; }
-    void                setAmbientLight(double new_ambient)  { m_ambient_light = new_ambient; }
-    void                setGlowZOrder(double new_z_order)    { m_glow_light_z_order = new_z_order; }
-    void                setGlowBlendMode(Blend_Mode mode)    { m_glow_blend_mode = static_cast<int>(mode); }
+    void                setDeleteThresholdX(double new_x)       { m_delete_threshold_x = new_x; }
+    void                setDeleteThresholdY(double new_y)       { m_delete_threshold_y = new_y; }
+    void                setBackgroundColor(DrColor new_color)   { m_background_color = new_color; }
+    void                setAmbientLight(double new_ambient)     { m_ambient_light = new_ambient; }
+    void                setGlowZOrder(double new_z_order)       { m_glow_light_z_order = new_z_order; }
+    void                setGlowBlendMode(Blend_Mode mode)       { m_glow_blend_mode = static_cast<int>(mode); }
 
 };
 

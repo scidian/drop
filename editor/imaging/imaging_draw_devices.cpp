@@ -16,6 +16,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/style/style.h"
 
@@ -29,8 +30,8 @@ namespace DrImaging
 //##    various devices / controls in the Editor
 //####################################################################################
 QPixmap DrawFixedIcon(QPixmap &middle_icon) {
-    QColor back_color =     Dr::GetColor(Window_Colors::Button_Light);
-    QColor border_color =   Dr::GetColor(Window_Colors::Midlight);
+    QColor back_color =     Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+    QColor border_color =   Dr::ToQColor(Dr::GetColor(Window_Colors::Midlight));
     back_color.setAlphaF( 0.75 );
 
     int width =  c_device_size;

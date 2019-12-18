@@ -99,7 +99,7 @@ public:
     // Effect Specific Components
     void    addComponentSettingsFire();
     void    addComponentSettingsFisheye();
-    void    addComponentSettingsLight(QColor color);
+    void    addComponentSettingsLight(DrColor color);
     void    addComponentSettingsMirror();
     void    addComponentSettingsSwirl();
     void    addComponentSettingsWater();

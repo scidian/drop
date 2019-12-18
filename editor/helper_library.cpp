@@ -148,7 +148,16 @@ DrPointF    FromQPointF(QPointF pointf)     { return DrPointF(pointf.x(), pointf
 QPoint      ToQPoint(DrPoint point)         { return QPoint(point.x, point.y); }
 QPointF     ToQPointF(DrPointF pointf)      { return QPointF(pointf.x, pointf.y); }
 
+DrColor     FromQColor(QColor color)        { return DrColor(color.red(), color.green(), color.blue(), color.alpha()); }
+QColor      ToQColor(DrColor color)         { return QColor(color.red(), color.green(), color.blue(), color.alpha()); }
 
+// Compares 2 colors, returns true if they are the same
+bool SameQColor(QColor color1, QColor color2, double tolerance) {
+    return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
+             Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
+             Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&
+             Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), tolerance) );
+}
 
 //####################################################################################
 //##

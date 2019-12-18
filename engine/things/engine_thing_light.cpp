@@ -18,7 +18,7 @@
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
                              double x, double y, double z, float  opacity,
                              Light_Type type_,
-                             QColor     color_,
+                             DrColor    color_,
                              float      diameter_,
                              DrPointF   cone_,
                              float intensity_,

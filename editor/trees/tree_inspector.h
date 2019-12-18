@@ -107,7 +107,7 @@ public:
 
 private slots:
     void        setAdvisorInfo(QString header, QString body);
-    void        setButtonColor(QWidget *button, QColor color);
+    void        setButtonColor(QWidget *button, DrColor color);
 
 public slots:
     void        handleCollapsed(QTreeWidgetItem *item);

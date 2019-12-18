@@ -8,6 +8,10 @@
 #ifndef I_EDITOR_RELAY_H
 #define I_EDITOR_RELAY_H
 
+#include <QList>
+#include <QPointF>
+#include <QString>
+
 #include "editor/constants_editor.h"
 #include "editor/enums_editor.h"
 #include "library/types/dr_variant.h"

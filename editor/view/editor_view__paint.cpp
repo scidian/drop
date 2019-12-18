@@ -14,6 +14,7 @@
 #include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
@@ -225,7 +226,7 @@ void DrView::paintGrid(QPainter &painter) {
 //####################################################################################
 void DrView::paintGameFrame(QPainter &painter) {
     painter.setBrush(Qt::NoBrush);
-    QColor frame_color = Dr::GetColor(Window_Colors::Button_Light);
+    QColor frame_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
     frame_color.setAlpha(128);
 
     QPen frame_pen_outline = QPen(frame_color, 4);
@@ -322,15 +323,15 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     arrow = t_view.map(arrow);
 
     painter.setBrush( Qt::NoBrush );
-    QColor line_color = Dr::GetColor(Window_Colors::Background_Dark);
-    QColor fill_color = Dr::GetColor(Window_Colors::Icon_Dark);
+    QColor line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
+    QColor fill_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark));
     QPen frame_pen_outline = QPen(line_color, 4);
     QPen frame_pen_inside  = QPen(fill_color, 2);
 
     painter.setPen( frame_pen_outline );    painter.drawPath( mapFromScene(left) );     painter.drawPath( mapFromScene(right) );
     painter.setPen( frame_pen_inside );     painter.drawPath( mapFromScene(left) );     painter.drawPath( mapFromScene(right) );
 
-    painter.setBrush( Dr::GetColor(Window_Colors::Button_Dark) );
+    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark)) );
     painter.setPen( frame_pen_outline );
     painter.drawPath( direction );
     painter.drawPath( arrow );
@@ -338,7 +339,7 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     painter.setPen( frame_pen_inside );
     painter.drawPath( direction );
 
-    painter.setBrush( Dr::GetColor(Window_Colors::Icon_Light) );
+    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) );
     painter.drawPath( arrow );
 }
 
@@ -353,12 +354,12 @@ void DrView::paintToolTip(QPainter &painter) {
     int top_offset =  m_tool_tip->pos().y();
 
     painter.setPen(Qt::NoPen);
-    painter.setBrush(Dr::GetColor(Window_Colors::Shadow));
+    painter.setBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)));
     painter.drawRoundedRect(left_offset, top_offset + 2, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::AbsoluteSize);
 
     QLinearGradient gradient( left_offset, top_offset, left_offset, top_offset + h);
-    gradient.setColorAt(0.0, Dr::GetColor(Window_Colors::Button_Light));
-    gradient.setColorAt(1.0, Dr::GetColor(Window_Colors::Button_Dark));
+    gradient.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light)));
+    gradient.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark)));
     painter.setBrush(gradient);
     painter.drawRoundedRect(left_offset, top_offset, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::AbsoluteSize);
 
@@ -374,14 +375,14 @@ void DrView::paintToolTip(QPainter &painter) {
 void DrViewRubberBand::paintEvent(QPaintEvent *) {
     QStylePainter painter(this);
 
-    QColor bg = Dr::GetColor(Window_Colors::Icon_Light);
+    QColor bg = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));
     bg.setAlpha(48);
     QBrush brush;
     brush.setStyle(Qt::BrushStyle::SolidPattern);
     brush.setColor(bg);
 
     painter.setBrush(brush);
-    painter.setPen(QPen(QBrush(Dr::GetColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine));
+    painter.setPen(QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light))), 2, Qt::PenStyle::SolidLine));
     painter.drawRect(this->rect());
 }
 

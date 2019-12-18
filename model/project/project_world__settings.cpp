@@ -35,7 +35,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Settings, Properties::World_Use_Background_Color, Property_Type::Bool, false,
                            "Use Bg Color?", "Use Background Color? Check this box to use base Background Color for this world, otherwise"
                                             "background defaults to transparent.");
-    addPropertyToComponent(Components::World_Settings, Properties::World_Background_Color, Property_Type::Color, QColor(16, 16, 16, 255).rgba(),
+    addPropertyToComponent(Components::World_Settings, Properties::World_Background_Color, Property_Type::Color, DrColor(16, 16, 16, 255).rgba(),
                            "Background", "This is the base Background Color for this world. Must enable to use, otherwise background defaults to "
                                          "transparent.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Deletion_Threshold, Property_Type::Positive, 10000,

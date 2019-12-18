@@ -24,7 +24,6 @@ double  RandomDouble(double lower, double upper);
 /// @brief: Returns a random boolean
 bool    RandomBool();
 
-
 }   // end namespace Dr
 
 #endif // DR_RANDOM_H

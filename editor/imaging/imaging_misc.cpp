@@ -55,7 +55,7 @@ std::vector<QRgb*> GetScanLines(QImage &image) {
 //####################################################################################
 //##    Returns average color of a Pixmap
 //####################################################################################
-QColor AverageColor(const QPixmap &pixmap, bool screen_shot) {
+DrColor AverageColor(const QPixmap &pixmap, bool screen_shot) {
     QPixmap  one(20, 20);
              one.fill(Qt::transparent);
     QPainter painter(&one);
@@ -90,7 +90,7 @@ QColor AverageColor(const QPixmap &pixmap, bool screen_shot) {
     green = Dr::Clamp(green, 0, 255);
     blue =  Dr::Clamp(blue,  0, 255);
 
-    return QColor(red, green, blue);
+    return DrColor(red, green, blue);
 }
 
 

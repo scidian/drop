@@ -22,7 +22,7 @@ public:
     // Light Settings
     Light_Type      light_type = Light_Type::Opaque;        // Type of Light: Opaque or Glow
     float           light_size = 1500.0f;                   // Diameter of light
-    QColor          color = QColor(192, 64, 192);           // Color of light
+    DrColor          color = DrColor(192, 64, 192);          // Color of light
     DrPointF        cone = DrPointF(0.0, 360.0);             // Start / end angle of light
                                                             //      float cone_1 = qDegreesToRadians( 30.0f);    // Pac-man
                                                             //      float cone_2 = qDegreesToRadians(330.0f);
@@ -53,7 +53,7 @@ private:
 public:
     // Constructor / Destructor
     DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
-                  double x, double y, double z, float opacity, Light_Type type, QColor color, float diameter, DrPointF cone, float intensity,
+                  double x, double y, double z, float opacity, Light_Type type, DrColor color, float diameter, DrPointF cone, float intensity,
                   float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed);
     virtual ~DrEngineLight() override;
 

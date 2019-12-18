@@ -20,8 +20,8 @@ class DrEngineMirror : public DrEngineThing
 {
 public:
     // Mirror Settings
-    QColor          start_color =   QColor(192, 192, 192);      // Color tint of top of mirror
-    QColor          end_color =     QColor(128, 128, 255);      // Color tint of bottom of mirror
+    DrColor         start_color =   DrColor(192, 192, 192);     // Color tint of top of mirror
+    DrColor         end_color =     DrColor(128, 128, 255);     // Color tint of bottom of mirror
     float           tint_percent = 0.5f;                        // Color tint percentage     0 to  1
     float           blur = 0.0f;                                // Scatter amount
     float           blur_stretch = 0.0f;                        // Scatter stretch away from start
@@ -30,7 +30,7 @@ public:
 public:
     // Constructor / Destructor
     DrEngineMirror(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
-                   QColor color_1, QColor color_2, float tint_amount, float blur, float blur_stretch, float scale);
+                   DrColor color_1, DrColor color_2, float tint_amount, float blur, float blur_stretch, float scale);
     virtual ~DrEngineMirror() override;
 
     // Abstract Engine Thing Overrides

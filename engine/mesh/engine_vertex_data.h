@@ -11,7 +11,7 @@
 #include "engine_mesh.h"
 
 // Type Definitions
-typedef std::map<Vec3, std::vector<Vertex>> NeighborMap;
+typedef std::map<DrVec3, std::vector<Vertex>> NeighborMap;
 
 // Defines
 #define PAR_RGB  3

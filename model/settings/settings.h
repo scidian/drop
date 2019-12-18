@@ -8,8 +8,6 @@
 #ifndef DRSETTINGS_H
 #define DRSETTINGS_H
 
-#include <QColor>
-
 #include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
@@ -86,7 +84,7 @@ public:
     DrProperty*     findPropertyFromPropertyKey(Properties property_key_to_find);
 
     // Component / Property Building
-    DrComponent*    addComponent(Components component, std::string display_name, std::string description, QColor color, bool is_turned_on);
+    DrComponent*    addComponent(Components component, std::string display_name, std::string description, DrColor color, bool is_turned_on);
     DrProperty*     addPropertyToComponent(Components component, Properties property_number, Property_Type type, DrVariant value,
                                            std::string display_name, std::string description, bool is_hidden = false, bool is_editable = true);
     void            addComponentEntitySettings();

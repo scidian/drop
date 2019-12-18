@@ -28,7 +28,7 @@
 void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use) {
 
     // ***** Basic World Proeprties
-    m_background_color =    QColor(0, 0, 0);
+    m_background_color =    DrColor(0, 0, 0);
     m_ambient_light =       50;
     m_max_game_distance =   0.0;
 
@@ -77,7 +77,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
 
 
     if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool()) {
-        m_background_color = QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
+        m_background_color = DrColor(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
     }
 
     // ***** World Physics Properties

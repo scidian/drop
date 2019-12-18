@@ -12,6 +12,7 @@
 #include "editor/imaging/imaging.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
+#include "library/types/dr_vec3.h"
 
 
 //####################################################################################
@@ -115,10 +116,10 @@ Mesh DrEngineVertexData::getMesh(NeighborMap &neighbors) {
 //##        Source: http://rodolphe-vaillant.fr/?e=69
 //####################################################################################
 float LaplacianPositiveCotanWeight(Vertex vertex_i, Vertex edge_j, Vertex edge_j_previous, Vertex edge_j_next ) {
-    Vec3 pi      = vertex_i.position;
-    Vec3 pj      = edge_j.position;
-    Vec3 pj_prev = edge_j_previous.position;
-    Vec3 pj_next = edge_j_next.position;
+    DrVec3 pi(vertex_i.position);
+    DrVec3 pj(edge_j.position);
+    DrVec3 pj_prev(edge_j_previous.position);
+    DrVec3 pj_next(edge_j_next.position);
 
     float e1 = (pi      - pj     ).norm();
     float e2 = (pi      - pj_prev).norm();
@@ -167,6 +168,7 @@ float LaplacianPositiveCotanWeight(Vertex vertex_i, Vertex edge_j, Vertex edge_j
 //##    Smooths Vertices based on 'weight' of neighbors, recalculates normals
 //####################################################################################
 void DrEngineVertexData::smoothVertices(float weight) {
+
     // ***** Get Data Array into Mesh, find neighbors
     NeighborMap neighbors;
     Mesh mesh = getMesh(neighbors);
@@ -174,17 +176,17 @@ void DrEngineVertexData::smoothVertices(float weight) {
     // ***** Smooth points
     for (auto &triangle : mesh.m_triangles) {
         for (auto &point : triangle.points) {
-            Vec3  position(0.f);
-            Vec3  normals(0.f);
-            Vec3  texture(0.f);
-            float total_weight = 0.f;
+            DrVec3  position(0.f);
+            DrVec3  normals(0.f);
+            DrVec3  texture(0.f);
+            float   total_weight = 0.f;
 
             std::size_t prev = neighbors[point.position].size() - 1;
             std::size_t next = 1;
             for (std::size_t i = 0; i < neighbors[point.position].size(); i++) {
                 Vertex neighbor = neighbors[point.position][i];
-                Vertex neighbor_prev = neighbors[point.position][prev];
-                Vertex neighbor_next = neighbors[point.position][next];
+                ///Vertex neighbor_prev = neighbors[point.position][prev];
+                ///Vertex neighbor_next = neighbors[point.position][next];
 
                 // #NOTE: If we set neighbor_weight = 1.0f, the procedure operates a uniform smoothing,
                 //        the initial distribution of the triangles won't be preserved
@@ -208,9 +210,9 @@ void DrEngineVertexData::smoothVertices(float weight) {
             // When using cotan weights smoothing may be unstable, in this case we need to set t < 1
             // sometimes you even need to get as low as t < 0.5
             float t = 0.9f;
-            point.position =       (position / total_weight) * t + point.position * (1.f - t);
-            point.texture_coords = (texture /  total_weight) * t + point.texture_coords * (1.f - t);
-            point.normal =         (normals /  total_weight) * t + point.normal * (1.f - t);
+            point.position =       ((position / total_weight) * t + point.position * (1.f - t)).toGlmVec3();
+            point.texture_coords = ((texture /  total_weight) * t + point.texture_coords * (1.f - t)).toGlmVec3();
+            point.normal =         ((normals /  total_weight) * t + point.normal * (1.f - t)).toGlmVec3();
         }
     }
 
@@ -219,9 +221,9 @@ void DrEngineVertexData::smoothVertices(float weight) {
         Triangle tri = mesh.m_triangles[static_cast<std::size_t>(i / 3)];
 
         // Recalculate normals
-        Vec3 v1 = tri.points[2].position - tri.points[0].position;
-        Vec3 v2 = tri.points[1].position - tri.points[0].position;
-        Vec3 n = v1.cross( v2 );
+        DrVec3 v1 = tri.points[2].position - tri.points[0].position;
+        DrVec3 v2 = tri.points[1].position - tri.points[0].position;
+        DrVec3 n = v1.cross( v2 );
         n.normalize();
         for (auto &point : tri.points) { point.normal = n; }
 

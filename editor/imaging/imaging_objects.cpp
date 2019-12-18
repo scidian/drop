@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 9/8/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -16,6 +16,7 @@
 
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "library/dr_math.h"
 #include "library/types/dr_point.h"
@@ -138,7 +139,7 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
                     }
 
                     if (processed_lines[y][x] == FLOOD_NOT_PROCESSED) {
-                        if (Dr::IsSameColor(start_color, QColor::fromRgba(image_lines[y][x]), tolerance)) {
+                        if (Dr::SameQColor(start_color, QColor::fromRgba(image_lines[y][x]), tolerance)) {
                             points.push_back(DrPoint(x, y));
                             processed_lines[y][x] = FLOOD_MARKED_FOR_PROCESS;
                             processed_some = true;

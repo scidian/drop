@@ -39,7 +39,7 @@ void DrView::updateGrid() {
     m_grid_size =       Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF());
     m_grid_scale =      Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF());
     m_grid_rotate =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
-    m_grid_color =      Dr::GetColor(Window_Colors::Background_Light);
+    m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
     m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
     m_back_color_use =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool();
@@ -50,7 +50,7 @@ void DrView::updateGrid() {
     m_grid_resize_snap =  Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
     m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
-    QColor background = (m_back_color_use) ? m_back_color : Dr::GetColor(Window_Colors::Background_Dark);
+    QColor background = (m_back_color_use) ? m_back_color : Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
     this->setStyleSheet("background: " + background.name() + ";");
 
     recalculateGrid();

@@ -6,6 +6,8 @@
 //
 //
 #include <QtMath>
+#include <QBrush>
+#include <QColor>
 #include <QPainter>
 
 #include <cmath>
@@ -41,20 +43,20 @@ static void GetSpaceJointList(cpConstraint *constraint, std::vector<cpConstraint
 //####################################################################################
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
-QColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
-    QColor color, font_color;
+DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
+    DrColor color, font_color;
 
     switch (object->getCollisionType()) {
-        case Collision_Type::Damage_None:       color = QColor(0, 255, 0);      break;          // Green
-        case Collision_Type::Damage_Player:     color = QColor(255, 0, 0);      break;          // Red
-        case Collision_Type::Damage_Enemy:      color = QColor(0, 0, 255);      break;          // Blue
-        case Collision_Type::Damage_All:        color = QColor(128, 0, 128);    break;          // Purple
+        case Collision_Type::Damage_None:       color = DrColor(0, 255, 0);     break;          // Green
+        case Collision_Type::Damage_Player:     color = DrColor(255, 0, 0);     break;          // Red
+        case Collision_Type::Damage_Enemy:      color = DrColor(0, 0, 255);     break;          // Blue
+        case Collision_Type::Damage_All:        color = DrColor(128, 0, 128);   break;          // Purple
     }
     font_color = color;
 
     if (cpBodyIsSleeping(object->body)) {
         ///font_color = color;
-        color = Qt::yellow;
+        color = Dr::yellow;
     } else {
         ///font_color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
     }
@@ -113,15 +115,15 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Figure out what color to make the debug shapes
-        QColor color = objectDebugColor(object);
+        DrColor color = objectDebugColor(object);
         if (object->isDying() || !object->isAlive()) color = Qt::gray;
         if (!object->doesCollide()) color = color.lighter();
 
         // Set up QPainter
-        QPen cosmetic_pen( QBrush(color), 1);
+        QPen cosmetic_pen( QBrush(QColor(color.red(), color.green(), color.blue())), 1);
         cosmetic_pen.setCosmetic(true);
         painter.setPen( cosmetic_pen );
-        QColor brush_color = color;
+        QColor brush_color = QColor(color.red(), color.green(), color.blue());
         brush_color.setAlpha(64);
         painter.setBrush( QBrush( brush_color));
 
@@ -209,7 +211,7 @@ void DrOpenGL::drawDebugShapes(QPainter &painter) {
                 QRect bounding_box = QRectF(p1, p2).toRect().normalized();
                 if ((open_gl_rect.intersects(bounding_box) || open_gl_rect.contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < open_gl_width) && (bounding_box.height() * 0.1 < open_gl_height)) {
-                    QPen line_pen( QBrush(color), 2);
+                    QPen line_pen( QBrush(QColor(color.red(), color.green(), color.blue())), 2);
                     painter.setPen( line_pen );
                     painter.drawLine(p1, p2);
                 }

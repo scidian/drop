@@ -203,29 +203,50 @@ std::vector<DrVariant> DrVariant::toVector() {
 //####################################################################################
 //##    Custom Data Type Returns
 //####################################################################################
-// Try to return from DrPoint, otherwise DrPointF, otherwise return Point(0,0)
+// Try to return from DrColor, otherwise unsigned int, otherwise return DrColor(0, 0, 0, 0);
+DrColor DrVariant::toColor() {
+    try { return boost::any_cast<DrColor>(m_value); }
+    catch (const boost::bad_any_cast &) {
+        try { DrColor color(boost::any_cast<unsigned int>(m_value));
+              return color; }
+        catch (const boost::bad_any_cast &) {
+            return DrColor(0, 0, 0, 0);
+        }
+    }
+}
+// Try to return from DrPoint, otherwise DrPointF, otherwise return Point(0, 0)
 DrPoint DrVariant::toPoint() {
     try { return boost::any_cast<DrPoint>(m_value); }
     catch (const boost::bad_any_cast &) {
         try { DrPointF pointf = boost::any_cast<DrPointF>(m_value);
               return DrPoint(pointf.x, pointf.y); }
         catch (const boost::bad_any_cast &) {
-            return DrPoint();
+            return DrPoint(0, 0);
         }
     }
 }
-// Try to return from DrPointF, otherwise DrPoint, otherwise return Point(0,0)
+// Try to return from DrPointF, otherwise DrPoint, otherwise return Point(0, 0)
 DrPointF DrVariant::toPointF() {
     try { return boost::any_cast<DrPointF>(m_value); }
     catch (const boost::bad_any_cast &) {
         try { DrPoint point = boost::any_cast<DrPoint>(m_value);
               return DrPointF(point.x, point.y); }
         catch (const boost::bad_any_cast &) {
-            return DrPointF();
+            return DrPointF(0, 0);
         }
     }
 }
-
+// Try to return from DrVec3, otherwise glm::vec3, otherwise return Vec3(0, 0, 0)
+DrVec3 DrVariant::toVec3() {
+    try { return boost::any_cast<DrVec3>(m_value); }
+    catch (const boost::bad_any_cast &) {
+        try { glm::vec3 vec3 = boost::any_cast<glm::vec3>(m_value);
+              return DrVec3(vec3); }
+        catch (const boost::bad_any_cast &) {
+            return DrVec3(0, 0, 0);
+        }
+    }
+}
 
 
 

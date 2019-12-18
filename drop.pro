@@ -96,6 +96,7 @@ SOURCES += \
     3rd_party/chipmunk/cpSpaceStep.c \
     3rd_party/chipmunk/cpSpatialIndex.c \
     3rd_party/chipmunk/cpSweep1D.c \
+    3rd_party/glm/detail/glm.cpp \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
@@ -104,7 +105,6 @@ SOURCES += \
     editor/colors/palette_material.cpp \
     editor/colors/palette_rocky_rover.cpp \
     editor/colors/palette_window_themes.cpp \
-    editor/constants_editor.cpp \
     editor/debug.cpp \
     editor/docks/docks_build.cpp \
     editor/docks/docks_handle.cpp \
@@ -241,9 +241,11 @@ SOURCES += \
     library/dr_random.cpp \
     library/dr_string.cpp \
     library/dr_time.cpp \
+    library/types/dr_color.cpp \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
     library/types/dr_variant.cpp \
+    library/types/dr_vec3.cpp \
     main.cpp \
     model/enums_model_types.cpp \
     model/project/project.cpp \
@@ -496,10 +498,386 @@ HEADERS += \
     3rd_party/chipmunk/cpVect.h \
     3rd_party/chipmunk/prime.h \
     3rd_party/delaunator.h \
+    3rd_party/glm/common.hpp \
+    3rd_party/glm/detail/_features.hpp \
+    3rd_party/glm/detail/_fixes.hpp \
+    3rd_party/glm/detail/_noise.hpp \
+    3rd_party/glm/detail/_swizzle.hpp \
+    3rd_party/glm/detail/_swizzle_func.hpp \
+    3rd_party/glm/detail/_vectorize.hpp \
+    3rd_party/glm/detail/compute_common.hpp \
+    3rd_party/glm/detail/compute_vector_relational.hpp \
+    3rd_party/glm/detail/func_common.inl \
+    3rd_party/glm/detail/func_common_simd.inl \
+    3rd_party/glm/detail/func_exponential.inl \
+    3rd_party/glm/detail/func_exponential_simd.inl \
+    3rd_party/glm/detail/func_geometric.inl \
+    3rd_party/glm/detail/func_geometric_simd.inl \
+    3rd_party/glm/detail/func_integer.inl \
+    3rd_party/glm/detail/func_integer_simd.inl \
+    3rd_party/glm/detail/func_matrix.inl \
+    3rd_party/glm/detail/func_matrix_simd.inl \
+    3rd_party/glm/detail/func_packing.inl \
+    3rd_party/glm/detail/func_packing_simd.inl \
+    3rd_party/glm/detail/func_trigonometric.inl \
+    3rd_party/glm/detail/func_trigonometric_simd.inl \
+    3rd_party/glm/detail/func_vector_relational.inl \
+    3rd_party/glm/detail/func_vector_relational_simd.inl \
+    3rd_party/glm/detail/qualifier.hpp \
+    3rd_party/glm/detail/setup.hpp \
+    3rd_party/glm/detail/type_float.hpp \
+    3rd_party/glm/detail/type_half.hpp \
+    3rd_party/glm/detail/type_half.inl \
+    3rd_party/glm/detail/type_mat2x2.hpp \
+    3rd_party/glm/detail/type_mat2x2.inl \
+    3rd_party/glm/detail/type_mat2x3.hpp \
+    3rd_party/glm/detail/type_mat2x3.inl \
+    3rd_party/glm/detail/type_mat2x4.hpp \
+    3rd_party/glm/detail/type_mat2x4.inl \
+    3rd_party/glm/detail/type_mat3x2.hpp \
+    3rd_party/glm/detail/type_mat3x2.inl \
+    3rd_party/glm/detail/type_mat3x3.hpp \
+    3rd_party/glm/detail/type_mat3x3.inl \
+    3rd_party/glm/detail/type_mat3x4.hpp \
+    3rd_party/glm/detail/type_mat3x4.inl \
+    3rd_party/glm/detail/type_mat4x2.hpp \
+    3rd_party/glm/detail/type_mat4x2.inl \
+    3rd_party/glm/detail/type_mat4x3.hpp \
+    3rd_party/glm/detail/type_mat4x3.inl \
+    3rd_party/glm/detail/type_mat4x4.hpp \
+    3rd_party/glm/detail/type_mat4x4.inl \
+    3rd_party/glm/detail/type_mat4x4_simd.inl \
+    3rd_party/glm/detail/type_quat.hpp \
+    3rd_party/glm/detail/type_quat.inl \
+    3rd_party/glm/detail/type_quat_simd.inl \
+    3rd_party/glm/detail/type_vec1.hpp \
+    3rd_party/glm/detail/type_vec1.inl \
+    3rd_party/glm/detail/type_vec2.hpp \
+    3rd_party/glm/detail/type_vec2.inl \
+    3rd_party/glm/detail/type_vec3.hpp \
+    3rd_party/glm/detail/type_vec3.inl \
+    3rd_party/glm/detail/type_vec4.hpp \
+    3rd_party/glm/detail/type_vec4.inl \
+    3rd_party/glm/detail/type_vec4_simd.inl \
+    3rd_party/glm/exponential.hpp \
+    3rd_party/glm/ext.hpp \
+    3rd_party/glm/ext/matrix_clip_space.hpp \
+    3rd_party/glm/ext/matrix_clip_space.inl \
+    3rd_party/glm/ext/matrix_common.hpp \
+    3rd_party/glm/ext/matrix_common.inl \
+    3rd_party/glm/ext/matrix_double2x2.hpp \
+    3rd_party/glm/ext/matrix_double2x2_precision.hpp \
+    3rd_party/glm/ext/matrix_double2x3.hpp \
+    3rd_party/glm/ext/matrix_double2x3_precision.hpp \
+    3rd_party/glm/ext/matrix_double2x4.hpp \
+    3rd_party/glm/ext/matrix_double2x4_precision.hpp \
+    3rd_party/glm/ext/matrix_double3x2.hpp \
+    3rd_party/glm/ext/matrix_double3x2_precision.hpp \
+    3rd_party/glm/ext/matrix_double3x3.hpp \
+    3rd_party/glm/ext/matrix_double3x3_precision.hpp \
+    3rd_party/glm/ext/matrix_double3x4.hpp \
+    3rd_party/glm/ext/matrix_double3x4_precision.hpp \
+    3rd_party/glm/ext/matrix_double4x2.hpp \
+    3rd_party/glm/ext/matrix_double4x2_precision.hpp \
+    3rd_party/glm/ext/matrix_double4x3.hpp \
+    3rd_party/glm/ext/matrix_double4x3_precision.hpp \
+    3rd_party/glm/ext/matrix_double4x4.hpp \
+    3rd_party/glm/ext/matrix_double4x4_precision.hpp \
+    3rd_party/glm/ext/matrix_float2x2.hpp \
+    3rd_party/glm/ext/matrix_float2x2_precision.hpp \
+    3rd_party/glm/ext/matrix_float2x3.hpp \
+    3rd_party/glm/ext/matrix_float2x3_precision.hpp \
+    3rd_party/glm/ext/matrix_float2x4.hpp \
+    3rd_party/glm/ext/matrix_float2x4_precision.hpp \
+    3rd_party/glm/ext/matrix_float3x2.hpp \
+    3rd_party/glm/ext/matrix_float3x2_precision.hpp \
+    3rd_party/glm/ext/matrix_float3x3.hpp \
+    3rd_party/glm/ext/matrix_float3x3_precision.hpp \
+    3rd_party/glm/ext/matrix_float3x4.hpp \
+    3rd_party/glm/ext/matrix_float3x4_precision.hpp \
+    3rd_party/glm/ext/matrix_float4x2.hpp \
+    3rd_party/glm/ext/matrix_float4x2_precision.hpp \
+    3rd_party/glm/ext/matrix_float4x3.hpp \
+    3rd_party/glm/ext/matrix_float4x3_precision.hpp \
+    3rd_party/glm/ext/matrix_float4x4.hpp \
+    3rd_party/glm/ext/matrix_float4x4_precision.hpp \
+    3rd_party/glm/ext/matrix_projection.hpp \
+    3rd_party/glm/ext/matrix_projection.inl \
+    3rd_party/glm/ext/matrix_relational.hpp \
+    3rd_party/glm/ext/matrix_relational.inl \
+    3rd_party/glm/ext/matrix_transform.hpp \
+    3rd_party/glm/ext/matrix_transform.inl \
+    3rd_party/glm/ext/quaternion_common.hpp \
+    3rd_party/glm/ext/quaternion_common.inl \
+    3rd_party/glm/ext/quaternion_common_simd.inl \
+    3rd_party/glm/ext/quaternion_double.hpp \
+    3rd_party/glm/ext/quaternion_double_precision.hpp \
+    3rd_party/glm/ext/quaternion_exponential.hpp \
+    3rd_party/glm/ext/quaternion_exponential.inl \
+    3rd_party/glm/ext/quaternion_float.hpp \
+    3rd_party/glm/ext/quaternion_float_precision.hpp \
+    3rd_party/glm/ext/quaternion_geometric.hpp \
+    3rd_party/glm/ext/quaternion_geometric.inl \
+    3rd_party/glm/ext/quaternion_relational.hpp \
+    3rd_party/glm/ext/quaternion_relational.inl \
+    3rd_party/glm/ext/quaternion_transform.hpp \
+    3rd_party/glm/ext/quaternion_transform.inl \
+    3rd_party/glm/ext/quaternion_trigonometric.hpp \
+    3rd_party/glm/ext/quaternion_trigonometric.inl \
+    3rd_party/glm/ext/scalar_common.hpp \
+    3rd_party/glm/ext/scalar_common.inl \
+    3rd_party/glm/ext/scalar_constants.hpp \
+    3rd_party/glm/ext/scalar_constants.inl \
+    3rd_party/glm/ext/scalar_int_sized.hpp \
+    3rd_party/glm/ext/scalar_integer.hpp \
+    3rd_party/glm/ext/scalar_integer.inl \
+    3rd_party/glm/ext/scalar_relational.hpp \
+    3rd_party/glm/ext/scalar_relational.inl \
+    3rd_party/glm/ext/scalar_uint_sized.hpp \
+    3rd_party/glm/ext/scalar_ulp.hpp \
+    3rd_party/glm/ext/scalar_ulp.inl \
+    3rd_party/glm/ext/vector_bool1.hpp \
+    3rd_party/glm/ext/vector_bool1_precision.hpp \
+    3rd_party/glm/ext/vector_bool2.hpp \
+    3rd_party/glm/ext/vector_bool2_precision.hpp \
+    3rd_party/glm/ext/vector_bool3.hpp \
+    3rd_party/glm/ext/vector_bool3_precision.hpp \
+    3rd_party/glm/ext/vector_bool4.hpp \
+    3rd_party/glm/ext/vector_bool4_precision.hpp \
+    3rd_party/glm/ext/vector_common.hpp \
+    3rd_party/glm/ext/vector_common.inl \
+    3rd_party/glm/ext/vector_double1.hpp \
+    3rd_party/glm/ext/vector_double1_precision.hpp \
+    3rd_party/glm/ext/vector_double2.hpp \
+    3rd_party/glm/ext/vector_double2_precision.hpp \
+    3rd_party/glm/ext/vector_double3.hpp \
+    3rd_party/glm/ext/vector_double3_precision.hpp \
+    3rd_party/glm/ext/vector_double4.hpp \
+    3rd_party/glm/ext/vector_double4_precision.hpp \
+    3rd_party/glm/ext/vector_float1.hpp \
+    3rd_party/glm/ext/vector_float1_precision.hpp \
+    3rd_party/glm/ext/vector_float2.hpp \
+    3rd_party/glm/ext/vector_float2_precision.hpp \
+    3rd_party/glm/ext/vector_float3.hpp \
+    3rd_party/glm/ext/vector_float3_precision.hpp \
+    3rd_party/glm/ext/vector_float4.hpp \
+    3rd_party/glm/ext/vector_float4_precision.hpp \
+    3rd_party/glm/ext/vector_int1.hpp \
+    3rd_party/glm/ext/vector_int1_precision.hpp \
+    3rd_party/glm/ext/vector_int2.hpp \
+    3rd_party/glm/ext/vector_int2_precision.hpp \
+    3rd_party/glm/ext/vector_int3.hpp \
+    3rd_party/glm/ext/vector_int3_precision.hpp \
+    3rd_party/glm/ext/vector_int4.hpp \
+    3rd_party/glm/ext/vector_int4_precision.hpp \
+    3rd_party/glm/ext/vector_integer.hpp \
+    3rd_party/glm/ext/vector_integer.inl \
+    3rd_party/glm/ext/vector_relational.hpp \
+    3rd_party/glm/ext/vector_relational.inl \
+    3rd_party/glm/ext/vector_uint1.hpp \
+    3rd_party/glm/ext/vector_uint1_precision.hpp \
+    3rd_party/glm/ext/vector_uint2.hpp \
+    3rd_party/glm/ext/vector_uint2_precision.hpp \
+    3rd_party/glm/ext/vector_uint3.hpp \
+    3rd_party/glm/ext/vector_uint3_precision.hpp \
+    3rd_party/glm/ext/vector_uint4.hpp \
+    3rd_party/glm/ext/vector_uint4_precision.hpp \
+    3rd_party/glm/ext/vector_ulp.hpp \
+    3rd_party/glm/ext/vector_ulp.inl \
+    3rd_party/glm/fwd.hpp \
+    3rd_party/glm/geometric.hpp \
+    3rd_party/glm/glm.hpp \
+    3rd_party/glm/gtc/bitfield.hpp \
+    3rd_party/glm/gtc/bitfield.inl \
+    3rd_party/glm/gtc/color_space.hpp \
+    3rd_party/glm/gtc/color_space.inl \
+    3rd_party/glm/gtc/constants.hpp \
+    3rd_party/glm/gtc/constants.inl \
+    3rd_party/glm/gtc/epsilon.hpp \
+    3rd_party/glm/gtc/epsilon.inl \
+    3rd_party/glm/gtc/integer.hpp \
+    3rd_party/glm/gtc/integer.inl \
+    3rd_party/glm/gtc/matrix_access.hpp \
+    3rd_party/glm/gtc/matrix_access.inl \
+    3rd_party/glm/gtc/matrix_integer.hpp \
+    3rd_party/glm/gtc/matrix_inverse.hpp \
+    3rd_party/glm/gtc/matrix_inverse.inl \
+    3rd_party/glm/gtc/matrix_transform.hpp \
+    3rd_party/glm/gtc/matrix_transform.inl \
+    3rd_party/glm/gtc/noise.hpp \
+    3rd_party/glm/gtc/noise.inl \
+    3rd_party/glm/gtc/packing.hpp \
+    3rd_party/glm/gtc/packing.inl \
+    3rd_party/glm/gtc/quaternion.hpp \
+    3rd_party/glm/gtc/quaternion.inl \
+    3rd_party/glm/gtc/quaternion_simd.inl \
+    3rd_party/glm/gtc/random.hpp \
+    3rd_party/glm/gtc/random.inl \
+    3rd_party/glm/gtc/reciprocal.hpp \
+    3rd_party/glm/gtc/reciprocal.inl \
+    3rd_party/glm/gtc/round.hpp \
+    3rd_party/glm/gtc/round.inl \
+    3rd_party/glm/gtc/type_aligned.hpp \
+    3rd_party/glm/gtc/type_precision.hpp \
+    3rd_party/glm/gtc/type_precision.inl \
+    3rd_party/glm/gtc/type_ptr.hpp \
+    3rd_party/glm/gtc/type_ptr.inl \
+    3rd_party/glm/gtc/ulp.hpp \
+    3rd_party/glm/gtc/ulp.inl \
+    3rd_party/glm/gtc/vec1.hpp \
+    3rd_party/glm/gtx/associated_min_max.hpp \
+    3rd_party/glm/gtx/associated_min_max.inl \
+    3rd_party/glm/gtx/bit.hpp \
+    3rd_party/glm/gtx/bit.inl \
+    3rd_party/glm/gtx/closest_point.hpp \
+    3rd_party/glm/gtx/closest_point.inl \
+    3rd_party/glm/gtx/color_encoding.hpp \
+    3rd_party/glm/gtx/color_encoding.inl \
+    3rd_party/glm/gtx/color_space.hpp \
+    3rd_party/glm/gtx/color_space.inl \
+    3rd_party/glm/gtx/color_space_YCoCg.hpp \
+    3rd_party/glm/gtx/color_space_YCoCg.inl \
+    3rd_party/glm/gtx/common.hpp \
+    3rd_party/glm/gtx/common.inl \
+    3rd_party/glm/gtx/compatibility.hpp \
+    3rd_party/glm/gtx/compatibility.inl \
+    3rd_party/glm/gtx/component_wise.hpp \
+    3rd_party/glm/gtx/component_wise.inl \
+    3rd_party/glm/gtx/dual_quaternion.hpp \
+    3rd_party/glm/gtx/dual_quaternion.inl \
+    3rd_party/glm/gtx/easing.hpp \
+    3rd_party/glm/gtx/easing.inl \
+    3rd_party/glm/gtx/euler_angles.hpp \
+    3rd_party/glm/gtx/euler_angles.inl \
+    3rd_party/glm/gtx/extend.hpp \
+    3rd_party/glm/gtx/extend.inl \
+    3rd_party/glm/gtx/extended_min_max.hpp \
+    3rd_party/glm/gtx/extended_min_max.inl \
+    3rd_party/glm/gtx/exterior_product.hpp \
+    3rd_party/glm/gtx/exterior_product.inl \
+    3rd_party/glm/gtx/fast_exponential.hpp \
+    3rd_party/glm/gtx/fast_exponential.inl \
+    3rd_party/glm/gtx/fast_square_root.hpp \
+    3rd_party/glm/gtx/fast_square_root.inl \
+    3rd_party/glm/gtx/fast_trigonometry.hpp \
+    3rd_party/glm/gtx/fast_trigonometry.inl \
+    3rd_party/glm/gtx/float_notmalize.inl \
+    3rd_party/glm/gtx/functions.hpp \
+    3rd_party/glm/gtx/functions.inl \
+    3rd_party/glm/gtx/gradient_paint.hpp \
+    3rd_party/glm/gtx/gradient_paint.inl \
+    3rd_party/glm/gtx/handed_coordinate_space.hpp \
+    3rd_party/glm/gtx/handed_coordinate_space.inl \
+    3rd_party/glm/gtx/hash.hpp \
+    3rd_party/glm/gtx/hash.inl \
+    3rd_party/glm/gtx/integer.hpp \
+    3rd_party/glm/gtx/integer.inl \
+    3rd_party/glm/gtx/intersect.hpp \
+    3rd_party/glm/gtx/intersect.inl \
+    3rd_party/glm/gtx/io.hpp \
+    3rd_party/glm/gtx/io.inl \
+    3rd_party/glm/gtx/log_base.hpp \
+    3rd_party/glm/gtx/log_base.inl \
+    3rd_party/glm/gtx/matrix_cross_product.hpp \
+    3rd_party/glm/gtx/matrix_cross_product.inl \
+    3rd_party/glm/gtx/matrix_decompose.hpp \
+    3rd_party/glm/gtx/matrix_decompose.inl \
+    3rd_party/glm/gtx/matrix_factorisation.hpp \
+    3rd_party/glm/gtx/matrix_factorisation.inl \
+    3rd_party/glm/gtx/matrix_interpolation.hpp \
+    3rd_party/glm/gtx/matrix_interpolation.inl \
+    3rd_party/glm/gtx/matrix_major_storage.hpp \
+    3rd_party/glm/gtx/matrix_major_storage.inl \
+    3rd_party/glm/gtx/matrix_operation.hpp \
+    3rd_party/glm/gtx/matrix_operation.inl \
+    3rd_party/glm/gtx/matrix_query.hpp \
+    3rd_party/glm/gtx/matrix_query.inl \
+    3rd_party/glm/gtx/matrix_transform_2d.hpp \
+    3rd_party/glm/gtx/matrix_transform_2d.inl \
+    3rd_party/glm/gtx/mixed_product.hpp \
+    3rd_party/glm/gtx/mixed_product.inl \
+    3rd_party/glm/gtx/norm.hpp \
+    3rd_party/glm/gtx/norm.inl \
+    3rd_party/glm/gtx/normal.hpp \
+    3rd_party/glm/gtx/normal.inl \
+    3rd_party/glm/gtx/normalize_dot.hpp \
+    3rd_party/glm/gtx/normalize_dot.inl \
+    3rd_party/glm/gtx/number_precision.hpp \
+    3rd_party/glm/gtx/number_precision.inl \
+    3rd_party/glm/gtx/optimum_pow.hpp \
+    3rd_party/glm/gtx/optimum_pow.inl \
+    3rd_party/glm/gtx/orthonormalize.hpp \
+    3rd_party/glm/gtx/orthonormalize.inl \
+    3rd_party/glm/gtx/perpendicular.hpp \
+    3rd_party/glm/gtx/perpendicular.inl \
+    3rd_party/glm/gtx/polar_coordinates.hpp \
+    3rd_party/glm/gtx/polar_coordinates.inl \
+    3rd_party/glm/gtx/projection.hpp \
+    3rd_party/glm/gtx/projection.inl \
+    3rd_party/glm/gtx/quaternion.hpp \
+    3rd_party/glm/gtx/quaternion.inl \
+    3rd_party/glm/gtx/range.hpp \
+    3rd_party/glm/gtx/raw_data.hpp \
+    3rd_party/glm/gtx/raw_data.inl \
+    3rd_party/glm/gtx/rotate_normalized_axis.hpp \
+    3rd_party/glm/gtx/rotate_normalized_axis.inl \
+    3rd_party/glm/gtx/rotate_vector.hpp \
+    3rd_party/glm/gtx/rotate_vector.inl \
+    3rd_party/glm/gtx/scalar_multiplication.hpp \
+    3rd_party/glm/gtx/scalar_relational.hpp \
+    3rd_party/glm/gtx/scalar_relational.inl \
+    3rd_party/glm/gtx/spline.hpp \
+    3rd_party/glm/gtx/spline.inl \
+    3rd_party/glm/gtx/std_based_type.hpp \
+    3rd_party/glm/gtx/std_based_type.inl \
+    3rd_party/glm/gtx/string_cast.hpp \
+    3rd_party/glm/gtx/string_cast.inl \
+    3rd_party/glm/gtx/texture.hpp \
+    3rd_party/glm/gtx/texture.inl \
+    3rd_party/glm/gtx/transform.hpp \
+    3rd_party/glm/gtx/transform.inl \
+    3rd_party/glm/gtx/transform2.hpp \
+    3rd_party/glm/gtx/transform2.inl \
+    3rd_party/glm/gtx/type_aligned.hpp \
+    3rd_party/glm/gtx/type_aligned.inl \
+    3rd_party/glm/gtx/type_trait.hpp \
+    3rd_party/glm/gtx/type_trait.inl \
+    3rd_party/glm/gtx/vec_swizzle.hpp \
+    3rd_party/glm/gtx/vector_angle.hpp \
+    3rd_party/glm/gtx/vector_angle.inl \
+    3rd_party/glm/gtx/vector_query.hpp \
+    3rd_party/glm/gtx/vector_query.inl \
+    3rd_party/glm/gtx/wrap.hpp \
+    3rd_party/glm/gtx/wrap.inl \
+    3rd_party/glm/integer.hpp \
+    3rd_party/glm/mat2x2.hpp \
+    3rd_party/glm/mat2x3.hpp \
+    3rd_party/glm/mat2x4.hpp \
+    3rd_party/glm/mat3x2.hpp \
+    3rd_party/glm/mat3x3.hpp \
+    3rd_party/glm/mat3x4.hpp \
+    3rd_party/glm/mat4x2.hpp \
+    3rd_party/glm/mat4x3.hpp \
+    3rd_party/glm/mat4x4.hpp \
+    3rd_party/glm/matrix.hpp \
+    3rd_party/glm/packing.hpp \
+    3rd_party/glm/simd/common.h \
+    3rd_party/glm/simd/exponential.h \
+    3rd_party/glm/simd/geometric.h \
+    3rd_party/glm/simd/integer.h \
+    3rd_party/glm/simd/matrix.h \
+    3rd_party/glm/simd/packing.h \
+    3rd_party/glm/simd/platform.h \
+    3rd_party/glm/simd/trigonometric.h \
+    3rd_party/glm/simd/vector_relational.h \
+    3rd_party/glm/trigonometric.hpp \
+    3rd_party/glm/vec2.hpp \
+    3rd_party/glm/vec3.hpp \
+    3rd_party/glm/vec4.hpp \
+    3rd_party/glm/vector_relational.hpp \
     3rd_party/hull_finder.h \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
-    3rd_party/vec3.h \
     editor/colors/colors.h \
     editor/constants_editor.h \
     editor/debug.h \
@@ -554,9 +932,11 @@ HEADERS += \
     library/dr_random.h \
     library/dr_string.h \
     library/dr_time.h \
+    library/types/dr_color.h \
     library/types/dr_point.h \
     library/types/dr_pointf.h \
     library/types/dr_variant.h \
+    library/types/dr_vec3.h \
     model/constants_keys.h \
     model/enums_model_properties.h \
     model/enums_model_types.h \

@@ -31,7 +31,7 @@ void DrOpenGL::drawDebugHealth(QPainter &painter) {
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Figure out what color to make the debug shapes
-        QColor color = objectDebugColor(object, true);
+        DrColor color = objectDebugColor(object, true);
 
         // Load Object Position
         DrPointF center = object->getPosition();
@@ -42,7 +42,7 @@ void DrOpenGL::drawDebugHealth(QPainter &painter) {
             QPainterPath health;
             QString hp = Dr::RemoveTrailingDecimals( object->getHealth(), 2 );
             health.addText(text_coord, health_font, hp);
-            painter.setBrush( QBrush(color) );
+            painter.setBrush( QBrush(QColor(color.red(), color.green(), color.blue())) );
 
             double fw = Dr::CheckFontWidth(health_font, hp);
             painter.translate( -(fw / 2.0), health.boundingRect().height() * 1.5);
@@ -110,7 +110,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
         vertices.resize( 12 * hp.length() );
 
         // Figure out what color to make the health, get health as string
-        QColor color = objectDebugColor(object, true);
+        DrColor color = objectDebugColor(object, true);
 
         // ***** Set Shader Variables
         setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));

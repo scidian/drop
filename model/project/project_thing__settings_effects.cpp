@@ -32,11 +32,11 @@ void DrThing::addComponentSettingsFire() {
 
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape, Property_Type::List, static_cast<int>(Fire_Mask::Torch),
                            "Shape", "Defines a shape mask to use for the Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, QColor(255,   0, 0, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1, Property_Type::Color, DrColor(255,   0, 0, 255).rgba(),
                            "Top Color", "Top color of this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, QColor(255, 255, 0, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2, Property_Type::Color, DrColor(255, 255, 0, 255).rgba(),
                            "Bottom Color", "Bottom color of this Fire.");
-    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke, Property_Type::Color, QColor(0, 0, 0, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke, Property_Type::Color, DrColor(0, 0, 0, 255).rgba(),
                            "Smoke Color", "Background color of this Fire.");
     addPropertyToComponent(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How intense colors should appear in this Fire.");
@@ -61,7 +61,7 @@ void DrThing::addComponentSettingsFisheye() {
     addComponent(Components::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::Orange_Pastel, true);
     getComponent(Components::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
 
-    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, QColor(128, 128, 128, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color, Property_Type::Color, DrColor(128, 128, 128, 255).rgba(),
                            "Color", "Color tint for this Lens.");
     addPropertyToComponent(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint, Property_Type::Percent, 25.0,
                            "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
@@ -72,7 +72,7 @@ void DrThing::addComponentSettingsFisheye() {
 //####################################################################################
 //##    Light Components
 //####################################################################################
-void DrThing::addComponentSettingsLight(QColor color) {
+void DrThing::addComponentSettingsLight(DrColor color) {
     DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
     property_name->setDisplayName("Effect Name");
     property_name->setDescription("Name of this Effect.");
@@ -118,9 +118,9 @@ void DrThing::addComponentSettingsMirror() {
     addComponent(Components::Thing_Settings_Mirror, "Mirror Settings", "Settings for this Mirror.", Component_Colors::Silver_Snow, true);
     getComponent(Components::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
 
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),
                            "Start Color", "Color tint for the top of this Mirror.");
-    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color, Property_Type::Color, QColor(170, 170, 170, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color, Property_Type::Color, DrColor(170, 170, 170, 255).rgba(),
                            "End Color", "Color tint to fade to toward the bottom of this Mirror.");
     addPropertyToComponent(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint, Property_Type::Percent, 50.0,
                            "Tint Percent", "How much color to tint the Mirror, 0 (none) - 100 (all the way)");
@@ -145,7 +145,7 @@ void DrThing::addComponentSettingsSwirl() {
     addComponent(Components::Thing_Settings_Swirl, "Swirl Settings", "Settings for this Swirl.", Component_Colors::Purple_Pastel, true);
     getComponent(Components::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
 
-    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),
                            "Color", "Color tint for this Lens.");
     addPropertyToComponent(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint, Property_Type::Percent, 0.0,
                            "Tint Percent", "How much color to tint the Lens, 0 (none) - 100 (all the way)");
@@ -168,9 +168,9 @@ void DrThing::addComponentSettingsWater() {
 
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Texture, Property_Type::List, static_cast<int>(Water_Texture::Ripples),
                            "Texture", "Defines a texture to use for the water surface, can give the Water several different looks.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, QColor(41, 182, 246, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color, Property_Type::Color, DrColor(41, 182, 246, 255).rgba(),
                            "Start Color", "Color tint for the top of this Water.");
-    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color, Property_Type::Color, QColor(0, 58, 103, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color, Property_Type::Color, DrColor(0, 58, 103, 255).rgba(),
                            "End Color", "Color tint to fade to toward the bottom of this Water.");
     addPropertyToComponent(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint, Property_Type::Percent, 75.0,
                            "Tint Percent", "How much color to tint the Water, 0 (none) - 100 (all the way)");
@@ -220,7 +220,7 @@ void DrThing::addComponentSettingsWater() {
     addComponent(Components::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of this Water.", Component_Colors::Blue_Drop_5, true);
     getComponent(Components::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
 
-    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, QColor(255, 255, 255, 255).rgba(),
+    addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),
                            "Color", "Color tint for the foam on the top of the Water.");
     addPropertyToComponent(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint, Property_Type::Percent, 75.0,
                            "Tint", "How much color to tint the foam on top of the Water, 0 (none) - 100 (all the way)");

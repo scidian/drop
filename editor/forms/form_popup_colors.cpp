@@ -12,6 +12,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/types/dr_color.h"
 
 
 //####################################################################################
@@ -24,7 +25,7 @@ FormPopupColor::FormPopupColor(DrProject *project, QWidget *widget_to_use_for_ma
 //####################################################################################
 //##    Builds a popup with a lot of colors to choose from
 //####################################################################################
-void FormPopupColor::buildPopupColors(QWidget *wants_color, QColor start_color) {
+void FormPopupColor::buildPopupColors(QWidget *wants_color, DrColor start_color) {
 
     // ***** Initialize form variables and settings
     m_wants_return_variable = wants_color;
@@ -135,7 +136,7 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
     }
 
     // Loop through array and make a grid of color labels
-    QColor color;
+    DrColor color;
     for (int i = 0; i < x; i++)  {
         for (int j = 0; j < y; j++) {
 
@@ -156,11 +157,11 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
                             ++color_index;
                         } else {
                             color = color.darker( 150 );
-                            color.setAlphaF(1);
+                            color.setAlphaF(1.0);
                         }
                         break;
                     case Colors::History:
-                        color = QColor::fromRgba( history .at(color_index).toUInt() );
+                        color = history.at(color_index).toColor();
                         ++color_index;
                         break;
                 }
@@ -181,7 +182,7 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
 
             QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
             button->setToolTip( color_as_string );
-            button->setStyleSheet( createButtonStyleSheet(color, border) );
+            button->setStyleSheet( QString::fromStdString(createButtonStyleSheet(color, border)) );
 
             if (type == Colors::History) {  if (color_index >= static_cast<int>(history.size())) break;
             } else {                        if (color_index >= Dr::GetPaletteColorCount(m_current_palette)) break;  }
@@ -196,22 +197,22 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
 }
 
 // Creates initial style sheet text for little color boxes
-QString FormPopupColor::createButtonStyleSheet(QColor color, int border) {
-    QString style;
+std::string FormPopupColor::createButtonStyleSheet(DrColor color, int border) {
+    std::string style;
     if (color.rgb() == m_start_color.rgb()) {
         style = "QPushButton {  "
-                "   border: " + QString::number(border + 2) + "px solid; border-radius: 2px; "
+                "   border: " + std::to_string(border + 2) + "px solid; border-radius: 2px; "
                 "   border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
                 "   background-color: " + color.name() + "; }";
     } else {
         style = "QPushButton {  "
-                "   border: " + QString::number(border) + "px solid; border-radius: 0px; "
+                "   border: " + std::to_string(border) + "px solid; border-radius: 0px; "
                 "   border-color: " + color.darker(175).name() + "; "
                 "   background-color: " + color.name() + "; }";
     }
     style +=
         "QPushButton::hover { "
-        "   border: " + QString::number(border + 2) + "px solid; border-radius: 3px; "
+        "   border: " + std::to_string(border + 2) + "px solid; border-radius: 3px; "
         "   border-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } ";
     return style;
 }
@@ -220,16 +221,16 @@ QString FormPopupColor::createButtonStyleSheet(QColor color, int border) {
 //####################################################################################
 //##    Updates the info label color and text
 //####################################################################################
-void FormPopupColor::setInfoLabelColor(QColor color) {
+void FormPopupColor::setInfoLabelColor(DrColor color) {
     bool white = (color.red() < 160 && color.green() < 160 && color.blue() < 160);
-    QString style =
-        "   background-color: " + color.name() + "; color: ";
-    style += white ? "white; " : "black; ";
-    style +=
-        "   border: 1px solid; border-radius: 4px;"
-        "   border-color: " + color.darker(200).name() + "; ";
-    m_color_label->setStyleSheet(style);
-    QString text = color.name().toUpper();
+    std::string style =
+                    "   background-color: " + color.name() + "; color: ";
+                style += white ? "white; " : "black; ";
+                style +=
+                    "   border: 1px solid; border-radius: 4px;"
+                    "   border-color: " + color.darker(200).name() + "; ";
+    m_color_label->setStyleSheet( QString::fromStdString(style) );
+    QString text = QString::fromStdString(color.name()).toUpper();
     m_color_label->setText( text );
 }
 
@@ -265,7 +266,7 @@ void DrQPushButtonPageSelect::leaveEvent(QEvent *) {
 //####################################################################################
 //##    ColorLabel Class Functions
 //####################################################################################
-DrQPushButtonColorSelect::DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, QColor my_color, int width, int height) :
+DrQPushButtonColorSelect::DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, DrColor my_color, int width, int height) :
     QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height) {
     setAttribute(Qt::WA_Hover);
     ///setToolTip("R: " + QString::number(m_color.red()) + ", B: " + QString::number(m_color.blue()) + ", G: " + QString::number(m_color.green()));

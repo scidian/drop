@@ -12,8 +12,10 @@
 
 #include "boost/any.hpp"
 #include "library/dr_containers.h"
+#include "library/types/dr_color.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
+#include "library/types/dr_vec3.h"
 
 
 //####################################################################################
@@ -51,8 +53,10 @@ public:
     std::list<DrVariant>    toList();
     std::vector<DrVariant>  toVector();
 
+    DrColor                 toColor();
     DrPoint                 toPoint();
     DrPointF                toPointF();
+    DrVec3                  toVec3();
 
 };
 

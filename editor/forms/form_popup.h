@@ -14,6 +14,8 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+#include "library/types/dr_color.h"
+
 // Forward declarations
 class       DrProject;
 class       FormPopup;
@@ -28,6 +30,7 @@ enum class Colors {
     Accent,
     History,
 };
+
 
 //####################################################################################
 //##    FormPopup
@@ -84,7 +87,7 @@ class FormPopupColor : public FormPopup
 
 private:
     QWidget         *m_wants_return_variable;           // A widget that wants something from this popup when its done
-    QColor           m_start_color;                     // Selected color when the color popup starts
+    DrColor          m_start_color;                     // Selected color when the color popup starts
 
     Color_Palettes   m_current_palette;                 // Palette currently shown on palette page
     QStackedWidget  *m_palette_block;                   // Widget holding the currently selected palette color buttons
@@ -98,19 +101,19 @@ public:
     virtual void closeEvent(QCloseEvent *event) override;
 
     // Building Functions
-    void         buildPopupColors(QWidget *wants_color, QColor start_color);
+    void         buildPopupColors(QWidget *wants_color, DrColor start_color);
     QWidget*     createColorBlock(Colors type, int start_index, int columns, int rows, int mid_step,
                                   int block_width, int block_height, int border, int x_spacing, int y_spacing);
-    QString      createButtonStyleSheet(QColor color, int border);
-    void         setInfoLabelColor(QColor color);
+    std::string  createButtonStyleSheet(DrColor color, int border);
+    void         setInfoLabelColor(DrColor color);
 
     // Getters
     QLabel*         getColorLabel()    { return m_color_label; }
     QWidget*        getReturnWidget()  { return m_wants_return_variable; }
-    QColor          getStartColor()    { return m_start_color; }
+    DrColor         getStartColor()    { return m_start_color; }
 
 signals:
-    void         colorGrabbed(QWidget *parent, QColor m_color);
+    void         colorGrabbed(QWidget *parent, DrColor m_color);
 
 };
 
@@ -142,13 +145,13 @@ public:
 class DrQPushButtonColorSelect : public QPushButton
 {
     FormPopupColor *m_popup;                // FormPopupColor form this button is installed on
-    QColor          m_color;                // This label's color
+    DrColor         m_color;                // This label's color
 
     int             m_width;                // This blocks width
     int             m_height;               // This blocks height
 
 public:
-    explicit DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, QColor my_color, int width, int height);
+    explicit DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, DrColor my_color, int width, int height);
     virtual ~DrQPushButtonColorSelect() override;
 
     // Event Overrides

@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QColorDialog>
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QMenu>
@@ -18,8 +19,10 @@
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_popup.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/types/dr_color.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component_property.h"
@@ -44,12 +47,12 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         color_button->setObjectName(QStringLiteral("buttonColorBox"));
         color_button->setFont(font);
         color_button->setSizePolicy(size_policy);
-        color_button->setProperty(User_Property::Key,   QVariant::fromValue( property_key ));
+        color_button->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
         this->updateColorButton(color_button, color);
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
             FormPopupColor *color_popup = new FormPopupColor(getParentProject(), color_box, color_button, -18, 5);
-            color_popup->buildPopupColors(color_button, QColor::fromRgba(color_button->property(User_Property::Color).toUInt()) );
-            connect(color_popup, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
+            color_popup->buildPopupColors(color_button, DrColor(color_button->property(User_Property::Color).toUInt()) );
+            connect(color_popup, SIGNAL(colorGrabbed(QWidget*, DrColor)), this, SLOT(setButtonColor(QWidget*, DrColor)) );
             color_popup->show();
         });
         getHoverHandler()->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
@@ -67,7 +70,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         picker_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(picker_button, &QPushButton::pressed, this, [this, picker_button, color_button]() {
             FormColorMagnifier *picker = new FormColorMagnifier(color_button, QCursor::pos(), 115, 115, 8);
-            connect(picker, SIGNAL(colorGrabbed(QWidget*, QColor)), this, SLOT(setButtonColor(QWidget*, QColor)) );
+            connect(picker, SIGNAL(colorGrabbed(QWidget*, DrColor)), this, SLOT(setButtonColor(QWidget*, DrColor)) );
             picker->show();
             picker_button->setDown(false);
         });
@@ -92,16 +95,16 @@ void TreeInspector::setButtonColorFromSystemDialog(QPushButton *button) {
     QColor old_color= QColor::fromRgba(button->property(User_Property::Color).toUInt());
     QColor color =    QColorDialog::getColor(old_color, this, "Select Color");///, QColorDialog::ColorDialogOption::ShowAlphaChannel);
     ///QColor color = QColorDialog::getColor(old_color, this, "Select Color", QColorDialog::DontUseNativeDialog);   // Qt Implementation
-    setButtonColor(button, color);
+    setButtonColor(button, Dr::FromQColor(color));
 }
 
 // SLOT: Receives a new color and updates color button and appropriate Project Settings
-void TreeInspector::setButtonColor(QWidget *button, QColor color) {
+void TreeInspector::setButtonColor(QWidget *button, DrColor color) {
     QPushButton *push = dynamic_cast<QPushButton*>(button);
-    if (push && color.isValid()) {
-        ///Dr::AddToColorHistory( QColor::fromRgba( button->property(User_Property::Color).toUInt() ));
+    if (push) {
+        ///Dr::AddToColorHistory( DrColor( button->property(User_Property::Color).toUInt() ));
         Dr::AddToColorHistory( color );
-        this->updateColorButton(push, color);
+        this->updateColorButton(push, Dr::ToQColor(color));
         this->updateSettingsFromNewValue(push->property(User_Property::Key).toInt(), color.rgba());
     }
 }
@@ -114,9 +117,9 @@ void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
         highlight =  QColor(255, 255, 255);
     }
     QString color_as_string = "R: " + QString::number(color.red()) + ", G: " + QString::number(color.green()) + ", B: " + QString::number(color.blue());
-    QString color_button = Dr::StyleSheetColorButton(color, text_color, highlight, 4, 0, 4, 0, true, true, "");
+    std::string color_button = Dr::StyleSheetColorButton(Dr::FromQColor(color), Dr::FromQColor(text_color), Dr::FromQColor(highlight), 4, 0, 4, 0, true, true, "");
     button->setToolTip( color_as_string );
-    button->setStyleSheet(color_button);
+    button->setStyleSheet( QString::fromStdString(color_button));
     button->setText( color.name().toUpper() );
 
     // Update advisor info with new color

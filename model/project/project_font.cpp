@@ -29,18 +29,18 @@ DrFont::DrFont(DrProject *parent_project, long key,
     p_font_family =     font_family;
     p_font_size =       font_size;
     p_font_padding =    2;
-    p_main_color =      Qt::white;
+    p_main_color =      Dr::white;
 
     p_outline =         false;
-    p_outline_color =   Qt::black;
+    p_outline_color =   Dr::black;
     p_outline_width =   1;
 
     p_shadow = false;
-    p_shadow_color =    QColor(205, 205, 205, 128);
+    p_shadow_color =    DrColor(205, 205, 205, 128);
     p_shadow_offset =   DrPoint(4, -4);
 
     p_gradient =        false;
-    p_gradient_color =  Qt::red;
+    p_gradient_color =  Dr::red;
 
 
     // ***** Initialize Font Settings

@@ -120,9 +120,10 @@ void FormPopup::buildPopupAddEntity() {
         // Divider line looks nice
         QLabel *label = new QLabel();
         label->setMaximumHeight(1);
-        label->setStyleSheet("color: " +      Dr::GetColor(Window_Colors::Midlight).name() + "; "
+        label->setStyleSheet(QString::fromStdString(
+                             "color: " +      Dr::GetColor(Window_Colors::Midlight).name() + "; "
                              "background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; "
-                             "border: none; margin-left: 5px; margin-right: 5px;");
+                             "border: none; margin-left: 5px; margin-right: 5px;"));
         layout->addWidget(label);
 
         layout->addWidget(buttonChar);

@@ -144,7 +144,7 @@ private:
     DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
     DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
 
-    Vec3        m_previous_position;                        // Previous frame position, updated every frame by update()
+    DrVec3      m_previous_position;                        // Previous frame position, updated every frame by update()
     bool        m_flipped_x = false;                        // True when image is flipped (going left) over the x axis
     bool        m_flipped_y = false;                        // True when image is flipped (going down) over the y axis
 
@@ -365,7 +365,7 @@ public:
     void            setFlipY(bool flipped)  { m_flipped_y = flipped; }
 
     // Object->Body Data - Updated every frame by updateWorld()
-    Vec3            getPreviousPosition()       { return m_previous_position; }
+    DrVec3          getPreviousPosition()       { return m_previous_position; }
     void            updateBodyPosition(DrPointF updated_position, bool update_previous_position_also = false);
 
 };

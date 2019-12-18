@@ -174,8 +174,7 @@ void FormMain::viewZoomToScale(double zoom_scale) { viewEditor->zoomToScale(zoom
 
 
 // Call to change the Advisor
-void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) {
-    setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
+void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
 void FormMain::setAdvisorInfo(QString header, QString body) {
     if (dockAdvisor == nullptr) return;
     if (treeAdvisor == nullptr) return;

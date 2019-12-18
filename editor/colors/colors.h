@@ -8,8 +8,10 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-#include <QColor>
-#include <QVector>
+#include <string>
+
+#include "library/types/dr_variant.h"
+
 
 //####################################################################################
 //##    Palette options for windows
@@ -45,20 +47,20 @@ enum class Color_Palettes {
 };
 
 struct Palette_Info {
-    QString         name =              "Name Me";          // Name of color palette
-    bool            show_in_list =      false;              // Show to user?
-    int             number_of_colors =  0;                  // Number of colors in palette
-    QVector<QColor> colors;
+    std::string             name =              "Name Me";          // Name of color palette
+    bool                    show_in_list =      false;              // Show to user?
+    int                     number_of_colors =  0;                  // Number of colors in palette
+    std::vector<DrColor>    colors;
 };
 
 namespace Dr {
 
     // Color Helper Functions
-    bool            IsSameColor(const QColor &color1, const QColor &color2, double tolerance);
-    QColor          RandomColor();
+    bool            IsSameColor(DrColor &color1, DrColor &color2, double tolerance);
+    DrColor         RandomColor();
 
     // Style Functions
-    QString         BorderWidth();                              // Project wide border width for Style Sheets, as QString
+    std::string     BorderWidth();                              // Project wide border width for Style Sheets, as String
     int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
 
     // Custom Palette Functions
@@ -70,14 +72,14 @@ namespace Dr {
     void            LoadPaletteWindowThemes(Palette_Info &palette);
 
     Color_Scheme    GetColorScheme();
-    QColor          GetColor(Window_Colors color_role);    
-    QColor          GetColorFromPalette(Color_Palettes palette, int color_index);
+    DrColor         GetColor(Window_Colors color_role);
+    DrColor         GetColorFromPalette(Color_Palettes palette, int color_index);
 
     int             GetPaletteColorCount(Color_Palettes palette);
-    QString         GetPaletteName(Color_Palettes palette);
+    std::string     GetPaletteName(Color_Palettes palette);
     bool            GetPaletteShowInList(Color_Palettes palette);
 
-    void            AddToColorHistory(QColor color);
+    void            AddToColorHistory(DrColor color);
 
     /**
      * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor

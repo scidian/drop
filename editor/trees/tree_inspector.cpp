@@ -189,31 +189,31 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             // Build category button
             AssetCategoryButton *category_button = new AssetCategoryButton(QString(" ") + QString::fromStdString(component->getDisplayName()),
                                                                            Qt::black, Qt::black, nullptr, category_item);
-            QString button_style;
-            button_style = QString(" QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
-                                                        " padding-left: 2px;"
-                                                        " border: none; "
-                                                        " border-style: solid; "
-                                                        " border-top-width: " + Dr::BorderWidth() + "; "
-                                                        " border-bottom-width: " + Dr::BorderWidth() + "; "
-                                                        " border-color: " + Dr::GetColor(Window_Colors::Header_Fade).name() + "; "
-                                                        " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-                                                        "   stop:0.00 " + component->getColor().lighter(120).name() +
-                                                        "   stop:0.05 " + component->getColor().lighter(120).name() +
-                                                        "   stop:0.10 " + component->getColor().name() +
-                                                        " , stop:0.90 " + component->getColor().darker(200).name() +
-                                                        " , stop:0.95 " + component->getColor().darker(300).name() +
-                                                        " , stop:1.00 " + component->getColor().darker(300).name() + "); } "
-                                          " QPushButton:hover:!pressed { color: " + component->getColor().lighter(200).name() + "; } "
-                                          " QPushButton:pressed { color: " + component->getColor().darker(250).name() + "; } ");
+            std::string button_style =
+                        " QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
+                                        " padding-left: 2px;"
+                                        " border: none; "
+                                        " border-style: solid; "
+                                        " border-top-width: " + Dr::BorderWidth() + "; "
+                                        " border-bottom-width: " + Dr::BorderWidth() + "; "
+                                        " border-color: " + Dr::GetColor(Window_Colors::Header_Fade).name() + "; "
+                                        " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+                                        "   stop:0.00 " + component->getColor().lighter(120).name() +
+                                        "   stop:0.05 " + component->getColor().lighter(120).name() +
+                                        "   stop:0.10 " + component->getColor().name() +
+                                        " , stop:0.90 " + component->getColor().darker(200).name() +
+                                        " , stop:0.95 " + component->getColor().darker(300).name() +
+                                        " , stop:1.00 " + component->getColor().darker(300).name() + "); } "
+                          " QPushButton:hover:!pressed { color: " + component->getColor().lighter(200).name() + "; } "
+                          " QPushButton:pressed { color: " + component->getColor().darker(250).name() + "; } ";
             // Assign icon to category button
             QPixmap cat_icon(QString::fromStdString(component->getIcon()));
             QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
-            drop_shadow->setColor(component->getColor().darker(200));
+            drop_shadow->setColor( Dr::ToQColor(component->getColor()).darker(200) );
             drop_shadow->setOffset( -4, 4 );
             cat_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(cat_icon.toImage(), drop_shadow, 0) );
             category_button->setIcon(QIcon(cat_icon));
-            category_button->setStyleSheet(button_style);
+            category_button->setStyleSheet(QString::fromStdString(button_style));
 
             // Add the button widget to the tree item
             getHoverHandler()->attachToHoverHandler(category_button,

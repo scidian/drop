@@ -13,7 +13,7 @@
 //####################################################################################
 DrEngineMirror::DrEngineMirror(DrEngineWorld *world, long unique_key, long original_key,
                                double x, double y, double z, double angle, float opacity, DrPointF size,
-                               QColor color_1, QColor color_2, float tint_amount, float blur, float blur_stretch, float scale) :
+                               DrColor color_1, DrColor color_2, float tint_amount, float blur, float blur_stretch, float scale) :
     DrEngineThing(world, unique_key, original_key) {
 
     this->setAngle(angle);

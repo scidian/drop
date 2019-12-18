@@ -16,6 +16,7 @@
 #include <QWidget>
 
 // Forward Declarations
+class DrColor;
 class DrPoint;
 class DrPointF;
 class DrVariant;
@@ -55,6 +56,10 @@ DrPoint     FromQPoint(QPoint point);
 DrPointF    FromQPointF(QPointF pointf);
 QPoint      ToQPoint(DrPoint point);
 QPointF     ToQPointF(DrPointF pointf);
+
+DrColor     FromQColor(QColor color);
+QColor      ToQColor(DrColor color);
+bool        SameQColor(QColor color1, QColor color2, double tolerance);
 
 
 // User Interaction

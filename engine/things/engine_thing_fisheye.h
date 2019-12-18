@@ -20,14 +20,14 @@ class DrEngineFisheye : public DrEngineThing
 {
 public:
     // Lens Settings
-    QColor          start_color = QColor(128, 128, 255);    // Color tint of lens
+    DrColor         start_color = DrColor(128, 128, 255);   // Color tint of lens
     float           color_tint = 0.5f;                      // Color tint percentage     0 to  1
     float           lens_zoom = 2.2f;                       // Lens Zoom                 0 to 10
 
 public:
     // Constructor / Destructor
     DrEngineFisheye(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
-                    QColor start_color_, float tint_, float zoom_);
+                    DrColor start_color_, float tint_, float zoom_);
     virtual ~DrEngineFisheye() override;
 
     // Abstract Engine Thing Overrides

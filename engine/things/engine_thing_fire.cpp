@@ -13,7 +13,7 @@
 //####################################################################################
 DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z,
                            DrPointF scale, double angle, float opacity, DrPointF size,
-                           Fire_Mask mask, QColor color_1, QColor color_2, QColor smoke, float color_intensity, float smooth, float wave, float speed) :
+                           Fire_Mask mask, DrColor color_1, DrColor color_2, DrColor smoke, float color_intensity, float smooth, float wave, float speed) :
     DrEngineThing(world, unique_key, original_key) {
 
     this->setAngle(angle);

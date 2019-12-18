@@ -42,25 +42,25 @@ enum class Property_Type {
     String          = 14,   // string               Uses QLineEdit
     Textbox         = 15,   // string               Uses QTextEdit for multi-line html text input
 
-    PointF          = 16,   // pointF               Decimal pair x and y
-    PositionF       = 17,   // pointF               Decimal pair x and y, used for object positions in scene
+    PointF          = 16,   // DrPointF             Decimal pair x and y
+    PositionF       = 17,   // DrPointF             Decimal pair x and y, used for object positions in scene
                             //                          Y is shown flipped (i.e. * -1), Chipmunk uses different coordinate system than Qt
                             //                          Y flipped in: createDoubleSpinBoxPair(), updateSettingsFromNewValue(),
                             //                                        updateInspectorPropertyBoxes(), updateToolTipData()
-    ScaleF          = 18,   // pointF               Decimal pair x and y, has smaller increment step in spin box
-    PositiveScaleF  = 19,   // pointF               Decimal pair x and y, both numbers are >= 0.0
-    SizeF           = 20,   // pointF               Decimal pair w and h
-    PositiveSizeF   = 21,   // pointF               Decimal pair w and h, both numbers are >= 1.0
-    Point3D         = 22,   // vector<variant>      Decimal point trio, x, y, z
+    ScaleF          = 18,   // DrPointF             Decimal pair x and y, has smaller increment step in spin box
+    PositiveScaleF  = 19,   // DrPointF             Decimal pair x and y, both numbers are >= 0.0
+    SizeF           = 20,   // DrPointF             Decimal pair w and h
+    PositiveSizeF   = 21,   // DrPointF             Decimal pair w and h, both numbers are >= 1.0
+    Point3D         = 22,   // DrVec3               Decimal point trio, x, y, z
                             //                          3 values: double x, double y, double z
 
-    GridF           = 23,   // pointF               Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
-    GridScaleF      = 24,   // pointF               Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable        = 25,   // pointF               Decimal point pair, number followed by a +/- number
+    GridF           = 23,   // DrPointF             Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
+    GridScaleF      = 24,   // DrPointF             Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
+    Variable        = 25,   // DrPointF             Decimal point pair, number followed by a +/- number
 
     List            = 26,   // long                 Index of a particular enum list
 
-    Color           = 27,   // unsigned int         For colors (compatible with QColor.rgba())
+    Color           = 27,   // unsigned int         For colors (compatible with DrColor.rgba())
     Image           = 28,   // long                 Index of a particular DrAnimation within the Project
 
     Collision       = 29,   // DrPropertyCollision  For Collision Shapes

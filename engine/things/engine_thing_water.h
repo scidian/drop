@@ -21,8 +21,8 @@ class DrEngineWater : public DrEngineThing
 public:
     // Water Settings
     Water_Texture   water_texture = Water_Texture::Ripples; // Texture to use
-    QColor          start_color = QColor(128, 128, 255);    // Color of top of water
-    QColor          end_color = QColor(128, 128, 255);      // Color of bottom of water
+    DrColor         start_color = DrColor(128, 128, 255);   // Color of top of water
+    DrColor         end_color = DrColor(128, 128, 255);     // Color of bottom of water
     float           water_tint = 0.5f;                      // Color tint percentage     0 to 1
     float           reflection_opacity = 0.5f;              // Reflection opacity        0 to 1
 
@@ -35,7 +35,7 @@ public:
     float           wave_speed =        20.0;               // Wave frequency
     float           wave_amplitude =    20.0;               // Wave frequency
 
-    QColor          surface_color = QColor(255, 255, 255);  // Surface color
+    DrColor         surface_color = DrColor(255, 255, 255); // Surface color
     float           surface_tint = 0.5f;                    // Surface tint percentage
     float           surface_height = 5.0f;                  // Surface height
     bool            surface_keep_flat = false;              // Keep top of water flat?
@@ -50,11 +50,11 @@ public:
 public:
     // Constructor / Destructor
     DrEngineWater(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
-                  Water_Texture texture, QColor start_color, QColor end_color,
+                  Water_Texture texture, DrColor start_color, DrColor end_color,
                   float tint, float reflection,
                   float rip_length,     float rip_speed, float rip_amplitude, float rip_stretch,
                   float w_length,       float w_speed,   float w_amplitude,
-                  QColor foam_color,    float foam_tint, float foam_height, bool foam_flat,
+                  DrColor foam_color,    float foam_tint, float foam_height, bool foam_flat,
                   float r_reflection,   float r_underwater, float r_texture, float r_foam, float texture_movement);
     virtual ~DrEngineWater() override;
 

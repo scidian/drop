@@ -86,7 +86,7 @@ void FormColorMagnifier::grabScreen(QScreen *screen) {
 void FormColorMagnifier::mousePressEvent(QMouseEvent *event) { QWidget::mousePressEvent(event); }
 void FormColorMagnifier::mouseReleaseEvent(QMouseEvent *) {
     Dr::ClearCursor();
-    emit colorGrabbed(m_parent, m_color);
+    emit colorGrabbed(m_parent, Dr::FromQColor(m_color));
     this->close();
 }
 
@@ -161,27 +161,27 @@ QPixmap FormColorMagnifier::drawCursor(QPoint screen_pos, int width, int height,
 
     // Draw rings around zoom
     paint.setRenderHint(QPainter::Antialiasing, true);
-    paint.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark), 4 ) );
+    paint.setPen( QPen( Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)), 4 ) );
     paint.drawEllipse(2, 2, width- 4, height - 4);
-    paint.setPen( QPen( Dr::GetColor(Window_Colors::Midlight), 2 ) );
+    paint.setPen( QPen( Dr::ToQColor(Dr::GetColor(Window_Colors::Midlight)), 2 ) );
     paint.drawEllipse(2, 2, width - 4, height - 4);
     paint.setPen( QPen( m_color, 4 ) );
     paint.drawEllipse(5, 5, width - 10, height - 10);
 
     // Draw bottom text box area
-    paint.setPen( QPen( Dr::GetColor(Window_Colors::Background_Dark), 4 ) );
-    QColor back_color = Dr::GetColor(Window_Colors::Background_Dark);
+    paint.setPen( QPen( Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)), 4 ) );
+    QColor back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
            back_color.setAlpha(128);
     paint.setBrush( back_color );
     QRectF text_rect = QRectF(5, height + 5, width - 10, c_text_box_height - 10);
     paint.drawRoundedRect( text_rect, 10, 10);
-    paint.setPen( QPen( Dr::GetColor(Window_Colors::Midlight), 2 ) );
+    paint.setPen( QPen( Dr::ToQColor(Dr::GetColor(Window_Colors::Midlight)), 2 ) );
     paint.drawRoundedRect( text_rect.adjusted(0, 0, 0, 0), 10, 10);
     paint.setPen( QPen( m_color, 3 ) );
     paint.drawRoundedRect( text_rect.adjusted(2, 2, -2, -2), 8, 8);
 
     // Draw color name text
-    paint.setPen( Dr::GetColor(Window_Colors::Text_Light) );
+    paint.setPen( Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)) );
     ///QString color_string = "R: " + QString::number(m_color.red()) +
     ///                      " G: " + QString::number(m_color.green()) +
     ///                      " B: " + QString::number(m_color.blue());

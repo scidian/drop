@@ -220,14 +220,10 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    std::vector<DrVariant> point3D = property->getValue().toVector();
-    double x = static_cast<double>(point3D[0].toDouble());
-    double y = static_cast<double>(point3D[1].toDouble());
-    double z = static_cast<double>(point3D[2].toDouble());
-
-    DrQTripleSpinBox *spin_x = initializeEmptySpinBox(property, font, x);
-    DrQTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, y);
-    DrQTripleSpinBox *spin_z = initializeEmptySpinBox(property, font, z);
+    DrVec3 point3D = property->getValue().toVec3();
+    DrQTripleSpinBox *spin_x = initializeEmptySpinBox(property, font, static_cast<double>(point3D.x));
+    DrQTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, static_cast<double>(point3D.y));
+    DrQTripleSpinBox *spin_z = initializeEmptySpinBox(property, font, static_cast<double>(point3D.z));
 
     spin_x->setFixedHeight(22);
     spin_y->setFixedHeight(22);

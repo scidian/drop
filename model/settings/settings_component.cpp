@@ -18,7 +18,7 @@
 DrComponent::DrComponent(DrSettings    *parent_settings,
                          std::string    new_display_name,
                          std::string    new_description,
-                         QColor         new_color,
+                         DrColor        new_color,
                          long           new_key,
                          bool           new_turned_on) {
     m_parent_settings = parent_settings;

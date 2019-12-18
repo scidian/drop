@@ -14,6 +14,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_popup.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "model/project/project.h"
 
@@ -58,8 +59,8 @@ void FormPopup::paintEvent(QPaintEvent *event) {
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
-    painter.setBrush( QBrush(Dr::GetColor(Window_Colors::Button_Dark) ) );
+    painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Midlight))) );
+    painter.setBrush( QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark))) );
 
     if (m_below) {
         painter.drawRoundedRect(1, 11, this->rect().width() - 3, 24, 9, 6);
@@ -70,7 +71,7 @@ void FormPopup::paintEvent(QPaintEvent *event) {
         points[2] = QPoint((this->rect().width() / 2) + 20, 21);
         painter.drawPolygon(points, 3);
 
-        painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
+        painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Midlight))) );
         painter.drawLine( points[0], QPoint((this->rect().width() / 2) - 10, 11) );
         painter.drawLine( points[0], QPoint((this->rect().width() / 2) + 10, 11) );
     } else {
@@ -83,7 +84,7 @@ void FormPopup::paintEvent(QPaintEvent *event) {
         points[2] = QPoint((this->rect().width() / 2) + 20, this->rect().height() - 22);
         painter.drawPolygon(points, 3);
 
-        painter.setPen( QPen(Dr::GetColor(Window_Colors::Midlight)) );
+        painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Midlight))) );
         painter.drawLine( points[0], QPoint((this->rect().width() / 2) - 10, this->rect().height() - 12) );
         painter.drawLine( points[0], QPoint((this->rect().width() / 2) + 10, this->rect().height() - 12) );
 

@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -13,6 +13,8 @@
 #include <QPainter>
 #include <QScreen>
 #include <QWidget>
+
+#include <library/types/dr_color.h>
 
 
 //####################################################################################
@@ -42,15 +44,15 @@ void        CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *for
                                double width_percentage = -1, double height_percentage = -1);
 QScreen*    FindScreenFromWidget(QWidget *widget);
 
-QString     StyleSheetColorButton(QColor color, QColor text_color, QColor highlight,
+std::string StyleSheetColorButton(DrColor color, DrColor text_color, DrColor highlight,
                                   int tl_radius, int tr_radius, int bl_radius, int br_radius,
-                                  bool left_border, bool right_border, QString name);
-QString     StyleSheetToolBar();
-QString     StyleSheetToolBarButtons(QString button_name, QString icon_unchecked, QString icon_checked, QString icon_disabled,
+                                  bool left_border, bool right_border, std::string name);
+std::string StyleSheetToolBar();
+std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_unchecked, std::string icon_checked, std::string icon_disabled,
                                      int padding, int tl, int tr, int bl, int br, bool checkable);
-QString     StyleSheetToolBarModeButton(QString button_name, QString icon_name, QString icon_faded_name);
-QString     StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
-QString     StyleSheetPoppedOutBackgroundBorder(QColor background_color, QColor border_color, int top_percent,
+std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name);
+std::string StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
+std::string StyleSheetPoppedOutBackgroundBorder(DrColor background_color, DrColor border_color, int top_percent,
                                                 int bottom_percent, bool highlight = false);
 
 // ***** QPixmap Functions

@@ -119,7 +119,8 @@ void FormAbout::buildForm() {
         QTextEdit *license = new QTextEdit(licenseText());
         license->setReadOnly(true);
         license->setFixedHeight(100);
-        license->setStyleSheet( " QTextEdit { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+        license->setStyleSheet( QString::fromStdString(
+                                " QTextEdit { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
                                 "             color: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
                                 "             border-color: " + Dr::GetColor(Window_Colors::Midlight).name() + "; } "
                                 " QScrollBar:vertical { width: 10px; margin: 0px; border-radius: 0px; "
@@ -128,7 +129,7 @@ void FormAbout::buildForm() {
                                 "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
                                 " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
                                 " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
-                               );
+                                ));
         inner_layout->addWidget(license);
 
         QPushButton *exit = new QPushButton("  Okay  ");

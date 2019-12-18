@@ -15,6 +15,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_popup.h"
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
 #include "model/project/project.h"
@@ -199,16 +200,16 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
     QColor top, middle;
     bool hover = (property(User_Property::Mouse_Over).toBool() && checkbox_indicator.contains(mouse_position));
     if (hover) {
-        top =    Dr::GetColor(Window_Colors::Background_Dark).darker(110);
-        middle = Dr::GetColor(Window_Colors::Background_Light);
+        top =    Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(110);
+        middle = Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
     } else {
-        top =    Dr::GetColor(Window_Colors::Background_Dark).darker(150);
-        middle = Dr::GetColor(Window_Colors::Background_Dark);
+        top =    Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150);
+        middle = Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
     }
 
     if (this->isEnabled()) {
         // Draw bottom highlight
-        painter.setPen( QPen(Dr::GetColor(Window_Colors::Background_Dark).lighter(200), Dr::BorderWidthAsInt()) );
+        painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).lighter(200), Dr::BorderWidthAsInt()) );
         painter.setBrush( Qt::NoBrush );
         painter.drawRoundedRect(m_draw_left, m_draw_top, 21, 21, 4, 4);
 
@@ -219,12 +220,12 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
         gradient.setColorAt(0.18, middle);
         gradient.setColorAt(1.00, middle);
         painter.setBrush(gradient);
-        painter.setPen( QPen(Dr::GetColor(Window_Colors::Background_Dark).darker(200), Dr::BorderWidthAsInt()) );
+        painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(200), Dr::BorderWidthAsInt()) );
         painter.drawRoundedRect(m_draw_left, m_draw_top, 21, 20, 4, 4);
 
         // Draw check mark
         if (checkState()) {
-            painter.setPen( QPen(Dr::GetColor(Window_Colors::Text), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
+            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
             QVector<QLineF> check;
             ///check.append( QLineF( 11, 13, 13, 16) );
             ///check.append( QLineF( 14, 16, 21,  8) );
@@ -235,7 +236,7 @@ void DrQCheckBox::paintEvent(QPaintEvent *) {
     } else {
         // Draw check mark
         if (checkState()) {
-            painter.setPen( QPen(Dr::GetColor(Window_Colors::Text_Dark), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
+            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
             QVector<QLineF> check;
             ///check.append( QLineF( 11, 13, 13, 16) );
             ///check.append( QLineF( 14, 16, 21,  8) );

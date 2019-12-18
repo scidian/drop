@@ -14,6 +14,9 @@
 #include <QScreen>
 #include <QWidget>
 
+#include "library/types/dr_color.h"
+
+
 //####################################################################################
 //##    FormColorMagnifier
 //##        Magnifying glass that pops up to pick a color off the screen
@@ -55,7 +58,7 @@ public slots:
     void        grabScreen(QScreen *screen);
 
 signals:
-    void        colorGrabbed(QWidget *parent, QColor m_color);
+    void        colorGrabbed(QWidget *parent, DrColor m_color);
 
 };
 

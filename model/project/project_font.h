@@ -34,18 +34,18 @@ private:
     std::string p_font_family;              // Font to use
     int         p_font_size;                // Point size
     int         p_font_padding;             // Extra letter spacing
-    QColor      p_main_color;               // Main font color
+    DrColor     p_main_color;               // Main font color
 
     bool        p_outline;
-    QColor      p_outline_color;
+    DrColor     p_outline_color;
     int         p_outline_width;
 
     bool        p_shadow;
-    QColor      p_shadow_color;
+    DrColor     p_shadow_color;
     DrPoint     p_shadow_offset;
 
     bool        p_gradient;
-    QColor      p_gradient_color;
+    DrColor     p_gradient_color;
 
 
 public:

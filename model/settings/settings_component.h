@@ -8,8 +8,6 @@
 #ifndef DRCOMPONENT_H
 #define DRCOMPONENT_H
 
-#include <QColor>
-
 #include "library/types/dr_variant.h"
 #include "model/enums_model_types.h"
 #include "model/enums_model_properties.h"
@@ -38,7 +36,7 @@ private:
     std::string     m_display_name = "Unknown Component";
     std::string     m_description = "No description";
     std::string     m_icon = "";
-    QColor          m_color = QColor(Qt::gray);
+    DrColor         m_color = DrColor(128, 128, 128, 255);
     bool            m_turned_on = false;
     long            m_component_key;
 
@@ -48,7 +46,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrComponent(DrSettings *parent_settings, std::string new_display_name, std::string new_description, QColor new_color, long new_key, bool new_turned_on);
+    DrComponent(DrSettings *parent_settings, std::string new_display_name, std::string new_description, DrColor new_color, long new_key, bool new_turned_on);
     ~DrComponent();
 
     // Getters / Setters
@@ -61,14 +59,14 @@ public:
     std::string     getDisplayName() { return m_display_name; }
     std::string     getDescription() { return m_description; }
     std::string     getIcon() { return m_icon; }
-    QColor          getColor() { return m_color; }
+    DrColor         getColor() { return m_color; }
     bool            isTurnedOn() { return m_turned_on; }
     long            getComponentKey() { return m_component_key; }
 
     void            setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
     void            setDescription(std::string new_description) { m_description = new_description; }
     void            setIcon(std::string new_icon) { m_icon = new_icon; }
-    void            setColor(QColor new_color) { m_color = new_color; }
+    void            setColor(DrColor new_color) { m_color = new_color; }
     void            setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
     void            turnOn() { m_turned_on = true; }
     void            turnOff() { m_turned_on = false; }
