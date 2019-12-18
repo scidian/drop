@@ -10,10 +10,14 @@
 
 #include <QPixmap>
 
+#include "library/types/dr_color.h"
+#include "library/types/dr_point.h"
+#include "library/types/dr_pointf.h"
 #include "model/settings/settings.h"
 
 // Forward declarations
 class DrProject;
+
 
 //####################################################################################
 //##    DrFont

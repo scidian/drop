@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include "library/dr_math.h"
+#include "library/types/dr_pointf.h"
 
 
 namespace Dr {

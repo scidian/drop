@@ -9,6 +9,7 @@
 #include "editor/globals_editor.h"
 #include "library/dr_math.h"
 #include "library/dr_random.h"
+#include "library/types/dr_color.h"
 #include "model/enums_model_types.h"
 
 typedef std::map<Color_Scheme,   std::map<Window_Colors, DrColor>> Color_Scheme_Map;

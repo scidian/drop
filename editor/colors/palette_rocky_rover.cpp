@@ -6,9 +6,10 @@
 //
 //
 #include "editor/colors/colors.h"
-
+#include "library/types/dr_color.h"
 
 namespace Dr {
+
 
 void LoadPaletteRockyRover(Palette_Info &palette) {
     palette.name = "Rocky Rover";

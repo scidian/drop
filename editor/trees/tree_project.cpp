@@ -132,7 +132,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
 
             // ***** Iterates through Things based on z-order of each Thing
             ThingMap &things = stage->getThingMap();
-            std::vector<long> keys = stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+            std::vector<long> keys = stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder);
 
             for (auto key: keys) {
                 DrThing         *thing =        things[key];

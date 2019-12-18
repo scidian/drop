@@ -70,7 +70,7 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
 
     // ***** Fill in any empty spaces
     std::list<DrThing*> things_sorted;
-    for (auto thing : m_parent_stage->thingsSortedByZOrder(Qt::DescendingOrder)) {
+    for (auto thing : m_parent_stage->thingsSortedByZOrder(Sort_Order::DescendingOrder)) {
         double thing_z = thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
         if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { things_sorted.push_back(thing); }
     }
@@ -86,7 +86,7 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
 //##    Move Z-Order / Sub Order
 //####################################################################################
 void DrThing::moveBackward() {
-    std::vector<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+    std::vector<long> list = m_parent_stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder);
 
     // Find Things position within the Stage
     int my_position = 0;
@@ -107,7 +107,7 @@ void DrThing::moveBackward() {
 }
 
 void DrThing::moveForward() {
-    std::vector<long> list = m_parent_stage->thingKeysSortedByZOrder(Qt::DescendingOrder);
+    std::vector<long> list = m_parent_stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder);
 
     // Find Things position within the Stage
     int my_position = 0;

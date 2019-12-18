@@ -10,6 +10,8 @@
 
 #include <QString>
 
+#include <vector>
+
 #include "library/types/dr_color.h"
 
 

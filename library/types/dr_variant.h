@@ -8,13 +8,11 @@
 #ifndef DR_VARIANT_H
 #define DR_VARIANT_H
 
-#include <string>
-
 #include "boost/any.hpp"
-#include "library/dr_containers.h"
 #include "library/types/dr_color.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
+#include "library/types/dr_vec2.h"
 #include "library/types/dr_vec3.h"
 
 
@@ -56,6 +54,7 @@ public:
     DrColor                 toColor();
     DrPoint                 toPoint();
     DrPointF                toPointF();
+    DrVec2                  toVec2();
     DrVec3                  toVec3();
 
 };

@@ -121,19 +121,19 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Send to Front
         if (key_pressed == Qt::Key_Greater) {
-            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Sort_Order::AscendingOrder, false, selected_things);
             for (auto &thing : things) {
-                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).front() != thing->getKey()) {
+                while (stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder).front() != thing->getKey()) {
                     thing->moveForward();
                 }
             }
 
         // ***** Send Forward
         } else if (key_pressed == Qt::Key_Period) {
-            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Sort_Order::DescendingOrder, false, selected_things);
             size_t i = 0;
             for (auto thing : things) {
-                if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
+                if (stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder).at(i) != thing->getKey()) {
                     thing->moveForward();
                 }
                 i++;
@@ -141,19 +141,19 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Send to Back
         } else if (key_pressed == Qt::Key_Less) {
-            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::DescendingOrder, false, selected_things);
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Sort_Order::DescendingOrder, false, selected_things);
             for (auto &thing : things) {
-                while (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).back() != thing->getKey()) {
+                while (stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder).back() != thing->getKey()) {
                     thing->moveBackward();
                 }
             }
 
         // ***** Send Backward
         } else if (key_pressed == Qt::Key_Comma) {
-            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Qt::AscendingOrder, false, selected_things);
-            size_t i = stage->thingKeysSortedByZOrder(Qt::DescendingOrder).size() - 1;
+            std::vector<DrThing*> things = stage->thingsSortedByZOrder(Sort_Order::AscendingOrder, false, selected_things);
+            size_t i = stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder).size() - 1;
             for (auto thing : things) {
-                if (stage->thingKeysSortedByZOrder(Qt::DescendingOrder).at(i) != thing->getKey()) {
+                if (stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder).at(i) != thing->getKey()) {
                     thing->moveBackward();
                 }
                 i--;

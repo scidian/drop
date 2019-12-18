@@ -11,8 +11,6 @@
 
 #include <string>
 
-#include "library/dr_math.h"
-
 // Struct for Hue, Saturation, Value
 struct DrHsv {
     int hue =           0;     // 0 to 36000
@@ -27,10 +25,10 @@ struct DrHsv {
 class DrColor
 {
 private:
-    int r = 0;
-    int g = 0;
-    int b = 0;
-    int a = 255;
+    int r = 0;              // Red      Range: 0 to 255
+    int g = 0;              // Green    Range: 0 to 255
+    int b = 0;              // Blue     Range: 0 to 255
+    int a = 255;            // Alpha    Range: 0 to 255
 
 public:
     // Constructors
@@ -62,14 +60,14 @@ public:
     int         alpha()     { return a; }
     double      alphaF()    { return static_cast<double>(a) / 255.0; }
 
-    void        setRed(int red)         { r = Dr::Clamp(red, 0, 255); }
-    void        setRedF(double red)     { r = Dr::Clamp(static_cast<int>(red * 255.0), 0, 255); }
-    void        setGreen(int green)     { g = Dr::Clamp(green, 0, 255); }
-    void        setGreenF(double green) { g = Dr::Clamp(static_cast<int>(green * 255.0), 0, 255); }
-    void        setBlue(int blue)       { b = Dr::Clamp(blue, 0, 255); }
-    void        setBlueF(double blue)   { b = Dr::Clamp(static_cast<int>(blue * 255.0), 0, 255); }
-    void        setAlpha(int alpha)     { a = Dr::Clamp(alpha, 0, 255); }
-    void        setAlphaF(double alpha) { a = Dr::Clamp(static_cast<int>(alpha * 255.0), 0, 255); }
+    void        setRed(int red);
+    void        setRedF(double red);
+    void        setGreen(int green);
+    void        setGreenF(double green);
+    void        setBlue(int blue);
+    void        setBlueF(double blue);
+    void        setAlpha(int alpha);
+    void        setAlphaF(double alpha);
 
     // Operator Overloads
     DrColor&    operator=(const DrColor &other);

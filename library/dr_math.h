@@ -9,12 +9,13 @@
 #ifndef DR_MATH_H
 #define DR_MATH_H
 
-#include "library/types/dr_pointf.h"
+// Forward Declarations
+class DrPoint;
+class DrPointF;
 
 // Local Defines
 #define EPSILON 0.00001
 #define DR_PI   3.141592653589793238463
-
 
 namespace Dr {
 

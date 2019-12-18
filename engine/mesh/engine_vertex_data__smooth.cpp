@@ -3,7 +3,9 @@
 //
 //  File:
 //
-//
+//  For some same code framework for Lapacian Smooting see:
+//      http://rodolphe-vaillant.fr/?c=code
+//      https://github.com/silenthell/harmonic_weights_triangle_mesh
 //
 #include <QDebug>
 

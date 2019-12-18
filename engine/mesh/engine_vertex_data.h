@@ -77,20 +77,20 @@ public:
                             const QImage &black_and_white, bool wireframe, Trianglulation type);
 
     // Building Functions
-    void    add(const glm::vec3 &vertex, const glm::vec3 &normal, const glm::vec2 &text_coord, Triangle_Point point_number);
-    void    extrude(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
-                    GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2, int steps = 1);
-    void    cube(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
-                 GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
-                 GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3,
-                 GLfloat x4, GLfloat y4, GLfloat tx4, GLfloat ty4);
-    void    quad(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
-                 GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
-                 GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3,
-                 GLfloat x4, GLfloat y4, GLfloat tx4, GLfloat ty4);
-    void    triangle(GLfloat x1, GLfloat y1, GLfloat tx1, GLfloat ty1,
-                     GLfloat x2, GLfloat y2, GLfloat tx2, GLfloat ty2,
-                     GLfloat x3, GLfloat y3, GLfloat tx3, GLfloat ty3);
+    void    add(const DrVec3 &vertex, const DrVec3 &normal, const DrVec2 &text_coord, Triangle_Point point_number);
+    void    extrude(float x1, float y1, float tx1, float ty1,
+                    float x2, float y2, float tx2, float ty2, int steps = 1);
+    void    cube(float x1, float y1, float tx1, float ty1,
+                 float x2, float y2, float tx2, float ty2,
+                 float x3, float y3, float tx3, float ty3,
+                 float x4, float y4, float tx4, float ty4);
+    void    quad(float x1, float y1, float tx1, float ty1,
+                 float x2, float y2, float tx2, float ty2,
+                 float x3, float y3, float tx3, float ty3,
+                 float x4, float y4, float tx4, float ty4);
+    void    triangle(float x1, float y1, float tx1, float ty1,
+                     float x2, float y2, float tx2, float ty2,
+                     float x3, float y3, float tx3, float ty3);
 };
 
 

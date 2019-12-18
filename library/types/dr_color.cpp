@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "library/dr_debug.h"
+#include "library/dr_math.h"
 #include "library/types/dr_color.h"
 
 
@@ -71,6 +72,19 @@ std::string DrColor::name() {
     if (hex_b.length() == 1) hex_b = std::string("0") + hex_b;
     return std::string("#" + hex_r + hex_g + hex_b);
 }
+
+
+//####################################################################################
+//##    Setters
+//####################################################################################
+void DrColor::setRed(int red)           { r = Dr::Clamp(red, 0, 255); }
+void DrColor::setRedF(double red)       { r = Dr::Clamp(static_cast<int>(red * 255.0), 0, 255); }
+void DrColor::setGreen(int green)       { g = Dr::Clamp(green, 0, 255); }
+void DrColor::setGreenF(double green)   { g = Dr::Clamp(static_cast<int>(green * 255.0), 0, 255); }
+void DrColor::setBlue(int blue)         { b = Dr::Clamp(blue, 0, 255); }
+void DrColor::setBlueF(double blue)     { b = Dr::Clamp(static_cast<int>(blue * 255.0), 0, 255); }
+void DrColor::setAlpha(int alpha)       { a = Dr::Clamp(alpha, 0, 255); }
+void DrColor::setAlphaF(double alpha)   { a = Dr::Clamp(static_cast<int>(alpha * 255.0), 0, 255); }
 
 
 //####################################################################################

@@ -25,6 +25,7 @@
 //####################################################################################
 DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
                  long new_stage_key, std::string new_stage_name, bool is_start_stage) : DrSettings(parent_project) {
+    m_center_view_point = DrPointF(0, 0);
     m_parent_world = parent_world;                  // pointer to parent World
 
     this->setKey(new_stage_key);                    // assign key passed in from key generator, this key matches key in parent World map container
@@ -105,7 +106,7 @@ void DrStage::deleteThing(DrThing *&thing) {
 //####################################################################################
 //##    Returns a list of Thing keys contained in stage, sorted from high z value to low
 //####################################################################################
-std::vector<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {
+std::vector<long> DrStage::thingKeysSortedByZOrder(Sort_Order sort_order) {
     std::vector<long> z_ordered_keys;
     for (auto thing : thingsSortedByZOrder(sort_order))
         z_ordered_keys.push_back(thing->getKey());
@@ -115,7 +116,7 @@ std::vector<long> DrStage::thingKeysSortedByZOrder(Qt::SortOrder sort_order) {
 //####################################################################################
 //##    Returns a list of Things contained in stage, sorted from high z value to low
 //####################################################################################
-std::vector<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things, std::list<DrThing*> just_these_things) {
+std::vector<DrThing*> DrStage::thingsSortedByZOrder(Sort_Order sort_order, bool all_things, std::list<DrThing*> just_these_things) {
     // Make a Vector of pairs for sorting
     std::vector<std::pair<double, DrThing*>> zorder_key_pair;
     if (all_things) {
@@ -136,7 +137,7 @@ std::vector<DrThing*> DrStage::thingsSortedByZOrder(Qt::SortOrder sort_order, bo
     }
 
     // Reverse if Ascending
-    if (sort_order == Qt::SortOrder::AscendingOrder) {
+    if (sort_order == Sort_Order::AscendingOrder) {
         std::reverse(z_ordered_things.begin(), z_ordered_things.end());
     }
 

@@ -245,6 +245,7 @@ SOURCES += \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
     library/types/dr_variant.cpp \
+    library/types/dr_vec2.cpp \
     library/types/dr_vec3.cpp \
     main.cpp \
     model/enums_model_types.cpp \
@@ -939,6 +940,7 @@ HEADERS += \
     library/types/dr_point.h \
     library/types/dr_pointf.h \
     library/types/dr_variant.h \
+    library/types/dr_vec2.h \
     library/types/dr_vec3.h \
     model/constants_keys.h \
     model/enums_model_properties.h \

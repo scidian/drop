@@ -5,6 +5,11 @@
 //
 //
 //
+#include "3rd_party/glm/gtx/normal.hpp"
+#include "3rd_party/glm/gtx/transform.hpp"
+#include "3rd_party/glm/matrix.hpp"
+#include "3rd_party/glm/vec3.hpp"
+#include "library/dr_math.h"
 #include "library/types/dr_vec3.h"
 
 
@@ -12,28 +17,39 @@
 //##    Constructors
 //####################################################################################
 DrVec3::DrVec3()                                { x = static_cast<float>(0);        y = static_cast<float>(0);      z = static_cast<float>(0); }
-DrVec3::DrVec3(float v)                         { x = v;                            y = v;                          z = v; }
+DrVec3::DrVec3(float f)                         { x = f;                            y = f;                          z = f; }
 DrVec3::DrVec3(float x_, float y_, float z_)    { x = x_;                           y = y_;                         z = z_; }
 DrVec3::DrVec3(const DrVec3 &v)                 { x = static_cast<float>(v.x);      y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
 DrVec3::DrVec3(const glm::vec3 &v)              { x = static_cast<float>(v.x);      y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
 
 
 //####################################################################################
-//##    Overload Operators - Additions
+//##    Conversion
 //####################################################################################
-DrVec3 DrVec3::operator+(const DrVec3 &v_) const {
-    return DrVec3(x+v_.x, y+v_.y, z+v_.z);
+glm::vec3 DrVec3::toGlmVec3()                   { return glm::vec3(x, y, z); }
+
+
+//####################################################################################
+//##    Vector 3 Functions
+//####################################################################################
+// Calculates triangle normal from three points of triangle
+DrVec3 DrVec3::triangleNormal(const DrVec3 &point_1, const DrVec3 &point_2, const DrVec3 &point_3) {
+    glm::vec3 n = glm::triangleNormal(glm::vec3(point_1.x, point_1.y, point_1.z),
+                                      glm::vec3(point_2.x, point_2.y, point_2.z),
+                                      glm::vec3(point_3.x, point_3.y, point_3.z));
+    return DrVec3(n.x, n.y, n.z);
 }
 
+
+
+//####################################################################################
+//##    Overload Operators - Additions
+//####################################################################################
 DrVec3& DrVec3::operator+=(const DrVec3 &v_) {
     x += v_.x;
     y += v_.y;
     z += v_.z;
     return *this;
-}
-
-DrVec3 DrVec3::operator+(float f_) const {
-    return DrVec3(x+f_, y+f_, z+f_);
 }
 
 DrVec3& DrVec3::operator+=(float f_) {
@@ -43,7 +59,15 @@ DrVec3& DrVec3::operator+=(float f_) {
     return *this;
 }
 
-// Friend function
+DrVec3 DrVec3::operator+(const DrVec3 &v_) const {
+    return DrVec3(x+v_.x, y+v_.y, z+v_.z);
+}
+
+DrVec3 DrVec3::operator+(float f_) const {
+    return DrVec3(x+f_, y+f_, z+f_);
+}
+
+// Friend function, left hand side addition
 DrVec3 operator+(const float d_, const DrVec3 &vec) {
     return DrVec3(d_+vec.x, d_+vec.y, d_+vec.z);
 }
@@ -52,22 +76,12 @@ DrVec3 operator+(const float d_, const DrVec3 &vec) {
 //####################################################################################
 //##    Overload Operators - Subtractions
 //####################################################################################
-DrVec3 DrVec3::operator-(const DrVec3 &v_) const {
-    return DrVec3(x-v_.x, y-v_.y, z-v_.z);
-}
-
 DrVec3& DrVec3::operator-=(const DrVec3 &v_) {
     x -= v_.x;
     y -= v_.y;
     z -= v_.z;
     return *this;
 }
-
-DrVec3 DrVec3::operator-() const {
-    return DrVec3(-x, -y, -z);
-}
-
-DrVec3 DrVec3::operator-(float f_) const { return DrVec3(x-f_, y-f_, z-f_); }
 
 DrVec3& DrVec3::operator-=(float f_) {
     x -= f_;
@@ -76,7 +90,18 @@ DrVec3& DrVec3::operator-=(float f_) {
     return *this;
 }
 
-// Friend function
+// Negative
+DrVec3 DrVec3::operator-() const {
+    return DrVec3(-x, -y, -z);
+}
+
+DrVec3 DrVec3::operator-(const DrVec3 &v_) const {
+    return DrVec3(x-v_.x, y-v_.y, z-v_.z);
+}
+
+DrVec3 DrVec3::operator-(float f_) const { return DrVec3(x-f_, y-f_, z-f_); }
+
+// Friend function, left hand side subtraction
 DrVec3 operator-(const float d_, const DrVec3 &vec) {
     return DrVec3(d_-vec.x, d_-vec.y, d_-vec.z);
 }
@@ -106,15 +131,15 @@ bool DrVec3::operator<(const DrVec3 &v_) const {
 //####################################################################################
 //##    Overload Operators - Divisions
 //####################################################################################
-DrVec3 DrVec3::operator/(const float d_) const {
-    return DrVec3(x/d_, y/d_, z/d_);
-}
-
 DrVec3& DrVec3::operator/=(const float d_) {
     x /= d_;
     y /= d_;
     z /= d_;
     return *this;
+}
+
+DrVec3 DrVec3::operator/(const float d_) const {
+    return DrVec3(x/d_, y/d_, z/d_);
 }
 
 DrVec3 DrVec3::operator/(const DrVec3 &v_) const {
@@ -125,14 +150,11 @@ DrVec3 DrVec3::operator/(const DrVec3 &v_) const {
 //####################################################################################
 //##    Overload Operators - Divisions
 //####################################################################################
-// rhs scalar multiplication
-DrVec3 DrVec3::operator*(const float d_) const {
-    return DrVec3(x*d_, y*d_, z*d_);
-}
-
-// lhs scalar multiplication
-DrVec3 operator*(const float d_, const DrVec3 &vec) {
-    return DrVec3(d_*vec.x, d_*vec.y, d_*vec.z);
+DrVec3& DrVec3::operator*=(const DrVec3 &d_) {
+    x *= d_.x;
+    y *= d_.y;
+    z *= d_.z;
+    return *this;
 }
 
 DrVec3& DrVec3::operator*=(const float d_) {
@@ -146,11 +168,20 @@ DrVec3 DrVec3::operator*(const DrVec3 &v_) const {
     return DrVec3(x*v_.x, y*v_.y, z*v_.z);
 }
 
-DrVec3& DrVec3::operator*=(const DrVec3 &d_) {
-    x *= d_.x;
-    y *= d_.y;
-    z *= d_.z;
-    return *this;
+// Right hand side scalar multiplication
+DrVec3 DrVec3::operator*(const float d_) const {
+    return DrVec3(x*d_, y*d_, z*d_);
+}
+
+// Left hand side scalar multiplication
+DrVec3 operator*(const float d_, const DrVec3 &vec) {
+    return DrVec3(d_*vec.x, d_*vec.y, d_*vec.z);
+}
+
+// Left  hand side (lhs) matrix multiplication
+DrVec3 operator*(const glm::mat4 &matrix, const DrVec3 &vec) {
+    glm::vec3 multiplied = glm::vec3(matrix * glm::vec4(glm::vec3(vec.x, vec.y, vec.z), 1.f));
+    return DrVec3(multiplied);
 }
 
 
@@ -167,13 +198,8 @@ float DrVec3::dot(const DrVec3 &v_) const {
     return x*v_.x + y*v_.y + z*v_.z;
 }
 
-// Compute the cotangent (i.e. 1./tan) between 'this' and v_
+// Compute the cotangent (i.e. 1/tan) between 'this' and v_
 float DrVec3::cotan(const DrVec3 &v_) const {
-    // cot(alpha ) = dot(v1, v2) / ||cross(v1, v2)||
-    // = ||v1||*||v2||*cos( angle(v1, v2) ) / ||v1||*||v2|| * sin( angle(v1, v2) )
-    // = cos( angle(v1, v2) ) / sin( angle(v1, v2) )
-    // = 1 / tan( angle(v1, v2) )
-    // = cot( angle(v1, v2) ) = cot( alpha )
     return (this->dot(v_)) / (this->cross(v_)).norm();
 }
 
@@ -194,22 +220,6 @@ float DrVec3::normalize() {
     return l;
 }
 
-float DrVec3::safeNormalize(const float eps) {
-    float l = std::sqrt(normSquared());
-    if (l > eps) {
-        float f = 1.f / l;
-        x *= f;
-        y *= f;
-        z *= f;
-        return l;
-    } else {
-        x = 1.f;
-        y = 0.f;
-        z = 0.f;
-        return 0.f;
-    }
-}
-
 float DrVec3::norm() const {
     return std::sqrt(normSquared());
 }
@@ -227,8 +237,7 @@ float& DrVec3::operator[](int i) {
 }
 
 // Conversion returns the memory address of the vector
-// Very convenient to pass a DrVec3 pointer as a parameter to OpenGL:
-//      EX:
+// Very convenient to pass a DrVec3 pointer as a parameter to OpenGL, Example:
 //          DrVec3 pos, normal;
 //          glNormal3fv(normal);
 //          glVertex3fv(pos);

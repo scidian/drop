@@ -8,6 +8,7 @@
 #ifndef DRSTAGE_H
 #define DRSTAGE_H
 
+#include "library/types/dr_pointf.h"
 #include "model/settings/settings.h"
 
 // Forward declarations
@@ -36,7 +37,7 @@ private:
     bool        m_is_start_stage;                           // True if this is the first stage in a world
 
     bool        m_expanded = true;                          // Wether or not this is expanded in the Project Tree
-    DrPointF    m_center_view_point {0, 0};                 // Holds center point the View was on last time this Stage was shown
+    DrPointF    m_center_view_point;                        // Holds center point the View was on last time this Stage was shown
     double      m_zoom_level = 0.5;                         // Holds zoom level   the View was on last time this Stage was shown
 
 
@@ -68,8 +69,8 @@ public:
     DrThing*        addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide = true, long key = c_no_key);
     void            deleteThing(DrThing *&thing) ;
 
-    std::vector<long>       thingKeysSortedByZOrder(Qt::SortOrder sort_order);
-    std::vector<DrThing*>   thingsSortedByZOrder(Qt::SortOrder sort_order, bool all_things = true, std::list<DrThing*> just_these_things = { });
+    std::vector<long>       thingKeysSortedByZOrder(Sort_Order sort_order);
+    std::vector<DrThing*>   thingsSortedByZOrder(Sort_Order sort_order, bool all_things = true, std::list<DrThing*> just_these_things = { });
     void                    initializeStageSettings(std::string new_name);
     void                    removeGraphicsItemReferences();
 

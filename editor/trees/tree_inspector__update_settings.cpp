@@ -12,6 +12,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/dr_containers.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"
@@ -110,7 +111,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
                     for (auto variant : affected)
                         affected_as_longs.push_back(variant.toLong());
 
-                    if ( Dr::VectorContains(affected_as_longs, prop->getPropertyKey()) ) {
+                    if (Dr::VectorContains(affected_as_longs, prop->getPropertyKey())) {
                         row->setStyleSheet(QString::fromStdString("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"));
                         row->setVisible(enabled);
                         changed = true;

@@ -5,7 +5,10 @@
 //
 //
 //
+#include "3rd_party/glm/vec2.hpp"
+#include "3rd_party/glm/vec3.hpp"
 #include "library/dr_debug.h"
+#include "library/dr_containers.h"
 #include "library/types/dr_variant.h"
 
 
@@ -203,14 +206,18 @@ std::vector<DrVariant> DrVariant::toVector() {
 //####################################################################################
 //##    Custom Data Type Returns
 //####################################################################################
-// Try to return from DrColor, otherwise unsigned int, otherwise return DrColor(0, 0, 0, 0);
+// Try to return from DrColor, otherwise unsigned int/long, otherwise return DrColor(0, 0, 0, 0);
 DrColor DrVariant::toColor() {
     try { return boost::any_cast<DrColor>(m_value); }
     catch (const boost::bad_any_cast &) {
         try { DrColor color(boost::any_cast<unsigned int>(m_value));
               return color; }
         catch (const boost::bad_any_cast &) {
-            return DrColor(0, 0, 0, 0);
+            try { DrColor color(static_cast<unsigned int>(boost::any_cast<unsigned long>(m_value)));
+                  return color; }
+            catch (const boost::bad_any_cast &) {
+                return DrColor(0, 0, 0, 0);
+            }
         }
     }
 }
@@ -233,6 +240,25 @@ DrPointF DrVariant::toPointF() {
               return DrPointF(point.x, point.y); }
         catch (const boost::bad_any_cast &) {
             return DrPointF(0, 0);
+        }
+    }
+}
+// Try to return from DrVec2, otherwise glm::vec2, otherwise DrPointF/DrPoint, otherwise return Vec2(0, 0)
+DrVec2 DrVariant::toVec2() {
+    try { return boost::any_cast<DrVec2>(m_value); }
+    catch (const boost::bad_any_cast &) {
+        try { glm::vec2 vec2 = boost::any_cast<glm::vec2>(m_value);
+              return DrVec2(vec2); }
+        catch (const boost::bad_any_cast &) {
+            try { DrPointF pointf = boost::any_cast<DrPointF>(m_value);
+                  return DrVec2(static_cast<float>(pointf.x), static_cast<float>(pointf.y)); }
+            catch (const boost::bad_any_cast &) {
+                try { DrPoint point = boost::any_cast<DrPoint>(m_value);
+                      return DrVec2(static_cast<float>(point.x), static_cast<float>(point.y)); }
+                catch (const boost::bad_any_cast &) {
+                    return DrVec2(0, 0);
+                }
+            }
         }
     }
 }

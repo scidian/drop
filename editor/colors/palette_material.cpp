@@ -6,9 +6,10 @@
 //
 //
 #include "editor/colors/colors.h"
-
+#include "library/types/dr_color.h"
 
 namespace Dr {
+
 
 void LoadPaletteMaterial(Palette_Info &palette) {
     palette.name = "Material";

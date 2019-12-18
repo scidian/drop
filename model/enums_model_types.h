@@ -123,6 +123,15 @@ enum class Asset_Category {
 
 
 //####################################################################################
+//##    Misc Model Enums (Numerically equivalent to Qt::SortOrder)
+//############################
+enum class Sort_Order {
+    AscendingOrder   = 0,
+    DescendingOrder  = 1,
+};
+
+
+//####################################################################################
 //##    Some public forward function declarations for some enum functions
 //############################
 namespace Dr {
