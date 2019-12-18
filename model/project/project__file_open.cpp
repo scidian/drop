@@ -47,7 +47,7 @@ bool checkMapHasKey(QVariantMap &map, QString key) {
 bool DrProject::openProjectFromFile(std::string open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
-    qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
+    ///qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
 
     // ***** Open File
     QSettings settings(QString::fromStdString(open_file), QSettings::Format::IniFormat);
@@ -74,10 +74,6 @@ bool DrProject::openProjectFromFile(std::string open_file) {
     setOption(Project_Options::Width,           options["width"].toInt());
     setOption(Project_Options::Height,          options["height"].toInt());
     settings.endArray();
-
-
-    // ***** Adds Default Assets
-    addDefaultAssets();
 
 
     // ***** Read Effects

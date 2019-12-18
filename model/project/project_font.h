@@ -60,18 +60,18 @@ public:
     virtual DrType      getType() override      { return DrType::Font; }
 
     // Function Calls
-    QPixmap         createText(std::string text);
+    QPixmap             createText(std::string text);
 
     // Getters / Setters
-    QPixmap         getPixmap()                     { return m_pixmap; }
+    QPixmap             getPixmap()                     { return m_pixmap; }
 
-    QRect           getCharRect(char character)     { return m_positions[character]; }
-    QSize           getCharSpacing(char character)  { return m_spacing[character]; }
+    QRect               getCharRect(char character)     { return m_positions[character]; }
+    QSize               getCharSpacing(char character)  { return m_spacing[character]; }
 
-    std::string     getPropertyFontFamily()         { return p_font_family; }
-    int             getPropertyFontSize()           { return p_font_size; }
+    std::string         getPropertyFontFamily()         { return p_font_family; }
+    int                 getPropertyFontSize()           { return p_font_size; }
 
-    void            setTestFontRects();
+    void                setTestFontRects();
 
 };
 

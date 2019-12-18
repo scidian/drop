@@ -159,7 +159,6 @@ public:
 
 
     // Project Building
-    void            addBuiltInImages();
     void            addDefaultAssets();
     void            clearProject(bool add_built_in_items = true);
     void            deleteAnimation(long animation_key, long ignore_asset_key);
@@ -168,7 +167,6 @@ public:
     void            deleteFont(long font_key);
     void            deleteImage(long image_key);
     void            deleteWorld(long world_key);
-    void            initializeNewProject(std::string project_name, Orientation orientation, int width, int height, bool test = false);
     bool            openProjectFromFile(std::string open_file);
     void            saveProjectToFile();
 

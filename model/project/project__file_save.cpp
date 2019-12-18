@@ -50,7 +50,7 @@ void DrProject::saveProjectToFile() {
 
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
-    qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
+    ///qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
 
 
     // ***** Open File for Writing

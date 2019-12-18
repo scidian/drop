@@ -8,11 +8,8 @@
 #ifndef THING_SHAPE_LIST_H
 #define THING_SHAPE_LIST_H
 
-#include <QDataStream>
-
-#include <list>
-
 #include "engine/enums_engine.h"
+#include "library/dr_containers.h"
 #include "library/dr_math.h"
 #include "library/types/dr_pointf.h"
 
@@ -56,15 +53,6 @@ public:
     // Operator Overloads for file saving
     bool operator==(const DrPropertyCollision &o) {
         return Dr::FuzzyCompare(o.m_direction, this->m_direction);
-    }
-
-    friend QDataStream& operator<<(QDataStream &out, const DrPropertyCollision &rhs) {
-        out << rhs.m_direction;
-        return out;
-    }
-    friend QDataStream& operator>>(QDataStream &in, DrPropertyCollision &rhs) {
-        in >> rhs.m_direction;
-        return in;
     }
 
 };

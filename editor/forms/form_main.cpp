@@ -16,6 +16,7 @@
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/project/project.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
@@ -45,8 +46,11 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
 
     // Try to open command line file, otherwise initialize empty Project
     bool init_new = (file_to_open == "");
-    if (init_new == false) init_new = (m_project->openProjectFromFile(file_to_open) == false);
-    if (init_new) m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
+    if (init_new == false) {
+        Dr::AddBuiltInImages(m_project);
+        init_new = (m_project->openProjectFromFile(file_to_open) == false);
+    }
+    if (init_new) Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
 
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );

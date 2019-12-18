@@ -140,6 +140,8 @@ SOURCES += \
     editor/imaging/imaging_filters.cpp \
     editor/imaging/imaging_misc.cpp \
     editor/imaging/imaging_objects.cpp \
+    editor/project/project_add_built_in_images.cpp \
+    editor/project/project_initialize_new.cpp \
     editor/style/style_format_widgets.cpp \
     editor/style/style_pixmap.cpp \
     editor/style/style_sheet_main.cpp \
@@ -252,7 +254,6 @@ SOURCES += \
     model/project/project.cpp \
     model/project/project__file_open.cpp \
     model/project/project__file_save.cpp \
-    model/project/project__initialize.cpp \
     model/project/project_animation.cpp \
     model/project/project_animation_frame.cpp \
     model/project/project_asset.cpp \
@@ -900,6 +901,7 @@ HEADERS += \
     editor/globals_editor.h \
     editor/helper_library.h \
     editor/imaging/imaging.h \
+    editor/project/project.h \
     editor/style/style.h \
     editor/trees/tree_advisor.h \
     editor/trees/tree_assets.h \

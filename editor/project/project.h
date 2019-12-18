@@ -1,0 +1,44 @@
+//
+//      Created by Stephens Nunnally on 12/18/2019, (c) 2019 Scidian Software, All Rights Reserved
+//
+//  File:
+//
+//
+//
+#ifndef PROJECT_EDIT_H
+#define PROJECT_EDIT_H
+
+#include "model/project/project.h"
+
+
+//####################################################################################
+//##    Project handling from Editor, can use Qt
+//############################
+namespace Dr {
+
+
+// Project Building
+void    AddBuiltInImages(DrProject *project);
+void    InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test = false);
+
+
+
+
+
+}   // end namespace Dr
+
+#endif // PROJECT_EDIT_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+

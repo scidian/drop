@@ -46,13 +46,30 @@ void DrProject::clearProject(bool add_built_in_items) {
 
     // Add these Images to every project for use with New Assets
     if (add_built_in_items) {
-        addBuiltInImages();
         addDefaultAssets();
     }
 
     // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 could conflict with nullptr results
     //              (starts at 1001)
     m_key_generator = c_key_starting_number;
+}
+
+
+//####################################################################################
+//##    Adds Default Assets to Project
+//####################################################################################
+void DrProject::addDefaultAssets() {
+
+    // ***** Add Effects
+    if (findEffectFromType(DrEffectType::Light) == nullptr)     this->addEffect(DrEffectType::Light,    c_key_effect_light);
+    if (findEffectFromType(DrEffectType::Water) == nullptr)     this->addEffect(DrEffectType::Water,    c_key_effect_water);
+    if (findEffectFromType(DrEffectType::Fire) == nullptr)      this->addEffect(DrEffectType::Fire,     c_key_effect_fire);
+    if (findEffectFromType(DrEffectType::Mirror) == nullptr)    this->addEffect(DrEffectType::Mirror,   c_key_effect_mirror);
+    if (findEffectFromType(DrEffectType::Fisheye) == nullptr)   this->addEffect(DrEffectType::Fisheye,  c_key_effect_fisheye);
+    if (findEffectFromType(DrEffectType::Swirl) == nullptr)     this->addEffect(DrEffectType::Swirl,    c_key_effect_swirl);
+
+    // ***** Add Devices
+    if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
 }
 
 

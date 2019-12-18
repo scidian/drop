@@ -54,37 +54,37 @@ public:
     void setZ(float z_)                     { z = z_; }
 
     // Overload Operators - Additions
-    DrVec3&         operator+=(const DrVec3 &v_);
-    DrVec3&         operator+=(float f_);
-    DrVec3          operator+(const DrVec3 &v_) const;
-    DrVec3          operator+(float f_) const;
-    friend DrVec3   operator+(const float d_, const DrVec3 &vec);                   // Left hand side (lhs) scalar cwise addition
+    DrVec3&         operator+=  (const DrVec3 &v_);
+    DrVec3&         operator+=  (float f_);
+    DrVec3          operator+   (const DrVec3 &v_) const;
+    DrVec3          operator+   (float f_) const;
+    friend DrVec3   operator+   (const float d_, const DrVec3 &vec);                // Left hand side (lhs) scalar cwise addition
 
     // Overload Operators - Subtractions
-    DrVec3&         operator-=(const DrVec3 &v_);                                   // Opposite vector
-    DrVec3&         operator-=(float f_);
-    DrVec3          operator-(const DrVec3 &v_) const;
-    DrVec3          operator-() const;
-    DrVec3          operator-(float f_) const;
-    friend DrVec3   operator-(const float d_, const DrVec3 &vec);                   // Left hand side (lhs) scalar cwise substraction
+    DrVec3&         operator-=  (const DrVec3 &v_);                                  // Opposite vector
+    DrVec3&         operator-=  (float f_);
+    DrVec3          operator-   (const DrVec3 &v_) const;
+    DrVec3          operator-   () const;
+    DrVec3          operator-   (float f_) const;
+    friend DrVec3   operator-   (const float d_, const DrVec3 &vec);                // Left hand side (lhs) scalar cwise substraction
 
     // Overload Operators - Comparisons
-    bool            operator!=(const DrVec3 &v_) const;
-    bool            operator==(const DrVec3 &d_) const;
-    bool            operator<(const DrVec3 &v_) const;                              // No mathematical meaning, but nice for std::map ordering
+    bool            operator!=  (const DrVec3 &v_) const;
+    bool            operator==  (const DrVec3 &d_) const;
+    bool            operator<   (const DrVec3 &v_) const;                           // No mathematical meaning, but nice for std::map ordering
 
     // Overload Operators - Divisions
-    DrVec3&         operator/=(const float d_);
-    DrVec3          operator/(const float d_) const;
-    DrVec3          operator/(const DrVec3 &v_) const;
+    DrVec3&         operator/=  (const float d_);
+    DrVec3          operator/   (const float d_) const;
+    DrVec3          operator/   (const DrVec3 &v_) const;
 
     // Overload Operators - Multiplication    
-    DrVec3&         operator*=(const DrVec3 &d_);
-    DrVec3&         operator*=(const float d_);
-    DrVec3          operator*(const DrVec3 &v_) const;
-    DrVec3          operator*(const float d_) const;                                // Right hand side (rhs) scalar multiplication
-    friend DrVec3   operator*(const float d_, const DrVec3 &vec);                   // Left  hand side (lhs) scalar multiplication
-    friend DrVec3   operator*(const glm::mat4 &matrix, const DrVec3 &vec);          // Left  hand side (lhs) matrix multiplication
+    DrVec3&         operator*=  (const DrVec3 &d_);
+    DrVec3&         operator*=  (const float d_);
+    DrVec3          operator*   (const DrVec3 &v_) const;
+    DrVec3          operator*   (const float d_) const;                             // Right hand side (rhs) scalar multiplication
+    friend DrVec3   operator*   (const float d_, const DrVec3 &vec);                // Left  hand side (lhs) scalar multiplication
+    friend DrVec3   operator*   (const glm::mat4 &matrix, const DrVec3 &vec);       // Left  hand side (lhs) matrix multiplication
 
     // Operators on Vector3
     DrVec3          cross(const DrVec3 &v_) const;                                  // Cross product
@@ -96,14 +96,18 @@ public:
     float           norm() const;
 
     // Accessors
-    const float& operator[](int i) const;
-    float& operator[](int i);
-    operator const float*() const;
-    operator float*();
-
+    const float& operator[]     (int i) const;
+    float& operator[]           (int i);
+    operator const float*       () const;                                           // Const Pointer
+    operator float*             ();                                                 // Pointer
 };
 
 #endif // DR_VEC3_H
+
+
+
+
+
 
 
 

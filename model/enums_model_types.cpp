@@ -6,7 +6,6 @@
 //
 //
 #include "model/enums_model_types.h"
-#include "model/project/project_thing.h"
 #include "model/settings/settings.h"
 
 namespace Dr {

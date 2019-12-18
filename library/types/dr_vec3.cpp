@@ -228,10 +228,12 @@ float DrVec3::norm() const {
 //####################################################################################
 //##    Accessors
 //####################################################################################
+// Conversion returns the memory address at the index i
 const float& DrVec3::operator[](int i) const {
     return (reinterpret_cast<const float*>(this))[i];
 }
 
+// Conversion returns the memory address at the index i
 float& DrVec3::operator[](int i) {
     return (reinterpret_cast<float*>(this))[i];
 }

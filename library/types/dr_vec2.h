@@ -50,51 +50,65 @@ public:
     void setY(float y_)             { y = y_; }
 
     // Overload Operators - Additions
-    DrVec2&         operator+=(const DrVec2 &v_);
-    DrVec2&         operator+=(float f_);
-    DrVec2          operator+(const DrVec2 &v_) const;
-    DrVec2          operator+(float f_) const;
-    friend DrVec2   operator+(const float d_, const DrVec2 &vec);                   // lhs scalar cwise addition
+    DrVec2&         operator+=  (const DrVec2 &v_);
+    DrVec2&         operator+=  (float f_);
+    DrVec2          operator+   (const DrVec2 &v_) const;
+    DrVec2          operator+   (float f_) const;
+    friend DrVec2   operator+   (const float d_, const DrVec2 &vec);            // Left hand side scalar clockwise addition
 
     // Overload Operators - Subtractions
-    DrVec2&         operator-=(const DrVec2 &v_);                                   // Opposite vector
-    DrVec2&         operator-=(float f_);
-    DrVec2          operator-(const DrVec2 &v_) const;
-    DrVec2          operator-() const;
-    DrVec2          operator-(float f_) const;
-    friend DrVec2   operator-(const float d_, const DrVec2 &vec);                   // lhs scalar cwise substraction
+    DrVec2&         operator-=  (const DrVec2 &v_);                             // Opposite vector
+    DrVec2&         operator-=  (float f_);
+    DrVec2          operator-   (const DrVec2 &v_) const;
+    DrVec2          operator-   () const;
+    DrVec2          operator-   (float f_) const;
+    friend DrVec2   operator-   (const float d_, const DrVec2 &vec);            // Left hand side scalar clockwise substraction
 
     // Overload Operators - Comparisons
-    bool            operator!=(const DrVec2 &v_) const;
-    bool            operator==(const DrVec2 &d_) const;
-    bool            operator<(const DrVec2 &v_) const;                              // No mathematical meaning, but nice for std::map ordering
+    bool            operator!=  (const DrVec2 &v_) const;
+    bool            operator==  (const DrVec2 &d_) const;
+    bool            operator<   (const DrVec2 &v_) const;                       // No mathematical meaning, but nice for std::map ordering
 
     // Overload Operators - Divisions
-    DrVec2&         operator/=(const float d_);
-    DrVec2          operator/(const float d_) const;
-    DrVec2          operator/(const DrVec2 &v_) const;
+    DrVec2&         operator/=  (const float d_);
+    DrVec2          operator/   (const float d_) const;
+    DrVec2          operator/   (const DrVec2 &v_) const;
 
     // Overload Operators - Multiplication
-    DrVec2&         operator*=(const DrVec2 &d_);
-    DrVec2&         operator*=(const float d_);
-    DrVec2          operator*(const DrVec2 &v_) const;
-    DrVec2          operator*(const float d_) const;                                // rhs scalar multiplication
-    friend DrVec2   operator*(const float d_, const DrVec2 &vec);                   // lhs scalar multiplication
+    DrVec2&         operator*=  (const DrVec2 &d_);
+    DrVec2&         operator*=  (const float d_);
+    DrVec2          operator*   (const DrVec2 &v_) const;
+    DrVec2          operator*   (const float d_) const;                         // Right hand side scalar multiplication
+    friend DrVec2   operator*   (const float d_, const DrVec2 &vec);            // Left  hand side scalar multiplication
 
     // Operators on Vector3
-    float           dot(const DrVec2 &v_) const;                                    // Dot product
+    float           dot(const DrVec2 &v_) const;                                // Dot product
     float           normSquared() const;
     DrVec2          normalized() const;
     float           normalize();
     float           norm() const;
 
     // Accessors
-    const float& operator[](int i) const;
-    float& operator[](int i);
-    operator const float*() const;
-    operator float*();
+    const float& operator[]     (int i) const;
+    float& operator[]           (int i);
+    operator const float*       () const;                                       // Const Pointer
+    operator float*             ();                                             // Pointer
 
 };
 
 
 #endif // DR_VEC2_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+

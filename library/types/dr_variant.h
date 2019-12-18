@@ -31,7 +31,7 @@ public:
     template<class T> DrVariant(T value) { m_value = value; }
 
     // Operator Overloads
-    DrVariant&      operator=(const DrVariant &other);
+    DrVariant&      operator=   (const DrVariant &other);
 
     // Getters
     std::string     getType() { return m_value.type().name(); }

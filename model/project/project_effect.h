@@ -8,6 +8,8 @@
 #ifndef DREFFECT_H
 #define DREFFECT_H
 
+#include <QPixmap>
+
 #include "model/settings/settings.h"
 
 // Forward Declarations

@@ -18,6 +18,7 @@
 #include "editor/forms/form_about.h"
 #include "editor/forms/form_main.h"
 #include "editor/helper_library.h"
+#include "editor/project/project.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -39,7 +40,7 @@ void FormMain::menuNew(bool test_project) {
 
     // Set up new Project
     setFormMainMode( Form_Main_Mode::Clear );
-    m_project->initializeNewProject("New Project", Orientation::Portrait, 800, 1600, test_project);
+    Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, 800, 1600, test_project);
     treeAssetEditor->clear();
     treeProjectEditor->clear();
     setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself
@@ -68,6 +69,7 @@ void FormMain::menuOpen() {
     if (!open_file.isEmpty()) {
         setFormMainMode( Form_Main_Mode::Clear );
         m_project->clearProject();
+        Dr::AddBuiltInImages(m_project);
         m_project->openProjectFromFile(open_file.toStdString());
         treeAssetEditor->clear();
         treeProjectEditor->clear();

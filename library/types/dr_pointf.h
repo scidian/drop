@@ -30,13 +30,13 @@ public:
     DrPointF(double x_, double y_);
 
     // Operator Overloads
-    DrPointF&   operator=(const DrPointF &other);
-    DrPointF    operator+(const DrPointF &other) const;
-    DrPointF    operator-(const DrPointF &other) const;
-    DrPointF    operator*(double k) const;
-    DrPointF    operator/(double k) const;
-    DrPointF&   operator*=(double k);
-    bool        operator==(const DrPointF &other) const;
+    DrPointF&   operator=   (const DrPointF &other);
+    DrPointF    operator+   (const DrPointF &other) const;
+    DrPointF    operator-   (const DrPointF &other) const;
+    DrPointF    operator*   (double k) const;
+    DrPointF    operator/   (double k) const;
+    DrPointF&   operator*=  (double k);
+    bool        operator==  (const DrPointF &other) const;
 
     // Functions
     double      dotProduct(const DrPointF &other) const;

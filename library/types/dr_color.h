@@ -70,12 +70,12 @@ public:
     void        setAlphaF(double alpha);
 
     // Operator Overloads
-    DrColor&    operator=(const DrColor &other);
-    DrColor     operator+(const DrColor &other) const;
-    DrColor     operator-(const DrColor &other) const;
-    DrColor     operator*(int k) const;
-    DrColor     operator/(int k) const;
-    bool        operator==(const DrColor &other) const;
+    DrColor&    operator=   (const DrColor &other);
+    DrColor     operator+   (const DrColor &other) const;
+    DrColor     operator-   (const DrColor &other) const;
+    DrColor     operator*   (int k) const;
+    DrColor     operator/   (int k) const;
+    bool        operator==  (const DrColor &other) const;
 
 };
 
