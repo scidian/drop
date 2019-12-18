@@ -13,6 +13,7 @@
 #include "library/types/dr_color.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
+#include "library/types/dr_rect.h"
 #include "model/settings/settings.h"
 
 // Forward declarations
@@ -28,11 +29,10 @@ class DrFont : public DrSettings
 private:
     // Local Variables
     QPixmap                 m_pixmap;                       // Stored font pixmap
-    std::map<char, QRect>   m_positions;                    // Holds rects for each character in the pixmap
+    std::map<char, DrRect>  m_positions;                    // Holds rects for each character in the pixmap
     std::map<char, QSize>   m_spacing;                      // Horizontal and vertical spacing for each character
 
     std::string             m_name;                         // Name of this font within the Project
-
 
     // Font Properties - NEED TO INCORPORATE FOR EDITOR
     std::string p_font_family;              // Font to use
@@ -65,7 +65,7 @@ public:
     // Getters / Setters
     QPixmap             getPixmap()                     { return m_pixmap; }
 
-    QRect               getCharRect(char character)     { return m_positions[character]; }
+    DrRect              getCharRect(char character)     { return m_positions[character]; }
     QSize               getCharSpacing(char character)  { return m_spacing[character]; }
 
     std::string         getPropertyFontFamily()         { return p_font_family; }

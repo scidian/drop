@@ -148,24 +148,42 @@ void FormAbout::buildForm() {
 //####################################################################################
 QString FormAbout::licenseText() {
 
-    return  "This software uses unmodified code from the Qt Toolkit licensed under the LPGL version 3. Qt libraries and sources can be downloaded "
-            "from https://www.qt.io/download/"
+    return  "This software dynamically links to unmodified code from the Qt framework licensed under the LPGLv3. Qt libraries and sources can be "
+            "downloaded from https://www.qt.io/download/"
             "<br><br>"
-            "The Qt Toolkit is Copyright (C) 2015 The Qt Company Ltd. For more info contact: http://www.qt.io/licensing/"
+            "The Qt framework is Copyright (C) 2019 The Qt Company. For more info visit https://www.qt.io/contact-us/"
             "<br><br>"
-            "This software uses the Chipmunk Physics Library written by Scott Lembcke and distributed under the MIT License. "
-            "Copyright (c) 2007-2015 Scott Lembcke and Howling Moon Software"
+
+            "This software uses Boost Libraries distributed under the Boost Software License. "
+            "Copyright (c) Beman Dawes, David Abrahams, 1998-2005. "
+            "Copyright (c) Rene Rivera 2004-2007. "
             "<br><br>"
+
+            "This software uses Chipmunk Physics Library written by Scott Lembcke and distributed under the MIT License. "
+            "Copyright (c) 2007-2015 Scott Lembcke and Howling Moon Software."
+            "<br><br>"
+
             "This software uses Delaunay Triangulation writted by Volodymyr Bilonenko and distributed under the MIT License. "
-            "Copyright (c) 2018 Volodymyr Bilonenko"
+            "Copyright (c) 2018 Volodymyr Bilonenko."
             "<br><br>"
+
+            "This software uses OpenGL Mathematics (glm) written by G-Truc Creation and distributed under the MIT License. "
+            "Copyright (c) 2005-2014 by G-Truc Creation."
+            "<br><br>"
+
             "This software uses Poly Partition written by Ivan Fratric and distributed under the MIT License. "
-            "Copyright (c) 2011 by Ivan Fratric"
+            "Copyright (c) 2011 by Ivan Fratric."
             "<br><br>"
-            "This software uses 3D Simplex Noise written by Iam McEwan and distributed under the MIT License. "
-            "Copyright (c) 2011 by Ashima Arts"
+
+            "This software uses Simplex Noise (3D) written by Iam McEwan and distributed under the MIT License. "
+            "Copyright (c) 2011 by Ashima Arts."
             "<br><br>"
-            "This software features the font, 'Aileron', designed by Sora Sagano and released under CC0 1.0 Universal (CC0 1.0) Public Domain Dedication."
+
+            "This software uses STB Single File Libraries written by Sean Barrett and distributed under the MIT License. "
+            "Copyright (c) 2017 Sean Barrett."
+            "<br><br>"
+
+            "This software features the font, 'Aileron', designed by Sora Sagano and released under CC0 1.0. "
             "<br><br>"
             ;
 }

@@ -12,6 +12,8 @@
 #include "library/types/dr_color.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
+#include "library/types/dr_rect.h"
+#include "library/types/dr_rectf.h"
 #include "library/types/dr_vec2.h"
 #include "library/types/dr_vec3.h"
 
@@ -54,6 +56,8 @@ public:
     DrColor                 toColor();
     DrPoint                 toPoint();
     DrPointF                toPointF();
+    DrRect                  toRect();
+    DrRectF                 toRectF();
     DrVec2                  toVec2();
     DrVec3                  toVec3();
 

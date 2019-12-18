@@ -34,18 +34,18 @@ public:
     DrVec3(const glm::vec3 &v);
 
     // Conversion
-    glm::vec3     toGlmVec3();
+    glm::vec3       toGlmVec3();
 
     // Vector 3 Functions
     /// @brief Calculates triangle normal from three points of triangle
-    static DrVec3 triangleNormal(const DrVec3 &point_1, const DrVec3 &point_2, const DrVec3 &point_3);
+    static DrVec3   triangleNormal(const DrVec3 &point_1, const DrVec3 &point_2, const DrVec3 &point_3);
 
     // Common Vector 3 Types
-    static DrVec3 unitX()       { return DrVec3(1.f, 0.f, 0.f); }
-    static DrVec3 unitY()       { return DrVec3(0.f, 1.f, 0.f); }
-    static DrVec3 unitZ()       { return DrVec3(0.f, 0.f, 1.f); }
-    static DrVec3 zero()        { return DrVec3(0.f, 0.f, 0.f); }
-    static DrVec3 one()         { return DrVec3(1.f, 1.f, 1.f); }
+    static DrVec3   unitX()       { return DrVec3(1.f, 0.f, 0.f); }
+    static DrVec3   unitY()       { return DrVec3(0.f, 1.f, 0.f); }
+    static DrVec3   unitZ()       { return DrVec3(0.f, 0.f, 1.f); }
+    static DrVec3   zero()        { return DrVec3(0.f, 0.f, 0.f); }
+    static DrVec3   one()         { return DrVec3(1.f, 1.f, 1.f); }
 
     // Setters
     void set(float x_, float y_, float z_)  { x = x_; y = y_; z = z_; }
@@ -64,9 +64,11 @@ public:
     DrVec3&         operator-=  (const DrVec3 &v_);                                  // Opposite vector
     DrVec3&         operator-=  (float f_);
     DrVec3          operator-   (const DrVec3 &v_) const;
-    DrVec3          operator-   () const;
     DrVec3          operator-   (float f_) const;
     friend DrVec3   operator-   (const float d_, const DrVec3 &vec);                // Left hand side (lhs) scalar cwise substraction
+
+    // Overload Operators - Negative
+    DrVec3          operator-   () const;
 
     // Overload Operators - Comparisons
     bool            operator!=  (const DrVec3 &v_) const;

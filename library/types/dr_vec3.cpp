@@ -16,11 +16,11 @@
 //####################################################################################
 //##    Constructors
 //####################################################################################
-DrVec3::DrVec3()                                { x = static_cast<float>(0);        y = static_cast<float>(0);      z = static_cast<float>(0); }
-DrVec3::DrVec3(float f)                         { x = f;                            y = f;                          z = f; }
-DrVec3::DrVec3(float x_, float y_, float z_)    { x = x_;                           y = y_;                         z = z_; }
-DrVec3::DrVec3(const DrVec3 &v)                 { x = static_cast<float>(v.x);      y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
-DrVec3::DrVec3(const glm::vec3 &v)              { x = static_cast<float>(v.x);      y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
+DrVec3::DrVec3()                                { x = 0.f;                      y = 0.f;                        z = 0.f; }
+DrVec3::DrVec3(float f)                         { x = f;                        y = f;                          z = f; }
+DrVec3::DrVec3(float x_, float y_, float z_)    { x = x_;                       y = y_;                         z = z_; }
+DrVec3::DrVec3(const DrVec3 &v)                 { x = static_cast<float>(v.x);  y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
+DrVec3::DrVec3(const glm::vec3 &v)              { x = static_cast<float>(v.x);  y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
 
 
 //####################################################################################

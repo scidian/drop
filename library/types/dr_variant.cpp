@@ -7,6 +7,7 @@
 //
 #include "3rd_party/glm/vec2.hpp"
 #include "3rd_party/glm/vec3.hpp"
+#include "3rd_party/glm/vec4.hpp"
 #include "library/dr_debug.h"
 #include "library/dr_containers.h"
 #include "library/types/dr_variant.h"
@@ -240,6 +241,32 @@ DrPointF DrVariant::toPointF() {
               return DrPointF(point.x, point.y); }
         catch (const boost::bad_any_cast &) {
             return DrPointF(0, 0);
+        }
+    }
+}
+// Try to return from DrRect, otherwise DrRectF, otherwise glm::vec4, otherwise return DrRect(0, 0, 0, 0)
+DrRect DrVariant::toRect() {
+    try { return boost::any_cast<DrRect>(m_value); }
+    catch (const boost::bad_any_cast &) {
+        try { return DrRect(boost::any_cast<DrRectF>(m_value)); }
+        catch (const boost::bad_any_cast &) {
+            try { return DrRect(boost::any_cast<glm::vec4>(m_value)); }
+            catch (const boost::bad_any_cast &) {
+                return DrRect(0, 0, 0, 0);
+            }
+        }
+    }
+}
+// Try to return from DrRectF, otherwise DrRect, otherwise glm::vec4, otherwise return DrRectF(0, 0, 0, 0)
+DrRectF DrVariant::toRectF() {
+    try { return boost::any_cast<DrRectF>(m_value); }
+    catch (const boost::bad_any_cast &) {
+        try { return DrRectF(boost::any_cast<DrRect>(m_value)); }
+        catch (const boost::bad_any_cast &) {
+            try { return DrRectF(boost::any_cast<glm::vec4>(m_value)); }
+            catch (const boost::bad_any_cast &) {
+                return DrRectF(0, 0, 0, 0);
+            }
         }
     }
 }

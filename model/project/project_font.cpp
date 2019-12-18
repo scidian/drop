@@ -6,6 +6,7 @@
 //
 //
 #include <QPainter>
+#include <QRect>
 
 #include "editor/constants_editor.h"
 #include "model/project/project_font.h"
@@ -64,9 +65,9 @@ DrFont::DrFont(DrProject *parent_project, long key,
 // !!! Need to incorporate letter spacing
 QPixmap DrFont::createText(std::string text) {
     int width = 0;
-    int height = m_positions['A'].height();
+    int height = m_positions['A'].height;
     for (int i = 0; i < static_cast<int>(text.length()); i++) {
-        width += m_positions[ text.at(i) ].width();
+        width += m_positions[ text.at(i) ].width;
     }
     if (width ==  0) width =  1;
     if (height == 0) height = 1;
@@ -79,9 +80,10 @@ QPixmap DrFont::createText(std::string text) {
     int x = 0;
     for (int i = 0; i < static_cast<int>(text.length()); i++) {
         char letter = text.at(i);
-        int  letter_width = m_positions[letter].width();
+        int  letter_width = m_positions[letter].width;
 
-        painter.drawPixmap( QRect(x, 0, letter_width, height), m_pixmap, m_positions[letter] );
+        QRect character(m_positions[letter].left, m_positions[letter].top, m_positions[letter].width, m_positions[letter].height);
+        painter.drawPixmap( QRect(x, 0, letter_width, height), m_pixmap, character );
         x += letter_width;
     }
 
@@ -93,73 +95,73 @@ QPixmap DrFont::createText(std::string text) {
 //##    Grabs test rects for temp font generation
 //####################################################################################
 void DrFont::setTestFontRects() {
-    m_positions['A'] = QRect(  0,   0, 32, 32);
-    m_positions['B'] = QRect( 32,   0, 32, 32);
-    m_positions['C'] = QRect( 64,   0, 32, 32);
-    m_positions['D'] = QRect( 96,   0, 32, 32);
-    m_positions['E'] = QRect(128,   0, 32, 32);
-    m_positions['F'] = QRect(160,   0, 32, 32);
-    m_positions['G'] = QRect(192,   0, 32, 32);
-    m_positions['H'] = QRect(224,   0, 32, 32);
-    m_positions['I'] = QRect(256,   0, 32, 32);
-    m_positions['J'] = QRect(288,   0, 32, 32);
-    m_positions['K'] = QRect(320,   0, 32, 32);
-    m_positions['L'] = QRect(352,   0, 32, 32);
-    m_positions['M'] = QRect(384,   0, 32, 32);
-    m_positions['N'] = QRect(416,   0, 32, 32);
-    m_positions['O'] = QRect(448,   0, 32, 32);
-    m_positions['P'] = QRect(480,   0, 32, 32);
+    m_positions['A'] = DrRect(  0,   0, 32, 32);
+    m_positions['B'] = DrRect( 32,   0, 32, 32);
+    m_positions['C'] = DrRect( 64,   0, 32, 32);
+    m_positions['D'] = DrRect( 96,   0, 32, 32);
+    m_positions['E'] = DrRect(128,   0, 32, 32);
+    m_positions['F'] = DrRect(160,   0, 32, 32);
+    m_positions['G'] = DrRect(192,   0, 32, 32);
+    m_positions['H'] = DrRect(224,   0, 32, 32);
+    m_positions['I'] = DrRect(256,   0, 32, 32);
+    m_positions['J'] = DrRect(288,   0, 32, 32);
+    m_positions['K'] = DrRect(320,   0, 32, 32);
+    m_positions['L'] = DrRect(352,   0, 32, 32);
+    m_positions['M'] = DrRect(384,   0, 32, 32);
+    m_positions['N'] = DrRect(416,   0, 32, 32);
+    m_positions['O'] = DrRect(448,   0, 32, 32);
+    m_positions['P'] = DrRect(480,   0, 32, 32);
 
-    m_positions['Q'] = QRect(  0,  32, 32, 32);
-    m_positions['R'] = QRect( 32,  32, 32, 32);
-    m_positions['S'] = QRect( 64,  32, 32, 32);
-    m_positions['T'] = QRect( 96,  32, 32, 32);
-    m_positions['U'] = QRect(128,  32, 32, 32);
-    m_positions['V'] = QRect(160,  32, 32, 32);
-    m_positions['W'] = QRect(192,  32, 32, 32);
-    m_positions['X'] = QRect(224,  32, 32, 32);
-    m_positions['Y'] = QRect(256,  32, 32, 32);
-    m_positions['Z'] = QRect(288,  32, 32, 32);
-    m_positions['a'] = QRect(320,  32, 32, 32);
-    m_positions['b'] = QRect(352,  32, 32, 32);
-    m_positions['c'] = QRect(384,  32, 32, 32);
-    m_positions['d'] = QRect(416,  32, 32, 32);
-    m_positions['e'] = QRect(448,  32, 32, 32);
-    m_positions['f'] = QRect(480,  32, 32, 32);
+    m_positions['Q'] = DrRect(  0,  32, 32, 32);
+    m_positions['R'] = DrRect( 32,  32, 32, 32);
+    m_positions['S'] = DrRect( 64,  32, 32, 32);
+    m_positions['T'] = DrRect( 96,  32, 32, 32);
+    m_positions['U'] = DrRect(128,  32, 32, 32);
+    m_positions['V'] = DrRect(160,  32, 32, 32);
+    m_positions['W'] = DrRect(192,  32, 32, 32);
+    m_positions['X'] = DrRect(224,  32, 32, 32);
+    m_positions['Y'] = DrRect(256,  32, 32, 32);
+    m_positions['Z'] = DrRect(288,  32, 32, 32);
+    m_positions['a'] = DrRect(320,  32, 32, 32);
+    m_positions['b'] = DrRect(352,  32, 32, 32);
+    m_positions['c'] = DrRect(384,  32, 32, 32);
+    m_positions['d'] = DrRect(416,  32, 32, 32);
+    m_positions['e'] = DrRect(448,  32, 32, 32);
+    m_positions['f'] = DrRect(480,  32, 32, 32);
 
-    m_positions['g'] = QRect(  0,  64, 32, 32);
-    m_positions['h'] = QRect( 32,  64, 32, 32);
-    m_positions['i'] = QRect( 64,  64, 32, 32);
-    m_positions['j'] = QRect( 96,  64, 32, 32);
-    m_positions['k'] = QRect(128,  64, 32, 32);
-    m_positions['l'] = QRect(160,  64, 32, 32);
-    m_positions['m'] = QRect(192,  64, 32, 32);
-    m_positions['n'] = QRect(224,  64, 32, 32);
-    m_positions['o'] = QRect(256,  64, 32, 32);
-    m_positions['p'] = QRect(288,  64, 32, 32);
-    m_positions['q'] = QRect(320,  64, 32, 32);
-    m_positions['r'] = QRect(352,  64, 32, 32);
-    m_positions['s'] = QRect(384,  64, 32, 32);
-    m_positions['t'] = QRect(416,  64, 32, 32);
-    m_positions['u'] = QRect(448,  64, 32, 32);
-    m_positions['v'] = QRect(480,  64, 32, 32);
+    m_positions['g'] = DrRect(  0,  64, 32, 32);
+    m_positions['h'] = DrRect( 32,  64, 32, 32);
+    m_positions['i'] = DrRect( 64,  64, 32, 32);
+    m_positions['j'] = DrRect( 96,  64, 32, 32);
+    m_positions['k'] = DrRect(128,  64, 32, 32);
+    m_positions['l'] = DrRect(160,  64, 32, 32);
+    m_positions['m'] = DrRect(192,  64, 32, 32);
+    m_positions['n'] = DrRect(224,  64, 32, 32);
+    m_positions['o'] = DrRect(256,  64, 32, 32);
+    m_positions['p'] = DrRect(288,  64, 32, 32);
+    m_positions['q'] = DrRect(320,  64, 32, 32);
+    m_positions['r'] = DrRect(352,  64, 32, 32);
+    m_positions['s'] = DrRect(384,  64, 32, 32);
+    m_positions['t'] = DrRect(416,  64, 32, 32);
+    m_positions['u'] = DrRect(448,  64, 32, 32);
+    m_positions['v'] = DrRect(480,  64, 32, 32);
 
-    m_positions['w'] = QRect(  0,  96, 32, 32);
-    m_positions['x'] = QRect( 32,  96, 32, 32);
-    m_positions['y'] = QRect( 64,  96, 32, 32);
-    m_positions['z'] = QRect( 96,  96, 32, 32);
-    m_positions['0'] = QRect(128,  96, 32, 32);
-    m_positions['1'] = QRect(160,  96, 32, 32);
-    m_positions['2'] = QRect(192,  96, 32, 32);
-    m_positions['3'] = QRect(224,  96, 32, 32);
-    m_positions['4'] = QRect(256,  96, 32, 32);
-    m_positions['5'] = QRect(288,  96, 32, 32);
-    m_positions['6'] = QRect(320,  96, 32, 32);
-    m_positions['7'] = QRect(352,  96, 32, 32);
-    m_positions['8'] = QRect(384,  96, 32, 32);
-    m_positions['9'] = QRect(416,  96, 32, 32);
-    m_positions['.'] = QRect(448,  96, 32, 32);
-    m_positions[' '] = QRect(480,  96, 32, 32);
+    m_positions['w'] = DrRect(  0,  96, 32, 32);
+    m_positions['x'] = DrRect( 32,  96, 32, 32);
+    m_positions['y'] = DrRect( 64,  96, 32, 32);
+    m_positions['z'] = DrRect( 96,  96, 32, 32);
+    m_positions['0'] = DrRect(128,  96, 32, 32);
+    m_positions['1'] = DrRect(160,  96, 32, 32);
+    m_positions['2'] = DrRect(192,  96, 32, 32);
+    m_positions['3'] = DrRect(224,  96, 32, 32);
+    m_positions['4'] = DrRect(256,  96, 32, 32);
+    m_positions['5'] = DrRect(288,  96, 32, 32);
+    m_positions['6'] = DrRect(320,  96, 32, 32);
+    m_positions['7'] = DrRect(352,  96, 32, 32);
+    m_positions['8'] = DrRect(384,  96, 32, 32);
+    m_positions['9'] = DrRect(416,  96, 32, 32);
+    m_positions['.'] = DrRect(448,  96, 32, 32);
+    m_positions[' '] = DrRect(480,  96, 32, 32);
 }
 
 

@@ -246,6 +246,8 @@ SOURCES += \
     library/types/dr_color.cpp \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
+    library/types/dr_rect.cpp \
+    library/types/dr_rectf.cpp \
     library/types/dr_variant.cpp \
     library/types/dr_vec2.cpp \
     library/types/dr_vec3.cpp \
@@ -941,6 +943,8 @@ HEADERS += \
     library/types/dr_color.h \
     library/types/dr_point.h \
     library/types/dr_pointf.h \
+    library/types/dr_rect.h \
+    library/types/dr_rectf.h \
     library/types/dr_variant.h \
     library/types/dr_vec2.h \
     library/types/dr_vec3.h \

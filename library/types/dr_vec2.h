@@ -33,16 +33,16 @@ public:
     DrVec2(const glm::vec2 &v);
 
     // Conversion
-    glm::vec2     toGlmVec2();
+    glm::vec2       toGlmVec2();
 
     // Vector 2 Functions
 
 
     // Common Vector 2 Types
-    static DrVec2 unitX()       { return DrVec2(1.f, 0.f); }
-    static DrVec2 unitY()       { return DrVec2(0.f, 1.f); }
-    static DrVec2 zero()        { return DrVec2(0.f, 0.f); }
-    static DrVec2 one()         { return DrVec2(1.f, 1.f); }
+    static DrVec2   unitX()       { return DrVec2(1.f, 0.f); }
+    static DrVec2   unitY()       { return DrVec2(0.f, 1.f); }
+    static DrVec2   zero()        { return DrVec2(0.f, 0.f); }
+    static DrVec2   one()         { return DrVec2(1.f, 1.f); }
 
     // Setters
     void set(float x_, float y_)    { x = x_; y = y_; }
@@ -60,9 +60,11 @@ public:
     DrVec2&         operator-=  (const DrVec2 &v_);                             // Opposite vector
     DrVec2&         operator-=  (float f_);
     DrVec2          operator-   (const DrVec2 &v_) const;
-    DrVec2          operator-   () const;
     DrVec2          operator-   (float f_) const;
     friend DrVec2   operator-   (const float d_, const DrVec2 &vec);            // Left hand side scalar clockwise substraction
+
+    // Overload Operators - Negative
+    DrVec2          operator-   () const;
 
     // Overload Operators - Comparisons
     bool            operator!=  (const DrVec2 &v_) const;
