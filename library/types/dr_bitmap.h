@@ -6,23 +6,21 @@
 //  Note:
 //      To be Engine compatible, this file does NOT, and should NOT #include any Qt Library types
 //
-#ifndef DR_IMAGE_H
-#define DR_IMAGE_H
+#ifndef DR_BITMAP_H
+#define DR_BITMAP_H
 
 #include <string>
 #include <vector>
-
-#include "3rd_party/stb/stb_image.h"
 
 // Local constants
 const int   c_number_channels = 4;
 
 
 //####################################################################################
-//##    DrImage
+//##    DrBitmap
 //##        Holds an image, compatible / loads with stb_image
 //############################
-class DrImage
+class DrBitmap
 {
 public:
     int     channels =  c_number_channels;          // Number of 8-bit components per pixel: R, G, B, A
@@ -34,8 +32,8 @@ public:
 
 public:
     // Constructors
-    DrImage();
-    DrImage(const DrImage &image);
+    DrBitmap();
+    DrBitmap(const DrBitmap &bitmap);
 
     void    loadFromFile(std::string filename);
     void    loadFromMemory(const unsigned char *from_data, const int &number_of_bytes);
@@ -43,7 +41,7 @@ public:
 };
 
 
-#endif // DR_IMAGE_H
+#endif // DR_BITMAP_H
 
 
 

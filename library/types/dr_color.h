@@ -73,14 +73,14 @@ public:
     DrColor         lighter(int percent = 150);
 
     // Getters / Setters
-    int         red()       { return r; }
-    double      redF()      { return static_cast<double>(r) / 255.0; }
-    int         green()     { return g; }
-    double      greenF()    { return static_cast<double>(g) / 255.0; }
-    int         blue()      { return b; }
-    double      blueF()     { return static_cast<double>(b) / 255.0; }
-    int         alpha()     { return a; }
-    double      alphaF()    { return static_cast<double>(a) / 255.0; }
+    int         red() const     { return r; }
+    double      redF() const    { return static_cast<double>(r) / 255.0; }
+    int         green() const   { return g; }
+    double      greenF() const  { return static_cast<double>(g) / 255.0; }
+    int         blue() const    { return b; }
+    double      blueF() const   { return static_cast<double>(b) / 255.0; }
+    int         alpha() const   { return a; }
+    double      alphaF() const  { return static_cast<double>(a) / 255.0; }
 
     void        setRed(int red);
     void        setRedF(double red);

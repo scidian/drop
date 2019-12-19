@@ -223,10 +223,10 @@ DrColor DrVariant::toColor() {
     }
 }
 // Try to return from DrImage
-DrImage DrVariant::toImage() {
-    try { return boost::any_cast<DrImage>(m_value); }
+DrBitmap DrVariant::toImage() {
+    try { return boost::any_cast<DrBitmap>(m_value); }
     catch (const boost::bad_any_cast &) {
-        return DrImage();
+        return DrBitmap();
     }
 }
 // Try to return from DrPoint, otherwise DrPointF, otherwise return Point(0, 0)

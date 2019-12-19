@@ -237,14 +237,15 @@ SOURCES += \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
+    header_builds.cpp \
     library/dr_containers.cpp \
     library/dr_debug.cpp \
     library/dr_math.cpp \
     library/dr_random.cpp \
     library/dr_string.cpp \
     library/dr_time.cpp \
+    library/types/dr_bitmap.cpp \
     library/types/dr_color.cpp \
-    library/types/dr_image.cpp \
     library/types/dr_point.cpp \
     library/types/dr_pointf.cpp \
     library/types/dr_rect.cpp \
@@ -941,8 +942,8 @@ HEADERS += \
     library/dr_random.h \
     library/dr_string.h \
     library/dr_time.h \
+    library/types/dr_bitmap.h \
     library/types/dr_color.h \
-    library/types/dr_image.h \
     library/types/dr_point.h \
     library/types/dr_pointf.h \
     library/types/dr_rect.h \

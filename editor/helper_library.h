@@ -16,8 +16,8 @@
 #include <QWidget>
 
 // Forward Declarations
+class DrBitmap;
 class DrColor;
-class DrImage;
 class DrPoint;
 class DrPointF;
 class DrVariant;
@@ -53,19 +53,19 @@ QString     StringFromBool(bool boolean);
 
 
 // DrLibrary Conversion
-DrColor     FromQColor(QColor &color);
-DrImage     FromQImage(QImage &image);
-DrPoint     FromQPoint(QPoint &point);
-DrPointF    FromQPointF(QPointF &pointf);
+DrColor     FromQColor(const QColor &color);
+DrBitmap    FromQImage(const QImage &image);
+DrPoint     FromQPoint(const QPoint &point);
+DrPointF    FromQPointF(const QPointF &pointf);
 
-QColor      ToQColor(DrColor &color);
-QImage      ToQImage(DrImage &image);
-QPoint      ToQPoint(DrPoint &point);
-QPointF     ToQPointF(DrPointF &pointf);
+QColor      ToQColor(const DrColor &color);
+QImage      ToQImage(const DrBitmap &image);
+QPoint      ToQPoint(const DrPoint &point);
+QPointF     ToQPointF(const DrPointF &pointf);
 
 
 // Qt Comparison
-bool        SameQColor(QColor &color1, QColor &color2, double tolerance);
+bool        SameQColor(QColor color1, QColor color2, double tolerance);
 
 
 // User Interaction
