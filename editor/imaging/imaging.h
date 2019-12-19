@@ -11,8 +11,7 @@
 #include <QPixmap>
 
 #include "engine/enums_engine.h"
-#include "library/types/dr_color.h"
-#include "library/types/dr_pointf.h"
+#include "library/types/dr_variant.h"
 
 
 //####################################################################################
@@ -64,6 +63,16 @@ namespace Dr {
     QImage  FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, double tolerance, Flood_Fill_Type type,
                       int &flood_pixel_count, QRect &flood_rect);
 
+
+
+    // ***** Misc Image Functions
+    std::vector<DrPointF>   TraceImageOutline(const DrBitmap &bitmap);
+
+    // ***** Object Counting / Fill (a la Ravens Project)
+    DrBitmap    BlackAndWhiteFromAlpha(const DrBitmap &bitmap, double alpha_tolerance, bool inverse);
+    int         FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, std::vector<DrRect> &rects, double alpha_tolerance, bool convert = true);
+    DrBitmap    FloodFill(DrBitmap &bitmap, int at_x, int at_y, DrColor fill_color, double tolerance, Flood_Fill_Type type,
+                          int &flood_pixel_count, DrRect &flood_rect);
 
 }
 

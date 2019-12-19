@@ -328,16 +328,16 @@ public:
     void            setMouseRotate(bool mouse_rotate) { m_mouse_rotate = mouse_rotate; }
 
     // ***** Local Variables - Updated By Engine
-    const int&      getRemainingJumps()         { return m_remaining_jumps; }
-    const double&   getRemainingBoost()         { return m_remaining_boost; }
-    const double&   getRemainingGroundTime()    { return m_remaining_ground_time; }
-    const double&   getRemainingWallTime()      { return m_remaining_wall_time; }
-    const bool&     isOnGround()                { return m_grounded; }
-    const bool&     isOnWall()                  { return m_on_wall; }
-    const double&   getTempGravityMultiplier()  { return m_temp_gravity_multiplier; }
-    const cpVect&   getLastTouchedGroundNormal() { return m_last_touched_ground_normal; }
-    const double&   getLastTouchedGroundDot()   { return m_last_touched_ground_dot; }
-    Jump_State      getJumpState()              { return m_jump_state; }
+    const int&      getRemainingJumps()             { return m_remaining_jumps; }
+    const double&   getRemainingBoost()             { return m_remaining_boost; }
+    const double&   getRemainingGroundTime()        { return m_remaining_ground_time; }
+    const double&   getRemainingWallTime()          { return m_remaining_wall_time; }
+    const bool&     isOnGround()                    { return m_grounded; }
+    const bool&     isOnWall()                      { return m_on_wall; }
+    const double&   getTempGravityMultiplier()      { return m_temp_gravity_multiplier; }
+    const cpVect&   getLastTouchedGroundNormal()    { return m_last_touched_ground_normal; }
+    const double&   getLastTouchedGroundDot()       { return m_last_touched_ground_dot; }
+    Jump_State      getJumpState()                  { return m_jump_state; }
     void            setRemainingJumps(int new_remaining_jumps) { m_remaining_jumps = new_remaining_jumps; }
     void            setRemainingBoost(double boost_time) { m_remaining_boost = boost_time; }
     void            setRemainingGroundTime(double ground_time) { m_remaining_ground_time = ground_time; }
@@ -349,23 +349,23 @@ public:
     void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
     void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }
 
-    const bool&     isDying()                   { return m_dying; }
-    const bool&     isAlive()                   { return m_alive; }
-    bool            isDead()                    { return (!m_alive); }
+    const bool&     isDying()                       { return m_dying; }
+    const bool&     isAlive()                       { return m_alive; }
+    bool            isDead()                        { return (!m_alive); }
     void            setDying(bool is_dying) { m_dying = is_dying; }
     void            setAlive(bool is_alive) { m_alive = is_alive; }
 
-    DrTime&         getDamageTimer()            { return m_damage_timer; }
-    DrTime&         getDeathTimer()             { return m_death_timer; }
-    DrTime&         getFadeTimer()              { return m_fade_timer; }
+    DrTime&         getDamageTimer()                { return m_damage_timer; }
+    DrTime&         getDeathTimer()                 { return m_death_timer; }
+    DrTime&         getFadeTimer()                  { return m_fade_timer; }
 
-    bool            isFlippedX()                { return (m_flipped_x); }
-    bool            isFlippedY()                { return (m_flipped_y); }
+    bool            isFlippedX()                    { return (m_flipped_x); }
+    bool            isFlippedY()                    { return (m_flipped_y); }
     void            setFlipX(bool flipped)  { m_flipped_x = flipped; }
     void            setFlipY(bool flipped)  { m_flipped_y = flipped; }
 
     // Object->Body Data - Updated every frame by updateWorld()
-    DrVec3          getPreviousPosition()       { return m_previous_position; }
+    DrVec3          getPreviousPosition()           { return m_previous_position; }
     void            updateBodyPosition(DrPointF updated_position, bool update_previous_position_also = false);
 
 };

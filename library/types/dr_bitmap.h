@@ -12,6 +12,9 @@
 #include <string>
 #include <vector>
 
+// Forward Declarations
+class DrColor;
+
 // Local constants
 const int   c_number_channels = 4;
 
@@ -40,10 +43,19 @@ public:
     DrBitmap(const unsigned char *from_data, const int &number_of_bytes,
              bool compressed = true, int width_ = 0, int height_ = 0);
 
+    // Manipulation
+    DrColor getPixel(int x, int y) const;
+    void    setPixel(int x, int y, DrColor color);
+
     // Image Loaders
     void    loadFromFile(std::string filename);
     void    loadFromMemory(const unsigned char *compressed_data, const int &number_of_bytes,
                            bool compressed = true, int width_ = 0, int height_ = 0);
+
+
+    int     saveAsPng(std::string filename);                            // Returns 0 on failure, non-zero on success
+    int     saveAsJpg(std::string filename, int quality = 100);         // Returns 0 on failure, non-zero on success, Quality 0-100
+
 
     // Functions
     bool    isValid() const     { return (width > 0 && height > 0); }

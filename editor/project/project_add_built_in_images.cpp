@@ -45,7 +45,6 @@ DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category
 //####################################################################################
 void AddBuiltInImages(DrProject *project) {
 
-    AddImage(project, ":/assets/dr_images/empty.png",                           c_key_image_empty,                  Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/circle.png",                          c_key_image_character,              Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/box.png",                             c_key_image_object,                 Asset_Category::Image);
 

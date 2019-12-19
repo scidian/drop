@@ -267,14 +267,14 @@ void TreeAssets::buildAssetTree(QString search_text) {
                     case DrAssetType::Character: {
                         long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
                         DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
-                        if (ani != nullptr) pix = ani->getPixmapFromFirstFrame();
+                        if (ani != nullptr) pix = Dr::ToQPixmap(ani->getFirstFrameImage()->getBitmap());
                         description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
                         break;
                     }
                     case DrAssetType::Object: {
                         long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
                         DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
-                        if (ani != nullptr) pix = ani->getPixmapFromFirstFrame();
+                        if (ani != nullptr) pix = Dr::ToQPixmap(ani->getFirstFrameImage()->getBitmap());
                         description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];
                         break;
                     }

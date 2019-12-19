@@ -33,7 +33,7 @@ int         BorderWidthAsInt()  { return 1; }                                   
 //##    Color Helper Functions
 //####################################################################################
 // Compares 2 colors, returns true if they are the same
-bool IsSameColor(DrColor &color1, DrColor &color2, double tolerance) {
+bool IsSameColor(const DrColor &color1, const DrColor &color2, double tolerance) {
     return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
              Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
              Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&

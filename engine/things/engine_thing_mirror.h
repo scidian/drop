@@ -34,7 +34,7 @@ public:
     virtual ~DrEngineMirror() override;
 
     // Abstract Engine Thing Overrides
-    virtual DrThingType getThingType() override { return DrThingType::Mirror; }
+    virtual DrThingType getThingType() override     { return DrThingType::Mirror; }
 
 
 

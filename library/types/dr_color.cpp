@@ -13,35 +13,39 @@
 #include "library/types/dr_color.h"
 
 
+inline constexpr unsigned char operator "" _uc( unsigned long long arg ) noexcept {
+    return static_cast<unsigned char>(arg);
+}
+
 //####################################################################################
 //##    Constructors
 //####################################################################################
 DrColor::DrColor() {
     r = 0; g = 0; b = 0; a = 255;
 }
-DrColor::DrColor(unsigned char r_, unsigned char g_, unsigned char b_, unsigned char a_) {
-    r = Dr::Clamp(static_cast<int>(r_), 0, 255);
-    g = Dr::Clamp(static_cast<int>(g_), 0, 255);
-    b = Dr::Clamp(static_cast<int>(b_), 0, 255);
-    a = Dr::Clamp(static_cast<int>(a_), 0, 255);
+DrColor::DrColor(const unsigned char &r_, const unsigned char &g_, const unsigned char &b_, const unsigned char &a_) {
+    r = Dr::Clamp(static_cast<unsigned char>(r_), 0_uc, 255_uc);
+    g = Dr::Clamp(static_cast<unsigned char>(g_), 0_uc, 255_uc);
+    b = Dr::Clamp(static_cast<unsigned char>(b_), 0_uc, 255_uc);
+    a = Dr::Clamp(static_cast<unsigned char>(a_), 0_uc, 255_uc);
 }
 DrColor::DrColor(int r_, int g_, int b_, int a_) {
-    r = Dr::Clamp(r_, 0, 255);
-    g = Dr::Clamp(g_, 0, 255);
-    b = Dr::Clamp(b_, 0, 255);
-    a = Dr::Clamp(a_, 0, 255);
+    r = Dr::Clamp(static_cast<unsigned char>(r_), 0_uc, 255_uc);
+    g = Dr::Clamp(static_cast<unsigned char>(g_), 0_uc, 255_uc);
+    b = Dr::Clamp(static_cast<unsigned char>(b_), 0_uc, 255_uc);
+    a = Dr::Clamp(static_cast<unsigned char>(a_), 0_uc, 255_uc);
 }
 DrColor::DrColor(float r_, float g_, float b_, float a_) {
-    r = static_cast<int>(Dr::Clamp(r_, 0.0f, 1.0f) * 255.0f);
-    g = static_cast<int>(Dr::Clamp(g_, 0.0f, 1.0f) * 255.0f);
-    b = static_cast<int>(Dr::Clamp(b_, 0.0f, 1.0f) * 255.0f);
-    a = static_cast<int>(Dr::Clamp(a_, 0.0f, 1.0f) * 255.0f);
+    r = static_cast<unsigned char>(Dr::Clamp(r_, 0.0f, 1.0f) * 255.0f);
+    g = static_cast<unsigned char>(Dr::Clamp(g_, 0.0f, 1.0f) * 255.0f);
+    b = static_cast<unsigned char>(Dr::Clamp(b_, 0.0f, 1.0f) * 255.0f);
+    a = static_cast<unsigned char>(Dr::Clamp(a_, 0.0f, 1.0f) * 255.0f);
 }
 DrColor::DrColor(double r_, double g_, double b_, double a_) {
-    r = static_cast<int>(Dr::Clamp(r_, 0.0, 1.0) * 255.0);
-    g = static_cast<int>(Dr::Clamp(g_, 0.0, 1.0) * 255.0);
-    b = static_cast<int>(Dr::Clamp(b_, 0.0, 1.0) * 255.0);
-    a = static_cast<int>(Dr::Clamp(a_, 0.0, 1.0) * 255.0);
+    r = static_cast<unsigned char>(Dr::Clamp(r_, 0.0, 1.0) * 255.0);
+    g = static_cast<unsigned char>(Dr::Clamp(g_, 0.0, 1.0) * 255.0);
+    b = static_cast<unsigned char>(Dr::Clamp(b_, 0.0, 1.0) * 255.0);
+    a = static_cast<unsigned char>(Dr::Clamp(a_, 0.0, 1.0) * 255.0);
 }
 DrColor::DrColor(unsigned int ui) {
     a = (ui & 0xFF000000) >> 24;
@@ -55,17 +59,22 @@ DrColor::DrColor(unsigned int ui) {
 //##    Unsigned Int
 //####################################################################################
 unsigned int DrColor::rgb() {
-    unsigned int color = b | (g << 8) | (r << 16);
+    unsigned int color = static_cast<unsigned int>(b) |
+                        (static_cast<unsigned int>(g) << 8) |
+                        (static_cast<unsigned int>(r) << 16);
     return color;
 }
 unsigned int DrColor::rgba() {
-    unsigned int color = b | (g << 8) | (r << 16) | (static_cast<unsigned int>(a) << 24);
+    unsigned int color = static_cast<unsigned int>(b) |
+                        (static_cast<unsigned int>(g) << 8) |
+                        (static_cast<unsigned int>(r) << 16) |
+                        (static_cast<unsigned int>(a) << 24);
     return color;
 }
 std::string DrColor::name() {
-    std::stringstream r_stream;     r_stream << std::hex << r;      std::string hex_r = r_stream.str();
-    std::stringstream g_stream;     g_stream << std::hex << g;      std::string hex_g = g_stream.str();
-    std::stringstream b_stream;     b_stream << std::hex << b;      std::string hex_b = b_stream.str();
+    std::stringstream r_stream;     r_stream << std::hex << static_cast<int>(r);    std::string hex_r = r_stream.str();
+    std::stringstream g_stream;     g_stream << std::hex << static_cast<int>(g);    std::string hex_g = g_stream.str();
+    std::stringstream b_stream;     b_stream << std::hex << static_cast<int>(b);    std::string hex_b = b_stream.str();
 
     if (hex_r.length() == 1) hex_r = std::string("0") + hex_r;
     if (hex_g.length() == 1) hex_g = std::string("0") + hex_g;
@@ -77,14 +86,14 @@ std::string DrColor::name() {
 //####################################################################################
 //##    Setters
 //####################################################################################
-void DrColor::setRed(int red)           { r = Dr::Clamp(red, 0, 255); }
-void DrColor::setRedF(double red)       { r = Dr::Clamp(static_cast<int>(red * 255.0), 0, 255); }
-void DrColor::setGreen(int green)       { g = Dr::Clamp(green, 0, 255); }
-void DrColor::setGreenF(double green)   { g = Dr::Clamp(static_cast<int>(green * 255.0), 0, 255); }
-void DrColor::setBlue(int blue)         { b = Dr::Clamp(blue, 0, 255); }
-void DrColor::setBlueF(double blue)     { b = Dr::Clamp(static_cast<int>(blue * 255.0), 0, 255); }
-void DrColor::setAlpha(int alpha)       { a = Dr::Clamp(alpha, 0, 255); }
-void DrColor::setAlphaF(double alpha)   { a = Dr::Clamp(static_cast<int>(alpha * 255.0), 0, 255); }
+void DrColor::setRed(int red)           { r = Dr::Clamp(static_cast<unsigned char>(red),            0_uc, 255_uc); }
+void DrColor::setRedF(double red)       { r = Dr::Clamp(static_cast<unsigned char>(red * 255.0),    0_uc, 255_uc); }
+void DrColor::setGreen(int green)       { g = Dr::Clamp(static_cast<unsigned char>(green),          0_uc, 255_uc); }
+void DrColor::setGreenF(double green)   { g = Dr::Clamp(static_cast<unsigned char>(green * 255.0),  0_uc, 255_uc); }
+void DrColor::setBlue(int blue)         { b = Dr::Clamp(static_cast<unsigned char>(blue),           0_uc, 255_uc); }
+void DrColor::setBlueF(double blue)     { b = Dr::Clamp(static_cast<unsigned char>(blue * 255.0),   0_uc, 255_uc); }
+void DrColor::setAlpha(int alpha)       { a = Dr::Clamp(static_cast<unsigned char>(alpha),          0_uc, 255_uc); }
+void DrColor::setAlphaF(double alpha)   { a = Dr::Clamp(static_cast<unsigned char>(alpha * 255.0),  0_uc, 255_uc); }
 
 
 //####################################################################################
@@ -151,7 +160,7 @@ DrColor DrColor::fromHsv(DrHsv hsv, int alpha) {
             case 1:     color.setRedF(q);   color.setGreenF(v);     color.setBlueF(p);  break;
             case 3:     color.setRedF(p);   color.setGreenF(q);     color.setBlueF(v);  break;
             case 5:     color.setRedF(v);   color.setGreenF(p);     color.setBlueF(q);  break;
-            default:    Dr::PrintDebug("DrColor::fromHsv() Warning: i not handled in switch. Value of i: " + std::to_string(i));
+            default:    Dr::PrintDebug("DrColor::fromHsv() Warning: Hue (i) not handled in switch. Value of i: " + std::to_string(i));
         }
 
     } else {
@@ -160,7 +169,7 @@ DrColor DrColor::fromHsv(DrHsv hsv, int alpha) {
             case 0:     color.setRedF(v);   color.setGreenF(t);     color.setBlueF(p);  break;
             case 2:     color.setRedF(p);   color.setGreenF(v);     color.setBlueF(t);  break;
             case 4:     color.setRedF(t);   color.setGreenF(p);     color.setBlueF(v);  break;
-            default:    Dr::PrintDebug("DrColor::fromHsv() Warning: i not handled in switch. Value of i: " + std::to_string(i));
+            default:    Dr::PrintDebug("DrColor::fromHsv() Warning: Hue (i) not handled in switch. Value of i: " + std::to_string(i));
         }
     }
     return color;
@@ -254,6 +263,9 @@ bool DrColor::operator==(const DrColor &other) const {
     return (r == other.r) && (g == other.g) && (b == other.b) && (a == other.a);
 }
 
+bool DrColor::operator!=(const DrColor &other) const {
+    return (r != other.r) || (g != other.g) || (b != other.b) || (a != other.a);
+}
 
 
 

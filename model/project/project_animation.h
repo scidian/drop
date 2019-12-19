@@ -15,6 +15,7 @@
 
 // Forward declarations
 class DrFrame;
+class DrImage;
 class DrProject;
 class DrWorld;
 
@@ -45,7 +46,7 @@ public:
     void        initializeAnimationSettings(std::string new_name);
 
     // Getters / Setters
-    QPixmap                 getPixmapFromFirstFrame();
+    DrImage*                getFirstFrameImage();
     DrFrame*                getFrame(long frame_number) { return m_frames[static_cast<unsigned long>(frame_number - 1)]; }
     Frames&                 getFrames()                 { return m_frames; }
     long                    getFrameCount()             { return static_cast<long>(m_frames.size()); }

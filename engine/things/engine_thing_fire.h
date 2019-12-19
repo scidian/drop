@@ -39,10 +39,10 @@ public:
     virtual ~DrEngineFire() override;
 
     // Abstract Engine Thing Overrides
-    virtual DrThingType getThingType() override { return DrThingType::Fire; }
+    virtual DrThingType getThingType() override     { return DrThingType::Fire; }
 
     // Engine Thing Overrides
-    virtual double      getAngle() override { return -(DrEngineThing::getAngle()); }
+    virtual double      getAngle() const override   { return -(DrEngineThing::getAngle()); }
 
 };
 

@@ -75,7 +75,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
             pixmap = QPixmap(":/assets/gui_misc/empty_image.png").scaled(QSize(64, 64), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             pixmap = Dr::ApplySinglePixelFilter(Image_Filter_Type::Opacity, pixmap, -100);
         } else {
-            pixmap = animation->getPixmapFromFirstFrame();
+            pixmap = Dr::ToQPixmap(animation->getFirstFrameImage()->getBitmap());
             pixmap = pixmap.scaled(QSize(frame_width, frame_height - 20), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
         asset_pix->setPixmap(pixmap);

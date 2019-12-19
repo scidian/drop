@@ -6,8 +6,11 @@
 //
 //
 #include "3rd_party/stb/stb_image.h"
+#include "3rd_party/stb/stb_image_resize.h"
+#include "3rd_party/stb/stb_image_write.h"
 #include "library/dr_debug.h"
 #include "library/types/dr_bitmap.h"
+#include "library/types/dr_color.h"
 
 
 //####################################################################################
@@ -39,6 +42,22 @@ DrBitmap::DrBitmap(std::string filename) {
 
 DrBitmap::DrBitmap(const unsigned char *from_data, const int &number_of_bytes, bool compressed, int width_, int height_) {
     loadFromMemory(from_data, number_of_bytes, compressed, width_, height_);
+}
+
+
+//####################################################################################
+//##    Manipulation
+//####################################################################################
+DrColor DrBitmap::getPixel(int x, int y) const {
+    size_t index = (y * this->width * c_number_channels) + (x * c_number_channels);
+    return DrColor(data[index+2], data[index+1], data[index], data[index+3]);
+}
+void DrBitmap::setPixel(int x, int y, DrColor color) {
+    size_t index = (y * this->width * c_number_channels) + (x * c_number_channels);
+    data[index]   = color.blue();
+    data[index+1] = color.green();
+    data[index+2] = color.red();
+    data[index+3] = color.alpha();
 }
 
 
@@ -86,8 +105,13 @@ void DrBitmap::loadFromMemory(const unsigned char *from_data, const int &number_
 }
 
 
+int DrBitmap::saveAsPng(std::string filename) {
+    return stbi_write_png(filename.data(), width, height, channels, data.data(), width * channels);
+}
 
-
+int DrBitmap::saveAsJpg(std::string filename, int quality) {
+    return stbi_write_jpg(filename.data(), width, height, channels, data.data(), quality);
+}
 
 
 

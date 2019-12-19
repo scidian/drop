@@ -67,14 +67,14 @@ public:
 
 
     // Getters / Setters
-    QPointF     getScreenPos() { return m_screen_pos; }
-    int         getLightDiameter() { return m_light_diameter; }
-    int         getLightDiameterFitted() { return m_light_diameter_fitted; }
-    float       getStartIntensity() { return m_start_intensity; }
-    float       getPulseDirection() { return m_pulse_direction; }
-    float       getPerspectiveScale() { return m_perspective_scale; }
-    bool        isInView() { return m_visible; }
-    DrPointF    getRotatedCone() { return m_rotated_cone; }
+    QPointF     getScreenPos()              { return m_screen_pos; }
+    int         getLightDiameter()          { return m_light_diameter; }
+    int         getLightDiameterFitted()    { return m_light_diameter_fitted; }
+    float       getStartIntensity()         { return m_start_intensity; }
+    float       getPulseDirection()         { return m_pulse_direction; }
+    float       getPerspectiveScale()       { return m_perspective_scale; }
+    bool        isInView()                  { return m_visible; }
+    DrPointF    getRotatedCone()            { return m_rotated_cone; }
 
     void        setScreenPos(QPointF new_pos) { m_screen_pos = new_pos; }
     void        setLightDiameter(int new_diameter) { m_light_diameter = new_diameter; }

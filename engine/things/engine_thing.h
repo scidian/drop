@@ -121,16 +121,16 @@ public:
     virtual void        onDeath()   { }
 
     // Basic Properties
-    virtual double          getAngle()      { return m_angle_z; }                           // Returns Thing angle (in degrees)
-    virtual const float&    getOpacity()    { return m_opacity; }                           // Returns Opacity (alpha 0.0 to 1.0) of Thing
-    virtual DrPointF        getPosition()   { return m_position; }                          // Returns Thing center position in world coordinates
-    virtual const float&    getScaleX()     { return m_scale_x; }
-    virtual const float&    getScaleY()     { return m_scale_y; }
-    virtual DrPointF        getSize()       { return m_size; }                              // Returns original Thing size
-    virtual const double&   getVelocityX()  { return m_velocity_x; }
-    virtual const double&   getVelocityY()  { return m_velocity_y; }
-    DrEngineWorld*          getWorld()      { return m_world; }
-    virtual const double&   getZOrder()     { return m_z_order; }
+    virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)
+    virtual const float&    getOpacity() const      { return m_opacity; }                   // Returns Opacity (alpha 0.0 to 1.0) of Thing
+    virtual DrPointF        getPosition() const     { return m_position; }                  // Returns Thing center position in world coordinates
+    virtual const float&    getScaleX() const       { return m_scale_x; }
+    virtual const float&    getScaleY() const       { return m_scale_y; }
+    virtual DrPointF        getSize()  const        { return m_size; }                      // Returns original Thing size
+    virtual const double&   getVelocityX() const    { return m_velocity_x; }
+    virtual const double&   getVelocityY() const    { return m_velocity_y; }
+    DrEngineWorld*          getWorld()              { return m_world; }
+    virtual const double&   getZOrder() const       { return m_z_order; }
 
     virtual void            setAngle(double new_angle)      { m_angle_z = new_angle; }
     virtual void            setOpacity(float new_opacity)   { m_opacity = new_opacity; }

@@ -47,15 +47,15 @@ struct DrHsv {
 class DrColor
 {
 private:
-    int r = 0;              // Red      Range: 0 to 255
-    int g = 0;              // Green    Range: 0 to 255
-    int b = 0;              // Blue     Range: 0 to 255
-    int a = 255;            // Alpha    Range: 0 to 255
+    unsigned char r = 0;                // Red      Range: 0 to 255
+    unsigned char g = 0;                // Green    Range: 0 to 255
+    unsigned char b = 0;                // Blue     Range: 0 to 255
+    unsigned char a = 255;              // Alpha    Range: 0 to 255
 
 public:
     // Constructors
     DrColor();
-    DrColor(unsigned char r_, unsigned char g_, unsigned char b_, unsigned char a_ = 255);
+    DrColor(const unsigned char &r_, const unsigned char &g_, const unsigned char &b_, const unsigned char &a_ = static_cast<unsigned char>(255));
     DrColor(int r_, int g_, int b_, int a_ = 255);
     DrColor(float r_, float g_, float b_, float a_ = 1.0f);
     DrColor(double r_, double g_, double b_, double a_ = 1.0);
@@ -73,14 +73,14 @@ public:
     DrColor         lighter(int percent = 150);
 
     // Getters / Setters
-    int         red() const     { return r; }
-    double      redF() const    { return static_cast<double>(r) / 255.0; }
-    int         green() const   { return g; }
-    double      greenF() const  { return static_cast<double>(g) / 255.0; }
-    int         blue() const    { return b; }
-    double      blueF() const   { return static_cast<double>(b) / 255.0; }
-    int         alpha() const   { return a; }
-    double      alphaF() const  { return static_cast<double>(a) / 255.0; }
+    const unsigned char&    red() const     { return r; }
+    const unsigned char&    green() const   { return g; }
+    const unsigned char&    blue() const    { return b; }
+    const unsigned char&    alpha() const   { return a; }
+    double                  redF() const    { return static_cast<double>(r) / 255.0; }
+    double                  greenF() const  { return static_cast<double>(g) / 255.0; }
+    double                  blueF() const   { return static_cast<double>(b) / 255.0; }
+    double                  alphaF() const  { return static_cast<double>(a) / 255.0; }
 
     void        setRed(int red);
     void        setRedF(double red);
@@ -98,6 +98,7 @@ public:
     DrColor     operator*   (int k) const;
     DrColor     operator/   (int k) const;
     bool        operator==  (const DrColor &other) const;
+    bool        operator!=  (const DrColor &other) const;
 
 };
 

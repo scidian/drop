@@ -31,7 +31,7 @@ public:
     virtual ~DrEngineSwirl() override;
 
     // Abstract Engine Thing Overrides
-    virtual DrThingType getThingType() override { return DrThingType::Swirl; }
+    virtual DrThingType getThingType() override     { return DrThingType::Swirl; }
 
 
 };

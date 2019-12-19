@@ -56,7 +56,7 @@ struct Palette_Info {
 namespace Dr {
 
     // Color Helper Functions
-    bool            IsSameColor(DrColor &color1, DrColor &color2, double tolerance);
+    bool            IsSameColor(const DrColor &color1, const DrColor &color2, double tolerance);
     DrColor         RandomColor();
 
     // Style Functions

@@ -71,12 +71,10 @@ int DrAnimation::getStartFrameNumber() {
     return getComponentPropertyValue(Components::Animation_Settings, Properties::Animation_Settings_Start_Frame).toInt();
 }
 
-QPixmap DrAnimation::getPixmapFromFirstFrame() {
+DrImage* DrAnimation::getFirstFrameImage() {
     long first_frame = getComponentPropertyValue(Components::Animation_Settings, Properties::Animation_Settings_Start_Frame).toInt();
     long image_key =   getFrame(first_frame)->getKey();
-
-    DrImage *frame_image = getParentProject()->findImageFromKey(image_key);
-    return Dr::ToQPixmap(frame_image->getBitmap());
+    return getParentProject()->findImageFromKey(image_key);
 }
 
 

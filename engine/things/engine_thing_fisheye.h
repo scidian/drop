@@ -31,7 +31,7 @@ public:
     virtual ~DrEngineFisheye() override;
 
     // Abstract Engine Thing Overrides
-    virtual DrThingType getThingType() override { return DrThingType::Fisheye; }
+    virtual DrThingType getThingType() override     { return DrThingType::Fisheye; }
 
 
 };

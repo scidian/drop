@@ -6,6 +6,7 @@
 //
 //
 #include "editor/helper_library.h"
+#include "library/dr_debug.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
@@ -24,6 +25,7 @@
 
 // Internal Linkage (File Scope) Forward Declarations
 DrPropertyCollision autoCollisionShape(QPixmap pixmap);
+DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap);
 
 
 //####################################################################################
@@ -42,7 +44,7 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
 
     DrPropertyCollision shape;
     std::string     my_starting_name = "Unknown";
-    QPixmap         my_starting_pixmap(":/assets/dr_images/empty.png");
+    DrBitmap        my_starting_bitmap(32, 32);
 
     switch (getAssetType()) {
         case DrAssetType::Character:
@@ -59,14 +61,14 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
                     animation = dynamic_cast<DrAnimation*>(source);
                     if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + std::to_string(base_key));
                 }
-                my_starting_pixmap = animation->getPixmapFromFirstFrame();
+                my_starting_bitmap = animation->getFirstFrameImage()->getBitmap();
                 my_starting_name =   animation->getName();
             } else {
                 m_base_key = c_no_key;
             }
 
             // Load / Initialize Entity Settings
-            shape = autoCollisionShape(my_starting_pixmap);
+            shape = autoCollisionShape(my_starting_bitmap);
             if (new_asset_type == DrAssetType::Character)
                 initializeAssetSettingsCharacter(my_starting_name);
             else if (new_asset_type == DrAssetType::Object)
@@ -80,8 +82,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
         }
     }
 
-    m_width =  my_starting_pixmap.width();
-    m_height = my_starting_pixmap.height();
+    m_width =  my_starting_bitmap.width;
+    m_height = my_starting_bitmap.height;
 }
 
 DrAsset::~DrAsset() { }
@@ -132,7 +134,10 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
     long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
     DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
 
-    if (animation == nullptr) return c_key_image_empty;
+    if (animation == nullptr) {
+        ///return c_key_image_empty;        // Old 32x32 blank image file
+        Dr::PrintDebug("Error in DrAsset::getIdleAnimationFirstFrameImageKey(), could not find idle animation key!!");
+    }
 
     return animation->getFrame(animation->getStartFrameNumber())->getKey();
 }
@@ -154,7 +159,7 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties ani
     property->setValue( animation->getKey() );
 
     if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) {
-        QPixmap      new_pixmap = animation->getPixmapFromFirstFrame();
+        QPixmap      new_pixmap = Dr::ToQPixmap(animation->getFirstFrameImage()->getBitmap());
         m_width =    new_pixmap.width();
         m_height =   new_pixmap.height();
         m_base_key = animation->getKey();

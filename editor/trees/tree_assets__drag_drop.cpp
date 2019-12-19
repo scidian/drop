@@ -11,6 +11,7 @@
 #include <QScreen>
 
 #include "editor/globals_editor.h"
+#include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
@@ -48,7 +49,7 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
             case DrAssetType::Character: {
                 long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
                 DrAnimation *ani = asset->getParentProject()->findAnimationFromKey(animation_key);
-                if (ani != nullptr) pixmap = ani->getPixmapFromFirstFrame();
+                if (ani != nullptr) pixmap = Dr::ToQPixmap(ani->getFirstFrameImage()->getBitmap());
                 break;
             }
         }
