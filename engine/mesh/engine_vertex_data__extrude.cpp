@@ -21,6 +21,7 @@
 #include "3rd_party/poly_partition.h"
 #include "3rd_party/polyline_simplification.h"
 #include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
 #include "library/types/dr_point.h"
@@ -36,8 +37,8 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
     // ***** Break pixmap into seperate images for each object in image
     std::vector<QImage> images;
     std::vector<QRect>  rects;
-    DrImaging::FindObjectsInImage(pixmap.toImage(), images, rects, 0.9);
-    ///images.push_back( DrImaging::BlackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
+    Dr::FindObjectsInImage(pixmap.toImage(), images, rects, 0.9);
+    ///images.push_back( Dr::BlackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
 
     // ***** Go through each image (object) and add triangles for it
     for (int image_number = 0; image_number < static_cast<int>(images.size()); image_number++) {
@@ -45,7 +46,7 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         if (image.width() < 1 || image.height() < 1) continue;
 
         // ***** Trace edge of image
-        std::vector<DrPointF> points = DrImaging::TraceImageOutline(image);
+        std::vector<DrPointF> points = Dr::TraceImageOutline(image);
 
         // Smooth point list
         points = smoothPoints( points, 5, 5.0, 0.5 );
@@ -63,19 +64,19 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
         // ***** Copy image and finds holes as seperate outlines
         QImage holes = image.copy(rects[image_number]);
-        DrImaging::FillBorder(holes, c_color_white, holes.rect());          // Ensures only holes are left as black spots
+        Dr::FillBorder(holes, c_color_white, holes.rect());                 // Ensures only holes are left as black spots
 
         // Breaks holes into seperate images for each Hole
         std::vector<QImage> hole_images;
         std::vector<QRect>  hole_rects;
-        DrImaging::FindObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
+        Dr::FindObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
 
         // Go through each image (Hole) create list for it
         std::vector<std::vector<DrPointF>> hole_list;
         for (int hole_number = 0; hole_number < static_cast<int>(hole_images.size()); hole_number++) {
             QImage &hole = hole_images[hole_number];
             if (hole.width() < 1 || hole.height() < 1) continue;
-            std::vector<DrPointF> one_hole = DrImaging::TraceImageOutline(hole);
+            std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole);
             // Add in sub image offset to points
             for (auto &point : one_hole) {
                 point.x += rects[image_number].x();

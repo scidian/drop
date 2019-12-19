@@ -17,17 +17,16 @@
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
-#include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
 
-
-namespace DrImaging
+namespace Dr
 {
 
 
 //####################################################################################
 //##    Draws a Rounded Square Icon with middle_icon in the middle for displaying
-//##    various devices / controls in the Editor
+//##    various Devices / Controls in the Editor
 //####################################################################################
 QPixmap DrawFixedIcon(QPixmap &middle_icon) {
     QColor back_color =     Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
@@ -73,9 +72,7 @@ QPixmap DrawCamera() {
 
 
 
-
-
-}   // End DrImaging Namespace
+}   // End Dr Namespace
 
 
 

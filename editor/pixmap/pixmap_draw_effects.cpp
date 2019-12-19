@@ -16,14 +16,14 @@
 
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
-#include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
 #include "library/dr_math.h"
 #include "library/dr_random.h"
 
-
-namespace DrImaging
+namespace Dr
 {
+
 
 // Internal Constants
 const float PI =    3.14159f;
@@ -366,7 +366,7 @@ QPixmap DrawWater(QColor top_color, QColor bottom_color) {
 
 
 
-}   // End DrImaging Namespace
+}   // End Dr Namespace
 
 
 

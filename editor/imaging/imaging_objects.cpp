@@ -18,12 +18,13 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "library/dr_math.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
 
 
-namespace DrImaging
+namespace Dr
 {
 
 
@@ -169,7 +170,7 @@ QImage FloodFill(QImage &from_image, int at_x, int at_y, QColor fill_color, doub
 //##        Traces Border of 'rect' and makes sure to fill in any c_color_black areas with fill_color
 //####################################################################################
 void FillBorder(QImage &image, QColor fill_color, QRect rect) {
-    std::vector<QRgb*> lines = DrImaging::GetScanLines(image);
+    std::vector<QRgb*> lines = Dr::GetScanLines(image);
     QRect  fill_rect;
     int    fill_qty;
 
@@ -177,10 +178,10 @@ void FillBorder(QImage &image, QColor fill_color, QRect rect) {
     int y2 = rect.y() + rect.height() - 1;
     for (int x = rect.x(); x < rect.x() + rect.width(); x++) {
         if (lines[y1][x] == c_color_black) {
-            DrImaging::FloodFill(image, x, y1, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            Dr::FloodFill(image, x, y1, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
         if (lines[y2][x] == c_color_black) {
-            DrImaging::FloodFill(image, x, y2, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            Dr::FloodFill(image, x, y2, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
     }
 
@@ -188,10 +189,10 @@ void FillBorder(QImage &image, QColor fill_color, QRect rect) {
     int x2 = rect.x() + rect.width() - 1;
     for (int y = rect.y(); y < rect.y() + rect.height(); y++) {
         if (lines[y][x1] == c_color_black) {
-            DrImaging::FloodFill(image, x1, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            Dr::FloodFill(image, x1, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
         if (lines[y][x2] == c_color_black) {
-            DrImaging::FloodFill(image, x2, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
+            Dr::FloodFill(image, x2, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
     }
 }

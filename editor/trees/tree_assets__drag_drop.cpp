@@ -67,7 +67,7 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
     }
 
     if (pixmap.isNull()) pixmap = QPixmap(1, 1);
-    pixmap = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Opacity, pixmap, -64);
+    pixmap = Dr::ApplySinglePixelFilter( Image_Filter_Type::Opacity, pixmap, -64);
     int scaled_x = static_cast<int>( pixmap.width() *  m_editor_relay->currentViewZoom() );
     int scaled_y = static_cast<int>( pixmap.height() * m_editor_relay->currentViewZoom() );
     int max_width =  2048;
@@ -99,7 +99,7 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
     drag->setHotSpot(hot_spot);
 
     // Execute drag command
-    QPixmap temp_pixmap = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Opacity, pre_pixmap, -128);
+    QPixmap temp_pixmap = Dr::ApplySinglePixelFilter( Image_Filter_Type::Opacity, pre_pixmap, -128);
     label_pixmap->setPixmap(temp_pixmap);
     drag->exec(Qt::CopyAction, Qt::CopyAction);
     label_pixmap->setPixmap(pre_pixmap);

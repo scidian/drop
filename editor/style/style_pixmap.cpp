@@ -7,6 +7,7 @@
 //
 #include "editor/colors/colors.h"
 #include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
 
 
@@ -18,7 +19,7 @@ namespace Dr {
 //####################################################################################
 QImage ImageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
     QImage image = from_image;
-    std::vector<QRgb*> lines = DrImaging::GetScanLines(image);
+    std::vector<QRgb*> lines = Dr::GetScanLines(image);
 
     // Loop through every pixel, if alpha is below threshold, set to mask color
     for (int y = 0; y < image.height(); ++y) {

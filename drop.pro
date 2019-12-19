@@ -134,12 +134,11 @@ SOURCES += \
     editor/forms/form_settings.cpp \
     editor/globals_editor.cpp \
     editor/helper_library.cpp \
-    editor/imaging/imaging_draw.cpp \
-    editor/imaging/imaging_draw_devices.cpp \
-    editor/imaging/imaging_draw_effects.cpp \
     editor/imaging/imaging_filters.cpp \
-    editor/imaging/imaging_misc.cpp \
     editor/imaging/imaging_objects.cpp \
+    editor/pixmap/pixmap_draw.cpp \
+    editor/pixmap/pixmap_draw_devices.cpp \
+    editor/pixmap/pixmap_draw_effects.cpp \
     editor/project/project_add_built_in_images.cpp \
     editor/project/project_initialize_new.cpp \
     editor/style/style_format_widgets.cpp \
@@ -905,6 +904,7 @@ HEADERS += \
     editor/globals_editor.h \
     editor/helper_library.h \
     editor/imaging/imaging.h \
+    editor/pixmap/pixmap.h \
     editor/project/project.h \
     editor/style/style.h \
     editor/trees/tree_advisor.h \

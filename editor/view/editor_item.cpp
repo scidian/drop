@@ -13,6 +13,7 @@
 #include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/pixmap/pixmap.h"
 #include "editor/view/editor_item.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
@@ -68,7 +69,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
         DrDevice *device = dynamic_cast<DrDevice*>(m_asset);
         switch (device->getDeviceType()) {
             case DrDeviceType::Camera: {
-                m_pixmap = DrImaging::DrawCamera();
+                m_pixmap = Dr::DrawCamera();
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
@@ -85,14 +86,14 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                 uint color_2 =      m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt();
                 uint smoke =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt();
                 int  mask  =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape).toInt();
-                m_pixmap = DrImaging::DrawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
+                m_pixmap = Dr::DrawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Fisheye: {
                 uint color =        m_thing->getComponentProperty(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color)->getValue().toUInt();
-                m_pixmap = DrImaging::DrawFisheye( QColor::fromRgba(color) );
+                m_pixmap = Dr::DrawFisheye( QColor::fromRgba(color) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
@@ -103,14 +104,14 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
                 float cone_end =    m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toFloat();
                 float intensity =   m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
                 float blur =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-                m_pixmap = DrImaging::DrawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
+                m_pixmap = Dr::DrawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
                 setPixmap(m_pixmap);
                 break;
             }
             case DrEffectType::Mirror: {
                 uint color_1 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt();
                 uint color_2 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt();
-                m_pixmap = DrImaging::DrawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
+                m_pixmap = Dr::DrawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
@@ -118,7 +119,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             case DrEffectType::Swirl: {
                 uint color_1 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt();
                 float  angle = m_thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
-                m_pixmap = DrImaging::DrawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
+                m_pixmap = Dr::DrawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
@@ -126,7 +127,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             case DrEffectType::Water: {
                 uint start_color =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt();
                 uint end_color =    m_thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt();
-                m_pixmap = DrImaging::DrawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
+                m_pixmap = Dr::DrawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
@@ -232,19 +233,19 @@ void DrItem::applyFilters() {
     DrPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     if (pixelation.x > 1.0 || pixelation.y > 1.0)
-                           new_image = DrImaging::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );
-    if ( negative )        new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Negative, new_image, 0 );
-    if ( grayscale )       new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Grayscale, new_image, 0 );
+                           new_image = Dr::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );
+    if ( negative )        new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Negative, new_image, 0 );
+    if ( grayscale )       new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Grayscale, new_image, 0 );
 
     // Important to do saturation first, then hue
-    if ( saturation != 0 ) new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Saturation, new_image, saturation );
-    if ( hue        != 0 ) new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Hue, new_image, hue );
+    if ( saturation != 0 ) new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Saturation, new_image, saturation );
+    if ( hue        != 0 ) new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Hue, new_image, hue );
 
-    if ( contrast   != 0 ) new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Contrast, new_image, contrast );
-    if ( brightness != 0 ) new_image = DrImaging::ApplySinglePixelFilter( Image_Filter_Type::Brightness, new_image, brightness );
+    if ( contrast   != 0 ) new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Contrast, new_image, contrast );
+    if ( brightness != 0 ) new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Brightness, new_image, brightness );
 
     // Make all mostly transparent pixels fully transparent, better QGraphicsItem.shape() mouse select / grab
-    new_image = DrImaging::CheckOpacityTolerance(new_image);
+    new_image = Dr::CheckOpacityTolerance(new_image);
 
     // Set updated image as Pixmap
     setPixmap( QPixmap::fromImage(new_image) );

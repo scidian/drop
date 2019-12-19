@@ -17,10 +17,11 @@
 #include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "library/dr_math.h"
 
 
-namespace DrImaging
+namespace Dr
 {
 
 
@@ -34,7 +35,7 @@ QPixmap ApplySinglePixelFilter(Image_Filter_Type filter, const QPixmap &from_pix
 
 QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image, int value) {
     QImage image = from_image;
-    std::vector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = Dr::GetScanLines(image);
 
     int table[ 256 ];
     for ( int i = 0; i < 256; ++i ) {
@@ -155,7 +156,7 @@ QImage ColorizeImage(const QImage &from_image, QColor new_color) {
 //####################################################################################
 QImage CheckOpacityTolerance(const QImage &from_image) {
     QImage image = from_image;
-    std::vector<QRgb*> lines = GetScanLines(image);
+    std::vector<QRgb*> lines = Dr::GetScanLines(image);
 
     for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
         for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
@@ -173,7 +174,7 @@ QImage CheckOpacityTolerance(const QImage &from_image) {
 
 
 
-}   // End DrImaging Namespace
+}   // End Dr Namespace
 
 
 

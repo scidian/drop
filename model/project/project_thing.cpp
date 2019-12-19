@@ -9,6 +9,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
+#include "editor/pixmap/pixmap.h"
 #include "engine/opengl/opengl.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
