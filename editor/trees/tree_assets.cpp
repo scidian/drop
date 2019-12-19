@@ -298,7 +298,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
             } else if (entity->getType() == DrType::Image) {
                 DrImage *image = dynamic_cast<DrImage*>(entity);
-                pix = QPixmap::fromImage(Dr::ToQImage(image->getBitmap()));
+                pix = Dr::ToQPixmap(image->getBitmap());
                 if (entity->getKey() < c_key_starting_number) {
                     description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image_Built_In[1];
                 } else {
@@ -373,8 +373,11 @@ void TreeAssets::buildAssetTree(QString search_text) {
     expandCollapseComponents();
 
     // ***** Scroll back to previous position
-    this->verticalScrollBar()->setValue(scroll_position);
-    this->ensureSelectedKeyVisible();
+    if (scroll_position > 0) {
+        if (scroll_position > this->verticalScrollBar()->maximum()) scroll_position = this->verticalScrollBar()->maximum();
+        this->verticalScrollBar()->setValue(scroll_position);
+        QTimer::singleShot(0, this, SLOT(ensureSelectedKeyVisible()));
+    }
 }
 
 

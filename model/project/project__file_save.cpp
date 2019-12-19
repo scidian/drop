@@ -104,7 +104,7 @@ void DrProject::saveProjectToFile() {
         QVariantMap image_data;
         image_data["key"] =         QVariant::fromValue(image->getKey());
         image_data["simple_name"] = QString::fromStdString(image->getSimplifiedName());
-        image_data["image"] =       QVariant(QPixmap::fromImage(Dr::ToQImage(image->getBitmap())));
+        image_data["image"] =       QVariant(Dr::ToQPixmap(image->getBitmap()));
         settings.beginWriteArray("images");
         settings.setArrayIndex(image_count++);
         settings.setValue("image", image_data);

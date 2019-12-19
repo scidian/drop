@@ -71,7 +71,6 @@ public:
     // Tree Building Functions
     void                    buildAssetTree(QString search_text = "");
     AssetCategoryButton*    createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type);
-    void                    ensureSelectedKeyVisible();
     void                    expandCollapseComponents();
     QList<QTreeWidgetItem*> getListOfTopLevelItems();
     void                    removeAsset(long entity_key);
@@ -92,6 +91,7 @@ public:
     void                    setShowTypes(QList<DrType> types) { m_show_types = types; }
 
 private slots:
+    void            ensureSelectedKeyVisible();
     void            searchTextChanged(QString new_text);
     void            setAdvisorInfo(QString header, QString body);
 

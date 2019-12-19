@@ -33,6 +33,7 @@ public:
 public:
     // Constructors
     DrBitmap();
+    ~DrBitmap();
     DrBitmap(const DrBitmap &bitmap);
     DrBitmap(int width_, int height_);
     DrBitmap(std::string filename);
@@ -45,7 +46,7 @@ public:
                            bool compressed = true, int width_ = 0, int height_ = 0);
 
     // Functions
-    bool    isValid()   { return (width > 0 && height > 0); }
+    bool    isValid() const     { return (width > 0 && height > 0); }
 
 };
 

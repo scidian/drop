@@ -52,16 +52,19 @@ QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 
 QString     StringFromBool(bool boolean);
 
 
-// DrLibrary Conversion
+// Dr Libary Misc Conversion
 DrColor     FromQColor(const QColor &color);
-DrBitmap    FromQImage(const QImage &image);
 DrPoint     FromQPoint(const QPoint &point);
 DrPointF    FromQPointF(const QPointF &pointf);
-
 QColor      ToQColor(const DrColor &color);
-QImage      ToQImage(const DrBitmap &bitmap);
 QPoint      ToQPoint(const DrPoint &point);
 QPointF     ToQPointF(const DrPointF &pointf);
+
+// DrLibrary Image Conversion
+DrBitmap    FromQImage(const QImage &image);
+DrBitmap    FromQPixmap(const QPixmap &pix);
+QImage      ToQImage(const DrBitmap &bitmap);
+QPixmap     ToQPixmap(const DrBitmap &bitmap);
 
 
 // Qt Comparison

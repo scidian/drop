@@ -76,7 +76,7 @@ QPixmap DrAnimation::getPixmapFromFirstFrame() {
     long image_key =   getFrame(first_frame)->getKey();
 
     DrImage *frame_image = getParentProject()->findImageFromKey(image_key);
-    return   QPixmap::fromImage(Dr::ToQImage(frame_image->getBitmap()));
+    return Dr::ToQPixmap(frame_image->getBitmap());
 }
 
 

@@ -13,9 +13,8 @@
 //####################################################################################
 //##    Constructors
 //####################################################################################
-DrBitmap::DrBitmap() {
-    data.clear();
-}
+DrBitmap::DrBitmap() {  data.clear(); }
+DrBitmap::~DrBitmap() { data.clear(); }
 
 DrBitmap::DrBitmap(const DrBitmap &bitmap) {
     channels =  bitmap.channels;

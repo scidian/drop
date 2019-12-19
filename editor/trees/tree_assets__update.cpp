@@ -31,15 +31,23 @@ void TreeAssets::setSelectedKey(long key) {
 // Scrolls to selected item if necessary
 void TreeAssets::ensureSelectedKeyVisible() {
     for (auto frame : m_asset_frames) {
-        if (frame->property(User_Property::Key).toLongLong() == m_selected_key) {
-            QFrame *parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());
+        if (frame == nullptr) continue;
+
+        if (frame->property(User_Property::Key).toLongLong() == m_selected_key) {    
+            QFrame *parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());                // Parent is "Characters", "Objects", etc category frame
+            if (parent_frame == nullptr) continue;
+
             int widget_top = frame->geometry().y() + parent_frame->geometry().y();
             int widget_bot = widget_top + frame->geometry().height();
 
             if (widget_bot > this->geometry().height()) {
-                verticalScrollBar()->setValue( verticalScrollBar()->value() + (widget_bot - this->geometry().height() + 10));
+                int new_position = verticalScrollBar()->value() + (widget_bot - this->geometry().height() + 10);
+                if (new_position > this->verticalScrollBar()->maximum()) new_position = this->verticalScrollBar()->maximum();
+                verticalScrollBar()->setValue( new_position );
             } else if (widget_top < 0) {
-                verticalScrollBar()->setValue( verticalScrollBar()->value() + (widget_top - 10));
+                int new_position = verticalScrollBar()->value() + (widget_top - 10);
+                if (new_position > this->verticalScrollBar()->maximum()) new_position = this->verticalScrollBar()->maximum();
+                verticalScrollBar()->setValue( new_position );
             }
             break;
         }

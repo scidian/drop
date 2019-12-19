@@ -136,7 +136,7 @@ void DrOpenGL::loadProjectTextures() {
     for (auto &image_key : image_keys_used) {
         DrImage *image = m_engine->getProject()->findImageFromKey(image_key);
         if (image != nullptr) {
-            QPixmap pixmap = QPixmap::fromImage(Dr::ToQImage(image->getBitmap()));
+            QPixmap pixmap = Dr::ToQPixmap(image->getBitmap());
             importTexture(image->getKey(), pixmap);
         }
     }
