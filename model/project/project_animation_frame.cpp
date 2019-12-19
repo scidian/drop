@@ -28,8 +28,8 @@ DrFrame::DrFrame(DrProject *parent_project, std::list<long> image_keys) : DrSett
         Dr::PrintDebug("Warning!!! DrFrame() Constructor - Could not load DrImage with key: " + std::to_string(image_keys.front()));
 
     } else {
-        width =  image->getImage().width();
-        height = image->getImage().height();
+        width =  image->getBitmap().width;
+        height = image->getBitmap().height;
     }
 
     addComponentTransform(width, height, 0, 0);

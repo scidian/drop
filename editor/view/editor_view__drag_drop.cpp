@@ -13,6 +13,7 @@
 
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/project/project.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
@@ -177,7 +178,7 @@ void DrView::dropEvent(QDropEvent *event) {
         QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
-        DrImage *add_image = m_editor_relay->currentProject()->addImage(file_path.toStdString());
+        DrImage *add_image = Dr::AddImage(m_editor_relay->currentProject(), file_path);
         DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, add_image->getKey() );
         m_editor_relay->buildAssetTree();
         m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());

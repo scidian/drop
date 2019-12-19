@@ -103,10 +103,8 @@ void DrProject::saveProjectToFile() {
         DrImage *image = image_pair.second;
         QVariantMap image_data;
         image_data["key"] =         QVariant::fromValue(image->getKey());
-        image_data["full_path"] =   QString::fromStdString(image->getFullPath());
-        image_data["filename"] =    QString::fromStdString(image->getFilename());
         image_data["simple_name"] = QString::fromStdString(image->getSimplifiedName());
-        image_data["image"] =       QVariant(QPixmap::fromImage(image->getImage()));
+        image_data["image"] =       QVariant(QPixmap::fromImage(Dr::ToQImage(image->getBitmap())));
         settings.beginWriteArray("images");
         settings.setArrayIndex(image_count++);
         settings.setValue("image", image_data);

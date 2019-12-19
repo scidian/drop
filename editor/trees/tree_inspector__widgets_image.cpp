@@ -19,6 +19,7 @@
 #include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/project/project.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/view/editor_scene.h"
@@ -242,7 +243,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             // Add Images, Update Animation
             std::list<long> image_keys;
             for (auto file_path : file_paths) {
-                DrImage *image = project->addImage(file_path.toStdString());
+                DrImage *image = Dr::AddImage(project, file_path);
                 image_keys.push_back(image->getKey());
             }
             asset->updateAnimationProperty( image_keys, static_cast<Properties>(property->getPropertyKey()) );

@@ -20,6 +20,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
+#include "library/dr_debug.h"
 #include "library/dr_math.h"
 
 
@@ -45,8 +46,12 @@ std::vector<QRgb*> GetScanLines(QImage &image) {
             for (int y = 0; y < image.height(); ++y)
                 lines.push_back( reinterpret_cast<QRgb*>(image.scanLine(y)) );
 
-        } else {    Dr::ShowMessageBox("Image missing alpha channel!"); }
-    } else {    Dr::ShowMessageBox("Image only has 256 colors!"); }
+        } else {
+            Dr::PrintDebug("Image missing alpha channel!!!");
+        }
+    } else {
+        Dr::PrintDebug("Image only has 256 colors!");
+    }
 
     return lines;
 }

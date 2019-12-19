@@ -59,7 +59,7 @@ DrPoint     FromQPoint(const QPoint &point);
 DrPointF    FromQPointF(const QPointF &pointf);
 
 QColor      ToQColor(const DrColor &color);
-QImage      ToQImage(const DrBitmap &image);
+QImage      ToQImage(const DrBitmap &bitmap);
 QPoint      ToQPoint(const DrPoint &point);
 QPointF     ToQPointF(const DrPointF &pointf);
 

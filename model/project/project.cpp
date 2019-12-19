@@ -204,14 +204,10 @@ long DrProject::addFont(std::string font_name, QPixmap font_pixmap, std::string 
     return new_font_key;
 }
 
-DrImage* DrProject::addImage(std::string image_path, long key, Asset_Category category) {
+DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category, long key) {
     long new_image_key = (key == c_no_key) ? getNextKey() : key;
-    m_images[new_image_key] = new DrImage(this, new_image_key, image_path, category);
+    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, category);
     return m_images[new_image_key];
-}
-long DrProject::addImage(long key, std::string full_path, std::string filename, std::string simple_name, QImage &image, Asset_Category category) {
-    m_images[key] = new DrImage(this, key, full_path, filename, simple_name, image, category);
-    return key;
 }
 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World

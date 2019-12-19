@@ -298,7 +298,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
             } else if (entity->getType() == DrType::Image) {
                 DrImage *image = dynamic_cast<DrImage*>(entity);
-                pix = image->getPixmapFromImage();
+                pix = QPixmap::fromImage(Dr::ToQImage(image->getBitmap()));
                 if (entity->getKey() < c_key_starting_number) {
                     description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image_Built_In[1];
                 } else {

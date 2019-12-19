@@ -100,14 +100,14 @@ bool DrProject::openProjectFromFile(std::string open_file) {
         // Load Image
         QVariantMap image_data =    settings.value("image").value<QVariantMap>();
         long        image_key =     image_data["key"].toLongLong();
-        std::string full_path =     image_data["full_path"].toString().toStdString();
-        std::string filename =      image_data["filename"].toString().toStdString();
         std::string simple_name =   image_data["simple_name"].toString().toStdString();
+
         QImage      image =         image_data["image"].value<QPixmap>().toImage().convertToFormat(QImage::Format_ARGB32);
+        DrBitmap    bitmap(image.bits(), static_cast<int>(image.sizeInBytes()));
 
         // If key doesnt already exist, initialize Image
         if (findSettingsFromKey(image_key, false) != nullptr) continue;
-        addImage(image_key, full_path, filename, simple_name, image);
+        addImage(simple_name, bitmap, Asset_Category::Image, image_key);
     }
     settings.endArray();
 

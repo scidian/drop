@@ -7,7 +7,6 @@
 //
 #include "editor/constants_editor.h"
 #include "engine/opengl/opengl.h"
-#include "library/types/dr_variant.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"

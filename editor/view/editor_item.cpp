@@ -49,7 +49,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
             case DrAssetType::Character:
             case DrAssetType::Object: {
                 DrImage *image = m_project->findImageFromKey(asset->getIdleAnimationFirstFrameImageKey());
-                if (image != nullptr) m_pixmap = image->getPixmapFromImage();
+                if (image != nullptr) m_pixmap = QPixmap::fromImage(Dr::ToQImage(image->getBitmap()));
                 applyFilters();                                 // Apply filters and set pixmap
                 m_asset_width =  asset->getWidth();             // Dimensions of associated asset, used for boundingRect
                 m_asset_height = asset->getHeight();

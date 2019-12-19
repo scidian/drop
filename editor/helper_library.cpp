@@ -145,14 +145,15 @@ QString StringFromBool(bool boolean)        { return boolean? "True" : "False"; 
 //##
 //####################################################################################
 DrColor     FromQColor(const QColor &color)     { return DrColor(color.red(), color.green(), color.blue(), color.alpha()); }
-DrBitmap    FromQImage(const QImage &image)     { DrBitmap bitmap; bitmap.loadFromMemory(image.constBits(), int(image.sizeInBytes())); return bitmap; }
+DrBitmap    FromQImage(const QImage &image)     { return DrBitmap(image.constBits(), int(image.sizeInBytes()), false, image.width(), image.height()); }
 DrPoint     FromQPoint(const QPoint &point)     { return DrPoint(point.x(), point.y()); }
 DrPointF    FromQPointF(const QPointF &pointf)  { return DrPointF(pointf.x(), pointf.y()); }
 
 QColor      ToQColor(const DrColor &color)      { return QColor(color.red(), color.green(), color.blue(), color.alpha()); }
-QImage      ToQImage(const DrBitmap &image)     { return QImage(image.data.data(), image.width, image.height, QImage::Format::Format_ARGB32); }
+QImage      ToQImage(const DrBitmap &bitmap)    { return QImage(bitmap.data.data(), bitmap.width, bitmap.height, QImage::Format::Format_ARGB32); }
 QPoint      ToQPoint(const DrPoint &point)      { return QPoint(point.x, point.y); }
 QPointF     ToQPointF(const DrPointF &pointf)   { return QPointF(pointf.x, pointf.y); }
+
 
 
 //####################################################################################

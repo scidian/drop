@@ -34,9 +34,18 @@ public:
     // Constructors
     DrBitmap();
     DrBitmap(const DrBitmap &bitmap);
+    DrBitmap(int width_, int height_);
+    DrBitmap(std::string filename);
+    DrBitmap(const unsigned char *from_data, const int &number_of_bytes,
+             bool compressed = true, int width_ = 0, int height_ = 0);
 
+    // Image Loaders
     void    loadFromFile(std::string filename);
-    void    loadFromMemory(const unsigned char *from_data, const int &number_of_bytes);
+    void    loadFromMemory(const unsigned char *compressed_data, const int &number_of_bytes,
+                           bool compressed = true, int width_ = 0, int height_ = 0);
+
+    // Functions
+    bool    isValid()   { return (width > 0 && height > 0); }
 
 };
 

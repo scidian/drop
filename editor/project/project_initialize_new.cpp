@@ -46,22 +46,22 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
     if (test) {
         project->setOption(Project_Options::Name, std::string("Rocky Rover"));
 
-        DrImage *image_1  = project->addImage(":/assets/test_images/test_square.png");
-        DrImage *image_2  = project->addImage(":/assets/test_images/ground_fill.png");
-        DrImage *image_3  = project->addImage(":/assets/test_images/ground_top.png");
-        DrImage *image_4  = project->addImage(":/assets/test_images/moon_plant_6.png");
-        DrImage *image_5  = project->addImage(":/assets/test_images/rover_body.png");
-        DrImage *image_6  = project->addImage(":/assets/test_images/ball_1.png");
-        DrImage *image_7  = project->addImage(":/assets/test_images/water_1.png");
-        DrImage *image_8  = project->addImage(":/assets/test_images/rover_wheel.png");
-        DrImage *image_9  = project->addImage(":/assets/test_images/cake_block.png");
-        DrImage *image_10 = project->addImage(":/assets/test_images/cake_chocolate.png");
-        DrImage *image_11 = project->addImage(":/assets/test_images/cake_ice_cube.png");
-        DrImage *image_12 = project->addImage(":/assets/test_images/planetwithareallylongname.png");
-        DrImage *image_13 = project->addImage(":/assets/test_images/metal_block.png");
-        DrImage *image_14 = project->addImage(":/assets/test_images/donut.png");
-        DrImage *image_15 = project->addImage(":/assets/test_images/shapes2.png");
-        DrImage *image_16 = project->addImage(":/assets/test_images/dragon.png");
+        DrImage *image_1  = Dr::AddImage(project, ":/assets/test_images/test_square.png");
+        DrImage *image_2  = Dr::AddImage(project, ":/assets/test_images/ground_fill.png");
+        DrImage *image_3  = Dr::AddImage(project, ":/assets/test_images/ground_top.png");
+        DrImage *image_4  = Dr::AddImage(project, ":/assets/test_images/moon_plant_6.png");
+        DrImage *image_5  = Dr::AddImage(project, ":/assets/test_images/rover_body.png");
+        DrImage *image_6  = Dr::AddImage(project, ":/assets/test_images/ball_1.png");
+        DrImage *image_7  = Dr::AddImage(project, ":/assets/test_images/water_1.png");
+        DrImage *image_8  = Dr::AddImage(project, ":/assets/test_images/rover_wheel.png");
+        DrImage *image_9  = Dr::AddImage(project, ":/assets/test_images/cake_block.png");
+        DrImage *image_10 = Dr::AddImage(project, ":/assets/test_images/cake_chocolate.png");
+        DrImage *image_11 = Dr::AddImage(project, ":/assets/test_images/cake_ice_cube.png");
+        DrImage *image_12 = Dr::AddImage(project, ":/assets/test_images/planetwithareallylongname.png");
+        DrImage *image_13 = Dr::AddImage(project, ":/assets/test_images/metal_block.png");
+        DrImage *image_14 = Dr::AddImage(project, ":/assets/test_images/donut.png");
+        DrImage *image_15 = Dr::AddImage(project, ":/assets/test_images/shapes2.png");
+        DrImage *image_16 = Dr::AddImage(project, ":/assets/test_images/dragon.png");
 
         long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
                         project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);

@@ -5,6 +5,10 @@
 //
 //
 //
+#include <QPixmap>
+#include "editor/helper_library.h"
+
+
 #include <algorithm>
 #include <set>
 
@@ -132,7 +136,7 @@ void DrOpenGL::loadProjectTextures() {
     for (auto &image_key : image_keys_used) {
         DrImage *image = m_engine->getProject()->findImageFromKey(image_key);
         if (image != nullptr) {
-            QPixmap pixmap = image->getPixmapFromImage();
+            QPixmap pixmap = QPixmap::fromImage(Dr::ToQImage(image->getBitmap()));
             importTexture(image->getKey(), pixmap);
         }
     }

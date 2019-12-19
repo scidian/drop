@@ -151,8 +151,7 @@ public:
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
-    DrImage*        addImage(std::string image_path, long key = c_no_key, Asset_Category category = Asset_Category::Image);
-    long            addImage(long key, std::string full_path, std::string filename, std::string simple_name, QImage &image, Asset_Category category = Asset_Category::Image);
+    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image, long key = c_no_key);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world);
