@@ -70,11 +70,14 @@ void DrOpenGL::importTexture(long texture_id, std::string from_asset_string) {
 void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
     m_engine->addTexture(texture_id, pixmap);
 
+    // Dont process Noise / Water / Fire / Built In Textures
+    if (texture_id < 1 && texture_id > -100) return;
+
     // ***** 3D Extruded Textures
     // Create mesh
     m_texture_data[texture_id] = new DrEngineVertexData();
-    m_texture_data[texture_id]->initializeExtrudedPixmap( pixmap, false );      // Run with 'false' to reduce number of triangles in scene
-                                                                                // Run with 'true' for better looking models in wireframe
+    m_texture_data[texture_id]->initializeExtrudedBitmap( Dr::FromQPixmap(pixmap), false );     // Run with 'false' to reduce number of triangles in scene
+                                                                                                // Run with 'true' for better looking models in wireframe
 
     // Allocate mesh into vbo for use with OpenGL (could delete m_texture_data after this)
     m_texture_vbos[texture_id] = new QOpenGLBuffer();

@@ -10,7 +10,6 @@
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
-#include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/view/editor_item.h"
@@ -233,7 +232,7 @@ void DrItem::applyFilters() {
     DrPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
     if (pixelation.x > 1.0 || pixelation.y > 1.0)
-                           new_image = Dr::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );
+                                       Dr::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );
     if ( negative )        new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Negative, new_image, 0 );
     if ( grayscale )       new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Grayscale, new_image, 0 );
 

@@ -7,13 +7,12 @@
 //      http://rodolphe-vaillant.fr/?c=code
 //      https://github.com/silenthell/harmonic_weights_triangle_mesh
 //
-#include <QDebug>
-
 #include <limits>
 
-#include "editor/imaging/imaging.h"
+#include "3rd_party/glm/vec3.hpp"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
+#include "library/imaging/imaging.h"
 #include "library/types/dr_vec3.h"
 
 

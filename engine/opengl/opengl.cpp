@@ -6,8 +6,6 @@
 //      !!!!! Updating calls to native glCalls, commenting Qt calls as "#NO_QT" !!!!!
 //
 //
-#include <QSurfaceFormat>
-
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"

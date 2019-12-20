@@ -11,6 +11,7 @@
 #include "library/dr_debug.h"
 #include "library/types/dr_bitmap.h"
 #include "library/types/dr_color.h"
+#include "library/types/dr_rect.h"
 
 
 //####################################################################################
@@ -29,9 +30,9 @@ DrBitmap::DrBitmap(const DrBitmap &bitmap) {
 
 // Create empty bitmap
 DrBitmap::DrBitmap(int width_, int height_) {
-    channels = c_number_channels;
-    width = width_;
-    height = height_;
+    channels =  c_number_channels;
+    width =     width_;
+    height =    height_;
     data.resize(width * height * c_number_channels);
     std::fill(data.begin(), data.end(), 0);
 }
@@ -48,6 +49,33 @@ DrBitmap::DrBitmap(const unsigned char *from_data, const int &number_of_bytes, b
 //####################################################################################
 //##    Manipulation
 //####################################################################################
+DrBitmap DrBitmap::copy() { return (*this); }
+
+DrBitmap DrBitmap::copy(DrRect &copy_rect) {
+    // Bounds checking
+    if (copy_rect.right() > width - 1)   copy_rect.width = width - copy_rect.left - 1;
+    if (copy_rect.bottom() > height - 1) copy_rect.height = height - copy_rect.top - 1;
+
+    // Create empty DrBitmap
+    DrBitmap copy(copy_rect.width, copy_rect.height);
+
+    // Copy source
+    int source_x = copy_rect.left;
+    for (int x = 0; x < copy.width; ++x) {
+        int source_y = copy_rect.top;
+        for (int y = 0; y < copy.height; ++y) {
+            copy.setPixel(x, y, this->getPixel(source_x, source_y));
+            source_y++;
+        }
+        ++source_x;
+    }
+    return copy;
+}
+
+DrRect DrBitmap::rect() const {
+    return DrRect(0, 0, width, height);
+}
+
 DrColor DrBitmap::getPixel(int x, int y) const {
     size_t index = (y * this->width * c_number_channels) + (x * c_number_channels);
     return DrColor(data[index+2], data[index+1], data[index], data[index+3]);

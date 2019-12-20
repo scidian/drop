@@ -7,7 +7,6 @@
 //
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
-#include "editor/imaging/imaging.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"

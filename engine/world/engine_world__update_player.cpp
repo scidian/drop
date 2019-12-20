@@ -5,8 +5,8 @@
 //
 //
 //
-#include <QtMath>
-#include <QDebug>
+#include <QLineF>
+#include <QTransform>
 
 #include "engine/engine.h"
 #include "engine/things/engine_thing_object.h"
@@ -153,7 +153,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             cpFloat jump_vx, jump_vy;
             if (object->getRemainingWallTime() > 0.0) {
                 double angle = atan2(object->getLastTouchedGroundNormal().y, object->getLastTouchedGroundNormal().x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
-                angle = qRadiansToDegrees( angle ) - 180;
+                angle = Dr::RadiansToDegrees( angle ) - 180;
                 ///qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->getLastTouchedGroundDot();
                 if (angle < -180) angle += 360;
                 if (angle >  180) angle -= 360;

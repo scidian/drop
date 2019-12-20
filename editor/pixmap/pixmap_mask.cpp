@@ -1,15 +1,16 @@
 //
-//      Created by Stephens Nunnally on 8/27/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/19/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#include "editor/imaging/imaging.h"
-#include "editor/pixmap/pixmap.h"
-#include "editor/style/style.h"
-#include "library/colors/colors.h"
+#include <QBitmap>
+#include <QPainter>
+#include <QPixmap>
 
+#include "editor/pixmap/pixmap.h"
+#include "library/colors/colors.h"
 
 namespace Dr {
 
@@ -35,7 +36,7 @@ QImage ImageMask(const QImage &from_image, QColor mask_color, int max_alpha) {
 //####################################################################################
 //##    Creates a circular mask to limit to QPixmap shape
 //####################################################################################
-void SetMaskCircleShape (QPixmap &pix) {
+void SetMaskCircleShape(QPixmap &pix) {
     QPixmap mask(pix.width(), pix.height());
     mask.fill(Qt::green);
     QPainter painter(&mask);
@@ -49,6 +50,12 @@ void SetMaskCircleShape (QPixmap &pix) {
 
 
 }   // End namespace Dr
+
+
+
+
+
+
 
 
 

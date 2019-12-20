@@ -14,6 +14,7 @@
 
 // Forward Declarations
 class DrColor;
+class DrRect;
 
 // Local constants
 const int   c_number_channels = 4;
@@ -44,8 +45,11 @@ public:
              bool compressed = true, int width_ = 0, int height_ = 0);
 
     // Manipulation
-    DrColor getPixel(int x, int y) const;
-    void    setPixel(int x, int y, DrColor color);
+    DrBitmap    copy();
+    DrBitmap    copy(DrRect &copy_rect);
+    DrRect      rect() const;
+    DrColor     getPixel(int x, int y) const;
+    void        setPixel(int x, int y, DrColor color);
 
     // Image Loaders
     void    loadFromFile(std::string filename);

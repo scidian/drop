@@ -5,8 +5,6 @@
 //
 //
 //
-#include <QtMath>
-
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
@@ -82,7 +80,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
         case Body_Type::Kinematic:   this->body = cpBodyNewKinematic();                             break;
     }
     cpBodySetPosition( this->body, cpv(x, y));
-    cpBodySetAngle(    this->body, qDegreesToRadians(-angle) );
+    cpBodySetAngle(    this->body, Dr::DegreesToRadians(-angle) );
     setAngle( -angle );
     cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
 

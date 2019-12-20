@@ -5,8 +5,6 @@
 //
 //
 //
-#include <QtMath>
-
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/things/engine_thing_object.h"

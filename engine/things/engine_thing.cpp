@@ -5,6 +5,8 @@
 //      Abstract Item representing a thing that has a body in the Physics Engine (object, character, light, etc)
 //
 //
+#include <QRectF>
+
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"
 

@@ -7,9 +7,7 @@
 //
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/polyline_simplification.h"
-
-#include "editor/imaging/imaging.h"
-
+#include "library/imaging/imaging.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"

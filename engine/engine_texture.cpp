@@ -6,8 +6,8 @@
 //
 //
 #include <QPixmap>
+#include <QOpenGLTexture>
 
-#include "editor/imaging/imaging.h"
 #include "editor/pixmap/pixmap.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"

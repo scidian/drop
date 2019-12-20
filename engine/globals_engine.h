@@ -8,15 +8,9 @@
 #ifndef GLOBALS_ENGINE_H
 #define GLOBALS_ENGINE_H
 
-#include <QOpenGLTexture>
-#include <QPixmap>
-#include <QVector2D>
-#include <QVector3D>
-
 #include <string>
 
 #include "3rd_party/chipmunk/chipmunk.h"
-#include "3rd_party/glm/vec3.hpp"
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
 #include "library/dr_containers.h"

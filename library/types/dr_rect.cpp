@@ -63,10 +63,12 @@ glm::vec4 DrRect::toGlmVec4()           { return glm::vec4(left, top, width, hei
 //####################################################################################
 //##    Getters
 //####################################################################################
+int     DrRect::right()                 { return (left + width - 1); }
+int     DrRect::bottom()                { return (top + height - 1); }
 DrPoint DrRect::topLeft()               { return DrPoint(left, top); }
-DrPoint DrRect::topRight()              { return DrPoint(left + width, top); }
-DrPoint DrRect::bottomLeft()            { return DrPoint(left, top + height); }
-DrPoint DrRect::bottomRight()           { return DrPoint(left + width, top + height); }
+DrPoint DrRect::topRight()              { return DrPoint(left + width - 1, top); }
+DrPoint DrRect::bottomLeft()            { return DrPoint(left, top + height - 1); }
+DrPoint DrRect::bottomRight()           { return DrPoint(left + width - 1, top + height - 1); }
 
 
 

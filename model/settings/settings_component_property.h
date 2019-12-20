@@ -16,6 +16,7 @@
 class DrSettings;
 class DrComponent;
 
+
 //####################################################################################
 //##    DrProperty
 //##        Class to hold one property of any Project object component

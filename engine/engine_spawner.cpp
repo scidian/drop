@@ -5,6 +5,9 @@
 //
 //
 //
+#include <QRect>
+#include <QTransform>
+
 #include "engine/engine_spawner.h"
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"

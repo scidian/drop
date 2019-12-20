@@ -16,7 +16,6 @@
 #include "editor/constants_editor.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
-#include "editor/imaging/imaging.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
 #include "library/colors/colors.h"

@@ -5,13 +5,6 @@
 //
 //
 //
-#include <QtMath>
-#include <QDateTime>
-#include <QMatrix4x4>
-#include <QPainter>
-#include <QPixmap>
-#include <QStandardPaths>
-
 #include <algorithm>
 #include <limits>
 
@@ -20,10 +13,10 @@
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "3rd_party/polyline_simplification.h"
-#include "editor/imaging/imaging.h"
-#include "editor/pixmap/pixmap.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
+#include "library/dr_debug.h"
+#include "library/imaging/imaging.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
 
@@ -31,19 +24,18 @@
 //####################################################################################
 //##    Builds an Extruded Pixmap Model
 //####################################################################################
-void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wireframe) {
+void DrEngineVertexData::initializeExtrudedBitmap(const DrBitmap &bitmap, bool wireframe) {
     m_data.resize(100 * c_vertex_length);
 
     // ***** Break pixmap into seperate images for each object in image
-    std::vector<QImage> images;
-    std::vector<QRect>  rects;
-    Dr::FindObjectsInImage(pixmap.toImage(), images, rects, 0.9);
-    ///images.push_back( Dr::BlackAndWhiteFromAlpha(pixmap.toImage(), 0.9, false));
+    std::vector<DrBitmap> images;
+    std::vector<DrRect>   rects;
+    Dr::FindObjectsInBitmap(bitmap, images, rects, 0.9);
 
     // ***** Go through each image (object) and add triangles for it
     for (int image_number = 0; image_number < static_cast<int>(images.size()); image_number++) {
-        QImage &image = images[image_number];
-        if (image.width() < 1 || image.height() < 1) continue;
+        DrBitmap &image = images[image_number];
+        if (image.width < 1 || image.height < 1) continue;
 
         // ***** Trace edge of image
         std::vector<DrPointF> points = Dr::TraceImageOutline(image);
@@ -63,24 +55,24 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
         ///points = simplifyPoints(points, 0.001, split, false);            // Run again with smaller tolerance to reduce triangles along straight lines
 
         // ***** Copy image and finds holes as seperate outlines
-        QImage holes = image.copy(rects[image_number]);
-        Dr::FillBorder(holes, c_color_white, holes.rect());                 // Ensures only holes are left as black spots
+        DrBitmap holes = image.copy(rects[image_number]);
+        Dr::FillBorder(holes, Dr::white, holes.rect());                     // Ensures only holes are left as black spots
 
         // Breaks holes into seperate images for each Hole
-        std::vector<QImage> hole_images;
-        std::vector<QRect>  hole_rects;
-        Dr::FindObjectsInImage(holes, hole_images, hole_rects, 0.9, false);
+        std::vector<DrBitmap> hole_images;
+        std::vector<DrRect>   hole_rects;
+        Dr::FindObjectsInBitmap(holes, hole_images, hole_rects, 0.9, false);
 
         // Go through each image (Hole) create list for it
         std::vector<std::vector<DrPointF>> hole_list;
         for (int hole_number = 0; hole_number < static_cast<int>(hole_images.size()); hole_number++) {
-            QImage &hole = hole_images[hole_number];
-            if (hole.width() < 1 || hole.height() < 1) continue;
+            DrBitmap &hole = hole_images[hole_number];
+            if (hole.width < 1 || hole.height < 1) continue;
             std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole);
             // Add in sub image offset to points
             for (auto &point : one_hole) {
-                point.x += rects[image_number].x();
-                point.y += rects[image_number].y();
+                point.x += rects[image_number].left;
+                point.y += rects[image_number].top;
             }
             one_hole = smoothPoints( one_hole, 5, 5.0, 0.5 );
             one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);
@@ -97,15 +89,18 @@ void DrEngineVertexData::initializeExtrudedPixmap(QPixmap &pixmap, bool wirefram
 
         // ***** Add extruded triangles from Hull and Holes
         int slices = wireframe ? 2 : 1;
-        extrudeFacePolygon(points, image.width(), image.height(), slices);
+        extrudeFacePolygon(points, image.width, image.height, slices);
         for (auto hole : hole_list) {
-            extrudeFacePolygon(hole, image.width(), image.height(), slices);
+            extrudeFacePolygon(hole, image.width, image.height, slices);
         }
     }
 
     // ***** Smooth Vertices
     ///smoothVertices(1.0f);
 }
+
+
+
 
 
 //####################################################################################
@@ -291,9 +286,9 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
 void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_points, const std::vector<std::vector<DrPointF>> &hole_list,
-                                         const QImage &black_and_white, bool wireframe, Trianglulation type) {
-    int width =  black_and_white.width();
-    int height = black_and_white.height();
+                                         const DrBitmap &black_and_white, bool wireframe, Trianglulation type) {
+    int width =  black_and_white.width;
+    int height = black_and_white.height;
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
@@ -372,7 +367,7 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
             if (y_add < 1) y_add = 1;
             for (int i = (x_add / 2); i < width; i += x_add) {
                 for (int j = (y_add / 2); j < height; j += y_add) {
-                    if (black_and_white.pixel(i, j) != c_color_black) {
+                    if (black_and_white.getPixel(i, j) != Dr::transparent) {
                         coords.push_back( i );
                         coords.push_back( j );
                     }
@@ -416,9 +411,9 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
             DrPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
             DrPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
             int transparent_count = 0;
-            if (black_and_white.pixel(mid12.x, mid12.y) == c_color_black) ++transparent_count;
-            if (black_and_white.pixel(mid23.x, mid23.y) == c_color_black) ++transparent_count;
-            if (black_and_white.pixel(mid13.x, mid13.y) == c_color_black) ++transparent_count;
+            if (black_and_white.getPixel(mid12.x, mid12.y) == Dr::transparent) ++transparent_count;
+            if (black_and_white.getPixel(mid23.x, mid23.y) == Dr::transparent) ++transparent_count;
+            if (black_and_white.getPixel(mid13.x, mid13.y) == Dr::transparent) ++transparent_count;
             if (transparent_count > 1) continue;
 
             // Add triangle
@@ -444,6 +439,9 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
     }   // end if
 
 }
+
+
+
 
 
 //####################################################################################

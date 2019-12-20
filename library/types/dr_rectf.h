@@ -40,6 +40,8 @@ public:
     glm::vec4       toGlmVec4();
 
     // Getters
+    double          right();
+    double          bottom();
     DrPointF        topLeft();
     DrPointF        topRight();
     DrPointF        bottomLeft();

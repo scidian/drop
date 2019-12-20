@@ -8,6 +8,8 @@
 #ifndef ENGINE_VERTEX_DATA_H
 #define ENGINE_VERTEX_DATA_H
 
+#include <QOpenGLTexture>
+
 #include "engine_mesh.h"
 
 // Type Definitions
@@ -56,7 +58,8 @@ public:
     int             vertexCount() const {   return m_count / c_vertex_length; }
 
     // Creation Functions
-    void    initializeExtrudedPixmap(QPixmap &pixmap, bool wireframe = true);
+    void    initializeExtrudedBitmap(const DrBitmap &bitmap, bool wireframe = true);
+
     void    initializeTextureCone();
     void    initializeTextureCube();
     void    initializeTextureQuad();
@@ -74,7 +77,7 @@ public:
     // Extrusion Functions
     void    extrudeFacePolygon(const std::vector<DrPointF> &outline_points, int width, int height, int steps);
     void    triangulateFace(const std::vector<DrPointF> &outline_points, const std::vector<std::vector<DrPointF>> &hole_list,
-                            const QImage &black_and_white, bool wireframe, Trianglulation type);
+                            const DrBitmap &black_and_white, bool wireframe, Trianglulation type);
 
     // Building Functions
     void    add(const DrVec3 &vertex, const DrVec3 &normal, const DrVec2 &text_coord, Triangle_Point point_number);

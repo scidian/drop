@@ -129,15 +129,14 @@ SOURCES += \
     editor/forms/form_settings.cpp \
     editor/globals_editor.cpp \
     editor/helper_library.cpp \
-    editor/imaging/imaging_filters.cpp \
-    editor/imaging/imaging_objects.cpp \
     editor/pixmap/pixmap_draw.cpp \
     editor/pixmap/pixmap_draw_devices.cpp \
     editor/pixmap/pixmap_draw_effects.cpp \
+    editor/pixmap/pixmap_filters.cpp \
+    editor/pixmap/pixmap_mask.cpp \
     editor/project/project_add_built_in_images.cpp \
     editor/project/project_initialize_new.cpp \
     editor/style/style_format_widgets.cpp \
-    editor/style/style_pixmap.cpp \
     editor/style/style_sheet_main.cpp \
     editor/style/style_sheet_toolbar.cpp \
     editor/trees/tree_advisor.cpp \
@@ -243,6 +242,8 @@ SOURCES += \
     library/dr_random.cpp \
     library/dr_string.cpp \
     library/dr_time.cpp \
+    library/imaging/imaging_filters.cpp \
+    library/imaging/imaging_objects.cpp \
     library/types/dr_bitmap.cpp \
     library/types/dr_color.cpp \
     library/types/dr_point.cpp \
@@ -902,7 +903,6 @@ HEADERS += \
     editor/forms/form_settings.h \
     editor/globals_editor.h \
     editor/helper_library.h \
-    editor/imaging/imaging.h \
     editor/pixmap/pixmap.h \
     editor/project/project.h \
     editor/style/style.h \
@@ -942,6 +942,7 @@ HEADERS += \
     library/dr_random.h \
     library/dr_string.h \
     library/dr_time.h \
+    library/imaging/imaging.h \
     library/types/dr_bitmap.h \
     library/types/dr_color.h \
     library/types/dr_point.h \

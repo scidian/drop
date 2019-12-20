@@ -8,6 +8,8 @@
 #ifndef ENGINE_TEXTURE_H
 #define ENGINE_TEXTURE_H
 
+#include <QOpenGLTexture>
+
 #include "engine/globals_engine.h"
 
 

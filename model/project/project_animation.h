@@ -8,9 +8,6 @@
 #ifndef DRANIMATION_H
 #define DRANIMATION_H
 
-#include <QImage>
-#include <QPixmap>
-
 #include "model/settings/settings.h"
 
 // Forward declarations

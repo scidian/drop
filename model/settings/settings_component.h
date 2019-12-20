@@ -19,6 +19,7 @@ class DrProperty;
 // Type definitions
 typedef std::map<long, DrProperty*> PropertyMap;
 
+
 //####################################################################################
 //##    DrComponent
 //##        Class to hold a component for all Project objects

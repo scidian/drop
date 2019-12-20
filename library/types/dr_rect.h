@@ -43,6 +43,8 @@ public:
     DrRectF&        operator=   (const DrRectF &other);
 
     // Getters
+    int             right();
+    int             bottom();
     DrPoint         topLeft();
     DrPoint         topRight();
     DrPoint         bottomLeft();

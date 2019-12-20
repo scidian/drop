@@ -5,8 +5,6 @@
 //
 //
 //
-#include <QPixmap>
-
 #include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_device.h"

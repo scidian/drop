@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 3/7/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/19/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -15,7 +15,6 @@
 #include <QVector2D>
 
 #include "editor/globals_editor.h"
-#include "editor/imaging/imaging.h"
 #include "editor/pixmap/pixmap.h"
 #include "library/colors/colors.h"
 #include "library/dr_math.h"
@@ -104,12 +103,7 @@ QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image
 //####################################################################################
 //##    Pixelates Image
 //####################################################################################
-QPixmap ApplyPixelation(const QPixmap &from_pixmap, QPointF data_pair) {
-    return QPixmap::fromImage( ApplyPixelation(from_pixmap.toImage(), data_pair ));
-}
-
-QImage ApplyPixelation(const QImage &from_image, QPointF data_pair) {
-    QImage image = from_image;
+void ApplyPixelation(QImage &image, QPointF data_pair) {
     std::vector<QRgb*> lines = GetScanLines(image);
 
     for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
@@ -123,7 +117,6 @@ QImage ApplyPixelation(const QImage &from_image, QPointF data_pair) {
             lines[y][x] = lines[static_cast<size_t>(y_coord)][static_cast<size_t>(x_coord)];
         }
     }
-    return image;
 }
 
 

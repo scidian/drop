@@ -7,7 +7,6 @@
 //
 #include "3rd_party/glm/gtx/transform.hpp"
 #include "3rd_party/glm/mat4x4.hpp"
-#include "editor/imaging/imaging.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
 #include "library/types/dr_vec2.h"
