@@ -19,14 +19,19 @@ class TreeAssets;
 class TreeInspector;
 enum class DrType;
 
+
+//####################################################################################
+//##    Dock Building / Handling
+//############################
 namespace Dr {
 
-    // Building Shared Dock Widgets
+
+    // ***** Building Shared Dock Widgets
     QDockWidget*        BuildDockAdvisor(   DrProject *project, IEditorRelay *editor_relay, TreeAdvisor *&tree_advisor);
     QDockWidget*        BuildDockAssets(    DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types);
     QDockWidget*        BuildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) ;
 
-    // Handling Shared Dock Widgets
+    // ***** Handling Shared Dock Widgets
     void        InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector);
     void        LockDockWidth(QDockWidget *&dock, int width);
     void        UnlockDockWidth(QMainWindow *window, QDockWidget *&dock);

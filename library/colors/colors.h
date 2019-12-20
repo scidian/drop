@@ -8,8 +8,6 @@
 #ifndef COLORS_H
 #define COLORS_H
 
-#include <string>
-
 #include "library/types/dr_variant.h"
 
 
@@ -53,17 +51,22 @@ struct Palette_Info {
     std::vector<DrColor>    colors;
 };
 
+
+//####################################################################################
+//##    Color Functions
+//############################
 namespace Dr {
 
-    // Color Helper Functions
+
+    // ***** Color Helper Functions
     bool            IsSameColor(const DrColor &color1, const DrColor &color2, double tolerance);
     DrColor         RandomColor();
 
-    // Style Functions
+    // ***** Style Functions
     std::string     BorderWidth();                              // Project wide border width for Style Sheets, as String
     int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
 
-    // Custom Palette Functions
+    // ***** Custom Palette Functions
     void            LoadPalettes();
     void            LoadPaletteBasic(Palette_Info &palette);
     void            LoadPaletteBlank(Palette_Info &palette);
@@ -79,7 +82,6 @@ namespace Dr {
     std::string     GetPaletteName(Color_Palettes palette);
     bool            GetPaletteShowInList(Color_Palettes palette);
 
-    void            AddToColorHistory(DrColor color);
 
     /**
      * Doxygen comments, type slash star star enter, brief shows a mouse mover popup for the described function in the editor
@@ -90,12 +92,22 @@ namespace Dr {
      */
     void            SetColorScheme(Color_Scheme new_scheme);
 
+
+
 }   // namespace Dr
 
-
-
-
 #endif // COLORS_H
+
+
+
+
+
+
+
+
+
+
+
 
 
 

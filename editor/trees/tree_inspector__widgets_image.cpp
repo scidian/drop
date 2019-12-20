@@ -11,7 +11,6 @@
 #include <QMimeData>
 #include <QPainter>
 
-#include "editor/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_animation.h"
 #include "editor/forms/form_popup.h"
@@ -24,6 +23,7 @@
 #include "editor/trees/tree_inspector.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"

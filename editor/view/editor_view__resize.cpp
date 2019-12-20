@@ -7,7 +7,6 @@
 //
 #include <math.h>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
@@ -16,6 +15,7 @@
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "engine/opengl/opengl.h"
+#include "library/colors/colors.h"
 #include "library/dr_math.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"

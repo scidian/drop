@@ -10,7 +10,6 @@
 #include <QKeyEvent>
 #include <QTimer>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/docks/docks.h"
 #include "editor/forms/form_main.h"
@@ -25,6 +24,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "library/colors/colors.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"

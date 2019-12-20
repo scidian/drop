@@ -11,20 +11,22 @@
 #include <algorithm>
 #include <string>
 
-namespace Dr {
-
 
 //####################################################################################
 //##    String Functions
 //############################
-/// @brief: Returns (length) number of characters from the left side of a string
-std::string Left(const std::string &source, const size_t length);
+namespace Dr {
 
-/// @brief: Returns (length) number of characters from the right side of a string
-std::string Right(const std::string &source, const size_t length);
 
-/// @brief: Returns true if string is a positive integer, otherwise false
-bool IsInteger(const std::string &source);
+    /// @brief: Returns (length) number of characters from the left side of a string
+    std::string Left(const std::string &source, const size_t length);
+
+    /// @brief: Returns (length) number of characters from the right side of a string
+    std::string Right(const std::string &source, const size_t length);
+
+    /// @brief: Returns true if string is a positive integer, otherwise false
+    bool IsInteger(const std::string &source);
+
 
 
 }   // end namespace Dr

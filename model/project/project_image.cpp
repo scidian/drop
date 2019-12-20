@@ -5,6 +5,7 @@
 //
 //
 //
+#include "model/constants_components.h"
 #include "model/project/project_image.h"
 #include "model/settings/settings_component.h"
 #include "model/settings/settings_component_property.h"

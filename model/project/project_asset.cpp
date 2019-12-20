@@ -5,8 +5,8 @@
 //      DrAsset Class Definitions
 //
 //
-#include "editor/helper_library.h"
 #include "library/dr_debug.h"
+#include "model/constants_components.h"
 #include "model/properties/property_collision.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
@@ -24,8 +24,7 @@
 
 
 // Internal Linkage (File Scope) Forward Declarations
-DrPropertyCollision autoCollisionShape(QPixmap pixmap);
-DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap);
+DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap);                 // Defined in "project_asset__auto_collision.cpp"
 
 
 //####################################################################################
@@ -55,11 +54,11 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             if (source != nullptr) {
                 if (source->getType() == DrType::Image) {
                     animation = parent_project->addAnimation({ base_key });
-                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not create animation from image: " + std::to_string(base_key));
+                    if (animation == nullptr) Dr::PrintDebug("Warning! In DrAsset constructor, could not create animation from image: " + std::to_string(base_key));
                     m_base_key = animation->getKey();
                 } else if (source->getType() == DrType::Animation) {
                     animation = dynamic_cast<DrAnimation*>(source);
-                    if (animation == nullptr) Dr::ShowErrorMessage("DrAsset::DrAsset", "Could not find animation: " + std::to_string(base_key));
+                    if (animation == nullptr) Dr::PrintDebug("Warning! In DrAsset constructor, could not find animation: " + std::to_string(base_key));
                 }
                 my_starting_bitmap = animation->getFirstFrameImage()->getBitmap();
                 my_starting_name =   animation->getName();
@@ -159,13 +158,13 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties ani
     property->setValue( animation->getKey() );
 
     if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) {
-        QPixmap      new_pixmap = Dr::ToQPixmap(animation->getFirstFrameImage()->getBitmap());
-        m_width =    new_pixmap.width();
-        m_height =   new_pixmap.height();
+        DrBitmap     new_bitmap = animation->getFirstFrameImage()->getBitmap();
+        m_width =    new_bitmap.width;
+        m_height =   new_bitmap.height;
         m_base_key = animation->getKey();
 
         // Calculate new image collision shape
-        DrPropertyCollision shape = autoCollisionShape(new_pixmap);
+        DrPropertyCollision shape = autoCollisionShape(new_bitmap);
         setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, shape);
     }
 

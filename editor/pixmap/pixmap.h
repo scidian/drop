@@ -30,7 +30,7 @@ const unsigned int c_color_white =  QColor(255, 255, 255, 255).rgba();
 
 
 //####################################################################################
-//##    Image editing declarations
+//##    Pixmap handling / drawing
 //############################
 namespace Dr {
 

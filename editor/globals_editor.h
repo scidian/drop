@@ -53,17 +53,24 @@ enum class Preferences {
 //############################
 namespace Dr {
 
-    void        LoadPreferences();
 
-    DrVariant   GetPreference(Preferences preference_to_get);
-    void        SetPreference(Preferences preference_to_set, DrVariant new_value);
+    // ***** Prefereces
+    void            LoadPreferences();
+    DrVariant       GetPreference(Preferences preference_to_get);
+    void            SetPreference(Preferences preference_to_set, DrVariant new_value);
 
-    bool        GetAssetExpanded(Asset_Category asset_type);
-    void        SetAssetExpanded(Asset_Category asset_type, bool expanded);
+    void            AddToColorHistory(DrColor color);
 
-    bool        GetInspectorExpanded(Components component_to_check);
-    void        SetInspectorExpanded(Components component_to_set, bool expanded);
 
+    // ***** Tree Tracking
+    bool            GetAssetExpanded(Asset_Category asset_type);
+    void            SetAssetExpanded(Asset_Category asset_type, bool expanded);
+
+    bool            GetInspectorExpanded(Components component_to_check);
+    void            SetInspectorExpanded(Components component_to_set, bool expanded);
+
+
+    // ***** Global Forms
     IEditorRelay*   GetActiveEditorRelay();
     void            SetActiveEditorRelay(IEditorRelay *new_editor_relay);
 
@@ -72,14 +79,19 @@ namespace Dr {
 
     void            SetLabelText(Label_Names label, QString text);
 
-    void    ClearCursor();
-    void    HideCursor();
-    void    SetCursor(QCursor &cursor);
+
+    // ***** Cursors
+    void        ClearCursor();
+    void        HideCursor();
+    void        SetCursor(QCursor &cursor);
+
+
 
 }   // namespace Dr
 
-
 #endif // GLOBALS_H
+
+
 
 
 

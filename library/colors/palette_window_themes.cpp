@@ -5,7 +5,7 @@
 //
 //
 //
-#include "editor/colors/colors.h"
+#include "library/colors/colors.h"
 #include "library/types/dr_color.h"
 
 namespace Dr {

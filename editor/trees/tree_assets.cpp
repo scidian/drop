@@ -14,7 +14,6 @@
 #include <QScrollBar>
 #include <QVBoxLayout>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/event_filters.h"
 #include "editor/globals_editor.h"
@@ -23,6 +22,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_assets.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"

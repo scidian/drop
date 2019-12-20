@@ -14,7 +14,6 @@
 #include <QMenu>
 #include <QPainter>
 
-#include "editor/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_popup.h"
@@ -22,6 +21,7 @@
 #include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/colors/colors.h"
 #include "library/types/dr_color.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"

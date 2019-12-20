@@ -7,7 +7,6 @@
 //
 #include <QGraphicsSceneMouseEvent>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
@@ -15,6 +14,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/view/editor_item.h"
+#include "library/colors/colors.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"

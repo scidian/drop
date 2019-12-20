@@ -38,7 +38,7 @@ enum class Flood_Fill_Type {
 
 
 //####################################################################################
-//##    Image editing declarations
+//##    Image editing / object finding
 //############################
 namespace Dr {
 

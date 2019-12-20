@@ -5,8 +5,8 @@
 //      DrSettings Class Definitions
 //
 //
-#include "editor/constants_editor.h"
-#include "editor/helper_library.h"
+#include "library/dr_debug.h"
+#include "model/constants_components.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
@@ -92,11 +92,11 @@ DrProperty* DrSettings::getComponentProperty(Components component, Properties pr
 DrProperty* DrSettings::getComponentProperty(long component, long property) {
     auto it = m_components.find(component);
     if (it == m_components.end()) {
-        Dr::ShowMessageBox("ERROR! CODE: " + Error_Code::NoComponent + "\n\n"
-                           "Component not found in current object \n\n"
-                           "Component ID: \t" + std::to_string(component) + "\n"
-                           "Object Name: \t" + this->getName() + ". \n"
-                           "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+        Dr::PrintDebug("Error Code: " + Error_Code::NoComponent + "\n\n"
+                       "Component not found in current object \n\n"
+                       "Component ID: \t" + std::to_string(component) + "\n"
+                       "Object Name: \t" + this->getName() + ". \n"
+                       "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
     }
     return m_components[component]->getProperty(property);
 }

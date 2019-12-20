@@ -38,8 +38,8 @@
 #include <QToolButton>
 #include <QWidgetAction>
 
-#include "editor/colors/colors.h"
 #include "editor/interface_editor_relay.h"
+#include "library/colors/colors.h"
 
 // Necessary forward declarations
 class FormPopup;

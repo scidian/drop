@@ -7,12 +7,12 @@
 //
 #include <QMouseEvent>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 #include "model/project/project_world.h"
 #include "model/project/project_stage.h"

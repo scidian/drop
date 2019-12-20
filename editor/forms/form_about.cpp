@@ -10,11 +10,11 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 
-#include "editor/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_about.h"
 #include "editor/globals_editor.h"
 #include "editor/style/style.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 
 

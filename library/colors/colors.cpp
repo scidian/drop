@@ -5,8 +5,7 @@
 //      Holds all of our custom colors
 //
 //
-#include "editor/colors/colors.h"
-#include "editor/globals_editor.h"
+#include "library/colors/colors.h"
 #include "library/dr_math.h"
 #include "library/dr_random.h"
 #include "library/types/dr_color.h"
@@ -68,34 +67,6 @@ DrColor         GetColorFromPalette(Color_Palettes palette, int color_index) {
 int             GetPaletteColorCount(Color_Palettes palette)    { return g_color_palettes[palette].number_of_colors; }
 std::string     GetPaletteName(Color_Palettes palette)          { return g_color_palettes[palette].name; }
 bool            GetPaletteShowInList(Color_Palettes palette)    { return g_color_palettes[palette].show_in_list; }
-
-
-//####################################################################################
-//##    Color History
-//####################################################################################
-void AddToColorHistory(DrColor color) {
-    // Load old color history list (up to 36 colors)
-    std::vector<DrVariant> variant_vector = Dr::GetPreference(Preferences::Color_Popup_History).toVector();
-
-    // Creat new list and add color as first item
-    std::vector<DrVariant> color_vector;
-    color_vector.push_back( color.rgba() );
-
-    // Add all the old colors skipping the lastest color
-    for (auto item : variant_vector) {
-        if (color.rgb() != item.toColor().rgb()) {
-            color_vector.push_back( item.toColor().rgba() );
-        }
-    }
-
-    // Make sure list is <= 36 items
-    while (color_vector.size() > 36) {
-        color_vector.pop_back();
-    }
-
-    // Store new color list in preferences
-    Dr::SetPreference(Preferences::Color_Popup_History, color_vector);
-}
 
 
 //####################################################################################

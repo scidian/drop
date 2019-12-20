@@ -12,11 +12,11 @@
 #include <QMenu>
 #include <QPainter>
 
-#include "editor/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/globals_editor.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component_property.h"

@@ -15,11 +15,11 @@
 #include <QVector2D>
 
 #include "3rd_party/stb/stb_image_write.h"
-#include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/imaging/imaging.h"
 #include "editor/pixmap/pixmap.h"
+#include "library/colors/colors.h"
 #include "library/dr_debug.h"
 #include "library/dr_math.h"
 #include "library/types/dr_point.h"

@@ -5,10 +5,10 @@
 //
 //
 //
-#include "editor/colors/colors.h"
 #include "editor/imaging/imaging.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
+#include "library/colors/colors.h"
 
 
 namespace Dr {

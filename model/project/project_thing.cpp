@@ -5,12 +5,11 @@
 //      DrThing Class Definitions
 //
 //
-#include "editor/forms/form_main.h"
-#include "editor/globals_editor.h"
-#include "editor/helper_library.h"
-#include "editor/imaging/imaging.h"
 #include "editor/pixmap/pixmap.h"
+
 #include "engine/opengl/opengl.h"
+#include "library/dr_debug.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_font.h"
@@ -140,8 +139,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
 
         default:
-            Dr::ShowMessageBox("Error in DrThing Constructor, DrThingType not handled! Type: " + Dr::StringFromThingType(new_thing_type),
-                               QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
+            Dr::PrintDebug("Error in DrThing Constructor, DrThingType not handled! Type: " + Dr::StringFromThingType(new_thing_type));
     }
 
 }

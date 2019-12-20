@@ -10,12 +10,12 @@
 #include <QGridLayout>
 #include <QMouseEvent>
 
-#include "editor/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_popup.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 
 

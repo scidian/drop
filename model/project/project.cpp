@@ -5,11 +5,9 @@
 //      DrProject Class Definitions
 //
 //
-#include "editor/forms/form_main.h"
-#include "editor/globals_editor.h"
-#include "editor/helper_library.h"
 #include "library/dr_debug.h"
 #include "library/dr_containers.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"
@@ -308,11 +306,10 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
 
     if (show_warning) {
         if (custom_error == "") custom_error = "No more info available...";
-        Dr::ShowMessageBox(std::string("WARNING: Did not find key (" + std::to_string(check_key) +
-                           ") in project! \n"
-                           "Last key used in project: " + std::to_string(m_key_generator - 1) + "!\n\n"
-                           "This warning called from \"DrProject::findChildSettingsFromKey\"" + "\n\n" + custom_error),
-                           QMessageBox::Icon::Warning, std::string("Warning!"), Dr::GetActiveFormMain());
+        Dr::PrintDebug("WARNING: Did not find key (" + std::to_string(check_key) + ") in project! \n"
+                       "Last key used in project: " + std::to_string(m_key_generator - 1) + "!\n"
+                       "This warning called from \"DrProject::findChildSettingsFromKey\"" + "\n" +
+                       custom_error + " - End Error.....");
     }
     return nullptr;
 }

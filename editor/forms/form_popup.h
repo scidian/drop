@@ -20,7 +20,7 @@
 class       DrProject;
 class       FormPopup;
 class       TreeInspector;
-enum class  Color_Palettes;         // Defined in "editor/colors.h"
+enum class  Color_Palettes;         // Defined in "library/colors/colors.h"
 enum class  DrAssetType;            // Defined in "model/enums_types.h"
 
 enum class Colors {

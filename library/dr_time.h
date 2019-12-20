@@ -15,17 +15,16 @@
 typedef std::chrono::high_resolution_clock Clock;
 typedef Clock::time_point DrTime;
 
-namespace Dr {
-
 
 //####################################################################################
 //##    Time Functions
 //############################
-double      MillisecondsElapsed(const DrTime &timer);
-double      MillisecondsSinceStartOfDay();
-void        ResetTimer(DrTime &timer);
+namespace Dr {
 
 
+    double      MillisecondsElapsed(const DrTime &timer);
+    double      MillisecondsSinceStartOfDay();
+    void        ResetTimer(DrTime &timer);
 
 
 }   // end namespace Dr

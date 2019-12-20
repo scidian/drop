@@ -29,58 +29,65 @@ class DrVariant;
 namespace Dr {
 
 
-// Time Functions
-QString     CurrentTimeAsString();
+    // ***** Time Functions
+    QString     CurrentTimeAsString();
 
 
-// Comparison Functions
-double      CheckScaleNotZero(double scale_to_check);
-QString     RemoveTrailingDecimals(double value, int max_decimal_places);
+    // ***** Comparison Functions
+    double      CheckScaleNotZero(double scale_to_check);
+    QString     RemoveTrailingDecimals(double value, int max_decimal_places);
 
 
-// Custom Font Functions
-QFont       CustomFont();
-QFont       CustomFontLarger();
-QString     FontFamily();
-int         FontSize();
-void        LoadCustomFonts();
+    // ***** Custom Font Functions
+    QFont       CustomFont();
+    QFont       CustomFontLarger();
+    QString     FontFamily();
+    int         FontSize();
+    void        LoadCustomFonts();
 
 
-// String Functions
-int         CheckFontWidth(QFont font, QString text_to_check);
-QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
-QString     StringFromBool(bool boolean);
+    // ***** String Functions
+    int         CheckFontWidth(QFont font, QString text_to_check);
+    QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
+    QString     StringFromBool(bool boolean);
 
 
-// Dr Libary Misc Conversion
-DrColor     FromQColor(const QColor &color);
-DrPoint     FromQPoint(const QPoint &point);
-DrPointF    FromQPointF(const QPointF &pointf);
-QColor      ToQColor(const DrColor &color);
-QPoint      ToQPoint(const DrPoint &point);
-QPointF     ToQPointF(const DrPointF &pointf);
+    // ***** Dr Libary Misc Conversion
+    DrColor     FromQColor(const QColor &color);
+    DrPoint     FromQPoint(const QPoint &point);
+    DrPointF    FromQPointF(const QPointF &pointf);
+    QColor      ToQColor(const DrColor &color);
+    QPoint      ToQPoint(const DrPoint &point);
+    QPointF     ToQPointF(const DrPointF &pointf);
 
-// DrLibrary Image Conversion
-DrBitmap    FromQImage(const QImage &image);
-DrBitmap    FromQPixmap(const QPixmap &pix);
-QImage      ToQImage(const DrBitmap &bitmap);
-QPixmap     ToQPixmap(const DrBitmap &bitmap);
-
-
-// Qt Comparison
-bool        SameQColor(QColor color1, QColor color2, double tolerance);
+    // ***** DrLibrary Image Conversion
+    DrBitmap    FromQImage(const QImage &image);
+    DrBitmap    FromQPixmap(const QPixmap &pix);
+    QImage      ToQImage(const DrBitmap &bitmap);
+    QPixmap     ToQPixmap(const DrBitmap &bitmap);
 
 
-// User Interaction
-void                        ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent = nullptr);
-QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title = "", QWidget *parent = nullptr,
-                                           QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
-QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, std::string title = "", QWidget *parent = nullptr,
-                                           QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
+    // ***** Qt Comparison
+    bool        SameQColor(QColor color1, QColor color2, double tolerance);
+
+
+    // ***** User Interaction
+    void                        ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent = nullptr);
+    QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title = "", QWidget *parent = nullptr,
+                                               QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
+    QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, std::string title = "", QWidget *parent = nullptr,
+                                               QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
+
+
+
 
 }   // end namespace Dr
 
 #endif // HELPER_EDITOR_H
+
+
+
+
 
 
 

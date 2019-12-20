@@ -14,8 +14,8 @@
 
 #include <cmath>
 
-#include "editor/colors/colors.h"
 #include "editor/helper_library.h"
+#include "library/colors/colors.h"
 #include "library/dr_math.h"
 #include "library/types/dr_variant.h"
 

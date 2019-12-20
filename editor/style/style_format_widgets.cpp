@@ -14,9 +14,9 @@
 #include <QStyle>
 #include <QWindow>
 
-#include "editor/colors/colors.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"
+#include "library/colors/colors.h"
 
 
 namespace Dr {

@@ -5,8 +5,7 @@
 //
 //
 //
-#include "editor/constants_editor.h"
-#include "editor/helper_library.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"

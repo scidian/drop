@@ -5,11 +5,8 @@
 //      DrStage Class Definitions
 //
 //
-#include <deque>
-
-#include "editor/forms/form_main.h"
-#include "editor/globals_editor.h"
-#include "editor/helper_library.h"
+#include "library/dr_debug.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"
@@ -56,10 +53,9 @@ DrStage::~DrStage() {
 DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, double y, double z, bool should_collide, long key) {
     DrSettings *asset = getParentProject()->findSettingsFromKey(from_asset_key);
     if (asset == nullptr) {
-        Dr::ShowMessageBox("Error in DrStage::addThing, Could not find underlying Entity to load from! \n "
-                           "New Type: " + Dr::StringFromThingType(new_type) + " \n "
-                           "Asset Key: " + std::to_string(from_asset_key) + ".",
-                            QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
+        Dr::PrintDebug("Error in DrStage::addThing, Could not find underlying Entity to load from! \n "
+                       "New Type: " + Dr::StringFromThingType(new_type) + " \n "
+                       "Asset Key: " + std::to_string(from_asset_key) + " - End Error.....");
     }
 
     // Figure out name for Thing
@@ -86,8 +82,8 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         ///    break;
 
         default:
-            Dr::ShowMessageBox("Error in DrStage::addThing, DrThingType not handled! New Type: " + Dr::StringFromThingType(new_type),
-                               QMessageBox::Icon::Critical, "Error!", Dr::GetActiveFormMain());
+            Dr::PrintDebug("Error in DrStage::addThing, DrThingType not handled! \n"
+                           "New Type: " + Dr::StringFromThingType(new_type) + " - End Error.....");
     }
 
     long new_thing_key = (key == c_no_key) ? getParentProject()->getNextKey() : key;

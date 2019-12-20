@@ -14,10 +14,10 @@
 #include <QVector2D>
 #include <QVector3D>
 
-#include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
+#include "library/colors/colors.h"
 #include "library/dr_math.h"
 #include "library/dr_random.h"
 

@@ -107,12 +107,12 @@
 #include <QDateTime>
 #include <QSurfaceFormat>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_expire.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "library/colors/colors.h"
 
 
 //####################################################################################

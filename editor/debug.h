@@ -46,6 +46,8 @@ enum class Debug_Flags {
 //############################
 namespace Dr {
 
+
+    // ***** Debug Functions
     bool CheckDebugFlag(Debug_Flags flag);
     void FlipDebugFlag(Debug_Flags flag);
     void SetDebugFlag(Debug_Flags flag);
@@ -55,8 +57,9 @@ namespace Dr {
 
     void LoadDebugFlags();
 
-}   // namespace Dr
 
+
+}   // namespace Dr
 
 #endif // DEBUG_H
 

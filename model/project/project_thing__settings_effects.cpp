@@ -5,9 +5,8 @@
 //      Effect Specific Components / Properties
 //
 //
-#include "editor/constants_editor.h"
-#include "editor/helper_library.h"
 #include "engine/enums_engine.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_world.h"

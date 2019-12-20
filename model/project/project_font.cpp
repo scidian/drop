@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QRect>
 
-#include "editor/constants_editor.h"
+#include "model/constants_components.h"
 #include "model/project/project_font.h"
 #include "model/settings/settings_component.h"
 #include "model/settings/settings_component_property.h"

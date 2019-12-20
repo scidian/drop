@@ -7,6 +7,7 @@
 //
 #include <QPixmap>
 
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_effect.h"
 #include "model/settings/settings_component_property.h"

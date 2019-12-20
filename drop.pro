@@ -100,11 +100,6 @@ SOURCES += \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
-    editor/colors/colors.cpp \
-    editor/colors/palette_blank.cpp \
-    editor/colors/palette_material.cpp \
-    editor/colors/palette_rocky_rover.cpp \
-    editor/colors/palette_window_themes.cpp \
     editor/debug.cpp \
     editor/docks/docks_build.cpp \
     editor/docks/docks_handle.cpp \
@@ -237,6 +232,11 @@ SOURCES += \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
     header_builds.cpp \
+    library/colors/colors.cpp \
+    library/colors/palette_blank.cpp \
+    library/colors/palette_material.cpp \
+    library/colors/palette_rocky_rover.cpp \
+    library/colors/palette_window_themes.cpp \
     library/dr_containers.cpp \
     library/dr_debug.cpp \
     library/dr_math.cpp \
@@ -886,7 +886,6 @@ HEADERS += \
     3rd_party/stb/stb_image.h \
     3rd_party/stb/stb_image_resize.h \
     3rd_party/stb/stb_image_write.h \
-    editor/colors/colors.h \
     editor/constants_editor.h \
     editor/debug.h \
     editor/docks/docks.h \
@@ -936,6 +935,7 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
+    library/colors/colors.h \
     library/dr_containers.h \
     library/dr_debug.h \
     library/dr_math.h \
@@ -951,6 +951,7 @@ HEADERS += \
     library/types/dr_variant.h \
     library/types/dr_vec2.h \
     library/types/dr_vec3.h \
+    model/constants_components.h \
     model/constants_keys.h \
     model/enums_model_properties.h \
     model/enums_model_types.h \

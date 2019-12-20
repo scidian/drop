@@ -5,8 +5,8 @@
 //      DrComponent Class Definitions
 //
 //
-#include "editor/constants_editor.h"
-#include "editor/helper_library.h"
+#include "library/dr_debug.h"
+#include "model/constants_components.h"
 #include "model/settings/settings.h"
 #include "model/settings/settings_component.h"
 #include "model/settings/settings_component_property.h"
@@ -43,13 +43,13 @@ DrProperty* DrComponent::getProperty(Properties setting) { return getProperty(st
 DrProperty* DrComponent::getProperty(long setting) {
     auto it = m_properties.find(setting);
     if (it == m_properties.end()) {
-        Dr::ShowMessageBox("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
-                           "Property not found in object / component \n\n"
-                           "Property ID: \t" +    std::to_string(setting) + "\n"
-                           "Component Name: \t" + this->getDisplayName() + "\n"
-                           "Component ID: \t" +   std::to_string(this->getComponentKey()) + "\n"
-                           "Object Name: \t" + this->m_parent_settings->getName() + "\n"
-                           "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + "\n");
+        Dr::PrintDebug("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
+                       "Property not found in object / component \n\n"
+                       "Property ID: \t" +    std::to_string(setting) + "\n"
+                       "Component Name: \t" + this->getDisplayName() + "\n"
+                       "Component ID: \t" +   std::to_string(this->getComponentKey()) + "\n"
+                       "Object Name: \t" + this->m_parent_settings->getName() + "\n"
+                       "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + " - End Error.....");
     }
     return m_properties[setting];
 }

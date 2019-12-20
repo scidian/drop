@@ -5,9 +5,9 @@
 //
 //
 //
-#include "editor/constants_editor.h"
-#include "editor/helper_library.h"
+#include "library/dr_debug.h"
 #include "library/dr_string.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"
@@ -30,7 +30,7 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, std:
         // Get first image from image keys so we can use it's name
         DrImage *first_image = parent_project->findImageFromKey(image_keys.front());
         if (first_image == nullptr) {
-            Dr::ShowErrorMessage("DrAnimation::DrAnimation", "Could not load first image with key: " + std::to_string(image_keys.front()) );
+            Dr::PrintDebug("Eror in DrAnimation constructor! Could not load first image with key: " + std::to_string(image_keys.front()) );
         }
 
         // Remove trailing numbers and spaces from name

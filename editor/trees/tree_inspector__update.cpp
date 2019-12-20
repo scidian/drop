@@ -13,10 +13,10 @@
 #include <QScrollBar>
 #include <QVector3D>
 
-#include "editor/colors/colors.h"
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_inspector.h"
+#include "library/colors/colors.h"
 #include "library/dr_containers.h"
 #include "model/enums_model_types.h"
 #include "model/project/project.h"

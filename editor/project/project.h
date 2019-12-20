@@ -17,12 +17,10 @@
 namespace Dr {
 
 
-// Project Building
-DrImage*    AddImage(DrProject *project, QString filename, long key = c_no_key, Asset_Category category = Asset_Category::Image);
-void        AddBuiltInImages(DrProject *project);
-void        InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test = false);
-
-
+    // ***** Project Building
+    DrImage*    AddImage(DrProject *project, QString filename, long key = c_no_key, Asset_Category category = Asset_Category::Image);
+    void        AddBuiltInImages(DrProject *project);
+    void        InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test = false);
 
 
 

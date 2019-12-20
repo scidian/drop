@@ -5,9 +5,9 @@
 //
 //
 //
-#include "editor/constants_editor.h"
 #include "library/dr_debug.h"
 #include "library/types/dr_pointf.h"
+#include "model/constants_components.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_image.h"

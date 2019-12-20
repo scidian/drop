@@ -15,7 +15,6 @@
 
 #include <cmath>
 
-#include "editor/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/event_filters.h"
 #include "editor/globals_editor.h"
@@ -27,6 +26,7 @@
 #include "editor/trees/tree_inspector.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
+#include "library/colors/colors.h"
 #include "model/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_stage.h"
