@@ -24,7 +24,7 @@ DrBitmap::DrBitmap(const DrBitmap &bitmap) {
     channels =  bitmap.channels;
     width =     bitmap.width;
     height =    bitmap.height;
-    data.resize(width * height * c_number_channels);                                            // Resize data vector
+    data.resize(width * height * bitmap.channels);                                              // Resize data vector
     memcpy(&data[0], &bitmap.data[0], data.size());                                             // Copy data
 }
 
@@ -77,11 +77,13 @@ DrRect DrBitmap::rect() const {
 }
 
 DrColor DrBitmap::getPixel(int x, int y) const {
-    size_t index = (y * this->width * c_number_channels) + (x * c_number_channels);
+    size_t index = (y * this->width * channels) + (x * channels);
     return DrColor(data[index+2], data[index+1], data[index], data[index+3]);
 }
+
+// DrBitmap data is in the format provided by QImage (Format_ARGB32)
 void DrBitmap::setPixel(int x, int y, DrColor color) {
-    size_t index = (y * this->width * c_number_channels) + (x * c_number_channels);
+    size_t index = (y * this->width * channels) + (x * channels);
     data[index]   = color.blue();
     data[index+1] = color.green();
     data[index+2] = color.red();
@@ -118,7 +120,7 @@ void DrBitmap::loadFromMemory(const unsigned char *from_data, const int &number_
     // Load Image
     } else {
         const stbi_uc *compressed_data = reinterpret_cast<const stbi_uc*>(from_data);
-        unsigned char* ptr = stbi_load_from_memory(compressed_data, number_of_bytes, &width, &height, &channels, 4);
+        unsigned char* ptr = stbi_load_from_memory(compressed_data, number_of_bytes, &width, &height, &channels, c_number_channels);
 
         // Error Check
         if (ptr == nullptr || width == 0 || height == 0) {
@@ -132,14 +134,44 @@ void DrBitmap::loadFromMemory(const unsigned char *from_data, const int &number_
     }
 }
 
+// Aligns pixel format (stb ABGR vs QImage ARGB) for stbi_write
+void DrBitmap::saveFormat(std::vector<unsigned char> &formatted) {
+    formatted.resize(width * height * channels);
+    for (int x = 0; x < width; ++x) {
+        for (int y = 0; y < height; ++y) {
+            DrColor pixel = getPixel(x, y);
 
-int DrBitmap::saveAsPng(std::string filename) {
-    return stbi_write_png(filename.data(), width, height, channels, data.data(), width * channels);
+            size_t index = (y * width * channels) + (x * channels);
+            formatted[index] =   pixel.red();
+            formatted[index+1] = pixel.green();
+            formatted[index+2] = pixel.blue();
+            formatted[index+3] = pixel.alpha();
+        }
+    }
+}
+
+int DrBitmap::saveAsBmp(std::string filename) {
+    std::vector<unsigned char> formatted;
+    saveFormat(formatted);
+    int result = stbi_write_bmp(filename.c_str(), width, height, channels, formatted.data());
+    return result;
 }
 
 int DrBitmap::saveAsJpg(std::string filename, int quality) {
-    return stbi_write_jpg(filename.data(), width, height, channels, data.data(), quality);
+    std::vector<unsigned char> formatted;
+    saveFormat(formatted);
+    int result = stbi_write_jpg(filename.c_str(), width, height, channels, formatted.data(), quality);
+    return result;
 }
+
+int DrBitmap::saveAsPng(std::string filename) {
+    std::vector<unsigned char> formatted;
+    saveFormat(formatted);
+    int result = stbi_write_png(filename.c_str(), width, height, channels, formatted.data(), width * channels);
+    return result;
+}
+
+
 
 
 

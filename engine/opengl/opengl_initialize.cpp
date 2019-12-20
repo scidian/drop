@@ -17,6 +17,7 @@
 #include "engine/mesh/engine_vertex_data.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
+#include "library/dr_debug.h"
 #include "model/project/project.h"
 #include "model/project/project_animation.h"
 #include "model/project/project_asset.h"

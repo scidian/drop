@@ -57,8 +57,10 @@ public:
                            bool compressed = true, int width_ = 0, int height_ = 0);
 
 
-    int     saveAsPng(std::string filename);                            // Returns 0 on failure, non-zero on success
+    void    saveFormat(std::vector<unsigned char> &formatted);          // Realigns pixels with stb image format
+    int     saveAsBmp(std::string filename);                            // Returns 0 on failure, non-zero on success
     int     saveAsJpg(std::string filename, int quality = 100);         // Returns 0 on failure, non-zero on success, Quality 0-100
+    int     saveAsPng(std::string filename);                            // Returns 0 on failure, non-zero on success
 
 
     // Functions
