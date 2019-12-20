@@ -420,5 +420,6 @@
         <file>assets/dr_images/ground/tile_right.png</file>
         <file>assets/dr_images/ground/wood_left.png</file>
         <file>assets/dr_images/ground/wood_right.png</file>
+        <file>assets/dr_images/empty.png</file>
     </qresource>
 </RCC>

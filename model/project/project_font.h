@@ -8,8 +8,6 @@
 #ifndef DRFONT_H
 #define DRFONT_H
 
-#include <QPixmap>
-
 #include "library/types/dr_color.h"
 #include "library/types/dr_point.h"
 #include "library/types/dr_pointf.h"
@@ -28,9 +26,9 @@ class DrFont : public DrSettings
 {
 private:
     // Local Variables
-    QPixmap                 m_pixmap;                       // Stored font pixmap
+    DrBitmap                m_bitmap;                       // Stored font bitmap
     std::map<char, DrRect>  m_positions;                    // Holds rects for each character in the pixmap
-    std::map<char, QPoint>  m_spacing;                      // Horizontal and vertical spacing for each character
+    std::map<char, DrPoint> m_spacing;                      // Horizontal and vertical spacing for each character
 
     std::string             m_name;                         // Name of this font within the Project
 
@@ -54,19 +52,16 @@ private:
 
 public:
     // Constructor
-    DrFont(DrProject *parent_project, long key, std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects = false);
+    DrFont(DrProject *parent_project, long key, std::string font_name, DrBitmap font_pixmap, std::string font_family, int font_size, bool use_test_rects = false);
 
     // DrSettings Overrides
     virtual DrType      getType() override      { return DrType::Font; }
 
-    // Function Calls
-    QPixmap             createText(std::string text);
-
     // Getters / Setters
-    QPixmap             getPixmap()                     { return m_pixmap; }
+    DrBitmap            getBitmap()                     { return m_bitmap; }
 
     DrRect              getCharRect(char character)     { return m_positions[character]; }
-    QPoint              getCharSpacing(char character)  { return m_spacing[character]; }
+    DrPoint             getCharSpacing(char character)  { return m_spacing[character]; }
 
     std::string         getPropertyFontFamily()         { return p_font_family; }
     int                 getPropertyFontSize()           { return p_font_size; }

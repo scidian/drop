@@ -70,7 +70,7 @@ void FormMain::menuOpen() {
         setFormMainMode( Form_Main_Mode::Clear );
         m_project->clearProject();
         Dr::AddBuiltInImages(m_project);
-        m_project->openProjectFromFile(open_file.toStdString());
+        Dr::OpenProjectFromFile(m_project, open_file.toStdString());
         treeAssetEditor->clear();
         treeProjectEditor->clear();
         setFormMainMode( Form_Main_Mode::World_Editor );
@@ -110,7 +110,7 @@ void FormMain::menuSave(bool save_as) {
 
     // Save the file
     m_project->setOption(Project_Options::File_Name_Path, full_path.toStdString());
-    m_project->saveProjectToFile();
+    Dr::SaveProjectToFile(m_project);
 }
 
 

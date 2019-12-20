@@ -5,8 +5,7 @@
 //      DrThing Class Definitions
 //
 //
-#include "editor/pixmap/pixmap.h"
-
+#include "engine/enums_engine.h"
 #include "engine/opengl/opengl.h"
 #include "library/dr_debug.h"
 #include "model/constants_components.h"
@@ -87,9 +86,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
 
         case DrThingType::Text: {
             DrFont *font = dynamic_cast<DrFont*>(entity);
-            QPixmap pixmap = font->createText( "Text" );
+            DrRect rect = font->getCharRect('A');
             addComponentSettingsText(new_thing_name);
-            addComponentTransform(pixmap.width(), pixmap.height(), x, -y, DrThingType::Text);
+            addComponentTransform(rect.width * 4 /* "Test" */, rect.height, x, -y, DrThingType::Text);
             addComponentLayering(z);
             break;
         }

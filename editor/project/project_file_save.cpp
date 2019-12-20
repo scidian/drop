@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 10/10/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/20/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -31,10 +31,12 @@
 void    addSettingsToMap(DrSettings *entity, QVariantMap &map);
 
 
+namespace Dr {
+
 //####################################################################################
 //##    Save all Settings Component Properties to a File
 //####################################################################################
-void DrProject::saveProjectToFile() {
+void SaveProjectToFile(DrProject *project) {
 
     // ***** Project Data to be Saved:
     // Done
@@ -54,7 +56,7 @@ void DrProject::saveProjectToFile() {
 
 
     // ***** Open File for Writing
-    QString   filename = QString::fromStdString(getOption(Project_Options::File_Name_Path).toString());
+    QString   filename = QString::fromStdString(project->getOption(Project_Options::File_Name_Path).toString());
     QSettings settings(filename, QSettings::Format::IniFormat);
               ///if (settings.isWritable() == false) return;
               settings.clear();
@@ -65,14 +67,14 @@ void DrProject::saveProjectToFile() {
     options["version_major"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Major).toString());
     options["version_minor"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Minor).toString());
     options["version_build"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Build).toString());
-    options["key_generator"] =  QVariant::fromValue(m_key_generator);
-    options["name"] =           QString::fromStdString( getOption(Project_Options::Name).toString());
-    options["file_path"] =      QString::fromStdString( getOption(Project_Options::File_Name_Path).toString());
-    options["current_world"] =  QVariant::fromValue(getOption(Project_Options::Current_World).toInt());
-    options["current_stage"] =  QVariant::fromValue(getOption(Project_Options::Current_Stage).toInt());
-    options["orientation"] =    QVariant::fromValue(getOption(Project_Options::Orientation).toInt());
-    options["width"] =          QVariant::fromValue(getOption(Project_Options::Width).toInt());
-    options["height"] =         QVariant::fromValue(getOption(Project_Options::Height).toInt());
+    options["key_generator"] =  QVariant::fromValue(project->checkCurrentKey());
+    options["name"] =           QString::fromStdString( project->getOption(Project_Options::Name).toString());
+    options["file_path"] =      QString::fromStdString( project->getOption(Project_Options::File_Name_Path).toString());
+    options["current_world"] =  QVariant::fromValue(project->getOption(Project_Options::Current_World).toInt());
+    options["current_stage"] =  QVariant::fromValue(project->getOption(Project_Options::Current_Stage).toInt());
+    options["orientation"] =    QVariant::fromValue(project->getOption(Project_Options::Orientation).toInt());
+    options["width"] =          QVariant::fromValue(project->getOption(Project_Options::Width).toInt());
+    options["height"] =         QVariant::fromValue(project->getOption(Project_Options::Height).toInt());
     settings.beginWriteArray("options");
     settings.setArrayIndex(0);
     settings.setValue("options", options);
@@ -98,7 +100,7 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Images
     int image_count = 0;
-    for (auto image_pair : m_images) {
+    for (auto image_pair : project->getImageMap()) {
         if (image_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
         DrImage *image = image_pair.second;
         QVariantMap image_data;
@@ -113,7 +115,7 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Animations
     int animation_count = 0;
-    for (auto animation_pair : m_animations) {
+    for (auto animation_pair : project->getAnimationMap()) {
         if (animation_pair.first < c_key_starting_number) continue;                     // Don't save reserved items, keys / items handled by editor
         DrAnimation *animation = animation_pair.second;
         QVariantMap animation_data;
@@ -140,7 +142,7 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Fonts
     int font_count = 0;
-    for (auto font_pair : m_fonts) {
+    for (auto font_pair : project->getFontMap()) {
         if (font_pair.first < c_key_starting_number) continue;                          // Don't save reserved items, keys / items handled by editor
         DrFont *font = font_pair.second;
         QVariantMap font_data;
@@ -148,7 +150,7 @@ void DrProject::saveProjectToFile() {
         font_data["font_name"] =    QString::fromStdString(font->getName());
         font_data["font_family"] =  QString::fromStdString(font->getPropertyFontFamily());
         font_data["font_size"] =    QVariant::fromValue(font->getPropertyFontSize());
-        font_data["image"] =        font->getPixmap();
+        font_data["image"] =        Dr::ToQPixmap(font->getBitmap());
         settings.beginWriteArray("fonts");
         settings.setArrayIndex(font_count++);
         settings.setValue("font", font_data);
@@ -158,7 +160,7 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Assets
     int asset_count = 0;
-    for (auto asset_pair : m_assets) {
+    for (auto asset_pair : project->getAssetMap()) {
         if (asset_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
         DrAsset *asset = asset_pair.second;
         QVariantMap asset_data;
@@ -175,7 +177,7 @@ void DrProject::saveProjectToFile() {
 
     // ***** Write Worlds
     int world_count = 0;
-    for (auto world_pair : m_worlds) {
+    for (auto world_pair : project->getWorldMap()) {
         if (world_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
         DrWorld *world = world_pair.second;
         QVariantMap world_data;
@@ -228,12 +230,17 @@ void DrProject::saveProjectToFile() {
 
     // ***** Important! Let Drop know we don't need to save at this point, meaning its safe to close...
     //                  At least until some changes to the Project are made.
-    setHasSaved(true);
+    project->setHasSaved(true);
 }
+
+}   // end namespace Dr
+
 
 
 //####################################################################################
+//##
 //##    Copy all Components / Properties into QVariantMap for saving
+//##
 //####################################################################################
 void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
     map["locked"] =  QVariant::fromValue(entity->isLocked());
@@ -264,7 +271,6 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
         }
     }
 }
-
 
 
 

@@ -94,29 +94,29 @@ void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
 //##    Built in temp textures and shader textures
 //####################################################################################
 void DrOpenGL::loadBuiltInTextures() {
-    importTexture(Asset_Textures::Numbers,               ":/assets/engine/numbers.png");
+    importTexture(Asset_Textures::Numbers,              ":/assets/engine/numbers.png");
 
-    importTexture(Asset_Textures::Fire_Noise,            ":/assets/textures/fire_noise.png");
-    importTexture(Asset_Textures::Fire_Flame_None,       ":/assets/textures/fire_flame_none.png");
-    importTexture(Asset_Textures::Fire_Flame_Torch,      ":/assets/textures/fire_flame_torch.png");
-    importTexture(Asset_Textures::Fire_Flame_Candle,     ":/assets/textures/fire_flame_candle.png");
-    importTexture(Asset_Textures::Fire_Flame_Square,     ":/assets/textures/fire_flame_square.png");
-    importTexture(Asset_Textures::Fire_Flame_Triangle,   ":/assets/textures/fire_flame_triangle.png");
+    importTexture(Asset_Textures::Fire_Noise,           ":/assets/textures/fire_noise.png");
+    importTexture(Asset_Textures::Fire_Flame_None,      ":/assets/textures/fire_flame_none.png");
+    importTexture(Asset_Textures::Fire_Flame_Torch,     ":/assets/textures/fire_flame_torch.png");
+    importTexture(Asset_Textures::Fire_Flame_Candle,    ":/assets/textures/fire_flame_candle.png");
+    importTexture(Asset_Textures::Fire_Flame_Square,    ":/assets/textures/fire_flame_square.png");
+    importTexture(Asset_Textures::Fire_Flame_Triangle,  ":/assets/textures/fire_flame_triangle.png");
 
-    importTexture(Asset_Textures::Mirror_Noise_1,        ":/assets/textures/mirror_noise_1.png");
+    importTexture(Asset_Textures::Mirror_Noise_1,       ":/assets/textures/mirror_noise_1.png");
 
-    importTexture(Asset_Textures::Water_Normal_1,        ":/assets/textures/water_normal.jpg");
-    importTexture(Asset_Textures::Water_Texture_1,       ":/assets/textures/water_texture_1.jpg");
-    importTexture(Asset_Textures::Water_Texture_2,       ":/assets/textures/water_texture_2.jpg");
-    importTexture(Asset_Textures::Water_Texture_3,       ":/assets/textures/water_texture_3.jpg");
-    importTexture(Asset_Textures::Water_Texture_4,       ":/assets/textures/water_texture_4.jpg");
+    importTexture(Asset_Textures::Water_Normal_1,       ":/assets/textures/water_normal.jpg");
+    importTexture(Asset_Textures::Water_Texture_1,      ":/assets/textures/water_texture_1.jpg");
+    importTexture(Asset_Textures::Water_Texture_2,      ":/assets/textures/water_texture_2.jpg");
+    importTexture(Asset_Textures::Water_Texture_3,      ":/assets/textures/water_texture_3.jpg");
+    importTexture(Asset_Textures::Water_Texture_4,      ":/assets/textures/water_texture_4.jpg");
 
-    importTexture(Asset_Textures::Ball,                  ":/assets/test_images/ball_1.png");
-    importTexture(Asset_Textures::Block,                 ":/assets/test_images/metal_block.png");
-    importTexture(Asset_Textures::Plant,                 ":/assets/test_images/moon_plant_6.png");
-    importTexture(Asset_Textures::Rover,                 ":/assets/test_images/rover_body.png");
-    importTexture(Asset_Textures::Wheel,                 ":/assets/test_images/rover_wheel.png");
-    importTexture(Asset_Textures::Spare,                 ":/assets/test_images/spare_wheel.png");
+    importTexture(Asset_Textures::Ball,                 ":/assets/test_images/ball_1.png");
+    importTexture(Asset_Textures::Block,                ":/assets/test_images/metal_block.png");
+    importTexture(Asset_Textures::Plant,                ":/assets/test_images/moon_plant_6.png");
+    importTexture(Asset_Textures::Rover,                ":/assets/test_images/rover_body.png");
+    importTexture(Asset_Textures::Wheel,                ":/assets/test_images/rover_wheel.png");
+    importTexture(Asset_Textures::Spare,                ":/assets/test_images/spare_wheel.png");
 
 }
 
@@ -125,8 +125,9 @@ void DrOpenGL::loadBuiltInTextures() {
 //##    Load resources from project
 //####################################################################################
 void DrOpenGL::loadProjectTextures() {
-    // Build list of DrImage keys used by Project
+    // Build list of DrImage keys used by Project, using std::set to ensure no duplicates
     std::set<long> image_keys_used;
+    image_keys_used.insert(c_key_image_empty);
     for (auto &animation_pair : m_engine->getProject()->getAnimationMap()) {
         for (auto &frame : animation_pair.second->getFrames()) {
             long image_key = frame->getKey();

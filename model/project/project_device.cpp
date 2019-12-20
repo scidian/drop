@@ -28,13 +28,7 @@ DrDevice::DrDevice(DrProject *parent_project, long key, DrDeviceType device_type
 }
 
 
-//####################################################################################
-//##    Creates a Pixmap for this Effect
-//####################################################################################
-QPixmap DrDevice::getPixmap() {
-    switch (m_device_type) {
-        case DrDeviceType::Camera:      return QPixmap(":/assets/asset_types/camera.png");
-    }
-}
+
+
 
 

@@ -12,6 +12,7 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
+#include "editor/project/project.h"
 #include "editor/view/editor_item.h"
 #include "library/colors/colors.h"
 #include "model/enums_model_types.h"
@@ -59,7 +60,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     } else if (m_asset->getType() == DrType::Font) {
         std::string text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-        m_pixmap = m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() )->createText( text );
+        m_pixmap = Dr::CreateText(m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() ), text );
         setPixmap(m_pixmap);
         m_asset_width =  m_pixmap.width();
         m_asset_height = m_pixmap.height();

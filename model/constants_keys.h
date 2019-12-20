@@ -20,6 +20,7 @@ constexpr long c_key_starting_number =              1001;       // First 1001 ke
 //####################################################################################
 //##    Basic Images                    001-099
 //############################
+constexpr long c_key_image_empty =                  1;          //  32 x  32    Empty Square
 constexpr long c_key_image_character =              2;          // 256 x 256    Gray Circle
 constexpr long c_key_image_object =                 3;          // 256 x 256    Gray Box
 

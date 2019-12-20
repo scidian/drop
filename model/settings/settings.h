@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrSettings - Class to hold settings and a collection of components for all Project objects
+//      DrSettings - Base class to hold Settings and a collection of Components for all Project entities
 //
 //
 #ifndef DRSETTINGS_H

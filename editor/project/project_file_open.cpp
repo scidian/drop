@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 10/10/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/20/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -41,10 +41,12 @@ bool checkMapHasKey(QVariantMap &map, QString key) {
 }
 
 
+namespace Dr {
+
 //####################################################################################
 //##    Opens a Project File, returns false if unsuccessful
 //####################################################################################
-bool DrProject::openProjectFromFile(std::string open_file) {
+bool OpenProjectFromFile(DrProject *project, std::string open_file) {
 
     // !!!!! #IMPORTANT: Register custom QVariant Types
     ///qRegisterMetaTypeStreamOperators<DrPropertyCollision>("DrPropertyCollision");
@@ -61,18 +63,18 @@ bool DrProject::openProjectFromFile(std::string open_file) {
     QString version_minor = options["version_minor"].toString();
     QString version_build = options["version_build"].toString();
     long    key_generator = options["key_generator"].toLongLong();
-          m_key_generator = key_generator;
+    project->setKeyGeneratorStartNumber( key_generator );
 
     // ***** Test for a basic property, if doesnt have this probably not a valid save file, return false
     if (checkMapHasKey(options, "name") == false) return false;
 
-    setOption(Project_Options::Name,            options["name"].toString());
-    setOption(Project_Options::File_Name_Path,  open_file);
-    setOption(Project_Options::Current_World,   options["current_world"].toInt());
-    setOption(Project_Options::Current_Stage,   options["current_stage"].toInt());
-    setOption(Project_Options::Orientation,     options["orientation"].toInt());
-    setOption(Project_Options::Width,           options["width"].toInt());
-    setOption(Project_Options::Height,          options["height"].toInt());
+    project->setOption(Project_Options::Name,            options["name"].toString());
+    project->setOption(Project_Options::File_Name_Path,  open_file);
+    project->setOption(Project_Options::Current_World,   options["current_world"].toInt());
+    project->setOption(Project_Options::Current_Stage,   options["current_stage"].toInt());
+    project->setOption(Project_Options::Orientation,     options["orientation"].toInt());
+    project->setOption(Project_Options::Width,           options["width"].toInt());
+    project->setOption(Project_Options::Height,          options["height"].toInt());
     settings.endArray();
 
 
@@ -106,8 +108,8 @@ bool DrProject::openProjectFromFile(std::string open_file) {
         DrBitmap    bitmap(image.bits(), static_cast<int>(image.sizeInBytes()));
 
         // If key doesnt already exist, initialize Image
-        if (findSettingsFromKey(image_key, false) != nullptr) continue;
-        addImage(simple_name, bitmap, Asset_Category::Image, image_key);
+        if (project->findSettingsFromKey(image_key, false) != nullptr) continue;
+        project->addImage(simple_name, bitmap, Asset_Category::Image, image_key);
     }
     settings.endArray();
 
@@ -124,11 +126,11 @@ bool DrProject::openProjectFromFile(std::string open_file) {
         long        animation_key =     checkMapHasKey(animation_data, "key") ? animation_data["key"].toLongLong() : c_no_key;
 
         // If key doesnt already exist, initialize Animation
-        if (findSettingsFromKey(animation_key, false) != nullptr) continue;
-        addAnimation( { }, animation_key );
+        if (project->findSettingsFromKey(animation_key, false) != nullptr) continue;
+        project->addAnimation( { }, animation_key );
 
         // Load World Settings, Variables
-        DrAnimation *animation = findAnimationFromKey(animation_key);
+        DrAnimation *animation = project->findAnimationFromKey(animation_key);
         loadSettingsFromMap(animation, animation_data);
         settings.endArray();
 
@@ -167,8 +169,8 @@ bool DrProject::openProjectFromFile(std::string open_file) {
         QPixmap     pix =           font_data["image"].value<QPixmap>();
 
         // If key doesnt already exist, initialize Font
-        if (findSettingsFromKey(font_key, false) != nullptr) continue;
-        addFont(name, pix, family, font_size, true, font_key);
+        if (project->findSettingsFromKey(font_key, false) != nullptr) continue;
+        project->addFont(name, Dr::FromQPixmap(pix), family, font_size, true, font_key);
     }
     settings.endArray();
 
@@ -188,8 +190,8 @@ bool DrProject::openProjectFromFile(std::string open_file) {
         DrAssetType asset_type =    static_cast<DrAssetType>(asset_type_as_int);
 
         // If key doesnt already exist, initialize Asset
-        if (findSettingsFromKey(asset_key, false) != nullptr) continue;
-        DrAsset* asset = addAsset(asset_type, base_key, asset_key);
+        if (project->findSettingsFromKey(asset_key, false) != nullptr) continue;
+        DrAsset* asset = project->addAsset(asset_type, base_key, asset_key);
 
         // Load Asset Settings, Variables
         loadSettingsFromMap(asset,  asset_data);
@@ -212,11 +214,11 @@ bool DrProject::openProjectFromFile(std::string open_file) {
         bool        world_expanded =    checkMapHasKey(world_data, "tree_expanded")     ? world_data["tree_expanded"].toBool()      : true;
 
         // If key doesnt already exist, initialize World
-        if (findSettingsFromKey(world_key, false) != nullptr) continue;
-        addWorld(world_key, start_stage_key, editor_stage_key);
+        if (project->findSettingsFromKey(world_key, false) != nullptr) continue;
+        project->addWorld(world_key, start_stage_key, editor_stage_key);
 
         // Load World Settings, Variables
-        DrWorld *world = findWorldFromKey(world_key);
+        DrWorld *world = project->findWorldFromKey(world_key);
         loadSettingsFromMap(world, world_data);
         world->setExpanded(world_expanded);
         settings.endArray();
@@ -239,11 +241,11 @@ bool DrProject::openProjectFromFile(std::string open_file) {
             double      zoom_scale =        checkMapHasKey(stage_data, "zoom_scale")     ? stage_data["zoom_scale"].toDouble()   : 0.5;
 
             // If key doesnt already exist, initialize Stage
-            if (findSettingsFromKey(stage_key, false) != nullptr) continue;
+            if (project->findSettingsFromKey(stage_key, false) != nullptr) continue;
             world->addStage(stage_key, start_stage, DrPointF(center_point.x(), center_point.y()), zoom_scale);
 
             // Load Stage Settings, Variables
-            DrStage *stage = findStageFromKey(stage_key);
+            DrStage *stage = project->findStageFromKey(stage_key);
             loadSettingsFromMap(stage, stage_data);
             stage->setExpanded(stage_expanded);
             settings.endArray();
@@ -264,7 +266,7 @@ bool DrProject::openProjectFromFile(std::string open_file) {
                 DrThingType thing_type =    checkMapHasKey(thing_data, "type")           ? static_cast<DrThingType>(thing_data["type"].toInt()) : DrThingType::Object;
 
                 // If key already exists, move on
-                if (findSettingsFromKey(thing_key, false) != nullptr) continue;
+                if (project->findSettingsFromKey(thing_key, false) != nullptr) continue;
 
                 // Make sure thing uses Built-In Device / Effect Asset Key
                 switch (thing_type) {
@@ -280,11 +282,11 @@ bool DrProject::openProjectFromFile(std::string open_file) {
                 }
 
                 // If we can find associated Asset, initialize Thing
-                if (findSettingsFromKey(asset_key) == nullptr) continue;
+                if (project->findSettingsFromKey(asset_key) == nullptr) continue;
                 stage->addThing(thing_type, asset_key, 0, 0, 0, true, thing_key);
 
                 // Load Thing Settings, Variables
-                DrThing *thing = findThingFromKey(thing_key);
+                DrThing *thing = project->findThingFromKey(thing_key);
                 loadSettingsFromMap(thing, thing_data);
                 settings.endArray();
             }
@@ -293,11 +295,11 @@ bool DrProject::openProjectFromFile(std::string open_file) {
 
 
     // ***** Important! Signify we don't need to save at this point!
-    setHasSaved(true);
+    project->setHasSaved(true);
 
 
     // ***** Set Key Generator from Save file
-    if (m_key_generator != key_generator) {
+    if (project->checkCurrentKey() != key_generator) {
         ///Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
         ///                   "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
         ///m_key_generator = key_generator;
@@ -306,9 +308,14 @@ bool DrProject::openProjectFromFile(std::string open_file) {
     return true;
 }
 
+}   // end namespace Dr
+
+
 
 //####################################################################################
+//##
 //##    Load all Components / Properties Settings
+//##
 //####################################################################################
 void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     // ***** Load class variables
@@ -392,6 +399,7 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     }
 
 }
+
 
 
 

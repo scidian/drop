@@ -8,8 +8,6 @@
 #ifndef DRDEVICE_H
 #define DRDEVICE_H
 
-#include <QPixmap>
-
 #include "model/settings/settings.h"
 
 // Forward Declarations
@@ -33,9 +31,6 @@ public:
 
     // DrSettings Overrides
     virtual DrType  getType() override      { return DrType::Device; }
-
-    // Functions
-    QPixmap         getPixmap();                        // Returns a pixmap for a Device in the editor based on the DrDeviceType
 
     // Getters / Setters
     DrDeviceType    getDeviceType() { return m_device_type; }

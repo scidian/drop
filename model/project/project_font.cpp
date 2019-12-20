@@ -5,9 +5,6 @@
 //
 //
 //
-#include <QPainter>
-#include <QRect>
-
 #include "model/constants_components.h"
 #include "model/project/project_font.h"
 #include "model/settings/settings_component.h"
@@ -18,11 +15,11 @@
 //##    Constructor
 //####################################################################################
 DrFont::DrFont(DrProject *parent_project, long key,
-               std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects) : DrSettings(parent_project) {
+               std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects) : DrSettings(parent_project) {
     this->setKey(key);
 
     m_name =   font_name;
-    m_pixmap = font_pixmap;
+    m_bitmap = font_bitmap;
 
     if (use_test_rects)
         setTestFontRects();
@@ -57,37 +54,6 @@ DrFont::DrFont(DrProject *parent_project, long key,
                            "Font Family", "Font used for this text asset.", false, false);
     addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, getPropertyFontSize(),
                            "Font Size", "Font size of this text asset.", false, false);
-}
-
-//####################################################################################
-//##    Create Text
-//####################################################################################
-// !!! Need to incorporate letter spacing
-QPixmap DrFont::createText(std::string text) {
-    int width = 0;
-    int height = m_positions['A'].height;
-    for (int i = 0; i < static_cast<int>(text.length()); i++) {
-        width += m_positions[ text.at(i) ].width;
-    }
-    if (width ==  0) width =  1;
-    if (height == 0) height = 1;
-    QPixmap text_image(width, height);
-    text_image.fill(Qt::transparent);
-
-    QPainter painter(&text_image);
-    painter.setPen(Qt::NoPen);
-
-    int x = 0;
-    for (int i = 0; i < static_cast<int>(text.length()); i++) {
-        char letter = text.at(i);
-        int  letter_width = m_positions[letter].width;
-
-        QRect character(m_positions[letter].left, m_positions[letter].top, m_positions[letter].width, m_positions[letter].height);
-        painter.drawPixmap( QRect(x, 0, letter_width, height), m_pixmap, character );
-        x += letter_width;
-    }
-
-    return text_image;
 }
 
 

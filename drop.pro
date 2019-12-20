@@ -135,7 +135,10 @@ SOURCES += \
     editor/pixmap/pixmap_filters.cpp \
     editor/pixmap/pixmap_mask.cpp \
     editor/project/project_add_built_in_images.cpp \
+    editor/project/project_file_open.cpp \
+    editor/project/project_file_save.cpp \
     editor/project/project_initialize_new.cpp \
+    editor/project/project_pixmaps.cpp \
     editor/style/style_format_widgets.cpp \
     editor/style/style_sheet_main.cpp \
     editor/style/style_sheet_toolbar.cpp \
@@ -256,8 +259,6 @@ SOURCES += \
     main.cpp \
     model/enums_model_types.cpp \
     model/project/project.cpp \
-    model/project/project__file_open.cpp \
-    model/project/project__file_save.cpp \
     model/project/project_animation.cpp \
     model/project/project_animation_frame.cpp \
     model/project/project_asset.cpp \

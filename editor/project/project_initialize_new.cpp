@@ -5,6 +5,7 @@
 //
 //
 //
+#include "editor/helper_library.h"
 #include "editor/project/project.h"
 #include "model/project/project_asset.h"
 #include "model/project/project_image.h"
@@ -63,9 +64,9 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
         DrImage *image_15 = Dr::AddImage(project, ":/assets/test_images/shapes2.png");
         DrImage *image_16 = Dr::AddImage(project, ":/assets/test_images/dragon.png");
 
-        long font_1 =   project->addFont("Distance Font", QPixmap(":/assets/test_images/test_font.png"),   "Arial",          20, true);
-                        project->addFont("Coin Count",    QPixmap(":/assets/test_images/test_font_2.png"), "Britannic Bold", 15, true);
-                        project->addFont("I Love Julie",  QPixmap(":/assets/test_images/test_font_3.png"), "Bauhaus 93",     36, true);
+        long font_1 =   project->addFont("Distance Font", Dr::FromQPixmap(QPixmap(":/assets/test_images/test_font.png")),   "Arial",          20, true);
+                        project->addFont("Coin Count",    Dr::FromQPixmap(QPixmap(":/assets/test_images/test_font_2.png")), "Britannic Bold", 15, true);
+                        project->addFont("I Love Julie",  Dr::FromQPixmap(QPixmap(":/assets/test_images/test_font_3.png")), "Bauhaus 93",     36, true);
 
                                 project->addAsset(DrAssetType::Character, image_6->getKey() );          // "Ball 1"
         DrAsset *a_dragon =     project->addAsset(DrAssetType::Character, image_16->getKey() );         // "Dragon"

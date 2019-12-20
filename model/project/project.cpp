@@ -150,6 +150,7 @@ void DrProject::deleteFont(long font_key) {
 
 // Removes an Image from the Project
 void DrProject::deleteImage(long image_key) {
+    if (image_key < c_key_starting_number) return;
     DrImage *image = findImageFromKey(image_key);
     if (image == nullptr) return;
     m_images.erase(image_key);
@@ -196,9 +197,9 @@ long DrProject::addEffect(DrEffectType effect_type, long key) {
     return new_effect_key;
 }
 
-long DrProject::addFont(std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects, long key) {
+long DrProject::addFont(std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects, long key) {
     long new_font_key = (key == c_no_key) ? getNextKey() : key;
-    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_pixmap, font_family, font_size, use_test_rects);
+    m_fonts[new_font_key] = new DrFont(this, new_font_key, font_name, font_bitmap, font_family, font_size, use_test_rects);
     return new_font_key;
 }
 

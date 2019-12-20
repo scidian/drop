@@ -20,6 +20,7 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
+#include "editor/project/project.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_assets.h"
 #include "library/colors/colors.h"
@@ -282,18 +283,17 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
             } else if (entity->getType() == DrType::Device) {
                 DrDevice *device = dynamic_cast<DrDevice*>(entity);
-                pix = device->getPixmap();
+                pix = Dr::GetAssetPixmapDevice( device->getDeviceType() );
                 description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Device[1];
 
             } else if (entity->getType() == DrType::Effect) {
                 DrEffect *effect = dynamic_cast<DrEffect*>(entity);
-                pix = effect->getPixmap();
+                pix = Dr::GetAssetPixmapEffect( effect->getEffectType() );
                 description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Effect[1];
 
             } else if (entity->getType() == DrType::Font) {
                 DrFont *font = dynamic_cast<DrFont*>(entity);
-                ///pix = font->getPixmap();
-                pix = font->createText( "Aa" );
+                pix = Dr::CreateText(font, "Aa" );
                 description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Text[1];
 
             } else if (entity->getType() == DrType::Image) {

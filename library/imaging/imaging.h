@@ -8,10 +8,9 @@
 #ifndef IMAGE_FILTER_H
 #define IMAGE_FILTER_H
 
-#include "engine/enums_engine.h"
 #include "library/types/dr_variant.h"
 
-
+// Imaging Enumerations
 enum class Flood_Fill_Type {
     Compare_4,
     Compare_8,

@@ -62,7 +62,7 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
     addComponent(Components::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
     getComponent(Components::Thing_Settings_Character)->setIcon(Component_Icons::Character);
 
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, DrPointF(0, 100),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position, Property_Type::PointF, DrPointF(0, 0),
                            "Camera Offset", "Every Character has a Camera attached which always looks directly at the Character. "
                                             "The Camera Offset allows for the camera to look at a point offset from the Character in 2D space.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation, Property_Type::PointF, DrPointF(0, 0),

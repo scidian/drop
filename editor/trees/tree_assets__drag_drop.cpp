@@ -14,6 +14,7 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
+#include "editor/project/project.h"
 #include "editor/trees/tree_assets.h"
 #include "library/dr_math.h"
 #include "model/enums_model_types.h"
@@ -55,14 +56,14 @@ void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asse
         }
 
     } else if (entity->getType() == DrType::Device) {
-        pixmap = m_editor_relay->currentProject()->findDeviceFromKey( entity->getKey() )->getPixmap();
+        pixmap = Dr::GetAssetPixmapDevice( m_editor_relay->currentProject()->findDeviceFromKey( entity->getKey() )->getDeviceType() );
 
     } else if (entity->getType() == DrType::Effect) {
-        pixmap = m_editor_relay->currentProject()->findEffectFromKey( entity->getKey() )->getPixmap();
+        pixmap = Dr::GetAssetPixmapEffect( m_editor_relay->currentProject()->findEffectFromKey( entity->getKey() )->getEffectType() );
 
     } else if (entity->getType() == DrType::Font) {
         //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
-        pixmap = m_editor_relay->currentProject()->findFontFromKey( entity->getKey() )->createText( "Text" );
+        pixmap = Dr::CreateText(m_editor_relay->currentProject()->findFontFromKey( entity->getKey() ), "Text" );
     } else {
         return;
     }

@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QRectF>
+
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_spawner.h"

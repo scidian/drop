@@ -131,12 +131,10 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
     ///DrAnimation *animation = getParentProject()->findAnimationFromKey(getBaseKey());
 
     long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
-    DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
+    if (idle_animation_key == c_no_key) return c_key_image_empty;
 
-    if (animation == nullptr) {
-        ///return c_key_image_empty;        // Old 32x32 blank image file
-        Dr::PrintDebug("Error in DrAsset::getIdleAnimationFirstFrameImageKey(), could not find idle animation key!!");
-    }
+    DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
+    if (animation == nullptr)           return c_key_image_empty;
 
     return animation->getFrame(animation->getStartFrameNumber())->getKey();
 }

@@ -48,7 +48,7 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
     bool init_new = (file_to_open == "");
     if (init_new == false) {
         Dr::AddBuiltInImages(m_project);
-        init_new = (m_project->openProjectFromFile(file_to_open) == false);
+        init_new = (Dr::OpenProjectFromFile(m_project, file_to_open) == false);
     }
     if (init_new) Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
 

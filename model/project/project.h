@@ -8,11 +8,6 @@
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
-#include <QImage>
-#include <QPixmap>
-
-#include <map>
-
 #include "model/constants_keys.h"
 #include "model/settings/settings.h"
 
@@ -93,8 +88,10 @@ public:
 
 
     // Local Variable Functions
-    long        getNextKey()            { return m_key_generator++; }
-    void        setKeyGeneratorStartNumber(long initial_key) { m_key_generator = initial_key; }
+    long        checkCurrentKey()                               { return m_key_generator; }
+    long        getNextKey()                                    { return m_key_generator++; }
+    void        setKeyGeneratorStartNumber(long initial_key)    { m_key_generator = initial_key; }
+
 
     bool        hasSaved()              { return m_has_saved; }
     bool        isTestOnly()            { return m_test_only; }
@@ -150,7 +147,7 @@ public:
     DrAsset*        addAsset(DrAssetType new_asset_type, long source_image_key, long key = c_no_key);
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
-    long            addFont(std::string font_name, QPixmap font_pixmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
+    long            addFont(std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
     DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image, long key = c_no_key);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
@@ -166,8 +163,6 @@ public:
     void            deleteFont(long font_key);
     void            deleteImage(long image_key);
     void            deleteWorld(long world_key);
-    bool            openProjectFromFile(std::string open_file);
-    void            saveProjectToFile();
 
 };
 

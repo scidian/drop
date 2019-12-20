@@ -8,8 +8,6 @@
 #ifndef DREFFECT_H
 #define DREFFECT_H
 
-#include <QPixmap>
-
 #include "model/settings/settings.h"
 
 // Forward Declarations
@@ -33,9 +31,6 @@ public:
 
     // DrSettings Overrides
     virtual DrType  getType() override      { return DrType::Effect; }
-
-    // Functions
-    QPixmap         getPixmap();                        // Returns a pixmap for an Effect in the editor based on the EffectType
 
     // Getters / Setters
     DrEffectType    getEffectType() { return m_effect_type; }
