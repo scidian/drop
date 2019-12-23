@@ -13,12 +13,12 @@
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "3rd_party/polyline_simplification.h"
+#include "core/dr_debug.h"
+#include "core/imaging/imaging.h"
+#include "core/types/dr_point.h"
+#include "core/types/dr_pointf.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-#include "library/dr_debug.h"
-#include "library/imaging/imaging.h"
-#include "library/types/dr_point.h"
-#include "library/types/dr_pointf.h"
 
 
 //####################################################################################

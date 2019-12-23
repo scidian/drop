@@ -8,15 +8,15 @@
 #include <QDebug>
 #include <QVBoxLayout>
 
+#include "core/colors/colors.h"
+#include "core/dr_containers.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
-#include "library/colors/colors.h"
-#include "library/dr_containers.h"
-#include "model/project/project.h"
-#include "model/settings/settings.h"
-#include "model/settings/settings_component.h"
-#include "model/settings/settings_component_property.h"
+#include "project/dr_project.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_property.h"
 
 
 //####################################################################################

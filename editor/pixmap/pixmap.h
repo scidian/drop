@@ -10,9 +10,9 @@
 
 #include <QPixmap>
 
+#include "core/types/dr_color.h"
+#include "core/types/dr_pointf.h"
 #include "engine/enums_engine.h"
-#include "library/types/dr_color.h"
-#include "library/types/dr_pointf.h"
 
 
 //####################################################################################

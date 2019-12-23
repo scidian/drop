@@ -15,7 +15,7 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
-#include "model/enums_model_types.h"
+#include "project/enums_entity_types.h"
 
 // Forward declarations
 class DrProject;

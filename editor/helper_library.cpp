@@ -14,10 +14,10 @@
 
 #include <cmath>
 
+#include "core/colors/colors.h"
+#include "core/dr_math.h"
+#include "core/types/dr_variant.h"
 #include "editor/helper_library.h"
-#include "library/colors/colors.h"
-#include "library/dr_math.h"
-#include "library/types/dr_variant.h"
 
 namespace Dr {
 

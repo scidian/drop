@@ -7,10 +7,10 @@
 //
 #include "3rd_party/glm/gtx/transform.hpp"
 #include "3rd_party/glm/mat4x4.hpp"
+#include "core/types/dr_vec2.h"
+#include "core/types/dr_vec3.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-#include "library/types/dr_vec2.h"
-#include "library/types/dr_vec3.h"
 
 
 //####################################################################################

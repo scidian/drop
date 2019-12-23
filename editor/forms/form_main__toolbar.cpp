@@ -18,9 +18,9 @@
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "editor/enums_editor.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_thing.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_thing.h"
 
 
 //####################################################################################

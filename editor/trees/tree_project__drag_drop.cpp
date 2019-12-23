@@ -14,8 +14,8 @@
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/trees/tree_project.h"
-#include "model/project/project.h"
-#include "model/settings/settings.h"
+#include "project/dr_project.h"
+#include "project/settings/settings.h"
 
 
 //####################################################################################

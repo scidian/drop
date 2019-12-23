@@ -10,7 +10,7 @@
 #include "editor/style/style.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "model/project/project.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################

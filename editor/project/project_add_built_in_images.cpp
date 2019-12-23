@@ -11,12 +11,12 @@
 #include <QPixmap>
 
 #include "editor/project/project.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_image.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
-#include "model/project/project_world.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_image.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/entities/dr_world.h"
 
 namespace Dr {
 

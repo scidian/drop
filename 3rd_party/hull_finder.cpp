@@ -4,9 +4,9 @@
 //
 //
 #include "3rd_party/hull_finder.h"
-#include "library/dr_containers.h"
-#include "library/dr_math.h"
-#include "library/types/dr_pointf.h"
+#include "core/dr_containers.h"
+#include "core/dr_math.h"
+#include "core/types/dr_pointf.h"
 
 
 double HullFinder::IsLeft(DrPointF p0, DrPointF p1, DrPointF p2) {

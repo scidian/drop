@@ -12,14 +12,14 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_font.h"
-#include "model/project/project_image.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
-#include "model/properties/property_collision.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_font.h"
+#include "project/entities/dr_image.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/properties/property_collision.h"
 
 
 //####################################################################################
@@ -76,7 +76,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     m_loaded_to = 0;                                    // Reset how far we've loaded
 
 
-    if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool()) {
+    if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toVector()[0].toBool()) {
         m_background_color = DrColor(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
     }
 

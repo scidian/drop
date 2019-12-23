@@ -10,6 +10,7 @@
 
 #include "engine/globals_engine.h"
 #include "engine/things/engine_thing.h"
+#include "project/properties/property_collision.h"
 
 
 //####################################################################################

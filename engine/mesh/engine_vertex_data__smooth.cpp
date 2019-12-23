@@ -10,10 +10,10 @@
 #include <limits>
 
 #include "3rd_party/glm/vec3.hpp"
+#include "core/imaging/imaging.h"
+#include "core/types/dr_vec3.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
-#include "library/imaging/imaging.h"
-#include "library/types/dr_vec3.h"
 
 
 //####################################################################################

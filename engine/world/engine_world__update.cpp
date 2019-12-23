@@ -7,6 +7,7 @@
 //
 #include <numeric>
 
+#include "core/dr_random.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_spawner.h"
@@ -15,10 +16,9 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-#include "library/dr_random.h"
-#include "model/project/project.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
 
 
 // Local Structs

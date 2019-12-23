@@ -9,8 +9,8 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include "core/colors/colors.h"
 #include "editor/pixmap/pixmap.h"
-#include "library/colors/colors.h"
 
 namespace Dr {
 

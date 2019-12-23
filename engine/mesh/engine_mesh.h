@@ -8,9 +8,8 @@
 #ifndef ENGINE_MESH_H
 #define ENGINE_MESH_H
 
+#include "core/types/dr_vec3.h"
 #include "engine/globals_engine.h"
-#include "library/types/dr_vec3.h"
-
 
 struct Vertex {
     DrVec3      position;

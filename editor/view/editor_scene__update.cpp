@@ -5,6 +5,7 @@
 //      Very Important File! Updates Items in the GraphicsScene based on changes elsewhere
 //
 //
+#include "core/dr_math.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/pixmap/pixmap.h"
@@ -13,17 +14,16 @@
 #include "editor/view/editor_scene.h"
 #include "engine/enums_engine.h"
 #include "engine/opengl/opengl.h"
-#include "library/dr_math.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_effect.h"
-#include "model/project/project_font.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
-#include "model/settings/settings.h"
-#include "model/settings/settings_component.h"
-#include "model/settings/settings_component_property.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_effect.h"
+#include "project/entities/dr_font.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_property.h"
 
 
 //####################################################################################

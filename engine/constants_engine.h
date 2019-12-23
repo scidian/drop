@@ -10,7 +10,7 @@
 
 #include <QVector3D>
 
-#include "library/types/dr_pointf.h"
+#include "core/types/dr_pointf.h"
 
 
 // Camera Constants

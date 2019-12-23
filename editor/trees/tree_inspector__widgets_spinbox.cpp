@@ -15,7 +15,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
-#include "model/settings/settings_component_property.h"
+#include "project/settings/settings_component_property.h"
 
 
 //####################################################################################

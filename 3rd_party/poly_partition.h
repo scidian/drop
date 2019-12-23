@@ -31,7 +31,7 @@
 #include <list>
 #include <set>
 
-#include "library/dr_math.h"
+#include "core/dr_math.h"
 
 // Type Definitions
 typedef double tppl_float;

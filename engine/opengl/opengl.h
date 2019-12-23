@@ -17,12 +17,12 @@
 #include <QMatrix4x4>
 #include <chrono>
 
+#include "core/dr_string.h"
+#include "core/types/dr_point.h"
+#include "core/types/dr_pointf.h"
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
-#include "library/dr_string.h"
-#include "library/types/dr_point.h"
-#include "library/types/dr_pointf.h"
-#include "model/enums_model_types.h"
+#include "project/enums_entity_types.h"
 
 // Forward Declarations
 class DrColor;

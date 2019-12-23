@@ -16,7 +16,7 @@
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/style/style.h"
-#include "model/project/project.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################

@@ -9,9 +9,9 @@
 
 #include "editor/globals_editor.h"
 #include "editor/trees/tree_assets.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_font.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_font.h"
 
 
 //####################################################################################

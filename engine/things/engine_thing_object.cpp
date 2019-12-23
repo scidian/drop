@@ -11,9 +11,9 @@
 #include "engine/things/engine_thing_object.h"
 #include "engine/opengl/opengl.h"
 #include "engine/world/engine_world.h"
-#include "model/project/project.h"
-#include "model/project/project_animation.h"
-#include "model/project/project_asset.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
+#include "project/entities/dr_asset.h"
 
 
 //####################################################################################

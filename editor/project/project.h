@@ -11,7 +11,7 @@
 #include <QPixmap>
 #include <QString>
 
-#include "model/project/project.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################

@@ -8,10 +8,10 @@
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_project.h"
-#include "model/project/project.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
 
 
 //####################################################################################

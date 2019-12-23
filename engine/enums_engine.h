@@ -119,13 +119,6 @@ enum class Jump_State {
     Jumped                  = 1,
 };
 
-enum class One_Way {                        // One Way Collide
-    None                    = 0,
-    Pass_Through            = 1,            // Objects can pass through going one_way_direction
-    Weak_Spot               = 2,            // Only takes damage from one_way_direction (bustable block, turtle enemy)
-    ///Damage_Direction     = 3,            // Only gives damage from one_way_direction
-};
-
 enum class Pedal {
     None                    = 0,
     Brake                   = 1,

@@ -7,6 +7,7 @@
 //
 #include <QGraphicsSceneMouseEvent>
 
+#include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
@@ -14,20 +15,19 @@
 #include "editor/pixmap/pixmap.h"
 #include "editor/project/project.h"
 #include "editor/view/editor_item.h"
-#include "library/colors/colors.h"
-#include "model/enums_model_types.h"
-#include "model/project/project.h"
-#include "model/project/project_animation.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_device.h"
-#include "model/project/project_effect.h"
-#include "model/project/project_font.h"
-#include "model/project/project_image.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
-#include "model/settings/settings.h"
-#include "model/settings/settings_component.h"
-#include "model/settings/settings_component_property.h"
+#include "project/enums_entity_types.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_device.h"
+#include "project/entities/dr_effect.h"
+#include "project/entities/dr_font.h"
+#include "project/entities/dr_image.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_property.h"
 
 
 //####################################################################################

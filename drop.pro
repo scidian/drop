@@ -2,12 +2,13 @@
 ##
 ##                   DROP
 ##           by Scidian Software
+##           Copyright 2018-2020
 ##
 ############################
 TARGET   =  Drop
 TEMPLATE =  app
 
-CONFIG  +=  c++11
+CONFIG          +=  c++11                                       # "QMAKE_CXXFLAGS += -std=c++11" is not sufficient, use this instead
 
 ##  C Compiler Flags
 QMAKE_CFLAGS    += -std=c99
@@ -23,15 +24,11 @@ QMAKE_CXXFLAGS  += -Wno-sign-conversion
 CONFIG  += drop_editor
 
 CONFIG(drop_editor){
-    QT  +=  core gui
-    QT  += widgets
+    QT          += core gui
+    QT          += widgets
 
-    # Show warnings if using any feature of Qt which has been marked as deprecated
-    DEFINES         +=  QT_DEPRECATED_WARNINGS
-
-    # Fail to compile if using deprecated APIs.
-    # Also possible to disable deprecated APIs only up to a certain version of Qt.
-    #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+    DEFINES     += QT_DEPRECATED_WARNINGS                       # Show warnings if using any feature of Qt which has been marked as deprecated
+    #DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060000        # Disables all the Qt APIs deprecated before Qt 6.0.0
 }
 
 
@@ -100,6 +97,28 @@ SOURCES += \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
+    core/colors/colors.cpp \
+    core/colors/palette_blank.cpp \
+    core/colors/palette_material.cpp \
+    core/colors/palette_rocky_rover.cpp \
+    core/colors/palette_window_themes.cpp \
+    core/dr_containers.cpp \
+    core/dr_debug.cpp \
+    core/dr_math.cpp \
+    core/dr_random.cpp \
+    core/dr_string.cpp \
+    core/dr_time.cpp \
+    core/imaging/imaging_filters.cpp \
+    core/imaging/imaging_objects.cpp \
+    core/types/dr_bitmap.cpp \
+    core/types/dr_color.cpp \
+    core/types/dr_point.cpp \
+    core/types/dr_pointf.cpp \
+    core/types/dr_rect.cpp \
+    core/types/dr_rectf.cpp \
+    core/types/dr_variant.cpp \
+    core/types/dr_vec2.cpp \
+    core/types/dr_vec3.cpp \
     editor/debug.cpp \
     editor/docks/docks_build.cpp \
     editor/docks/docks_handle.cpp \
@@ -234,54 +253,32 @@ SOURCES += \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
     header_builds.cpp \
-    library/colors/colors.cpp \
-    library/colors/palette_blank.cpp \
-    library/colors/palette_material.cpp \
-    library/colors/palette_rocky_rover.cpp \
-    library/colors/palette_window_themes.cpp \
-    library/dr_containers.cpp \
-    library/dr_debug.cpp \
-    library/dr_math.cpp \
-    library/dr_random.cpp \
-    library/dr_string.cpp \
-    library/dr_time.cpp \
-    library/imaging/imaging_filters.cpp \
-    library/imaging/imaging_objects.cpp \
-    library/types/dr_bitmap.cpp \
-    library/types/dr_color.cpp \
-    library/types/dr_point.cpp \
-    library/types/dr_pointf.cpp \
-    library/types/dr_rect.cpp \
-    library/types/dr_rectf.cpp \
-    library/types/dr_variant.cpp \
-    library/types/dr_vec2.cpp \
-    library/types/dr_vec3.cpp \
     main.cpp \
-    model/enums_model_types.cpp \
-    model/project/project.cpp \
-    model/project/project_animation.cpp \
-    model/project/project_animation_frame.cpp \
-    model/project/project_asset.cpp \
-    model/project/project_asset__auto_collision.cpp \
-    model/project/project_asset__settings.cpp \
-    model/project/project_asset__settings_shared.cpp \
-    model/project/project_device.cpp \
-    model/project/project_effect.cpp \
-    model/project/project_font.cpp \
-    model/project/project_image.cpp \
-    model/project/project_stage.cpp \
-    model/project/project_stage__settings.cpp \
-    model/project/project_thing.cpp \
-    model/project/project_thing__settings.cpp \
-    model/project/project_thing__settings_effects.cpp \
-    model/project/project_thing__settings_shared.cpp \
-    model/project/project_thing__z_order.cpp \
-    model/project/project_world.cpp \
-    model/project/project_world__settings.cpp \
-    model/properties/property_collision.cpp \
-    model/settings/settings.cpp \
-    model/settings/settings_component.cpp \
-    model/settings/settings_component_property.cpp
+    project/dr_project.cpp \
+    project/entities/dr_animation.cpp \
+    project/entities/dr_animation_frame.cpp \
+    project/entities/dr_asset.cpp \
+    project/entities/dr_asset__auto_collision.cpp \
+    project/entities/dr_asset__settings.cpp \
+    project/entities/dr_asset__settings_shared.cpp \
+    project/entities/dr_device.cpp \
+    project/entities/dr_effect.cpp \
+    project/entities/dr_font.cpp \
+    project/entities/dr_image.cpp \
+    project/entities/dr_stage.cpp \
+    project/entities/dr_stage__settings.cpp \
+    project/entities/dr_thing.cpp \
+    project/entities/dr_thing__settings.cpp \
+    project/entities/dr_thing__settings_effects.cpp \
+    project/entities/dr_thing__settings_shared.cpp \
+    project/entities/dr_thing__z_order.cpp \
+    project/entities/dr_world.cpp \
+    project/entities/dr_world__settings.cpp \
+    project/enums_entity_types.cpp \
+    project/properties/property_collision.cpp \
+    project/settings/settings.cpp \
+    project/settings/settings_component.cpp \
+    project/settings/settings_component_property.cpp
 
 
 HEADERS += \
@@ -888,6 +885,23 @@ HEADERS += \
     3rd_party/stb/stb_image.h \
     3rd_party/stb/stb_image_resize.h \
     3rd_party/stb/stb_image_write.h \
+    core/colors/colors.h \
+    core/dr_containers.h \
+    core/dr_debug.h \
+    core/dr_math.h \
+    core/dr_random.h \
+    core/dr_string.h \
+    core/dr_time.h \
+    core/imaging/imaging.h \
+    core/types/dr_bitmap.h \
+    core/types/dr_color.h \
+    core/types/dr_point.h \
+    core/types/dr_pointf.h \
+    core/types/dr_rect.h \
+    core/types/dr_rectf.h \
+    core/types/dr_variant.h \
+    core/types/dr_vec2.h \
+    core/types/dr_vec3.h \
     editor/constants_editor.h \
     editor/debug.h \
     editor/docks/docks.h \
@@ -936,40 +950,23 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
-    library/colors/colors.h \
-    library/dr_containers.h \
-    library/dr_debug.h \
-    library/dr_math.h \
-    library/dr_random.h \
-    library/dr_string.h \
-    library/dr_time.h \
-    library/imaging/imaging.h \
-    library/types/dr_bitmap.h \
-    library/types/dr_color.h \
-    library/types/dr_point.h \
-    library/types/dr_pointf.h \
-    library/types/dr_rect.h \
-    library/types/dr_rectf.h \
-    library/types/dr_variant.h \
-    library/types/dr_vec2.h \
-    library/types/dr_vec3.h \
-    model/constants_components.h \
-    model/constants_keys.h \
-    model/enums_model_properties.h \
-    model/enums_model_types.h \
-    model/project/project.h \
-    model/project/project_animation.h \
-    model/project/project_asset.h \
-    model/project/project_device.h \
-    model/project/project_effect.h \
-    model/project/project_font.h \
-    model/project/project_image.h \
-    model/project/project_stage.h \
-    model/project/project_thing.h \
-    model/project/project_world.h \
-    model/properties/property_collision.h \
-    model/settings/settings.h \
-    model/settings/settings_component.h \
-    model/settings/settings_component_property.h
+    project/constants_components.h \
+    project/constants_keys.h \
+    project/dr_project.h \
+    project/entities/dr_animation.h \
+    project/entities/dr_asset.h \
+    project/entities/dr_device.h \
+    project/entities/dr_effect.h \
+    project/entities/dr_font.h \
+    project/entities/dr_image.h \
+    project/entities/dr_stage.h \
+    project/entities/dr_thing.h \
+    project/entities/dr_world.h \
+    project/enums_entity_types.h \
+    project/enums_properties.h \
+    project/properties/property_collision.h \
+    project/settings/settings.h \
+    project/settings/settings_component.h \
+    project/settings/settings_component_property.h
 
 

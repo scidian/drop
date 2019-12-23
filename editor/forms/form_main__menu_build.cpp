@@ -12,6 +12,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 
+#include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/forms/form_main.h"
 #include "editor/helper_library.h"
@@ -22,8 +23,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "library/colors/colors.h"
-#include "model/project/project.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################

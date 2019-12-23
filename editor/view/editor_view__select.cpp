@@ -7,19 +7,19 @@
 //
 #include <QMouseEvent>
 
+#include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
-#include "library/colors/colors.h"
-#include "model/project/project.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
-#include "model/settings/settings.h"
-#include "model/settings/settings_component.h"
-#include "model/settings/settings_component_property.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_property.h"
 
 
 //####################################################################################

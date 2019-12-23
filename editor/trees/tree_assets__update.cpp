@@ -8,16 +8,16 @@
 #include <QDebug>
 #include <QScrollBar>
 
+#include "core/dr_containers.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_assets.h"
-#include "library/dr_containers.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
-#include "model/project/project_world.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/entities/dr_world.h"
 
 
 //####################################################################################

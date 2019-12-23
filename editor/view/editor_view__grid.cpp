@@ -8,15 +8,15 @@
 #include <QtMath>
 #include <QScrollBar>
 
+#include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/helper_library.h"
 #include "editor/globals_editor.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
-#include "library/colors/colors.h"
-#include "model/project/project.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
 
 
 //####################################################################################
@@ -42,7 +42,7 @@ void DrView::updateGrid() {
     m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
     m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
-    m_back_color_use =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toBool();
+    m_back_color_use =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toVector()[0].toBool();
 
     int style =         stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
     m_grid_style =      static_cast<Grid_Style>(style);

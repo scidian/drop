@@ -11,13 +11,13 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-#include "model/project/project.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_font.h"
-#include "model/project/project_image.h"
-#include "model/project/project_world.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_font.h"
+#include "project/entities/dr_image.h"
+#include "project/entities/dr_world.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
 
 
 //####################################################################################

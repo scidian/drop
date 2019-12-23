@@ -8,22 +8,21 @@
 #include <QPixmap>
 #include "editor/helper_library.h"
 
-
 #include <algorithm>
 #include <set>
 
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
-#include "library/dr_debug.h"
-#include "model/project/project.h"
-#include "model/project/project_animation.h"
-#include "model/project/project_asset.h"
-#include "model/project/project_image.h"
-#include "model/settings/settings.h"
-#include "model/settings/settings_component_property.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
+#include "project/entities/dr_asset.h"
+#include "project/entities/dr_image.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component_property.h"
 
 
 // OpenGL Constant Definitions

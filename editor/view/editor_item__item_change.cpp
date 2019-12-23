@@ -48,15 +48,15 @@
 ---------- */
 #include <QDebug>
 
+#include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
-#include "library/colors/colors.h"
-#include "model/enums_model_types.h"
-#include "model/project/project_stage.h"
-#include "model/project/project_thing.h"
+#include "project/enums_entity_types.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
 
 
 //####################################################################################

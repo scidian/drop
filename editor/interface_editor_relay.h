@@ -12,10 +12,10 @@
 #include <QPointF>
 #include <QString>
 
+#include "core/types/dr_variant.h"
 #include "editor/constants_editor.h"
 #include "editor/enums_editor.h"
-#include "library/types/dr_variant.h"
-#include "model/enums_model_types.h"
+#include "project/enums_entity_types.h"
 
 // Forward declarations
 class DrThing;

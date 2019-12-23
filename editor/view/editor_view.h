@@ -13,10 +13,10 @@
 #include <QMap>
 #include <QRubberBand>
 
+#include "core/types/dr_pointf.h"
 #include "editor/constants_editor.h"
 #include "editor/enums_editor.h"
-#include "library/types/dr_pointf.h"
-#include "model/enums_model_types.h"
+#include "project/enums_entity_types.h"
 
 // Forward declarations
 class DrProject;

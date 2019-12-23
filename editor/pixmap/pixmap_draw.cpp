@@ -15,11 +15,11 @@
 #include <QTime>
 #include <QVector2D>
 
+#include "core/colors/colors.h"
+#include "core/dr_debug.h"
+#include "core/dr_math.h"
 #include "editor/globals_editor.h"
 #include "editor/pixmap/pixmap.h"
-#include "library/colors/colors.h"
-#include "library/dr_debug.h"
-#include "library/dr_math.h"
 
 namespace Dr
 {

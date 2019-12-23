@@ -8,15 +8,15 @@
 #include <QGraphicsPixmapItem>
 #include <QStyleOptionGraphicsItem>
 
+#include "core/colors/colors.h"
+#include "core/dr_math.h"
 #include "editor/debug.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_view.h"
-#include "library/colors/colors.h"
-#include "library/dr_math.h"
-#include "model/enums_model_types.h"
-#include "model/project/project_thing.h"
+#include "project/enums_entity_types.h"
+#include "project/entities/dr_thing.h"
 
 
 //####################################################################################

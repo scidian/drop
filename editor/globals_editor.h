@@ -10,10 +10,10 @@
 
 #include <QCursor>
 
+#include "core/types/dr_variant.h"
 #include "editor/enums_editor.h"
-#include "library/types/dr_variant.h"
-#include "model/enums_model_types.h"
-#include "model/enums_model_properties.h"
+#include "project/enums_entity_types.h"
+#include "project/enums_properties.h"
 
 
 // Forward declarations

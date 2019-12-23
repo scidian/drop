@@ -14,7 +14,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "library/types/dr_color.h"
+#include "core/types/dr_color.h"
 
 // Forward declarations
 class       DrProject;

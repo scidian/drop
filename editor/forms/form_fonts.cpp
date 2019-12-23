@@ -11,7 +11,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_fonts.h"
 #include "editor/style/style.h"
-#include "model/project/project.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################

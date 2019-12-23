@@ -13,16 +13,16 @@
 #include <QScrollBar>
 #include <QVector3D>
 
+#include "core/colors/colors.h"
+#include "core/dr_containers.h"
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_inspector.h"
-#include "library/colors/colors.h"
-#include "library/dr_containers.h"
-#include "model/enums_model_types.h"
-#include "model/project/project.h"
-#include "model/settings/settings.h"
-#include "model/settings/settings_component.h"
-#include "model/settings/settings_component_property.h"
+#include "project/enums_entity_types.h"
+#include "project/dr_project.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_property.h"
 
 
 //####################################################################################

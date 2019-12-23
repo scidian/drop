@@ -14,7 +14,7 @@
 #include <QScreen>
 #include <QWidget>
 
-#include <library/types/dr_color.h>
+#include "core/types/dr_color.h"
 
 
 //####################################################################################

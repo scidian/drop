@@ -11,14 +11,14 @@
 #include <string>
 
 #include "3rd_party/chipmunk/chipmunk.h"
+#include "core/dr_containers.h"
+#include "core/dr_math.h"
+#include "core/dr_time.h"
+#include "core/types/dr_variant.h"
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
-#include "library/dr_containers.h"
-#include "library/dr_math.h"
-#include "library/dr_time.h"
-#include "library/types/dr_variant.h"
-#include "model/constants_keys.h"
-#include "model/enums_model_types.h"
+#include "project/constants_keys.h"
+#include "project/enums_entity_types.h"
 
 
 // Forward declarations

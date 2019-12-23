@@ -8,6 +8,7 @@
 #include <QtMath>
 #include <QMouseEvent>
 
+#include "core/dr_random.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
@@ -15,8 +16,7 @@
 #include "engine/things/engine_thing_light.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-#include "library/dr_random.h"
-#include "model/project/project.h"
+#include "project/dr_project.h"
 
 
 // Local File Scope Globals

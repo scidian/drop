@@ -29,7 +29,7 @@
 //##                                 Drop Creator
 //##                        A Drag and Drop Video Game Maker
 //##
-//##                         (C) Scidian Software, 2018-20
+//##                        (C) Scidian Software, 2018-2020
 //##                              Stephens Nunnally
 //##
 //##                           Started December 7, 2018
@@ -107,12 +107,12 @@
 #include <QDateTime>
 #include <QSurfaceFormat>
 
+#include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_expire.h"
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
-#include "library/colors/colors.h"
 
 
 //####################################################################################
