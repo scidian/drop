@@ -48,7 +48,7 @@ uniform lowp  float u_bitrate;// = 256;             // Bitrate          Editor: 
 //####################################################################################
 vec4  permute(vec4 x) {          return mod(((x*34.0)+1.0)*x, 289.0); }
 vec4  taylorInvSqrt(vec4 r) {    return 1.79284291400159 - 0.85373472095314 * r; }
-float snoise(vec3 v) {
+float simplexNoise(vec3 v) {
     const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
     const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
 
@@ -181,8 +181,8 @@ void main( void ) {
         float amplitude = pow(power, i);
         float x_noise = ((coords.x * 1.5) / frequency) + u_pos.x;
         float y_noise = ((coords.y - z)   / frequency) + u_pos.y;
-        float z_noise = z * 4.0;
-        color_1 += snoise(vec3(x_noise, y_noise, z_noise)) / amplitude;
+        float z_noise = (z * 4.0);
+        color_1 += simplexNoise(vec3(x_noise, y_noise, z_noise)) / amplitude;
         frequency /= 2.0;
     }
     color_1 = (color_1 + 2.0) / (octaves - 1.0);
