@@ -232,6 +232,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
                                         static_cast<float>(texture->averageColor().greenF()),
                                         static_cast<float>(texture->averageColor().blueF()) );
     m_default_shader.setUniformValue( u_default_tint,               0.0f, 0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_zoom,               combinedZoomScale() );
     m_default_shader.setUniformValue( u_default_width,              texture_width );
     m_default_shader.setUniformValue( u_default_height,             texture_height );
     m_default_shader.setUniformValue( u_default_time,               static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );

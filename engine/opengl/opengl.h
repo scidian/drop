@@ -17,6 +17,7 @@
 #include <QMatrix4x4>
 #include <chrono>
 
+#include "3rd_party/chipmunk/chipmunk.h"
 #include "core/dr_string.h"
 #include "core/types/dr_point.h"
 #include "core/types/dr_pointf.h"
@@ -172,6 +173,9 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
 
+    void            drawDebugShape(QMatrix4x4 mvp, DrColor fill, DrColor border, float *position, float *uv, float *radius, int triangles);
+    void            drawDebugCircle(DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
+    void            drawDebugLine(cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
     void            drawDebugShapes2();
 
     bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
@@ -188,7 +192,6 @@ public:
     void            drawObjectSimple(DrEngineThing *thing);
     bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
-    void            drawShapeCircle(DrPointF position, float radius, float angle, float alpha, DrColor color);
     void            drawSpace();
     bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                                       double &top, double &bottom, double &left, double &right, float &angle);
@@ -333,13 +336,15 @@ private:
     int     u_simple_texture;
     int     u_simple_alpha;                                     // Opacity
 
-    // Circle Shader
-    QOpenGLShaderProgram m_circle_shader;
-    int     a_circle_vertex;
-    int     a_circle_texture_coord;
-    int     u_circle_matrix;
-    int     u_circle_color;
-    int     u_circle_alpha;                                     // Opacity
+
+    // Debug Shader
+    QOpenGLShaderProgram m_debug_shader;
+    int     a_debug_position;
+    int     a_debug_texture_coord;
+    int     a_debug_radius;
+    int     u_debug_matrix;
+    int     u_debug_color_fill;
+    int     u_debug_color_border;
 
 
     // Kernel Shader

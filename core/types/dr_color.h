@@ -20,6 +20,7 @@ namespace Dr {
         transparent =   0x00000000,
         white =         0xFFFFFFFF,
         black =         0xFF000000,
+        gray =          0xFF808080,
         red =           0xFFFF0000,
         green =         0xFF00FF00,
         blue =          0xFF0000FF,
