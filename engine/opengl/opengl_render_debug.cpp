@@ -47,10 +47,10 @@ DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
     DrColor color, font_color;
 
     switch (object->getCollisionType()) {
-        case Collision_Type::Damage_None:       color = DrColor(0, 255, 0);     break;          // Green
-        case Collision_Type::Damage_Player:     color = DrColor(255, 0, 0);     break;          // Red
-        case Collision_Type::Damage_Enemy:      color = DrColor(0, 0, 255);     break;          // Blue
-        case Collision_Type::Damage_All:        color = DrColor(128, 0, 128);   break;          // Purple
+        case Collision_Type::Damage_None:       color = DrColor(  0, 255,   0);     break;          // Green
+        case Collision_Type::Damage_Player:     color = DrColor(255,   0,   0);     break;          // Red
+        case Collision_Type::Damage_Enemy:      color = DrColor(  0,   0, 255);     break;          // Blue
+        case Collision_Type::Damage_All:        color = DrColor(128,   0, 128);     break;          // Purple
     }
     font_color = color;
 
@@ -58,7 +58,7 @@ DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
         ///font_color = color;
         color = Dr::yellow;
     } else {
-        ///font_color = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
+        ///font_color = DrColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
     }
 
     if (text_color) return font_color;
@@ -71,8 +71,9 @@ DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
 //####################################################################################
 void DrOpenGL::drawDebug(QPainter &painter) {
     painter.setRenderHint(QPainter::Antialiasing, true);
+
     if (m_form_engine->debug_shapes) {
-        drawDebugShapes(painter);
+//        drawDebugShapes(painter);
         drawDebugJoints(painter);
         ///drawDebugHealth(painter);
         drawDebugHealthNative(painter);

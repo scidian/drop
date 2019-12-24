@@ -14,5 +14,6 @@
         <file>shaders/frag_swirl.glsl</file>
         <file>shaders/simple_vert.glsl</file>
         <file>shaders/simple_frag.glsl</file>
+        <file>shaders/simple_frag_circle.glsl</file>
     </qresource>
 </RCC>

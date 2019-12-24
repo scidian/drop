@@ -365,6 +365,23 @@ void DrOpenGL::loadShaders() {
     u_simple_alpha =            m_simple_shader.uniformLocation(    "u_alpha" );
 
 
+    // ***** Initialize our Circle Shader
+    QOpenGLShader v_circle_shader( QOpenGLShader::Vertex );         v_circle_shader.compileSourceFile( ":/shaders/simple_vert.glsl" );
+    QOpenGLShader f_circle_shader( QOpenGLShader::Fragment );       f_circle_shader.compileSourceFile( ":/shaders/simple_frag_circle.glsl" );
+    m_circle_shader.addShader( &v_circle_shader );
+    m_circle_shader.addShader( &f_circle_shader );
+    m_circle_shader.link();
+
+    // Vertex Shader Input
+    a_circle_vertex =           m_circle_shader.attributeLocation(  "vertex" );
+    a_circle_texture_coord =    m_circle_shader.attributeLocation(  "texture_coordinates" );
+    u_circle_matrix =           m_circle_shader.uniformLocation(    "u_matrix" );
+
+    // Fragment Shader Input
+    u_circle_color =            m_circle_shader.uniformLocation(    "u_color" );
+    u_circle_alpha =            m_circle_shader.uniformLocation(    "u_alpha" );
+
+
     // ***** Initialize our Kernel Shader
     QOpenGLShader v_kernel_shader( QOpenGLShader::Vertex );         v_kernel_shader.compileSourceFile( ":/shaders/simple_vert.glsl" );
     QOpenGLShader f_kernel_shader( QOpenGLShader::Fragment );       f_kernel_shader.compileSourceFile( ":/shaders/frag_kernel.glsl" );

@@ -10,7 +10,6 @@
 #include "core/dr_math.h"
 #include "core/types/dr_pointf.h"
 
-
 namespace Dr {
 
 

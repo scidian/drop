@@ -171,6 +171,9 @@ public:
     void            drawDebugHealthNative(QPainter &painter);
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
+
+    void            drawDebugShapes2();
+
     bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
@@ -185,6 +188,7 @@ public:
     void            drawObjectSimple(DrEngineThing *thing);
     bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
+    void            drawShapeCircle(DrPointF position, float radius, float angle, float alpha, DrColor color);
     void            drawSpace();
     bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                                       double &top, double &bottom, double &left, double &right, float &angle);
@@ -328,6 +332,14 @@ private:
     int     u_simple_matrix;
     int     u_simple_texture;
     int     u_simple_alpha;                                     // Opacity
+
+    // Circle Shader
+    QOpenGLShaderProgram m_circle_shader;
+    int     a_circle_vertex;
+    int     a_circle_texture_coord;
+    int     u_circle_matrix;
+    int     u_circle_color;
+    int     u_circle_alpha;                                     // Opacity
 
 
     // Kernel Shader

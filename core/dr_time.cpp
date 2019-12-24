@@ -7,7 +7,6 @@
 //
 #include "core/dr_time.h"
 
-
 namespace Dr {
 
 
