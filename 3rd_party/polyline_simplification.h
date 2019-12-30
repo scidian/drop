@@ -31,7 +31,6 @@ public:
     PolylineSimplification();
 
     static std::vector<DrPointF> RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon);
-
 };
 
 

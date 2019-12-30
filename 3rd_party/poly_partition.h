@@ -265,7 +265,7 @@ class TPPLPartition {
         bool InCone(TPPLPoint &p1, TPPLPoint &p2, TPPLPoint &p3, TPPLPoint &p);
         bool InCone(PartitionVertex *v, TPPLPoint &p);
         
-        int Intersects(TPPLPoint &p11, TPPLPoint &p12, TPPLPoint &p21, TPPLPoint &p22);
+        int  Intersects(TPPLPoint &p11, TPPLPoint &p12, TPPLPoint &p21, TPPLPoint &p22);
         
         TPPLPoint Normalize(const TPPLPoint &p);
         tppl_float Distance(const TPPLPoint &p1, const TPPLPoint &p2);

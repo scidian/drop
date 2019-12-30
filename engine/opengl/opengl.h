@@ -176,6 +176,7 @@ public:
     void            drawDebugShape(QMatrix4x4 mvp, DrColor fill, DrColor border, float *position, float *uv, float *radius, int triangles);
     void            drawDebugCircle(DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
     void            drawDebugLine(cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
+    void            drawDebugPolygon(DrPointF pos, const std::vector<cpVect> &verts, float radius, float angle, DrColor fill, DrColor border);
     void            drawDebugShapes2();
 
     bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
