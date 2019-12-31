@@ -54,7 +54,7 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
                angle1 =     Dr::EqualizeAngle0to360(angle1);
 
         // Angle of Object
-        DrPointF up =       Dr::RotatePointAroundOrigin(DrPointF(my_pos.x, my_pos.y - 1.0), DrPointF(my_pos.x, my_pos.y), my_angle, true);
+        DrPointF up =       Dr::RotatePointAroundOrigin(DrPointF(my_pos.x, my_pos.y + 1.0), DrPointF(my_pos.x, my_pos.y), my_angle, true);
         double angle2 =     Dr::CalcRotationAngleInDegrees(DrPointF(my_pos.x, my_pos.y), up);
                angle2 =     Dr::EqualizeAngle0to360(angle2);
 

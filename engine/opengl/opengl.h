@@ -176,10 +176,10 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
 
+    void            addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
+    void            addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
+    void            addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border);
     void            drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes);
-    void            drawDebugCircle(DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
-    void            drawDebugLine(cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
-    void            drawDebugPolygon(const DrPointF &position, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, float angle, DrColor fill, DrColor border);
     void            drawDebugShapes2();
 
     bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);

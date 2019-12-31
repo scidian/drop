@@ -60,6 +60,8 @@ struct DebugVertex {
 //####################################################################################
 void DrOpenGL::drawDebugShapes2() {
 
+    // ***** Go through Things and add triangles for Shapes
+    DebugVertex vertexes;
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
@@ -74,21 +76,18 @@ void DrOpenGL::drawDebugShapes2() {
         // Load Object Position
         DrPointF center = object->getPosition();
 
-        // Used to store combined polygon of a multi-shape body
-        QPolygonF object_poly;
-
         for (auto shape : object->shapes) {
 
             if (object->shape_type[shape] == Shape_Type::Circle) {
                 cpVect offset = cpCircleShapeGetOffset(shape);
                 float  radius = static_cast<float>(cpCircleShapeGetRadius(shape));
-                drawDebugCircle( DrPointF(center.x + offset.x, center.y + offset.y), radius, static_cast<float>(object->getAngle()), fill_color, fill_color );
+                addDebugCircle( vertexes, DrPointF(center.x + offset.x, center.y + offset.y), radius, static_cast<float>(object->getAngle()), fill_color, fill_color );
 
             } else if (object->shape_type[shape] == Shape_Type::Segment) {
                 cpVect a = cpSegmentShapeGetA( shape );
                 cpVect b = cpSegmentShapeGetB( shape );
                 float  radius = static_cast<float>(cpSegmentShapeGetRadius( shape ));
-                drawDebugLine( a, b, radius, fill_color, border_color );
+                addDebugLine( vertexes, a, b, radius, fill_color, border_color );
 
             } else if (object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box) {
                 float radius = static_cast<float>(cpPolyShapeGetRadius(shape));
@@ -100,20 +99,24 @@ void DrOpenGL::drawDebugShapes2() {
                     cpVect vert = cpPolyShapeGetVert(shape, i) + cpv(center.x, center.y);
                     centroid.x += vert.x;
                     centroid.y += vert.y;
-                    vertices.push_back(vert);
+                    DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);
+                    vertices.push_back(cpv(mapped.x, mapped.y));
                 }
                 centroid.x /= point_count;
                 centroid.y /= point_count;
+                centroid = Dr::RotatePointAroundOrigin(DrPointF(centroid.x, centroid.y), center, object->getAngle(), false);
 
-                drawDebugPolygon( DrPointF(center.x, center.y), vertices, centroid, radius, static_cast<float>(object->getAngle()), fill_color, border_color );
+                addDebugPolygon( vertexes, vertices, centroid, radius, fill_color, border_color );
 
             }   // End If
 
         }   // End For shape
 
-
-
     }   // End For object
+
+
+    // ***** Draw Debug Triangles
+    drawDebugTriangles(m_projection * m_view, vertexes );
 }
 
 
@@ -157,92 +160,78 @@ void DrOpenGL::drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes) {
 
 
 //####################################################################################
-//##    Draws a Circle Shape
+//##    Adds a Circle Shape to "vertexes"
 //####################################################################################
-void DrOpenGL::drawDebugCircle(DrPointF pos, float radius, float angle, DrColor fill, DrColor border) {
-
+void DrOpenGL::addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border) {
     // Object location
     float x =   static_cast<float>(pos.x);
     float y =   static_cast<float>(pos.y);
 
-    DebugVertex shape;
     // Triangle 1
-    shape.addVertex(x, y, -1, -1, radius, fill, border);
-    shape.addVertex(x, y, -1,  1, radius, fill, border);
-    shape.addVertex(x, y,  1, -1, radius, fill, border);
+    vertexes.addVertex(x, y, -1, -1, radius, fill, border);
+    vertexes.addVertex(x, y, -1,  1, radius, fill, border);
+    vertexes.addVertex(x, y,  1, -1, radius, fill, border);
     // Triangle 2
-    shape.addVertex(x, y, -1,  1, radius, fill, border);
-    shape.addVertex(x, y,  1, -1, radius, fill, border);
-    shape.addVertex(x, y,  1,  1, radius, fill, border);
-
-    // Draw Circle
-    drawDebugTriangles(m_projection * m_view, shape );
+    vertexes.addVertex(x, y, -1,  1, radius, fill, border);
+    vertexes.addVertex(x, y,  1, -1, radius, fill, border);
+    vertexes.addVertex(x, y,  1,  1, radius, fill, border);
 
     // Draw Orientation Line
-    drawDebugLine(cpv(pos.x, pos.y), cpvadd(cpv(pos.x, pos.y), cpvmult(cpvforangle(static_cast<cpFloat>(Dr::DegreesToRadians(angle+90.f))), 0.95*static_cast<double>(radius))),
-                  1.5f/combinedZoomScale(), border, border);
+    addDebugLine(vertexes, cpv(pos.x, pos.y),
+                 cpvadd(cpv(pos.x, pos.y), cpvmult(cpvforangle(static_cast<cpFloat>(Dr::DegreesToRadians(angle+90.f))), 0.95*static_cast<double>(radius))),
+                 1.5f/combinedZoomScale(), border, border);
 }
 
 
 //####################################################################################
 //##    Draws a Segment (Line) Shape
 //####################################################################################
-void DrOpenGL::drawDebugLine(cpVect a, cpVect b, float radius, DrColor fill, DrColor border) {
-
+void DrOpenGL::addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float radius, DrColor fill, DrColor border) {
     cpVect t = cpvnormalize(cpvsub(b, a));
 
-    DebugVertex shape;
-    shape.addVertex(a.x, a.y, static_cast<float>(-t.x + t.y), static_cast<float>(-t.x - t.y), radius, fill, border);
-    shape.addVertex(a.x, a.y, static_cast<float>(-t.x - t.y), static_cast<float>(+t.x - t.y), radius, fill, border);
-    shape.addVertex(a.x, a.y, static_cast<float>(-0.0 + t.y), static_cast<float>(-t.x + 0.0), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-t.x + t.y), static_cast<float>(-t.x - t.y), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-t.x - t.y), static_cast<float>(+t.x - t.y), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-0.0 + t.y), static_cast<float>(-t.x + 0.0), radius, fill, border);
 
-    shape.addVertex(a.x, a.y, static_cast<float>(-t.x - t.y), static_cast<float>(+t.x - t.y), radius, fill, border);
-    shape.addVertex(a.x, a.y, static_cast<float>(-0.0 + t.y), static_cast<float>(-t.x + 0.0), radius, fill, border);
-    shape.addVertex(a.x, a.y, static_cast<float>(-0.0 - t.y), static_cast<float>(+t.x + 0.0), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-t.x - t.y), static_cast<float>(+t.x - t.y), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-0.0 + t.y), static_cast<float>(-t.x + 0.0), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-0.0 - t.y), static_cast<float>(+t.x + 0.0), radius, fill, border);
 
-    shape.addVertex(a.x, a.y, static_cast<float>(-0.0 + t.y), static_cast<float>(-t.x + 0.0), radius, fill, border);
-    shape.addVertex(a.x, a.y, static_cast<float>(-0.0 - t.y), static_cast<float>(+t.x + 0.0), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+0.0 + t.y), static_cast<float>(-t.x - 0.0), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-0.0 + t.y), static_cast<float>(-t.x + 0.0), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-0.0 - t.y), static_cast<float>(+t.x + 0.0), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+0.0 + t.y), static_cast<float>(-t.x - 0.0), radius, fill, border);
 
-    shape.addVertex(a.x, a.y, static_cast<float>(-0.0 - t.y), static_cast<float>(+t.x + 0.0), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+0.0 + t.y), static_cast<float>(-t.x - 0.0), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+0.0 - t.y), static_cast<float>(+t.x - 0.0), radius, fill, border);
+    vertexes.addVertex(a.x, a.y, static_cast<float>(-0.0 - t.y), static_cast<float>(+t.x + 0.0), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+0.0 + t.y), static_cast<float>(-t.x - 0.0), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+0.0 - t.y), static_cast<float>(+t.x - 0.0), radius, fill, border);
 
-    shape.addVertex(b.x, b.y, static_cast<float>(+0.0 + t.y), static_cast<float>(-t.x - 0.0), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+0.0 - t.y), static_cast<float>(+t.x - 0.0), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+t.x + t.y), static_cast<float>(-t.x + t.y), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+0.0 + t.y), static_cast<float>(-t.x - 0.0), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+0.0 - t.y), static_cast<float>(+t.x - 0.0), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+t.x + t.y), static_cast<float>(-t.x + t.y), radius, fill, border);
 
-    shape.addVertex(b.x, b.y, static_cast<float>(+0.0 - t.y), static_cast<float>(+t.x - 0.0), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+t.x + t.y), static_cast<float>(-t.x + t.y), radius, fill, border);
-    shape.addVertex(b.x, b.y, static_cast<float>(+t.x - t.y), static_cast<float>(+t.x + t.y), radius, fill, border);
-
-    drawDebugTriangles(m_projection * m_view, shape );
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+0.0 - t.y), static_cast<float>(+t.x - 0.0), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+t.x + t.y), static_cast<float>(-t.x + t.y), radius, fill, border);
+    vertexes.addVertex(b.x, b.y, static_cast<float>(+t.x - t.y), static_cast<float>(+t.x + t.y), radius, fill, border);
 }
 
 
 //####################################################################################
 //##    Draws a Polygon Shape
 //####################################################################################
-void DrOpenGL::drawDebugPolygon(const DrPointF &position, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, float angle, DrColor fill, DrColor border) {
+void DrOpenGL::addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border) {
     int count = static_cast<int>(static_cast<int>(verts.size()));
 
-    DebugVertex shape;
     for (int i = 0; i < count - 1; i++) {
-        shape.addVertex(verts[i].x,     verts[i].y,         0.f, 0.f, radius, fill, border);
-        shape.addVertex(verts[i+1].x,   verts[i+1].y,       0.f, 0.f, radius, fill, border);
-        shape.addVertex(centroid.x,     centroid.y,         0.f, 0.f, 0,      fill, border);
+        vertexes.addVertex(verts[i].x,     verts[i].y,         0.f, 0.f, radius, fill, border);
+        vertexes.addVertex(verts[i+1].x,   verts[i+1].y,       0.f, 0.f, radius, fill, border);
+        vertexes.addVertex(centroid.x,     centroid.y,         0.f, 0.f, 0,      fill, border);
+        addDebugLine(vertexes, verts[i], verts[i+1], 1.5f/combinedZoomScale(), border, border);
     }
 
-    shape.addVertex(verts[count-1].x,   verts[count-1].y,   0.f, 0.f, radius, fill, border);
-    shape.addVertex(verts[0].x,         verts[0].y,         0.f, 0.f, radius, fill, border);
-    shape.addVertex(centroid.x,         centroid.y,         0.f, 0.f, 0,      fill, border);
-
-    // Set Rotation of Shape
-    float x =   static_cast<float>(position.x);
-    float y =   static_cast<float>(position.y);
-    QMatrix4x4 model; model.translate( x,  y, 0); model.rotate(angle, 0.f, 0.f, 1.f); model.translate( -x, -y, 0);
-
-    drawDebugTriangles(m_projection * m_view * model, shape);
+    vertexes.addVertex(verts[count-1].x,   verts[count-1].y,   0.f, 0.f, radius, fill, border);
+    vertexes.addVertex(verts[0].x,         verts[0].y,         0.f, 0.f, radius, fill, border);
+    vertexes.addVertex(centroid.x,         centroid.y,         0.f, 0.f, 0,      fill, border);
+    addDebugLine(vertexes, verts[count-1], verts[0], 1.5f/combinedZoomScale(), border, border);
 }
 
 

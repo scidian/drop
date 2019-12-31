@@ -110,15 +110,23 @@ bool IsRectangle(DrPointF p1, DrPointF p2, DrPointF p3, DrPointF p4) {
 }
 
 DrPointF RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, bool angle_is_in_radians) {
-    double x_origin = origin.x;
-    double y_origin = origin.y;
-    double x = point.x;
-    double y = point.y;
     if (angle_is_in_radians == false) angle = DegreesToRadians(angle);
 
-    double x_rotated = ((x - x_origin) * cos(angle)) - ((y_origin - y) * sin(angle)) + x_origin;
-    double y_rotated = ((y_origin - y) * cos(angle)) - ((x - x_origin) * sin(angle)) + y_origin;
-    return DrPointF(x_rotated, y_rotated);
+    double s = sin(angle);
+    double c = cos(angle);
+
+    // Translate point to origin
+    point.x -= origin.x;
+    point.y -= origin.y;
+
+    // Rotate point
+    double x = point.x * c - point.y * s;
+    double y = point.x * s + point.y * c;
+
+    // Translate point back
+    point.x = x + origin.x;
+    point.y = y + origin.y;
+    return point;
 }
 
 
