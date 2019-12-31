@@ -377,12 +377,10 @@ void DrOpenGL::loadShaders() {
     a_debug_position =          m_debug_shader.attributeLocation(  "a_pos" );
     a_debug_texture_coord =     m_debug_shader.attributeLocation(  "a_uv" );
     a_debug_radius =            m_debug_shader.attributeLocation(  "a_radius" );
+    a_debug_color_fill =        m_debug_shader.attributeLocation(  "a_color_fill" );
+    a_debug_color_border =      m_debug_shader.attributeLocation(  "a_color_border" );
+
     u_debug_matrix =            m_debug_shader.uniformLocation(    "u_matrix" );
-
-    // Fragment Shader Input
-    u_debug_color_fill =        m_debug_shader.uniformLocation(    "u_fill" );
-    u_debug_color_border =      m_debug_shader.uniformLocation(    "u_outline" );
-
 
 
     // ***** Initialize our Kernel Shader

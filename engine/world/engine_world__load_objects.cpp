@@ -132,7 +132,7 @@ void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *ob
     double  touch_damage_pts =  asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toVector()[1].toDouble();
 
     if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
-        object->setCanRotate( true );
+        ///object->setCanRotate( true );
         object->setRotateSpeedZ(rotate_speed);
     }
     object->setTouchDrag(         touch_drag);

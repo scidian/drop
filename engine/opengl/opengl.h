@@ -25,7 +25,7 @@
 #include "engine/enums_engine.h"
 #include "project/enums_entity_types.h"
 
-// Forward Declarations
+// Forward Class Declarations
 class DrColor;
 class DrEngine;
 class DrEngineFire;
@@ -38,6 +38,9 @@ class DrEngineThing;
 class DrEngineVertexData;
 class DrEngineWater;
 class FormEngine;
+
+// Forward Struct Declarations
+struct DebugVertex;
 
 // Type Definitions
 typedef std::chrono::high_resolution_clock Clock;
@@ -173,10 +176,10 @@ public:
     void            drawDebugJoints(QPainter &painter);
     void            drawDebugShapes(QPainter &painter);
 
-    void            drawDebugShape(QMatrix4x4 mvp, DrColor fill, DrColor border, float *position, float *uv, float *radius, int triangles);
+    void            drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes);
     void            drawDebugCircle(DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
     void            drawDebugLine(cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
-    void            drawDebugPolygon(DrPointF pos, const std::vector<cpVect> &verts, float radius, float angle, DrColor fill, DrColor border);
+    void            drawDebugPolygon(const DrPointF &position, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, float angle, DrColor fill, DrColor border);
     void            drawDebugShapes2();
 
     bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
@@ -343,9 +346,9 @@ private:
     int     a_debug_position;
     int     a_debug_texture_coord;
     int     a_debug_radius;
+    int     a_debug_color_fill;
+    int     a_debug_color_border;
     int     u_debug_matrix;
-    int     u_debug_color_fill;
-    int     u_debug_color_border;
 
 
     // Kernel Shader
