@@ -118,8 +118,8 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
                     }
                 }
             }
-        } // end for i
-    } // end for component
+        }   // End For i
+    }   // End For component
 
     if (changed && !called_from_build) forceUpdateOfItemSizes();
 }

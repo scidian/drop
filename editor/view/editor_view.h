@@ -199,6 +199,7 @@ public:
 
     // Event Overrides - Misc
     virtual void    focusInEvent(QFocusEvent *event) override;
+    virtual void    leaveEvent(QEvent *event) override;
 
 
     // View Display Functions

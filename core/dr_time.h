@@ -27,7 +27,7 @@ namespace Dr {
     void        ResetTimer(DrTime &timer);
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // DR_TIME_H
 

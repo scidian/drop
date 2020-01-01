@@ -66,7 +66,7 @@ void DrThing::addComponentLayering(double z, double opacity, bool show_component
                                                          "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, show_component);
     getComponent(Components::Thing_Layering)->setIcon(Component_Icons::Layering);
 
-    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0,
+    addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0.0,
                            "Z-Order", "Arrangement of item along the z axis in the Stage. Should be between the near and far clipping planes (" +
                                       std::to_string(double(c_near_plane)) + " and " + std::to_string(double(c_far_plane)) + ") to be visible.");
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,

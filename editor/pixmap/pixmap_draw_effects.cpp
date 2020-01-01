@@ -366,7 +366,7 @@ QPixmap DrawWater(QColor top_color, QColor bottom_color) {
 
 
 
-}   // End Dr Namespace
+}   // End namespace Dr
 
 
 

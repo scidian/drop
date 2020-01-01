@@ -45,7 +45,7 @@ bool RandomBool() {
 }
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 
 

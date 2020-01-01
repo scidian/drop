@@ -154,9 +154,9 @@ void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
 
         for (auto poly : result) {
             std::vector<cpVect> verts { };
-            verts.resize( static_cast<ulong>( poly.GetNumPoints()) );
+            verts.resize(static_cast<size_t>(poly.GetNumPoints()));
             for (int i = 0; i < poly.GetNumPoints(); i++) {
-                verts[static_cast<ulong>(i)] = cpv( poly[i].x, poly[i].y );
+                verts[static_cast<size_t>(i)] = cpv(poly[i].x, poly[i].y);
             }
 
             cpShape *shape = cpPolyShapeNew( this->body, static_cast<int>(poly.GetNumPoints()), verts.data(), cpTransformIdentity, c_extra_radius );

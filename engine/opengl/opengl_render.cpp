@@ -46,7 +46,6 @@ void DrOpenGL::paintGL() {
     // ***** Render Onto Frame Buffer Object
     bindOffscreenBuffer();                                                          // Create / Bind Offscreen Frame Buffer Object
     drawSpace();                                                                    // Render cpSpace Objects
-    drawDebugShapes2();
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
 
     // #NO_QT: As original QOpenGlWidget calls

@@ -10,6 +10,7 @@
 #include <QTimer>
 
 #include "core/colors/colors.h"
+#include "core/dr_string.h"
 #include "editor/debug.h"
 #include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
@@ -44,6 +45,15 @@ namespace Mouse_Cursors {
 //####################################################################################
 //##    Mouse Moved
 //####################################################################################
+void DrView::leaveEvent(QEvent *event) {
+    (void)event;
+    m_editor_relay->setMousePosition(" ----- ", " ----- ");
+}
+
+
+//####################################################################################
+//##    Mouse Moved
+//####################################################################################
 void DrView::mouseMoveEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
@@ -72,8 +82,9 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     }
 
     // Updates our tool tip position
-    if (m_tool_tip->isHidden() == false)
+    if (m_tool_tip->isHidden() == false) {
         m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
+    }
 
     // ******************** Grab item under mouse
     QGraphicsItem *check_item = nullptr;/// = itemAt(m_last_mouse_pos);
@@ -192,6 +203,10 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
                                                      ", Fonts: " + QString::number(m_project->getFontMap().size()));
     }
     // !!!!! END
+
+    // ***** Update mouse position on status bar
+    m_editor_relay->setMousePosition(Dr::RoundToDecimalPlace( mapToScene(m_last_mouse_pos).x(), 1),
+                                     Dr::RoundToDecimalPlace(-mapToScene(m_last_mouse_pos).y(), 1));
 
     // !!!!! #DEBUG:    Showing Item Data
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data) && check_item != nullptr) {

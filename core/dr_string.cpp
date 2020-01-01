@@ -33,8 +33,24 @@ bool IsInteger(const std::string &source) {
         source.end(), [](char c) { return !std::isdigit(c); }) == source.end();
 }
 
+// Returns number as string with decimal_places precision
+std::string RoundToDecimalPlace(const double number, const int decimal_places) {
+    std::stringstream ss;
+    ss << std::fixed;
+    ss.precision(decimal_places);
+    ss << number;
+    return ss.str();
+}
 
-}   // end namespace Dr
+// Returns interger as hex string
+std::string ToHex(const int integer) {
+    std::stringstream ss;
+    ss << std::hex << static_cast<int>(integer);
+    return ss.str();
+}
+
+
+}   // End namespace Dr
 
 
 

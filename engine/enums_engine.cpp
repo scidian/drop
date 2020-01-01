@@ -34,4 +34,4 @@ std::string StringFromShapeType(Shape_Type type) {
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr

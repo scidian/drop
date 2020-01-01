@@ -109,7 +109,7 @@ private:
     QFrame         *statusBar;
 
     //       "Editor" Status Bar Widgets
-    QLabel         *labelSelected;
+    QLabel         *labelSelected,  *labelMousePosition;
 
 
     // ***** Labels to display info
@@ -161,6 +161,7 @@ public:
 public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
+    virtual void        setMousePosition(std::string x, std::string y) override;
 
 
 private:

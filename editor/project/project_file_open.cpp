@@ -308,7 +308,7 @@ bool OpenProjectFromFile(DrProject *project, std::string open_file) {
     return true;
 }
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 
 

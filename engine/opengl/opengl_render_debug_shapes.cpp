@@ -109,7 +109,6 @@ void DrOpenGL::drawDebugShapes2() {
                 addDebugPolygon( vertexes, vertices, centroid, radius, fill_color, border_color );
 
             }   // End If
-
         }   // End For shape
 
     }   // End For object
@@ -178,7 +177,7 @@ void DrOpenGL::addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius,
 
     // Draw Orientation Line
     addDebugLine(vertexes, cpv(pos.x, pos.y),
-                 cpvadd(cpv(pos.x, pos.y), cpvmult(cpvforangle(static_cast<cpFloat>(Dr::DegreesToRadians(angle+90.f))), 0.95*static_cast<double>(radius))),
+                 cpvadd(cpv(pos.x, pos.y), cpvmult(cpvforangle(static_cast<cpFloat>(Dr::DegreesToRadians(angle+90.f))), 0.98*static_cast<double>(radius))),
                  1.5f/combinedZoomScale(), border, border);
 }
 

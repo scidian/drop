@@ -434,9 +434,9 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
             triangle( ix1, iy1, tx1, ty1,
                       ix2, iy2, tx2, ty2,
                       ix3, iy3, tx3, ty3);
-        }   // end for int i
+        }   // End For int i
 
-    }   // end if
+    }   // End If
 
 }
 

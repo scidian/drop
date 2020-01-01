@@ -166,7 +166,7 @@ QImage CheckOpacityTolerance(const QImage &from_image) {
 
 
 
-}   // End Dr Namespace
+}   // End namespace Dr
 
 
 

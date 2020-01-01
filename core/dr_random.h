@@ -26,7 +26,7 @@ namespace Dr {
     bool    RandomBool();
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // DR_RANDOM_H
 

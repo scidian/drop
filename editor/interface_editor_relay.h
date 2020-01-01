@@ -67,6 +67,7 @@ public:
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
+    virtual void        setMousePosition(std::string x, std::string y) = 0;
 
     // Getter / Setters
     Editor_Widgets      getActiveWidget() { return m_active_widget; }

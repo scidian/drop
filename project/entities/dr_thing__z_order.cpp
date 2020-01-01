@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "core/dr_math.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -31,7 +32,9 @@ void ShiftOrder(std::list<OrderInfo> &order_info, int needs_to_be_empty) {
 
 double DrThing::getZOrderWithSub() {
     double z_order = getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
+    ///Dr::PrintDebug("Z Order: " + std::to_string(z_order));
     int  sub_order = getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
+    ///Dr::PrintDebug("Sub Order: " + std::to_string(sub_order));
     return (z_order + (static_cast<double>(sub_order) / 100000.0));
 }
 

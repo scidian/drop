@@ -6,10 +6,10 @@
 //
 //
 #include <iomanip>
-#include <sstream>
 
 #include "core/dr_debug.h"
 #include "core/dr_math.h"
+#include "core/dr_string.h"
 #include "core/types/dr_color.h"
 
 
@@ -72,9 +72,9 @@ unsigned int DrColor::rgba() {
     return color;
 }
 std::string DrColor::name() {
-    std::stringstream r_stream;     r_stream << std::hex << static_cast<int>(r);    std::string hex_r = r_stream.str();
-    std::stringstream g_stream;     g_stream << std::hex << static_cast<int>(g);    std::string hex_g = g_stream.str();
-    std::stringstream b_stream;     b_stream << std::hex << static_cast<int>(b);    std::string hex_b = b_stream.str();
+    std::string hex_r = Dr::ToHex(static_cast<int>(r));
+    std::string hex_g = Dr::ToHex(static_cast<int>(g));
+    std::string hex_b = Dr::ToHex(static_cast<int>(b));
 
     if (hex_r.length() == 1) hex_r = std::string("0") + hex_r;
     if (hex_g.length() == 1) hex_g = std::string("0") + hex_g;

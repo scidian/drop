@@ -131,7 +131,7 @@ DrPointF RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, 
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 
 

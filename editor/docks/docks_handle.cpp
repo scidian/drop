@@ -36,4 +36,4 @@ void UnlockDockWidth(QMainWindow *window, QDockWidget *&dock) {
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr

@@ -183,7 +183,9 @@ void FormMain::setAdvisorInfo(QString header, QString body) {
         treeAdvisor->getAdvisorBody() == body) return;                      // If Advisor header and body is already set to proper info, cancel
     treeAdvisor->changeAdvisor(header, body);
 }
-
+void FormMain::setMousePosition(std::string x, std::string y) {
+    labelMousePosition->setText(" X: " + QString::fromStdString(x) + ", Y: " + QString::fromStdString(y) + " ");
+}
 
 
 

@@ -24,7 +24,7 @@ void PrintDebug(const std::string message) {
 }
 
 
-} // end namespace Dr
+}   // End namespace Dr
 
 
 

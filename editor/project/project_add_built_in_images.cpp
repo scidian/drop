@@ -292,9 +292,9 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/decoration/sign_warning.png",         c_key_image_sign_warning,           Asset_Category::Decoration);
     AddImage(project, ":/assets/dr_images/decoration/sun.png",                  c_key_image_sun,                    Asset_Category::Decoration);
 
-}   // end AddBuiltInImages()
+}   // End AddBuiltInImages()
 
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr

@@ -72,7 +72,7 @@ QPixmap DrawCamera() {
 
 
 
-}   // End Dr Namespace
+}   // End namespace Dr
 
 
 

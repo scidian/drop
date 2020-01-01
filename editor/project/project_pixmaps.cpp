@@ -82,7 +82,7 @@ QPixmap CreateText(DrFont *font, std::string text) {
 }
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 
 

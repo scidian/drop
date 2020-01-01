@@ -23,7 +23,7 @@ namespace Dr {
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // DR_DEBUG_H
 

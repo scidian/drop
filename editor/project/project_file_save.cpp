@@ -224,16 +224,16 @@ void SaveProjectToFile(DrProject *project) {
                 settings.setArrayIndex(thing_count++);
                 settings.setValue("thing", thing_data);
                 settings.endArray();
-            } // end thing
-        } // end stage
-    } // end world
+            }   // End thing
+        }   // End stage
+    }   // End world
 
     // ***** Important! Let Drop know we don't need to save at this point, meaning its safe to close...
     //                  At least until some changes to the Project are made.
     project->setHasSaved(true);
 }
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 
 

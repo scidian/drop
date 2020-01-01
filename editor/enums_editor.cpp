@@ -44,7 +44,7 @@ QString StringFromPositionFlag(Position_Flags flag) {
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 
 

@@ -139,6 +139,7 @@ void FormMain::buildCentralWidgetEditor() {
                     widgetStageView->setSizePolicy(sizePolicyView);
                     widgetStageView->setMinimumSize(QSize(100, 0));
                     widgetStageView->setFont(font);
+
                         QVBoxLayout *verticalLayoutView = new QVBoxLayout(widgetStageView);
                         verticalLayoutView->setObjectName(QStringLiteral("verticalLayoutView"));
                         verticalLayoutView->setSpacing(0);
@@ -175,7 +176,6 @@ void FormMain::buildCentralWidgetEditor() {
                         }
 
 
-
                         // ***** View area status bar
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
@@ -192,11 +192,16 @@ void FormMain::buildCentralWidgetEditor() {
                             status_layout->addWidget(labelSelected);
                             status_layout->addWidget(createToolbarSpacer(18));
                             status_layout->addStretch();
+                            labelMousePosition = new QLabel(" X: -----, Y: ----- ");
+                            labelMousePosition->setObjectName(QStringLiteral("labelMousePosition"));
+                            labelMousePosition->setAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);
+                            labelMousePosition->setFont(font);
+                            status_layout->addWidget(labelMousePosition);
 
 
-
-                    verticalLayoutView->addWidget(statusBar);
                     verticalLayoutView->addWidget(viewEditor);
+                    verticalLayoutView->addWidget(statusBar);
+
 
                 splitterHorizontal->addWidget(widgetStageView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150

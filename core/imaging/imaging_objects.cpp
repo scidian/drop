@@ -413,7 +413,7 @@ std::vector<DrPointF> OutlinePointList(const DrBitmap &bitmap) {
 
 
 
-}   // End Namespace Imaging
+}   // End namespace Dr
 
 
 

@@ -114,10 +114,11 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         key_pressed == Qt::Key_Less ||
         key_pressed == Qt::Key_Greater) {
 
-        // Get current Stage selected items as list of Things
+        // Get current Stage selected items as list of Things, convert toStdList()
         DrStage *stage = m_current_stage;
         if (stage == nullptr) return;
-        std::list<DrThing*> selected_things = { getSelectionItemsAsThings().begin(), getSelectionItemsAsThings().end() };       // Convert toStdList()
+        QList<DrThing*> q_selected_things = getSelectionItemsAsThings();
+        std::list<DrThing*> selected_things { q_selected_things.begin(), q_selected_things.end() };
 
         // ***** Send to Front
         if (key_pressed == Qt::Key_Greater) {

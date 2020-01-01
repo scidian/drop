@@ -81,7 +81,7 @@ namespace Dr {
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // HELPER_EDITOR_H
 

@@ -94,7 +94,7 @@ DrPointF     RotatePointAroundOrigin(DrPointF point, DrPointF origin, double ang
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // DR_MATH_H
 

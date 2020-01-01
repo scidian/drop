@@ -55,7 +55,7 @@ template<class T> bool VectorContains(const std::vector<T> &my_vector, T variabl
 
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // DR_CONTAINERS_H
 

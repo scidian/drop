@@ -41,7 +41,7 @@ namespace Dr {
     void        SaveProjectToFile(DrProject *project);
 
 
-}   // end namespace Dr
+}   // End namespace Dr
 
 #endif // PROJECT_EDIT_H
 

@@ -57,7 +57,7 @@ void DrOpenGL::drawDebugHealth(QPainter &painter) {
 //##    Draws the health of each object using Native GL
 //####################################################################################
 void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
-    painter.beginNativePainting();
+    ///painter.beginNativePainting();
 
     const float font_size = 12.0f;
     const float spacing = 0.75f;
@@ -146,7 +146,7 @@ void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
     }
 
     m_default_shader.release();
-    painter.endNativePainting();
+    ///painter.endNativePainting();
 }
 
 

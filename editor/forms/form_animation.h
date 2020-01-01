@@ -97,7 +97,7 @@ public:
 public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
-
+    virtual void        setMousePosition(std::string x, std::string y) override;
 
 private:
     // Form Building / Setup

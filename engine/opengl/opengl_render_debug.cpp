@@ -74,6 +74,7 @@ void DrOpenGL::drawDebug(QPainter &painter) {
 
     if (m_form_engine->debug_shapes) {
 //        drawDebugShapes(painter);
+        drawDebugShapes2();
         drawDebugJoints(painter);
         ///drawDebugHealth(painter);
         drawDebugHealthNative(painter);

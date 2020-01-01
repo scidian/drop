@@ -240,7 +240,7 @@ QString CustomStyleSheetFormatting() {
         //##    StatusBar
         //################################################################################
         " QFrame#statusBar { "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       border-top:    1 solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; "
         "       border-bottom: 1 solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
 
