@@ -56,6 +56,12 @@ void DrOpenGL::initializeGL() {
     loadBuiltInModels();
     loadShaders();
 
+    // Build Debug Font Stash
+    fs = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT);
+    if (fs == nullptr) Dr::PrintDebug("Could not create font stash");
+    font_normal = fonsAddFont(fs, "sans", "Aileron-Regular.ttf");
+    ///font_normal = fonsAddFont(fs, "sans", "DroidSerif-Regular.ttf");
+    if (font_normal == FONS_INVALID) Dr::PrintDebug("Could not add font normal.\n");
 }
 
 

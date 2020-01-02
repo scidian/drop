@@ -29,7 +29,12 @@ namespace Dr {
     bool        IsInteger(const std::string &source);
 
     /// @brief: Returns number as string with decimal_places precision
+    std::string RoundToDecimalPlace(const size_t number, const int decimal_places);
+    std::string RoundToDecimalPlace(const int    number, const int decimal_places);
+    std::string RoundToDecimalPlace(const long   number, const int decimal_places);
+    std::string RoundToDecimalPlace(const float  number, const int decimal_places);
     std::string RoundToDecimalPlace(const double number, const int decimal_places);
+
 
     /// @brief: Returns interger as hex string
     std::string ToHex(const int integer);

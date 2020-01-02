@@ -102,7 +102,7 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_fisheye_shader.setAttributeArray(    a_fisheye_vertex, vertices.data(), 3 );
     m_fisheye_shader.enableAttributeArray( a_fisheye_vertex );
 
@@ -187,7 +187,7 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_mirror_shader.setAttributeArray(    a_mirror_vertex, vertices.data(), 3 );
     m_mirror_shader.enableAttributeArray( a_mirror_vertex );
 
@@ -271,7 +271,7 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_swirl_shader.setAttributeArray(    a_swirl_vertex, vertices.data(), 3 );
     m_swirl_shader.enableAttributeArray( a_swirl_vertex );
 
@@ -384,7 +384,7 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_water_shader.setAttributeArray(    a_water_vertex, vertices.data(), 3 );
     m_water_shader.enableAttributeArray( a_water_vertex );
 

@@ -505,6 +505,9 @@ HEADERS += \
     3rd_party/chipmunk/cpVect.h \
     3rd_party/chipmunk/prime.h \
     3rd_party/delaunator.h \
+    3rd_party/fontstash/fontstash.h \
+    3rd_party/fontstash/gl3corefontstash.h \
+    3rd_party/fontstash/glfontstash.h \
     3rd_party/glm/common.hpp \
     3rd_party/glm/detail/_features.hpp \
     3rd_party/glm/detail/_fixes.hpp \
@@ -888,6 +891,7 @@ HEADERS += \
     3rd_party/stb/stb_image.h \
     3rd_party/stb/stb_image_resize.h \
     3rd_party/stb/stb_image_write.h \
+    3rd_party/stb/stb_truetype.h \
     core/colors/colors.h \
     core/dr_containers.h \
     core/dr_debug.h \

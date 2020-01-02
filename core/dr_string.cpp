@@ -34,6 +34,10 @@ bool IsInteger(const std::string &source) {
 }
 
 // Returns number as string with decimal_places precision
+std::string RoundToDecimalPlace(const size_t number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
+std::string RoundToDecimalPlace(const int    number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
+std::string RoundToDecimalPlace(const long   number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
+std::string RoundToDecimalPlace(const float  number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
 std::string RoundToDecimalPlace(const double number, const int decimal_places) {
     std::stringstream ss;
     ss << std::fixed;

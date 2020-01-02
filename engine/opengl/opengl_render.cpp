@@ -48,8 +48,9 @@ void DrOpenGL::paintGL() {
     drawSpace();                                                                    // Render cpSpace Objects
     releaseOffscreenBuffer();                                                       // Release Frame Buffer Object
 
+    // ***** Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
     // #NO_QT: As original QOpenGlWidget calls
-    ///QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);         // Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
+    ///QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
     // Standard OpenGL Calls
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_render_fbo->handle());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_texture_fbo->handle());
@@ -73,28 +74,24 @@ void DrOpenGL::paintGL() {
 //####################################################################################
 //##    Returns list of vertices at z plane from size passed in
 //####################################################################################
-void DrOpenGL::setQuadVertices(std::vector<GLfloat> &vertices, float width, float height, QPointF center, float z) {
-    float left =   static_cast<float>(center.x()) - (width  / 2.0f);
-    float right =  static_cast<float>(center.x()) + (width  / 2.0f);
-    float top =    static_cast<float>(center.y()) + (height / 2.0f);
-    float bottom = static_cast<float>(center.y()) - (height / 2.0f);
-    QVector3D top_right = QVector3D( right, top, 0);
-    QVector3D top_left =  QVector3D( left,  top, 0);
-    QVector3D bot_right = QVector3D( right, bottom, 0);
-    QVector3D bot_left =  QVector3D( left,  bottom, 0);
+void DrOpenGL::setQuadVertices(std::vector<float> &vertices, float width, float height, DrPointF center, float z) {
+    float left =   static_cast<float>(center.x) - (width  / 2.0f);
+    float right =  static_cast<float>(center.x) + (width  / 2.0f);
+    float top =    static_cast<float>(center.y) + (height / 2.0f);
+    float bottom = static_cast<float>(center.y) - (height / 2.0f);
 
     vertices.clear();
     vertices.resize( 12 );              // in sets of x, y, z
-    vertices[ 0] = top_right.x();       vertices[ 1] = top_right.y();       vertices[ 2] = z;           // Top Right
-    vertices[ 3] = top_left.x();        vertices[ 4] = top_left.y();        vertices[ 5] = z;           // Top Left
-    vertices[ 6] = bot_right.x();       vertices[ 7] = bot_right.y();       vertices[ 8] = z;           // Bottom Right
-    vertices[ 9] = bot_left.x();        vertices[10] = bot_left.y();        vertices[11] = z;           // Bottom Left
+    vertices[ 0] = right;       vertices[ 1] = top;         vertices[ 2] = z;           // Top Right
+    vertices[ 3] = left;        vertices[ 4] = top;         vertices[ 5] = z;           // Top Left
+    vertices[ 6] = right;       vertices[ 7] = bottom;      vertices[ 8] = z;           // Bottom Right
+    vertices[ 9] = left;        vertices[10] = bottom;      vertices[11] = z;           // Bottom Left
 }
 
 //####################################################################################
 //##    Returns list of vertices at z plane from 4 corners
 //####################################################################################
-void DrOpenGL::setQuadRotatedVertices(std::vector<GLfloat> &vertices,
+void DrOpenGL::setQuadRotatedVertices(std::vector<float> &vertices,
                                       QVector3D &top_right, QVector3D &top_left,
                                       QVector3D &bot_left,  QVector3D &bot_right,
                                       QVector3D position) {

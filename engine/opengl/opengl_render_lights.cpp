@@ -228,7 +228,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height(), DrPointF(0, 0), 0.0f);
     m_shadow_shader.setAttributeArray(    a_shadow_vertex, vertices.data(), 3 );
     m_shadow_shader.enableAttributeArray( a_shadow_vertex );
 
@@ -307,7 +307,7 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     float quad_width =  (light->getLightDiameterFitted()/perspective_scale);
     float quad_height = (light->getLightDiameterFitted()/perspective_scale);
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, quad_width, quad_height, QPointF(light->getPosition().x, light->getPosition().y), static_cast<float>(light->getZOrder()));
+    setQuadVertices(vertices, quad_width, quad_height, DrPointF(light->getPosition().x, light->getPosition().y), static_cast<float>(light->getZOrder()));
     m_light_shader.setAttributeArray(    a_light_vertex, vertices.data(), 3 );
     m_light_shader.enableAttributeArray( a_light_vertex );
 

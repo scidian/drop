@@ -47,7 +47,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
     m_default_shader.enableAttributeArray( a_default_vertex );
 
@@ -111,7 +111,7 @@ void DrOpenGL::drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo) {
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_kernel_shader.setAttributeArray(    a_kernel_vertex, vertices.data(), 3 );
     m_kernel_shader.enableAttributeArray( a_kernel_vertex );
 
@@ -165,7 +165,7 @@ void DrOpenGL::drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper,
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, lower->width(), lower->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, lower->width(), lower->height(), DrPointF(0, 0), 0.0f);
     m_screen_shader.setAttributeArray(      a_screen_vertex, vertices.data(), 3 );
     m_screen_shader.enableAttributeArray(   a_screen_vertex );
 
@@ -209,7 +209,7 @@ void DrOpenGL::drawFrameBufferUsingSimpleShader(QOpenGLFramebufferObject *fbo) {
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), QPointF(0, 0), 0.0f);
+    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
     m_simple_shader.setAttributeArray(    a_simple_vertex, vertices.data(), 3 );
     m_simple_shader.enableAttributeArray( a_simple_vertex );
 

@@ -18,6 +18,8 @@
 #include <chrono>
 
 #include "3rd_party/chipmunk/chipmunk.h"
+#include "3rd_party/fontstash/fontstash.h"
+#include "3rd_party/fontstash/glfontstash.h"
 #include "core/dr_string.h"
 #include "core/types/dr_point.h"
 #include "core/types/dr_pointf.h"
@@ -73,6 +75,10 @@ private:
     // External Borrowed Pointers
     FormEngine     *m_form_engine;                              // Pointer to parent FormEngine
     DrEngine       *m_engine;                                   // Pointer to Engine instance that will run in this OpenGLWidget
+
+    // Fontstash
+    FONScontext    *fs = nullptr;
+    int             font_normal = FONS_INVALID;
 
     // Local Variables
     QMatrix4x4      m_view;
@@ -215,8 +221,8 @@ public:
     void            setDefaultAttributeBuffer(QOpenGLBuffer *buffer);
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(std::string letter, std::vector<float> &texture_coordinates);
-    void            setQuadVertices(std::vector<GLfloat> &vertices, float width, float height, QPointF center, float z);
-    void            setQuadRotatedVertices(std::vector<GLfloat> &vertices, QVector3D &top_right, QVector3D &top_left,
+    void            setQuadVertices(std::vector<float> &vertices, float width, float height, DrPointF center, float z);
+    void            setQuadRotatedVertices(std::vector<float> &vertices, QVector3D &top_right, QVector3D &top_left,
                                            QVector3D &bot_left, QVector3D &bot_right, QVector3D position);
 
     // Soft Shadows / Lights
@@ -233,8 +239,8 @@ public:
     void            process2DLights();
 
     // Triangles
-    void            addTriangles(long triangles) { m_triangles += triangles; }
-    long            getTriangleCount()  { return m_triangles; }
+    void            addTriangles(long triangles)    { m_triangles += triangles; }
+    long            getTriangleCount()              { return m_triangles; }
 
 
 

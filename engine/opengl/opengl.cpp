@@ -28,6 +28,7 @@ DrOpenGL::~DrOpenGL() {
     m_engine->clearWorlds();
 
     makeCurrent();
+
         // Delete textures
         m_engine->deleteTextures();
 
@@ -52,6 +53,8 @@ DrOpenGL::~DrOpenGL() {
         m_cube_vbo->destroy();  delete m_cube_vbo;
         m_quad_vbo->destroy();  delete m_quad_vbo;
 
+        // Delete font stash
+        glfonsDelete(fs);
 
     doneCurrent();
 }

@@ -39,6 +39,7 @@ static void GetSpaceJointList(cpConstraint *constraint, std::vector<cpConstraint
 //####################################################################################
 void DrOpenGL::drawDebug() {
 
+    // ***** Debug Shapes
     if (m_form_engine->debug_shapes) {
         drawDebugShapes();
         drawDebugJoints();
@@ -52,16 +53,41 @@ void DrOpenGL::drawDebug() {
         ///paintDebugCollisions(painter);
     }
 
-//    QFont font("Avenir", 12);
-//    painter.setFont(font);
-//    painter.setPen( Qt::white );
-//    painter.drawText( QPointF(500, 20), "Distance: \t" +    QString::number(m_engine->getCurrentWorld()->getMaxDistance()) );       // Game Distance
-//    painter.drawText( QPointF(20,  20), "FPS: \t" +         QString::number(m_form_engine->fps_render) );                           // Frames per second
-//    painter.drawText( QPointF(20,  40), "Objects: \t" +     QString::number(m_engine->getCurrentWorld()->getThings().size()) );     // Object count
-//    painter.drawText( QPointF(20,  60), "Triangles: \t" +   QString::number(getTriangleCount()) );                                  // Triangle count
-//    painter.drawText( QPointF(20,  80), "Zoom: \t" +        QString::number(double(combinedZoomScale())) );                         // World scale
-//    painter.drawText( QPointF(20, 100), QString::fromStdString(g_info) );                                                           // Global debug string
-//    ///painter.drawText( QPointF(20, 120), "Physics: \t" +     QString::number(m_engine->getFormEngine()->fps_physics) );           // Physics update
+    // ***** Debug Text
+    glViewport(0, 0, width(), height());
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, width(), height(), 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+    unsigned int white = glfonsRGBA(255, 255, 255, 255);
+    ///unsigned int brown = glfonsRGBA(192, 128,   0, 128);
+
+    fonsClearState(fs);
+    fonsSetFont( fs, font_normal);
+    fonsSetSize( fs, 14.0f);
+    fonsSetColor(fs, white);
+
+    fonsDrawText(fs, 500,  20, "Distance:",     nullptr );                          // Game Distance
+    fonsDrawText(fs,  20,  20, "FPS:",          nullptr );                          // Frames per second
+    fonsDrawText(fs,  20,  40, "Objects:",      nullptr );                          // Object count
+    fonsDrawText(fs,  20,  60, "Triangles:",    nullptr );                          // Triangle count
+    fonsDrawText(fs,  20,  80, "Zoom:",         nullptr );                          // World scale
+    ///fonsDrawText(fs,  20, 120, "Physics:",   nullptr );                          // Physics update
+
+    fonsDrawText(fs, 570,  20, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getMaxDistance(), 2).c_str(), nullptr );            // Game Distance
+    fonsDrawText(fs,  90,  20, Dr::RoundToDecimalPlace(m_form_engine->fps_render, 1).c_str(), nullptr );                                // Frames per second
+    fonsDrawText(fs,  90,  40, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getThings().size(), 0).c_str(), nullptr );          // Object count
+    fonsDrawText(fs,  90,  60, Dr::RoundToDecimalPlace(getTriangleCount(), 0).c_str(), nullptr );                                       // Triangle count
+    fonsDrawText(fs,  90,  80, Dr::RoundToDecimalPlace(combinedZoomScale(), 2).c_str(), nullptr );                                      // World scale
+    fonsDrawText(fs,  20, 100, g_info.c_str(), nullptr);                                                                                // Global debug string
+    ///fonsDrawText(fs,  20, 120, Dr::RoundToDecimalPlace(m_engine->getFormEngine()->fps_physics, 1).c_str(), nullptr );                // Physics update
+
+    ///fonsDrawDebug(fs, 300.0, 350.0);
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
@@ -102,7 +128,6 @@ DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
 //##    Draws the active Constraints using Debug Shader
 //####################################################################################
 void DrOpenGL::drawDebugJoints() {
-
     // Get a list of the constraints in the Space
     std::vector<cpConstraint*> joint_list;
     joint_list.clear();
