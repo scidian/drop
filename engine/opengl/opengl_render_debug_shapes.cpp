@@ -89,7 +89,7 @@ void DrOpenGL::drawDebugShapes2() {
                 float  radius = static_cast<float>(cpSegmentShapeGetRadius( shape ));
                 addDebugLine( vertexes, a, b, radius, fill_color, border_color );
 
-            } else if (object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box) {
+            } else if ((object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box)) {
                 float radius = static_cast<float>(cpPolyShapeGetRadius(shape));
                 std::vector<cpVect> vertices;
 
@@ -106,10 +106,29 @@ void DrOpenGL::drawDebugShapes2() {
                 centroid.y /= point_count;
                 centroid = Dr::RotatePointAroundOrigin(DrPointF(centroid.x, centroid.y), center, object->getAngle(), false);
 
-                addDebugPolygon( vertexes, vertices, centroid, radius, fill_color, border_color );
+                addDebugPolygon( vertexes, vertices, centroid, radius, fill_color, border_color, object->polygons.empty() );
 
             }   // End If
         }   // End For shape
+
+        // Add concave polygon outlines
+        if (object->polygons.empty() == false) {
+            for (auto poly : object->polygons) {
+                // Map points
+                std::vector<cpVect> vertices;
+                for (int i = 0; i < static_cast<int>(poly.size()); i++) {
+                    cpVect vert = poly[i] + cpv(center.x, center.y);
+                    DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);
+                    vertices.push_back(cpv(mapped.x, mapped.y));
+                }
+                // Add lines
+                int count = static_cast<int>(vertices.size());
+                for (int i = 0; i < count - 1; i++) {
+                    addDebugLine(vertexes, vertices[i], vertices[i+1], 1.5f/combinedZoomScale(), border_color, border_color);
+                }
+                addDebugLine(vertexes, vertices[count-1], vertices[0], 1.5f/combinedZoomScale(), border_color, border_color);
+            }
+        }
 
     }   // End For object
 
@@ -217,20 +236,21 @@ void DrOpenGL::addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float rad
 //####################################################################################
 //##    Draws a Polygon Shape
 //####################################################################################
-void DrOpenGL::addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border) {
+void DrOpenGL::addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid,
+                               float radius, DrColor fill, DrColor border, bool add_outlines) {
     int count = static_cast<int>(static_cast<int>(verts.size()));
 
     for (int i = 0; i < count - 1; i++) {
         vertexes.addVertex(verts[i].x,     verts[i].y,         0.f, 0.f, radius, fill, border);
         vertexes.addVertex(verts[i+1].x,   verts[i+1].y,       0.f, 0.f, radius, fill, border);
         vertexes.addVertex(centroid.x,     centroid.y,         0.f, 0.f, 0,      fill, border);
-        addDebugLine(vertexes, verts[i], verts[i+1], 1.5f/combinedZoomScale(), border, border);
+        if (add_outlines) addDebugLine(vertexes, verts[i], verts[i+1], 1.5f/combinedZoomScale(), border, border);
     }
 
     vertexes.addVertex(verts[count-1].x,   verts[count-1].y,   0.f, 0.f, radius, fill, border);
     vertexes.addVertex(verts[0].x,         verts[0].y,         0.f, 0.f, radius, fill, border);
     vertexes.addVertex(centroid.x,         centroid.y,         0.f, 0.f, 0,      fill, border);
-    addDebugLine(vertexes, verts[count-1], verts[0], 1.5f/combinedZoomScale(), border, border);
+    if (add_outlines) addDebugLine(vertexes, verts[count-1], verts[0], 1.5f/combinedZoomScale(), border, border);
 }
 
 

@@ -125,6 +125,9 @@ void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
         verts[i] = cpv(x, y);
     }
 
+    // Add polygon to list of concave polygons for debug drawing
+    polygons.push_back(verts);
+
     // Calculate the convex hull of a given set of points. Returns the count of points in the hull. Result must be a pointer to a cpVect array
     // with at least count elements. If result is NULL, then verts array wil be reduced instead. first is an optional pointer to an integer to store
     // where the first vertex in the hull came from (i.e. verts[first] == result[0]). Tolerance (tol) is the allowed amount to shrink the hull when

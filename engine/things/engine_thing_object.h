@@ -12,6 +12,7 @@
 #include "engine/things/engine_thing.h"
 #include "project/properties/property_collision.h"
 
+typedef std::vector<std::vector<cpVect>> PolygonList;
 
 //####################################################################################
 //##    DrEngineObject
@@ -26,7 +27,7 @@ public:
 
     std::vector<cpShape*>   shapes;                         // Collision Shapes of object
     ShapeMap                shape_type;                     // Shape Types of Shapes of Object
-
+    PolygonList             polygons;                       // List of concave polygon Shapes (for debug drawing)
 
     std::deque<long>    animation_idle_keys;                // Image frame keys
     long                animation_idle_frame = 1;           // Current frame

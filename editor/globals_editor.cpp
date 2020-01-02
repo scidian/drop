@@ -123,9 +123,9 @@ void LoadPreferences() {
     // Stored Color History
     ///DrVariant colors = std::vector<DrVariant>({ qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) });
     ///Dr::SetPreference(Preferences::Color_Popup_History, colors);
-    Dr::AddToColorHistory( Qt::red   );
-    Dr::AddToColorHistory( Qt::green );
-    Dr::AddToColorHistory( Qt::blue  );
+    Dr::AddToColorHistory( Dr::red   );
+    Dr::AddToColorHistory( Dr::green );
+    Dr::AddToColorHistory( Dr::blue  );
 
     Dr::SetPreference(Preferences::Color_Popup_Tab, 0);                 // int - 0 = Palette, 1 = History
 

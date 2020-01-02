@@ -178,7 +178,7 @@ public:
 
     void            addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
     void            addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
-    void            addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border);
+    void            addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border, bool add_outlines);
     void            drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes);
     void            drawDebugShapes2();
 
