@@ -28,6 +28,7 @@ public:
     // Constructor
     DrPointF();
     DrPointF(double x_, double y_);
+    DrPointF(const DrPoint point);
 
     // Operator Overloads
     DrPointF&   operator=   (const DrPointF &other);

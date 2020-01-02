@@ -56,19 +56,14 @@ void DrOpenGL::paintGL() {
     glBlitFramebuffer(0, 0, m_render_fbo->width(), m_render_fbo->height(), 0, 0, m_render_fbo->width(), m_render_fbo->height(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 
-
     // ***** Bind default Qt FrameBuffer, Clear and Render FBO to screen buffer as a textured quad, with post processing available
     QOpenGLFramebufferObject::bindDefault();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glDisable(GL_BLEND);
     drawFrameBufferUsingDefaultShader(m_texture_fbo);
+    drawDebug();
 
-    // ***** Draws Debug Shapes / Text Onto Frame Buffer Object
-    QOpenGLPaintDevice paint_gl(width() * devicePixelRatio(), height() * devicePixelRatio());
-    QPainter painter (&paint_gl);
-    drawDebug(painter);
-    painter.end();
 
     // ***** Update FPS
     ++m_fps_count_render;

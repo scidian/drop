@@ -215,6 +215,7 @@ SOURCES += \
     engine/mesh/engine_vertex_data.cpp \
     engine/mesh/engine_vertex_data__extrude.cpp \
     engine/mesh/engine_vertex_data__smooth.cpp \
+    engine/mesh/engine_vertex_debug.cpp \
     engine/opengl/opengl.cpp \
     engine/opengl/opengl_bind_fbo.cpp \
     engine/opengl/opengl_initialize.cpp \
@@ -225,6 +226,7 @@ SOURCES += \
     engine/opengl/opengl_render.cpp \
     engine/opengl/opengl_render_debug.cpp \
     engine/opengl/opengl_render_debug_health.cpp \
+    engine/opengl/opengl_render_debug_old.cpp \
     engine/opengl/opengl_render_debug_shapes.cpp \
     engine/opengl/opengl_render_effects.cpp \
     engine/opengl/opengl_render_fbo.cpp \
@@ -941,6 +943,7 @@ HEADERS += \
     engine/globals_engine.h \
     engine/mesh/engine_mesh.h \
     engine/mesh/engine_vertex_data.h \
+    engine/mesh/engine_vertex_debug.h \
     engine/opengl/opengl.h \
     engine/things/engine_thing.h \
     engine/things/engine_thing_fire.h \

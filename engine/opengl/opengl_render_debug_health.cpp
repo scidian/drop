@@ -22,7 +22,7 @@
 //####################################################################################
 //##    Draws the health of each object using QPainter
 //####################################################################################
-void DrOpenGL::drawDebugHealth(QPainter &painter) {
+void DrOpenGL::paintDebugHealth(QPainter &painter) {
     QFont health_font("Avenir", static_cast<int>(18 * combinedZoomScale()));
     painter.setPen(Qt::NoPen);
 
@@ -56,9 +56,7 @@ void DrOpenGL::drawDebugHealth(QPainter &painter) {
 //####################################################################################
 //##    Draws the health of each object using Native GL
 //####################################################################################
-void DrOpenGL::drawDebugHealthNative(QPainter &painter) {
-    ///painter.beginNativePainting();
-
+void DrOpenGL::drawDebugHealth() {
     const float font_size = 12.0f;
     const float spacing = 0.75f;
 

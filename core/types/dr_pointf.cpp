@@ -25,6 +25,11 @@ DrPointF::DrPointF(double x_, double y_) {
     y = y_;
 }
 
+DrPointF::DrPointF(const DrPoint point) {
+    x = static_cast<double>(point.x);
+    y = static_cast<double>(point.y);
+}
+
 //####################################################################################
 //##    Overload Operators
 //####################################################################################

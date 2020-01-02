@@ -11,25 +11,26 @@
 // Forward Declarations
 #include "3rd_party/glm/fwd.hpp"
 class DrPoint;
+class DrPointF;
 class DrRectF;
 
 
 //####################################################################################
 //##    DrRect
-//##        An int Rectangle Class
+//##        An int Rectangle Class, Y axis starts at 0 at top and increases as it goes downward
 //############################
 class DrRect
 {
 
 public:
-    int     left;                   // As vec4, x
-    int     top;                    // As vec4, y
+    int     x;                      // As vec4, x
+    int     y;                      // As vec4, y
     int     width;                  // As vec4, z
     int     height;                 // As vec4, w
 
     // Constructors
     DrRect();
-    DrRect(int left_, int top_, int width_, int height_);
+    DrRect(int x_, int y_, int width_, int height_);
     DrRect(const DrPoint &top_left, const DrPoint &bottom_right);
     DrRect(const DrRect  &r);
     DrRect(const DrRectF &r);
@@ -42,9 +43,16 @@ public:
     // Operator Overloads
     DrRectF&        operator=   (const DrRectF &other);
 
+    // Helper Functions
+    bool            contains(const DrPoint);
+    bool            contains(const DrPointF);
+
     // Getters
+    int             left();
     int             right();
+    int             top();
     int             bottom();
+
     DrPoint         topLeft();
     DrPoint         topRight();
     DrPoint         bottomLeft();
@@ -53,5 +61,17 @@ public:
 };
 
 
-
 #endif // DR_RECT_H
+
+
+
+
+
+
+
+
+
+
+
+
+

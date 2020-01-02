@@ -6,6 +6,7 @@
 //
 //
 #include "engine/engine.h"
+#include "engine/mesh/engine_vertex_debug.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing.h"
 #include "engine/things/engine_thing_object.h"
@@ -13,58 +14,16 @@
 
 
 //####################################################################################
-//##    Vertex for Debug Shapes
-//####################################################################################
-struct DebugVertex {
-    std::vector<float> position;                        // in sets of x, y
-    std::vector<float> texture_coordinates;             // in sets of x, y
-    std::vector<float> radiuses;                        // in sets of r
-    std::vector<float> color_fill;                      // in sets of r, g, b, a
-    std::vector<float> color_border;                    // in sets of r, g, b, a
-
-    DebugVertex() {
-        position.clear();
-        texture_coordinates.clear();
-        radiuses.clear();
-        color_fill.clear();
-        color_border.clear();
-    }
-
-    int triangleCount() { return static_cast<int>(radiuses.size() / 3); }
-    int vertexCount() { return static_cast<int>(radiuses.size()); }
-
-    void addVertex(double x, double y, float uv_x, float uv_y, float r, DrColor fill, DrColor border) {
-        addVertex(static_cast<float>(x), static_cast<float>(y), uv_x, uv_y, r, fill, border);
-    }
-
-    void addVertex(float x, float y, float uv_x, float uv_y, float r, DrColor fill, DrColor border) {
-        position.push_back(x);
-        position.push_back(y);
-        texture_coordinates.push_back(uv_x);
-        texture_coordinates.push_back(uv_y);
-        radiuses.push_back(r);
-        color_fill.push_back(static_cast<float>(fill.redF()));
-        color_fill.push_back(static_cast<float>(fill.greenF()));
-        color_fill.push_back(static_cast<float>(fill.blueF()));
-        color_fill.push_back(static_cast<float>(fill.alphaF()));
-        color_border.push_back(static_cast<float>(border.redF()));
-        color_border.push_back(static_cast<float>(border.greenF()));
-        color_border.push_back(static_cast<float>(border.blueF()));
-        color_border.push_back(static_cast<float>(border.alphaF()));
-    }
-};
-
-
-//####################################################################################
 //##    Draws the Collision Shapes using Shaders
 //####################################################################################
-void DrOpenGL::drawDebugShapes2() {
+void DrOpenGL::drawDebugShapes() {
 
     // ***** Go through Things and add triangles for Shapes
     DebugVertex vertexes;
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+        if (object->getCollidesWith() == Collision_Groups::None) continue;
 
         // Figure out what color to make the debug shapes
         DrColor border_color = objectDebugColor(object);
@@ -76,6 +35,7 @@ void DrOpenGL::drawDebugShapes2() {
         // Load Object Position
         DrPointF center = object->getPosition();
 
+        // ***** Add Objects' Shapes
         for (auto shape : object->shapes) {
 
             if (object->shape_type[shape] == Shape_Type::Circle) {
@@ -111,7 +71,7 @@ void DrOpenGL::drawDebugShapes2() {
             }   // End If
         }   // End For shape
 
-        // Add concave polygon outlines
+        // ***** Add concave polygon outlines
         if (object->polygons.empty() == false) {
             for (auto poly : object->polygons) {
                 // Map points
@@ -134,7 +94,7 @@ void DrOpenGL::drawDebugShapes2() {
 
 
     // ***** Draw Debug Triangles
-    drawDebugTriangles(m_projection * m_view, vertexes );
+    drawDebugTriangles(m_projection * m_view, vertexes);
 }
 
 
@@ -180,7 +140,7 @@ void DrOpenGL::drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes) {
 //####################################################################################
 //##    Adds a Circle Shape to "vertexes"
 //####################################################################################
-void DrOpenGL::addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border) {
+void DrOpenGL::addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border, bool draw_angle) {
     // Object location
     float x =   static_cast<float>(pos.x);
     float y =   static_cast<float>(pos.y);
@@ -195,9 +155,11 @@ void DrOpenGL::addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius,
     vertexes.addVertex(x, y,  1,  1, radius, fill, border);
 
     // Draw Orientation Line
-    addDebugLine(vertexes, cpv(pos.x, pos.y),
-                 cpvadd(cpv(pos.x, pos.y), cpvmult(cpvforangle(static_cast<cpFloat>(Dr::DegreesToRadians(angle+90.f))), 0.98*static_cast<double>(radius))),
-                 1.5f/combinedZoomScale(), border, border);
+    if (draw_angle) {
+        addDebugLine(vertexes, cpv(pos.x, pos.y),
+                     cpvadd(cpv(pos.x, pos.y), cpvmult(cpvforangle(static_cast<cpFloat>(Dr::DegreesToRadians(angle+90.f))), 0.98*static_cast<double>(radius))),
+                     1.5f/combinedZoomScale(), border, border);
+    }
 }
 
 

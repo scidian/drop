@@ -8,6 +8,7 @@
 #include "3rd_party/glm/vec4.hpp"
 #include "core/dr_math.h"
 #include "core/types/dr_point.h"
+#include "core/types/dr_pointf.h"
 #include "core/types/dr_rect.h"
 #include "core/types/dr_rectf.h"
 
@@ -16,38 +17,38 @@
 //##    Constructors
 //####################################################################################
 DrRect::DrRect() {
-    left =      0;
-    top =       0;
+    x =         0;
+    y =         0;
     width =     0;
     height =    0;
 }
-DrRect::DrRect(int left_, int top_, int width_, int height_) {
-    left =      left_;
-    top =       top_;
+DrRect::DrRect(int x_, int y_, int width_, int height_) {
+    x =         x_;
+    y =         y_;
     width =     width_;
     height =    height_;
 }
 DrRect::DrRect(const DrPoint &top_left, const DrPoint &bottom_right) {
-    left =      top_left.x;
-    top =       top_left.y;
+    x =         top_left.x;
+    y =         top_left.y;
     width =     (bottom_right.x - top_left.x);
     height =    (bottom_right.y - top_left.y);
 }
 DrRect::DrRect(const DrRect &r) {
-    left =      r.left;
-    top =       r.top;
+    x =         r.x;
+    y =         r.y;
     width =     r.width;
     height =    r.height;
 }
 DrRect::DrRect(const DrRectF &r) {
-    left =      static_cast<int>(r.left);
-    top =       static_cast<int>(r.top);
+    x =         static_cast<int>(r.x);
+    y =         static_cast<int>(r.y);
     width =     static_cast<int>(r.width);
     height =    static_cast<int>(r.height);
 }
 DrRect::DrRect(const glm::vec4 &v) {
-    left =      static_cast<int>(v.x);
-    top =       static_cast<int>(v.y);
+    x =         static_cast<int>(v.x);
+    y =         static_cast<int>(v.y);
     width =     static_cast<int>(v.z);
     height =    static_cast<int>(v.w);
 }
@@ -57,18 +58,47 @@ DrRect::DrRect(const glm::vec4 &v) {
 //##    Conversion
 //####################################################################################
 DrRectF DrRect::toRectF()               { return DrRectF(*this); }
-glm::vec4 DrRect::toGlmVec4()           { return glm::vec4(left, top, width, height); }
+glm::vec4 DrRect::toGlmVec4()           { return glm::vec4(x, y, width, height); }
+
+
+//####################################################################################
+//##    Helper Functions
+//####################################################################################
+bool DrRect::contains(const DrPointF pointf) { return contains(DrPoint(pointf)); }
+bool DrRect::contains(const DrPoint point) {
+    if (point.x > left() && point.x < right()) {
+        if (point.y > top() && point.y < bottom())
+            return true;
+    }
+    return false;
+}
 
 
 //####################################################################################
 //##    Getters
 //####################################################################################
-int     DrRect::right()                 { return (left + width - 1); }
-int     DrRect::bottom()                { return (top + height - 1); }
-DrPoint DrRect::topLeft()               { return DrPoint(left, top); }
-DrPoint DrRect::topRight()              { return DrPoint(left + width - 1, top); }
-DrPoint DrRect::bottomLeft()            { return DrPoint(left, top + height - 1); }
-DrPoint DrRect::bottomRight()           { return DrPoint(left + width - 1, top + height - 1); }
+int     DrRect::left()                  { return (width > 0) ? (x) : (x + width + 1); }
+int     DrRect::right()                 { return (width > 0) ? (x + width - 1) : (x); }
+
+int     DrRect::top()                   { return (height > 0) ? (y) : (y + height + 1); }
+int     DrRect::bottom()                { return (height > 0) ? (y + height - 1) : (y); }
+
+DrPoint DrRect::topLeft()               { return DrPoint(left(),    top()); }
+DrPoint DrRect::topRight()              { return DrPoint(right(),   top()); }
+DrPoint DrRect::bottomLeft()            { return DrPoint(left(),    bottom()); }
+DrPoint DrRect::bottomRight()           { return DrPoint(right(),   bottom()); }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

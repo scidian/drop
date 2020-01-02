@@ -71,8 +71,8 @@ void DrEngineVertexData::initializeExtrudedBitmap(const DrBitmap &bitmap, bool w
             std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole);
             // Add in sub image offset to points
             for (auto &point : one_hole) {
-                point.x += rects[image_number].left;
-                point.y += rects[image_number].top;
+                point.x += rects[image_number].left();
+                point.y += rects[image_number].top();
             }
             one_hole = smoothPoints( one_hole, 5, 5.0, 0.5 );
             one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);

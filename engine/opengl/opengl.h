@@ -165,23 +165,29 @@ public:
     void            loadProjectTextures();
     void            loadShaders();
 
-    // Render Calls    
+
+    // Debug Render Calls - Old
+    void            paintDebugCollisions(QPainter &painter);
+    void            paintDebugHealth(QPainter &painter);
+    void            paintDebugJoints(QPainter &painter);
+    void            paintDebugShapes(QPainter &painter);
+
+    // Debug Render Calls - New
+    void            addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border, bool draw_angle = true);
+    void            addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
+    void            addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border, bool add_outlines);
+    void            drawDebug();
+    void            drawDebugCollisions();
+    void            drawDebugHealth();
+    void            drawDebugJoints();
+    void            drawDebugShapes();
+    void            drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes);
+
+
+    // Render Calls
     void            bindOffscreenBuffer(bool clear = true);
     void            cullingOn(bool reversed = false);
     void            cullingOff();
-    void            drawDebug(QPainter &painter);
-    void            drawDebugCollisions(QPainter &painter);
-    void            drawDebugHealth(QPainter &painter);
-    void            drawDebugHealthNative(QPainter &painter);
-    void            drawDebugJoints(QPainter &painter);
-    void            drawDebugShapes(QPainter &painter);
-
-    void            addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border);
-    void            addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
-    void            addDebugPolygon(DebugVertex &vertexes, const std::vector<cpVect> &verts, const DrPointF &centroid, float radius, DrColor fill, DrColor border, bool add_outlines);
-    void            drawDebugTriangles(QMatrix4x4 mvp, DebugVertex &vertexes);
-    void            drawDebugShapes2();
-
     bool            drawEffect(DrEngineThing *thing, DrThingType &last_thing);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);

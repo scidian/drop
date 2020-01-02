@@ -167,9 +167,9 @@ void FillBorder(DrBitmap &bitmap, DrColor fill_color, DrRect rect) {
     DrRect fill_rect;
     int    fill_qty;
 
-    int y1 = rect.top;
+    int y1 = rect.top();
     int y2 = rect.bottom();
-    for (int x = rect.left; x < rect.left + rect.width; x++) {
+    for (int x = rect.left(); x < rect.left() + rect.width; x++) {
         if (bitmap.getPixel(x, y1) == Dr::transparent) {
             Dr::FloodFill(bitmap, x, y1, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }
@@ -178,9 +178,9 @@ void FillBorder(DrBitmap &bitmap, DrColor fill_color, DrRect rect) {
         }
     }
 
-    int x1 = rect.left;
+    int x1 = rect.left();
     int x2 = rect.right();
-    for (int y = rect.top; y < rect.top + rect.height; y++) {
+    for (int y = rect.top(); y < rect.top() + rect.height; y++) {
         if (bitmap.getPixel(x1, y) == Dr::transparent) {
             Dr::FloodFill(bitmap, x1, y, fill_color, 0.001, Flood_Fill_Type::Compare_4, fill_qty, fill_rect);
         }

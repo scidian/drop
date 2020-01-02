@@ -73,7 +73,7 @@ QPixmap CreateText(DrFont *font, std::string text) {
         char letter = text.at(i);
         int  letter_width = font->getCharRect( letter ).width;
 
-        QRect character(font->getCharRect(letter).left, font->getCharRect(letter).top, font->getCharRect(letter).width, font->getCharRect(letter).height);
+        QRect character(font->getCharRect(letter).left(), font->getCharRect(letter).top(), font->getCharRect(letter).width, font->getCharRect(letter).height);
         painter.drawPixmap( QRect(x, 0, letter_width, height), text_atlas, character );
         x += letter_width;
     }
