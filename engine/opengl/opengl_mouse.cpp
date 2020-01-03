@@ -20,7 +20,8 @@
 
 
 // Local File Scope Globals
-static cpBody *l_drag_body = nullptr;
+static cpBody *l_drag_body =    nullptr;
+static cpVect  l_drag_offset =  cpv(0, 0);
 
 
 //####################################################################################
@@ -112,6 +113,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                     if (touch->hasTouchDrag()) {
                         if (touch->body_type == Body_Type::Kinematic) {
                             l_drag_body = touch->body;
+                            l_drag_offset = cpvsub(cpBodyGetPosition(l_drag_body), cpv(x, y));
                             should_jump = false;
 
                         } else if (touch->body_type == Body_Type::Dynamic) {
@@ -195,7 +197,7 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
         cpVect pos = cpv(x, y);
         cpBodySetPosition(m_engine->mouse_body, pos);
         if (l_drag_body != nullptr) {
-            cpBodySetPosition(l_drag_body, pos);
+            cpBodySetPosition(l_drag_body, cpvadd(pos, l_drag_offset));
         }
     }
 }

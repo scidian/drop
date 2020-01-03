@@ -135,17 +135,13 @@ void DrOpenGL::drawDebugJoints() {
         cpBody *body_a = cpConstraintGetBodyA( joint );
         cpBody *body_b = cpConstraintGetBodyB( joint );
 
-        // Grab DrEngineObjects from cpUserData
-        DrEngineObject *object_a = static_cast<DrEngineObject*>(cpBodyGetUserData(body_a));
-        DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
-
         // Load Object Positions
-        DrPointF center_a = object_a->getPosition();
-        DrPointF center_b = object_b->getPosition();
+        cpVect body_pos_a = cpBodyGetPosition(body_a);
+        cpVect body_pos_b = cpBodyGetPosition(body_b);
 
-        addDebugLine(vertexes, cpv(center_a.x, center_a.y), cpv(center_b.x, center_b.y), 1.5f/combinedZoomScale(), Dr::white, Dr::white);
-        addDebugCircle(vertexes, center_a, 3.f, 0.f, fill_color, Dr::white, false);
-        addDebugCircle(vertexes, center_b, 3.f, 0.f, fill_color, Dr::white, false);
+        addDebugLine(vertexes, body_pos_a, body_pos_b, 1.5f/combinedZoomScale(), Dr::white, Dr::white);
+        addDebugCircle(vertexes, DrPointF(body_pos_a.x, body_pos_a.y), 3.f, 0.f, fill_color, Dr::white, false);
+        addDebugCircle(vertexes, DrPointF(body_pos_b.x, body_pos_b.y), 3.f, 0.f, fill_color, Dr::white, false);
     }
 
     // ***** Draw joint triangles
