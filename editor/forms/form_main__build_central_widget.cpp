@@ -192,7 +192,8 @@ void FormMain::buildCentralWidgetEditor() {
                             status_layout->addWidget(labelSelected);
                             status_layout->addWidget(createToolbarSpacer(18));
                             status_layout->addStretch();
-                            labelMousePosition = new QLabel(" X: -----, Y: ----- ");
+
+                            labelMousePosition = new QLabel(" ");
                             labelMousePosition->setObjectName(QStringLiteral("labelMousePosition"));
                             labelMousePosition->setAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);
                             labelMousePosition->setFont(font);

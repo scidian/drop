@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QFocusEvent>
 #include <QMainWindow>
 #include <QScrollBar>
 #include <QVBoxLayout>

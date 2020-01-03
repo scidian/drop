@@ -47,7 +47,7 @@ namespace Mouse_Cursors {
 //####################################################################################
 void DrView::leaveEvent(QEvent *event) {
     (void)event;
-    m_editor_relay->setMousePosition(" ----- ", " ----- ");
+    m_editor_relay->setMousePosition("", "");
 }
 
 
