@@ -64,14 +64,6 @@ void DrOpenGL::drawDebug() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-    unsigned int white = glfonsRGBA(255, 255, 255, 255);
-    ///unsigned int brown = glfonsRGBA(192, 128,   0, 128);
-
-    fonsClearState(fs);
-    fonsSetFont( fs, font_normal);
-    fonsSetSize( fs, 14.0f);
-    fonsSetColor(fs, white);
-
     fonsDrawText(fs, 500,  20, "Distance:",     nullptr );                          // Game Distance
     fonsDrawText(fs,  20,  20, "FPS:",          nullptr );                          // Frames per second
     fonsDrawText(fs,  20,  40, "Objects:",      nullptr );                          // Object count

@@ -5,7 +5,11 @@
 //
 //
 //
+#include <QApplication>
+#include <QFile>
 #include <QPixmap>
+#include <QTemporaryDir>
+#include <QTemporaryFile>
 #include "editor/helper_library.h"
 
 #include <algorithm>
@@ -55,13 +59,7 @@ void DrOpenGL::initializeGL() {
     loadProjectTextures();
     loadBuiltInModels();
     loadShaders();
-
-    // Build Debug Font Stash
-    fs = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT);
-    if (fs == nullptr) Dr::PrintDebug("Could not create font stash");
-    font_normal = fonsAddFont(fs, "sans", "Aileron-Regular.ttf");
-    ///font_normal = fonsAddFont(fs, "sans", "DroidSerif-Regular.ttf");
-    if (font_normal == FONS_INVALID) Dr::PrintDebug("Could not add font normal.\n");
+    loadFonts();
 }
 
 
@@ -208,6 +206,57 @@ void DrOpenGL::loadBuiltInModels() {
         m_quad_vbo->release();
     delete quad;
 }
+
+
+//####################################################################################
+//##    Debug Font
+//####################################################################################
+void DrOpenGL::loadFonts() {
+    fs = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT);
+    if (fs == nullptr) Dr::PrintDebug("Could not create font stash");
+
+    // Attempt to load font from file
+    font_normal = fonsAddFont(fs, "sans", "Aileron-Regular.otf");
+
+    // If could not laod font from file, attempt to copy from Qt Resource file using temporary directory
+    if (font_normal == FONS_INVALID) {
+        QTemporaryDir temp_directory;
+        if (temp_directory.isValid()) {
+            const QString temp_file = temp_directory.path() + "/Aileron-Regular.otf";
+            qDebug() << "Loading font Aileron from temporary directory: " << temp_file;
+            if (QFile::copy(":/assets/fonts/Aileron-Regular.otf", temp_file)) {
+                font_normal = fonsAddFont(fs, "sans", temp_file.toStdString().c_str());
+            }
+        }
+    }
+
+    // If could not laod font from file, attempt to copy from Qt Resource file using temporary file
+    if (font_normal == FONS_INVALID) {
+        QTemporaryFile temp_file(qApp);
+        temp_file.setFileTemplate("XXXXXX.otf");
+        if (temp_file.open()) {
+            qDebug() << "Loading font Aileron from temporary file: " << temp_file.fileName();
+            QFile file(":/assets/fonts/Aileron-Regular.otf");
+            if (file.open(QIODevice::ReadOnly)) {
+                temp_file.write(file.readAll());
+            }
+            temp_file.close();
+            font_normal = fonsAddFont(fs, "sans", temp_file.fileName().toStdString().c_str());
+        }
+    }
+
+    if (font_normal == FONS_INVALID) {
+        Dr::PrintDebug("Could not add font Aileron to font stash!");
+    } else {
+        unsigned int white = glfonsRGBA(255, 255, 255, 255);
+        ///unsigned int brown = glfonsRGBA(192, 128,   0, 128);
+        fonsClearState(fs);
+        fonsSetFont( fs, font_normal);
+        fonsSetSize( fs, 14.0f);
+        fonsSetColor(fs, white);
+    }
+}
+
 
 //####################################################################################
 //##    Shaders

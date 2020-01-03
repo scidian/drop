@@ -98,7 +98,7 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
         // Stage 4 Rover Test
         long start_stage = project->findWorldWithName("World 2")->getFirstStageKey();
-        project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_dragon->getKey(),  0,    60,   5);
+        project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Character, a_dragon->getKey(),  0,    80,   5);
 
         project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet->getKey(),   200,   600,   0);
         project->findWorldWithName("World 2")->getStageFromKey(start_stage)->addThing(DrThingType::Object, a_planet->getKey(),  1200,   475,   0);

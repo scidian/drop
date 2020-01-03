@@ -15,6 +15,7 @@
 #include <QOpenGLTexture>
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
+
 #include <chrono>
 
 #include "3rd_party/chipmunk/chipmunk.h"
@@ -168,6 +169,7 @@ public:
     void            importTexture(long texture_id, QPixmap &pixmap);
     void            loadBuiltInModels();
     void            loadBuiltInTextures();
+    void            loadFonts();
     void            loadProjectTextures();
     void            loadShaders();
 
