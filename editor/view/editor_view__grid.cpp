@@ -51,7 +51,7 @@ void DrView::updateGrid() {
     m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
     QColor background = (m_back_color_use) ? m_back_color : Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
-    this->setStyleSheet(" QFrame { background-color: " + background.name() + "; }");
+    this->setStyleSheet(" QFrame { background-color: " + background.name() + "; } ");
 
     recalculateGrid();
     m_grid_needs_redraw = true;                 // Flag grid for redraw during next paintEvent

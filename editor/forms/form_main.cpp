@@ -83,11 +83,13 @@ FormMain::~FormMain() {
 void FormMain::buildSceneAfterLoading(long stage_key) {
     if (Dr::CheckDoneLoading() == false) {
         QTimer::singleShot( 100, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
-        return;
+    } else {
+        QTimer::singleShot(  50, this, [this, stage_key] { this->buildSceneAfterWaiting(stage_key); } );
     }
+}
+void FormMain::buildSceneAfterWaiting(long stage_key) {
     buildScene( stage_key );
 }
-
 
 //####################################################################################
 //##    Sets the new palette to the style sheets

@@ -208,9 +208,11 @@ private slots:
     void            buttonGroupPlayClicked(int id);
     void            buttonGroupTransformClicked(int id);
 
-    void            centerViewTimer(QPointF center_point);
-    void            editMenuAboutToShow();
-    void            editMenuAboutToHide();
+    void        buildSceneAfterWaiting(long stage_key);
+
+    void        centerViewTimer(QPointF center_point);
+    void        editMenuAboutToShow();
+    void        editMenuAboutToHide();
 
 signals:
     // Undo Stack Signals
