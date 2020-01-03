@@ -99,24 +99,18 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         if (entity == nullptr) return;
         if (entity->getType() != DrType::Asset) return;
         DrAsset *asset = dynamic_cast<DrAsset*>(entity);
-        if (asset == nullptr) return;
+        if (asset == nullptr) return;       
+
+        // Find name for copy
+        std::vector<QString> asset_names;
+        for (auto &asset_pair : getParentProject()->getAssetMap()) {
+            asset_names.push_back( QString::fromStdString(asset_pair.second->getName()) );
+        }
+        QString new_name = Dr::FindCopyName(QString::fromStdString(asset->getName()), asset_names);
 
         // Create new Asset, copy Settings / Components / Properties
         DrAsset *copy_asset = getParentProject()->addAsset( asset->getAssetType(), asset->getBaseKey() );
         copy_asset->copyEntitySettings(asset);
-
-        // Find a new name for Asset
-        QString new_name;
-        bool    has_name;
-        int     i = 1;
-        do {
-            has_name = false;
-            new_name = (i == 1) ? QString::fromStdString(copy_asset->getName()) + " copy" : QString::fromStdString(copy_asset->getName()) + " copy (" + QString::number(i) + ")";
-            for (auto &asset_pair : getParentProject()->getAssetMap()) {
-                if (asset_pair.second->getName() == new_name.toStdString()) has_name = true;
-            }
-            i++;
-        } while (has_name != false);
         copy_asset->setName( new_name.toStdString() );
 
         // Update EditorRelay widgets

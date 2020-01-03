@@ -151,7 +151,7 @@ public:
     DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image, long key = c_no_key);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
-    DrWorld*        addWorldCopyFromWorld(DrWorld* from_world);
+    DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);
 
 
     // Project Building

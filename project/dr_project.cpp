@@ -232,29 +232,18 @@ DrWorld* DrProject::addWorld(long key, long start_stage_key, long last_stage_in_
 }
 
 // Adds a new World, copied from another World
-DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world) {
+DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world, std::string new_name) {
     DrWorld *copy_world = addWorld();
     copy_world->copyEntitySettings(from_world);
 
-    // Find name for Copy World
-    std::string new_name;
-    bool has_name;
-    int  i = 1;
-    do {
-        has_name = false;
-        new_name = (i == 1) ? from_world->getName() + " copy" : from_world->getName() + " copy (" + std::to_string(i) + ")";
-        for (auto &world_pair : getWorldMap()) {
-            if (world_pair.second->getName() == new_name) has_name = true;
-        }
-        i++;
-    } while (has_name != false);
+    // Set new name of copy World
     copy_world->setName( new_name );
 
     // Copy all Stages from World
     int stage_count = 0;
     for (auto &stage_pair : from_world->getStageMap()) {
         DrStage *stage = stage_pair.second;
-        DrStage *copy_stage = copy_world->addStageCopyFromStage(stage, (stage_count == 0));
+        DrStage *copy_stage = copy_world->addStageCopyFromStage(stage, stage->getName(), (stage_count == 0));
         copy_stage->copyEntitySettings(stage);
         stage_count++;
     }

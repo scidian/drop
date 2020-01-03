@@ -137,6 +137,42 @@ QString FitStringToWidth(QFont font, QString text_to_check, int max_width, bool 
 
 QString StringFromBool(bool boolean)        { return boolean? "True" : "False"; }
 
+// Finds a new name for a copy
+QString FindCopyName(QString original, std::vector<QString> others) {
+    QString new_name = original;
+    if (new_name.indexOf(" copy") != -1) new_name = new_name.left(new_name.indexOf(" copy"));
+    int same_count = 0;
+    for (auto &one : others) {
+        QString check_name = one;
+        if (check_name.indexOf(" copy") != -1) check_name = check_name.left(check_name.indexOf(" copy"));
+        if (check_name == new_name) same_count++;
+    }
+
+    // First copy
+    if (same_count > 0) new_name += " copy";
+
+    // Multiple copies, find name with unused copy number
+    if (same_count > 1) {
+        QString name_check = "";
+        bool has_name = false;
+        int  i = 1;
+        do {
+            has_name = false;
+            name_check = new_name;
+            if (i > 1) name_check += " (" + QString::number(i) + ")";
+            for (auto &one : others) {
+                if (one == name_check) {
+                    has_name = true;
+                    break;
+                }
+            }
+            i++;
+        } while (has_name == true);
+        new_name = name_check;
+    }
+    return new_name;
+}
+
 
 
 //####################################################################################

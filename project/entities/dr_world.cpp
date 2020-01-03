@@ -69,7 +69,7 @@ DrStage* DrWorld::addStage(long stage_key, bool is_start_stage, DrPointF center_
 }
 
 // Adds a Stage as a copy from another Stage
-DrStage* DrWorld::addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage) {
+DrStage* DrWorld::addStageCopyFromStage(DrStage *from_stage, std::string new_name, bool copy_into_start_stage) {
     DrStage *copy_stage = (copy_into_start_stage) ? getStageMap()[m_start_stage_key] : addStage();
     copy_stage->copyEntitySettings(from_stage);
 
@@ -79,18 +79,7 @@ DrStage* DrWorld::addStageCopyFromStage(DrStage *from_stage, bool copy_into_star
         my_name->setEditable(true);
     }
 
-    // Find a new name for Stage
-    std::string new_name;
-    bool    has_name;
-    int     name_count = 1;
-    do {
-        has_name = false;
-        new_name = (name_count == 1) ? from_stage->getName() + " copy" : from_stage->getName() + " copy (" + std::to_string(name_count) + ")";
-        for (auto &stage_pair : getStageMap()) {
-            if (stage_pair.second->getName() == new_name) has_name = true;
-        }
-        name_count++;
-    } while (has_name != false);
+    // Set new name for Stage
     copy_stage->setName( new_name );
 
     // Copy all Things from From_Stage

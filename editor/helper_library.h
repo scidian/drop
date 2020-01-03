@@ -50,6 +50,7 @@ namespace Dr {
     int         CheckFontWidth(QFont font, QString text_to_check);
     QString     FitStringToWidth(QFont font, QString text_to_check, int max_width = 80, bool use_dots = true);
     QString     StringFromBool(bool boolean);
+    QString     FindCopyName(QString original, std::vector<QString> others);
 
 
     // ***** Dr Libary Misc Conversion

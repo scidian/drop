@@ -55,7 +55,7 @@ public:
     // Function Calls
     DrStage*    addStage(std::string new_stage_name = std::string(""));
     DrStage*    addStage(long stage_key, bool is_start_stage, DrPointF center_point, double zoom_scale);
-    DrStage*    addStageCopyFromStage(DrStage *from_stage, bool copy_into_start_stage = false);
+    DrStage*    addStageCopyFromStage(DrStage *from_stage, std::string new_name, bool copy_into_start_stage = false);
     void        deleteStage(DrStage *stage);
     void        initializeWorldSettings(std::string new_name);
 

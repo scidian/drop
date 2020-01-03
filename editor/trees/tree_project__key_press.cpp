@@ -58,7 +58,15 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             for (auto item : selectedItems()) {
                 DrStage *stage = getParentProject()->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                 if (stage == nullptr) continue;
-                DrStage *copy_stage = stage->getParentWorld()->addStageCopyFromStage(stage);
+
+                // Find a new name for Stage
+                std::vector<QString> stage_names;
+                for (auto &stage_pair : stage->getParentWorld()->getStageMap()) {
+                    stage_names.push_back( QString::fromStdString(stage_pair.second->getName()) );
+                }
+                QString new_name = Dr::FindCopyName(QString::fromStdString(stage->getName()), stage_names);
+
+                DrStage *copy_stage = stage->getParentWorld()->addStageCopyFromStage(stage, new_name.toStdString());
                 if (stage_count == 0) new_selected_stage = copy_stage;
                 stage_count++;
             }
@@ -78,7 +86,15 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             for (auto item : selectedItems()) {
                 DrWorld *world = getParentProject()->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
                 if (world == nullptr) continue;
-                DrWorld *copy_world = getParentProject()->addWorldCopyFromWorld(world);
+
+                // Find a new name for World
+                std::vector<QString> world_names;
+                for (auto &world_pair : getParentProject()->getWorldMap()) {
+                    world_names.push_back( QString::fromStdString(world_pair.second->getName()) );
+                }
+                QString new_name = Dr::FindCopyName(QString::fromStdString(world->getName()), world_names);
+
+                DrWorld *copy_world = getParentProject()->addWorldCopyFromWorld(world, new_name.toStdString());
                 if (world_count == 0) new_selected_world = copy_world;
                 world_count++;
             }

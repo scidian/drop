@@ -28,7 +28,6 @@ private:
 
     long            m_base_key = c_no_key;              // Holds key to source (asset pulls from an DrAnimation, DrImage)
                                                         // For more info, look at DrAsset Constructor
-
     long            m_width;
     long            m_height;
 
