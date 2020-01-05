@@ -106,7 +106,7 @@ private:
     QDockWidget    *dockAssetsEditor;
     QWidget        *widgetCentralEditor;
     QScrollArea    *areaBottom;
-    QFrame         *statusBar;
+    QFrame         *statusBar,      *viewToolBar;
 
     //       "Editor" Status Bar Widgets
     QLabel         *labelSelected,  *labelMousePosition;

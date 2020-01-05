@@ -421,5 +421,9 @@
         <file>assets/dr_images/ground/wood_left.png</file>
         <file>assets/dr_images/ground/wood_right.png</file>
         <file>assets/dr_images/empty.png</file>
+        <file>assets/toolbar_icons/toolbar_mouse_hand.png</file>
+        <file>assets/toolbar_icons/toolbar_mouse_magnify.png</file>
+        <file>assets/toolbar_icons/toolbar_mouse_pointer.png</file>
+        <file>assets/toolbar_icons/toolbar_debug_shape.png</file>
     </qresource>
 </RCC>

@@ -59,6 +59,10 @@ namespace Advisor_Info {
     const HeaderBodyList Play_Stage             { "Play Stage", "Play ONLY the current Stage. Gameplay starts at the Start Stage of the current World "
                                                                 "and only loads in the Stage currently selected." };
 
+    const HeaderBodyList Mouse_Pointer          { "Selection Tool", "This is the main tool mode of the mouse cursor in the editor. Use this to select and move objects." };
+    const HeaderBodyList Mouse_Hand             { "Pan Tool",       "Use this tool to move the viewable game area in the editor." };
+    const HeaderBodyList Mouse_Magnify          { "Zoom Tool",      "Use this tool to change the zoom level of the editor." };
+
 
     // Form Main Widgets
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor items." };

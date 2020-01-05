@@ -99,6 +99,15 @@ std::string StyleSheetToolBar() {
     StyleSheetToolBarButtons("buttonSettingsEditor",    "settings.png",         "settings.png",         "settings.png",          4, 4, 4, 4, 4, false) +
             " QToolButton#buttonSettingsEditor              { padding-left: 3px; padding-bottom: 3px; } " +
 
+
+    // View Toolbar Buttons
+    StyleSheetToolBarModeButton("mousePointer", "toolbar_mouse_pointer.png",    "toolbar_mouse_pointer.png",    4) +
+    StyleSheetToolBarModeButton("mouseHand",    "toolbar_mouse_hand.png",       "toolbar_mouse_hand.png",       4) +
+    StyleSheetToolBarModeButton("mouseMagnify", "toolbar_mouse_magnify.png",    "toolbar_mouse_magnify.png",    4) +
+    StyleSheetToolBarButtons(   "debugOnOff",   "debug_shape.png",              "debug_shape.png",      "debug_shape.png",       4, 4, 4, 4, 4, false) +
+            " QToolButton#debugOnOff                        { padding-left: 3px; padding-bottom: 4px; padding-right: 3px; padding-top: 4px; } " +
+
+
     // Popup Menus
     " QMenu#menuToolbarOptions { "
     "      padding-top: 4px; padding-bottom: 4px; "
@@ -145,7 +154,8 @@ std::string StyleSheetToolBar() {
 //################################################################################
 //##    Formatting for "Mode" toolbar buttons
 //################################################################################
-std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name) {
+std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name, int padding) {
+    std::string pad = std::to_string(padding);
     return
     " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
     "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
@@ -155,11 +165,11 @@ std::string StyleSheetToolBarModeButton(std::string button_name, std::string ico
     "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
     " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
     " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
-    " QToolButton#" + button_name + "  {                image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":pressed {         image: url(:/assets/toolbar_icons/" + icon_faded_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":checked {         image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":hover:checked {   image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } "
-    " QToolButton#" + button_name + ":hover:!checked {  image: url(:/assets/toolbar_icons/" + icon_name + "); padding: 7px; } ";
+    " QToolButton#" + button_name + "  {                image: url(:/assets/toolbar_icons/" + icon_name + "); padding: " + pad + "px; } "
+    " QToolButton#" + button_name + ":pressed {         image: url(:/assets/toolbar_icons/" + icon_faded_name + "); padding: " + pad + "px; } "
+    " QToolButton#" + button_name + ":checked {         image: url(:/assets/toolbar_icons/" + icon_name + "); padding: " + pad + "px; } "
+    " QToolButton#" + button_name + ":hover:checked {   image: url(:/assets/toolbar_icons/" + icon_name + "); padding: " + pad + "px; } "
+    " QToolButton#" + button_name + ":hover:!checked {  image: url(:/assets/toolbar_icons/" + icon_name + "); padding: " + pad + "px; } ";
 }
 
 

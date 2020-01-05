@@ -51,7 +51,7 @@ namespace Dr {
     std::string StyleSheetToolBar();
     std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_unchecked, std::string icon_checked, std::string icon_disabled,
                                          int padding, int tl, int tr, int bl, int br, bool checkable);
-    std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name);
+    std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name, int padding = 7);
     std::string StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_percent, bool highlight = false);
     std::string StyleSheetPoppedOutBackgroundBorder(DrColor background_color, DrColor border_color, int top_percent,
                                                     int bottom_percent, bool highlight = false);

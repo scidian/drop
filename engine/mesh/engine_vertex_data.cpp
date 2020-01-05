@@ -99,7 +99,8 @@ void DrEngineVertexData::initializeTextureCone() {
     x1 =    0;  y1 = +h2;                       // Top
     x2 =  -w2;  y2 = -h2;                       // Bottom Left
     x3 =  +w2;  y3 = -h2;                       // Bottom Right
-    tx1 = 0.5; ty1 = 0.5;
+    ///tx1 = 0.5; ty1 = 0.5;                    // ... If wanting to use just bottom half
+    tx1 = 0.5; ty1 = 1.0;
     tx2 = 0.0; ty2 = 0.0;
     tx3 = 1.0; ty3 = 0.0;
 
@@ -111,16 +112,10 @@ void DrEngineVertexData::initializeTextureCone() {
     glm::mat4 rotate = glm::mat4(1.0);
 
     for (int i = 0; i < 4; ++i) {
-        if (i == 1) {
-            tx2 = 1.0; ty2 = 0.0;
-            tx3 = 1.0; ty3 = 1.0;
-        } else if (i == 2) {
-            tx2 = 0.0; ty2 = 1.0;
-            tx3 = 0.0; ty3 = 0.0;
-        } else if (i == 3) {
-            tx2 = 1.0; ty2 = 1.0;
-            tx3 = 0.0; ty3 = 1.0;
-        }
+        // ... If wanting to use just bottom half and rotate quarters around texture
+        ///if (i == 1) {           tx2 = 1.0; ty2 = 0.0;       tx3 = 1.0; ty3 = 1.0;
+        ///} else if (i == 2) {    tx2 = 0.0; ty2 = 1.0;       tx3 = 0.0; ty3 = 0.0;
+        ///} else if (i == 3) {    tx2 = 1.0; ty2 = 1.0;       tx3 = 0.0; ty3 = 1.0; }
 
         add(point_t , n, DrVec2(tx1, ty1), Triangle_Point::Point1);
         add(point_bl, n, DrVec2(tx2, ty2), Triangle_Point::Point2);

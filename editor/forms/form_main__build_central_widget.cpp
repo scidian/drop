@@ -176,7 +176,34 @@ void FormMain::buildCentralWidgetEditor() {
                         }
 
 
-                        // ***** View area status bar
+                        // ***** Toolbar above view
+                        viewToolBar = new QFrame(widgetStageView);
+                        viewToolBar->setObjectName("viewToolBar");
+                        viewToolBar->setFixedHeight(32);
+                            QHBoxLayout *view_toolbar_layout = new QHBoxLayout(viewToolBar);
+                            view_toolbar_layout->setObjectName(QStringLiteral("viewToolBarLayout"));
+                            view_toolbar_layout->setSpacing(6);
+                            view_toolbar_layout->setContentsMargins(6, 2, 6, 0);
+
+                            QToolButton *mouse_pointer =    createToolbarButton("mousePointer", Advisor_Info::Mouse_Pointer, 24, 24, true, true);
+                            view_toolbar_layout->addWidget(mouse_pointer);
+
+                            QToolButton *mouse_hand =       createToolbarButton("mouseHand", Advisor_Info::Mouse_Hand, 24, 24, true, true);
+                            view_toolbar_layout->addWidget(mouse_hand);
+
+                            QToolButton *mouse_magnify =    createToolbarButton("mouseMagnify", Advisor_Info::Mouse_Magnify, 24, 24, true, true);
+                            view_toolbar_layout->addWidget(mouse_magnify);
+                            view_toolbar_layout->addWidget(createToolbarSpacer());
+
+                            view_toolbar_layout->addStretch();
+
+                            view_toolbar_layout->addWidget(createToolbarSpacer());
+                            QToolButton *debug_on_off =    createToolbarButton("debugOnOff", Advisor_Info::Not_Set, 23, 23, true, true);
+                            view_toolbar_layout->addWidget(debug_on_off);
+
+
+
+                        // ***** Lower View area Status Bar
                         statusBar = new QFrame(widgetStageView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(26);
@@ -199,10 +226,9 @@ void FormMain::buildCentralWidgetEditor() {
                             labelMousePosition->setFont(font);
                             status_layout->addWidget(labelMousePosition);
 
-
+                    verticalLayoutView->addWidget(viewToolBar);
                     verticalLayoutView->addWidget(viewEditor);
                     verticalLayoutView->addWidget(statusBar);
-
 
                 splitterHorizontal->addWidget(widgetStageView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150
