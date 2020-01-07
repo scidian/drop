@@ -49,6 +49,7 @@ uniform         bool    u_cross_hatch;//false               // Cross Hatch      
 uniform mediump float   u_cross_hatch_width;// = 5.0        // Cross Hatch Width    0.0 to ?
 uniform         bool    u_wavy;// = false;                  // Wavy                 True / False
 uniform         bool    u_wireframe;// = false;             // Wireframe            True / False
+uniform mediump float   u_wireframe_width;// = 1.0          // Wireframe Width      0.0 to ? (1.0 is good, 6.0 is fat)
 
 // Constants
 const   highp   float   THRESHOLD = 0.75;                   // Alpha threshold for our occlusion map
@@ -81,11 +82,9 @@ vec3 hsvToRgb(vec3 c) {
 //####################################################################################
 //##    Calculates how close point is to edge of triangle (used for wirefame)
 //####################################################################################
-float wireframe_width = 1.0;    // A number here like 6.0 is big, but still works. Looks like fat lines...
-
-float edgeFactor() {
+float edgeFactor(float width) {
     vec3 d =  fwidth(vert_bary);
-    vec3 a3 = smoothstep(vec3(0.0), d * wireframe_width * sqrt(u_zoom), vert_bary);
+    vec3 a3 = smoothstep(vec3(0.0), d * width * sqrt(u_zoom), vert_bary);
     return min(min(a3.x, a3.y), a3.z);
 }
 
@@ -472,7 +471,7 @@ void main( void ) {
     // ***** WIREFRAME
     if (u_wireframe) {
         float wireframe_percent = 0.2;
-        final_color *= (1.0 - edgeFactor());
+        final_color *= (1.0 - edgeFactor(u_wireframe_width));
 
         // If not on edge, draw texture faded, or just maybe just discard
         if ( all(lessThan(final_color, vec4(0.02))) ) {

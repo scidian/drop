@@ -257,7 +257,14 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_cross_hatch,        object->cross_hatch );
     m_default_shader.setUniformValue( u_default_cross_hatch_width,  object->cross_hatch_width );
     m_default_shader.setUniformValue( u_default_wavy,               false );
-    m_default_shader.setUniformValue( u_default_wireframe,          (m_engine->getCurrentWorld()->wireframe || object->wireframe) );
+    if (m_engine->getCurrentWorld()->wireframe || object->wireframe) {
+        m_default_shader.setUniformValue( u_default_wireframe,          true );
+        if (object->wireframe)  m_default_shader.setUniformValue( u_default_wireframe_width,    object->wireframe_width );
+        else                    m_default_shader.setUniformValue( u_default_wireframe_width,    m_engine->getCurrentWorld()->wireframe_width );
+    } else {
+        m_default_shader.setUniformValue( u_default_wireframe,          false );
+        m_default_shader.setUniformValue( u_default_wireframe_width,    1.0f );
+    }
 
 
     // ***** Draw triangles using shader program

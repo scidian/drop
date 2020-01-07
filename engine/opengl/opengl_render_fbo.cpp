@@ -75,6 +75,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_cross_hatch_width,  m_engine->getCurrentWorld()->cross_hatch_width );
     m_default_shader.setUniformValue( u_default_wavy,               m_engine->getCurrentWorld()->wavy );
     m_default_shader.setUniformValue( u_default_wireframe,          false );
+    m_default_shader.setUniformValue( u_default_wireframe_width,    1.0f );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

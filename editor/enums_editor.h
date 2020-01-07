@@ -105,7 +105,24 @@ enum class Position_Flags {                                 // !!!!! Order is im
 
 
 //####################################################################################
-//##    Interactive mouse modes
+//##    Stage View Mouse Modes
+//############################
+enum class Mouse_Mode {
+    None                = 0,
+    Pointer             = 1,
+    Hand                = 2,
+    Magnify             = 3,
+};
+
+// Stage View Toggle Options
+enum class Buttons_Toggle {
+    None,
+    DebugOnOff,                     // Turns Debug drawing on / off
+};
+
+
+//####################################################################################
+//##    Sub Stage View Mouse Mode - Mouse_Mode::Pointer
 //############################
 enum class View_Mode {
     None,

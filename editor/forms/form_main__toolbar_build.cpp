@@ -28,13 +28,15 @@
 //####################################################################################
 void FormMain::buildToolBar() {
 
+    int toolbar_height = 44;
+
     // Widgets to use during building
     QToolButton *tool;
 
     // ***** Initialize toolbar widget
     toolbar = new QToolBar(this);
     toolbar->setObjectName(QStringLiteral("toolbar"));
-    toolbar->setFixedHeight(44);
+    toolbar->setFixedHeight(toolbar_height);
     toolbar->setMovable(false);
     toolbar->setFloatable(false);
     toolbar->installEventFilter(new DrFilterClickAndDragWindow(toolbar));
@@ -42,7 +44,7 @@ void FormMain::buildToolBar() {
     // ***** This is a container object that holds all toolbar button groups, allowing us to put them in a layout
     widgetToolbar = new QWidget();
     widgetToolbar->setObjectName(QStringLiteral("widgetToolbar"));
-    widgetToolbar->setFixedHeight(46);
+    widgetToolbar->setFixedHeight(toolbar_height);
     widgetToolbarLayout = new QHBoxLayout(widgetToolbar);
     widgetToolbarLayout->setSpacing(3);
     widgetToolbarLayout->setContentsMargins(12, 0, 12, 0);
@@ -50,10 +52,10 @@ void FormMain::buildToolBar() {
     // ***** Selectable Button group that keeps track of which mode we are in: World Editor, World Map, UI Editor
     widgetGroupMode = new QWidget();
     widgetGroupMode->setObjectName(QStringLiteral("widgetGroupMode"));
-    widgetGroupMode->setFixedHeight(46);
+    widgetGroupMode->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutMode = new QHBoxLayout(widgetGroupMode);
         toolbarLayoutMode->setSpacing(3);
-        toolbarLayoutMode->setContentsMargins(0, 0, 0, 0);
+        toolbarLayoutMode->setContentsMargins(0, 1, 0, 0);
 
         buttonsGroupMode = new QButtonGroup();
         buttonsGroupMode->setExclusive(true);
@@ -78,7 +80,7 @@ void FormMain::buildToolBar() {
     widgetGroupEdit = new QWidget(widgetToolbar);
     widgetGroupEdit->hide();
     widgetGroupEdit->setObjectName(QStringLiteral("widgetGroupEdit"));
-    widgetGroupEdit->setFixedHeight(46);
+    widgetGroupEdit->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutEdit = new QHBoxLayout(widgetGroupEdit);
         toolbarLayoutEdit->setSpacing(5);
         toolbarLayoutEdit->setContentsMargins(0, 0, 0, 0);
@@ -107,7 +109,7 @@ void FormMain::buildToolBar() {
     widgetGroupLayering = new QWidget(widgetToolbar);
     widgetGroupLayering->hide();
     widgetGroupLayering->setObjectName(QStringLiteral("widgetGroupLayering"));
-    widgetGroupLayering->setFixedHeight(46);
+    widgetGroupLayering->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutLayering = new QHBoxLayout(widgetGroupLayering);
         toolbarLayoutLayering->setSpacing(1);
         toolbarLayoutLayering->setContentsMargins(0, 0, 0, 0);
@@ -140,7 +142,7 @@ void FormMain::buildToolBar() {
     widgetGroupTransform = new QWidget(widgetToolbar);
     widgetGroupTransform->hide();
     widgetGroupTransform->setObjectName(QStringLiteral("widgetGroupTransform"));
-    widgetGroupTransform->setFixedHeight(46);
+    widgetGroupTransform->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutTransform = new QHBoxLayout(widgetGroupTransform);
         toolbarLayoutTransform->setSpacing(1);
         toolbarLayoutTransform->setContentsMargins(2, 0, 0, 0);
@@ -179,7 +181,7 @@ void FormMain::buildToolBar() {
     widgetGroupGrid = new QWidget(widgetToolbar);
     widgetGroupGrid->hide();
     widgetGroupGrid->setObjectName(QStringLiteral("widgetGroupGrid"));
-    widgetGroupGrid->setFixedHeight(46);
+    widgetGroupGrid->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutGrid = new QHBoxLayout(widgetGroupGrid);
         toolbarLayoutGrid->setSpacing(0);
         toolbarLayoutGrid->setContentsMargins(0, 0, 0, 0);
@@ -218,7 +220,7 @@ void FormMain::buildToolBar() {
     widgetGroupPlay = new QWidget(widgetToolbar);
     widgetGroupPlay->hide();
     widgetGroupPlay->setObjectName(QStringLiteral("widgetGroupPlay"));
-    widgetGroupPlay->setFixedHeight(46);
+    widgetGroupPlay->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutPlay = new QHBoxLayout(widgetGroupPlay);
         toolbarLayoutPlay->setSpacing(5);
         toolbarLayoutPlay->setContentsMargins(0, 0, 0, 0);
@@ -244,7 +246,7 @@ void FormMain::buildToolBar() {
     widgetGroupSettings = new QWidget(widgetToolbar);
     widgetGroupSettings->hide();
     widgetGroupSettings->setObjectName(QStringLiteral("widgetGroupSettings"));
-    widgetGroupSettings->setFixedHeight(46);
+    widgetGroupSettings->setFixedHeight(toolbar_height);
         QHBoxLayout *toolbarLayoutSettings = new QHBoxLayout(widgetGroupSettings);
         toolbarLayoutSettings->setSpacing(5);
         toolbarLayoutSettings->setContentsMargins(0, 0, 0, 0);
@@ -305,12 +307,12 @@ void FormMain::buildToolBar() {
 //####################################################################################
 QToolButton* FormMain::createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable, bool enabled) {
     QToolButton *tool = new QToolButton();
-    tool->setObjectName( style_sheet_name );
+    tool->setObjectName(style_sheet_name);
     if (checkable) {
         tool->setCheckable(true);
         tool->setChecked(false);
     }
-    tool->setToolTip( advisor_text[0] );
+    tool->setToolTip(advisor_text[0]);
     tool->setEnabled(enabled);
     tool->setFixedSize(w, h);
     m_filter_hover->attachToHoverHandler(tool, advisor_text);

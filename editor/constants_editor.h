@@ -40,7 +40,7 @@ namespace Advisor_Info {
     const HeaderBodyList Trash_Can              { "Delete",        "Remove selected item(s)." };
 
     const HeaderBodyList Reset                  { "Reset Transform", "Resets selected objects' transforms to a Scale of X:1, Y:1 and Rotation of "
-                                                                            "0 Degrees." };
+                                                                     "0 Degrees." };
     const HeaderBodyList Flip_H                 { "Flip Horizontal", "Flips the selection horizontally." };
     const HeaderBodyList Flip_V                 { "Flip Vertical",   "Flips the selection vertically." };
     const HeaderBodyList Rotate_L               { "Rotate Left",  "Rotates selection counter-clockwise by 90 degrees." };
@@ -56,13 +56,17 @@ namespace Advisor_Info {
                                                                      "object within the group snap to grid individually." };
 
     const HeaderBodyList Play_Game              { "Play Game",  "Start playing game! Gameplay starts at the Start Stage of the World selected." };
-    const HeaderBodyList Play_Stage             { "Play Stage", "Play ONLY the current Stage. Gameplay starts at the Start Stage of the current World "
+    const HeaderBodyList Play_Stage             { "Play Stage", "Play <b>ONLY</b> the current Stage. Gameplay starts at the Start Stage of the current World "
                                                                 "and only loads in the Stage currently selected." };
 
-    const HeaderBodyList Mouse_Pointer          { "Selection Tool", "This is the main tool mode of the mouse cursor in the editor. Use this to select and move objects." };
-    const HeaderBodyList Mouse_Hand             { "Pan Tool",       "Use this tool to move the viewable game area in the editor." };
-    const HeaderBodyList Mouse_Magnify          { "Zoom Tool",      "Use this tool to change the zoom level of the editor." };
+    const HeaderBodyList Mouse_Pointer          { "Selection Tool", "This is the main tool mode of the mouse cursor in the editor. Use this to select and move objects."};
+    const HeaderBodyList Mouse_Hand             { "Pan Tool",       "Use this tool to move the viewable game area in the editor. It is also possible to Pan while using the <b>Selection "
+                                                                    "Tool</b>, activate the <b>Pan Tool</b> by holding down the <b>Space Bar</b>." };
+    const HeaderBodyList Mouse_Magnify          { "Zoom Tool",      "Use this tool to change the zoom level of the editor. It is also possible to Zoom while using the <b>Selection "
+                                                                    "Tool</b> by using the <b>Mouse Wheel</b> when available."};
 
+    const HeaderBodyList Debug_On_Off           { "Debug Shapes On / Off", "Toggles drawing of Physics Collision Shapes On / Off. These shapes show physics / event collisions within "
+                                                                           "your game. <b>Blue:</b> Player, <b>Red:</b> Enemy, <b>Purple:</b> Damage All" };
 
     // Form Main Widgets
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor items." };
@@ -88,7 +92,7 @@ namespace Advisor_Info {
     const HeaderBodyList Stage_Description      { "Stage", "A Stage is a container of Things." };
     const HeaderBodyList Camera_Thing           { "Camera", "This is a Camera. This will decide what the player sees." };
     const HeaderBodyList Character_Thing        { "Character", "This is a Character." };
-    const HeaderBodyList Thing_Description      { "Thing", "This is a Thing in a Stage." };
+    const HeaderBodyList Thing_Description      { "Thing", "This is a Thing in a Stage. Things are anything in a Stage (i.e. Character, Object, etc)." };
 
     // Asset Types
     const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character." };

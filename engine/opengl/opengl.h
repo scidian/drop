@@ -289,6 +289,7 @@ private:
     int     u_default_cross_hatch_width;                        // Cross Hatch Width
     int     u_default_wavy;                                     // Wavy? (Ripple Effect)
     int     u_default_wireframe;                                // Wireframe?
+    int     u_default_wireframe_width;                          // Wireframe Width
 
 
     // Occluder Map Shader

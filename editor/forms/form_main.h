@@ -80,14 +80,14 @@ private:
     QList<QLayoutItem*>  toolbarSpacers { };
 
     QToolBar    *toolbar;
-    QWidget     *widgetToolbar;         QHBoxLayout     *widgetToolbarLayout;
+    QWidget     *widgetToolbar;             QHBoxLayout     *widgetToolbarLayout;
 
-    QWidget     *widgetGroupMode;       QButtonGroup    *buttonsGroupMode;
-    QWidget     *widgetGroupEdit;       QButtonGroup    *buttonsGroupEdit;          QToolButton *buttonAdd;
-    QWidget     *widgetGroupLayering;   QButtonGroup    *buttonsGroupLayering;
-    QWidget     *widgetGroupTransform;  QButtonGroup    *buttonsGroupTransform;
-    QWidget     *widgetGroupGrid;       QButtonGroup    *buttonsGroupGrid;
-    QWidget     *widgetGroupPlay;       QButtonGroup    *buttonsGroupPlay;
+    QWidget     *widgetGroupMode;           QButtonGroup    *buttonsGroupMode;
+    QWidget     *widgetGroupEdit;           QButtonGroup    *buttonsGroupEdit;              QToolButton *buttonAdd;
+    QWidget     *widgetGroupLayering;       QButtonGroup    *buttonsGroupLayering;
+    QWidget     *widgetGroupTransform;      QButtonGroup    *buttonsGroupTransform;
+    QWidget     *widgetGroupGrid;           QButtonGroup    *buttonsGroupGrid;
+    QWidget     *widgetGroupPlay;           QButtonGroup    *buttonsGroupPlay;
     QWidget     *widgetGroupSettings;
 
 
@@ -107,6 +107,10 @@ private:
     QWidget        *widgetCentralEditor;
     QScrollArea    *areaBottom;
     QFrame         *statusBar,      *viewToolBar;
+
+    //       "Editor" Tool Bar Widgets
+    QWidget        *widgetGroupMouse;       QButtonGroup   *buttonsGroupMouse;
+    QWidget        *widgetGroupToggle;      QButtonGroup   *buttonsGroupToggle;
 
     //       "Editor" Status Bar Widgets
     QLabel         *labelSelected,  *labelMousePosition;

@@ -147,6 +147,7 @@ public:
     float           brightness = 0.0f;                          // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
     bool            wireframe = false;                          // Wireframe            True / False
+    float           wireframe_width = 1.0;                      // Wireframe Width
     bool            cartoon = false;                            // Cartoon              True / False
     float           cartoon_width = 5.0;                        // Cartoon Width
     bool            cross_hatch = false;                        // Cross Hatch          True / False

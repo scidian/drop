@@ -320,7 +320,7 @@ enum class Properties {
 
     // Special Effects
     World_Filter_Convert_3D             = 114,      // bool
-    World_Filter_Wireframe              = 115,      // bool
+    World_Filter_Wireframe              = 115,      // bool double combo
     World_Filter_Cartoon                = 116,      // bool double combo
     World_Filter_Cross_Hatch            = 117,      // bool double combo
     World_Filter_Wavy                   = 118,      // bool
@@ -387,7 +387,7 @@ enum class Properties {
 
     // Special Effects
     Thing_Filter_Convert_3D             = 159,      // bool
-    Thing_Filter_Wireframe              = 160,      // bool
+    Thing_Filter_Wireframe              = 160,      // bool double combo
     Thing_Filter_Cartoon                = 161,      // bool double combo
     Thing_Filter_Cross_Hatch            = 162,      // bool double combo
 

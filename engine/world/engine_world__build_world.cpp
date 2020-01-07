@@ -113,7 +113,8 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
 
     bool draw_3D =      world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Convert_3D).toBool();
     render_mode =       draw_3D ? Render_Mode::Mode_3D : Render_Mode::Mode_2D;
-    wireframe =         world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toBool();
+    wireframe =         world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toVector()[0].toBool();
+    wireframe_width =   world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toVector()[1].toFloat();
     cartoon =           world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toVector()[0].toBool();
     cartoon_width =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toVector()[1].toFloat();
     cross_hatch =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toVector()[0].toBool();

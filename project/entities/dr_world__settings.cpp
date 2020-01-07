@@ -86,7 +86,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Purple_Royal, true);
     getComponent(Components::World_Appearance)->setIcon(Component_Icons::Appearance);
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::RangedInt, std::vector<DrVariant>({ 256, 0, 256, 8 }),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::Slider, std::vector<DrVariant>({256, 0, 256, 8, ""}),
                            "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, DrPointF(1.0, 1.0),
@@ -109,13 +109,14 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Convert_3D, Property_Type::Bool, false,
                            "Instant 3D", "Auto convert all 2D graphics into 3D. Depth of each item is customizable utilizing each "
                                          "item's \"3D Properties - Depth\" property.");
-    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe, Property_Type::Bool, false,
+    addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wireframe,
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 1000.0, 1.0, "Edge Width: "}),
                            "Wireframe", "Renders all the world's objects as outlines.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cartoon,
-                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 5.0, 0.0, 10.0, 1.0,  "Edge Width: "}),
                            "Cartoon", "Gives the world a comic book look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch,
-                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 10.0, 1.0, 100, 5.0, "Hatch Width: "}),
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 10.0, 1.0, 100.0, 5.0, "Hatch Width: "}),
                            "Cross Hatch", "Gives the world a sketched look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");

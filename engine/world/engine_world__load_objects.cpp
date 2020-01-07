@@ -68,7 +68,8 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
     bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
     bool    instant_3d =    thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Convert_3D).toBool();
-    bool    wireframe =     thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toBool();
+    bool    wireframe =         thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toVector()[0].toBool();
+    float   wireframe_width =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toVector()[1].toFloat();
     bool    cartoon =       thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toVector()[0].toBool();
     float   cartoon_width = thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toVector()[1].toFloat();
     bool    cross_hatch =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
@@ -85,6 +86,7 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     object->negative =          negative;
     object->extrude_3d =        instant_3d;
     object->wireframe =         wireframe;
+    object->wireframe_width =   wireframe_width;
     object->cartoon =           cartoon;
     object->cartoon_width =     cartoon_width;
     object->cross_hatch =       cross_hatch;

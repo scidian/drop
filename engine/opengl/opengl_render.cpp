@@ -164,6 +164,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_cross_hatch_width,  5.0f );
     m_default_shader.setUniformValue( u_default_wavy,               false );
     m_default_shader.setUniformValue( u_default_wireframe,          false );
+    m_default_shader.setUniformValue( u_default_wireframe_width,    1.0f );
 }
 
 

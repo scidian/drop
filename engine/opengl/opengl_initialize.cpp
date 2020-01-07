@@ -314,6 +314,7 @@ void DrOpenGL::loadShaders() {
     u_default_cross_hatch_width =   m_default_shader.uniformLocation(   "u_cross_hatch_width" );
     u_default_wavy =                m_default_shader.uniformLocation(   "u_wavy" );
     u_default_wireframe =           m_default_shader.uniformLocation(   "u_wireframe" );
+    u_default_wireframe_width =     m_default_shader.uniformLocation(   "u_wireframe_width" );
 
 
     // ***** Initialize our Occluder Map Shader

@@ -221,8 +221,9 @@ void DrThing::addComponentSpecialEffects() {
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Convert_3D, Property_Type::Bool, false,
                            "Instant 3D", "Auto convert 2D graphics into 3D. Depth of item is customizable utilizing the "
                                          "\"3D Properties - Depth\" property.");
-    addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe, Property_Type::Bool, false,
-                           "Wireframe", "Renders this item as an 3d outline, item 3D Depth should be greater than 0 for best effect.");
+    addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe,
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 1000.0, 1.0, "Edge Width: "}),
+                           "Wireframe", "Renders this item as an 3D outline, item 3D Depth should be greater than 0 for best effect.");
     addPropertyToComponent(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon,
                            Property_Type::BoolDouble, std::vector<DrVariant>({false, 5.0, 0.0, 10, 1.0, "Edge Width: "}),
                            "Cartoon", "Gives this item a comic book look.");
