@@ -79,15 +79,26 @@ QImage ApplySinglePixelFilter(Image_Filter_Type filter, const QImage &from_image
                     color.setAlpha( Dr::Clamp(color.alpha() + value, 0, 255) );
                     break;
                 case Image_Filter_Type::Premultiplied_Alpha: {
-                    qreal r = color.redF() *   color.alphaF();
-                    qreal g = color.greenF() * color.alphaF();
-                    qreal b = color.blueF() *  color.alphaF();
+                    double r = color.redF() *   color.alphaF();
+                    double g = color.greenF() * color.alphaF();
+                    double b = color.blueF() *  color.alphaF();
                     color.setRedF(   r );
                     color.setGreenF( g );
                     color.setBlueF(  b );
                     break;
                 }
                 case Image_Filter_Type::Pixelation: ;                                           // Different Function
+                    break;
+                case Image_Filter_Type::Bitrate:
+                    double bit_depth = static_cast<double>(value);
+                    // = vec3(floor(frag_rgb.r * bit_depth), floor(frag_rgb.g * bit_depth), floor(frag_rgb.b * bit_depth)) / bit_depth;
+                    double r = static_cast<double>(static_cast<int>((color.redF() *     bit_depth))) / bit_depth;
+                    double g = static_cast<double>(static_cast<int>((color.greenF() *   bit_depth))) / bit_depth;
+                    double b = static_cast<double>(static_cast<int>((color.blueF() *    bit_depth))) / bit_depth;
+                    color.setRedF(   r );
+                    color.setGreenF( g );
+                    color.setBlueF(  b );
+                    break;
             }
 
             // Sets the new pixel color

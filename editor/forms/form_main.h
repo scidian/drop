@@ -67,8 +67,8 @@ private:
     DrProject              *m_project = nullptr;                                    // BASE DEFINITION of DrProject!!!!! Holds current open game project
     DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
 
-    Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what Form_Main_Mode state formMain is in
-
+    Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what state FormMain is in
+    Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;                     // Holds what state Editor Widget - Stage View Mouse Tool is in
 
     // ***** Menu Widgets
     QMenuBar       *menuBar;
@@ -111,9 +111,10 @@ private:
     //       "Editor" Tool Bar Widgets
     QWidget        *widgetGroupMouse;       QButtonGroup   *buttonsGroupMouse;
     QWidget        *widgetGroupToggle;      QButtonGroup   *buttonsGroupToggle;
+    QWidget        *widgetGroupZoomTool;
 
     //       "Editor" Status Bar Widgets
-    QLabel         *labelSelected,  *labelMousePosition;
+    QLabel         *labelSelected,  *labelInfo,     *labelMousePosition;
 
 
     // ***** Labels to display info
@@ -173,6 +174,7 @@ private:
     void        buildMenu();
     void        buildSceneAfterLoading(long stage_key);
     void        buildToolBar();
+    void        buildViewToolBar(QWidget *parent);
     void        buildCentralWidgetEditor();
     void        buildCentralWidgetMain();
     void        changePalette(Color_Scheme new_color_scheme);
@@ -205,12 +207,17 @@ private:
     void            updateToolbar();
 
 private slots:
+    // Main Toolbar
     void            buttonGroupEditClicked(int id);
     void            buttonGroupGridClicked(int id);
     void            buttonGroupLayeringClicked(int id);
     void            buttonGroupModeClicked(int id);
     void            buttonGroupPlayClicked(int id);
     void            buttonGroupTransformClicked(int id);
+
+    // View Toolbar
+    void            buttonGroupMouseClicked(int id);
+    void            buttonGroupToggleClicked(int id);
 
     void        buildSceneAfterWaiting(long stage_key);
 

@@ -275,6 +275,19 @@ QString CustomStyleSheetFormatting() {
 
         " QAbstractSpinBox#spinBool:!enabled { color: transparent; }"
 
+        // Spin boxes - Zoom
+        " QAbstractSpinBox#zoomSpin {        border: " + Dr::BorderWidth() + " solid; height: 20px; "
+        "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;"
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +
+        "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
+        " QAbstractSpinBox#zoomSpin:hover {  border: " + Dr::BorderWidth() + " solid; "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92, true) + " }"
+        " QAbstractSpinBox#zoomSpin:focus {  border: " + Dr::BorderWidth() + " solid; border-radius: 0px; "
+        "       color: " +        Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " +   Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; }"
+
         // Right click menu, mostly in SpinBox context menus
         " QMenu { "
         "       border: 1px solid black; "
@@ -321,7 +334,7 @@ QString CustomStyleSheetFormatting() {
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
         // Drop down PushButtons
-        " QPushButton#buttonDropDown { border: " + Dr::BorderWidth() + " solid; height: 20px; "
+        " QPushButton#buttonDropDown { border: " + Dr::BorderWidth() + " solid; height: 21px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
                 StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 9, 92) +
@@ -337,6 +350,26 @@ QString CustomStyleSheetFormatting() {
         "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-radius: 0px; }"
         " QPushButton#buttonDropDown:!enabled { "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       background: transparent; border: none; }"
+
+        // Drop down PushButtons - spinBoxSelect
+        " QPushButton#spinBoxSelect { border: " + Dr::BorderWidth() + " solid; height: 20px; "
+        "       border-top-left-radius: 0px; border-bottom-left-radius: 0px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Dark), Dr::GetColor(Window_Colors::Background_Dark), 9, 92) +
+        "       padding-left: 10px; "
+        "       text-align: left; } "
+        " QPushButton#spinBoxSelect::menu-indicator { left: -8px; top: -7px; }"
+        " QPushButton#spinBoxSelect:hover { border: " + Dr::BorderWidth() + " solid; "
+        "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
+                StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 10, 92, true) + " }"
+        " QPushButton#spinBoxSelect:pressed { "
+        "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
+        "       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
+        "       border-radius: 0px; }"
+        " QPushButton#spinBoxSelect:!enabled { "
         "       color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: transparent; border: none; }"
 

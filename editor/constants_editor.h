@@ -60,13 +60,14 @@ namespace Advisor_Info {
                                                                 "and only loads in the Stage currently selected." };
 
     const HeaderBodyList Mouse_Pointer          { "Selection Tool", "This is the main tool mode of the mouse cursor in the editor. Use this to select and move objects."};
-    const HeaderBodyList Mouse_Hand             { "Pan Tool",       "Use this tool to move the viewable game area in the editor. It is also possible to Pan while using the <b>Selection "
-                                                                    "Tool</b>, activate the <b>Pan Tool</b> by holding down the <b>Space Bar</b>." };
-    const HeaderBodyList Mouse_Magnify          { "Zoom Tool",      "Use this tool to change the zoom level of the editor. It is also possible to Zoom while using the <b>Selection "
-                                                                    "Tool</b> by using the <b>Mouse Wheel</b> when available."};
+    const HeaderBodyList Mouse_Hand             { "Hand Tool",      "Use this tool to move the viewable game area in the editor. It is also possible to activate the "
+                                                                    "<b>Hand Tool</b> while using the <b>Selection Tool</b> by holding down the <b>Space Bar</b>." };
+    const HeaderBodyList Mouse_Magnify          { "Zoom Tool",      "Use this tool to change the zoom level of the editor. It is also possible to change the zoom level "
+                                                                    "while using the <b>Selection Tool</b> by using the <b>Mouse Wheel</b> (when available)."};
 
-    const HeaderBodyList Debug_On_Off           { "Debug Shapes On / Off", "Toggles drawing of Physics Collision Shapes On / Off. These shapes show physics / event collisions within "
-                                                                           "your game. <b>Blue:</b> Player, <b>Red:</b> Enemy, <b>Purple:</b> Damage All" };
+    const HeaderBodyList Debug_On_Off           { "Debug Shapes On / Off", "Toggles drawing of Physics Collision Shapes On / Off. These shapes show "
+                                                                           "physics / event collisions within your game. "
+                                                                           "<b>Blue:</b> Player, <b>Red:</b> Enemy, <b>Purple:</b> Damage All, <b>Green:</b> Damage None" };
 
     // Form Main Widgets
     const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor items." };

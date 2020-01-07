@@ -25,7 +25,9 @@ enum class Image_Filter_Type {
     Hue,
     Grayscale,
     Negative,
+
     Pixelation,
+    Bitrate,
 
     Opacity,
 

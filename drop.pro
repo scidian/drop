@@ -140,7 +140,10 @@ SOURCES += \
     editor/forms/form_main__menu_build.cpp \
     editor/forms/form_main__toolbar.cpp \
     editor/forms/form_main__toolbar_build.cpp \
-    editor/forms/form_main__toolbar_button_click.cpp \
+    editor/forms/form_main__toolbar_click.cpp \
+    editor/forms/form_main__view_toolbar.cpp \
+    editor/forms/form_main__view_toolbar_build.cpp \
+    editor/forms/form_main__view_toolbar_click.cpp \
     editor/forms/form_popup.cpp \
     editor/forms/form_popup__add_entity.cpp \
     editor/forms/form_popup__grid_snap.cpp \

@@ -179,66 +179,7 @@ void FormMain::buildCentralWidgetEditor() {
 
 
                         // ***** Toolbar above Stage View
-                        viewToolBar = new QFrame(widgetStageView);
-                        viewToolBar->setObjectName("viewToolBar");
-                        viewToolBar->setFixedHeight(32);
-                            QHBoxLayout *view_toolbar_layout = new QHBoxLayout(viewToolBar);
-                            view_toolbar_layout->setObjectName(QStringLiteral("viewToolBarLayout"));
-                            view_toolbar_layout->setSpacing(4);
-                            view_toolbar_layout->setContentsMargins(6, 0, 6, 0);
-
-                            // ***** Selectable Button group that keeps track of which mouse mode we are in: Pointer, Hand, Mganify, etc.
-                            widgetGroupMouse = new QWidget();
-                            widgetGroupMouse->setObjectName(QStringLiteral("widgetGroupMouse"));
-                            widgetGroupMouse->setFixedHeight(32);
-                                QHBoxLayout *toolbarLayoutMouse = new QHBoxLayout(widgetGroupMouse);
-                                toolbarLayoutMouse->setSpacing(3);
-                                toolbarLayoutMouse->setContentsMargins(0, 0, 0, 0);
-
-                                buttonsGroupMouse = new QButtonGroup();
-                                buttonsGroupMouse->setExclusive(true);
-                                connect(buttonsGroupMouse, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupMouseClicked(int)));
-
-                                QToolButton *mouse_pointer = createToolbarButton(QStringLiteral("mousePointer"), Advisor_Info::Mouse_Pointer, 24, 24, true);
-                                mouse_pointer->setChecked(true);
-                                buttonsGroupMouse->addButton(mouse_pointer, int(Mouse_Mode::Pointer));
-                                toolbarLayoutMouse->addWidget(mouse_pointer);
-
-                                QToolButton *mouse_hand = createToolbarButton(QStringLiteral("mouseHand"), Advisor_Info::Mouse_Hand, 24, 24, true);
-                                buttonsGroupMouse->addButton(mouse_hand,    int(Mouse_Mode::Hand));
-                                toolbarLayoutMouse->addWidget(mouse_hand);
-
-                                QToolButton *mouse_magnify = createToolbarButton(QStringLiteral("mouseMagnify"), Advisor_Info::Mouse_Magnify, 24, 24, true);
-                                buttonsGroupMouse->addButton(mouse_magnify, int(Mouse_Mode::Magnify));
-                                toolbarLayoutMouse->addWidget(mouse_magnify);
-
-                            view_toolbar_layout->addWidget(widgetGroupMouse);
-                            view_toolbar_layout->addSpacing(2);
-                            view_toolbar_layout->addWidget(createToolbarSpacer(16));
-                            view_toolbar_layout->addStretch();
-
-                            // ***** Toggled View Options, Debug On/Off, etc
-                            widgetGroupToggle = new QWidget(widgetToolbar);
-                            widgetGroupToggle->setObjectName(QStringLiteral("widgetGroupToggle"));
-                            widgetGroupToggle->setFixedHeight(32);
-                                QHBoxLayout *toolbarLayoutToggle = new QHBoxLayout(widgetGroupToggle);
-                                toolbarLayoutToggle->setSpacing(3);
-                                toolbarLayoutToggle->setContentsMargins(0, 0, 0, 0);
-
-                                buttonsGroupToggle = new QButtonGroup();
-                                buttonsGroupToggle->setExclusive(false);
-                                connect(buttonsGroupToggle, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
-
-                                QToolButton *debug_on_off = createToolbarButton("debugOnOff", Advisor_Info::Debug_On_Off, 23, 23, true);
-                                Dr::ApplyDropShadowByType(debug_on_off, Shadow_Types::Button_Shadow_Thin);
-                                buttonsGroupToggle->addButton(debug_on_off, int(Buttons_Toggle::DebugOnOff));
-                                debug_on_off->setChecked(false);
-                                toolbarLayoutToggle->addWidget(debug_on_off);
-
-                            view_toolbar_layout->addWidget(createToolbarSpacer(16));
-                            view_toolbar_layout->addSpacing(2);
-                            view_toolbar_layout->addWidget(widgetGroupToggle);
-
+                        buildViewToolBar(widgetStageView);
 
 
                         // ***** Lower View area Status Bar
@@ -256,12 +197,19 @@ void FormMain::buildCentralWidgetEditor() {
                             labelSelected->setFont(font);
                             status_layout->addWidget(labelSelected);
                             status_layout->addWidget(createToolbarSpacer(18));
+
+                            labelInfo = new QLabel("");
+                            labelInfo->setObjectName(QStringLiteral("labelInfo"));
+                            labelInfo->setAlignment(Qt::AlignmentFlag::AlignCenter);
+                            labelInfo->setFont(font);
+                            status_layout->addWidget(labelInfo);
                             status_layout->addStretch();
 
                             labelMousePosition = new QLabel(" ");
                             labelMousePosition->setObjectName(QStringLiteral("labelMousePosition"));
                             labelMousePosition->setAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);
                             labelMousePosition->setFont(font);
+                            status_layout->addWidget(createToolbarSpacer(18));
                             status_layout->addWidget(labelMousePosition);
 
                     verticalLayoutView->addWidget(viewToolBar);

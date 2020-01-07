@@ -28,8 +28,6 @@
 //##    buttonGroupMode SLOT and functions
 //####################################################################################
 void FormMain::buttonGroupModeClicked(int id) {
-    buttonGroupModeSetChecked(id);
-
     Form_Main_Mode new_id = static_cast<Form_Main_Mode>(id);
     if (m_current_mode == new_id) return;
 

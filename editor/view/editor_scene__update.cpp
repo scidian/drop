@@ -238,6 +238,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
             case Properties::Thing_Filter_Grayscale:
             case Properties::Thing_Filter_Negative:
             case Properties::Thing_Filter_Pixelation:
+            case Properties::Thing_Filter_Bitrate:
                 item->applyFilters();
                 break;
 

@@ -114,13 +114,6 @@ enum class Mouse_Mode {
     Magnify             = 3,
 };
 
-// Stage View Toggle Options
-enum class Buttons_Toggle {
-    None,
-    DebugOnOff,                     // Turns Debug drawing on / off
-};
-
-
 //####################################################################################
 //##    Sub Stage View Mouse Mode - Mouse_Mode::Pointer
 //############################
@@ -182,6 +175,13 @@ enum class Buttons_Play {
     Play_Stage,
 };
 
+
+//####################################################################################
+//##    Form_Main View Toolbar Button Groups
+//############################
+enum class Buttons_Toggle {
+    DebugOnOff,                     // Turns Debug drawing on / off
+};
 
 
 //####################################################################################

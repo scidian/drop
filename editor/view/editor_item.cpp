@@ -5,6 +5,7 @@
 //      DrItem Class Definitions
 //
 //
+#include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
 #include "core/colors/colors.h"
@@ -231,7 +232,7 @@ void DrItem::applyFilters() {
     bool     grayscale  = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
     bool     negative   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
     DrPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-    ///int      bit_rate =   m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    int      bit_rate =   m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
 
     if ( pixelation.x > 1.0 || pixelation.y > 1.0 )
                                        Dr::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );
@@ -244,6 +245,8 @@ void DrItem::applyFilters() {
 
     if ( contrast   != 0 ) new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Contrast, new_image, contrast );
     if ( brightness != 0 ) new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Brightness, new_image, brightness );
+
+    if ( bit_rate < 256 )  new_image = Dr::ApplySinglePixelFilter( Image_Filter_Type::Bitrate, new_image, bit_rate );
 
     // Make all mostly transparent pixels fully transparent, better QGraphicsItem.shape() mouse select / grab
     new_image = Dr::CheckOpacityTolerance(new_image);

@@ -184,8 +184,10 @@ void FormMain::setAdvisorInfo(QString header, QString body) {
     treeAdvisor->changeAdvisor(header, body);
 }
 void FormMain::setMousePosition(std::string x, std::string y) {
-    labelMousePosition->setVisible(!(x == "" || y == ""));
-    labelMousePosition->setText(" X: " + QString::fromStdString(x) + "  Y: " + QString::fromStdString(y) + " ");
+    if (x == "" || y == "")
+        labelMousePosition->setText(" ");
+    else
+        labelMousePosition->setText(" X: " + QString::fromStdString(x) + "  Y: " + QString::fromStdString(y) + " ");
 }
 
 
