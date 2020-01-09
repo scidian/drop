@@ -39,12 +39,11 @@ void DrQSlider::paintEvent(QPaintEvent *event) {
             int h = 4;
             painter.setPen(m_tick_color);
             if (tickPosition() == TicksBothSides || tickPosition() == TicksAbove) {
-                int y = this->rect().top();
+                int y = this->rect().top() + 1;
                 painter.drawLine(x, y, x, y + h);
             }
-
             if (tickPosition() == TicksBothSides || tickPosition() == TicksBelow) {
-                int y = this->rect().bottom();
+                int y = this->rect().bottom() - 1;
                 painter.drawLine(x, y, x, y - h);
             }
         }

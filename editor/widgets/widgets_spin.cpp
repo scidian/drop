@@ -5,15 +5,29 @@
 //
 //
 //
+#include "core/dr_math.h"
 #include "editor/widgets/widgets.h"
 
 
 //####################################################################################
-//##    Non signal activating setValue
+//##    Integer Spin Box, Non signal activating setValue
 //####################################################################################
 void DrQSpinSlot::updateValue(int value) {
     bool before_block = this->signalsBlocked();
     this->blockSignals(true);
     this->setValue( value );
+    this->blockSignals(before_block);
+}
+
+
+//####################################################################################
+//##    Floating Point Spin Box, Non signal activating setValue
+//####################################################################################
+void DrQDoubleSpinSlot::updateValue(double value) {
+    bool before_block = this->signalsBlocked();
+    this->blockSignals(true);
+    if ( Dr::IsCloseTo(value, this->value(), m_update_tolerance) == false) {
+        this->setValue( value );
+    }
     this->blockSignals(before_block);
 }

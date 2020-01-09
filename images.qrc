@@ -428,5 +428,7 @@
         <file>assets/toolbar_icons/toolbar_mouse_hand_faded.png</file>
         <file>assets/toolbar_icons/toolbar_mouse_magnify_faded.png</file>
         <file>assets/toolbar_icons/toolbar_mouse_pointer_faded.png</file>
+        <file>assets/toolbar_icons/toolbar_fit_to_view.png</file>
+        <file>assets/cursors/magnify.png</file>
     </qresource>
 </RCC>

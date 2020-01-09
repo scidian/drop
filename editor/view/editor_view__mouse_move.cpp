@@ -39,6 +39,7 @@ namespace Mouse_Cursors {
     QCursor size135()           { return QCursor(QPixmap(":/assets/cursors/size_135.png")); }
     QCursor size157()           { return QCursor(QPixmap(":/assets/cursors/size_157.png")); }
     QCursor rotateAll()         { return QCursor(QPixmap(":/assets/cursors/rotate_all.png")); }
+    QCursor magnify()           { return QCursor(QPixmap(":/assets/cursors/magnify.png")); }
 };
 
 
@@ -55,7 +56,7 @@ void DrView::leaveEvent(QEvent *event) {
 //##    Mouse Moved
 //####################################################################################
 void DrView::mouseMoveEvent(QMouseEvent *event) {
-    // Test for scene, convert to our custom class and lock the scene
+    // Test for scene and lock the scene
     if (scene() == nullptr) return;
     if (my_scene->scene_mutex.tryLock(10) == false) return;
 
@@ -86,7 +87,8 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
     }
 
-    // ******************** Grab item under mouse
+
+    // ********** Grab item under mouse
     QGraphicsItem *check_item = nullptr;/// = itemAt(m_last_mouse_pos);
     for (auto item : items(m_last_mouse_pos)) {
         long item_key = item->data(User_Roles::Key).toLongLong();
@@ -100,7 +102,6 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     }
 
 
-
     // !!!!! #DEBUG: Shows red, green, blue and alpha of pixel under mouse
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
         QColor pixel_color = dynamic_cast<DrItem*>(check_item)->getColorAtPoint(m_last_mouse_pos, this);
@@ -112,7 +113,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     // !!!!! END
 
 
-    // ******************** Check selection handles to see if mouse is over one
+    // ********** Check selection handles to see if mouse is over one
     if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
 
     if (my_scene->getSelectionCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
@@ -138,49 +139,64 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
             m_over_handle = Position_Flags::Rotate;
     }
 
-    // If we are over a handle, and not doing anything, set cursor based on precalculated angle
+    // ******************* If we are over a handle, and not doing anything, set cursor based on precalculated angle
     double a = 0;
-    if (m_over_handle != Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+    if (m_mouse_mode == Mouse_Mode::Hand) {
+        if (m_flag_key_down_spacebar == false) {
+            spaceBarDown();
+        }
 
-        if (m_over_handle == Position_Flags::Move_Item) {
-            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
-        } else if (m_over_handle == Position_Flags::Rotate) {
-            viewport()->setCursor(Mouse_Cursors::rotateAll());
-        } else {
-            a = m_handles_angles[m_over_handle];
+    } else if (m_mouse_mode == Mouse_Mode::Magnify) {
+        if (m_flag_key_down_spacebar == false) {
+            viewport()->setCursor(Mouse_Cursors::magnify());
+        }
 
-            ///// Custom rotated cursor
-            ///QPixmap arrow = QPixmap(":/assets/cursors/size_vertical.png", nullptr, Qt::ImageConversionFlag::AutoDither);
-            ///QPixmap rotated = arrow.transformed(QTransform().rotate(a));
-            ///int xoffset = (rotated.width() - arrow.width()) / 2;
-            ///int yoffset = (rotated.height() - arrow.height()) / 2;
-            ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
-            ///viewport()->setCursor(rotated);
+    } else if (m_mouse_mode == Mouse_Mode::Pointer) {
+        if (m_over_handle != Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
 
-            if      (a <  11.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());                              // 0        Top
-            else if (a <  33.75) viewport()->setCursor(Mouse_Cursors::size022());                                   // 22.5
-            else if (a <  56.25) viewport()->setCursor(Mouse_Cursors::size045());                                   // 45       Top Right
-            else if (a <  78.75) viewport()->setCursor(Mouse_Cursors::size067());                                   // 67.5
-            else if (a < 101.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());                            // 90       Right
-            else if (a < 123.75) viewport()->setCursor(Mouse_Cursors::size112());                                   // 112.5
-            else if (a < 146.25) viewport()->setCursor(Mouse_Cursors::size135());                                   // 135      Bottom Right
-            else if (a < 168.75) viewport()->setCursor(Mouse_Cursors::size157());                                   // 157
-            else if (a < 191.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());                              // 180      Bottom
-            else if (a < 213.75) viewport()->setCursor(Mouse_Cursors::size022());                                   // 202
-            else if (a < 236.25) viewport()->setCursor(Mouse_Cursors::size045());                                   // 225      Bottom Left
-            else if (a < 258.75) viewport()->setCursor(Mouse_Cursors::size067());                                   // 247
-            else if (a < 281.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());                            // 270      Left
-            else if (a < 303.75) viewport()->setCursor(Mouse_Cursors::size112());                                   // 292
-            else if (a < 326.25) viewport()->setCursor(Mouse_Cursors::size135());                                   // 315      Top Left
-            else if (a < 348.75) viewport()->setCursor(Mouse_Cursors::size157());                                   // 337
-            else                 viewport()->setCursor(Mouse_Cursors::sizeVertical());                              // 360      Top
+            if (m_over_handle == Position_Flags::Move_Item) {
+                viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+            } else if (m_over_handle == Position_Flags::Rotate) {
+                viewport()->setCursor(Mouse_Cursors::rotateAll());
+            } else {
+                a = m_handles_angles[m_over_handle];
+
+                ///// Custom rotated cursor
+                ///QPixmap arrow = QPixmap(":/assets/cursors/size_vertical.png", nullptr, Qt::ImageConversionFlag::AutoDither);
+                ///QPixmap rotated = arrow.transformed(QTransform().rotate(a));
+                ///int xoffset = (rotated.width() - arrow.width()) / 2;
+                ///int yoffset = (rotated.height() - arrow.height()) / 2;
+                ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
+                ///viewport()->setCursor(rotated);
+
+                if      (a <  11.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());                  // 0        Top
+                else if (a <  33.75) viewport()->setCursor(Mouse_Cursors::size022());                       // 22.5
+                else if (a <  56.25) viewport()->setCursor(Mouse_Cursors::size045());                       // 45       Top Right
+                else if (a <  78.75) viewport()->setCursor(Mouse_Cursors::size067());                       // 67.5
+                else if (a < 101.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());                // 90       Right
+                else if (a < 123.75) viewport()->setCursor(Mouse_Cursors::size112());                       // 112.5
+                else if (a < 146.25) viewport()->setCursor(Mouse_Cursors::size135());                       // 135      Bottom Right
+                else if (a < 168.75) viewport()->setCursor(Mouse_Cursors::size157());                       // 157
+                else if (a < 191.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());                  // 180      Bottom
+                else if (a < 213.75) viewport()->setCursor(Mouse_Cursors::size022());                       // 202
+                else if (a < 236.25) viewport()->setCursor(Mouse_Cursors::size045());                       // 225      Bottom Left
+                else if (a < 258.75) viewport()->setCursor(Mouse_Cursors::size067());                       // 247
+                else if (a < 281.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());                // 270      Left
+                else if (a < 303.75) viewport()->setCursor(Mouse_Cursors::size112());                       // 292
+                else if (a < 326.25) viewport()->setCursor(Mouse_Cursors::size135());                       // 315      Top Left
+                else if (a < 348.75) viewport()->setCursor(Mouse_Cursors::size157());                       // 337
+                else                 viewport()->setCursor(Mouse_Cursors::sizeVertical());                  // 360      Top
+            }
         }
     }
 
 
-    // If no longer over handle and mouse is up, reset mouse cursor
-    if (m_over_handle == Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false)
-        viewport()->unsetCursor();
+    // ******************* If no longer over handle and mouse is up, reset mouse cursor
+    if (m_mouse_mode == Mouse_Mode::Pointer) {
+        if (m_over_handle == Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+            viewport()->unsetCursor();
+        }
+    }
 
 
 
@@ -226,11 +242,11 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && check_item == nullptr) {
-            Dr::SetLabelText(Label_Names::Label_Position, "Null");
-            Dr::SetLabelText(Label_Names::Label_Center, "Null");
-            Dr::SetLabelText(Label_Names::Label_Scale, "Null");
-            Dr::SetLabelText(Label_Names::Label_Rotate, "Null");
-            Dr::SetLabelText(Label_Names::Label_Z_Order, "Null");
+            Dr::SetLabelText(Label_Names::Label_Position,   "Null");
+            Dr::SetLabelText(Label_Names::Label_Center,     "Null");
+            Dr::SetLabelText(Label_Names::Label_Scale,      "Null");
+            Dr::SetLabelText(Label_Names::Label_Rotate,     "Null");
+            Dr::SetLabelText(Label_Names::Label_Z_Order,    "Null");
         }
     }
     // !!!!! END

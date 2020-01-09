@@ -85,7 +85,13 @@ void FormMain::updateToolbar() {
         }
 
         buttonAdd->setEnabled(true);
-        labelSelected->setText(selected);
+        if (viewEditor->getMouseMode() == Mouse_Mode::Pointer) {
+            labelSelected->setText(selected);
+        } else if (viewEditor->getMouseMode() == Mouse_Mode::Hand) {
+            labelSelected->setText("Left click and drag to <b>Move View</b>");
+        } else if (viewEditor->getMouseMode() == Mouse_Mode::Magnify) {
+            labelSelected->setText("Left click to <b>Zoom In</b>, right click to <b>Zoom Out</b>");
+        }
     }
 }
 

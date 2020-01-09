@@ -71,6 +71,7 @@ private:
     DrScene                *my_scene;                               // Holds the scene() this view is set to as a DrScene Class
 
     // Local Variables
+    Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;     // Tracks current view mouse mode
     View_Mode               m_view_mode = View_Mode::None;          // Tracks current view interaction mode
 
     const QPixmap p_circle = QPixmap(":/assets/gui_misc/handle_circle.png");
@@ -205,6 +206,7 @@ public:
     // View Display Functions
     void            setViewRect(QRectF new_rect);
     void            zoomInOut(int level);
+    void            zoomToContents();
     void            zoomToPower(int level);
     void            zoomToScale(double scale, bool recalculate_level = true);
 
@@ -258,7 +260,9 @@ public:
     double          currentZoomLevel() { return m_zoom_scale; }
     bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
     DrScene*        getDrScene() { return my_scene; }
+    Mouse_Mode      getMouseMode() { return m_mouse_mode; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
+    void            setMouseMode(Mouse_Mode mode) { m_mouse_mode = mode; }
     void            setViewMode(View_Mode mode) { m_view_mode = mode; }
     void            spaceBarDown();
     void            spaceBarUp();
@@ -278,9 +282,13 @@ signals:
     void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
     void    selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
 
+    // Mouse Mode Hand Signals
+    void    updateCenterPointX(double new_value);
+    void    updateCenterPointY(double new_value);
+
     // Mouse Mode Zoom Signals
-    void    zoomSliderUpdate(int new_value);
-    void    zoomSpinUpdate(int new_value);
+    void    updateZoomSlider(int new_value);
+    void    updateZoomSpin(int new_value);
 
 };
 

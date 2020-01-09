@@ -62,113 +62,139 @@ void DrView::mousePressEvent(QMouseEvent *event) {
         }
     }
 
-    // If space bar isn't down, process mouse down
-    if (dragMode() == QGraphicsView::DragMode::NoDrag) {
 
-        // If left mouse button down
-        if (event->button() & Qt::LeftButton) {
-            // Restart mouse select movement buffer timer
-            m_origin_timer.restart();
-            m_allow_movement = false;
-
-            if (my_scene->getSelectionCount() > 0) {
-                // ******************* If clicked while holding Alt key start rotating
-                if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
-                    m_view_mode = View_Mode::Rotating;
-                    startRotate(m_origin);
-                    my_scene->scene_mutex.unlock();
-                    return;
-                }
-
-                // ******************* If clicked while in a Size Grip Handle start resizing
-                if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
-                    m_view_mode = View_Mode::Resizing;
-                    startResize(m_origin);
-                    my_scene->scene_mutex.unlock();
-                    return;
-                }
-            }
-
-
-            // ******************* If no modifier keys are down, only select item under mouse. Also updates the Inspector
-            //                           if the item clicked was already selected (but the Inspector was showing something
-            //                           else like an asset or something)
-            //                    #NOTE: If object was not already selected the Inspector will be updated when the
-            //                           DrScene::selectionChanged slot fires
-            if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                if (m_origin_item != nullptr && origin_item_settings != nullptr) {
-
-                    // ***** If we clicked clicked a new item, set selection group to that
-                    if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
-                        my_scene->clearSelection();
-                        m_origin_item->setSelected(true);
-                    }
-
-                    // ***** Process press event for item movement (Translation)
-                    if (origin_item_settings->isLocked() == false) {
-                        // Disable item changes before messing with Z-Order
-                        DrItem *dr_item = dynamic_cast<DrItem*>(m_origin_item);
-                        bool flags_enabled_before = false;
-                        if (dr_item) {
-                            flags_enabled_before = dr_item->itemChangeFlagsEnabled();
-                            dr_item->disableItemChangeFlags();
-                        }
-
-                        // Make sure item is on top before firing QGraphicsView event so we start translating properly
-                        double original_z = m_origin_item->zValue();
-                        m_origin_item->setZValue(std::numeric_limits<double>::max());
-                        QGraphicsView::mousePressEvent(event);
-                        m_origin_item->setZValue(original_z);
-
-                        // Restore item changes
-                        if (dr_item && flags_enabled_before) dr_item->enableItemChangeFlags();
-
-                        // Prep Translating start
-                        viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
-                        QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
-
-                        m_hide_bounding = true;
-                        m_view_mode = View_Mode::Translating;
-
-                        for (auto item : my_scene->getSelectionItems()) {
-                            item->moveBy(0, 0);
-                        }
-                    } else {
-                        origin_locked = true;
-                    }
-
-                    if (my_scene->getSelectionItems().count() <= 1) {
-                        m_editor_relay->buildInspector( { origin_item_key } );
-                        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { origin_item_key } );
-                    }
-                }
-
-            // ******************** If clicked while control is down, add to selection group, or take out
-            } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
-
-                if (m_origin_item != nullptr) {
-                     m_origin_item->setSelected(!m_origin_item->isSelected());
-                }
-
-            }
-
-
-            // ******************* If theres no item under mouse, start selection box
-            if (m_origin_item == nullptr || origin_locked) {
-                m_view_mode = View_Mode::Selecting;
-                startSelect(event);
-                processSelection(event->pos());
-                my_scene->scene_mutex.unlock();
-                return;
-            }
-
-        }
-
-
-    // ******************** Process mouse press event for hand drag
-    } else {
+    // ******************* Process Hand Mouse Mode
+    if (m_mouse_mode == Mouse_Mode::Hand) {
         QGraphicsView::mousePressEvent(event);
         m_view_mode = View_Mode::Dragging;
+    }
+
+
+    // ******************* Process Magnify Mouse Mode
+    if (m_mouse_mode == Mouse_Mode::Magnify) {
+        if (dragMode() == QGraphicsView::DragMode::NoDrag) {
+            if (event->button() & Qt::LeftButton) {
+                zoomInOut(50);
+            } else if (event->button() & Qt::RightButton) {
+                zoomInOut(-50);
+            }
+
+        } else {
+            QGraphicsView::mousePressEvent(event);
+            m_view_mode = View_Mode::Dragging;
+        }
+    }
+
+
+    // ******************* Prcoess Pointer Mouse Mode: If space bar isn't down, process mouse down
+    if (m_mouse_mode == Mouse_Mode::Pointer) {
+        if (dragMode() == QGraphicsView::DragMode::NoDrag) {
+
+            // If left mouse button down
+            if (event->button() & Qt::LeftButton) {
+                // Restart mouse select movement buffer timer
+                m_origin_timer.restart();
+                m_allow_movement = false;
+
+                if (my_scene->getSelectionCount() > 0) {
+                    // ******************* If clicked while holding Alt key start rotating
+                    if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
+                        m_view_mode = View_Mode::Rotating;
+                        startRotate(m_origin);
+                        my_scene->scene_mutex.unlock();
+                        return;
+                    }
+
+                    // ******************* If clicked while in a Size Grip Handle start resizing
+                    if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
+                        m_view_mode = View_Mode::Resizing;
+                        startResize(m_origin);
+                        my_scene->scene_mutex.unlock();
+                        return;
+                    }
+                }
+
+
+                // ******************* If no modifier keys are down, only select item under mouse. Also updates the Inspector
+                //                           if the item clicked was already selected (but the Inspector was showing something
+                //                           else like an asset or something)
+                //                    #NOTE: If object was not already selected the Inspector will be updated when the
+                //                           DrScene::selectionChanged slot fires
+                if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
+                    if (m_origin_item != nullptr && origin_item_settings != nullptr) {
+
+                        // ***** If we clicked clicked a new item, set selection group to that
+                        if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
+                            my_scene->clearSelection();
+                            m_origin_item->setSelected(true);
+                        }
+
+                        // ***** Process press event for item movement (Translation)
+                        if (origin_item_settings->isLocked() == false) {
+                            // Disable item changes before messing with Z-Order
+                            DrItem *dr_item = dynamic_cast<DrItem*>(m_origin_item);
+                            bool flags_enabled_before = false;
+                            if (dr_item) {
+                                flags_enabled_before = dr_item->itemChangeFlagsEnabled();
+                                dr_item->disableItemChangeFlags();
+                            }
+
+                            // Make sure item is on top before firing QGraphicsView event so we start translating properly
+                            double original_z = m_origin_item->zValue();
+                            m_origin_item->setZValue(std::numeric_limits<double>::max());
+                            QGraphicsView::mousePressEvent(event);
+                            m_origin_item->setZValue(original_z);
+
+                            // Restore item changes
+                            if (dr_item && flags_enabled_before) dr_item->enableItemChangeFlags();
+
+                            // Prep Translating start
+                            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+                            QTimer::singleShot(500, this, SLOT(checkTranslateToolTipStarted()));
+
+                            m_hide_bounding = true;
+                            m_view_mode = View_Mode::Translating;
+
+                            for (auto item : my_scene->getSelectionItems()) {
+                                item->moveBy(0, 0);
+                            }
+                        } else {
+                            origin_locked = true;
+                        }
+
+                        if (my_scene->getSelectionItems().count() <= 1) {
+                            m_editor_relay->buildInspector( { origin_item_key } );
+                            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { origin_item_key } );
+                        }
+                    }
+
+                // ******************** If clicked while control is down, add to selection group, or take out
+                } else if (event->modifiers() & Qt::KeyboardModifier::ControlModifier && m_origin_item != nullptr) {
+
+                    if (m_origin_item != nullptr) {
+                         m_origin_item->setSelected(!m_origin_item->isSelected());
+                    }
+
+                }
+
+
+                // ******************* If theres no item under mouse, start selection box
+                if (m_origin_item == nullptr || origin_locked) {
+                    m_view_mode = View_Mode::Selecting;
+                    startSelect(event);
+                    processSelection(event->pos());
+                    my_scene->scene_mutex.unlock();
+                    return;
+                }
+
+            }
+
+
+        // ******************** Process mouse press event for hand drag
+        } else {
+            QGraphicsView::mousePressEvent(event);
+            m_view_mode = View_Mode::Dragging;
+        }
     }
 
     update();
@@ -275,11 +301,20 @@ void DrView::wheelEvent(QWheelEvent *event) {
         return;
     }
 
-    if (event->delta() > 0)
-        zoomInOut(10);
-    else
-        zoomInOut(-10);
+    // Force View to know mouse position in Interactive Mode (good if in Hand mode)
+    Mouse_Mode before_zoom = m_mouse_mode;
+    m_mouse_mode = Mouse_Mode::None;
+    spaceBarUp();
+    QMouseEvent temp_event(QMouseEvent::Type::Move, event->pos(), Qt::MouseButton::NoButton, { }, { });
+    mouseMoveEvent(&temp_event);
+
+    // Process Zoom
+    if (event->delta() > 0) zoomInOut( 10);                 // In
+    else                    zoomInOut(-10);                 // Out
     event->accept();
+
+    // Restore Mouse Mode
+    m_mouse_mode = before_zoom;
 
     // Show tool tip with zoom percentage, if first time start tooltip, otherwise update it
     if (m_tool_tip->getTipType() != View_Mode::Zooming)
@@ -341,9 +376,26 @@ void DrView::zoomToScale(double scale, bool recalculate_level) {
         updateGrid();
     }
 
-    emit zoomSliderUpdate(static_cast<int>(m_zoom / 10.0));
-    emit zoomSpinUpdate(static_cast<int>(m_zoom_scale * 100.0));
+    emit updateZoomSlider(static_cast<int>(m_zoom / 10.0));
+    emit updateZoomSpin(static_cast<int>(m_zoom_scale * 100.0));
 }
+
+// Fits contents of stage into View, called from button on View Toolbar
+void DrView::zoomToContents() {
+    this->fitInView( this->scene()->sceneRect() );
+
+    QMatrix fit_matrix = this->matrix();
+    double  scale_x = fit_matrix.m11();
+    double  scale_y = fit_matrix.m22();
+    double  min = (scale_x < scale_y) ? scale_x : scale_y;
+    zoomToScale(min);
+}
+
+
+
+
+
+
 
 
 

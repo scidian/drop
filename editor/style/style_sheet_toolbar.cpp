@@ -39,9 +39,9 @@ std::string StyleSheetToolBar() {
 
     // Toobar Selectable Buttons
     +
-    StyleSheetToolBarModeButton("buttonModeWorldMap",  "toolbar_world_map.png",     "toolbar_world_map_faded.png") +
-    StyleSheetToolBarModeButton("buttonModeWorldEdit", "toolbar_world_editor.png",  "toolbar_world_editor_faded.png") +
-    StyleSheetToolBarModeButton("buttonModeUIEdit",    "toolbar_ui_editor.png",     "toolbar_ui_editor_faded.png") +
+    StyleSheetToolBarModeButton("buttonModeWorldMap",  "toolbar_world_map.png",     "toolbar_world_map_faded.png",      5) +
+    StyleSheetToolBarModeButton("buttonModeWorldEdit", "toolbar_world_editor.png",  "toolbar_world_editor_faded.png",   5) +
+    StyleSheetToolBarModeButton("buttonModeUIEdit",    "toolbar_ui_editor.png",     "toolbar_ui_editor_faded.png",      5) +
 
     " QToolButton {            border: 1px solid; "
     "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
@@ -101,9 +101,9 @@ std::string StyleSheetToolBar() {
 
 
     // View Toolbar Buttons
-    StyleSheetToolBarModeButton("mousePointer", "toolbar_mouse_pointer.png",    "toolbar_mouse_pointer_faded.png",      4) +
-    StyleSheetToolBarModeButton("mouseHand",    "toolbar_mouse_hand.png",       "toolbar_mouse_hand_faded.png",         4) +
-    StyleSheetToolBarModeButton("mouseMagnify", "toolbar_mouse_magnify.png",    "toolbar_mouse_magnify_faded.png",      4) +
+    StyleSheetToolBarModeButton("mousePointer", "toolbar_mouse_pointer.png",    "toolbar_mouse_pointer_faded.png",      5) +
+    StyleSheetToolBarModeButton("mouseHand",    "toolbar_mouse_hand.png",       "toolbar_mouse_hand_faded.png",         5) +
+    StyleSheetToolBarModeButton("mouseMagnify", "toolbar_mouse_magnify.png",    "toolbar_mouse_magnify_faded.png",      5) +
     StyleSheetToolBarButtons(   "debugOnOff",   "debug_shape.png",              "debug_shape.png",      "debug_shape.png",       4, 4, 4, 4, 4, true) +
             " QToolButton#debugOnOff                        { padding-left: 3px; padding-bottom: 4px; padding-right: 3px; padding-top: 4px; } " +
 

@@ -8,6 +8,7 @@
 #ifndef WIDGETS_H
 #define WIDGETS_H
 
+#include <QDoubleSpinBox>
 #include <QSlider>
 #include <QSpinBox>
 
@@ -38,7 +39,7 @@ public slots:
 
 
 //####################################################################################
-//##    Spin Slot
+//##    Spin Slot Integer
 //##        Allows us to attach to setValue slot without emitting signals
 //############################
 class DrQSpinSlot : public QSpinBox
@@ -50,10 +51,31 @@ public:
     virtual ~DrQSpinSlot() override { }
 
 public slots:
-    void    updateValue(int value);
+    void        updateValue(int value);
 };
 
 
+
+//####################################################################################
+//##    Spin Slot Double
+//##        Allows us to attach to setValue slot without emitting signals
+//############################
+class DrQDoubleSpinSlot : public QDoubleSpinBox
+{
+    Q_OBJECT
+private:
+    double      m_update_tolerance = 0.0;
+
+public:
+    DrQDoubleSpinSlot(QWidget *parent = nullptr) : QDoubleSpinBox(parent) { }
+    virtual ~DrQDoubleSpinSlot() override { }
+
+    // Getters / Setters
+    void        setUpdateTolerance(double tolerance) { m_update_tolerance = tolerance; }
+
+public slots:
+    void        updateValue(double value);
+};
 
 
 

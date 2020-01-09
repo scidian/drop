@@ -9,6 +9,7 @@
 
 #include "editor/forms/form_main.h"
 #include "editor/globals_editor.h"
+#include "editor/view/editor_view.h"
 
 
 //####################################################################################
@@ -17,17 +18,22 @@
 void FormMain::buttonGroupMouseClicked(int id) {
     Mouse_Mode clicked = static_cast<Mouse_Mode>(id);
 
-    m_mouse_mode = clicked;
+    if (viewEditor != nullptr) viewEditor->setMouseMode(clicked);
     if (clicked == Mouse_Mode::Pointer) {
+        widgetGroupHandTool->setVisible(false);
         widgetGroupZoomTool->setVisible(false);
 
     } else if (clicked == Mouse_Mode::Hand) {
         widgetGroupZoomTool->setVisible(false);
+        widgetGroupHandTool->setVisible(true);
 
     } else if (clicked == Mouse_Mode::Magnify) {
+        widgetGroupHandTool->setVisible(false);
         widgetGroupZoomTool->setVisible(true);
-
     }
+
+    updateToolbar();
+    viewEditor->spaceBarUp();
 }
 
 

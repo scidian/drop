@@ -58,8 +58,10 @@ void DrView::spaceBarDown() {
 
 void DrView::spaceBarUp() {
     m_flag_key_down_spacebar = false;
-    setDragMode(QGraphicsView::DragMode::NoDrag);
-    setInteractive(true);
+    if (m_mouse_mode != Mouse_Mode::Hand) {
+        setDragMode(QGraphicsView::DragMode::NoDrag);
+        setInteractive(true);
+    }
 }
 
 

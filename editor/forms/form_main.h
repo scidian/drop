@@ -68,7 +68,6 @@ private:
     DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
 
     Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what state FormMain is in
-    Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;                     // Holds what state Editor Widget - Stage View Mouse Tool is in
 
     // ***** Menu Widgets
     QMenuBar       *menuBar;
@@ -111,6 +110,7 @@ private:
     //       "Editor" Tool Bar Widgets
     QWidget        *widgetGroupMouse;       QButtonGroup   *buttonsGroupMouse;
     QWidget        *widgetGroupToggle;      QButtonGroup   *buttonsGroupToggle;
+    QWidget        *widgetGroupHandTool;
     QWidget        *widgetGroupZoomTool;
 
     //       "Editor" Status Bar Widgets

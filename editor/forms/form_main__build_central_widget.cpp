@@ -209,7 +209,6 @@ void FormMain::buildCentralWidgetEditor() {
                             labelMousePosition->setObjectName(QStringLiteral("labelMousePosition"));
                             labelMousePosition->setAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);
                             labelMousePosition->setFont(font);
-                            status_layout->addWidget(createToolbarSpacer(18));
                             status_layout->addWidget(labelMousePosition);
 
                     verticalLayoutView->addWidget(viewToolBar);

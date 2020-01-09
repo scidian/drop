@@ -139,6 +139,10 @@ void DrView::paintEvent(QPaintEvent *event) {
     }
     // !!!!! END
 
+
+    QPointF center_point = this->mapToScene(this->viewport()->geometry().center());
+    emit updateCenterPointX( center_point.x());
+    emit updateCenterPointY(-center_point.y());
 }
 
 
