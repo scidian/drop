@@ -141,7 +141,7 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             move_to_center->setFixedSize(25, 22);
             move_to_center->setObjectName("buttonImageMiniButton");
                 QPixmap center_icon(":/assets/toolbar_icons/toolbar_reset_center.png");
-                center_icon = QPixmap::fromImage( Dr::ColorizeImage(center_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
+                center_icon = QPixmap::fromImage( Dr::ColorizeImage(center_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 move_to_center->setIcon( QIcon(center_icon.scaled(QSize(15, 15), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
             if (this->getStageView() != nullptr) {
                 connect(move_to_center, &QPushButton::pressed, [this, point_x, point_y]() {
@@ -238,7 +238,7 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             fit_to_view->setFixedSize(25, 22);
             fit_to_view->setObjectName("buttonImageMiniButton");
                 QPixmap fit_icon(":/assets/toolbar_icons/toolbar_fit_to_view.png");
-                fit_icon = QPixmap::fromImage( Dr::ColorizeImage(fit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
+                fit_icon = QPixmap::fromImage( Dr::ColorizeImage(fit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 fit_to_view->setIcon( QIcon(fit_icon.scaled(QSize(10, 10), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
             if (this->getStageView() != nullptr) {
                 connect(fit_to_view, &QPushButton::pressed, [this]() {

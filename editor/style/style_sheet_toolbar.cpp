@@ -189,13 +189,24 @@ std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_u
                                         "   border-bottom-left-radius: " +  std::to_string(bl) + "px;  "
                                         "   border-bottom-right-radius: " + std::to_string(br) + "px; } ";
 
-    if (checkable) { text +=
-        " QToolButton#" + button_name + ":checked { border: 1px solid; "
-        "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
-        "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() + " " +
-                                   Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
-                                   Dr::GetColor(Window_Colors::Background_Dark).name() +"; } ";
+    if (checkable) {
+        if (Dr::GetColorScheme() == Color_Scheme::Light) {
+            text +=
+                " QToolButton#" + button_name + ":checked { border: 1px solid; "
+                "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+                "       border-color: " +  Dr::GetColor(Window_Colors::Background_Light).darker(200).name() + " " +
+                                           Dr::GetColor(Window_Colors::Background_Light).name() + " " +
+                                           Dr::GetColor(Window_Colors::Background_Light).name() + " " +
+                                           Dr::GetColor(Window_Colors::Background_Light).name() +"; } ";
+        } else {
+            text +=
+                " QToolButton#" + button_name + ":checked { border: 1px solid; "
+                "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
+                "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
+                                           Dr::GetColor(Window_Colors::Background_Dark).name() + " " +
+                                           Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
+                                           Dr::GetColor(Window_Colors::Background_Dark).name() +"; } ";
+        }
     }
     return text;
 }

@@ -112,6 +112,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             }
             break;
         }
+        case DrType::Device:    m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Device);             break;
+        case DrType::Effect:    m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Effect);             break;
+        case DrType::Image:     m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Image);              break;
         default:
             m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }

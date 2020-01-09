@@ -534,17 +534,28 @@ std::string StyleSheetRecessedBackgroundBorder(int top_percent, int bottom_perce
         middle = Dr::GetColor(Window_Colors::Background_Dark).lighter(150);
         top =    Dr::GetColor(Window_Colors::Background_Dark);
     }
+    DrColor bottom, border, border_bottom;
+    if (Dr::GetColorScheme() == Color_Scheme::Light) {
+        bottom =        middle;
+        border =        Dr::GetColor(Window_Colors::Background_Dark).darker(250);
+        border_bottom = Dr::GetColor(Window_Colors::Background_Dark).darker(250);
+    } else {
+        bottom =        Dr::GetColor(Window_Colors::Background_Dark).darker(150);
+        border =        Dr::GetColor(Window_Colors::Background_Dark).darker(150);
+        border_bottom = Dr::GetColor(Window_Colors::Background_Light);
+    }
+
     return " background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
            "            stop:0 " +      top.name() + ", "
            "            stop:" + top1 + top.name() + ", "
            "            stop:" + top2 + middle.name() + ", "
            "            stop:" + bot1 + middle.name() + ", "
-           "            stop:" + bot2 + Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + ", "
-           "            stop:1 " +      Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + "); "
-           "          border-color: " + Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + " " +
-                                        Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + " " +
-                                        Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light))).name() + " " +
-                                        Dr::FromQColor(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150)).name() + "; ";
+           "            stop:" + bot2 + bottom.name() + ", "
+           "            stop:1 " +      bottom.name() + "); "
+           "          border-color: " + border.name() + " " +
+                                        border.name() + " " +
+                                        border_bottom.name() + " " +
+                                        border.name() + "; ";
 }
 
 //################################################################################
