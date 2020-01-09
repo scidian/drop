@@ -124,6 +124,7 @@ SOURCES += \
     editor/docks/docks_handle.cpp \
     editor/docks/docks_initialize.cpp \
     editor/enums_editor.cpp \
+    editor/event_filters.cpp \
     editor/forms/form_about.cpp \
     editor/forms/form_animation.cpp \
     editor/forms/form_animation__build.cpp \
@@ -208,7 +209,8 @@ SOURCES += \
     editor/view/editor_view__select.cpp \
     editor/view/editor_view__tooltip.cpp \
     editor/interface_editor_relay.cpp \
-    editor/widgets_event_filters.cpp \
+    editor/widgets/widgets_slider.cpp \
+    editor/widgets/widgets_spin.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
     engine/engine_spawner.cpp \
@@ -940,6 +942,7 @@ HEADERS += \
     editor/view/editor_scene_undo_commands.h \
     editor/view/editor_view.h \
     editor/interface_editor_relay.h \
+    editor/widgets/widgets.h \
     engine/constants_engine.h \
     engine/engine.h \
     engine/engine_camera.h \

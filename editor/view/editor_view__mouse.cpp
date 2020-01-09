@@ -309,18 +309,27 @@ void DrView::stoppedZooming() {
 void DrView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
-    if (m_zoom < -40) m_zoom = -40;
-    ///Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom);
-    zoomToScale( std::pow(2.0, (m_zoom - 250) / 50.0) );
+    if (m_zoom < -50) m_zoom = -50;
+    Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom));
+    zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
-void DrView::zoomToScale(double scale) {
+void DrView::zoomToPower(int level) {
+    m_zoom = level;
+    if (m_zoom > 500) m_zoom = 500;
+    if (m_zoom < -50) m_zoom = -50;
+    zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
+}
+
+void DrView::zoomToScale(double scale, bool recalculate_level) {
     m_zoom_scale = scale;
 
-    double solve_for_zoom  = std::log(m_zoom_scale) / std::log(2);
-           solve_for_zoom *= 50;
-           solve_for_zoom += 250;
-    m_zoom = static_cast<int>(solve_for_zoom);
+    if (recalculate_level) {
+        double solve_for_zoom  = std::log(m_zoom_scale) / std::log(2);
+               solve_for_zoom *= 50;
+               solve_for_zoom += 250;
+        m_zoom = static_cast<int>(solve_for_zoom);
+    }
 
     QMatrix matrix;
     matrix.scale(m_zoom_scale, m_zoom_scale);
@@ -328,8 +337,12 @@ void DrView::zoomToScale(double scale) {
     this->setMatrix(matrix);
 
     updateSelectionBoundingBox(5);
-    if (horizontalScrollBar()->value() == 0 && verticalScrollBar()->value() == 0)
+    if (horizontalScrollBar()->value() == 0 && verticalScrollBar()->value() == 0) {
         updateGrid();
+    }
+
+    emit zoomSliderUpdate(static_cast<int>(m_zoom / 10.0));
+    emit zoomSpinUpdate(static_cast<int>(m_zoom_scale * 100.0));
 }
 
 

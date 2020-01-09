@@ -205,7 +205,8 @@ public:
     // View Display Functions
     void            setViewRect(QRectF new_rect);
     void            zoomInOut(int level);
-    void            zoomToScale(double scale);
+    void            zoomToPower(int level);
+    void            zoomToScale(double scale, bool recalculate_level = true);
 
     // Misc Functions
     double          calculateCornerAngle(double angle1, double angle2);
@@ -276,6 +277,10 @@ signals:
     // Signals used to fire UndoStack Commands
     void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
     void    selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
+
+    // Mouse Mode Zoom Signals
+    void    zoomSliderUpdate(int new_value);
+    void    zoomSpinUpdate(int new_value);
 
 };
 

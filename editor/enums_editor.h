@@ -15,6 +15,8 @@
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //############################
 namespace User_Property {
+    const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
+
     const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
     const char Color[9] =           "dr_color";             // Stores a color value (QColor.rgba())
     const char Order[9] =           "dr_order";             // Used for properties with mulitple values (like Size has X and Y),
