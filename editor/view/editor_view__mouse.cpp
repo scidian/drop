@@ -389,6 +389,8 @@ void DrView::zoomToContents() {
     double  scale_y = fit_matrix.m22();
     double  min = (scale_x < scale_y) ? scale_x : scale_y;
     zoomToScale(min);
+
+    m_editor_relay->viewCenterOnPoint( this->scene()->sceneRect().center() );
 }
 
 

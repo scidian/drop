@@ -88,16 +88,20 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             DrQDoubleSpinSlot *point_y = new DrQDoubleSpinSlot();
 
             // Point X Box
+            point_y->setToolTip("Center X Coordinate");
             point_x->setFixedHeight(22);
             point_x->setFont(Dr::CustomFont());
-            point_x->setDecimals(3);
+            point_x->setDecimals(1);
             point_x->setAttribute(Qt::WA_MacShowFocusRect, 0);
-            point_x->setRange(-100000000000.000, 100000000000.000);
+            point_x->setRange(-1000000000.0, 1000000000.0);
             point_x->setPrefix("X: ");
             point_x->setSingleStep(100.0);
             point_x->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
             point_x->setValue(0);
             point_x->setUpdateTolerance(5.0);
+            int max_point_width = Dr::CheckFontWidth(Dr::CustomFont(), "X: -1000000000.0");
+            point_x->setFixedWidth(max_point_width);
+            m_filter_hover->attachToHoverHandler(point_x, "Center X Coordinate", "Current X coordinate location of the center of the view.");
             toolbarLayoutHand->addSpacing(5);
             toolbarLayoutHand->addWidget(point_x);
             if (this->getStageView() != nullptr) {
@@ -108,17 +112,20 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             }
 
             // Point Y Box
+            point_y->setToolTip("Center Y Coordinate");
             point_y->setFixedHeight(22);
             point_y->setFont(Dr::CustomFont());
-            point_y->setDecimals(3);
+            point_y->setDecimals(1);
             point_y->setAttribute(Qt::WA_MacShowFocusRect, 0);
-            point_y->setRange(-100000000000.000, 100000000000.000);
+            point_y->setRange(-1000000000.0, 1000000000.0);
             point_y->setPrefix("Y: ");
             point_y->setSingleStep(100.0);
             point_y->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
             point_y->setValue(0);
             point_y->setUpdateTolerance(5.0);
-            toolbarLayoutHand->addSpacing(5);
+            point_y->setFixedWidth(max_point_width);
+            m_filter_hover->attachToHoverHandler(point_y, "Center Y Coordinate", "Current Y coordinate location of the center of the view.");
+            toolbarLayoutHand->addSpacing(6);
             toolbarLayoutHand->addWidget(point_y);
             if (this->getStageView() != nullptr) {
                 connect (point_y, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [this, point_x] (double d) {
@@ -126,6 +133,26 @@ void FormMain::buildViewToolBar(QWidget *parent) {
                 });
                 connect(this->getStageView(), SIGNAL(updateCenterPointY(double)), point_y, SLOT(updateValue(double)));
             }
+
+            // Reset to Center
+            QPushButton *move_to_center = new QPushButton();
+            move_to_center->setObjectName(QStringLiteral("button"));
+            move_to_center->setToolTip("Center View to Zero");
+            move_to_center->setFixedSize(25, 22);
+            move_to_center->setObjectName("buttonImageMiniButton");
+                QPixmap center_icon(":/assets/toolbar_icons/toolbar_reset_center.png");
+                center_icon = QPixmap::fromImage( Dr::ColorizeImage(center_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
+                move_to_center->setIcon( QIcon(center_icon.scaled(QSize(15, 15), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
+            if (this->getStageView() != nullptr) {
+                connect(move_to_center, &QPushButton::pressed, [this, point_x, point_y]() {
+                    point_x->updateValue(0.0);
+                    point_y->updateValue(0.0);
+                    this->getStageView()->centerOn(0, 0);
+                });
+            }
+            m_filter_hover->attachToHoverHandler(move_to_center, "Center View to Zero", "Moves the centers of the Stage View to coordinate (0, 0).");
+            toolbarLayoutHand->addSpacing(6);
+            toolbarLayoutHand->addWidget(move_to_center);
 
             toolbarLayoutHand->addStretch();
 
@@ -156,8 +183,8 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             zoom_spin->setSingleStep(50);
             zoom_spin->setSuffix("%");
             zoom_spin->setValue(50);
-            int max_width = Dr::CheckFontWidth(Dr::CustomFont(), "3200%") + 20;
-            zoom_spin->setFixedWidth(max_width);
+            int max_zoom_width = Dr::CheckFontWidth(Dr::CustomFont(), "3200%") + 20;
+            zoom_spin->setFixedWidth(max_zoom_width);
             zoom_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
             if (this->getStageView() != nullptr) {
                 connect (zoom_spin, QOverload<int>::of(&QSpinBox::valueChanged), this, [this] (int i) {
@@ -200,7 +227,7 @@ void FormMain::buildViewToolBar(QWidget *parent) {
                         }
                     }
             drop_button->setMenu(menu);
-            menu->installEventFilter(new DrFilterPopUpMenuRelocater(menu, 2, -max_width));
+            menu->installEventFilter(new DrFilterPopUpMenuRelocater(menu, 2, -max_zoom_width));
             m_filter_hover->attachToHoverHandler(drop_button, "Preset Zoom Level", "Select from preset zoom levels.");
             toolbarLayoutZoom->addWidget(drop_button);
 
