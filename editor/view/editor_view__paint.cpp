@@ -93,6 +93,12 @@ void DrView::paintEvent(QPaintEvent *event) {
         painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     }
 
+    // Draw collision shapes if we have a Stage
+    if (Dr::GetPreference(Preferences::World_Editor_Show_Collision_Shapes).toBool() && stage != nullptr) {
+        paintCollisionShapes(painter, stage);
+        paintDebugHealth(painter, stage);
+    }
+
     // If theres no selection we don't need to perform these paint routines
     if (my_scene->getSelectionCount() > 0) {
 

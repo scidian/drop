@@ -290,7 +290,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
 
 
 //####################################################################################
-//##    Remove shearing from item
+//##    Remove shearing from item during Resize function
 //####################################################################################
 void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 

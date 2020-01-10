@@ -9,7 +9,6 @@
 #define EDITOR_TREE_INSPECTOR_H
 
 #include <QCheckBox>
-#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QTextEdit>
@@ -18,6 +17,7 @@
 #include "core/types/dr_variant.h"
 #include "project/enums_entity_types.h"
 #include "project/enums_properties.h"
+
 
 // Forward declarations
 class DrProject;
@@ -36,6 +36,7 @@ constexpr int    c_minimum_grid_size =     1;//5;       // Minimum grid size
 constexpr double c_minimum_grid_scale =   .1;           // Minimum grid sscale
 
 constexpr int    c_spacer_item_key =     -10;           // Number is arbitrary below zero value, used to ignore spacer category while iterating
+
 
 //####################################################################################
 //##    TreeInspector
@@ -116,66 +117,6 @@ public slots:
 };
 
 
-
-//####################################################################################
-//##    TripleSpinBox
-//##        Allows us to control number of decimals being shown in spin box
-//############################
-class DrQTripleSpinBox : public QDoubleSpinBox
-{
-    Q_OBJECT
-
-public:
-    DrQTripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) { }
-    virtual ~DrQTripleSpinBox() override { }
-
-protected:
-    virtual QString textFromValue(double value) const override;
-};
-
-
-//####################################################################################
-//##    DropDownComboBox
-//##        Allows us to move combo listview underneath control to appear as a drop down list
-//############################
-class DrQComboBoxDropDown : public QComboBox
-{
-    Q_OBJECT
-
-public:
-    DrQComboBoxDropDown(QWidget *parent = nullptr) : QComboBox(parent) { }
-    virtual ~DrQComboBoxDropDown() override { }
-
-protected:
-    virtual void showPopup() override;
-};
-
-
-//####################################################################################
-//##    CheckBox
-//##        Allows us to move combo listview underneath control to appear as a drop down list
-//############################
-class DrQCheckBox : public QCheckBox
-{
-    Q_OBJECT
-private:
-    int     m_draw_left = 5;
-    int     m_draw_top =  1;
-
-public:
-    DrQCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) { }
-    virtual ~DrQCheckBox() override { }
-
-    int         getDrawLeft() { return m_draw_left; }
-    int         getDrawTop() { return m_draw_top; }
-    void        setDrawLeft(int left) { m_draw_left = left; }
-    void        setDrawTop(int top) { m_draw_top = top; }
-
-protected:
-    virtual void paintEvent(QPaintEvent *) override;
-};
-
-
 //####################################################################################
 //##    DrImageHolder
 //##        Event filter handler for image properties
@@ -224,6 +165,8 @@ public:
     // Getters / Setters
     IEditorRelay*       getEditorRelay()        { return m_editor_relay; }
 };
+
+
 
 
 #endif // EDITOR_TREE_INSPECTOR_H

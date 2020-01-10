@@ -45,6 +45,7 @@ void FormMain::buttonGroupToggleClicked(int id) {
 
     if (clicked == Buttons_Toggle::DebugOnOff) {
         Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes, buttonsGroupToggle->button(id)->isChecked());
+        viewEditor->update();
     }
 }
 

@@ -11,14 +11,13 @@
 
 #include <string>
 
-
-//####################################################################################
-//##    Debugging Functions
-//############################
 namespace Dr {
 
 
-    // ***** Printing to Console
+    //####################################################################################
+    //##    Debugging Functions
+    //############################
+    // Printing to Console
     void        PrintDebug(const std::string message);
 
 

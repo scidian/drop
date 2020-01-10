@@ -88,7 +88,7 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             DrQDoubleSpinSlot *point_y = new DrQDoubleSpinSlot();
 
             // Point X Box
-            point_y->setToolTip("Center X Coordinate");
+            point_x->setToolTip("Center X Coordinate");
             point_x->setFixedHeight(22);
             point_x->setFont(Dr::CustomFont());
             point_x->setDecimals(1);

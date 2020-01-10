@@ -229,6 +229,10 @@ public:
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
     void            paintCrossHairs(QPainter &painter, QPoint center);
+
+    void            paintCollisionShapes(QPainter &painter, DrStage *stage);
+    void            paintDebugHealth(QPainter &painter, DrStage *stage);
+
     void            paintGameFrame(QPainter &painter);
     void            paintGrid(QPainter &painter);
     void            paintGroupAngle(QPainter &painter, double angle);
@@ -283,12 +287,12 @@ signals:
     void    selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
 
     // Mouse Mode Hand Signals
-    void    updateCenterPointX(double new_value);
-    void    updateCenterPointY(double new_value);
+    void    updateCenterPointX(double new_value);                       // Emitted to update View Tool Bar Hand Mode Center Point X Coordinate
+    void    updateCenterPointY(double new_value);                       // Emitted to update View Tool Bar Hand Mode Center Point Y Coordinate
 
     // Mouse Mode Zoom Signals
-    void    updateZoomSlider(int new_value);
-    void    updateZoomSpin(int new_value);
+    void    updateZoomSlider(int new_value);                            // Emitted to update View Tool Bar Zoom Mode Slider
+    void    updateZoomSpin(int new_value);                              // Emitted to update View Tool Bar Zoom Mode Spin Box
 
 };
 

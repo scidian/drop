@@ -8,9 +8,53 @@
 #ifndef WIDGETS_H
 #define WIDGETS_H
 
+#include <QCheckBox>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QSpinBox>
+
+
+//####################################################################################
+//##    CheckBox
+//##        Allows us to draw custom check mark
+//############################
+class DrQCheckBox : public QCheckBox
+{
+    Q_OBJECT
+private:
+    int     m_draw_left = 5;
+    int     m_draw_top =  1;
+
+public:
+    DrQCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) { }
+    virtual ~DrQCheckBox() override { }
+
+    int         getDrawLeft() { return m_draw_left; }
+    int         getDrawTop() { return m_draw_top; }
+    void        setDrawLeft(int left) { m_draw_left = left; }
+    void        setDrawTop(int top) { m_draw_top = top; }
+
+protected:
+    virtual void paintEvent(QPaintEvent *) override;
+};
+
+
+//####################################################################################
+//##    DropDownComboBox
+//##        Allows us to move combo listview underneath control to appear as a drop down list
+//############################
+class DrQComboBoxDropDown : public QComboBox
+{
+    Q_OBJECT
+
+public:
+    DrQComboBoxDropDown(QWidget *parent = nullptr) : QComboBox(parent) { }
+    virtual ~DrQComboBoxDropDown() override { }
+
+protected:
+    virtual void showPopup() override;
+};
 
 
 //####################################################################################
@@ -39,6 +83,24 @@ public slots:
 
 
 //####################################################################################
+//##    TripleSpinBox
+//##        Allows us to control number of decimals being shown in spin box
+//##        #NOTE: As name implies usually aiming for 3 decimals, but can be set by calling DrQTripleSpinBox->setDecimals(xxx);
+//############################
+class DrQTripleSpinBox : public QDoubleSpinBox
+{
+    Q_OBJECT
+
+public:
+    DrQTripleSpinBox(QWidget *parent = nullptr) : QDoubleSpinBox(parent) { }
+    virtual ~DrQTripleSpinBox() override { }
+
+protected:
+    virtual QString textFromValue(double value) const override;
+};
+
+
+//####################################################################################
 //##    Spin Slot Integer
 //##        Allows us to attach to setValue slot without emitting signals
 //############################
@@ -53,7 +115,6 @@ public:
 public slots:
     void        updateValue(int value);
 };
-
 
 
 //####################################################################################

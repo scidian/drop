@@ -79,12 +79,12 @@ void DrOpenGL::drawDebug() {
     fonsDrawText(fs,  20, 100, g_info.c_str(), nullptr);                                                                                // Global debug string
     ///fonsDrawText(fs,  20, 120, Dr::RoundToDecimalPlace(m_engine->getFormEngine()->fps_physics, 1).c_str(), nullptr );                // Physics update
 
-    ///fonsDrawDebug(fs, 300.0, 350.0);
+    ///fonsDrawDebug(fs, 300.0, 350.0);                                                     // Draws Font Stash debug texture
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
-    ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                      // Finds max multi sampling available on system
-    ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                   // Finds max texture size available on system
-    ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );        // Finds max number of textures can bind at one time
+    ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                       // Finds max multi sampling available on system
+    ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                    // Finds max texture size available on system
+    ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );         // Finds max number of textures can bind at one time
     ///glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
     ///painter.drawText( QPointF(20, 80), "Max Texture Size: " +  QString::number(g_max_texture_size));
 }
@@ -93,10 +93,10 @@ void DrOpenGL::drawDebug() {
 //####################################################################################
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
-DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
+DrColor DrOpenGL::objectDebugColor(Collision_Type collision_type, bool text_color, bool sleeping) {
     DrColor color, font_color;
 
-    switch (object->getCollisionType()) {
+    switch (collision_type) {
         case Collision_Type::Damage_None:       color = DrColor(  0, 255,   0);     break;          // Green
         case Collision_Type::Damage_Player:     color = DrColor(255,   0,   0);     break;          // Red
         case Collision_Type::Damage_Enemy:      color = DrColor(  0,   0, 255);     break;          // Blue
@@ -104,7 +104,7 @@ DrColor DrOpenGL::objectDebugColor(DrEngineObject *object, bool text_color) {
     }
     font_color = color;
 
-    if (cpBodyIsSleeping(object->body)) {
+    if (sleeping) {
         ///font_color = color;
         color = Dr::yellow;
     } else {

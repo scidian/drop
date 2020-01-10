@@ -51,7 +51,7 @@ void DrOpenGL::paintGL() {
     // ***** Copy fbo to a GL_TEXTURE_2D (non multi-sampled) Frame Buffer Object
     // #NO_QT: As original QOpenGlWidget calls
     ///QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
-    // Standard OpenGL Calls
+    //         As standard OpenGL Calls
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_render_fbo->handle());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_texture_fbo->handle());
     glBlitFramebuffer(0, 0, m_render_fbo->width(), m_render_fbo->height(), 0, 0, m_render_fbo->width(), m_render_fbo->height(), GL_COLOR_BUFFER_BIT, GL_LINEAR);

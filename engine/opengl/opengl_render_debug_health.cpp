@@ -5,52 +5,15 @@
 //
 //
 //
-#include <QtMath>
-#include <QPainter>
-
 #include <cmath>
 
-#include "editor/helper_library.h"
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
-
-
-//####################################################################################
-//##    Draws the health of each object using QPainter
-//####################################################################################
-void DrOpenGL::paintDebugHealth(QPainter &painter) {
-    QFont health_font("Avenir", static_cast<int>(18 * combinedZoomScale()));
-    painter.setPen(Qt::NoPen);
-
-    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if ( thing->getThingType() != DrThingType::Object)  continue;
-        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-
-        // Figure out what color to make the debug shapes
-        DrColor color = objectDebugColor(object, true);
-
-        // Load Object Position
-        DrPointF center = object->getPosition();
-        QPointF  text_coord = mapToScreen(center.x, center.y, 0);
-
-        if (rect().contains( text_coord.toPoint() )) {
-            // Health as a QPainterPath
-            QPainterPath health;
-            QString hp = Dr::RemoveTrailingDecimals( object->getHealth(), 2 );
-            health.addText(text_coord, health_font, hp);
-            painter.setBrush( QBrush(QColor(color.red(), color.green(), color.blue())) );
-
-            double fw = Dr::CheckFontWidth(health_font, hp);
-            painter.translate( -(fw / 2.0), health.boundingRect().height() * 1.5);
-            painter.drawPath(health);
-            painter.resetTransform();
-        }
-    }
-}
 
 
 //####################################################################################
@@ -81,7 +44,8 @@ void DrOpenGL::drawDebugHealth() {
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Get health as string
-        QString hp = Dr::RemoveTrailingDecimals( object->getHealth(), 2 );
+        std::string health = Dr::RoundToDecimalPlace(object->getHealth(), 2);
+        std::string hp = Dr::RemoveTrailingZeros( health );
         if (hp.length() < 1) continue;
 
         // ***** Load object position
@@ -108,7 +72,7 @@ void DrOpenGL::drawDebugHealth() {
         vertices.resize( 12 * hp.length() );
 
         // Figure out what color to make the health, get health as string
-        DrColor color = objectDebugColor(object, true);
+        DrColor color = objectDebugColor(object->getCollisionType(), true, cpBodyIsSleeping(object->body));
 
         // ***** Set Shader Variables
         setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));
@@ -119,10 +83,10 @@ void DrOpenGL::drawDebugHealth() {
 
         // ***** Render each number as a textured quad
         x -= ((hp.length() - 1.0f) * (half_width * spacing));
-        for (int i = 0; i < hp.length(); i++) {
+        for (size_t i = 0; i < hp.length(); i++) {
 
             // Set Texture Coordinates
-            setNumberTextureCoordinates( QString(hp.at(i)).toStdString(), texture_coordinates);
+            setNumberTextureCoordinates(hp.substr(i, 1), texture_coordinates);
 
             // Set Vertices
             setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));

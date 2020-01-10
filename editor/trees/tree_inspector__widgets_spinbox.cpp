@@ -15,6 +15,7 @@
 #include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
+#include "editor/widgets/widgets.h"
 #include "project/settings/settings_component_property.h"
 
 
@@ -350,11 +351,6 @@ DrQTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QF
     new_spin->setValue(start_value);
     getHoverHandler()->attachToHoverHandler(new_spin, property);
     return new_spin;
-}
-
-// Catches event that Qt fires when value has changed to trim any excess zeros from the right side
-QString DrQTripleSpinBox::textFromValue(double value) const {
-    return Dr::RemoveTrailingDecimals(value, decimals());
 }
 
 

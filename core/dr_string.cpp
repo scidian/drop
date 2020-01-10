@@ -15,6 +15,17 @@ namespace Dr {
 //##    String Functions
 //##
 //####################################################################################
+// Removes trailing zeros from a number, returns as string
+std::string RemoveTrailingZeros(const std::string &source) {
+    std::string str = source;
+    int offset{1};
+    if (str.find_last_not_of('0') == str.find('.')) {
+        offset = 0;
+    }
+    str.erase(str.find_last_not_of('0') + offset, std::string::npos);
+    return str;
+}
+
 // Returns (length) number of characters from the left side of a string
 std::string Left(const std::string &source, const size_t length) {
     if (length >= source.size()) { return source; }
@@ -33,19 +44,6 @@ bool IsInteger(const std::string &source) {
         source.end(), [](char c) { return !std::isdigit(c); }) == source.end();
 }
 
-// Returns number as string with decimal_places precision
-std::string RoundToDecimalPlace(const size_t number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
-std::string RoundToDecimalPlace(const int    number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
-std::string RoundToDecimalPlace(const long   number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
-std::string RoundToDecimalPlace(const float  number, const int decimal_places) { return RoundToDecimalPlace(static_cast<double>(number), decimal_places); }
-std::string RoundToDecimalPlace(const double number, const int decimal_places) {
-    std::stringstream ss;
-    ss << std::fixed;
-    ss.precision(decimal_places);
-    ss << number;
-    return ss.str();
-}
-
 // Returns interger as hex string
 std::string ToHex(const int integer) {
     std::stringstream ss;
@@ -54,7 +52,24 @@ std::string ToHex(const int integer) {
 }
 
 
+
+
 }   // End namespace Dr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

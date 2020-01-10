@@ -6,7 +6,17 @@
 //
 //
 #include "core/dr_math.h"
+#include "editor/helper_library.h"
 #include "editor/widgets/widgets.h"
+
+
+//####################################################################################
+//##    Catches event that Qt fires when value has changed,
+//##    trims any excess zeros from the right side
+//####################################################################################
+QString DrQTripleSpinBox::textFromValue(double value) const {
+    return Dr::RemoveTrailingDecimals(value, decimals());
+}
 
 
 //####################################################################################

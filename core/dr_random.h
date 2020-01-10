@@ -11,13 +11,12 @@
 
 #include <random>
 
-
-//####################################################################################
-//##    Random Functions
-//############################
 namespace Dr {
 
 
+    //####################################################################################
+    //##    Random Functions
+    //############################
     /// @brief: Returns a number between lower (inclusive) and upper (exclusive)
     int     RandomInt(int lower, int upper);
     /// @brief: Returns a number between lower (inclusive) and upper (inclusive)

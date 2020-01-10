@@ -13,12 +13,29 @@
 #include <string>
 
 
-//####################################################################################
-//##    String Functions
-//############################
 namespace Dr {
 
 
+    //####################################################################################
+    //##    Decimal Strings
+    //############################
+    /// @brief: Returns number as string with decimal_places precision
+    template <typename T> std::string RoundToDecimalPlace(const T& number, const int decimal_places) {
+        double num_as_double = static_cast<double>(number);
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(decimal_places);
+        ss << num_as_double;
+        return ss.str();
+    }
+
+    /// @brief: Removes trailing zeros from a number, returns as string
+    std::string RemoveTrailingZeros(const std::string &source);
+
+
+    //####################################################################################
+    //##    String Functions
+    //############################
     /// @brief: Returns (length) number of characters from the left side of a string
     std::string Left(const std::string &source, const size_t length);
 
@@ -28,20 +45,21 @@ namespace Dr {
     /// @brief: Returns true if string is a positive integer, otherwise false
     bool        IsInteger(const std::string &source);
 
-    /// @brief: Returns number as string with decimal_places precision
-    std::string RoundToDecimalPlace(const size_t number, const int decimal_places);
-    std::string RoundToDecimalPlace(const int    number, const int decimal_places);
-    std::string RoundToDecimalPlace(const long   number, const int decimal_places);
-    std::string RoundToDecimalPlace(const float  number, const int decimal_places);
-    std::string RoundToDecimalPlace(const double number, const int decimal_places);
-
-
     /// @brief: Returns interger as hex string
     std::string ToHex(const int integer);
+
+
 
 }   // End namespace Dr
 
 #endif // DR_STRING_H
+
+
+
+
+
+
+
 
 
 

@@ -203,12 +203,15 @@ SOURCES += \
     editor/view/editor_view__mouse.cpp \
     editor/view/editor_view__mouse_move.cpp \
     editor/view/editor_view__paint.cpp \
+    editor/view/editor_view__paint_collision.cpp \
     editor/view/editor_view__paint_items.cpp \
     editor/view/editor_view__resize.cpp \
     editor/view/editor_view__rotate.cpp \
     editor/view/editor_view__select.cpp \
     editor/view/editor_view__tooltip.cpp \
     editor/interface_editor_relay.cpp \
+    editor/widgets/widgets_checkbox.cpp \
+    editor/widgets/widgets_combobox.cpp \
     editor/widgets/widgets_slider.cpp \
     editor/widgets/widgets_spin.cpp \
     engine/engine.cpp \

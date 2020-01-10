@@ -54,7 +54,8 @@ void DrOpenGL::paintDebugShapes(QPainter &painter) {
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
 
         // Figure out what color to make the debug shapes
-        DrColor color = objectDebugColor(object);
+        DrColor color = objectDebugColor(object->getCollisionType(), false, cpBodyIsSleeping(object->body));
+
         if (object->isDying() || !object->isAlive()) color = Qt::gray;
         if (!object->doesCollide()) color = color.lighter();
 
