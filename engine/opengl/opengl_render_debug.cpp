@@ -46,11 +46,9 @@ void DrOpenGL::drawDebug() {
         drawDebugHealth();
         ///paintDebugShapes(painter);
         ///paintDebugJoints(painter);
-        ///paintDebugHealth(painter);
     }
     if (m_form_engine->debug_collisions) {
         drawDebugCollisions();
-        ///paintDebugCollisions(painter);
     }
 
     // ***** Debug Text

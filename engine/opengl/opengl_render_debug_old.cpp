@@ -243,55 +243,6 @@ void DrOpenGL::paintDebugJoints(QPainter &painter) {
 
 
 
-//####################################################################################
-//##    Draws the Collision Points using QPainter
-//####################################################################################
-void DrOpenGL::paintDebugCollisions(QPainter &painter) {
-
-    int open_gl_width =  width() *  devicePixelRatio();
-    int open_gl_height = height() * devicePixelRatio();
-    QRect open_gl_rect = QRect(0, 0, open_gl_width, open_gl_height);
-
-    QPen pen( QBrush(Qt::red), 2.5 * static_cast<double>(combinedZoomScale()), Qt::SolidLine, Qt::PenCapStyle::RoundCap);
-    painter.setPen( pen );
-
-    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if ( thing->getThingType() != DrThingType::Object)  continue;
-
-        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-        if ( object->body_type != Body_Type::Dynamic)        continue;
-
-        std::vector<QPointF> point_list;    point_list.clear();
-        std::vector<cpVect>  normal_list;   normal_list.clear();
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
-
-        for (int i = 0; i < static_cast<int>(point_list.size()); i++) {
-            QPointF contact = point_list[i];
-            QPointF point = mapToScreen( contact.x(), contact.y(), 0.0 );
-
-            double angle_in_radians = std::atan2(normal_list[i].y, normal_list[i].x);
-            double angle_in_degrees = (angle_in_radians / M_PI) * 180.0;
-
-            if (open_gl_rect.contains(point.toPoint())) {
-                QTransform t = QTransform().translate(point.x(), point.y()).rotate(-object->getAngle()).translate(-point.x(), -point.y());
-                QPoint dot = t.map( point ).toPoint();
-
-                //// Draw dots
-                painter.translate(point.x(), point.y());
-                painter.rotate(angle_in_degrees);
-                painter.translate(-point.x(), -point.y());
-                painter.drawLine( dot.x(), dot.y() - 4, dot.x(), dot.y() + 4);
-                painter.resetTransform();
-            }
-        }   // End For
-    }   // End For
-
-}
-
-
-
-
 
 
 

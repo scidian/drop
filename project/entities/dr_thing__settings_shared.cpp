@@ -69,6 +69,7 @@ void DrThing::addComponentLayering(double z, double opacity, bool show_component
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Z_Order, Property_Type::Double, 0.0,
                            "Z-Order", "Arrangement of item along the z axis in the Stage. Should be between the near and far clipping planes (" +
                                       std::to_string(double(c_near_plane)) + " and " + std::to_string(double(c_far_plane)) + ") to be visible.");
+    // !!!!! Hidden Property
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Sub_Z_Order, Property_Type::Int, 0,
                            "Sub Order", "Arrangement of item compared to other items within the same Z-Order.", true, false);
     addPropertyToComponent(Components::Thing_Layering, Properties::Thing_Opacity, Property_Type::Percent, opacity,

@@ -41,7 +41,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
                            "Collision Shape", "Shape of the " + type + " as it interacts with other Assets in the world. Can be calculated "
                                               "automatically from the <b>Image Shape</b>. Characters are best as <b>Circle</b> and ground and platforms "
                                               "work nicely as <b>Square</b>.");
-    // !! Hidden Property
+    // !!!!! Hidden Property
     addPropertyToComponent(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, Property_Type::Collision, shape,
                            "Image Shape", "Stores auto generated Image Shape.", true, false);
 

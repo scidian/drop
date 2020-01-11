@@ -175,7 +175,6 @@ public:
 
 
     // Debug Render Calls - Old
-    void            paintDebugCollisions(QPainter &painter);
     void            paintDebugJoints(QPainter &painter);
     void            paintDebugShapes(QPainter &painter);
 
