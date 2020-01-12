@@ -234,7 +234,6 @@ SOURCES += \
     engine/opengl/opengl_render.cpp \
     engine/opengl/opengl_render_debug.cpp \
     engine/opengl/opengl_render_debug_health.cpp \
-    engine/opengl/opengl_render_debug_old.cpp \
     engine/opengl/opengl_render_debug_shapes.cpp \
     engine/opengl/opengl_render_effects.cpp \
     engine/opengl/opengl_render_fbo.cpp \

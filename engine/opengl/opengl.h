@@ -174,10 +174,6 @@ public:
     void            loadShaders();
 
 
-    // Debug Render Calls - Old
-    void            paintDebugJoints(QPainter &painter);
-    void            paintDebugShapes(QPainter &painter);
-
     // Debug Render Calls - New
     void            addDebugCircle(DebugVertex &vertexes, DrPointF pos, float radius, float angle, DrColor fill, DrColor border, bool draw_angle = true);
     void            addDebugLine(DebugVertex &vertexes, cpVect a, cpVect b, float radius, DrColor fill, DrColor border);
@@ -212,7 +208,7 @@ public:
     bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                                       double &top, double &bottom, double &left, double &right, float &angle);
     void            getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *thing, double width, double height, float extra_scale_x = 1.0, float extra_scale_y = 1.0);
-    static DrColor  objectDebugColor(Collision_Type collision_type, bool text_color = false, bool sleeping = false);
+    static DrColor  objectDebugColor(Collision_Type collision_type, bool sleeping = false);
     void            occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, QMatrix4x4 &proj_matrix);
     QMatrix4x4      orthoMatrix(float width, float height);
     void            updateViewMatrix(Render_Type render_type);

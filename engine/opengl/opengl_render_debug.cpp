@@ -44,7 +44,6 @@ void DrOpenGL::drawDebug() {
         drawDebugShapes();
         drawDebugJoints();
         drawDebugHealth();
-        ///paintDebugShapes(painter);
         ///paintDebugJoints(painter);
     }
     if (m_form_engine->debug_collisions) {
@@ -91,8 +90,8 @@ void DrOpenGL::drawDebug() {
 //####################################################################################
 //##    Assigns Debug color based on Collision Type
 //####################################################################################
-DrColor DrOpenGL::objectDebugColor(Collision_Type collision_type, bool text_color, bool sleeping) {
-    DrColor color, font_color;
+DrColor DrOpenGL::objectDebugColor(Collision_Type collision_type, bool sleeping) {
+    DrColor color;
 
     switch (collision_type) {
         case Collision_Type::Damage_None:       color = DrColor(  0, 255,   0);     break;          // Green
@@ -100,17 +99,12 @@ DrColor DrOpenGL::objectDebugColor(Collision_Type collision_type, bool text_colo
         case Collision_Type::Damage_Enemy:      color = DrColor(  0,   0, 255);     break;          // Blue
         case Collision_Type::Damage_All:        color = DrColor(128,   0, 128);     break;          // Purple
     }
-    font_color = color;
 
     if (sleeping) {
-        ///font_color = color;
         color = Dr::yellow;
-    } else {
-        ///font_color = DrColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
     }
 
-    if (text_color) return font_color;
-    else            return color;
+    return color;
 }
 
 

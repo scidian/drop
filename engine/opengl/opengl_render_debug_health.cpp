@@ -72,7 +72,7 @@ void DrOpenGL::drawDebugHealth() {
         vertices.resize( 12 * hp.length() );
 
         // Figure out what color to make the health, get health as string
-        DrColor color = objectDebugColor(object->getCollisionType(), true, cpBodyIsSleeping(object->body));
+        DrColor color = objectDebugColor(object->getCollisionType(), cpBodyIsSleeping(object->body));
 
         // ***** Set Shader Variables
         setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));

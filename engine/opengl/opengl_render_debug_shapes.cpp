@@ -26,11 +26,12 @@ void DrOpenGL::drawDebugShapes() {
         if (object->getCollidesWith() == Collision_Groups::None) continue;
 
         // Figure out what color to make the debug shapes
-        DrColor border_color = objectDebugColor(object->getCollisionType(), false, cpBodyIsSleeping(object->body));
-        if (object->isDying() || !object->isAlive()) border_color = Dr::gray;
-        if (!object->doesCollide()) border_color = border_color.lighter();
-        DrColor fill_color = border_color;
-        fill_color.setAlphaF(0.4);
+        DrColor color = objectDebugColor(object->getCollisionType(), cpBodyIsSleeping(object->body));
+        if (object->isDying() || !object->isAlive()) color = Dr::gray;
+        if (!object->doesCollide()) color = color.lighter();
+        DrColor border_color =  color;
+        DrColor fill_color =    color;
+                fill_color.setAlphaF(0.4);
 
         // Load Object Position
         DrPointF center = object->getPosition();

@@ -18,6 +18,28 @@
 
 
 //####################################################################################
+//##    Finds color to use in Editor for DrThing debug shapes
+//####################################################################################
+DrColor editorThingDebugColor(DrThing *thing) {
+    bool collides = true;
+    Collision_Type damage = Collision_Type::Damage_None;
+
+    if (thing->getThingType() == DrThingType::Object) {
+        collides =          thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Collide).toBool();
+        long damage_type =  thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
+        damage = static_cast<Collision_Type>(damage_type);
+    } else if (thing->getThingType() == DrThingType::Character) {
+        damage =    Collision_Type::Damage_Enemy;
+        collides =  true;
+    } else {
+        return Dr::orange;
+    }
+    DrColor color = DrOpenGL::objectDebugColor(damage, false);
+    return ((collides) ? color : color.lighter());
+}
+
+
+//####################################################################################
 //##    PAINT: Paints Collision Shapes of all Things in Stage
 //####################################################################################
 void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
@@ -26,16 +48,8 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
         if (thing == nullptr) continue;
 
         // Figure out what color to make the debug shapes
-        Collision_Type damage = Collision_Type::Damage_None;
-        if (thing->getThingType() == DrThingType::Object) {
-            long    damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
-            damage = static_cast<Collision_Type>(damage_type);
-        } else if (thing->getThingType() == DrThingType::Character) {
-            damage = Collision_Type::Damage_Enemy;
-        } else {
-            continue;
-        }
-        DrColor color = DrOpenGL::objectDebugColor(damage, true, false);
+        if (thing->getThingType() != DrThingType::Object && thing->getThingType() != DrThingType::Character) continue;
+        DrColor color = editorThingDebugColor(thing);
 
         // Set up QPainter
         QPen cosmetic_pen(QBrush(QColor(color.red(), color.green(), color.blue())), 1);
@@ -56,6 +70,7 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
         // Load Object Position
         DrPointF center =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
         DrPointF size =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+        DrPointF scale =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
         double   angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
 
         // ***** Process Auto Collision Shape
@@ -63,7 +78,18 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
             DrVariant shapes =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
             DrPropertyCollision shape = boost::any_cast<DrPropertyCollision>(shapes.value());
             for (auto poly : shape.getPolygons()) {
-                ///object->addShapePolygon(poly);
+                QTransform t = QTransform().translate(center.x, center.y).rotate(angle).scale(scale.x, -scale.y);
+                QPolygonF polygon;
+                for (auto &point : poly) {
+                    polygon.append( mapFromScene( t.map(QPointF(point.x, point.y)) ));
+                }
+
+                // Don't draw if not touching or inside of visible area
+                QRect bounding_box = polygon.boundingRect().normalized().toRect();
+                if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box)) &&
+                    (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
+                    painter.drawPolygon(polygon);
+                }
             }
 
         // ***** Process Circle Collision Shape
@@ -75,8 +101,12 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
                 QPointF top =    mapFromScene(QPointF(center.x, center.y - size.y/2));
 
                 QTransform t = QTransform().translate(offset.x(), offset.y()).rotate(angle).translate(-offset.x(), -offset.y());
-                painter.drawEllipse(offset, radius, radius);                // Draw circle
-                painter.drawLine(t.map(top), offset);                       // Draw orientation line
+                QRect bounding_box = QRectF(QPointF(offset.x() - radius, offset.y() - radius), QPointF(offset.x() + radius, offset.y() + radius)).toRect();
+                if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box)) &&
+                    (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
+                    painter.drawEllipse(offset, radius, radius);                // Draw circle
+                    painter.drawLine(t.map(top), offset);                       // Draw orientation line
+                }
 
             // Ellipse
             } else {
@@ -86,25 +116,15 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
                 double   curve = 0.925;
 
                 QTransform t = QTransform().translate(center.x, center.y).rotate(angle);
-                QPointF mid =   t.map(QPointF(offset.x, offset.y));
-                QPointF top =   t.map(QPointF(offset.x, offset.y - radius_y));
-                QPointF bot =   t.map(QPointF(offset.x, offset.y + radius_y));
-                QPointF left =  t.map(QPointF(offset.x - radius_x, offset.y));
-                QPointF right = t.map(QPointF(offset.x + radius_x, offset.y));
-                QPointF tl =    t.map(QPointF((offset.x - radius_x) * curve, (offset.y - radius_y) * curve));
-                QPointF tr =    t.map(QPointF((offset.x + radius_x) * curve, (offset.y - radius_y) * curve));
-                QPointF bl =    t.map(QPointF((offset.x - radius_x) * curve, (offset.y + radius_y) * curve));
-                QPointF br =    t.map(QPointF((offset.x + radius_x) * curve, (offset.y + radius_y) * curve));
-
-                mid =   mapFromScene(mid.x(),   mid.y());
-                top =   mapFromScene(top.x(),   top.y());
-                bot =   mapFromScene(bot.x(),   bot.y());
-                left =  mapFromScene(left.x(),  left.y());
-                right = mapFromScene(right.x(), right.y());
-                tl =    mapFromScene(tl.x(), tl.y());
-                tr =    mapFromScene(tr.x(), tr.y());
-                bl =    mapFromScene(bl.x(), bl.y());
-                br =    mapFromScene(br.x(), br.y());
+                QPointF mid =   mapFromScene( t.map(QPointF(offset.x, offset.y)) );
+                QPointF top =   mapFromScene( t.map(QPointF(offset.x, offset.y - radius_y)) );
+                QPointF bot =   mapFromScene( t.map(QPointF(offset.x, offset.y + radius_y)) );
+                QPointF left =  mapFromScene( t.map(QPointF(offset.x - radius_x, offset.y)) );
+                QPointF right = mapFromScene( t.map(QPointF(offset.x + radius_x, offset.y)) );
+                QPointF tl =    mapFromScene( t.map(QPointF((offset.x - radius_x) * curve, (offset.y - radius_y) * curve)) );
+                QPointF tr =    mapFromScene( t.map(QPointF((offset.x + radius_x) * curve, (offset.y - radius_y) * curve)) );
+                QPointF bl =    mapFromScene( t.map(QPointF((offset.x - radius_x) * curve, (offset.y + radius_y) * curve)) );
+                QPointF br =    mapFromScene( t.map(QPointF((offset.x + radius_x) * curve, (offset.y + radius_y) * curve)) );
 
                 QPainterPath path(top);
                 path.quadTo(tl, left);
@@ -116,17 +136,32 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
                 QRect bounding_box = path.boundingRect().normalized().toRect();
                 if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
-                    painter.drawPath( path );                               // Draw circle
-                    painter.drawLine( top, mid );                           // Draw orientation line
+                    painter.drawPath(path);                                 // Draw circle
+                    painter.drawLine(top, mid);                             // Draw orientation line
                 }
             }
 
-        } else if (shape == Collision_Shape::Square) {
-            ///object->addShapeBoxFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
+        } else if (shape == Collision_Shape::Square || shape == Collision_Shape::Triangle) {
+            QTransform t = QTransform().translate(center.x, center.y).rotate(angle).translate(-center.x, -center.y);
 
-        } else if (shape == Collision_Shape::Triangle) {
-            ///object->addShapeTriangleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
+            QPolygonF polygon;
+            if (shape == Collision_Shape::Square) {
+                polygon.append( mapFromScene( t.map(QPointF(center.x-size.x/2, center.y-size.y/2)) ));
+                polygon.append( mapFromScene( t.map(QPointF(center.x+size.x/2, center.y-size.y/2)) ));
+                polygon.append( mapFromScene( t.map(QPointF(center.x+size.x/2, center.y+size.y/2)) ));
+                polygon.append( mapFromScene( t.map(QPointF(center.x-size.x/2, center.y+size.y/2)) ));
+            } else if (shape == Collision_Shape::Triangle) {
+                polygon.append( mapFromScene( t.map(QPointF(center.x,          center.y-size.y/2)) ));
+                polygon.append( mapFromScene( t.map(QPointF(center.x+size.x/2, center.y+size.y/2)) ));
+                polygon.append( mapFromScene( t.map(QPointF(center.x-size.x/2, center.y+size.y/2)) ));
+            }
 
+            // Don't draw if not touching or inside of visible area
+            QRect bounding_box = polygon.boundingRect().normalized().toRect();
+            if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box)) &&
+                (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
+                painter.drawPolygon(polygon);
+            }
         }
 
     }
@@ -147,16 +182,12 @@ void DrView::paintDebugHealth(QPainter &painter, DrStage *stage) {
         DrThing *thing = thing_pair.second;
 
         // Figure out what color to make the debug shapes
-        Collision_Type damage = Collision_Type::Damage_None;
-        if (thing->getThingType() == DrThingType::Object) {
-            long    damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
-            damage = static_cast<Collision_Type>(damage_type);
-        } else if (thing->getThingType() == DrThingType::Character) {
-            damage = Collision_Type::Damage_Enemy;
-        } else {
-            continue;
-        }
-        DrColor color = DrOpenGL::objectDebugColor(damage, true, false);
+        if (thing->getThingType() != DrThingType::Object && thing->getThingType() != DrThingType::Character) continue;
+        DrColor color = editorThingDebugColor(thing);
+
+        // Get underlying DrAsset
+        DrAsset    *asset =     m_project->findAssetFromKey(thing->getAssetKey());
+                if (asset == nullptr) continue;
 
         // Load Object Position
         DrPointF center = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
@@ -165,8 +196,6 @@ void DrView::paintDebugHealth(QPainter &painter, DrStage *stage) {
         if (rect().contains( text_coord.toPoint() )) {
             // Health as a QPainterPath
             QPainterPath health;
-            DrAsset    *asset =     m_project->findAssetFromKey(thing->getAssetKey());
-                    if (asset == nullptr) continue;
             QString hp = Dr::RemoveTrailingDecimals( asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Health).toDouble(), 2 );
             health.addText(text_coord, health_font, hp);
             painter.setBrush( QBrush(QColor(color.red(), color.green(), color.blue())) );

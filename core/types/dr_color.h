@@ -18,15 +18,21 @@
 namespace Dr {
     enum Colors {
         transparent =       0x00000000,
+
         white =             0xFFFFFFFF,
         black =             0xFF000000,
         gray =              0xFF808080,
+
         red =               0xFFFF0000,
         green =             0xFF00FF00,
         blue =              0xFF0000FF,
+
         magenta =           0xFFFF00FF,
         cyan =              0xFF00FFFF,
         yellow =            0xFFFFFF00,
+
+        orange =            0xFFFFA500,
+        purple =            0xFF800080,
     };
 }
 
