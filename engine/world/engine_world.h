@@ -195,8 +195,8 @@ public:
     void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
 
     void            updateSpace(double time_passed);
-    void            updateSpawners(double time_passed, double time_warp, QRectF &area);
-    void            updateThings(double time_passed, double time_warp, QRectF &area);
+    void            updateSpawners(double time_passed, double time_warp, DrRectF &area);
+    void            updateThings(double time_passed, double time_warp, DrRectF &area);
     void            updateWorld(double time_passed);
     void            wakeAllBodies();
 

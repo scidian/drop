@@ -72,7 +72,7 @@ public:
     bool            readyForRemoval()       { return m_delete_me; }
 
     // Spawning
-    DrEngineObject* update(double time_passed, double time_warp, QRectF area, bool use_area = true);
+    DrEngineObject* update(double time_passed, double time_warp, DrRectF area, bool use_area = true);
 
 
     // Timer Calls

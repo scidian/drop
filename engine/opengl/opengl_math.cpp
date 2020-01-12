@@ -5,12 +5,6 @@
 //
 //
 //
-#include <QDebug>
-#include <QVector3D>
-
-#include "glm/ext.hpp"
-#include "glm/glm.hpp"
-
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
@@ -22,15 +16,23 @@
 //##    Maps 3D Point to / from 2D FBO Map Coordinates
 //####################################################################################
 QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix) {
-    QRect viewport = QRect(0, 0, fbo->width(), fbo->height());
 
     float x_pos, y_pos, z_pos;
     x_pos = point3D.x();
     y_pos = point3D.y();
     z_pos = point3D.z();
 
-    QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( view_matrix, proj_matrix, viewport );
-    return QPointF( static_cast<double>(vec.x()),  static_cast<double>(fbo->height() - vec.y()) );
+    ///QRect viewport = QRect(0, 0, fbo->width(), fbo->height());
+    ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( view_matrix, proj_matrix, viewport );
+
+    glm::vec4 view(0, 0, fbo->width(), fbo->height());
+    glm::vec3 object(x_pos, y_pos, z_pos);
+    glm::mat4 model(glm::make_mat4(view_matrix.data()) );
+    glm::mat4 proj( glm::make_mat4(proj_matrix.data()) );
+    glm::vec3 v = glm::project(object, model, proj, view);
+
+    ///return QPointF( static_cast<double>(vec.x()),  static_cast<double>(fbo->height() - vec.y()) );
+    return QPointF( static_cast<double>(v.x),  static_cast<double>(fbo->height() - v.y) );
 }
 
 
@@ -49,7 +51,6 @@ QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     // Old Qt Way
     ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
     ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
-    ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
 
     // Better Glm Way - No Qt
     glm::vec4 view(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -61,16 +62,16 @@ QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     return QPointF( static_cast<double>(v.x),  static_cast<double>((height() * devicePixelRatio()) - v.y) );
 }
 
-QVector3D DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
-QVector3D DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
-QVector3D DrOpenGL::mapFromScreen(QPointF point) {
+glm::vec3 DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
+glm::vec3 DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
+glm::vec3 DrOpenGL::mapFromScreen(QPointF point) {
     ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
     float x_pos = static_cast<float>(             point.x()  * devicePixelRatio() );
     float y_pos = static_cast<float>( (height() - point.y()) * devicePixelRatio() );
 
-    QVector3D vec;
     // Old way of unprojecting in Orthographic before we 3D Ortho View was working
+    ///QVector3D vec;
     ///if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
     ///    vec = QVector3D( x_pos, y_pos, 0 ).unproject( m_view, m_projection, viewport);
     ///    vec.setX( vec.x() );
@@ -119,10 +120,9 @@ QVector3D DrOpenGL::mapFromScreen(QPointF point) {
     float nx = near_plane.x + (z_percent * (far_plane.x - near_plane.x));
     float ny = near_plane.y + (z_percent * (far_plane.y - near_plane.y));
 
-    vec = QVector3D(nx, ny, 0);
     ///qDebug() << "Near: " << near << "  -  Far: " << far << "  -  Vec: " << vec;
 
-    return vec;
+    return glm::vec3(nx, ny, 0);
 }
 
 

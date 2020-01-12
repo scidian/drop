@@ -73,9 +73,9 @@ void DrEngineWorld::updateSpace(double time_passed) {
 void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Calculate area that if Things are within, they can stay in the Space
-    QRectF threshold(getCameraPositionX() - getDeleteThresholdX(),
-                     getCameraPositionY() - getDeleteThresholdY(),
-                     getDeleteThresholdX()*2.0, getDeleteThresholdY()*2.0);
+    DrRectF threshold(getCameraPositionX() - getDeleteThresholdX(),
+                      getCameraPositionY() - getDeleteThresholdY(),
+                      getDeleteThresholdX()*2.0, getDeleteThresholdY()*2.0);
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
@@ -115,7 +115,7 @@ void DrEngineWorld::updateWorld(double time_passed) {
 //####################################################################################
 //##    Iterate through Things, delete if they go off screen
 //####################################################################################
-void DrEngineWorld::updateThings(double time_passed, double time_warp, QRectF &area) {
+void DrEngineWorld::updateThings(double time_passed, double time_warp, DrRectF &area) {
     for (auto it = m_things.begin(); it != m_things.end(); ) {
         DrEngineThing *thing = *it;
 
@@ -144,7 +144,7 @@ void DrEngineWorld::updateThings(double time_passed, double time_warp, QRectF &a
 //####################################################################################
 //##    Iterate through Spawners, delete if they go off screen or run out of Spawns
 //####################################################################################
-void DrEngineWorld::updateSpawners(double time_passed, double time_warp, QRectF &area) {
+void DrEngineWorld::updateSpawners(double time_passed, double time_warp, DrRectF &area) {
     for (auto it = m_spawners.begin(); it != m_spawners.end(); ) {
         DrEngineSpawner *spawner = *it;
 
@@ -213,11 +213,8 @@ void DrEngineWorld::addStage() {
         int stage_num = Dr::RandomInt(0, stage_count);
             stage = stages[stage_num];
 
-        QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
-                                   .rotate(   -m_game_direction)
-                                   .translate(-m_game_start.x, -m_game_start.y);
-        QPointF rotated = t.map( QPointF( m_loaded_to, 0 ));
-        loadStageToWorld(stage, rotated.x(), rotated.y());
+        DrPointF rotated = Dr::RotatePointAroundOrigin( DrPointF(m_loaded_to, 0), m_game_start, -m_game_direction );
+        loadStageToWorld(stage, rotated.x, rotated.y);
     }
 
 }

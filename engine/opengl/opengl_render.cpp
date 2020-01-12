@@ -5,10 +5,7 @@
 //
 //
 //
-#include <QtMath>
 #include <QOpenGLFramebufferObject>
-#include <QOpenGLPaintDevice>
-#include <QPainter>
 
 #include <vector>
 

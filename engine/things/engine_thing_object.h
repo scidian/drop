@@ -170,7 +170,7 @@ public:
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Object; }
-    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+    virtual bool        update(double time_passed, double time_warp, DrRectF &area) override;
 
     // Shape Creation
     void                    addShapeBox(double width, double height);

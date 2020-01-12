@@ -21,6 +21,8 @@
 #include "3rd_party/chipmunk/chipmunk.h"
 #include "3rd_party/fontstash/fontstash.h"
 #include "3rd_party/fontstash/glfontstash.h"
+#include "3rd_party/glm/ext.hpp"
+#include "3rd_party/glm/glm.hpp"
 #include "core/dr_string.h"
 #include "core/types/dr_point.h"
 #include "core/types/dr_pointf.h"
@@ -152,9 +154,9 @@ public:
 
     // Screen Functions
     float           combinedZoomScale();
-    QVector3D       mapFromScreen(double x, double y);
-    QVector3D       mapFromScreen(float x, float y);
-    QVector3D       mapFromScreen(QPointF point);
+    glm::vec3       mapFromScreen(double x, double y);
+    glm::vec3       mapFromScreen(float x, float y);
+    glm::vec3       mapFromScreen(QPointF point);
     QPointF         mapToScreen(double x, double y, double z);
     QPointF         mapToScreen(float x, float y, float z);
     QPointF         mapToScreen(QVector3D point3D);

@@ -113,7 +113,7 @@ public:
     // Basic Update Functions
     virtual void        addToWorld();                                                       // Called when Thing is added to m_things DrEngineWorld vector
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
-    virtual bool        update(double time_passed, double time_warp, QRectF &area);         // Process one update iteration for this Thing
+    virtual bool        update(double time_passed, double time_warp, DrRectF &area);        // Process one update iteration for this Thing
 
     // Virtual Event Functions
     virtual void        onCollide() { }

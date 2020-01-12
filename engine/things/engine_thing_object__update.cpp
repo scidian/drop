@@ -24,7 +24,7 @@ void DrEngineObject::updateBodyPosition(DrPointF updated_position, bool update_p
     setPosition( updated_position );
 }
 
-bool DrEngineObject::update(double time_passed, double time_warp, QRectF &area) {
+bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area) {
     bool remove = false;
 
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject

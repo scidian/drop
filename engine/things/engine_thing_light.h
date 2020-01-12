@@ -60,7 +60,7 @@ public:
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Light; }
-    virtual bool        update(double time_passed, double time_warp, QRectF &area) override;
+    virtual bool        update(double time_passed, double time_warp, DrRectF &area) override;
 
     // Non-Abstract Engine Thing Overrides
     virtual void        setAngle(double new_angle) override;

@@ -5,7 +5,6 @@
 //
 //
 //
-#include <QtMath>
 #include <QOpenGLFramebufferObject>
 
 #include "engine/engine.h"
@@ -330,8 +329,8 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
                                     static_cast<float>(light->color.blueF()) );
 
     // Give shader the light cone start and end angles
-    float cone_1 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().x));
-    float cone_2 = qDegreesToRadians(static_cast<float>(light->getRotatedCone().y));
+    float cone_1 = Dr::DegreesToRadians(static_cast<float>(light->getRotatedCone().x));
+    float cone_2 = Dr::DegreesToRadians(static_cast<float>(light->getRotatedCone().y));
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( u_light_cone, cone_1, cone_2 );

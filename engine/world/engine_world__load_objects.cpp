@@ -261,11 +261,12 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double      gravity_multi = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier).toDouble();
     DrPointF    surface_vel =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity).toPointF();
 
-    t.reset();
-    t.rotate(one_way_angle);
-    QPointF one_way_point = t.map(QPoint(0.0, 1.0));
+    DrPointF one_way_point = Dr::RotatePointAroundOrigin( DrPointF(0.0, 1.0), DrPointF(0, 0), one_way_angle - info.angle);
+             one_way_point.x *= info.scale.x;
+             one_way_point.y *= info.scale.y;
     block->setOneWay(static_cast<One_Way>(one_way_type));
-    block->setOneWayDirection(DrPointF(one_way_point.x(), one_way_point.y()));
+    block->setOneWayDirection(one_way_point);
+
     block->setGravityMultiplier(gravity_multi);
     block->setSurfaceVelocity(cpv(surface_vel.x, surface_vel.y));
 

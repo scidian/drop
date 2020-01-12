@@ -83,7 +83,7 @@ void DrEngineSpawner::setSpawnerForFirstTime() {
 //####################################################################################
 //##    Update Function, called every physics frame
 //####################################################################################
-DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QRectF area, bool use_area) {
+DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, DrRectF area, bool use_area) {
     Q_UNUSED( time_warp )
 
     DrEngineObject *return_object = nullptr;
@@ -193,7 +193,7 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, QR
         if (getSpawnCount() == 0) setReadyForRemoval();
 
         if (use_area) {
-            if (area.contains(QPointF(getLocation().x, getLocation().y)) == false) {
+            if (area.contains(getLocation()) == false) {
                 if (getSpawnType() == Spawn_Type::Permanent)
                     setReadyForRemoval();
             }

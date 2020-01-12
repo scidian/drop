@@ -64,7 +64,7 @@ void DrEngineLight::addToWorld() {
 //####################################################################################
 //##    Override for DrEngineThing::update() - Pulses Light
 //####################################################################################
-bool DrEngineLight::update(double time_passed, double time_warp, QRectF &area) {
+bool DrEngineLight::update(double time_passed, double time_warp, DrRectF &area) {
     bool remove = false;
 
     // ***** Pulse light

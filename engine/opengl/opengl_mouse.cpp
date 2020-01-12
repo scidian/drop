@@ -5,7 +5,6 @@
 //
 //
 //
-#include <QtMath>
 #include <QMouseEvent>
 
 #include "core/dr_random.h"
@@ -32,10 +31,10 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
-    QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
-    double x = static_cast<double>(vec.x());
-    double y = static_cast<double>(vec.y());
-    double z = static_cast<double>(vec.z());
+    glm::vec3 vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
+    double x = static_cast<double>(vec.x);
+    double y = static_cast<double>(vec.y);
+    double z = static_cast<double>(vec.z);
 
     // ***** If running, process click
     if (m_form_engine->isTimerActive() == false)
@@ -184,9 +183,9 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     ///DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
-    QVector3D vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
-    double x = static_cast<double>(vec.x());
-    double y = static_cast<double>(vec.y());
+    glm::vec3 vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
+    double x = static_cast<double>(vec.x);
+    double y = static_cast<double>(vec.y);
     ///double z = static_cast<double>(vec.z());
 
     QPointF mouse_position = QPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
