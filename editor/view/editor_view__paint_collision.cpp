@@ -56,6 +56,7 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
         // Load Object Position
         DrPointF center =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
         DrPointF size =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+        double   angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
 
         // ***** Process Auto Collision Shape
         if (shape == Collision_Shape::Image) {
@@ -67,9 +68,58 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
 
         // ***** Process Circle Collision Shape
         } else if (shape == Collision_Shape::Circle) {
-            QPointF top_left =  mapFromScene( QPointF( center.x - size.x/2, center.y - size.y/2) );
-            QPointF bot_right = mapFromScene( QPointF( center.x + size.x/2, center.y + size.y/2) );
-            painter.drawEllipse(QRectF(top_left, bot_right));
+            // Circle
+            if (Dr::FuzzyCompare(size.x, size.y) == true) {
+                QPointF offset = mapFromScene(QPointF(center.x, center.y));
+                double  radius = mapFromScene(QPointF(size.x/2, 0)).x() - mapFromScene(0, 0).x();
+                QPointF top =    mapFromScene(QPointF(center.x, center.y - size.y/2));
+
+                QTransform t = QTransform().translate(offset.x(), offset.y()).rotate(angle).translate(-offset.x(), -offset.y());
+                painter.drawEllipse(offset, radius, radius);                // Draw circle
+                painter.drawLine(t.map(top), offset);                       // Draw orientation line
+
+            // Ellipse
+            } else {
+                DrPointF offset(0, 0);
+                double   radius_x = size.x/2;
+                double   radius_y = size.y/2;
+                double   curve = 0.925;
+
+                QTransform t = QTransform().translate(center.x, center.y).rotate(angle);
+                QPointF mid =   t.map(QPointF(offset.x, offset.y));
+                QPointF top =   t.map(QPointF(offset.x, offset.y - radius_y));
+                QPointF bot =   t.map(QPointF(offset.x, offset.y + radius_y));
+                QPointF left =  t.map(QPointF(offset.x - radius_x, offset.y));
+                QPointF right = t.map(QPointF(offset.x + radius_x, offset.y));
+                QPointF tl =    t.map(QPointF((offset.x - radius_x) * curve, (offset.y - radius_y) * curve));
+                QPointF tr =    t.map(QPointF((offset.x + radius_x) * curve, (offset.y - radius_y) * curve));
+                QPointF bl =    t.map(QPointF((offset.x - radius_x) * curve, (offset.y + radius_y) * curve));
+                QPointF br =    t.map(QPointF((offset.x + radius_x) * curve, (offset.y + radius_y) * curve));
+
+                mid =   mapFromScene(mid.x(),   mid.y());
+                top =   mapFromScene(top.x(),   top.y());
+                bot =   mapFromScene(bot.x(),   bot.y());
+                left =  mapFromScene(left.x(),  left.y());
+                right = mapFromScene(right.x(), right.y());
+                tl =    mapFromScene(tl.x(), tl.y());
+                tr =    mapFromScene(tr.x(), tr.y());
+                bl =    mapFromScene(bl.x(), bl.y());
+                br =    mapFromScene(br.x(), br.y());
+
+                QPainterPath path(top);
+                path.quadTo(tl, left);
+                path.quadTo(bl, bot);
+                path.quadTo(br, right);
+                path.quadTo(tr, top);
+
+                // Don't draw if not touching or inside of visible area
+                QRect bounding_box = path.boundingRect().normalized().toRect();
+                if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box)) &&
+                    (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
+                    painter.drawPath( path );                               // Draw circle
+                    painter.drawLine( top, mid );                           // Draw orientation line
+                }
+            }
 
         } else if (shape == Collision_Shape::Square) {
             ///object->addShapeBoxFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
