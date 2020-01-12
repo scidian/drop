@@ -6,6 +6,7 @@
 //
 //
 #include <QOpenGLFramebufferObject>
+#include "editor/helper_library.h"
 
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
@@ -118,30 +119,31 @@ int DrOpenGL::findNeededShadowMaps() {
             QMatrix4x4 view_matrix, proj_matrix;
             occluderMatrix(Render_Type::Perspective, view_matrix, proj_matrix);
 
-            QVector3D point_0_a = QVector3D(static_cast<float>(light->getPosition().x), 0.0f, 0.0f);
-            QVector3D point_0_b = QVector3D(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f);
+            glm::vec3 point_0_a = glm::vec3(static_cast<float>(light->getPosition().x), 0.0f, 0.0f);
+            glm::vec3 point_0_b = glm::vec3(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f);
 
             float z_pos = static_cast<float>(light->getZOrder());
-            QVector3D point_z_a = QVector3D(static_cast<float>(light->getPosition().x), 0.0f, z_pos);
-            QVector3D point_z_b = QVector3D(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, z_pos);
+            glm::vec3 point_z_a = glm::vec3(static_cast<float>(light->getPosition().x), 0.0f, z_pos);
+            glm::vec3 point_z_b = glm::vec3(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, z_pos);
 
-            QPointF map_0_a = mapToFBO( point_0_a, m_occluder_fbo, view_matrix, proj_matrix );
-            QPointF map_0_b = mapToFBO( point_0_b, m_occluder_fbo, view_matrix, proj_matrix );
-            QPointF map_z_a = mapToFBO( point_z_a, m_occluder_fbo, view_matrix, proj_matrix );
-            QPointF map_z_b = mapToFBO( point_z_b, m_occluder_fbo, view_matrix, proj_matrix );
+            DrPointF map_0_a = mapToFBO( point_0_a, m_occluder_fbo, view_matrix, proj_matrix );
+            DrPointF map_0_b = mapToFBO( point_0_b, m_occluder_fbo, view_matrix, proj_matrix );
+            DrPointF map_z_a = mapToFBO( point_z_a, m_occluder_fbo, view_matrix, proj_matrix );
+            DrPointF map_z_b = mapToFBO( point_z_b, m_occluder_fbo, view_matrix, proj_matrix );
 
-            double map_0 = (map_0_a.x() > map_0_b.x()) ? (map_0_a.x() - map_0_b.x()) : (map_0_b.x() - map_0_a.x());
-            double map_z = (map_z_a.x() > map_z_b.x()) ? (map_z_a.x() - map_z_b.x()) : (map_z_b.x() - map_z_a.x());
+            double map_0 = (map_0_a.x > map_0_b.x) ? (map_0_a.x - map_0_b.x) : (map_0_b.x - map_0_a.x);
+            double map_z = (map_z_a.x > map_z_b.x) ? (map_z_a.x - map_z_b.x) : (map_z_b.x - map_z_a.x);
             light->setPerspectiveScale( float(map_z / map_0) );
             light_radius /= static_cast<double>(light->getPerspectiveScale() + 0.0001f);
         }
 
         // Check if light is in view to be rendered
-        QPoint top_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y + light_radius, light->getZOrder() ).toPoint();
-        QPoint top_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y + light_radius, light->getZOrder() ).toPoint();
-        QPoint bot_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y - light_radius, light->getZOrder() ).toPoint();
-        QPoint bot_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y - light_radius, light->getZOrder() ).toPoint();
-        QPolygon light_box; light_box << top_left << top_right << bot_left << bot_right;
+        DrPoint top_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y + light_radius, light->getZOrder() ).toPoint();
+        DrPoint top_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y + light_radius, light->getZOrder() ).toPoint();
+        DrPoint bot_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y - light_radius, light->getZOrder() ).toPoint();
+        DrPoint bot_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y - light_radius, light->getZOrder() ).toPoint();
+        QPolygon light_box;
+        light_box << Dr::ToQPoint(top_left) << Dr::ToQPoint(top_right) << Dr::ToQPoint(bot_left) << Dr::ToQPoint(bot_right);
         QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
         light->setIsInView( light_box.boundingRect().intersects(in_view) ||
                             light_box.boundingRect().contains(in_view)   ||
@@ -163,10 +165,8 @@ void DrOpenGL::drawShadowMaps() {
         // Calculate light position on Occluder Map
         QMatrix4x4 view_matrix, proj_matrix;
         occluderMatrix(m_engine->getCurrentWorld()->render_type, view_matrix, proj_matrix);
-        light->setScreenPos( mapToFBO( QVector3D(static_cast<float>(light->getPosition().x),
-                                                 static_cast<float>(light->getPosition().y),
-                                                 static_cast<float>(light->getZOrder())),
-                                       m_occluder_fbo, view_matrix, proj_matrix) );
+        light->setScreenPos( Dr::ToQPointF(mapToFBO( glm::vec3(static_cast<float>(light->getPosition().x), static_cast<float>(light->getPosition().y), static_cast<float>(light->getZOrder())),
+                                                     m_occluder_fbo, view_matrix, proj_matrix)) );
         double middle = m_texture_fbo->height() / 2.0;
         double y_diff = middle - light->getScreenPos().y();
 

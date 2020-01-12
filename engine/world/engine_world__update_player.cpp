@@ -5,9 +5,7 @@
 //
 //
 //
-#include <QLineF>
-#include <QTransform>
-
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
@@ -92,8 +90,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ***** Mouse Rotate
     if (object->shouldMouseRotate()) {
         DrPointF pos = object->mapPositionToScreen();
-        double angle = QLineF( QPointF(pos.x, pos.y), QPointF(g_mouse_position.x, g_mouse_position.y)).angle();
-        cpBodySetAngle( object->body, Dr::DegreesToRadians(angle - 90.0) );
+        double angle = Dr::CalcRotationAngleInDegrees(pos, g_mouse_position);
+        cpBodySetAngle( object->body, Dr::DegreesToRadians(-angle) );
     }
 
 
@@ -154,14 +152,14 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             if (object->getRemainingWallTime() > 0.0) {
                 double angle = atan2(object->getLastTouchedGroundNormal().y, object->getLastTouchedGroundNormal().x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
                 angle = Dr::RadiansToDegrees( angle ) - 180;
-                ///qDebug() << "Wall jump - Angle: " << angle << ", Dot: " << object->getLastTouchedGroundDot();
+                ///Dr::PrintDebug("Wall jump - Angle: " + std::to_string(angle) + ", Dot: " + std::to_string(object->getLastTouchedGroundDot()));
                 if (angle < -180) angle += 360;
                 if (angle >  180) angle -= 360;
                 angle /= 3;
 
-                QPointF wall_jump_force = QTransform().rotate(angle).map( QPointF(object->getJumpForceX(), object->getJumpForceY()) );
-                jump_vx = wall_jump_force.x() * 2.0;
-                jump_vy = wall_jump_force.y() * 2.0;
+                DrPointF wall_jump_force = Dr::RotatePointAroundOrigin( DrPointF(object->getJumpForceX(), object->getJumpForceY()), DrPointF(0, 0), angle );
+                jump_vx = wall_jump_force.x * 2.0;
+                jump_vy = wall_jump_force.y * 2.0;
 
             // Calculate ground jump forces
             } else {
@@ -231,13 +229,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double  forced_speed_y = object->getForcedSpeedY();
     double  rotate_speed =   object->getRotateSpeedZ();
     if (object->getAngleMovement()) {
-        QTransform t = QTransform().rotate(object->getAngle());
-        QPointF button_angle = t.map( QPointF(button_speed_x, button_speed_y) );
-            button_speed_x = button_angle.x();
-            button_speed_y = button_angle.y();
-        QPointF forced_angle = t.map( QPointF(forced_speed_x, forced_speed_y) );
-            forced_speed_x = forced_angle.x();
-            forced_speed_y = forced_angle.y();
+        DrPointF button_angle = Dr::RotatePointAroundOrigin( DrPointF(button_speed_x, button_speed_y), DrPointF(0, 0), object->getAngle() );
+            button_speed_x = button_angle.x;
+            button_speed_y = button_angle.y;
+        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
+            forced_speed_x = forced_angle.x;
+            forced_speed_y = forced_angle.y;
     }
     bool has_key_x = (Dr::FuzzyCompare(button_speed_x, 0.0)) ? false : true;
     bool has_key_y = (Dr::FuzzyCompare(button_speed_y, 0.0)) ? false : true;

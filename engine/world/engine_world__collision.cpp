@@ -127,9 +127,9 @@ static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
         velocity = cpvneg(cpArbiterGetNormal(arb));
     double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
     if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
-        QPointF v = QPointF(velocity.x, velocity.y);                // Convert to QPointF for better vector math operators than cpVect
-        v = v - (2.0 * dot * QPointF(n.x, n.y));                    // Reflect velocity normal across the plane of the collision normal
-        velocity = cpv(v.x(), v.y());                               // Convert back to cpVect
+        DrPointF v = DrPointF(velocity.x, velocity.y);          // Convert to DrPointF for better vector math operators than cpVect
+        v = v - (DrPointF(n.x, n.y) * 2.0 * dot);               // Reflect velocity normal across the plane of the collision normal
+        velocity = cpv(v.x, v.y);                               // Convert back to cpVect
     }
     velocity = cpvnormalize(velocity);                          // Normalize body velocity
     velocity.x *= object->getDamageRecoil();                    // Apply recoil force x to new direction vector

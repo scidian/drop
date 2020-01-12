@@ -90,11 +90,8 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Calculate distance and Add New Stage if needed
     if (has_scene == true) {
-        QTransform t = QTransform().translate( m_game_start.x,  m_game_start.y)
-                                   .rotate(    m_game_direction)
-                                   .translate(-m_game_start.x, -m_game_start.y);
-        QPointF rotated = t.map( QPointF( getCameraPositionX(), getCameraPositionY() ));
-        m_game_distance = rotated.x() - m_game_start.x;
+        DrPointF rotated = Dr::RotatePointAroundOrigin( DrPointF(getCameraPositionX(), getCameraPositionY()), m_game_start, m_game_direction );
+        m_game_distance = rotated.x - m_game_start.x;
         m_max_game_distance = Dr::Max(m_game_distance, m_max_game_distance);
 
         if (m_loaded_to - m_game_distance < m_load_buffer) {

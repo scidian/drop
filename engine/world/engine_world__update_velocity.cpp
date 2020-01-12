@@ -77,11 +77,10 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
         double  angle =     Dr::RadiansToDegrees( cpBodyGetAngle(body) );
         double  x_scale =   (object->getScaleX() < 0.f) ? -1.0 : 1.0;
         double  y_scale =   (object->getScaleY() < 0.f) ? -1.0 : 1.0;
-        QPointF original =  QPointF( object->getOriginalVelocityX(), object->getOriginalVelocityY() );
-        QPointF rotated =   QTransform().rotate(angle)
-                                .scale(x_scale, y_scale)
-                                .map(original);
-        cpBodySetVelocity( body, cpv(rotated.x(), rotated.y()) );
+
+        DrPointF original = DrPointF(object->getOriginalVelocityX(), object->getOriginalVelocityY());
+        DrPointF rotated =  Dr::RotatePointAroundOrigin( DrPointF(original.x * x_scale, original.y * y_scale), DrPointF(0, 0), angle);
+        cpBodySetVelocity( body, cpv(rotated.x, rotated.y) );
     }
 
     // Call real update function

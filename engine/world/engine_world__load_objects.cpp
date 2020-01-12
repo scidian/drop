@@ -5,8 +5,6 @@
 //
 //
 //
-#include <QTransform>
-
 #include "core/dr_random.h"
 #include "engine/engine.h"
 #include "engine/things/engine_thing_object.h"
@@ -195,10 +193,9 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double spawn_x = spawn_off_x.x + (Dr::RandomDouble(0.0, spawn_off_x.y * 2.0) - spawn_off_x.y);
     double spawn_y = spawn_off_y.x + (Dr::RandomDouble(0.0, spawn_off_y.y * 2.0) - spawn_off_y.y);
     DrPointF spawn_rotate;
-    QTransform t = QTransform().rotate(rotate_spawn);
-    QPointF spawn_angle = t.map( QPointF(spawn_x * scale_x, spawn_y * scale_y) );
-        spawn_rotate.x = spawn_angle.x();
-        spawn_rotate.y = spawn_angle.y();
+    DrPointF spawn_angle = Dr::RotatePointAroundOrigin( DrPointF(spawn_x * scale_x, spawn_y * scale_y), DrPointF(0, 0), rotate_spawn);
+        spawn_rotate.x = spawn_angle.x;
+        spawn_rotate.y = spawn_angle.y;
     double x_offset = spawn_rotate.x;
     double y_offset = spawn_rotate.y;
 

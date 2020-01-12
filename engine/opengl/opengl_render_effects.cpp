@@ -30,25 +30,25 @@
 bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,
                        double &top, double &bottom, double &left, double &right, float &angle) {
     // Get Thing position in screen coordinates
-    QPointF position_top =    mapToScreen(thing->getPosition().x, thing->getPosition().y + (thing->getSize().y / 2.0), thing->getZOrder());
-    QPointF position_bottom = mapToScreen(thing->getPosition().x, thing->getPosition().y - (thing->getSize().y / 2.0), thing->getZOrder());
-    QPointF position_left =   mapToScreen(thing->getPosition().x - (thing->getSize().x / 2.0), thing->getPosition().y, thing->getZOrder());
-    QPointF position_right =  mapToScreen(thing->getPosition().x + (thing->getSize().x / 2.0), thing->getPosition().y, thing->getZOrder());
-    if (position_left.x()   > position_right.x())
+    DrPointF position_top =    mapToScreen(thing->getPosition().x, thing->getPosition().y + (thing->getSize().y / 2.0), thing->getZOrder());
+    DrPointF position_bottom = mapToScreen(thing->getPosition().x, thing->getPosition().y - (thing->getSize().y / 2.0), thing->getZOrder());
+    DrPointF position_left =   mapToScreen(thing->getPosition().x - (thing->getSize().x / 2.0), thing->getPosition().y, thing->getZOrder());
+    DrPointF position_right =  mapToScreen(thing->getPosition().x + (thing->getSize().x / 2.0), thing->getPosition().y, thing->getZOrder());
+    if (position_left.x   > position_right.x)
         Dr::Swap(position_left,   position_right);
-    if (position_bottom.y() < position_top.y()) {
+    if (position_bottom.y < position_top.y) {
         Dr::Swap(position_bottom, position_top);
         angle += 180.0f;
     }
 
     // Calculate corners of Thing to check if it is within view
-    QPointF center = QPointF( position_right.x() - ((position_right.x() - position_left.x())   / 2.0),
-                              position_top.y() -   ((position_top.y() -   position_bottom.y()) / 2.0));
+    QPointF center = QPointF( position_right.x - ((position_right.x - position_left.x)   / 2.0),
+                              position_top.y -   ((position_top.y -   position_bottom.y) / 2.0));
     QTransform t = QTransform().translate(center.x(), center.y()).rotate(static_cast<double>(angle)).translate(-center.x(), -center.y());
-    QPointF top_left =  t.map(QPointF(position_left.x(),  position_top.y()));
-    QPointF top_right = t.map(QPointF(position_right.x(), position_top.y()));
-    QPointF bot_left =  t.map(QPointF(position_left.x(),  position_bottom.y()));
-    QPointF bot_right = t.map(QPointF(position_right.x(), position_bottom.y()));
+    QPointF top_left =  t.map(QPointF(position_left.x,  position_top.y));
+    QPointF top_right = t.map(QPointF(position_right.x, position_top.y));
+    QPointF bot_left =  t.map(QPointF(position_left.x,  position_bottom.y));
+    QPointF bot_right = t.map(QPointF(position_right.x, position_bottom.y));
     QRect   in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
     QPolygonF thing_box; thing_box << top_left << top_right << bot_left << bot_right;
     QRect     thing_rect = thing_box.boundingRect().toRect();
@@ -56,10 +56,10 @@ bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *t
     if (!process) return false;
 
     // Calculate sides of Thing in shader coordinates
-    top =    (fbo->height() - position_top.y()) / fbo->height();
-    bottom = (fbo->height() - position_bottom.y()) / fbo->height();
-    left =   position_left.x()  / fbo->width();
-    right =  position_right.x() / fbo->width();
+    top =    (fbo->height() - position_top.y) / fbo->height();
+    bottom = (fbo->height() - position_bottom.y) / fbo->height();
+    left =   position_left.x  / fbo->width();
+    right =  position_right.x / fbo->width();
     return true;
 }
 

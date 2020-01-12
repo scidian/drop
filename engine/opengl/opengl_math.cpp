@@ -15,12 +15,12 @@
 //####################################################################################
 //##    Maps 3D Point to / from 2D FBO Map Coordinates
 //####################################################################################
-QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix) {
+DrPointF DrOpenGL::mapToFBO(glm::vec3 point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix) {
 
     float x_pos, y_pos, z_pos;
-    x_pos = point3D.x();
-    y_pos = point3D.y();
-    z_pos = point3D.z();
+    x_pos = point3D.x;
+    y_pos = point3D.y;
+    z_pos = point3D.z;
 
     ///QRect viewport = QRect(0, 0, fbo->width(), fbo->height());
     ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( view_matrix, proj_matrix, viewport );
@@ -32,21 +32,21 @@ QPointF DrOpenGL::mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMa
     glm::vec3 v = glm::project(object, model, proj, view);
 
     ///return QPointF( static_cast<double>(vec.x()),  static_cast<double>(fbo->height() - vec.y()) );
-    return QPointF( static_cast<double>(v.x),  static_cast<double>(fbo->height() - v.y) );
+    return DrPointF( static_cast<double>(v.x),  static_cast<double>(fbo->height() - v.y) );
 }
 
 
 //####################################################################################
 //##    Maps 3D Point to / from 2D QOpenGLWidget Coordinates
 //####################################################################################
-QPointF DrOpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( QVector3D(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))); }
-QPointF DrOpenGL::mapToScreen(float  x, float  y, float  z) { return mapToScreen( QVector3D(x, y, z )); }
-QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
+DrPointF DrOpenGL::mapToScreen(double x, double y, double z) { return mapToScreen( glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z))); }
+DrPointF DrOpenGL::mapToScreen(float  x, float  y, float  z) { return mapToScreen( glm::vec3(x, y, z )); }
+DrPointF DrOpenGL::mapToScreen(glm::vec3 point3D) {
 
     float x_pos, y_pos, z_pos;
-    x_pos = point3D.x();
-    y_pos = point3D.y();
-    z_pos = point3D.z();
+    x_pos = point3D.x;
+    y_pos = point3D.y;
+    z_pos = point3D.z;
 
     // Old Qt Way
     ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
@@ -59,16 +59,16 @@ QPointF DrOpenGL::mapToScreen(QVector3D point3D) {
     glm::mat4 proj( glm::make_mat4(m_projection.data()) );
     glm::vec3 v = glm::project(object, model, proj, view);
 
-    return QPointF( static_cast<double>(v.x),  static_cast<double>((height() * devicePixelRatio()) - v.y) );
+    return DrPointF( static_cast<double>(v.x),  static_cast<double>((height() * devicePixelRatio()) - v.y) );
 }
 
-glm::vec3 DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( QPointF(x, y)); }
-glm::vec3 DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( QPointF(static_cast<double>(x), static_cast<double>(y)) ); }
-glm::vec3 DrOpenGL::mapFromScreen(QPointF point) {
+glm::vec3 DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( DrPointF(x, y)); }
+glm::vec3 DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( DrPointF(static_cast<double>(x), static_cast<double>(y)) ); }
+glm::vec3 DrOpenGL::mapFromScreen(DrPointF point) {
     ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
 
-    float x_pos = static_cast<float>(             point.x()  * devicePixelRatio() );
-    float y_pos = static_cast<float>( (height() - point.y()) * devicePixelRatio() );
+    float x_pos = static_cast<float>(             point.x  * devicePixelRatio() );
+    float y_pos = static_cast<float>( (height() - point.y) * devicePixelRatio() );
 
     // Old way of unprojecting in Orthographic before we 3D Ortho View was working
     ///QVector3D vec;

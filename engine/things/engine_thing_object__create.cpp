@@ -21,9 +21,8 @@ std::vector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &ce
     std::vector<DrPointF> ellipse;
     int count = point_count;
     for (int i = 0; i < count; i++) {
-        QTransform t = QTransform().translate(center.x, center.y).rotate(i * 360.0 / count);
-        QPointF point = t.map(QPointF( 0, radius));
-        ellipse.push_back( DrPointF(point.x(), point.y()) );
+        DrPointF point = Dr::RotatePointAroundOrigin(DrPointF(0, radius), DrPointF(0, 0), i * 360.0 / count);
+        ellipse.push_back( point + center );
     }
     return ellipse;
 }

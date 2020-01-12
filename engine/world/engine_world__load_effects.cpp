@@ -67,7 +67,7 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
 
-    // Find out original QPixmap size used in editor
+    // Calculate original size used in editor
     info.size.x = info.size.x / info.scale.x;
     info.size.y = info.size.y / info.scale.y;
     DrEngineFire *fire = new DrEngineFire(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,

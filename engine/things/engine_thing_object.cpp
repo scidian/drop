@@ -143,9 +143,9 @@ void DrEngineObject::addToWorld() {
 }
 
 DrPointF DrEngineObject::mapPositionToScreen() {
-    QPointF position = getWorld()->getEngine()->getOpenGL()->mapToScreen( getPosition().x, getPosition().y, getZOrder() );
-    return DrPointF(position.x(), position.y());
+    return getWorld()->getEngine()->getOpenGL()->mapToScreen( getPosition().x, getPosition().y, getZOrder() );
 }
+
 
 //####################################################################################
 //##    Collision Type of Object

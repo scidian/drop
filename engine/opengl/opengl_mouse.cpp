@@ -31,7 +31,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
-    glm::vec3 vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
+    glm::vec3 vec = mapFromScreen( DrPointF(event->pos().x(), event->pos().y()) );
     double x = static_cast<double>(vec.x);
     double y = static_cast<double>(vec.y);
     double z = static_cast<double>(vec.z);
@@ -183,7 +183,7 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     ///DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
-    glm::vec3 vec = mapFromScreen( QPointF(event->pos().x(), event->pos().y()) );
+    glm::vec3 vec = mapFromScreen( DrPointF(event->pos().x(), event->pos().y()) );
     double x = static_cast<double>(vec.x);
     double y = static_cast<double>(vec.y);
     ///double z = static_cast<double>(vec.z());

@@ -156,11 +156,11 @@ public:
     float           combinedZoomScale();
     glm::vec3       mapFromScreen(double x, double y);
     glm::vec3       mapFromScreen(float x, float y);
-    glm::vec3       mapFromScreen(QPointF point);
-    QPointF         mapToScreen(double x, double y, double z);
-    QPointF         mapToScreen(float x, float y, float z);
-    QPointF         mapToScreen(QVector3D point3D);
-    QPointF         mapToFBO(QVector3D point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix);
+    glm::vec3       mapFromScreen(DrPointF point);
+    DrPointF        mapToScreen(double x, double y, double z);
+    DrPointF        mapToScreen(float x, float y, float z);
+    DrPointF        mapToScreen(glm::vec3 point3D);
+    DrPointF        mapToFBO(glm::vec3 point3D, QOpenGLFramebufferObject *fbo, QMatrix4x4 view_matrix, QMatrix4x4 proj_matrix);
     static double   zoomPowToScale(double pow);
     static double   zoomScaleToPow(double scale);
     void            zoomInOut(int level);
