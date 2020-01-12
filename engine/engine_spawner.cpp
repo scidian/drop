@@ -5,9 +5,6 @@
 //
 //
 //
-#include <QRect>
-#include <QTransform>
-
 #include "core/dr_random.h"
 #include "engine/engine_spawner.h"
 #include "engine/things/engine_thing.h"
@@ -84,7 +81,7 @@ void DrEngineSpawner::setSpawnerForFirstTime() {
 //##    Update Function, called every physics frame
 //####################################################################################
 DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, DrRectF area, bool use_area) {
-    Q_UNUSED( time_warp )
+    (void)time_warp;
 
     DrEngineObject *return_object = nullptr;
 
@@ -124,10 +121,9 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, Dr
                 double forced_speed_x = object->getForcedSpeedX();
                 double forced_speed_y = object->getForcedSpeedY();
                 if (object->getAngleMovement()) {
-                    QTransform t = QTransform().rotate(object->getAngle());
-                    QPointF forced_angle = t.map( QPointF(forced_speed_x, forced_speed_y) );
-                        forced_speed_x = forced_angle.x();
-                        forced_speed_y = forced_angle.y();
+                    DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
+                        forced_speed_x = forced_angle.x;
+                        forced_speed_y = forced_angle.y;
                 }
 
                 // Use Forced Speed for Dynamic objects, otherwise use Current Velocity of Kinematic objects
