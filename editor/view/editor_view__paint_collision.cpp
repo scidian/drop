@@ -282,7 +282,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 QPointF p1 =    mapFromScene( cam_transform.map(QPointF(cam_position.x,      (cam_position.y-cam.lag.y/2) - 9)) );
                 QPointF p2 =    mapFromScene( cam_transform.map(QPointF(cam_position.x - 12, (cam_position.y-cam.lag.y/2) + 9)) );
                 QPointF p3 =    mapFromScene( cam_transform.map(QPointF(cam_position.x + 12, (cam_position.y-cam.lag.y/2) + 9)) );
-                painter.drawLine(middle, p1);
+                ///painter.drawLine(middle, p1);
 
                 QPolygonF arrow;
                 arrow << p1 << p2 << p3;
@@ -295,6 +295,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             }          
 
             // ***** Zoom Level
+            /**
             QPainterPath zoom;
             QString mag = "x" + Dr::RemoveTrailingDecimals( cam.zoom, 2 );
             zoom.addText(QPointF(0, 0), zoom_font, mag);
@@ -304,16 +305,16 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 outline_pen = QPen(QBrush(Qt::black), 1);
                 painter.setPen(outline_pen);
             }
-
             painter.translate(middle);
             painter.drawPath(zoom);
             painter.resetTransform();
-
+            */
 
             // ***** Rotation Circles
             painter.setPen(cosmetic_pen);
             painter.setBrush(Qt::NoBrush);
             float radius = 200.f * static_cast<float>(currentZoomLevel());
+            ///radius *= (1.f / static_cast<float>(cam.zoom));
 
             QMatrix4x4 circle_x, circle_y;
             circle_y.rotate(static_cast<float>(-cam.rotation.y) + 0.0001f, 0.0f, 1.0f, 0.0f);
