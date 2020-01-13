@@ -165,11 +165,18 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
 
         // Works for look at
-        QVector3D obj = QVector3D(x, y, z);
-        QVector3D eye = m_eye / combinedZoomScale();
-        model.setToIdentity();
-        model.lookAt(obj, eye, m_up);
-        model = model.inverted();
+        // #NO_QT:  As original Qt calls
+        ///QVector3D obj = QVector3D(x, y, z);
+        ///QVector3D eye = m_eye / combinedZoomScale();
+        ///model.setToIdentity();
+        ///model.lookAt(obj, eye, m_up);
+        ///model = model.inverted();
+        //          No Qt Calls
+        glm::vec3 obj{x, y, z};
+        glm::vec3 eye = glm::vec3(m_eye.x(), m_eye.y(), m_eye.z()) / combinedZoomScale();
+        glm::mat4 billboard = glm::lookAt(obj, eye, glm::vec3(m_up.x(), m_up.y(), m_up.z()));
+        billboard = glm::inverse(billboard);
+        model = QMatrix4x4(glm::value_ptr(billboard)).transposed();
     }
 
     // Scale
@@ -318,7 +325,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
 // Bind vertex array
 void DrOpenGL::setDefaultAttributeBuffer(QOpenGLBuffer *buffer) {
-    // #NO_QT: As original QOpenGlWidget calls
+    // #NO_QT:  As original QOpenGlWidget calls
     ///buffer->bind();
     ///m_default_shader.enableAttributeArray(  PROGRAM_VERTEX_ATTRIBUTE);
     ///m_default_shader.enableAttributeArray(  PROGRAM_NORMAL_ATTRIBUTE);
@@ -328,7 +335,7 @@ void DrOpenGL::setDefaultAttributeBuffer(QOpenGLBuffer *buffer) {
     ///m_default_shader.setAttributeBuffer(    PROGRAM_NORMAL_ATTRIBUTE,      GL_FLOAT, 3 * c_float_size, 3, c_vertex_length * c_float_size);
     ///m_default_shader.setAttributeBuffer(    PROGRAM_TEXCOORD_ATTRIBUTE,    GL_FLOAT, 6 * c_float_size, 2, c_vertex_length * c_float_size);
     ///m_default_shader.setAttributeBuffer(    PROGRAM_BARYCENTRIC_ATTRIBUTE, GL_FLOAT, 8 * c_float_size, 3, c_vertex_length * c_float_size);
-    // Standard OpenGL Calls
+    //          Standard OpenGL Calls
     glBindBuffer(GL_ARRAY_BUFFER, buffer->bufferId());
     glEnableVertexAttribArray( PROGRAM_VERTEX_ATTRIBUTE );
     glEnableVertexAttribArray( PROGRAM_NORMAL_ATTRIBUTE );

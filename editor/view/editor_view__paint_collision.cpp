@@ -212,6 +212,9 @@ void DrView::paintDebugHealth(QPainter &painter, DrStage *stage) {
 //##    PAINT: Paints Camera Boxes
 //####################################################################################
 void DrView::paintCameras(QPainter &painter, DrStage *stage) {
+    QFont zoom_font("Avenir", static_cast<int>(36 * m_zoom_scale));
+    zoom_font.setBold(true);
+
     // Loop through all Stage Things
     for (auto &thing_pair : stage->getThingMap()) {
         DrThing *thing = thing_pair.second;
@@ -236,6 +239,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             cam_position = center;
             cam.lag = DrPointF(100, 100);
             cam.tilt = angle;
+            cam.zoom =          thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
             int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
             cam.up =            static_cast<Up_Vector>(up_vector);
         }
@@ -269,27 +273,42 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.drawPolygon(square);
 
             // Y Up Vector Arrow
+            cosmetic_pen = QPen(QBrush(Qt::black), 2);
+            cosmetic_pen.setCosmetic(true);
+            painter.setPen(cosmetic_pen);
+            painter.setBrush(QBrush(Dr::ToQColor(color)));
             if (cam.up == Up_Vector::Y) {
-                QPointF p1 =    mapFromScene( cam_transform.map(QPointF(cam_position.x,     (cam_position.y-cam.lag.y/2)     )) );
-                QPointF p2 =    mapFromScene( cam_transform.map(QPointF(cam_position.x - 5, (cam_position.y-cam.lag.y/2) + 6)) );
-                QPointF p3 =    mapFromScene( cam_transform.map(QPointF(cam_position.x + 5, (cam_position.y-cam.lag.y/2) + 6)) );
+                QPointF p1 =    mapFromScene( cam_transform.map(QPointF(cam_position.x,      (cam_position.y-cam.lag.y/2) - 9)) );
+                QPointF p2 =    mapFromScene( cam_transform.map(QPointF(cam_position.x - 12, (cam_position.y-cam.lag.y/2) + 9)) );
+                QPointF p3 =    mapFromScene( cam_transform.map(QPointF(cam_position.x + 12, (cam_position.y-cam.lag.y/2) + 9)) );
+                painter.drawLine(middle, p1);
+
                 QPolygonF arrow;
                 arrow << p1 << p2 << p3;
-                painter.setBrush(QBrush(Dr::ToQColor(color)));
                 painter.drawPolygon(arrow);
-                painter.drawLine(middle, p1);
 
             // Z Up Vector Circle
             } else if (cam.up == Up_Vector::Z) {
                 QPointF c =     mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
-                painter.setBrush(QBrush(Dr::ToQColor(color)));
-                painter.drawEllipse(c, 7 * currentZoomLevel(), 7 * currentZoomLevel());
+                painter.drawEllipse(c, 10 * currentZoomLevel(), 10 * currentZoomLevel());
             }
-        }
 
+            // Zoom Level
+            QPainterPath zoom;
+            QString mag = "x" + Dr::RemoveTrailingDecimals( cam.zoom, 2 );
+            zoom.addText(QPointF(0, 0), zoom_font, mag);
+            double fw = Dr::CheckFontWidth(zoom_font, mag);
+            zoom.translate( -(fw / 2.0), zoom.boundingRect().height() * 2.0);
+            if (currentZoomLevel() < 1.0) {
+                cosmetic_pen = QPen(QBrush(Qt::black), 1);
+                painter.setPen(cosmetic_pen);
+            }
 
-
-    }
+            painter.translate(middle);
+            painter.drawPath(zoom);
+            painter.resetTransform();
+        }   // End If visible
+    }   // End For auto DrThing
 }
 
 

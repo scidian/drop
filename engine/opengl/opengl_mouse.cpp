@@ -247,9 +247,10 @@ void DrOpenGL::zoomToScale(double scale) {
 
 float DrOpenGL::combinedZoomScale() {
     double zoom = 1.0;
-    if (m_engine->getCurrentWorld() != nullptr)
+    if (m_engine->getCurrentWorld() != nullptr) {
         zoom = m_engine->getCurrentWorld()->getCameraZoom();
-
+        if ((zoom < 0.001) && (zoom > -0.001)) zoom = 0.001;
+    }
     return static_cast<float>(zoom * m_zoom_scale);
 }
 

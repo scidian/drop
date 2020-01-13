@@ -115,7 +115,7 @@ void DrEngineWorld::moveCameras(double milliseconds) {
             SmoothMove(m_temp_position,     target_position,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
             SmoothMove(m_temp_rotation,     target_rotation,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
             SmoothMove(m_temp_up_vector,    target_up_vector,   0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-            SmoothMove(temp_zoom_as_pow, target_zoom_as_pow, 0.001 * cam_switch_speed, m_switch_milliseconds);
+            SmoothMove(temp_zoom_as_pow, target_zoom_as_pow,    0.0002 * cam_switch_speed, m_switch_milliseconds);
             m_temp_zoom = DrOpenGL::zoomPowToScale( temp_zoom_as_pow );
 
             if (glm::distance(m_temp_position, target_position) < (0.0001f) &&
