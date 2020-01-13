@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 11/6/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      01-13-20: Now Qt Free!
 //
 //
 #ifndef GLOBALS_ENGINE_H

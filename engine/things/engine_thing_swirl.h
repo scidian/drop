@@ -20,7 +20,7 @@ class DrEngineSwirl : public DrEngineThing
 {
 public:
     // Swirl Settings
-    DrColor          start_color = DrColor(128, 128, 255);      // Color tint of lens
+    DrColor         start_color = DrColor(128, 128, 255);       // Color tint of lens
     float           color_tint = 0.5f;                          // Color tint percentage     0 to  1
     float           rotation;                                   // Amount of rotation for Swirl
 

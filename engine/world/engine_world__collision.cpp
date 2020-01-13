@@ -177,9 +177,9 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
         // Copy polygon Vertices into a scaled cpVect array
         std::vector<cpVect> verts;
         verts.clear();
-        verts.resize( static_cast<ulong>(old_point_count) );
+        verts.resize( static_cast<size_t>(old_point_count) );
         for (int i = 0; i < old_point_count; i++)
-            verts[static_cast<ulong>(i)] = cpv( points[i].x * static_cast<double>(object_b->getScaleX()), points[i].y * static_cast<double>(object_b->getScaleY()));
+            verts[static_cast<size_t>(i)] = cpv( points[i].x * static_cast<double>(object_b->getScaleX()), points[i].y * static_cast<double>(object_b->getScaleY()));
         collider = cpPolyShapeNew( object_b->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius);
     }
 

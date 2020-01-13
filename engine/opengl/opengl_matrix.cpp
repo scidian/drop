@@ -47,12 +47,12 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     // ***** Camera position
     DrEngineWorld *world = m_engine->getCurrentWorld();
     if (world == nullptr) return;
-    float cam_x = world->getCameraPosition().x() * combinedZoomScale();
-    float cam_y = world->getCameraPosition().y() * combinedZoomScale();
-    float cam_z = world->getCameraPosition().z();
+    float cam_x = world->getCameraPosition().x * combinedZoomScale();
+    float cam_y = world->getCameraPosition().y * combinedZoomScale();
+    float cam_z = world->getCameraPosition().z;
     m_eye =     QVector3D( cam_x, cam_y, cam_z );
     m_look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * combinedZoomScale() );
-    m_up =      world->getCameraUpVector();
+    m_up =      QVector3D( world->getCameraUpVector().x, world->getCameraUpVector().y, world->getCameraUpVector().z );
 
     float plane_scale = combinedZoomScale();
     if (plane_scale < 1.0f) plane_scale = 1.0f;
@@ -83,8 +83,8 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
 
     //          Find up vector (from a max as distance of square root of 2)
     float sqrt_2 = 1.4142135623f; ///static_cast<float>(sqrt(2.0));
-    float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
-    float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
+    float dist_y = glm::distance(c_up_vector_y, world->getCameraUpVector());
+    float dist_z = glm::distance(c_up_vector_z, world->getCameraUpVector());
 
     //          Z Rotation, tilts head, apply rotation as a percentage of distance from square root of 2, useful for camera tweening between camera up vectors
     QMatrix4x4 rotate_up;
@@ -134,9 +134,9 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     // ***** Camera position
     DrEngineWorld *world = m_engine->getCurrentWorld();
     if (world == nullptr) return;
-    float cam_x = world->getCameraPosition().x() * scale;
-    float cam_y = world->getCameraPosition().y() * scale;
-    float cam_z = world->getCameraPosition().z();
+    float cam_x = world->getCameraPosition().x * scale;
+    float cam_y = world->getCameraPosition().y * scale;
+    float cam_z = world->getCameraPosition().z;
     // Smooth position
     cam_x = (int(cam_x) / 5) * 5;
     cam_y = (int(cam_y) / 5) * 5;
@@ -161,7 +161,7 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     ///view_matrix.lookAt(m_eye, m_look_at, m_up);
     QVector3D eye =     QVector3D( cam_x, cam_y, cam_z );
     QVector3D look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * scale );
-    QVector3D up =      c_up_vector_y;///world->getCameraUpVector();
+    QVector3D up =      QVector3D( c_up_vector_y.x, c_up_vector_y.y, c_up_vector_y.z ); ///world->getCameraUpVector();
 
     view_matrix.lookAt(eye, look_at, up);
     view_matrix.scale(scale);

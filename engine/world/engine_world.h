@@ -94,19 +94,19 @@ private:
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
 
     double          m_switch_milliseconds;          // Used for tweening between cameras
-    QVector3D       m_switch_position;              // Used for tweening between cameras
-    QVector3D       m_switch_rotation;              // Used for tweening between cameras
+    glm::vec3       m_switch_position;              // Used for tweening between cameras
+    glm::vec3       m_switch_rotation;              // Used for tweening between cameras
     double          m_switch_zoom = 1.0;            // Used for tweening between cameras
     double          m_switch_follow_angle;          // Used for tweening between cameras
-    QVector3D       m_switch_up_vector;             // Used for tweening between cameras
+    glm::vec3       m_switch_up_vector;             // Used for tweening between cameras
     double          m_switch_z_order;               // Used for tweening between cameras
     bool            m_switch_match = false;         // Used for tweening between cameras
 
-    QVector3D       m_temp_position;                // Used for tweening between cameras
-    QVector3D       m_temp_rotation;                // Used for tweening between cameras
+    glm::vec3       m_temp_position;                // Used for tweening between cameras
+    glm::vec3       m_temp_rotation;                // Used for tweening between cameras
     double          m_temp_zoom = 1.0;              // Used for tweening between cameras
     double          m_temp_follow_angle;            // Used for tweening between cameras
-    QVector3D       m_temp_up_vector;               // Used for tweening between cameras
+    glm::vec3       m_temp_up_vector;               // Used for tweening between cameras
     double          m_temp_z_order;                 // Used for tweening between cameras
     bool            m_temp_match = false;           // Used for tweening between cameras
 
@@ -227,18 +227,18 @@ public:
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
     DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
     EngineCameraMap&    getCameraMap() { return m_cameras; }
-    QVector3D           getCameraPosition();
+    glm::vec3           getCameraPosition();
     double              getCameraPositionX();
     double              getCameraPositionY();
     double              getCameraPositionZ();
-    QVector3D           getCameraRotation();
+    glm::vec3           getCameraRotation();
     double              getCameraRotationX();
     double              getCameraRotationY();
     double              getCameraRotationZ();
     double              getCameraFollowingRotation();
     float               getCameraFollowingZ();
     bool                getCameraMatching();
-    QVector3D           getCameraUpVector();
+    glm::vec3           getCameraUpVector();
     double              getCameraZoom();
     void                moveCameras(double milliseconds);
     void                switchCameraToNext(bool only_switch_to_character_cameras, bool switch_player_controls);

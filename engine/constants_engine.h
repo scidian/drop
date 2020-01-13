@@ -8,14 +8,13 @@
 #ifndef CONSTANTS_ENGINE_H
 #define CONSTANTS_ENGINE_H
 
-#include <QVector3D>
-
+#include "3rd_party/glm/vec3.hpp"
 #include "core/types/dr_pointf.h"
 
 
 // Camera Constants
-const       QVector3D   c_up_vector_y { 0.0, 1.0, 0.0 };
-const       QVector3D   c_up_vector_z { 0.0, 0.0, 1.0 };
+const       glm::vec3   c_up_vector_y { 0.0, 1.0, 0.0 };
+const       glm::vec3   c_up_vector_z { 0.0, 0.0, 1.0 };
 const       float       c_near_plane =     -10000.0;
 const       float       c_far_plane =       10000.0;
 const       float       c_field_of_view =   52.5f;              // Close to Orthographic size when using standard widescreen ratio
@@ -35,8 +34,8 @@ constexpr   double      c_epsilon = 0.000001;                   // Floating poin
 const       DrPointF    c_center             {0, 0};            // Default offset in no offset
 const       DrPointF    c_scale1x1           {1, 1};            // Default scale of 1x1
 const       double      c_default_camera_z =  801;              // Default camera z distance
-const       QVector3D   c_default_camera_pos {0, 0, 801};       // Default camera position if there is no active camera
-const       QVector3D   c_default_camera_rot {0, 0, 0};         // Default camera rotation if there is no active camera
+const       glm::vec3   c_default_camera_pos {0, 0, 801};       // Default camera position if there is no active camera
+const       glm::vec3   c_default_camera_rot {0, 0, 0};         // Default camera rotation if there is no active camera
 constexpr   double      c_zero_rotate =         0;              // Default rotation amount of zero
 constexpr   double      c_opaque =              1;              // Default transparency of fully opaque
 constexpr   double      c_transparent =         0;              // Fully transparent

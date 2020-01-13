@@ -54,8 +54,8 @@ private:
 
     // Thing Properties - Camera
     long            m_active_camera = 0;                            // Set to ID of last camera that followed this object, 0 == no camera
-    QVector3D       m_camera_position = c_default_camera_pos;       // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
-    QVector3D       m_camera_rotation { 0, 0, 0 };                  // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
+    glm::vec3       m_camera_position = c_default_camera_pos;       // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
+    glm::vec3       m_camera_rotation { 0, 0, 0 };                  // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
     double          m_camera_zoom = 1.0;                            // Camera Magnification Level         for this objects Active (Follow) Camera
     DrPointF        m_camera_lag { 0.0, 0.0 };                      // Camera Movement Lag Amount         for this objects Active (Follow) Camera
     Up_Vector       m_camera_up = Up_Vector::Y;                     // Camera Up Vector                   usually Y, Z for first person
@@ -150,15 +150,15 @@ public:
     bool                    hasActiveCamera()       { return (m_active_camera == 0) ? false : true; }
     void                    setActiveCameraKey(const long &new_camera_key) { m_active_camera = new_camera_key; }
 
-    QVector3D&              getCameraPosition()     { return m_camera_position; }
-    void                    setCameraPosition(QVector3D position) { m_camera_position = position; }
-    void                    setCameraPosition(float x, float y, float z) { m_camera_position = QVector3D(x, y, z); }
-    void                    setCameraPositionXY(DrPointF point) { m_camera_position = QVector3D(float(point.x), float(point.y), m_camera_position.z()); }
+    glm::vec3&              getCameraPosition()     { return m_camera_position; }
+    void                    setCameraPosition(glm::vec3 position) { m_camera_position = position; }
+    void                    setCameraPosition(float x, float y, float z) { m_camera_position = glm::vec3(x, y, z); }
+    void                    setCameraPositionXY(DrPointF point) { m_camera_position = glm::vec3(float(point.x), float(point.y), m_camera_position.z); }
 
-    QVector3D&              getCameraRotation()     { return m_camera_rotation; }
-    void                    setCameraRotation(QVector3D rotation) { m_camera_rotation = rotation; }
+    glm::vec3&              getCameraRotation()     { return m_camera_rotation; }
+    void                    setCameraRotation(glm::vec3 rotation) { m_camera_rotation = rotation; }
     void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
-                                                    m_camera_rotation = QVector3D(x_up_down, y_left_right, z_rotate); }
+                                                    m_camera_rotation = glm::vec3(x_up_down, y_left_right, z_rotate); }
 
     DrPointF                getCameraLag()              { return m_camera_lag; }
     void                    setCameraLag(DrPointF lag)  { m_camera_lag.x = (lag.x <= 0) ? 0 : lag.x;

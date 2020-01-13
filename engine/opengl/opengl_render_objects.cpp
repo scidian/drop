@@ -20,72 +20,72 @@
 //####################################################################################
 //##    Keeps Object Looking at Camera
 //####################################################################################
-QMatrix4x4 billboard(QVector3D pos, QVector3D camera_pos, QVector3D camera_up) {
-    QVector3D look =    QVector3D(camera_pos - pos);
-              look.normalize();
-    QVector3D right =   QVector3D::crossProduct(camera_up,  look);
-    QVector3D up2 =     QVector3D::crossProduct(look,       right);
-    QMatrix4x4 transform = QMatrix4x4(  right.x(),  right.y(),  right.z(),  0,
-                                        up2.x(),    up2.y(),    up2.z(),    0,
-                                        look.x(),   look.y(),   look.z(),   0,
-                                        pos.x(),    pos.y(),    pos.z(),    1);
+QMatrix4x4 billboard(glm::vec3 pos, glm::vec3 camera_pos, glm::vec3 camera_up) {
+    glm::vec3 look =    glm::vec3(camera_pos - pos);
+              look =    glm::normalize(look);
+    glm::vec3 right =   glm::cross(camera_up,  look);
+    glm::vec3 up2 =     glm::cross(look,       right);
+    QMatrix4x4 transform = QMatrix4x4(  right.x,  right.y,  right.z,  0,
+                                        up2.x,    up2.y,    up2.z,    0,
+                                        look.x,   look.y,   look.z,   0,
+                                        pos.x,    pos.y,    pos.z,    1);
     return transform;
 }
 
-QMatrix4x4 billboardSphericalBegin(QVector3D camera, QVector3D object, QVector3D up, QVector3D look_at,
+QMatrix4x4 billboardSphericalBegin(glm::vec3 camera, glm::vec3 object, glm::vec3 up, glm::vec3 look_at,
                                    QMatrix4x4 model_view_projection, bool cylindrical_only = false) {
     QMatrix4x4 mvp = model_view_projection;
-    QVector3D  obj_to_cam_proj, up_aux, obj_to_cam;
+    glm::vec3  obj_to_cam_proj, up_aux, obj_to_cam;
     float      angle_cosine;
 
-    Up_Vector uv = (c_up_vector_y.distanceToPoint(up) < 0.5f) ? Up_Vector::Y : Up_Vector::Z;
+    Up_Vector uv = (glm::distance(c_up_vector_y, up) < 0.5f) ? Up_Vector::Y : Up_Vector::Z;
 
     // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane    
-    obj_to_cam_proj.setX( camera.x() - object.x() );
-    obj_to_cam_proj.setY( camera.y() - object.y() );
-    obj_to_cam_proj.setZ( camera.z() - object.z() );
+    obj_to_cam_proj.x = camera.x - object.x;
+    obj_to_cam_proj.y = camera.y - object.y;
+    obj_to_cam_proj.z = camera.z - object.z;
 
     if (uv == Up_Vector::Y) {
-        obj_to_cam_proj.setY( 0 );
-        look_at = QVector3D(0, 0, 1);           // This is the original look_at vector for the object in world coordinates
+        obj_to_cam_proj.y = 0;
+        look_at = glm::vec3(0, 0, 1);           // This is the original look_at vector for the object in world coordinates
     } else {
-        obj_to_cam_proj.setZ( 0 );
-        look_at = QVector3D(0, 0, 1);           // This is the original look_at vector for the object in world coordinates
+        obj_to_cam_proj.z = 0;
+        look_at = glm::vec3(0, 0, 1);           // This is the original look_at vector for the object in world coordinates
     }
 
     // Normalize both vectors to get the cosine directly afterwards
-    obj_to_cam_proj.normalize();
+    obj_to_cam_proj = glm::normalize(obj_to_cam_proj);
 
     // Easy fix to determine wether the angle is -/+:
     //      For positive angles up_aux will be a vector pointing in the positive y direction,
     //      Otherwise up_aux will point downwards effectively reversing the rotation
-    up_aux =        QVector3D::crossProduct(look_at, obj_to_cam_proj);
+    up_aux =        glm::cross(look_at, obj_to_cam_proj);
 
     // Compute the angle
-    angle_cosine =  QVector3D::dotProduct(look_at, obj_to_cam_proj);
+    angle_cosine =  glm::dot(look_at, obj_to_cam_proj);
 
     // Perform the rotation
     if ((angle_cosine < 0.9999f) && (angle_cosine > -0.9999f)) {
-        mvp.rotate( std::acos(angle_cosine)*180.f/3.14f, up_aux.x(), up_aux.y(), up_aux.z());
+        mvp.rotate( std::acos(angle_cosine)*180.f/3.14f, up_aux.x, up_aux.y, up_aux.z);
     }
 
     // So far it is just a cylindrical billboard, now the second part tilts the object so that it faces the camera
     // "obj_to_cam" is the vector in world coordinates from the local origin to the camera
     if (cylindrical_only) return mvp;
-    obj_to_cam.setX( camera.x() - object.x() );
-    obj_to_cam.setY( camera.y() - object.y() );
-    obj_to_cam.setZ( camera.z() - object.z() );
+    obj_to_cam.x = camera.x - object.x;
+    obj_to_cam.y = camera.y - object.y;
+    obj_to_cam.z = camera.z - object.z;
 
     // Normalize to get the cosine afterwards
-    obj_to_cam.normalize();
+    obj_to_cam = glm::normalize(obj_to_cam);
 
     // Compute the angle between obj_to_cam_proj and obj_to_cam, i.e. compute the required angle for the lookup vector
-    angle_cosine = QVector3D::dotProduct(obj_to_cam_proj, obj_to_cam);
+    angle_cosine = glm::dot(obj_to_cam_proj, obj_to_cam);
 
     // Tilt the object
     if ((angle_cosine < 0.9999f) && (angle_cosine > -0.9999f)) {
-        if (obj_to_cam.y() < 0) mvp.rotate( acos(angle_cosine)*180.f/3.14f,  1, 0, 0 );
-        else                    mvp.rotate( acos(angle_cosine)*180.f/3.14f, -1, 0, 0 );
+        if (obj_to_cam.y < 0) mvp.rotate( acos(angle_cosine)*180.f/3.14f,  1, 0, 0 );
+        else                  mvp.rotate( acos(angle_cosine)*180.f/3.14f, -1, 0, 0 );
     }
 
     return mvp;

@@ -165,10 +165,10 @@ void DrOpenGL::drawShadowMaps() {
         // Calculate light position on Occluder Map
         QMatrix4x4 view_matrix, proj_matrix;
         occluderMatrix(m_engine->getCurrentWorld()->render_type, view_matrix, proj_matrix);
-        light->setScreenPos( Dr::ToQPointF(mapToFBO( glm::vec3(static_cast<float>(light->getPosition().x), static_cast<float>(light->getPosition().y), static_cast<float>(light->getZOrder())),
-                                                     m_occluder_fbo, view_matrix, proj_matrix)) );
+        light->setScreenPos( mapToFBO( glm::vec3(static_cast<float>(light->getPosition().x), static_cast<float>(light->getPosition().y), static_cast<float>(light->getZOrder())),
+                                       m_occluder_fbo, view_matrix, proj_matrix) );
         double middle = m_texture_fbo->height() / 2.0;
-        double y_diff = middle - light->getScreenPos().y();
+        double y_diff = middle - light->getScreenPos().y;
 
         // Adjust scale for Perspective Mode lights
         double o_scale;
@@ -190,8 +190,8 @@ void DrOpenGL::drawShadowMaps() {
         QOpenGLFramebufferObject::blitFramebuffer(
                     light_fbo, QRect(0, 0, light_fbo->width(), light_fbo->height()),
                     m_occluder_fbo, QRect(
-                        static_cast<int>( floor(light->getScreenPos().x() - ((light_fbo->width() / 2.0) * o_scale)) ),
-                        static_cast<int>( floor(light->getScreenPos().y() - ((light_fbo->height()/ 2.0) * o_scale) + (y_diff * 2.0)) ),
+                        static_cast<int>( floor(light->getScreenPos().x - ((light_fbo->width() / 2.0) * o_scale)) ),
+                        static_cast<int>( floor(light->getScreenPos().y - ((light_fbo->height()/ 2.0) * o_scale) + (y_diff * 2.0)) ),
                         static_cast<int>( light_fbo->width()  * o_scale ),
                         static_cast<int>( light_fbo->height() * o_scale )),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);

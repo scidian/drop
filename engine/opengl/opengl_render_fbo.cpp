@@ -55,8 +55,8 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_bitrate,            m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,            m_engine->getCurrentWorld()->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,            m_engine->getCurrentWorld()->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,       m_engine->getCurrentWorld()->getCameraPosition().x(),
-                                                                    m_engine->getCurrentWorld()->getCameraPosition().y() );
+    m_default_shader.setUniformValue( u_default_pixel_offset,       m_engine->getCurrentWorld()->getCameraPosition().x,
+                                                                    m_engine->getCurrentWorld()->getCameraPosition().y );
 
     // Set more Appearance Variables for Shader
     m_default_shader.setUniformValue( u_default_negative,           m_engine->getCurrentWorld()->negative );

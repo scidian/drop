@@ -46,8 +46,8 @@ void DrEngineThing::calculateTimeSinceLastUpdate() {
 //##    Update Function, called every physics frame
 //####################################################################################
 bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) {
-    Q_UNUSED( time_passed )
-    Q_UNUSED( time_warp )
+    (void)time_passed;
+    (void)time_warp;
 
     bool remove = false;
 
