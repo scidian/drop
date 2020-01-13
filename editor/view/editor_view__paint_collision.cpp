@@ -221,13 +221,13 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
         if (thing == nullptr) continue;
         if (thing->getThingType() != DrThingType::Character && thing->getThingType() != DrThingType::Camera) continue;
 
-        // Load Thing Info
+        // ***** Load Thing Info
         DrPointF center =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
         ///DrPointF size =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
         ///DrPointF scale =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
         double   angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
 
-        // Load Camera Info
+        // ***** Load Camera Info
         QTransform  cam_transform;
         CamInfo     cam;
         DrPointF    cam_position;
@@ -239,6 +239,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             cam_position = center;
             cam.lag = DrPointF(100, 100);
             cam.tilt = angle;
+            cam.rotation =      thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
             cam.zoom =          thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
             int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
             cam.up =            static_cast<Up_Vector>(up_vector);
@@ -246,7 +247,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
         if (cam.match_angle) cam_transform = cam_transform.translate(center.x, center.y).rotate(angle).translate(-center.x, -center.y);
         cam_transform = cam_transform.translate(cam_position.x, cam_position.y).rotate(cam.tilt).translate(-cam_position.x, -cam_position.y);
 
-        // Camera Lag Box
+        // ***** Camera Lag Box
         QPointF middle = mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
         QPointF tl =     mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
         QPointF tr =     mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
@@ -269,13 +270,13 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             brush_color.setAlpha(64);
             painter.setBrush(QBrush(brush_color));
 
-            // Draw Camera Box
+            // ***** Draw Camera Box
             painter.drawPolygon(square);
 
-            // Y Up Vector Arrow
-            cosmetic_pen = QPen(QBrush(Qt::black), 2);
-            cosmetic_pen.setCosmetic(true);
-            painter.setPen(cosmetic_pen);
+            // ***** Y Up Vector Arrow
+            QPen outline_pen = QPen(QBrush(Qt::black), 2);
+            outline_pen.setCosmetic(true);
+            painter.setPen(outline_pen);
             painter.setBrush(QBrush(Dr::ToQColor(color)));
             if (cam.up == Up_Vector::Y) {
                 QPointF p1 =    mapFromScene( cam_transform.map(QPointF(cam_position.x,      (cam_position.y-cam.lag.y/2) - 9)) );
@@ -287,27 +288,64 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 arrow << p1 << p2 << p3;
                 painter.drawPolygon(arrow);
 
-            // Z Up Vector Circle
+            // ***** Z Up Vector Circle
             } else if (cam.up == Up_Vector::Z) {
                 QPointF c =     mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
                 painter.drawEllipse(c, 10 * currentZoomLevel(), 10 * currentZoomLevel());
-            }
+            }          
 
-            // Zoom Level
+            // ***** Zoom Level
             QPainterPath zoom;
             QString mag = "x" + Dr::RemoveTrailingDecimals( cam.zoom, 2 );
             zoom.addText(QPointF(0, 0), zoom_font, mag);
             double fw = Dr::CheckFontWidth(zoom_font, mag);
             zoom.translate( -(fw / 2.0), zoom.boundingRect().height() * 2.0);
             if (currentZoomLevel() < 1.0) {
-                cosmetic_pen = QPen(QBrush(Qt::black), 1);
-                painter.setPen(cosmetic_pen);
+                outline_pen = QPen(QBrush(Qt::black), 1);
+                painter.setPen(outline_pen);
             }
 
             painter.translate(middle);
             painter.drawPath(zoom);
             painter.resetTransform();
+
+
+            // ***** Rotation Circles
+            painter.setPen(cosmetic_pen);
+            painter.setBrush(Qt::NoBrush);
+            float radius = 200.f * static_cast<float>(currentZoomLevel());
+
+            QMatrix4x4 circle_x, circle_y;
+            circle_y.rotate(static_cast<float>(-cam.rotation.y) + 0.0001f, 0.0f, 1.0f, 0.0f);
+            circle_x.rotate(static_cast<float>( cam.rotation.x) + 0.0001f, 1.0f, 0.0f, 0.0f);
+
+            QVector3D tl_x, tr_x, bl_x, br_x;
+            QVector3D tl_y, tr_y, bl_y, br_y;
+            tl_x = circle_x * QVector3D(-radius, 0, -radius);
+            tr_x = circle_x * QVector3D(-radius, 0,  radius);
+            br_x = circle_x * QVector3D( radius, 0,  radius);
+            bl_x = circle_x * QVector3D( radius, 0, -radius);
+
+            tl_y = circle_y * QVector3D(0,  radius, -radius);
+            tr_y = circle_y * QVector3D(0,  radius,  radius);
+            br_y = circle_y * QVector3D(0, -radius,  radius);
+            bl_y = circle_y * QVector3D(0, -radius, -radius);
+
+            QVector3D cam_point = QVector3D(0, 0, -radius);
+            cam_point = circle_x * cam_point;
+            cam_point = circle_y * cam_point;
+
+            // Draw Big Circles
+            painter.translate(middle);
+            painter.drawEllipse(QRectF(QPointF(double(tl_x.x()), double(tl_x.y())), QPointF(double(br_x.x()), double(br_x.y()))));
+            painter.drawEllipse(QRectF(QPointF(double(tl_y.x()), double(tl_y.y())), QPointF(double(br_y.x()), double(br_y.y()))));
+
+            // Draw Small Cam circle
+            painter.setPen(QPen(QBrush(Dr::ToQColor(Dr::purple)), 2));
+            painter.drawEllipse(QPointF(double(cam_point.x()), double(cam_point.y())), static_cast<double>(radius / 20.f), static_cast<double>(radius / 20.f));
+            painter.resetTransform();
         }   // End If visible
+
     }   // End For auto DrThing
 }
 
