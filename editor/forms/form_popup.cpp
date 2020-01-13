@@ -13,8 +13,8 @@
 #include "core/colors/colors.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_popup.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "project/dr_project.h"
 

@@ -9,8 +9,8 @@
 
 #include "core/colors/colors.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "editor/widgets/widgets.h"
-#include "editor/globals_editor.h"
 
 
 //####################################################################################

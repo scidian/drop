@@ -7,8 +7,8 @@
 //
 #include <QDebug>
 
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_scene_undo_commands.h"

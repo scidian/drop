@@ -10,8 +10,8 @@
 #include <QSettings>
 #include <QVariantMap>
 
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "project/properties/property_collision.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"

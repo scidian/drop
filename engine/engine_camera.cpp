@@ -392,8 +392,8 @@ void DrEngineCamera::updateCamera() {
     bool update_x = false;
     bool update_y = false;
     bool update_z = true;
-    if (abs(static_cast<double>(m_position.x()) - follow_pos_x) > m_lag.x) update_x = true;
-    if (abs(static_cast<double>(m_position.y()) - follow_pos_y) > m_lag.y) update_y = true;
+    if (abs(static_cast<double>(m_position.x()) - follow_pos_x) > (m_lag.x / 2.0)) update_x = true;
+    if (abs(static_cast<double>(m_position.y()) - follow_pos_y) > (m_lag.y / 2.0)) update_y = true;
 
     // Calculate the average object Speed
     double average_x = 0;

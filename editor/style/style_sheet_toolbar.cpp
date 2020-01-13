@@ -63,40 +63,40 @@ std::string StyleSheetToolBar() {
                                Dr::GetColor(Window_Colors::Background_Dark).name() +"; } "
 
     +
-    StyleSheetToolBarButtons("buttonAddThing",          "add.png",              "add.png",              "add_gray.png",          4, 4, 4, 4, 4, false) +
-    StyleSheetToolBarButtons("buttonDuplicate",         "duplicate.png",        "duplicate.png",        "duplicate_gray.png",    4, 4, 4, 4, 4, false) +
-    StyleSheetToolBarButtons("buttonDeleteThing",       "trash.png",            "trash.png",            "trash_gray.png",        4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonAddThing",          "add.png",              "add.png",              "add_gray.png",             4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonDuplicate",         "duplicate.png",        "duplicate.png",        "duplicate_gray.png",       4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonDeleteThing",       "trash.png",            "trash.png",            "trash_gray.png",           4, 4, 4, 4, 4, false) +
             " QToolButton#buttonDeleteThing                 { padding-right: 5px; padding-top: 3px; } " +
 
-    StyleSheetToolBarButtons("buttonSendToBack",        "sendtoback.png",       "sendtoback.png",       "sendtoback_gray.png",   4, 4, 0, 4, 0, false) +
-    StyleSheetToolBarButtons("buttonSendBackward",      "sendbackward.png",     "sendbackward.png",     "sendbackward_gray.png", 4, 0, 0, 0, 0, false) +
-    StyleSheetToolBarButtons("buttonSendForward",       "sendforward.png",      "sendforward.png",      "sendforward_gray.png",  4, 0, 0, 0, 0, false) +
-    StyleSheetToolBarButtons("buttonSendToFront",       "sendtofront.png",      "sendtofront.png",      "sendtofront_gray.png",  4, 0, 4, 0, 4, false) +
+    StyleSheetToolBarButtons("buttonSendToBack",        "sendtoback.png",       "sendtoback.png",       "sendtoback_gray.png",      4, 4, 0, 4, 0, false) +
+    StyleSheetToolBarButtons("buttonSendBackward",      "sendbackward.png",     "sendbackward.png",     "sendbackward_gray.png",    4, 0, 0, 0, 0, false) +
+    StyleSheetToolBarButtons("buttonSendForward",       "sendforward.png",      "sendforward.png",      "sendforward_gray.png",     4, 0, 0, 0, 0, false) +
+    StyleSheetToolBarButtons("buttonSendToFront",       "sendtofront.png",      "sendtofront.png",      "sendtofront_gray.png",     4, 0, 4, 0, 4, false) +
 
-    StyleSheetToolBarButtons("buttonResetObject",       "reset.png",            "reset.png",            "reset_gray.png",        4, 4, 0, 4, 0, false) +
-    StyleSheetToolBarButtons("buttonTransformFlipH",    "flip_h.png",           "flip_h.png",           "flip_h_gray.png",       4, 0, 0, 0, 0, false) +
-    StyleSheetToolBarButtons("buttonTransformFlipV",    "flip_v.png",           "flip_v.png",           "flip_v_gray.png",       4, 0, 0, 0, 0, false) +
+    StyleSheetToolBarButtons("buttonResetObject",       "reset.png",            "reset.png",            "reset_gray.png",           4, 4, 0, 4, 0, false) +
+    StyleSheetToolBarButtons("buttonTransformFlipH",    "flip_h.png",           "flip_h.png",           "flip_h_gray.png",          4, 0, 0, 0, 0, false) +
+    StyleSheetToolBarButtons("buttonTransformFlipV",    "flip_v.png",           "flip_v.png",           "flip_v_gray.png",          4, 0, 0, 0, 0, false) +
             " QToolButton#buttonTransformFlipV              { padding-bottom: 5px; } " +
-    StyleSheetToolBarButtons("buttonTransformRotateL",  "rotate_l.png",         "rotate_l.png",         "rotate_l_gray.png",     4, 0, 0, 0, 0, false) +
-    StyleSheetToolBarButtons("buttonTransformRotateR",  "rotate_r.png",         "rotate_r.png",         "rotate_r_gray.png",     4, 0, 4, 0, 4, false) +
+    StyleSheetToolBarButtons("buttonTransformRotateL",  "rotate_l.png",         "rotate_l.png",         "rotate_l_gray.png",        4, 0, 0, 0, 0, false) +
+    StyleSheetToolBarButtons("buttonTransformRotateR",  "rotate_r.png",         "rotate_r.png",         "rotate_r_gray.png",        4, 0, 4, 0, 4, false) +
 
-    StyleSheetToolBarButtons("buttonGridOnTop",     "grid_ontop_uncheck.png",   "grid_ontop.png",       "grid_ontop_gray.png",   4, 4, 0, 4, 0, true)  +
-    StyleSheetToolBarButtons("buttonResizeToGrid",  "grid_resize_uncheck.png",  "grid_resize.png",      "grid_resize.png",       4, 0, 0, 0, 0, true)  +
-    StyleSheetToolBarButtons("buttonSnapToGrid",    "grid_snap_uncheck.png",    "grid_snap.png",        "toolbar_grid_snap_gray.png", 4, 0, 0, 0, 0, true)  +
+    StyleSheetToolBarButtons("buttonGridOnTop",     "grid_ontop_uncheck.png",   "grid_ontop.png",       "grid_ontop_gray.png",      4, 4, 0, 4, 0, true)  +
+    StyleSheetToolBarButtons("buttonResizeToGrid",  "grid_resize_uncheck.png",  "grid_resize.png",      "grid_resize.png",          4, 0, 0, 0, 0, true)  +
+    StyleSheetToolBarButtons("buttonSnapToGrid",    "grid_snap_uncheck.png",    "grid_snap.png",      "toolbar_grid_snap_gray.png", 4, 0, 0, 0, 0, true)  +
             " QToolButton#buttonSnapToGrid:checked          { padding-bottom: 3px; } " +
-    StyleSheetToolBarButtons("buttonSnapOptions",   "arrow.png",                "arrow.png",            "arrow.png",             2, 0, 4, 0, 4, false) +
+    StyleSheetToolBarButtons("buttonSnapOptions",   "arrow.png",                "arrow.png",            "arrow.png",                2, 0, 4, 0, 4, false) +
             " QToolButton#buttonSnapOptions                 { padding-left:   2px; } "
             " QToolButton#buttonSnapOptions::menu-indicator { image: none; } " +
 
-    StyleSheetToolBarButtons("buttonPlay",              "play.png",             "play.png",             "play.png",              4, 4, 4, 4, 4, false) +
-    StyleSheetToolBarButtons("buttonPlayStage",         "play_stage.png",       "play_stage.png",       "play_stage.png",        4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonPlay",              "play.png",             "play.png",             "play.png",                 4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonPlayStage",         "play_stage.png",       "play_stage.png",       "play_stage.png",           4, 4, 4, 4, 4, false) +
             " QToolButton#buttonPlayStage                   { padding-left: 3px; padding-bottom: 2px; padding-top: 3px; } " +
 
-    StyleSheetToolBarButtons("buttonPlayground",        "playground.png",       "playground.png",       "playground.png",        4, 4, 4, 4, 4, false) +
-    StyleSheetToolBarButtons("buttonImageViewer",       "atlas.png",            "atlas.png",            "atlas.png",             4, 4, 4, 4, 4, false) +
-    StyleSheetToolBarButtons("buttonFontBuilder",       "fonts.png",            "fonts.png",            "fonts.png",             4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonPlayground",        "playground.png",       "playground.png",       "playground.png",           4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonImageViewer",       "atlas.png",            "atlas.png",            "atlas.png",                4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonFontBuilder",       "fonts.png",            "fonts.png",            "fonts.png",                4, 4, 4, 4, 4, false) +
             " QToolButton#buttonFontBuilder                 { padding-left: 3px; padding-right: 3px; } " +
-    StyleSheetToolBarButtons("buttonSettingsEditor",    "settings.png",         "settings.png",         "settings.png",          4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonSettingsEditor",    "settings.png",         "settings.png",         "settings.png",             4, 4, 4, 4, 4, false) +
             " QToolButton#buttonSettingsEditor              { padding-left: 3px; padding-bottom: 3px; } " +
 
 
@@ -104,7 +104,9 @@ std::string StyleSheetToolBar() {
     StyleSheetToolBarModeButton("mousePointer", "toolbar_mouse_pointer.png",    "toolbar_mouse_pointer_faded.png",      5) +
     StyleSheetToolBarModeButton("mouseHand",    "toolbar_mouse_hand.png",       "toolbar_mouse_hand_faded.png",         5) +
     StyleSheetToolBarModeButton("mouseMagnify", "toolbar_mouse_magnify.png",    "toolbar_mouse_magnify_faded.png",      5) +
-    StyleSheetToolBarButtons(   "debugOnOff",   "debug_shape.png",              "debug_shape.png",      "debug_shape.png",       4, 4, 4, 4, 4, true) +
+    StyleSheetToolBarButtons(   "cameraOnOff",  "camera.png",                   "camera.png",           "camera.png",               4, 4, 4, 4, 4, true) +
+            " QToolButton#cameraOnOff                       { padding-left: 3px; padding-bottom: 4px; padding-right: 3px; padding-top: 4px; } " +
+    StyleSheetToolBarButtons(   "debugOnOff",   "debug_shape.png",              "debug_shape.png",      "debug_shape.png",          4, 4, 4, 4, 4, true) +
             " QToolButton#debugOnOff                        { padding-left: 3px; padding-bottom: 4px; padding-right: 3px; padding-top: 4px; } " +
 
 

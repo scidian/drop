@@ -49,12 +49,14 @@ DrBitmap BlackAndWhiteFromAlpha(const DrBitmap &bitmap, double alpha_tolerance, 
 
 
 //####################################################################################
-//##    Flood fill
-//##        !!!!! #NOTE: Returns Flood QImage, 'from_image' passed in by reference is altered !!!!!
-//##
-//##        tolerance: how similar color should be to continue to fill, 0.0 to 1.0
-//##        REFERENCE RETURN
-//##            int flood_pixel_count - returns number of total pixels in flood
+//##    Flood Fill
+/// @brief      Fills in an area of similar colored pixels starting at (at_x, at_y) with (fill_color)
+/// @returns    DrBitmap as new image of flood
+/// @ref    (bitmap):               Image passed in to be flooded, is altered during function
+/// @value  (tolerance):            Percentage of how similar color should be to continue to fill, 0.0 to 1.0
+/// @value  (type):                 Specifies algorithm used to compare neighbors during fill routine
+/// @ref    (flood_pixel_count):    Number of total pixels in flood
+/// @ref    (flood_rect):           Bounding box of fill area
 //####################################################################################
 #define FLOOD_NOT_PROCESSED         0
 #define FLOOD_WAS_PROCESSED         1

@@ -76,7 +76,7 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. Generally less than 10.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::SizeF, DrPointF(50, 50),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::PositiveSizeF, DrPointF(100, 100),
                            "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
                                          "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
                                          "camera starts to move.");
@@ -85,7 +85,7 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
                                           "This is the tilt angle (Z Axis rotation) of that camera. ");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle, Property_Type::Bool, false,
                            "Rotation Follow", "Should this camera rotate to so that it matches the Character's Z Rotation? "
-                                              "When Up Vectoris set to Y the whole world will spin. When it is set to Z, it allows you to have "
+                                              "When Up Vector is set to Y the whole world will spin. When it is set to Z, it allows you to have "
                                               "first person directional looking. ");
 }
 

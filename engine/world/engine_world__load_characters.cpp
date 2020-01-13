@@ -16,6 +16,23 @@
 
 
 //####################################################################################
+//##   Loads Camera Info from Character Camera component
+//####################################################################################
+CamInfo DrEngineWorld::loadCharacterCameraSettings(DrThing *thing) {
+    CamInfo cam;
+    cam.position =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position).toPointF();
+    cam.rotation =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
+    cam.tilt =          thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
+    cam.zoom =          thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
+    cam.lag =           thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag).toPointF();
+    int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
+    cam.match_angle =   thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle).toBool();
+    cam.up =            static_cast<Up_Vector>(up_vector);
+    return cam;
+}
+
+
+//####################################################################################
 //##    Loads one DrProject DrThingType::Object to World / Space
 //####################################################################################
 void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
@@ -24,18 +41,12 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset =     m_project->findAssetFromKey(asset_key);
             if (asset == nullptr) return;
-    ThingInfo   info =      loadThingBasicInfo( thing );
+    ThingInfo   info =      loadThingBasicInfo(thing);
+
+    // ***** Load Character Camera Properties
+    CamInfo     cam =       loadCharacterCameraSettings(thing);
 
     // ***** Load Character Settings
-    DrPointF cam_position =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position).toPointF();
-    DrPointF cam_rotation =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
-    double   cam_tilt =         thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
-    double   cam_zoom =         thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
-    DrPointF cam_lag =          thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag).toPointF();
-    int      up_vector =        thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
-    bool     cam_match =        thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle).toBool();
-    Up_Vector   cam_up =        static_cast<Up_Vector>(up_vector);
-
     DrPointF max_speed =        asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
     DrPointF forced_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
     DrPointF move_speed =       asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed).toPointF();
@@ -69,12 +80,12 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, player);                                                                 // Load collision shape(s)
-    player->setCameraPositionXY( cam_position );                                                            // Set active camera position
-    player->setCameraRotation( float(cam_rotation.x), float(cam_rotation.y), float(cam_tilt) );             // Set active camera rotation
-    player->setCameraZoom( cam_zoom );                                                                      // Set active camera zoom
-    player->setCameraLag( cam_lag );                                                                        // Set active camera lag
-    player->setCameraUpVector(cam_up);                                                                      // Set active camera up vector
-    player->setCameraMatch(cam_match);
+    player->setCameraPositionXY( cam.position );                                                            // Set active camera position
+    player->setCameraRotation( float(cam.rotation.x), float(cam.rotation.y), float(cam.tilt) );             // Set active camera rotation
+    player->setCameraZoom( cam.zoom );                                                                      // Set active camera zoom
+    player->setCameraLag( cam.lag );                                                                        // Set active camera lag
+    player->setCameraUpVector(cam.up);                                                                      // Set active camera up vector
+    player->setCameraMatch(cam.match_angle);
 
     // ***** Apply Character Settings
     player->setMaxSpeedX( max_speed.x );

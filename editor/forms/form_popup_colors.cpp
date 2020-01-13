@@ -10,8 +10,8 @@
 #include "core/types/dr_color.h"
 #include "editor/forms/form_main.h"
 #include "editor/forms/form_popup.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "editor/trees/tree_inspector.h"
 
 

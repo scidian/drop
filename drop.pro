@@ -150,13 +150,13 @@ SOURCES += \
     editor/forms/form_popup__grid_snap.cpp \
     editor/forms/form_popup_colors.cpp \
     editor/forms/form_settings.cpp \
-    editor/globals_editor.cpp \
     editor/helper_library.cpp \
     editor/pixmap/pixmap_draw.cpp \
     editor/pixmap/pixmap_draw_devices.cpp \
     editor/pixmap/pixmap_draw_effects.cpp \
     editor/pixmap/pixmap_filters.cpp \
     editor/pixmap/pixmap_mask.cpp \
+    editor/preferences.cpp \
     editor/project/project_add_built_in_images.cpp \
     editor/project/project_file_open.cpp \
     editor/project/project_file_save.cpp \
@@ -916,7 +916,7 @@ HEADERS += \
     core/types/dr_variant.h \
     core/types/dr_vec2.h \
     core/types/dr_vec3.h \
-    editor/constants_editor.h \
+    editor/constants_advisor_info.h \
     editor/debug.h \
     editor/docks/docks.h \
     editor/enums_editor.h \
@@ -930,9 +930,9 @@ HEADERS += \
     editor/forms/form_main.h \
     editor/forms/form_popup.h \
     editor/forms/form_settings.h \
-    editor/globals_editor.h \
     editor/helper_library.h \
     editor/pixmap/pixmap.h \
+    editor/preferences.h \
     editor/project/project.h \
     editor/style/style.h \
     editor/trees/tree_advisor.h \

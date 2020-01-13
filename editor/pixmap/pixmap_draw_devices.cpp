@@ -15,9 +15,9 @@
 #include <QVector3D>
 
 #include "core/colors/colors.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/pixmap/pixmap.h"
+#include "editor/preferences.h"
 #include "editor/style/style.h"
 
 namespace Dr

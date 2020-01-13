@@ -7,7 +7,7 @@
 //
 #include <QWidget>
 
-#include "editor/globals_editor.h"
+#include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"

@@ -9,8 +9,8 @@
 #include <QUndoView>
 
 #include "editor/debug.h"
-#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "project/dr_project.h"

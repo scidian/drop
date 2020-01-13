@@ -18,9 +18,9 @@
 #include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/event_filters.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
@@ -290,10 +290,11 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
                 case Property_Type::PositiveDouble: new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::PositiveDouble); break;
                 case Property_Type::RangedDouble:   new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::RangedDouble);   break;
                 case Property_Type::Angle:          new_widget = createDoubleSpinBox(       prop, fp, sp_right, Property_Type::Angle);          break;
-                case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);      break;
                 case Property_Type::PointF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PointF);         break;
+                case Property_Type::PositionF:      new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositionF);      break;
                 case Property_Type::SizeF:          new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::SizeF);          break;
                 case Property_Type::PositiveSizeF:  new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositiveSizeF);  break;
+                case Property_Type::OneSizeF:       new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::OneSizeF);       break;
                 case Property_Type::Point3D:        new_widget = createDoubleSpinBoxTrio(   prop, fp, sp_right, Property_Type::Point3D);        break;
                 case Property_Type::ScaleF:         new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::ScaleF);         break;
                 case Property_Type::PositiveScaleF: new_widget = createDoubleSpinBoxPair(   prop, fp, sp_right, Property_Type::PositiveScaleF); break;

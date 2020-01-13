@@ -10,7 +10,7 @@
 
 #include <QWidget>
 
-#include "editor/constants_editor.h"
+#include "editor/constants_advisor_info.h"
 
 // Forward declarations
 class DrProperty;

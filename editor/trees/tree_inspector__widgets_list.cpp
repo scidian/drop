@@ -16,7 +16,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_popup.h"
-#include "editor/globals_editor.h"
+#include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
 #include "project/dr_project.h"

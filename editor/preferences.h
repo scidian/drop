@@ -32,10 +32,14 @@ enum class Preferences {
 
     Limit_Frames_Rendered,                          // bool
 
-    World_Editor_Lock_Backgrounds,                  // bool
     World_Editor_Show_Collision_Shapes,             // bool
+    World_Editor_Show_Camera_Boxes,                 // bool
+
+    // !!!!! #TODO: Not implemented
     World_Editor_Show_Connections,                  // bool
     World_Editor_Show_Game_Frame,                   // bool
+    World_Editor_Lock_Backgrounds,                  // bool
+    // !!!!! #END TODO
 
     World_Editor_Snap_To_Grid,                      // bool
     World_Editor_Resize_To_Grid,                    // bool

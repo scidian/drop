@@ -8,8 +8,8 @@
 #include <QApplication>
 
 #include "editor/forms/form_main.h"
-#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 
 typedef std::map<Asset_Category, bool>      AssetCategoryMap;
 typedef std::map<Components,  bool>         ComponentMap;
@@ -108,10 +108,14 @@ void LoadPreferences() {
     Dr::SetColorScheme(Color_Scheme::Dark);
 
     // World Editor Options
-    Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds,       false);
+    Dr::SetPreference(Preferences::World_Editor_Show_Camera_Boxes,      false);
     Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes,  false);
+
+    // !!!!! NOT IMPLEMENTED YET: World Editor Options
+    Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds,       false);
     Dr::SetPreference(Preferences::World_Editor_Show_Connections,       false);
     Dr::SetPreference(Preferences::World_Editor_Show_Game_Frame,        false);
+    // !!!!!
 
     Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,           true);
     Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid,         true);

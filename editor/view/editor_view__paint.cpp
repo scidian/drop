@@ -13,9 +13,9 @@
 
 #include "core/colors/colors.h"
 #include "editor/debug.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
@@ -97,6 +97,11 @@ void DrView::paintEvent(QPaintEvent *event) {
     if (Dr::GetPreference(Preferences::World_Editor_Show_Collision_Shapes).toBool() && stage != nullptr) {
         paintCollisionShapes(painter, stage);
         paintDebugHealth(painter, stage);
+    }
+
+    // Draw camera boxes if we have a Stage
+    if (Dr::GetPreference(Preferences::World_Editor_Show_Camera_Boxes).toBool() && stage != nullptr) {
+        paintCameras(painter, stage);
     }
 
     // If theres no selection we don't need to perform these paint routines

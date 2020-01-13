@@ -10,8 +10,8 @@
 
 #include "core/colors/colors.h"
 #include "editor/debug.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "project/enums_entity_types.h"

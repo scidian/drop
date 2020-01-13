@@ -182,7 +182,8 @@ enum class Buttons_Play {
 //##    Form_Main View Toolbar Button Groups
 //############################
 enum class Buttons_Toggle {
-    DebugOnOff,                     // Turns Debug drawing on / off
+    CameraOnOff,                    // Turns Camera Box drawing on / off
+    DebugOnOff,                     // Turns Collision Shape drawing on / off
 };
 
 

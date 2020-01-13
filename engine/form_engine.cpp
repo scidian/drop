@@ -15,11 +15,11 @@
 #include <QTimer>
 #include <QWindow>
 
+#include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/form_engine.h"
-#include "editor/globals_editor.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"

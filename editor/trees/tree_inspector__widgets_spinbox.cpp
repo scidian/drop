@@ -12,9 +12,9 @@
 #include <QVector3D>
 
 #include "editor/event_filters.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
+#include "editor/preferences.h"
 #include "editor/widgets/widgets.h"
 #include "project/settings/settings_component_property.h"
 
@@ -142,8 +142,8 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     spin_right->setFixedHeight(22);
 
     switch (spin_type) {
-        case Property_Type::PositionF:
         case Property_Type::PointF:
+        case Property_Type::PositionF:    
         case Property_Type::ScaleF:
             spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
         case Property_Type::PositiveScaleF:
@@ -165,6 +165,11 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
             spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");   break;
         case Property_Type::PositiveSizeF:
             spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
+            spin_left->setRange( 0.0, 100000000);
+            spin_right->setRange(0.0, 100000000);
+            break;
+        case Property_Type::OneSizeF:
+            spin_left->setPrefix("W: ");        spin_right->setPrefix("H: ");
             spin_left->setRange( 1.0, 100000000);
             spin_right->setRange(1.0, 100000000);
             break;
@@ -173,9 +178,12 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     if (spin_type == Property_Type::ScaleF || spin_type == Property_Type::GridScaleF || spin_type == Property_Type::PositiveScaleF) {
         spin_left->setSingleStep(.1);
         spin_right->setSingleStep(.1);
-    } else if (spin_type == Property_Type::PositiveSizeF) {
+    } else if (spin_type == Property_Type::OneSizeF) {
         spin_left->setSingleStep(1.0);
         spin_right->setSingleStep(1.0);
+    } else if (spin_type == Property_Type::PositiveSizeF) {
+        spin_left->setSingleStep(10.0);
+        spin_right->setSingleStep(10.0);
     } else {
         spin_left->setSingleStep(5.0);
         spin_right->setSingleStep(5.0);

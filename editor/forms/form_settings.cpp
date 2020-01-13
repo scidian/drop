@@ -13,8 +13,8 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_settings.h"
-#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "project/dr_project.h"
 

@@ -65,6 +65,8 @@ namespace Advisor_Info {
     const HeaderBodyList Mouse_Magnify          { "Zoom Tool",      "Use this tool to change the zoom level of the editor. It is also possible to change the zoom level "
                                                                     "while using the <b>Selection Tool</b> by using the <b>Mouse Wheel</b> (when available)."};
 
+    const HeaderBodyList Camera_On_Off          { "Camera Boxes On / Off", "Toggles drawing of Camera Boxes On / Off. These boxes show "
+                                                                           "the lag areas of Character Cameras." };
     const HeaderBodyList Debug_On_Off           { "Debug Shapes On / Off", "Toggles drawing of Physics Collision Shapes On / Off. These shapes show "
                                                                            "physics / event collisions within your game. "
                                                                            "<b>Blue:</b> Player, <b>Red:</b> Enemy, <b>Purple:</b> Damage All, <b>Green:</b> Damage None" };

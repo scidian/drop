@@ -13,8 +13,8 @@
 
 #include "editor/event_filters.h"
 #include "editor/forms/form_main.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
+#include "editor/preferences.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
 #include "editor/view/editor_view.h"
@@ -288,6 +288,11 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             buttonsGroupToggle = new QButtonGroup();
             buttonsGroupToggle->setExclusive(false);
             connect(buttonsGroupToggle, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
+
+            QToolButton *camera_on_off = createToolbarButton("cameraOnOff", Advisor_Info::Camera_On_Off, c_button_size_w, c_button_size_h, true);
+            buttonsGroupToggle->addButton(camera_on_off, int(Buttons_Toggle::CameraOnOff));
+            camera_on_off->setChecked(false);
+            toolbarLayoutToggle->addWidget(camera_on_off);
 
             QToolButton *debug_on_off = createToolbarButton("debugOnOff", Advisor_Info::Debug_On_Off, c_button_size_w, c_button_size_h, true);
             buttonsGroupToggle->addButton(debug_on_off, int(Buttons_Toggle::DebugOnOff));

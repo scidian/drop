@@ -8,7 +8,7 @@
 #include <QButtonGroup>
 
 #include "editor/forms/form_main.h"
-#include "editor/globals_editor.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_view.h"
 
 
@@ -43,7 +43,11 @@ void FormMain::buttonGroupMouseClicked(int id) {
 void FormMain::buttonGroupToggleClicked(int id) {
     Buttons_Toggle clicked = static_cast<Buttons_Toggle>(id);
 
-    if (clicked == Buttons_Toggle::DebugOnOff) {
+    if (clicked == Buttons_Toggle::CameraOnOff) {
+        Dr::SetPreference(Preferences::World_Editor_Show_Camera_Boxes, buttonsGroupToggle->button(id)->isChecked());
+        viewEditor->update();
+
+    } else if (clicked == Buttons_Toggle::DebugOnOff) {
         Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes, buttonsGroupToggle->button(id)->isChecked());
         viewEditor->update();
     }

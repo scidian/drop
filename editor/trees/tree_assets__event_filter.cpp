@@ -14,10 +14,10 @@
 #include <QTimer>
 
 #include "core/colors/colors.h"
-#include "editor/constants_editor.h"
-#include "editor/globals_editor.h"
+#include "editor/constants_advisor_info.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"

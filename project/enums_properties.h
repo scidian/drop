@@ -13,7 +13,7 @@
 //##    Used to track what the DrVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:    31
+//##    !!!!! NEXT AVAILABLE NUMBER:    32
 //##
 //############################
 enum class Property_Type {
@@ -51,24 +51,25 @@ enum class Property_Type {
     ScaleF          = 18,   // DrPointF             Decimal pair x and y, has smaller increment step in spin box
     PositiveScaleF  = 19,   // DrPointF             Decimal pair x and y, both numbers are >= 0.0
     SizeF           = 20,   // DrPointF             Decimal pair w and h
-    PositiveSizeF   = 21,   // DrPointF             Decimal pair w and h, both numbers are >= 1.0
-    Point3D         = 22,   // DrVec3               Decimal point trio, x, y, z
+    PositiveSizeF   = 21,   // DrPointF             Decimal pair w and h, both numbers are >= 0.0
+    OneSizeF        = 22,   // DrPointF             Decimal pair w and h, both numbers are >= 1.0
+    Point3D         = 23,   // DrVec3               Decimal point trio, x, y, z
                             //                          3 values: double x, double y, double z
 
-    GridF           = 23,   // DrPointF             Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
-    GridScaleF      = 24,   // DrPointF             Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
-    Variable        = 25,   // DrPointF             Decimal point pair, number followed by a +/- number
+    GridF           = 24,   // DrPointF             Decimal pair x and y, minimum value of c_minimum_grid_size  for both x and y
+    GridScaleF      = 25,   // DrPointF             Decimal pair x and y, minimum value of c_minimum_grid_scale for both x and y
+    Variable        = 26,   // DrPointF             Decimal point pair, number followed by a +/- number
 
-    List            = 26,   // long                 Index of a particular enum list
+    List            = 27,   // long                 Index of a particular enum list
 
-    Color           = 27,   // unsigned int         For colors (compatible with DrColor.rgba())
-    Image           = 28,   // long                 Index of a particular DrAnimation within the Project
+    Color           = 28,   // unsigned int         For colors (compatible with DrColor.rgba())
+    Image           = 29,   // long                 Index of a particular DrAnimation within the Project
 
-    Collision       = 29,   // DrPropertyCollision  For Collision Shapes
+    Collision       = 30,   // DrPropertyCollision  For Collision Shapes
 
 
     // !!!!! NOT IMPLEMENTED:
-    Icon            = 30,   // -----
+    Icon            = 31,   // -----
 };
 
 

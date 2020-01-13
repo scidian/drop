@@ -81,19 +81,21 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     rotate_eye.translate(-m_look_at);
     m_eye = rotate_eye * m_eye;
 
-    //          Z Rotation, tilts head
+    //          Find up vector (from a max as distance of square root of 2)
+    float sqrt_2 = 1.4142135623f; ///static_cast<float>(sqrt(2.0));
+    float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
+    float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
+
+    //          Z Rotation, tilts head, apply rotation as a percentage of distance from square root of 2, useful for camera tweening between camera up vectors
     QMatrix4x4 rotate_up;
-    rotate_up.rotate(static_cast<float>(world->getCameraRotationZ()), 0.0f, 0.0f, 1.0f);
+    if (dist_y < sqrt_2) { rotate_up.rotate(static_cast<float>(-world->getCameraRotationZ()) * ((sqrt_2 - dist_y) / sqrt_2), 0.0f, 0.0f, 1.0f); }
+    if (dist_z < sqrt_2) { rotate_up.rotate(static_cast<float>( world->getCameraRotationZ()) * ((sqrt_2 - dist_z) / sqrt_2), 0.0f, 1.0f, 0.0f); }
     m_up = rotate_up * m_up;
 
 
     // ***** Rotation locked to Camera Follow Thing
     if (world->getCameraMatching()) {
-        float dist_y = c_up_vector_y.distanceToPoint(world->getCameraUpVector());
-        float dist_z = c_up_vector_z.distanceToPoint(world->getCameraUpVector());
-
-        // Apply rotation as a percentage of distance from max distance of square root of 2, useful for camera tweening between camera up vectors
-        float sqrt_2 = static_cast<float>(sqrt(2.0));
+        // Apply rotation as a percentage of distance from  square root of 2, useful for camera tweening between camera up vectors
         if (dist_y < sqrt_2) {
             rotate_up.setToIdentity();
             rotate_up.rotate(static_cast<float>(world->getCameraFollowingRotation()) * ((sqrt_2 - dist_y) / sqrt_2),  0.0f, 0.0f, 1.0f);
@@ -107,6 +109,7 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
             m_eye = rotate_eye * m_eye;
         }
     }
+
 
     // ***** Set Look At and Scale
     m_view.lookAt(m_eye, m_look_at, m_up);

@@ -15,8 +15,8 @@
 
 #include "core/colors/colors.h"
 #include "core/dr_containers.h"
-#include "editor/globals_editor.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/trees/tree_inspector.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
@@ -126,10 +126,11 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
                 dynamic_cast<QTextEdit*>(widget)->setText( QString::fromStdString(prop->getValue().toString()) );
                 break;
 
-            case Property_Type::PositionF:
             case Property_Type::PointF:
+            case Property_Type::PositionF:
             case Property_Type::SizeF:
             case Property_Type::PositiveSizeF:
+            case Property_Type::OneSizeF:
             case Property_Type::ScaleF:
             case Property_Type::PositiveScaleF:
             case Property_Type::GridF:
@@ -266,10 +267,11 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_
 
             case Property_Type::PositionF:                              // Floating pair x and y, y is flipped
             case Property_Type::PointF:                                 // Floating pair x and y
-            case Property_Type::SizeF:                                  // Floating pair w and h
-            case Property_Type::PositiveSizeF:                          // Floating pair x and y, both floats are >= 1.0
             case Property_Type::ScaleF:                                 // Floating pair, has smaller step in spin box
             case Property_Type::PositiveScaleF:                         // Floating pair x and y, both floats are >= 0.0
+            case Property_Type::SizeF:                                  // Floating pair w and h
+            case Property_Type::PositiveSizeF:                          // Floating pair x and y, both floats are >= 0.0
+            case Property_Type::OneSizeF:                               // Floating pair x and y, both floats are >= 1.0
             case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
             case Property_Type::GridScaleF:                             // Floating pair x and y, minimum value c_minimum_grid_scale
             case Property_Type::Variable:                               // floating point pair, number followed by a +/- number

@@ -11,10 +11,10 @@
 #include <QScreen>
 
 #include "core/dr_math.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
+#include "editor/preferences.h"
 #include "editor/project/project.h"
 #include "editor/trees/tree_assets.h"
 #include "project/enums_entity_types.h"

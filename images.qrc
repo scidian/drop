@@ -431,5 +431,6 @@
         <file>assets/toolbar_icons/toolbar_fit_to_view.png</file>
         <file>assets/cursors/magnify.png</file>
         <file>assets/toolbar_icons/toolbar_reset_center.png</file>
+        <file>assets/toolbar_icons/toolbar_camera.png</file>
     </qresource>
 </RCC>

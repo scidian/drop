@@ -11,13 +11,23 @@
 #include "engine/globals_engine.h"
 
 // Local Structs
-struct ThingInfo {
-    double      angle;
-    float       opacity;
-    DrPointF    position;
-    DrPointF    scale;
-    DrPointF    size;
-    double      z_order;
+struct ThingInfo {                                          // Basic Thing Properties
+    double      angle =         0.0;
+    float       opacity =       1.0;
+    DrPointF    position =      DrPointF(0.0, 0.0);
+    DrPointF    scale =         DrPointF(1.0, 1.0);
+    DrPointF    size =          DrPointF(1.0, 1.0);
+    double      z_order =       0.0;
+};
+
+struct CamInfo {                                            // Character Camera Properties
+    DrPointF    position =      DrPointF(0, 0);
+    DrPointF    rotation =      DrPointF(0, 0);
+    double      tilt =          0.0;
+    double      zoom =          1.0;
+    DrPointF    lag =           DrPointF(0, 0);
+    bool        match_angle =   false;
+    Up_Vector   up =            Up_Vector::Y;
 };
 
 // Global Forward Declarations for static Chipmunk callbacks
@@ -175,12 +185,13 @@ public:
     void            clearWorld();
     int             countCharacters();
 
-    void            loadThing3DSettings(DrThing *thing, DrEngineThing *object);
-    void            loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
-    ThingInfo       loadThingBasicInfo(DrThing *thing);
-    void            loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
-    void            loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
-    void            loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
+    static CamInfo      loadCharacterCameraSettings(DrThing *thing);
+    void                loadThing3DSettings(DrThing *thing, DrEngineThing *object);
+    void                loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
+    static ThingInfo    loadThingBasicInfo(DrThing *thing);
+    void                loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
+    void                loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
+    void                loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
 
     void            loadCameraToWorld(DrThing *thing, double offset_x, double offset_y);
     void            loadCharacterToWorld(DrThing *thing);

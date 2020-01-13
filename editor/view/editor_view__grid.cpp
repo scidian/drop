@@ -11,7 +11,7 @@
 #include "core/colors/colors.h"
 #include "editor/debug.h"
 #include "editor/helper_library.h"
-#include "editor/globals_editor.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
 #include "project/dr_project.h"

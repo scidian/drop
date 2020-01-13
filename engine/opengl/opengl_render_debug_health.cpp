@@ -54,7 +54,7 @@ void DrOpenGL::drawDebugHealth() {
         float half_width, half_height;
         x = static_cast<float>(center.x);
         y = static_cast<float>(center.y - static_cast<double>(font_size));
-        z = static_cast<float>(object->getZOrder());
+        z = static_cast<float>(0.f);///object->getZOrder());
         half_width =  font_size / 2.0f;
         half_height = font_size / 2.0f;
 

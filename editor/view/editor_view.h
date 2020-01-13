@@ -14,7 +14,7 @@
 #include <QRubberBand>
 
 #include "core/types/dr_pointf.h"
-#include "editor/constants_editor.h"
+#include "editor/constants_advisor_info.h"
 #include "editor/enums_editor.h"
 #include "project/enums_entity_types.h"
 
@@ -228,6 +228,7 @@ public:
 
     // Paint Functions
     void            paintBoundingBox(QPainter &painter);
+    void            paintCameras(QPainter &painter, DrStage *stage);
     void            paintCrossHairs(QPainter &painter, QPoint center);
     void            paintCollisionShapes(QPainter &painter, DrStage *stage);
     void            paintDebugHealth(QPainter &painter, DrStage *stage);

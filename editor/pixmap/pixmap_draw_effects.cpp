@@ -18,8 +18,8 @@
 #include "core/colors/colors.h"
 #include "core/dr_math.h"
 #include "core/dr_random.h"
-#include "editor/globals_editor.h"
 #include "editor/pixmap/pixmap.h"
+#include "editor/preferences.h"
 
 namespace Dr
 {

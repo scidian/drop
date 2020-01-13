@@ -10,6 +10,7 @@
 #include "editor/helper_library.h"
 #include "editor/view/editor_view.h"
 #include "engine/opengl/opengl.h"
+#include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_stage.h"
@@ -54,7 +55,7 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
         // Set up QPainter
         QPen cosmetic_pen(QBrush(QColor(color.red(), color.green(), color.blue())), 1);
         cosmetic_pen.setCosmetic(true);
-        painter.setPen( cosmetic_pen );
+        painter.setPen(cosmetic_pen);
         QColor brush_color = QColor(color.red(), color.green(), color.blue());
         brush_color.setAlpha(64);
         painter.setBrush(QBrush( brush_color));
@@ -168,8 +169,6 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
 }
 
 
-
-
 //####################################################################################
 //##    Draws the health of each object using QPainter
 //####################################################################################
@@ -207,6 +206,100 @@ void DrView::paintDebugHealth(QPainter &painter, DrStage *stage) {
         }
     }
 }
+
+
+//####################################################################################
+//##    PAINT: Paints Camera Boxes
+//####################################################################################
+void DrView::paintCameras(QPainter &painter, DrStage *stage) {
+    // Loop through all Stage Things
+    for (auto &thing_pair : stage->getThingMap()) {
+        DrThing *thing = thing_pair.second;
+        if (thing == nullptr) continue;
+        if (thing->getThingType() != DrThingType::Character && thing->getThingType() != DrThingType::Camera) continue;
+
+        // Load Thing Info
+        DrPointF center =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+        ///DrPointF size =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
+        ///DrPointF scale =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+        double   angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+
+        // Load Camera Info
+        QTransform  cam_transform;
+        CamInfo     cam;
+        DrPointF    cam_position;
+
+        if (thing->getThingType() == DrThingType::Character) {
+            cam = DrEngineWorld::loadCharacterCameraSettings(thing);
+            cam_position = center + DrPointF(cam.position.x, -cam.position.y);
+        } else if (thing->getThingType() == DrThingType::Camera) {
+            cam_position = center;
+            cam.lag = DrPointF(100, 100);
+            cam.tilt = angle;
+            int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
+            cam.up =            static_cast<Up_Vector>(up_vector);
+        }
+        if (cam.match_angle) cam_transform = cam_transform.translate(center.x, center.y).rotate(angle).translate(-center.x, -center.y);
+        cam_transform = cam_transform.translate(cam_position.x, cam_position.y).rotate(cam.tilt).translate(-cam_position.x, -cam_position.y);
+
+        // Camera Lag Box
+        QPointF middle = mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
+        QPointF tl =     mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
+        QPointF tr =     mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
+        QPointF br =     mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
+        QPointF bl =     mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
+        QPolygonF square;
+        square << tl << tr << br << bl;
+
+        // Don't draw if not touching or inside of visible area
+        QRect bounding_box = square.boundingRect().normalized().toRect();
+        if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box) || (bounding_box.width() == 0 && bounding_box.height() == 0)) &&
+            (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
+
+            // Set up QPainter
+            DrColor color = Dr::white;
+            QPen cosmetic_pen(QBrush(Dr::ToQColor(color)), 2);
+            cosmetic_pen.setCosmetic(true);
+            painter.setPen(cosmetic_pen);
+            QColor brush_color = Dr::ToQColor(color);
+            brush_color.setAlpha(64);
+            painter.setBrush(QBrush(brush_color));
+
+            // Draw Camera Box
+            painter.drawPolygon(square);
+
+            // Y Up Vector Arrow
+            if (cam.up == Up_Vector::Y) {
+                QPointF p1 =    mapFromScene( cam_transform.map(QPointF(cam_position.x,     (cam_position.y-cam.lag.y/2)     )) );
+                QPointF p2 =    mapFromScene( cam_transform.map(QPointF(cam_position.x - 5, (cam_position.y-cam.lag.y/2) + 6)) );
+                QPointF p3 =    mapFromScene( cam_transform.map(QPointF(cam_position.x + 5, (cam_position.y-cam.lag.y/2) + 6)) );
+                QPolygonF arrow;
+                arrow << p1 << p2 << p3;
+                painter.setBrush(QBrush(Dr::ToQColor(color)));
+                painter.drawPolygon(arrow);
+                painter.drawLine(middle, p1);
+
+            // Z Up Vector Circle
+            } else if (cam.up == Up_Vector::Z) {
+                QPointF c =     mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
+                painter.setBrush(QBrush(Dr::ToQColor(color)));
+                painter.drawEllipse(c, 7 * currentZoomLevel(), 7 * currentZoomLevel());
+            }
+        }
+
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 

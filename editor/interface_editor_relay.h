@@ -13,7 +13,7 @@
 #include <QString>
 
 #include "core/types/dr_variant.h"
-#include "editor/constants_editor.h"
+#include "editor/constants_advisor_info.h"
 #include "editor/enums_editor.h"
 #include "project/enums_entity_types.h"
 

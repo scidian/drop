@@ -9,9 +9,9 @@
 #include <QScrollBar>
 
 #include "core/dr_containers.h"
-#include "editor/globals_editor.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"

@@ -89,7 +89,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Bitrate, Property_Type::Slider, std::vector<DrVariant>({256, 0, 256, 8, ""}),
                            "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
-    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::PositiveSizeF, DrPointF(1.0, 1.0),
+    addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Pixelation, Property_Type::OneSizeF, DrPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Brightness, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
                            "Brightness", "How light / dark this world should appear. \nDefault: \t0 \nRange: \t-255 to 255");
