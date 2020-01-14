@@ -345,7 +345,7 @@ void DrView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -50) m_zoom = -50;
-    Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom));
+    ///Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom));
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
