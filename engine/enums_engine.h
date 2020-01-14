@@ -110,6 +110,10 @@ enum class Up_Vector {
     ///X                    = 2,            // -- Unused Currently --
 };
 
+enum class Auto_Zoom {
+    Zoom_Out                = 0,
+    Zoom_In                 = 1,
+};
 
 //####################################################################################
 //##    Control Enumerations

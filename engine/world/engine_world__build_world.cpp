@@ -80,7 +80,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
         m_background_color = DrColor(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
     }
 
-    // ***** World Physics Properties
+    // ***** World Physics Settings
     m_time_warp =           world->getComponentPropertyValue(Components::World_Physics, Properties::World_Time_Warp).toDouble();
     m_damping =             world->getComponentPropertyValue(Components::World_Physics, Properties::World_Drag).toDouble();
     m_friction =            world->getComponentPropertyValue(Components::World_Physics, Properties::World_Friction).toDouble();
@@ -91,15 +91,25 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
 
-    // ***** World appearance settings
+    // ***** World Camera Settings
     int render =            world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Type).toInt();
     cam_switch_speed =      world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Switch_Speed).toDouble();
     render_type = static_cast<Render_Type>(render);
+    if (world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Enabled).toVector()[0].toBool()) {
+        zoom_from_movement = true;
+        zoom_max =          world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Max_Change).toVector()[0].toDouble();
+        int in_out =        world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out).toInt();
+        zoom_type =         static_cast<Auto_Zoom>(in_out);
+    } else {
+        zoom_from_movement = false;
+    }
 
+    // ***** World Lighting Settings
     m_ambient_light =       world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Ambient).toDouble();
     m_glow_light_z_order =  world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Layer).toDouble();
     m_glow_blend_mode =     world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Blend).toInt();
 
+    // ***** World Camera Settings
     bitrate =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toVector()[0].toInt();
     DrPointF pixelation =   world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
     pixel_x =               static_cast<float>(pixelation.x);

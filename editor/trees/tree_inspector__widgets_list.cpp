@@ -103,6 +103,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Shoot Button")
                 << tr("Jump Button")
                 << tr("Object Death");
+    } else if   (property_key == static_cast<int>(Properties::World_Camera_Zoom_In_Or_Out)) {
+        options << tr("Zoom Out")
+                << tr("Zoom In");
     } else {
         options << tr("Unknown List");
     }

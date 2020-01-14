@@ -40,6 +40,7 @@ void DrStage::initializeStageSettings(std::string new_name) {
     addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after stage plays before it is possible to start showing again.");
 
+
     addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "
                                                  "to 45 degrees, and set \"Grid Scale\" X value twice the size \"Grid Scale\" Y value (i.e. X: 2, Y: 1).",
                                                  Component_Colors::Pink_Pearl, true);
@@ -56,6 +57,7 @@ void DrStage::initializeStageSettings(std::string new_name) {
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");
     addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Color, Property_Type::Color, Dr::GetColor(Window_Colors::Background_Light).rgba(),
                            "Grid Color", "Color of grid lines.", true);
+
 }
 
 

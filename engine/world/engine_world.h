@@ -127,6 +127,9 @@ public:
     Render_Type     render_type = Render_Type::Perspective;     // Should render Perspective or Orthographic?
     Render_Mode     render_mode = Render_Mode::Mode_2D;         // Should render in 2D or 3D?
     double          cam_switch_speed = 1.0;                     // Multiplier for Camera switching speed
+    bool            zoom_from_movement = false;                 // When true, camera changes zoom based on camera target average speed
+    Auto_Zoom       zoom_type = Auto_Zoom::Zoom_Out;            // When zoom_from_movement is true, decides whether cameras should zoom out or in upon movement
+    double          zoom_max = 1.0;                             // When zoom_from_movement is true, decides maxmimum zoom change
 
     long            effect_count = 0;                           // Stores number of effects being rendered
     long            light_count = 0;                            // Stores number of lights in scene

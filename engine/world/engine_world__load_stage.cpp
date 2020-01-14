@@ -144,7 +144,7 @@ void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double of
     camera->setSpeed( cam_speed.x, cam_speed.y, 0.0 );
     camera->setRotation( cam_rotation.x, cam_rotation.y, info.angle );
     camera->setWantActive( wants_active );
-    camera->setZoom( cam_zoom );
+    camera->setZoom( cam_zoom, true );
     camera->setUpVector( static_cast<Up_Vector>(up_vector) );
 }
 

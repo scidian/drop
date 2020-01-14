@@ -152,9 +152,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   240
+//##    !!!!! NEXT AVAILABLE NUMBER:   243
 //##
-//##    Checked for doubles up through 240 on 01/14/2020
+//##    Checked for doubles up through 243 on 01/14/2020
 //############################
 enum class Properties {
 
@@ -269,17 +269,17 @@ enum class Properties {
     Asset_Controls_Touch_Drag           = 76,       // bool
 
     Asset_Slingshot_Enabled             = 77,       // bool enabled
-    Asset_Slingshot_Arrow_Image         = 78,       // SUB: image
-    Asset_Slingshot_Arrow_Offset        = 79,       // SUB: positive double
-    Asset_Slingshot_Arrow_Scale         = 80,       // SUB: positive scalef
-    Asset_Slingshot_Tail_Image          = 81,       // SUB: image
-    Asset_Slingshot_Tail_Offset         = 82,       // SUB: positive double
-    Asset_Slingshot_Tail_Scale          = 83,       // SUB: positive scalef
-    Asset_Slingshot_Max_Distance        = 84,       // SUB: positive double
-    Asset_Slingshot_Force_Multiplier    = 85,       // SUB: double
-    Asset_Slingshot_Future_1            = 86,       // SUB: future
-    Asset_Slingshot_Future_2            = 87,       // SUB: future
-    Asset_Slingshot_Future_3            = 88,       // SUB: future
+    Asset_Slingshot_Arrow_Image         = 78,           // SUB: image
+    Asset_Slingshot_Arrow_Offset        = 79,           // SUB: positive double
+    Asset_Slingshot_Arrow_Scale         = 80,           // SUB: positive scalef
+    Asset_Slingshot_Tail_Image          = 81,           // SUB: image
+    Asset_Slingshot_Tail_Offset         = 82,           // SUB: positive double
+    Asset_Slingshot_Tail_Scale          = 83,           // SUB: positive scalef
+    Asset_Slingshot_Max_Distance        = 84,           // SUB: positive double
+    Asset_Slingshot_Force_Multiplier    = 85,           // SUB: double
+    Asset_Slingshot_Future_1            = 86,           // SUB: future
+    Asset_Slingshot_Future_2            = 87,           // SUB: future
+    Asset_Slingshot_Future_3            = 88,           // SUB: future
 
     Asset_Controls_Rotate_Speed         = 89,       // double
 
@@ -290,7 +290,7 @@ enum class Properties {
     World_Score_Multiplier              = 91,       // double
     World_Deletion_Threshold            = 92,       // positive int
     World_Use_Background_Color          = 93,       // bool enabled
-    World_Background_Color              = 94,       // SUB: color
+    World_Background_Color              = 94,           // SUB: color
 
     // Physics
     World_Gravity                       = 95,       // pointf (x, y)
@@ -308,6 +308,12 @@ enum class Properties {
     World_Camera_Type                   = 103,      // list, enum class Render_Type
     World_Camera_Slop                   = 104,      // percent
     World_Camera_Switch_Speed           = 105,      // positive double
+
+    World_Camera_Zoom_Enabled           = 240,      // bool enabled
+    World_Camera_Zoom_In_Or_Out         = 241,          // SUB: list
+    World_Camera_Zoom_Max_Change        = 242,          // SUB: ranged double, 0 to 10
+
+
 
     // Appearance
     World_Filter_Bitrate                = 106,      // ranged int, 0 to 256

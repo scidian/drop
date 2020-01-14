@@ -25,12 +25,14 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     property_name->setDescription("Name of this World.");
     property_name->setValue(new_name);
 
+
     addComponent(Components::World_Settings, "World Settings", "Settings for this World.", Component_Colors::White_Snow, true);
     getComponent(Components::World_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Components::World_Settings, Properties::World_Game_Direction, Property_Type::Angle, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - down, 180 - left, 270 - up, etc.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Score_Multiplier, Property_Type::Double, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
+
 
     std::vector<DrVariant> background_color_properties { static_cast<int>(Properties::World_Background_Color) };
     addPropertyToComponent(Components::World_Settings, Properties::World_Use_Background_Color, Property_Type::BoolEnabled,
@@ -39,10 +41,10 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                                                 "background defaults to transparent.");
     addPropertyToComponent(Components::World_Settings, Properties::World_Background_Color, Property_Type::Color, DrColor(16, 16, 16, 255).rgba(),
                            "Color", "This is the base Background Color for this world.");
-
     addPropertyToComponent(Components::World_Settings, Properties::World_Deletion_Threshold, Property_Type::Positive, 10000,
                            "Deletion Threshold", "Distance (in World units) away from active camera that objects are removed from the World. Keeps game "
                                                  "running smoothly.");
+
 
     addComponent(Components::World_Camera, "Camera", "Camera settings for this World.", Component_Colors::Pink_Pearl, true);
     getComponent(Components::World_Camera)->setIcon(Component_Icons::Camera);
@@ -51,6 +53,17 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Switch_Speed, Property_Type::PositiveDouble, 1.0,
                            "Switching Speed", "Multiplier to affect how fast Camera switching happens. A value lower than 1.0 will decrease switching "
                                               "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");
+
+    std::vector<DrVariant> auto_zoom_properties { static_cast<int>(Properties::World_Camera_Zoom_In_Or_Out),
+                                                  static_cast<int>(Properties::World_Camera_Zoom_Max_Change) };
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Enabled, Property_Type::BoolEnabled,
+                           std::vector<DrVariant>({false, auto_zoom_properties }),
+                           "Auto Zoom?", "Check this box to have Character Cameras change zoom automatically based on Characters speed.");
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out, Property_Type::List, static_cast<int>(Auto_Zoom::Zoom_Out),
+                           "Zoom Type", "Select whether auto zoom should zoom in or zoom out.");
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Max_Change, Property_Type::RangedDouble, std::vector<DrVariant>({1.0, 1.0, 10.0, 0.1}),
+                           "Max Zoom", "This value controls how much of a potential zoom can occur. A value of 1.0 is minimum, a value of 10.0 is maximum.");
+
 
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for this world, this affects all Objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Pastel, true);
@@ -72,6 +85,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
                                      "overriden on a per item basis.");
 
+
     addComponent(Components::World_Lighting, "Lighting", "Lighting settings for this World.", Component_Colors::Mustard_Yellow, true);
     getComponent(Components::World_Lighting)->setIcon(Component_Icons::Light);
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Ambient, Property_Type::Percent, 50,
@@ -82,6 +96,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Lighting, Properties::World_Light_Blend, Property_Type::List, static_cast<int>(Blend_Mode::Standard),
                            "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
                                          "oversaturation or be better for dark scenes.");
+
 
     addComponent(Components::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
                                                Component_Colors::Purple_Royal, true);
@@ -104,6 +119,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Components::World_Appearance, Properties::World_Filter_Negative, Property_Type::Bool, false,
                            "Negative", "Should this world's colors be inverted?");
 
+
     addComponent(Components::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Blue_Royal, true);
     getComponent(Components::World_Special_Effects)->setIcon(Component_Icons::Effects);
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Convert_3D, Property_Type::Bool, false,
@@ -120,6 +136,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Cross Hatch", "Gives the world a sketched look.");
     addPropertyToComponent(Components::World_Special_Effects, Properties::World_Filter_Wavy, Property_Type::Bool, false,
                            "Wavy", "Gives the world a trippy / drunken look.");
+
 }
 
 

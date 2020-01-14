@@ -69,7 +69,7 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
         camera->setPositionY(   static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y );
         camera->setPositionZ(   static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z );
         camera->setRotation(    follow->getCameraRotation() );
-        camera->setZoom(        follow->getCameraZoom() );
+        camera->setZoom(        follow->getCameraZoom(), true );
         camera->setLag(         follow->getCameraLag() );
         camera->setMatchAngle(  follow->getCameraMatch() );
         camera->setTarget(      camera->getPosition() );
@@ -363,26 +363,47 @@ float DrEngineCamera::getThingFollowingZOrder() {
     return static_cast<float>(follow->getZOrder());
 }
 
+
 //####################################################################################
 //##    Moves camera based on current speed / settings
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
-    // Update by fixed speed if not following an object
+    // ***** Update by fixed speed if not following an object
     if (m_follow_key == 0) {
         m_position.x = m_position.x + (m_speed.x * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
         m_position.y = m_position.y + (m_speed.y * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
 
-    // Otherwise Lerp to new Target Position
+    // ***** Otherwise Lerp to new Target Position
     } else {
-        double lerp = 0.01 * milliseconds;
-        m_position.x = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.x), static_cast<double>(m_target.x), lerp) );
-        m_position.y = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.y), static_cast<double>(m_target.y), lerp) );
-        m_position.z = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.z), static_cast<double>(m_target.z), lerp) );
+        double lerp_move = 0.01 * milliseconds;
+        m_position.x = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.x), static_cast<double>(m_target.x), lerp_move) );
+        m_position.y = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.y), static_cast<double>(m_target.y), lerp_move) );
+        m_position.z = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.z), static_cast<double>(m_target.z), lerp_move) );
         ///m_position.x = m_target.x();
         ///m_position.y = m_target.y();
         ///m_position.z = m_target.z();
     }
+
+    // ***** Update Speed Adjusted Zoom
+    if (this->getEngineWorld()->zoom_from_movement) {
+        double lerp_zoom = 0.001 * milliseconds;
+        float  max_speed = Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y));
+        double target_zoom;
+        if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_Out) {
+            double min_limit = this->getEngineWorld()->zoom_max * 0.08;
+            double speed_adjust = 1.0 - Dr::Clamp(static_cast<double>(max_speed) / 10.0, 0.0, min_limit);
+            target_zoom = (m_zoom * speed_adjust);
+        } else {
+            double max_limit = this->getEngineWorld()->zoom_max * 8.0;
+            double speed_adjust = Dr::Clamp(static_cast<double>(max_speed) / (11.0 - this->getEngineWorld()->zoom_max), 0.0, max_limit);
+            target_zoom = m_zoom + (m_zoom * speed_adjust);
+        }
+        m_speed_adjusted_zoom = Dr::Lerp(m_speed_adjusted_zoom, target_zoom, lerp_zoom);
+    } else {
+        m_speed_adjusted_zoom = m_zoom;
+    }
 }
+
 
 //####################################################################################
 //##    DrEngineCamera - Update Camera Position
@@ -410,26 +431,26 @@ void DrEngineCamera::updateCamera() {
     if (abs(static_cast<double>(m_position.y) - follow_pos_y) > (m_lag.y / 2.0)) update_y = true;
 
     // Calculate the average object Speed
-    double average_x = 0;
-    double average_y = 0;
-    double average_z = 0;
+    m_average_speed.x = 0;
+    m_average_speed.y = 0;
+    m_average_speed.z = 0;
     if (update_x) {
         while (m_avg_speed_x.size() <static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
         m_avg_speed_x.pop_front();
-        if (m_avg_speed_x.size() > 0) average_x = std::accumulate( m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size();
+        if (m_avg_speed_x.size() > 0) m_average_speed.x = static_cast<float>(std::accumulate(m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size());
     }
     if (update_y) {
         while (m_avg_speed_y.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
         m_avg_speed_y.pop_front();
-        if (m_avg_speed_y.size() > 0) average_y = std::accumulate( m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size();
+        if (m_avg_speed_y.size() > 0) m_average_speed.y = static_cast<float>(std::accumulate(m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size());
     }
     if (update_z) {
         while (m_avg_speed_z.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
         m_avg_speed_z.pop_front();
-        if (m_avg_speed_z.size() > 0) average_z = std::accumulate( m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size();
+        if (m_avg_speed_z.size() > 0) m_average_speed.z = static_cast<float>(std::accumulate(m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size());
     }
 
     // Average
@@ -445,9 +466,9 @@ void DrEngineCamera::updateCamera() {
     ///total += 1.0;
 
     // Move based on Last Camera Position + Average
-    pos_x += (static_cast<double>(m_target.x) + average_x) * 3.0;
-    pos_y += (static_cast<double>(m_target.y) + average_y) * 3.0;
-    pos_z += (static_cast<double>(m_target.z) + average_z) * 3.0;
+    pos_x += static_cast<double>(m_target.x + m_average_speed.x) * 3.0;
+    pos_y += static_cast<double>(m_target.y + m_average_speed.y) * 3.0;
+    pos_z += static_cast<double>(m_target.z + m_average_speed.z) * 3.0;
     total += 3.0;
 
     // Move based on Last Object Position + Average
@@ -463,7 +484,7 @@ void DrEngineCamera::updateCamera() {
 
     if (update_x) m_target.x = static_cast<float>(pos_x);
     if (update_y) m_target.y = static_cast<float>(pos_y);
-    if (update_z) m_target.z = static_cast<float>(pos_z);
+    if (update_z) m_target.z = static_cast<float>(pos_z);    
 }
 
 

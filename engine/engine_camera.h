@@ -35,7 +35,8 @@ private:
 
     DrPointF        m_lag = { 0.0, 0.0 };                       // Current camera lag when following object
     bool            m_match_angle = false;                      // Does this camera match angle of following object
-    double          m_distance = c_default_camera_z;            // Distance to look at target
+
+    double          m_speed_adjusted_zoom = 1.0;                // Zoom affected by speed
     double          m_zoom = 1.0;                               // Current camera zoom level
 
     glm::vec3       m_target;                                   // Calculated point this camera is moving towards
@@ -47,6 +48,7 @@ private:
 
     Up_Vector       m_up_vector = Up_Vector::Y;                 // Up Vector of Camera, usually Y, Z for first person
 
+    glm::vec3           m_average_speed;                        // Holds the calculated average (averaged in updateCamera()) of the arrays below
     std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
     std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
@@ -79,8 +81,7 @@ public:
     const glm::vec3&    getSpeed()          { return m_speed; }
     Up_Vector           getUpVector()       { return m_up_vector; }
     const bool&         getWantsActive()    { return m_wants_active; }
-    const double&       getDistance()       { return m_distance; }
-    const double&       getZoom()           { return m_zoom; }
+    const double&       getZoom()           { return m_speed_adjusted_zoom; }
 
     void                setBufferSize(int slop) { m_buffer_size = (slop < 1) ? 1 : slop; }
     void                setLag(DrPointF lag) { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
@@ -113,8 +114,7 @@ public:
     void                setTarget(glm::vec3 target) { m_target = target; }
     void                setUpVector(Up_Vector up) { m_up_vector = up; }
     void                setWantActive(bool wants) { m_wants_active = wants; }
-    void                setDistance(double d) { m_distance = d; }
-    void                setZoom(double zoom) { m_zoom = zoom; }
+    void                setZoom(double zoom, bool update_speed_zoom = false) { m_zoom = zoom; if (update_speed_zoom) m_speed_adjusted_zoom = zoom; }
 
 };
 
