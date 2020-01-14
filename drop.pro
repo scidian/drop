@@ -203,6 +203,7 @@ SOURCES += \
     editor/view/editor_view__mouse.cpp \
     editor/view/editor_view__mouse_move.cpp \
     editor/view/editor_view__paint.cpp \
+    editor/view/editor_view__paint_cameras.cpp \
     editor/view/editor_view__paint_collision.cpp \
     editor/view/editor_view__paint_items.cpp \
     editor/view/editor_view__resize.cpp \

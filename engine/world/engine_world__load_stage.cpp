@@ -134,12 +134,13 @@ void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double of
     bool        wants_active =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active).toBool();
     DrPointF    cam_speed =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed).toPointF();
     DrPointF    cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
+    double      cam_distance =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Distance).toDouble();
     double      cam_zoom =      thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
     int         up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
 
     float x = static_cast<float>( info.position.x + offset_x);
     float y = static_cast<float>(-info.position.y + offset_y);
-    DrEngineCamera *camera = addCamera(0, x, y, c_default_camera_z);
+    DrEngineCamera *camera = addCamera(0, x, y, static_cast<float>(cam_distance));
     camera->setSpeed( cam_speed.x, cam_speed.y, 0.0 );
     camera->setRotation( cam_rotation.x, cam_rotation.y, info.angle );
     camera->setWantActive( wants_active );

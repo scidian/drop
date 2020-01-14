@@ -5,6 +5,7 @@
 //
 //
 //
+#include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
 #include "project/constants_components.h"
 #include "project/dr_project.h"
@@ -45,7 +46,10 @@ void DrThing::addComponentSettingsCamera(std::string new_name) {
                            "Camera Up Vector", "Default for most games / styles of gameplay is for a Y Axis Up Vector. "
                                                "If making a First Person style game, rotate camera X or Y to between 75 and 90 degrees and "
                                                "set Up Vector to Z Axis.");
-    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::Double, 1.0,
+    // !!!!! Hidden Property
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Distance, Property_Type::Double, c_default_camera_z,
+                           "Camera Distance", "Distance camera is away from z axis 0.0. Default is 801.", true, false);
+    addPropertyToComponent(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, Property_Type::PositiveDouble, 1.0,
                            "Camera Zoom", "Magnification zoom level of this camera. A value of 1.0 is no zoom, 0.5 is twice as far away, 2.0 is twice as close. "
                                           "Generally less than 10.");
 }
@@ -73,7 +77,11 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
                            "Camera Up Vector", "Default for most games / styles of gameplay is for a Y Axis Up Vector. "
                                                "If making a First Person style game, rotate camera X or Y to between 75 and 90 degrees and "
                                                "set Up Vector to Z Axis.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::Double, 1.0,
+    // !!!!! Hidden Property
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Distance, Property_Type::Double, c_default_camera_z,
+                           "Camera Distance", "Every Character has a Camera attached which always looks directly at the Character. "
+                                              "This is the distance away that camera is from the Character. Defaults to 801.", true, false);
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::PositiveDouble, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. Generally less than 10.");
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::PositiveSizeF, DrPointF(100, 100),

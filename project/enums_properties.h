@@ -152,9 +152,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   238
+//##    !!!!! NEXT AVAILABLE NUMBER:   240
 //##
-//##    Checked for doubles up through 238 on 11/11/2019
+//##    Checked for doubles up through 240 on 01/14/2020
 //############################
 enum class Properties {
 
@@ -408,94 +408,96 @@ enum class Properties {
     Thing_Camera_Speed                  = 171,      // pointf
     Thing_Camera_Rotation               = 172,      // pointf
     Thing_Camera_Up_Vector              = 173,      // list, enum class Up_Vector
-    Thing_Camera_Zoom                   = 174,      // double
+    Thing_Camera_Distance               = 174,      // double
+    Thing_Camera_Zoom                   = 175,      // double
 
     // Character Settings
-    Thing_Character_Camera_Position     = 175,      // pointf
-    Thing_Character_Camera_Rotation     = 176,      // pointf
-    Thing_Character_Camera_Tilt         = 177,      // double
-    Thing_Character_Camera_Up_Vector    = 178,      // list, enum class Up_Vector
-    Thing_Character_Camera_Zoom         = 179,      // double
-    Thing_Character_Camera_Lag          = 180,      // double
-    Thing_Character_Camera_Match_Angle  = 181,      // bool
+    Thing_Character_Camera_Position     = 176,      // pointf
+    Thing_Character_Camera_Rotation     = 177,      // pointf
+    Thing_Character_Camera_Tilt         = 178,      // double
+    Thing_Character_Camera_Up_Vector    = 179,      // list, enum class Up_Vector
+    Thing_Character_Camera_Distance     = 180,      // double
+    Thing_Character_Camera_Zoom         = 181,      // double
+    Thing_Character_Camera_Lag          = 182,      // double
+    Thing_Character_Camera_Match_Angle  = 183,      // bool
 
     // Object Settings
-    Thing_Object_Physics_Type           = 182,      // list, enum class Body_Type (Static, Kinematic, Dynamic)
-    Thing_Object_Collide                = 183,      // bool
-    Thing_Object_Collision_Group        = 184,      // list, enum class Collision_Group (none, all, active players, players, enemies)
-    Thing_Object_Damage                 = 185,      // list, enum class Collision_Type (none, player, enemy, all)
+    Thing_Object_Physics_Type           = 184,      // list, enum class Body_Type (Static, Kinematic, Dynamic)
+    Thing_Object_Collide                = 185,      // bool
+    Thing_Object_Collision_Group        = 186,      // list, enum class Collision_Group (none, all, active players, players, enemies)
+    Thing_Object_Damage                 = 187,      // list, enum class Collision_Type (none, player, enemy, all)
 
     // Text Settings
-    Thing_Text_User_Text                = 186,      // string
+    Thing_Text_User_Text                = 188,      // string
 
 
     // ********** Effect Specific
     // Fire Settings
-    Thing_Fire_Shape                    = 187,      // list, enum class Fire_Mask
-    Thing_Fire_Color_1                  = 188,      // color
-    Thing_Fire_Color_2                  = 189,      // color
-    Thing_Fire_Color_Smoke              = 190,      // color
-    Thing_Fire_Intensity                = 191,      // percent
-    Thing_Fire_Smoothness               = 192,      // percent
-    Thing_Fire_Wavy                     = 193,      // percent
-    Thing_Fire_Speed                    = 194,      // ranged double, 1.0 to ?
+    Thing_Fire_Shape                    = 189,      // list, enum class Fire_Mask
+    Thing_Fire_Color_1                  = 190,      // color
+    Thing_Fire_Color_2                  = 191,      // color
+    Thing_Fire_Color_Smoke              = 192,      // color
+    Thing_Fire_Intensity                = 193,      // percent
+    Thing_Fire_Smoothness               = 194,      // percent
+    Thing_Fire_Wavy                     = 195,      // percent
+    Thing_Fire_Speed                    = 196,      // ranged double, 1.0 to ?
 
     // Fisheye Settings
-    Thing_Fisheye_Color                 = 195,      // color
-    Thing_Fisheye_Color_Tint            = 196,      // percent
-    Thing_Fisheye_Lens_Zoom             = 197,      // ranged double, 0 to 10
+    Thing_Fisheye_Color                 = 197,      // color
+    Thing_Fisheye_Color_Tint            = 198,      // percent
+    Thing_Fisheye_Lens_Zoom             = 199,      // ranged double, 0 to 10
 
     // Light Settings
-    Thing_Light_Type                    = 198,      // list, enum class Light_Type (Opaque, Glow)
-    Thing_Light_Color                   = 199,      // color
-    Thing_Light_Cone_Start              = 200,      // slider, 0 to 360
-    Thing_Light_Cone_End                = 201,      // slider, 0 to 360
-    Thing_Light_Intensity               = 202,      // percent, 0 to 100
-    Thing_Light_Blur                    = 203,      // percent, 0 to 100
-    Thing_Light_Draw_Shadows            = 204,      // bool
-    Thing_Light_Shadows                 = 205,      // percent, 0 to 100
-    Thing_Light_Pulse                   = 206,      // double
-    Thing_Light_Pulse_Speed             = 207,      // double
+    Thing_Light_Type                    = 200,      // list, enum class Light_Type (Opaque, Glow)
+    Thing_Light_Color                   = 201,      // color
+    Thing_Light_Cone_Start              = 202,      // slider, 0 to 360
+    Thing_Light_Cone_End                = 203,      // slider, 0 to 360
+    Thing_Light_Intensity               = 204,      // percent, 0 to 100
+    Thing_Light_Blur                    = 205,      // percent, 0 to 100
+    Thing_Light_Draw_Shadows            = 206,      // bool
+    Thing_Light_Shadows                 = 207,      // percent, 0 to 100
+    Thing_Light_Pulse                   = 208,      // double
+    Thing_Light_Pulse_Speed             = 209,      // double
 
     // Mirror Settings
-    Thing_Mirror_Start_Color            = 208,      // color
-    Thing_Mirror_End_Color              = 209,      // color
-    Thing_Mirror_Color_Tint             = 210,      // percent
-    Thing_Mirror_Blur                   = 211,      // double
-    Thing_Mirror_Blur_Stretch           = 212,      // double
-    Thing_Mirror_Scale                  = 213,      // ranged double, 0.001 to no limit
+    Thing_Mirror_Start_Color            = 210,      // color
+    Thing_Mirror_End_Color              = 211,      // color
+    Thing_Mirror_Color_Tint             = 212,      // percent
+    Thing_Mirror_Blur                   = 213,      // double
+    Thing_Mirror_Blur_Stretch           = 214,      // double
+    Thing_Mirror_Scale                  = 215,      // ranged double, 0.001 to no limit
 
     // Swirl Settings
-    Thing_Swirl_Start_Color             = 214,      // color
-    Thing_Swirl_Color_Tint              = 215,      // percent
-    Thing_Swirl_Angle                   = 216,      // double
+    Thing_Swirl_Start_Color             = 216,      // color
+    Thing_Swirl_Color_Tint              = 217,      // percent
+    Thing_Swirl_Angle                   = 218,      // double
 
     // Water Settings
-    Thing_Water_Texture                 = 217,      // list, enum class Water_Texture
-    Thing_Water_Start_Color             = 218,      // color
-    Thing_Water_End_Color               = 219,      // color
-    Thing_Water_Color_Tint              = 220,      // percent
-    Thing_Water_Reflection              = 221,      // percent
-    Thing_Water_Movement_Speed          = 222,      // double
-    Thing_Water_Ripple_Frequency        = 223,      // double
-    Thing_Water_Ripple_Speed            = 224,      // double
-    Thing_Water_Ripple_Amplitude        = 225,      // double
-    Thing_Water_Ripple_Stretch          = 226,      // double
-    Thing_Water_Wave_Frequency          = 227,      // double
-    Thing_Water_Wave_Speed              = 228,      // double
-    Thing_Water_Wave_Amplitude          = 229,      // double
+    Thing_Water_Texture                 = 219,      // list, enum class Water_Texture
+    Thing_Water_Start_Color             = 220,      // color
+    Thing_Water_End_Color               = 221,      // color
+    Thing_Water_Color_Tint              = 222,      // percent
+    Thing_Water_Reflection              = 223,      // percent
+    Thing_Water_Movement_Speed          = 224,      // double
+    Thing_Water_Ripple_Frequency        = 225,      // double
+    Thing_Water_Ripple_Speed            = 226,      // double
+    Thing_Water_Ripple_Amplitude        = 227,      // double
+    Thing_Water_Ripple_Stretch          = 228,      // double
+    Thing_Water_Wave_Frequency          = 229,      // double
+    Thing_Water_Wave_Speed              = 230,      // double
+    Thing_Water_Wave_Amplitude          = 231,      // double
 
     // Water Refract Settings
-    Thing_Water_Refract_Reflection      = 230,      // percent
-    Thing_Water_Refract_Underwater      = 231,      // percent
-    Thing_Water_Refract_Texture         = 232,      // percent
-    Thing_Water_Refract_Foam            = 233,      // percent
+    Thing_Water_Refract_Reflection      = 232,      // percent
+    Thing_Water_Refract_Underwater      = 233,      // percent
+    Thing_Water_Refract_Texture         = 234,      // percent
+    Thing_Water_Refract_Foam            = 235,      // percent
 
     // Water Foam Settings
-    Thing_Water_Surface_Color           = 234,      // color
-    Thing_Water_Surface_Tint            = 235,      // percent
-    Thing_Water_Surface_Height          = 236,      // double
-    Thing_Water_Surface_Is_Flat         = 237,      // bool
+    Thing_Water_Surface_Color           = 236,      // color
+    Thing_Water_Surface_Tint            = 237,      // percent
+    Thing_Water_Surface_Height          = 238,      // double
+    Thing_Water_Surface_Is_Flat         = 239,      // bool
 
 };
 

@@ -24,6 +24,7 @@ struct CamInfo {                                            // Character Camera 
     DrPointF    position =      DrPointF(0, 0);
     DrPointF    rotation =      DrPointF(0, 0);
     double      tilt =          0.0;
+    double      distance =      c_default_camera_z;
     double      zoom =          1.0;
     DrPointF    lag =           DrPointF(0, 0);
     bool        match_angle =   false;
@@ -93,22 +94,14 @@ private:
     long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
 
-    double          m_switch_milliseconds;          // Used for tweening between cameras
-    glm::vec3       m_switch_position;              // Used for tweening between cameras
-    glm::vec3       m_switch_rotation;              // Used for tweening between cameras
-    double          m_switch_zoom = 1.0;            // Used for tweening between cameras
-    double          m_switch_follow_angle;          // Used for tweening between cameras
-    glm::vec3       m_switch_up_vector;             // Used for tweening between cameras
-    double          m_switch_z_order;               // Used for tweening between cameras
-    bool            m_switch_match = false;         // Used for tweening between cameras
-
-    glm::vec3       m_temp_position;                // Used for tweening between cameras
-    glm::vec3       m_temp_rotation;                // Used for tweening between cameras
-    double          m_temp_zoom = 1.0;              // Used for tweening between cameras
-    double          m_temp_follow_angle;            // Used for tweening between cameras
-    glm::vec3       m_temp_up_vector;               // Used for tweening between cameras
-    double          m_temp_z_order;                 // Used for tweening between cameras
-    bool            m_temp_match = false;           // Used for tweening between cameras
+    double          m_switch_milliseconds;                                  // Used for tweening between cameras
+    glm::vec3       m_switch_position,          m_temp_position;            // Used for tweening between cameras
+    glm::vec3       m_switch_rotation,          m_temp_rotation;            // Used for tweening between cameras
+    double          m_switch_zoom,              m_temp_zoom;                // Used for tweening between cameras
+    double          m_switch_follow_angle,      m_temp_follow_angle;        // Used for tweening between cameras
+    glm::vec3       m_switch_up_vector,         m_temp_up_vector;           // Used for tweening between cameras
+    double          m_switch_z_order,           m_temp_z_order;             // Used for tweening between cameras
+    bool            m_switch_match = false,     m_temp_match = false;       // Used for tweening between cameras
 
 
     // Scene Variables

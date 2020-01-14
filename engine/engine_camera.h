@@ -35,6 +35,7 @@ private:
 
     DrPointF        m_lag = { 0.0, 0.0 };                       // Current camera lag when following object
     bool            m_match_angle = false;                      // Does this camera match angle of following object
+    double          m_distance = c_default_camera_z;            // Distance to look at target
     double          m_zoom = 1.0;                               // Current camera zoom level
 
     glm::vec3       m_target;                                   // Calculated point this camera is moving towards
@@ -78,6 +79,7 @@ public:
     const glm::vec3&    getSpeed()          { return m_speed; }
     Up_Vector           getUpVector()       { return m_up_vector; }
     const bool&         getWantsActive()    { return m_wants_active; }
+    const double&       getDistance()       { return m_distance; }
     const double&       getZoom()           { return m_zoom; }
 
     void                setBufferSize(int slop) { m_buffer_size = (slop < 1) ? 1 : slop; }
@@ -111,6 +113,7 @@ public:
     void                setTarget(glm::vec3 target) { m_target = target; }
     void                setUpVector(Up_Vector up) { m_up_vector = up; }
     void                setWantActive(bool wants) { m_wants_active = wants; }
+    void                setDistance(double d) { m_distance = d; }
     void                setZoom(double zoom) { m_zoom = zoom; }
 
 };

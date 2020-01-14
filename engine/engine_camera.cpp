@@ -32,15 +32,18 @@ static inline void SmoothMove(glm::vec3 &start, const glm::vec3 &target, const f
     start.y = Dr::Lerp(start.y, target.y, lerp_amount);
     start.z = Dr::Lerp(start.z, target.z, lerp_amount);
 
-    ///start.x = Dr::LerpConst(start.x, target.x, lerp_amount * 100.0f);
-    ///start.y = Dr::LerpConst(start.y, target.y, lerp_amount * 100.0f);
-    ///start.z = Dr::LerpConst(start.z, target.z, lerp_amount * 100.0f);
+    ///float lerp_amount = lerp * milliseconds * 10.f;
+    ///start.x = Dr::LerpConst(start.x, target.x, lerp_amount);
+    ///start.y = Dr::LerpConst(start.y, target.y, lerp_amount);
+    ///start.z = Dr::LerpConst(start.z, target.z, lerp_amount);
 }
 
 static inline void SmoothMove(double &start, const double &target, const double &lerp, const double &milliseconds) {
     double  lerp_amount = Dr::Clamp(lerp * milliseconds, 0.001, 1.0);
     start = Dr::Lerp(start, target, lerp_amount);
-    ///start = Dr::LerpConst(start, target, lerp_amount * 100.0);
+
+    ///double lerp_amount = lerp * milliseconds * 10.0;
+    ///start = Dr::LerpConst(start, target, lerp_amount);
 }
 
 
@@ -80,54 +83,66 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
 void DrEngineWorld::moveCameras(double milliseconds) {
     for (auto camera_pair : m_cameras) {
         camera_pair.second->moveCamera(milliseconds);
+    }
 
-        if (m_switching_cameras) {
-            m_switch_milliseconds += milliseconds;
+    if (m_switching_cameras) {
+        m_switch_milliseconds += milliseconds;
 
-            DrEngineCamera *target_camera = getCamera(m_active_camera);           
+        DrEngineCamera *target_camera = getCamera(m_active_camera);
 
-            // Linear Interpolation of temporary values
-            glm::vec3 target_position = target_camera->getPosition();
-            glm::vec3 target_rotation = target_camera->getRotation();
-                      target_rotation.x = Dr::EqualizeAngle0to360(target_rotation.x);
-                      target_rotation.y = Dr::EqualizeAngle0to360(target_rotation.y);
-                      target_rotation.z = Dr::EqualizeAngle0to360(target_rotation.z);
-                      target_rotation.x = Dr::FindClosestAngle180(m_temp_rotation.x, target_rotation.x);
-                      target_rotation.y = Dr::FindClosestAngle180(m_temp_rotation.y, target_rotation.y);
-                      target_rotation.z = Dr::FindClosestAngle180(m_temp_rotation.z, target_rotation.z);
-            glm::vec3 target_up_vector = (target_camera->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
-            double    target_following_rotation = target_camera->getThingFollowingRotation();
-                      target_following_rotation = Dr::EqualizeAngle0to360(target_following_rotation);
-                      target_following_rotation = Dr::FindClosestAngle180(m_temp_follow_angle, target_following_rotation);
-            double    target_z_order = static_cast<double>(target_camera->getThingFollowingZOrder());
-            double    target_zoom_as_pow = DrOpenGL::zoomScaleToPow( target_camera->getZoom() );
-            double    temp_zoom_as_pow =   DrOpenGL::zoomScaleToPow( m_temp_zoom );
-            m_temp_follow_angle =   m_switch_follow_angle;
-            m_temp_position =       m_switch_position;
-            m_temp_rotation =       m_switch_rotation;
-            m_temp_up_vector =      m_switch_up_vector;
-            m_temp_z_order =        m_switch_z_order;
-            m_temp_zoom =           m_switch_zoom;
-            m_temp_match =          target_camera->getMatchAngle();
+        // Linear Interpolation of Temporary Values
+        glm::vec3 target_position = target_camera->getPosition();
+        glm::vec3 target_rotation = target_camera->getRotation();
+                  target_rotation.x = Dr::EqualizeAngle0to360(target_rotation.x);
+                  target_rotation.y = Dr::EqualizeAngle0to360(target_rotation.y);
+                  target_rotation.z = Dr::EqualizeAngle0to360(target_rotation.z);
+                  target_rotation.x = Dr::FindClosestAngle180(m_temp_rotation.x, target_rotation.x);
+                  target_rotation.y = Dr::FindClosestAngle180(m_temp_rotation.y, target_rotation.y);
+                  target_rotation.z = Dr::FindClosestAngle180(m_temp_rotation.z, target_rotation.z);
+        glm::vec3 target_up_vector = (target_camera->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
+        double    target_following_rotation = target_camera->getThingFollowingRotation();
+                  target_following_rotation = Dr::EqualizeAngle0to360(target_following_rotation);
+                  target_following_rotation = Dr::FindClosestAngle180(m_temp_follow_angle, target_following_rotation);
+        double    target_z_order = static_cast<double>(target_camera->getThingFollowingZOrder());
 
-            SmoothMove(m_temp_follow_angle, target_following_rotation,  0.001 * cam_switch_speed, m_switch_milliseconds );
-            SmoothMove(m_temp_z_order,      target_z_order,             0.001 * cam_switch_speed, m_switch_milliseconds );
-            SmoothMove(m_temp_position,     target_position,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-            SmoothMove(m_temp_rotation,     target_rotation,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-            SmoothMove(m_temp_up_vector,    target_up_vector,   0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-            SmoothMove(temp_zoom_as_pow, target_zoom_as_pow,    0.0002 * cam_switch_speed, m_switch_milliseconds);
+        m_temp_follow_angle =   m_switch_follow_angle;
+        m_temp_position =       m_switch_position;
+        m_temp_rotation =       m_switch_rotation;
+        m_temp_up_vector =      m_switch_up_vector;
+        m_temp_z_order =        m_switch_z_order;
+        m_temp_match =          target_camera->getMatchAngle();
+
+        SmoothMove(m_temp_follow_angle, target_following_rotation,  0.001 * cam_switch_speed, m_switch_milliseconds );
+        SmoothMove(m_temp_z_order,      target_z_order,             0.001 * cam_switch_speed, m_switch_milliseconds );
+        SmoothMove(m_temp_position,     target_position,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
+        SmoothMove(m_temp_rotation,     target_rotation,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
+        SmoothMove(m_temp_up_vector,    target_up_vector,   0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
+
+        // Linear Interpolation of Zoom Values
+        double  target_zoom_as_pow = DrOpenGL::zoomScaleToPow( target_camera->getZoom() );
+        double  temp_zoom_as_pow =   DrOpenGL::zoomScaleToPow( m_temp_zoom );
+        bool    done_with_zoom = false;
+        m_temp_zoom = m_switch_zoom;
+
+        if (m_switch_zoom < target_camera->getZoom()) {
+            if (m_temp_zoom >= target_camera->getZoom()) done_with_zoom = true;
+        } else {
+            if (m_temp_zoom <= target_camera->getZoom()) done_with_zoom = true;
+        }
+        if (done_with_zoom == false) {
+            SmoothMove(temp_zoom_as_pow, target_zoom_as_pow, 0.00017 * cam_switch_speed, m_switch_milliseconds);
             m_temp_zoom = DrOpenGL::zoomPowToScale( temp_zoom_as_pow );
+        }
 
-            if (glm::distance(m_temp_position, target_position) < (0.0001f) &&
-                abs(temp_zoom_as_pow - target_zoom_as_pow) < 10.0) {
-                m_temp_position =       target_position;
-                m_temp_rotation =       target_rotation;
-                m_temp_zoom =           DrOpenGL::zoomPowToScale( target_zoom_as_pow );
-                m_temp_follow_angle =   target_following_rotation;
-                m_temp_up_vector =      target_up_vector;
-                m_temp_match =          false;
-                m_switching_cameras =   false;
-            }
+        // If distance and zoom are close to target, officially done switching cameras
+        if (glm::distance(m_temp_position, target_position) < (0.0001f) && done_with_zoom) {
+            m_temp_position =       target_position;
+            m_temp_rotation =       target_rotation;
+            m_temp_zoom =           DrOpenGL::zoomPowToScale( target_zoom_as_pow );
+            m_temp_follow_angle =   target_following_rotation;
+            m_temp_up_vector =      target_up_vector;
+            m_temp_match =          false;
+            m_switching_cameras =   false;
         }
     }
 }
@@ -142,17 +157,16 @@ void DrEngineWorld::updateCameras() {
 // Initiates a move to a new camera
 void DrEngineWorld::switchCameras(long new_camera) {
     m_switch_milliseconds = 0;
-    m_switch_position = getCameraPosition();
-    m_switch_rotation = getCameraRotation();
-        m_switch_rotation.x = Dr::EqualizeAngle0to360(m_switch_rotation.x);
-        m_switch_rotation.y = Dr::EqualizeAngle0to360(m_switch_rotation.y);
-        m_switch_rotation.z = Dr::EqualizeAngle0to360(m_switch_rotation.z);
-    m_switch_zoom = getCameraZoom();
-    m_switch_follow_angle = getCameraFollowingRotation();
-        m_switch_follow_angle = Dr::EqualizeAngle0to360(m_switch_follow_angle);
-    m_switch_up_vector = getCameraUpVector();
-    m_switch_z_order = static_cast<double>(getCameraFollowingZ());
-    m_switch_match = getCameraMatching();
+    m_switch_position =     getCameraPosition();
+    m_switch_rotation =     getCameraRotation();
+        m_switch_rotation.x =   Dr::EqualizeAngle0to360(m_switch_rotation.x);
+        m_switch_rotation.y =   Dr::EqualizeAngle0to360(m_switch_rotation.y);
+        m_switch_rotation.z =   Dr::EqualizeAngle0to360(m_switch_rotation.z);
+    m_switch_zoom =         getCameraZoom();
+    m_switch_follow_angle = Dr::EqualizeAngle0to360(getCameraFollowingRotation());
+    m_switch_up_vector =    getCameraUpVector();
+    m_switch_z_order =      static_cast<double>(getCameraFollowingZ());
+    m_switch_match =        getCameraMatching();
 
     m_temp_position =       m_switch_position;
     m_temp_rotation =       m_switch_rotation;
@@ -358,12 +372,12 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         m_position.x = m_position.x + (m_speed.x * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
         m_position.y = m_position.y + (m_speed.y * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
 
-    // Otherwise Lerp to new Target
+    // Otherwise Lerp to new Target Position
     } else {
         double lerp = 0.01 * milliseconds;
-        m_position.x = static_cast<float>( Dr::Lerp( static_cast<double>(m_position.x), static_cast<double>(m_target.x), lerp));
-        m_position.y = static_cast<float>( Dr::Lerp( static_cast<double>(m_position.y), static_cast<double>(m_target.y), lerp));
-        m_position.z = static_cast<float>( Dr::Lerp( static_cast<double>(m_position.z), static_cast<double>(m_target.z), lerp));
+        m_position.x = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.x), static_cast<double>(m_target.x), lerp) );
+        m_position.y = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.y), static_cast<double>(m_target.y), lerp) );
+        m_position.z = static_cast<float>( Dr::Lerp(static_cast<double>(m_position.z), static_cast<double>(m_target.z), lerp) );
         ///m_position.x = m_target.x();
         ///m_position.y = m_target.y();
         ///m_position.z = m_target.z();
