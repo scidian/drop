@@ -227,9 +227,11 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.resetTransform();
             */
 
-            // Map small circle from 3D
-            float rad = ((radius * static_cast<float>(cam.zoom)) / 24.f);
-            float curve = 0.925f;
+            float rad = ((radius * static_cast<float>(cam.zoom)) / 24.f) + 10.f;
+            float curve =  0.925f;
+            float curve2 = 0.7f;
+
+            // Circle
             QVector3D top_c =   circle_y * (circle_x * QVector3D(   0, -rad, -radius));
             QVector3D bot_c =   circle_y * (circle_x * QVector3D(   0,  rad, -radius));
             QVector3D left_c =  circle_y * (circle_x * QVector3D(-rad,    0, -radius));
@@ -238,7 +240,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             QVector3D tr_c =    circle_y * (circle_x * QVector3D( rad*curve, -rad*curve, -radius));
             QVector3D br_c =    circle_y * (circle_x * QVector3D( rad*curve,  rad*curve, -radius));
             QVector3D bl_c =    circle_y * (circle_x * QVector3D(-rad*curve,  rad*curve, -radius));
-            QVector3D mid_c =   circle_y * (circle_x * QVector3D(   0,    0, -radius - (rad*1.5f)));
+            QVector3D mid_c =   circle_y * (circle_x * QVector3D(   0,    0, -radius - (rad*1.0f)));
             QPointF top =   QPointF(static_cast<double>(top_c.x()),     static_cast<double>(top_c.y()));
             QPointF bot =   QPointF(static_cast<double>(bot_c.x()),     static_cast<double>(bot_c.y()));
             QPointF left =  QPointF(static_cast<double>(left_c.x()),    static_cast<double>(left_c.y()));
@@ -249,7 +251,6 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             QPointF bl =    QPointF(static_cast<double>(bl_c.x()),      static_cast<double>(bl_c.y()));
             QPointF mid =   QPointF(static_cast<double>(mid_c.x()),     static_cast<double>(mid_c.y()));
 
-            // Draw circle
             QPainterPath path(top);
             path.quadTo(tl, left);
             path.quadTo(bl, bot);
@@ -257,21 +258,31 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             path.quadTo(tr, top);
             painter.drawPath(path);
 
-            // Draw cone lines
-            painter.drawLine(mid, top);
-            painter.drawLine(mid, bot);
-            painter.drawLine(mid, left);
-            painter.drawLine(mid, right);
+            // Cone Lines
+            QVector3D tl_c2 = circle_y * (circle_x * QVector3D(-rad*curve2, -rad*curve2, -radius));
+            QVector3D tr_c2 = circle_y * (circle_x * QVector3D( rad*curve2, -rad*curve2, -radius));
+            QVector3D br_c2 = circle_y * (circle_x * QVector3D( rad*curve2,  rad*curve2, -radius));
+            QVector3D bl_c2 = circle_y * (circle_x * QVector3D(-rad*curve2,  rad*curve2, -radius));
+            QPointF tl2 = QPointF(static_cast<double>(tl_c2.x()), static_cast<double>(tl_c2.y()));
+            QPointF tr2 = QPointF(static_cast<double>(tr_c2.x()), static_cast<double>(tr_c2.y()));
+            QPointF br2 = QPointF(static_cast<double>(br_c2.x()), static_cast<double>(br_c2.y()));
+            QPointF bl2 = QPointF(static_cast<double>(bl_c2.x()), static_cast<double>(bl_c2.y()));
+
+            painter.drawLine(mid, tl2);
+            painter.drawLine(mid, tr2);
+            painter.drawLine(mid, br2);
+            painter.drawLine(mid, bl2);
+
 
             // ***** Draw Camera Cube behind small circle
-            QVector3D box1_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*1.5f)));
-            QVector3D box1_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*1.5f)));
-            QVector3D box1_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*1.5f)));
-            QVector3D box1_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*1.5f)));
-            QVector3D box2_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*3.5f)));
-            QVector3D box2_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*3.5f)));
-            QVector3D box2_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*3.5f)));
-            QVector3D box2_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*3.5f)));
+            QVector3D box1_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*1.0f)));
+            QVector3D box1_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*1.0f)));
+            QVector3D box1_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*1.0f)));
+            QVector3D box1_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*1.0f)));
+            QVector3D box2_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*3.0f)));
+            QVector3D box2_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*3.0f)));
+            QVector3D box2_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*3.0f)));
+            QVector3D box2_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*3.0f)));
             QPointF b1_tl = QPointF(static_cast<double>(box1_tl.x()),   static_cast<double>(box1_tl.y()));
             QPointF b1_tr = QPointF(static_cast<double>(box1_tr.x()),   static_cast<double>(box1_tr.y()));
             QPointF b1_br = QPointF(static_cast<double>(box1_br.x()),   static_cast<double>(box1_br.y()));
