@@ -37,7 +37,6 @@ enum class Preferences {
 
     // !!!!! #TODO: Not implemented
     World_Editor_Show_Connections,                  // bool
-    World_Editor_Show_Game_Frame,                   // bool
     World_Editor_Lock_Backgrounds,                  // bool
     // !!!!! #END TODO
 

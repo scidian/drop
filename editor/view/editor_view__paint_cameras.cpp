@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QPainter>
 
+#include "core/colors/colors.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/view/editor_view.h"
@@ -206,13 +207,15 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.resetTransform();
 
             // ***** Set Up Painter for Camera
-            DrColor cam_color = DrColor(Dr::purple).lighter(130);
-            if (m_cam_mouse_over == thing || m_cam_selected == thing) cam_color = DrColor(Dr::purple).lighter(180);
+            ///DrColor cam_color = DrColor(Dr::purple).lighter(125);
+            ///DrColor cam_color(0xFF7E28AA);
+            DrColor cam_color = Dr::GetColor(Window_Colors::Icon_Dark);
+            if (m_cam_mouse_over == thing || m_cam_selected == thing) cam_color = cam_color.lighter(150);
             float percent_z = cam_point.z() / radius;
             if (percent_z < 0) {
-                cam_color = cam_color.lighter(100 + static_cast<int>(abs(percent_z) * 100.f));
+                cam_color = cam_color.lighter(100 + static_cast<int>(abs(percent_z) * 50.f));
             } else {
-                cam_color = cam_color.darker( 100 + static_cast<int>(abs(percent_z) * 50.f));
+                cam_color = cam_color.darker( 100 + static_cast<int>(abs(percent_z) * 30.f));
             }
             painter.setPen(QPen(QBrush(Dr::ToQColor(cam_color)), 1));
             painter.translate(middle);

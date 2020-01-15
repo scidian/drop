@@ -276,8 +276,6 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
         // Release camera
         if (m_view_mode == View_Mode::Moving_Camera) {
             m_view_mode = View_Mode::None;
-            m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected },
-                        { Properties::Thing_Character_Camera_Rotation, Properties::Thing_Camera_Rotation });
             m_cam_selected = nullptr;
         }
 

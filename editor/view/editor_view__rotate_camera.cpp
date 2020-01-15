@@ -69,6 +69,9 @@ void DrView::rotateCamera(QPointF mouse_in_view) {
         m_cam_selected->setComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation, rotation);
     }
 
+    m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected },
+                { Properties::Thing_Character_Camera_Rotation, Properties::Thing_Camera_Rotation });
+
 }
 
 
