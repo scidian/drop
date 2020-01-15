@@ -117,6 +117,7 @@ void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin,
         case Position_Flags::Move_Item:
         case Position_Flags::Rotate:
         case Position_Flags::No_Position:
+        case Position_Flags::Over_Camera:
             item_pos = item_rect.topLeft();
     }
     item_pos = item->sceneTransform().map(item_pos);

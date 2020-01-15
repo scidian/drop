@@ -52,31 +52,33 @@ void DrOpenGL::drawDebug() {
 
     // ***** Debug Text
     glViewport(0, 0, width(), height());
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, width(), height(), 0, -1, 1);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    #if !defined (Q_OS_IOS)
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, width(), height(), 0, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-    fonsDrawText(fs, 500,  20, "Distance:",     nullptr );                          // Game Distance
-    fonsDrawText(fs,  20,  20, "FPS:",          nullptr );                          // Frames per second
-    fonsDrawText(fs,  20,  40, "Objects:",      nullptr );                          // Object count
-    fonsDrawText(fs,  20,  60, "Triangles:",    nullptr );                          // Triangle count
-    fonsDrawText(fs,  20,  80, "Zoom:",         nullptr );                          // World scale
-    ///fonsDrawText(fs,  20, 120, "Physics:",   nullptr );                          // Physics update
+        fonsDrawText(fs, 500,  20, "Distance:",     nullptr );                          // Game Distance
+        fonsDrawText(fs,  20,  20, "FPS:",          nullptr );                          // Frames per second
+        fonsDrawText(fs,  20,  40, "Objects:",      nullptr );                          // Object count
+        fonsDrawText(fs,  20,  60, "Triangles:",    nullptr );                          // Triangle count
+        fonsDrawText(fs,  20,  80, "Zoom:",         nullptr );                          // World scale
+        ///fonsDrawText(fs,  20, 120, "Physics:",   nullptr );                          // Physics update
 
-    fonsDrawText(fs, 570,  20, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getMaxDistance(), 2).c_str(), nullptr );            // Game Distance
-    fonsDrawText(fs,  90,  20, Dr::RoundToDecimalPlace(m_form_engine->fps_render, 1).c_str(), nullptr );                                // Frames per second
-    fonsDrawText(fs,  90,  40, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getThings().size(), 0).c_str(), nullptr );          // Object count
-    fonsDrawText(fs,  90,  60, Dr::RoundToDecimalPlace(getTriangleCount(), 0).c_str(), nullptr );                                       // Triangle count
-    fonsDrawText(fs,  90,  80, Dr::RoundToDecimalPlace(combinedZoomScale(), 2).c_str(), nullptr );                                      // World scale
-    fonsDrawText(fs,  20, 100, g_info.c_str(), nullptr);                                                                                // Global debug string
-    ///fonsDrawText(fs,  20, 120, Dr::RoundToDecimalPlace(m_engine->getFormEngine()->fps_physics, 1).c_str(), nullptr );                // Physics update
+        fonsDrawText(fs, 570,  20, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getMaxDistance(), 2).c_str(), nullptr );            // Game Distance
+        fonsDrawText(fs,  90,  20, Dr::RoundToDecimalPlace(m_form_engine->fps_render, 1).c_str(), nullptr );                                // Frames per second
+        fonsDrawText(fs,  90,  40, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getThings().size(), 0).c_str(), nullptr );          // Object count
+        fonsDrawText(fs,  90,  60, Dr::RoundToDecimalPlace(getTriangleCount(), 0).c_str(), nullptr );                                       // Triangle count
+        fonsDrawText(fs,  90,  80, Dr::RoundToDecimalPlace(combinedZoomScale(), 2).c_str(), nullptr );                                      // World scale
+        fonsDrawText(fs,  20, 100, g_info.c_str(), nullptr);                                                                                // Global debug string
+        ///fonsDrawText(fs,  20, 120, Dr::RoundToDecimalPlace(m_engine->getFormEngine()->fps_physics, 1).c_str(), nullptr );                // Physics update
 
-    ///fonsDrawDebug(fs, 300.0, 350.0);                                                     // Draws Font Stash debug texture
+        ///fonsDrawDebug(fs, 300.0, 350.0);                                                     // Draws Font Stash debug texture
+    #endif
 
     ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                       // Finds max multi sampling available on system

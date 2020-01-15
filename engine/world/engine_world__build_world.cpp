@@ -97,7 +97,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     render_type = static_cast<Render_Type>(render);
     if (world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Enabled).toVector()[0].toBool()) {
         zoom_from_movement = true;
-        zoom_max =          world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Max_Change).toVector()[0].toDouble();
+        zoom_multiplier =   world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Multiplier).toVector()[0].toDouble();
         int in_out =        world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out).toInt();
         zoom_type =         static_cast<Auto_Zoom>(in_out);
     } else {

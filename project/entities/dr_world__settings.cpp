@@ -55,14 +55,14 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                                               "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");
 
     std::vector<DrVariant> auto_zoom_properties { static_cast<int>(Properties::World_Camera_Zoom_In_Or_Out),
-                                                  static_cast<int>(Properties::World_Camera_Zoom_Max_Change) };
+                                                  static_cast<int>(Properties::World_Camera_Zoom_Multiplier) };
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Enabled, Property_Type::BoolEnabled,
                            std::vector<DrVariant>({false, auto_zoom_properties }),
                            "Auto Zoom?", "Check this box to have Character Cameras change zoom automatically based on Characters speed.");
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out, Property_Type::List, static_cast<int>(Auto_Zoom::Zoom_Out),
                            "Zoom Type", "Select whether auto zoom should zoom in or zoom out.");
-    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Max_Change, Property_Type::RangedDouble, std::vector<DrVariant>({1.0, 1.0, 10.0, 0.1}),
-                           "Max Zoom", "This value controls how much of a potential zoom can occur. A value of 1.0 is minimum, a value of 10.0 is maximum.");
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Multiplier, Property_Type::RangedDouble, std::vector<DrVariant>({5.0, 1.0, 10.0, 0.1}),
+                           "Zoom Amount", "This value controls how much of a potential zoom can occur. A value of 1.0 is minimum, a value of 10.0 is maximum.");
 
 
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for this world, this affects all Objects that have \"Physics?\" "

@@ -23,16 +23,17 @@
 //####################################################################################
 //##    Font Stash
 //####################################################################################
-#include <stdio.h>					// malloc, free, fopen, fclose, ftell, fseek, fread
-#include <string.h>					// memset
-#define FONTSTASH_IMPLEMENTATION	// Expands implementation
-#include "3rd_party/fontstash/fontstash.h"
+#if !defined(Q_OS_IOS)
+    #include <stdio.h>					// malloc, free, fopen, fclose, ftell, fseek, fread
+    #include <string.h>					// memset
+    #define FONTSTASH_IMPLEMENTATION	// Expands implementation
+    #include "3rd_party/fontstash/fontstash.h"
 
-///#include <GLFW/glfw3.h>          // Or any other GL header of your choice.
-#include <QOpenGLWidget>
-#define GLFONTSTASH_IMPLEMENTATION	// Expands implementation
-#include "3rd_party/fontstash/glfontstash.h"
-
+    ///#include <GLFW/glfw3.h>          // Or any other GL header of your choice.
+    #include <QOpenGLWidget>
+    #define GLFONTSTASH_IMPLEMENTATION	// Expands implementation
+    #include "3rd_party/fontstash/glfontstash.h"
+#endif
 
 
 

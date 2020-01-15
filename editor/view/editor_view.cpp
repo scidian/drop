@@ -136,6 +136,7 @@ QString DrView::currentViewModeAsString() {
         case View_Mode::Dragging:           return "Dragging";
         case View_Mode::Zooming:            return "Zooming";
         case View_Mode::Holding_Keys:       return "Holding Keys";
+        case View_Mode::Moving_Camera:      return "Moving Camera";
     }
 }
 

@@ -52,7 +52,8 @@ private:
     std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
     std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
-
+    std::deque<double>  m_avg_max_speed;                        // Average max speed per second, used for auto zoom
+    std::deque<double>  m_avg_target_zoom;                      // Average target zoom, used for auto zoom
 
 public:
     // Constructor

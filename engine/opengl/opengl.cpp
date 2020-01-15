@@ -54,7 +54,9 @@ DrOpenGL::~DrOpenGL() {
         m_quad_vbo->destroy();  delete m_quad_vbo;
 
         // Delete font stash
-        glfonsDelete(fs);
+        #if !defined (Q_OS_IOS)
+            glfonsDelete(fs);
+        #endif
 
     doneCurrent();
 }

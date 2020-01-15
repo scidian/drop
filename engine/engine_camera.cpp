@@ -328,10 +328,11 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     setRotation(    c_default_camera_rot );
 
     // Zero out average speed vectors
-    setBufferSize( buffer_size);
-    m_avg_speed_x.resize(buffer_size); std::fill(m_avg_speed_x.begin(), m_avg_speed_x.end(), 0);
-    m_avg_speed_y.resize(buffer_size); std::fill(m_avg_speed_y.begin(), m_avg_speed_y.end(), 0);
-    m_avg_speed_z.resize(buffer_size); std::fill(m_avg_speed_z.begin(), m_avg_speed_z.end(), 0);
+    m_buffer_size = buffer_size;
+    setBufferSize(  buffer_size);
+    m_avg_speed_x.resize(buffer_size);  std::fill(m_avg_speed_x.begin(),    m_avg_speed_x.end(),    0);
+    m_avg_speed_y.resize(buffer_size);  std::fill(m_avg_speed_y.begin(),    m_avg_speed_y.end(),    0);
+    m_avg_speed_z.resize(buffer_size);  std::fill(m_avg_speed_z.begin(),    m_avg_speed_z.end(),    0);
 }
 
 
@@ -384,21 +385,60 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         ///m_position.z = m_target.z();
     }
 
+    // ***** Calculate average max speed per second
+    static double avg_speed_clock = 0;
+    static double avg_speed = 0;
+    avg_speed_clock += milliseconds;
+    if (avg_speed_clock > 16.0) {
+        while (avg_speed_clock > 16) {
+            while (m_avg_max_speed.size() > 30) {
+                m_avg_max_speed.pop_front();
+            }
+            m_avg_max_speed.push_back( static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y))) );
+            avg_speed_clock -= 16.0;
+        }
+        if (m_avg_max_speed.size() > 0) {
+            avg_speed = std::accumulate(m_avg_max_speed.begin(), m_avg_max_speed.end(), 0.0) / m_avg_max_speed.size();
+        }
+    }
+
     // ***** Update Speed Adjusted Zoom
     if (this->getEngineWorld()->zoom_from_movement) {
-        double lerp_zoom = 0.001 * milliseconds;
-        float  max_speed = Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y));
-        double target_zoom;
+        double target_zoom = m_speed_adjusted_zoom;
+        double lerp_zoom = 0.01 * milliseconds;
+
         if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_Out) {
-            double min_limit = this->getEngineWorld()->zoom_max * 0.08;
-            double speed_adjust = 1.0 - Dr::Clamp(static_cast<double>(max_speed) / 10.0, 0.0, min_limit);
+            double min_limit = this->getEngineWorld()->zoom_multiplier * 0.09;
+            double speed_adjust = 1.0 - Dr::Clamp(avg_speed / 2.0, 0.0, min_limit);
             target_zoom = (m_zoom * speed_adjust);
-        } else {
-            double max_limit = this->getEngineWorld()->zoom_max * 8.0;
-            double speed_adjust = Dr::Clamp(static_cast<double>(max_speed) / (11.0 - this->getEngineWorld()->zoom_max), 0.0, max_limit);
+
+        } else if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_In) {
+            double max_limit = this->getEngineWorld()->zoom_multiplier;
+            double speed_adjust = Dr::Clamp(avg_speed / 2.0, 0.0, max_limit);
             target_zoom = m_zoom + (m_zoom * speed_adjust);
         }
-        m_speed_adjusted_zoom = Dr::Lerp(m_speed_adjusted_zoom, target_zoom, lerp_zoom);
+
+        // ***** Calculate average target zoom per second
+        static double avg_zoom_clock = 0;
+        static double avg_zoom = m_zoom;
+        avg_zoom_clock += milliseconds;
+        while (avg_zoom_clock > 16.0) {
+            while (m_avg_target_zoom.size() > 30) {
+                m_avg_target_zoom.pop_front();
+            }
+            m_avg_target_zoom.push_back( target_zoom );
+            if (m_avg_target_zoom.size() > 0) {
+                avg_zoom = std::accumulate(m_avg_target_zoom.begin(), m_avg_target_zoom.end(), 0.0) / m_avg_target_zoom.size();
+            }
+            avg_zoom_clock -= 16.0;
+        }
+
+        g_info = "Target Zoom: " + std::to_string(avg_zoom);
+
+        // Lerp as power for smoother tweening
+        double target_zoom_as_pow = DrOpenGL::zoomScaleToPow( avg_zoom );
+        double new_zoom_as_pow =    Dr::Lerp(DrOpenGL::zoomScaleToPow(m_speed_adjusted_zoom), target_zoom_as_pow, lerp_zoom);
+        m_speed_adjusted_zoom =     DrOpenGL::zoomPowToScale(new_zoom_as_pow);
     } else {
         m_speed_adjusted_zoom = m_zoom;
     }
