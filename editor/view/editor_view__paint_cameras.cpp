@@ -64,12 +64,12 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
 
         // ***** Camera Lag Box
         QPointF middle = mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
-        QPointF tl =     mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
-        QPointF tr =     mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
-        QPointF br =     mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
-        QPointF bl =     mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
+        QPointF tl_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
+        QPointF tr_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
+        QPointF br_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
+        QPointF bl_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
         QPolygonF square;
-        square << tl << tr << br << bl;
+        square << tl_b << tr_b << br_b << bl_b;
 
         // ***** Bounds Check, don't draw if not touching or inside of visible area
         QRect bounding_box = square.boundingRect().normalized().toRect();
@@ -141,12 +141,12 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             cam_point = circle_y * cam_point;
 
             // ***** Draw big X circle
+            /**
             QLinearGradient gradient_x;
             QColor ring_x_back(Qt::white);
             QColor ring_x_front(Qt::white);
             float distance_x = (tl_x.y() > tr_x.y()) ? (tl_x.y() - tr_x.y()) : (tr_x.y() - tl_x.y());
             float percent_x = 1.0f - ((distance_x / (radius * 2.f)) / 2.f);
-            /**
             if (tl_x.z() < tr_x.z()) {
                 gradient_x.setStart(    QPointF(0, static_cast<double>(tl_x.y())));
                 gradient_x.setFinalStop(QPointF(0, static_cast<double>(tr_x.y())));
@@ -212,8 +212,11 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 cam_color = cam_color.darker( 100 + static_cast<int>(abs(percent_z) * 50.f));
             }
             painter.setPen(QPen(QBrush(Dr::ToQColor(cam_color)), c_outline_width));
-            painter.translate(middle + QPointF(double(cam_point.x()), double(cam_point.y())));
+            painter.translate(middle);
 
+            // Old Small Circle Drawing
+            /**
+            painter.translate(middle + QPointF(double(cam_point.x()), double(cam_point.y())));
             double cam_diameter_x = ((static_cast<double>(radius) * cam.zoom) / 24.0) * static_cast<double>(percent_y);
             double cam_diameter_y = ((static_cast<double>(radius) * cam.zoom) / 24.0) * static_cast<double>(percent_x);
             double equalized_x = Dr::EqualizeAngle0to360( cam.rotation.x);
@@ -221,6 +224,78 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.rotate( (equalized_y > 180) ? equalized_x : -equalized_x);
             cam_diameter_y /= static_cast<double>(percent_x);
             painter.drawEllipse(QPointF(0, 0), cam_diameter_x, cam_diameter_y);
+            painter.resetTransform();
+            */
+
+            // Map small circle from 3D
+            float rad = ((radius * static_cast<float>(cam.zoom)) / 24.f);
+            float curve = 0.925f;
+            QVector3D top_c =   circle_y * (circle_x * QVector3D(   0, -rad, -radius));
+            QVector3D bot_c =   circle_y * (circle_x * QVector3D(   0,  rad, -radius));
+            QVector3D left_c =  circle_y * (circle_x * QVector3D(-rad,    0, -radius));
+            QVector3D right_c = circle_y * (circle_x * QVector3D( rad,    0, -radius));
+            QVector3D tl_c =    circle_y * (circle_x * QVector3D(-rad*curve, -rad*curve, -radius));
+            QVector3D tr_c =    circle_y * (circle_x * QVector3D( rad*curve, -rad*curve, -radius));
+            QVector3D br_c =    circle_y * (circle_x * QVector3D( rad*curve,  rad*curve, -radius));
+            QVector3D bl_c =    circle_y * (circle_x * QVector3D(-rad*curve,  rad*curve, -radius));
+            QVector3D mid_c =   circle_y * (circle_x * QVector3D(   0,    0, -radius - (rad*1.5f)));
+            QPointF top =   QPointF(static_cast<double>(top_c.x()),     static_cast<double>(top_c.y()));
+            QPointF bot =   QPointF(static_cast<double>(bot_c.x()),     static_cast<double>(bot_c.y()));
+            QPointF left =  QPointF(static_cast<double>(left_c.x()),    static_cast<double>(left_c.y()));
+            QPointF right = QPointF(static_cast<double>(right_c.x()),   static_cast<double>(right_c.y()));
+            QPointF tl =    QPointF(static_cast<double>(tl_c.x()),      static_cast<double>(tl_c.y()));
+            QPointF tr =    QPointF(static_cast<double>(tr_c.x()),      static_cast<double>(tr_c.y()));
+            QPointF br =    QPointF(static_cast<double>(br_c.x()),      static_cast<double>(br_c.y()));
+            QPointF bl =    QPointF(static_cast<double>(bl_c.x()),      static_cast<double>(bl_c.y()));
+            QPointF mid =   QPointF(static_cast<double>(mid_c.x()),     static_cast<double>(mid_c.y()));
+
+            // Draw circle
+            QPainterPath path(top);
+            path.quadTo(tl, left);
+            path.quadTo(bl, bot);
+            path.quadTo(br, right);
+            path.quadTo(tr, top);
+            painter.drawPath(path);
+
+            // Draw cone lines
+            painter.drawLine(mid, top);
+            painter.drawLine(mid, bot);
+            painter.drawLine(mid, left);
+            painter.drawLine(mid, right);
+
+            // ***** Draw Camera Cube behind small circle
+            QVector3D box1_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*1.5f)));
+            QVector3D box1_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*1.5f)));
+            QVector3D box1_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*1.5f)));
+            QVector3D box1_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*1.5f)));
+            QVector3D box2_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*3.5f)));
+            QVector3D box2_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*3.5f)));
+            QVector3D box2_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*3.5f)));
+            QVector3D box2_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*3.5f)));
+            QPointF b1_tl = QPointF(static_cast<double>(box1_tl.x()),   static_cast<double>(box1_tl.y()));
+            QPointF b1_tr = QPointF(static_cast<double>(box1_tr.x()),   static_cast<double>(box1_tr.y()));
+            QPointF b1_br = QPointF(static_cast<double>(box1_br.x()),   static_cast<double>(box1_br.y()));
+            QPointF b1_bl = QPointF(static_cast<double>(box1_bl.x()),   static_cast<double>(box1_bl.y()));
+            QPointF b2_tl = QPointF(static_cast<double>(box2_tl.x()),   static_cast<double>(box2_tl.y()));
+            QPointF b2_tr = QPointF(static_cast<double>(box2_tr.x()),   static_cast<double>(box2_tr.y()));
+            QPointF b2_br = QPointF(static_cast<double>(box2_br.x()),   static_cast<double>(box2_br.y()));
+            QPointF b2_bl = QPointF(static_cast<double>(box2_bl.x()),   static_cast<double>(box2_bl.y()));
+
+            painter.drawLine(b1_tl, b1_tr);
+            painter.drawLine(b1_tr, b1_br);
+            painter.drawLine(b1_br, b1_bl);
+            painter.drawLine(b1_bl, b1_tl);
+
+            painter.drawLine(b2_tl, b2_tr);
+            painter.drawLine(b2_tr, b2_br);
+            painter.drawLine(b2_br, b2_bl);
+            painter.drawLine(b2_bl, b2_tl);
+
+            painter.drawLine(b1_tl, b2_tl);
+            painter.drawLine(b1_tr, b2_tr);
+            painter.drawLine(b1_br, b2_br);
+            painter.drawLine(b1_bl, b2_bl);
+
             painter.resetTransform();
 
         }   // End If visible
