@@ -208,6 +208,7 @@ SOURCES += \
     editor/view/editor_view__paint_items.cpp \
     editor/view/editor_view__resize.cpp \
     editor/view/editor_view__rotate.cpp \
+    editor/view/editor_view__rotate_camera.cpp \
     editor/view/editor_view__select.cpp \
     editor/view/editor_view__tooltip.cpp \
     editor/interface_editor_relay.cpp \

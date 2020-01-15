@@ -29,6 +29,8 @@ const int   c_outline_width = 2;            // Pen width of QPainter
 //##    PAINT: Paints Camera Boxes
 //####################################################################################
 void DrView::paintCameras(QPainter &painter, DrStage *stage) {
+    // Reset camera data
+    m_cam_data.clear();
 
     // Loop through all Stage Things
     for (auto &thing_pair : stage->getThingMap()) {
@@ -76,7 +78,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
         if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box) || (bounding_box.width() == 0 && bounding_box.height() == 0)) &&
             (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
 
-            // Set up QPainter
+            // ***** Initial Set Up of QPainter
             DrColor color = Dr::white;
             QPen cosmetic_pen(QBrush(Dr::ToQColor(color)), c_outline_width);
             cosmetic_pen.setCosmetic(true);
@@ -85,7 +87,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             brush_color.setAlpha(64);
             painter.setBrush(QBrush(brush_color));
 
-            // ***** Draw Camera Box
+            // ***** Draw Lag Box
             painter.drawPolygon(square);
 
             // ***** Y Up Vector Arrow
@@ -113,7 +115,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             }
             **/
 
-            // ***** Rotation Circles
+            // ***** Rotational Circles
             painter.setPen(cosmetic_pen);
             painter.setBrush(Qt::NoBrush);
             float radius = c_ring_size * static_cast<float>(currentZoomLevel());
@@ -140,7 +142,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             cam_point = circle_x * cam_point;
             cam_point = circle_y * cam_point;
 
-            // ***** Draw big X circle
+            // ***** Draw Big X Circle
             /**
             QLinearGradient gradient_x;
             QColor ring_x_back(Qt::white);
@@ -173,7 +175,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.resetTransform();
             */
 
-            // ***** Draw big Y circle
+            // ***** Draw Big Y Circle
             QLinearGradient gradient_y;
             QColor ring_y_back(Qt::white);
             QColor ring_y_front(Qt::white);
@@ -203,15 +205,16 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.drawEllipse(QRectF(QPointF(double(tl_y.x()), double(tl_y.y())), QPointF(double(br_y.x()), double(br_y.y()))));
             painter.resetTransform();
 
-            // ***** Draw small camera circle
+            // ***** Set Up Painter for Camera
             DrColor cam_color = DrColor(Dr::purple).lighter(130);
+            if (m_cam_mouse_over == thing || m_cam_selected == thing) cam_color = DrColor(Dr::purple).lighter(180);
             float percent_z = cam_point.z() / radius;
             if (percent_z < 0) {
                 cam_color = cam_color.lighter(100 + static_cast<int>(abs(percent_z) * 100.f));
             } else {
                 cam_color = cam_color.darker( 100 + static_cast<int>(abs(percent_z) * 50.f));
             }
-            painter.setPen(QPen(QBrush(Dr::ToQColor(cam_color)), c_outline_width));
+            painter.setPen(QPen(QBrush(Dr::ToQColor(cam_color)), 1));
             painter.translate(middle);
 
             // Old Small Circle Drawing
@@ -229,9 +232,9 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
 
             float rad = ((radius * static_cast<float>(cam.zoom)) / 24.f) + 10.f;
             float curve =  0.925f;
-            float curve2 = 0.7f;
+            float curve2 = 0.71f;
 
-            // Circle
+            // ***** Circle
             QVector3D top_c =   circle_y * (circle_x * QVector3D(   0, -rad, -radius));
             QVector3D bot_c =   circle_y * (circle_x * QVector3D(   0,  rad, -radius));
             QVector3D left_c =  circle_y * (circle_x * QVector3D(-rad,    0, -radius));
@@ -258,7 +261,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             path.quadTo(tr, top);
             painter.drawPath(path);
 
-            // Cone Lines
+            // ***** Cone Lines
             QVector3D tl_c2 = circle_y * (circle_x * QVector3D(-rad*curve2, -rad*curve2, -radius));
             QVector3D tr_c2 = circle_y * (circle_x * QVector3D( rad*curve2, -rad*curve2, -radius));
             QVector3D br_c2 = circle_y * (circle_x * QVector3D( rad*curve2,  rad*curve2, -radius));
@@ -273,8 +276,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.drawLine(mid, br2);
             painter.drawLine(mid, bl2);
 
-
-            // ***** Draw Camera Cube behind small circle
+            // ***** Camera Housing
             QVector3D box1_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*1.0f)));
             QVector3D box1_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*1.0f)));
             QVector3D box1_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*1.0f)));
@@ -292,22 +294,29 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             QPointF b2_br = QPointF(static_cast<double>(box2_br.x()),   static_cast<double>(box2_br.y()));
             QPointF b2_bl = QPointF(static_cast<double>(box2_bl.x()),   static_cast<double>(box2_bl.y()));
 
-            painter.drawLine(b1_tl, b1_tr);
-            painter.drawLine(b1_tr, b1_br);
-            painter.drawLine(b1_br, b1_bl);
-            painter.drawLine(b1_bl, b1_tl);
-
-            painter.drawLine(b2_tl, b2_tr);
-            painter.drawLine(b2_tr, b2_br);
-            painter.drawLine(b2_br, b2_bl);
-            painter.drawLine(b2_bl, b2_tl);
-
+            QPolygonF box1, box2;
+            box1 << b1_tl << b1_tr << b1_br << b1_bl;
+            box2 << b2_tl << b2_tr << b2_br << b2_bl;
+            painter.drawPolygon(box1);
+            painter.drawPolygon(box2);
             painter.drawLine(b1_tl, b2_tl);
             painter.drawLine(b1_tr, b2_tr);
             painter.drawLine(b1_br, b2_br);
             painter.drawLine(b1_bl, b2_bl);
 
             painter.resetTransform();
+
+
+            // ***** Store Camera Housing Bounding Rect for Mouse Interaction
+            box1.translate(middle);
+            box2.translate(middle);
+
+            Camera_Data cam_data;
+            cam_data.thing =        thing;
+            cam_data.z_order =      thing->getZOrderWithSub() + static_cast<double>(mid_c.z());
+            cam_data.view_rect =    box1.boundingRect().united(box2.boundingRect()).toRect();
+            m_cam_data[thing] = cam_data;
+
 
         }   // End If visible
     }   // End For auto DrThing

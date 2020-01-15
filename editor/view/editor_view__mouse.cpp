@@ -96,6 +96,14 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                 m_origin_timer.restart();
                 m_allow_movement = false;
 
+                // ******************** If clicked on camera, need to start rotating it
+                if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
+                    m_view_mode = View_Mode::Moving_Camera;
+                    startRotateCamera(m_origin);
+                    my_scene->scene_mutex.unlock();
+                    return;
+                }
+
                 if (my_scene->getSelectionCount() > 0) {
                     // ******************* If clicked while holding Alt key start rotating
                     if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
@@ -263,6 +271,14 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
             m_editor_relay->updateEditorWidgetsAfterItemChange(
                         Editor_Widgets::Stage_View, { selected_entities.begin(), selected_entities.end() },
                         { Properties::Thing_Position, Properties::Thing_Size, Properties::Thing_Scale, Properties::Thing_Rotation });
+        }
+
+        // Release camera
+        if (m_view_mode == View_Mode::Moving_Camera) {
+            m_view_mode = View_Mode::None;
+            m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected },
+                        { Properties::Thing_Character_Camera_Rotation, Properties::Thing_Camera_Rotation });
+            m_cam_selected = nullptr;
         }
 
         updateSelectionBoundingBox(6);
