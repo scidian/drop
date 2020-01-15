@@ -167,6 +167,13 @@ private:
     // View_Mode::Rotating Variables
     double                          m_rotate_start_angle;               // Stores angle of selection group at start of rotate routine
 
+    // View_Mode::Moving_Camera Variables
+    QPoint                          m_cam_mouse_start;                  // Starting mouse position when camera move starts
+    double                          m_cam_angle_x_start = 0;            // Camera angle when camera move starts
+    double                          m_cam_angle_y_start = 0;            // Camera angle when camera move starts
+    bool                            m_cam_at_back = false;              // Whether or not camera is behind target when camera move starts
+    bool                            m_cam_reversed = false;             // Stores is x rotation is reversed when camera move starts
+
     // Debug Camera Mode Variables
     DrThing                             *m_cam_mouse_over = nullptr;    // Stores which camera mouse is over, if none == nullptr
     DrThing                             *m_cam_selected = nullptr;      // Stores which camera is selected, if none == nullptr

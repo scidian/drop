@@ -9,32 +9,33 @@
 
 #include "editor/debug.h"
 
-
 namespace Dr {
+
 
 //####################################################################################
 //##    Local Static Variables
 //####################################################################################
-static std::bitset<static_cast<int>(Debug_Flags::Total)>   g_debug_flags;
-static bool                                                done_loading = false;    // True after initial startup of FormMain,
-                                                                                    // makes sure done loading before any calls to SetLabelText
+const  int flags = static_cast<int>(Debug_Flags::Total);
+static std::bitset<flags>   l_debug_flags;
+static bool                 l_done_loading = false;      // True after initial startup of FormMain, ensures done loading before any calls to SetLabelText
+
 
 //####################################################################################
 //##    Functions to initialize, set and check flags
 //####################################################################################
-bool CheckDoneLoading() { return done_loading; }
-void SetDoneLoading(bool done) { done_loading = done; }
+bool CheckDoneLoading() { return l_done_loading; }
+void SetDoneLoading(bool done) { l_done_loading = done; }
 
 bool CheckDebugFlag(Debug_Flags flag) {
-    return g_debug_flags.test(static_cast<size_t>(flag));
+    return l_debug_flags.test(static_cast<size_t>(flag));
 }
 
 void FlipDebugFlag(Debug_Flags flag) {
-    g_debug_flags.flip(static_cast<size_t>(flag));
+    l_debug_flags.flip(static_cast<size_t>(flag));
 }
 
 void SetDebugFlag(Debug_Flags flag) {
-    g_debug_flags.set(static_cast<size_t>(flag));
+    l_debug_flags.set(static_cast<size_t>(flag));
 }
 
 void LoadDebugFlags() {

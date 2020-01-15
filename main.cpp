@@ -47,13 +47,17 @@
 //
 //
 //
-//  Large Libraries:
-//      Boost -                     Boost   Only using boost::any for now
-//      Chipmunk -                  MIT     Physics, very good. Eventually look into Bullet for 3D
-//      Glm -                       MIT     Amazing vector / matrix math Library
+//  Large Dynamic Libraries:
 //      Qt -                        LGPL    Eventually for Editor ONLY!!!!!
 //
-//  Small Static Libraries
+//  Medium Source Libraries
+//      Boost -                     Boost   Only using boost::any for now
+//      Chipmunk -                  MIT     Physics, very good. Eventually look into Bullet for 3D
+//      Font Stash -                zLib    Renders fonts as triangles
+//      Glm -                       MIT     Amazing vector / matrix math Library
+//      Stb -                       MIT     Single file header libraries, great!
+//
+//  Small Source Libraries
 //      Delaunator -                MIT     Delaunay Triangulation of 2D Points, creates list of triangles connecting set of points
 //      Hull Finder -               WTF     Attempts to find concave hull from a collection of Points
 //      Poly Partition -            MIT     Polygon Partioning and Triangulation

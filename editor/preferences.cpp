@@ -4,7 +4,14 @@
 //  File:
 //      Globals
 //
-//
+//####################################################################################
+//##    These functions can be used globally without passing around an interface pointer
+//##
+//##    - Just need to #include "interface_relay.h"
+//##    - When program starts, FormMain is set as active 'IEditorRelay' class
+//##    - Make calls like: "Dr::SetLabelText"
+//##
+//####################################################################################
 #include <QApplication>
 
 #include "editor/forms/form_main.h"
@@ -15,31 +22,24 @@ typedef std::map<Asset_Category, bool>      AssetCategoryMap;
 typedef std::map<Components,  bool>         ComponentMap;
 typedef std::map<Preferences, DrVariant>    PreferenceMap;
 
-
-//####################################################################################
-//##    These functions can be used globally without passing around an interface pointer
-//##
-//##    - Just need to #include "interface_relay.h"
-//##    - When program starts, FormMain is set as active 'IEditorRelay' class
-//##    - Make calls like: "Dr::SetLabelText"
-//##
-//####################################################################################
-
 namespace Dr {
 
-// Global variables
-static AssetCategoryMap asset_categories;                   // Map holding if Asset Tree Category was last Expanded
-static ComponentMap     components;                         // Map holding if Inspector Component was last Expanded
-static PreferenceMap    options;                            // Map holding PROGRAM WIDE options (PreferenceMap type defined in globals.h)
-static FormMain        *g_active_form_main;                 // Stores active FormMain reference
-static IEditorRelay    *g_active_editor;                    // Stores active IEditorRelay reference
+
+//####################################################################################
+//##    Local Static Variables
+//####################################################################################
+static AssetCategoryMap l_asset_categories;                 // Map holding if Asset Tree Category was last Expanded
+static ComponentMap     l_components;                       // Map holding if Inspector Component was last Expanded
+static PreferenceMap    l_options;                          // Map holding PROGRAM WIDE options (PreferenceMap type defined in globals.h)
+static FormMain        *l_active_form_main;                 // Stores active FormMain reference
+static IEditorRelay    *l_active_editor;                    // Stores active IEditorRelay reference
 
 
 //####################################################################################
 //##    Preferences
 //####################################################################################
-DrVariant   GetPreference(Preferences option_to_get)                        { return options[option_to_get]; }
-void        SetPreference(Preferences option_to_set, DrVariant new_value)   { options[option_to_set] = new_value; }
+DrVariant   GetPreference(Preferences option_to_get)                        { return l_options[option_to_get]; }
+void        SetPreference(Preferences option_to_set, DrVariant new_value)   { l_options[option_to_set] = new_value; }
 
 // Color History
 void AddToColorHistory(DrColor color) {
@@ -70,23 +70,23 @@ void AddToColorHistory(DrColor color) {
 //####################################################################################
 //##    Tree Tracking
 //####################################################################################
-bool        GetAssetExpanded(Asset_Category asset_type)                         { return asset_categories[asset_type]; }
-void        SetAssetExpanded(Asset_Category asset_type, bool expanded)          { asset_categories[asset_type] = expanded; }
+bool        GetAssetExpanded(Asset_Category asset_type)                         { return l_asset_categories[asset_type]; }
+void        SetAssetExpanded(Asset_Category asset_type, bool expanded)          { l_asset_categories[asset_type] = expanded; }
 
-bool        GetInspectorExpanded(Components component_to_check)                 { return components[component_to_check]; }
-void        SetInspectorExpanded(Components component_to_set, bool expanded)    { components[component_to_set] = expanded; }
+bool        GetInspectorExpanded(Components component_to_check)                 { return l_components[component_to_check]; }
+void        SetInspectorExpanded(Components component_to_set, bool expanded)    { l_components[component_to_set] = expanded; }
 
 
 //####################################################################################
 //##    Global Forms
 //####################################################################################
-IEditorRelay*   GetActiveEditorRelay()                              { return g_active_editor; }
-void            SetActiveEditorRelay(IEditorRelay *editor_relay)    { g_active_editor =    editor_relay; }
+IEditorRelay*   GetActiveEditorRelay()                              { return l_active_editor; }
+void            SetActiveEditorRelay(IEditorRelay *editor_relay)    { l_active_editor =    editor_relay; }
 
-FormMain*       GetActiveFormMain()                                 { return g_active_form_main; }
-void            SetActiveFormMain(FormMain *form_main)              { g_active_form_main = form_main; }
+FormMain*       GetActiveFormMain()                                 { return l_active_form_main; }
+void            SetActiveFormMain(FormMain *form_main)              { l_active_form_main = form_main; }
 
-void            SetLabelText(Label_Names label, QString text)       { if (g_active_form_main) g_active_form_main->setLabelText(label, text); }
+void            SetLabelText(Label_Names label, QString text)       { if (l_active_form_main) l_active_form_main->setLabelText(label, text); }
 
 
 //####################################################################################
