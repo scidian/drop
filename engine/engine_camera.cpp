@@ -88,7 +88,21 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 
 
     // ********** Update Speed Adjusted Zoom
-    if (this->getEngineWorld()->zoom_from_movement && m_follow_key != c_no_key) {
+    if (this->getEngineWorld()->zoom_from_movement) {
+
+        // Get average speed if following an object, and that object is alive
+        double average_speed = 0.0;
+        if (m_follow_key != c_no_key) {
+            DrEngineThing *follow = getThingFollowing();
+            if (follow != nullptr) {
+                DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
+                if (object != nullptr) {
+                    if (object->isDying() == false && object->isDead() == false) {
+                        average_speed = static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y)));
+                    }
+                }
+            }
+        }
 
         // ***** Calculate average speed per xxx seconds
         static double avg_speed_clock = 0;
@@ -97,7 +111,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         size_t avg_speed_elements =     30;
         avg_speed_clock += milliseconds;
         while (avg_speed_clock > avg_speed_wait_time) {
-            while (m_avg_speed.size() <= avg_speed_elements) m_avg_speed.push_back( static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y))) );
+            while (m_avg_speed.size() <= avg_speed_elements) m_avg_speed.push_back( average_speed );
             while (m_avg_speed.size() >  avg_speed_elements) m_avg_speed.pop_front();
             avg_speed = std::accumulate(m_avg_speed.begin(), m_avg_speed.end(), 0.0) / m_avg_speed.size();
             avg_speed_clock -= avg_speed_wait_time;
@@ -163,9 +177,8 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 void DrEngineCamera::updateCamera() {        
     // Movement is based on following an object stored in m_follow
     if (m_follow_key == c_no_key) return;
-    DrEngineThing *follow = getThingFollowing();
-    if (follow == nullptr) return;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
+    DrEngineThing *follow = getThingFollowing();                        if (follow == nullptr) return;
+    DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);     if (object == nullptr) return;
     if (object->isDying() || object->isDead()) return;
 
     double follow_pos_x = object->getPosition().x + static_cast<double>(object->getCameraPosition().x);
