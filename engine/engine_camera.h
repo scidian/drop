@@ -43,7 +43,7 @@ private:
 
     long            m_follow_key = 0;                           // Unique DrEngineWorld key this camera should follow
     bool            m_follow_lost = false;                      // Set to true by engine when was following and now is not following
-    int             m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
+    size_t          m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
     bool            m_wants_active = false;                     // If set to true in Editor, this camera tries to take Active when in Start Stage
 
     Up_Vector       m_up_vector = Up_Vector::Y;                 // Up Vector of Camera, usually Y, Z for first person
@@ -52,8 +52,12 @@ private:
     std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
     std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
-    std::deque<double>  m_avg_max_speed;                        // Average max speed per second, used for auto zoom
-    std::deque<double>  m_avg_target_zoom;                      // Average target zoom, used for auto zoom
+
+    // Auto zoom arrays
+    std::deque<double>  m_max_speed;                            // Max speed over last 10 seconds,      used for auto zoom
+    std::deque<double>  m_avg_speed;                            // Average speed per second,            used for auto zoom
+    std::deque<double>  m_target_zoom;                          // Average target zoom,                 used for auto zoom
+
 
 public:
     // Constructor
@@ -74,7 +78,7 @@ public:
     void                setFollowThing(long follow_key) { m_follow_key = follow_key; }
     bool                wasFollowLost() { return m_follow_lost; }
 
-    const int&          getBufferSize()     { return m_buffer_size; }
+    const size_t&       getBufferSize()     { return m_buffer_size; }
     const DrPointF&     getLag()            { return m_lag; }
     const bool&         getMatchAngle()     { return m_match_angle; }
     const glm::vec3&    getPosition()       { return m_position; }

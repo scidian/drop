@@ -330,9 +330,9 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
     // Zero out average speed vectors
     m_buffer_size = buffer_size;
     setBufferSize(  buffer_size);
-    m_avg_speed_x.resize(buffer_size);  std::fill(m_avg_speed_x.begin(),    m_avg_speed_x.end(),    0);
-    m_avg_speed_y.resize(buffer_size);  std::fill(m_avg_speed_y.begin(),    m_avg_speed_y.end(),    0);
-    m_avg_speed_z.resize(buffer_size);  std::fill(m_avg_speed_z.begin(),    m_avg_speed_z.end(),    0);
+    ///m_avg_speed_x.resize(buffer_size);  std::fill(m_avg_speed_x.begin(),    m_avg_speed_x.end(),    0);
+    ///m_avg_speed_y.resize(buffer_size);  std::fill(m_avg_speed_y.begin(),    m_avg_speed_y.end(),    0);
+    ///m_avg_speed_z.resize(buffer_size);  std::fill(m_avg_speed_z.begin(),    m_avg_speed_z.end(),    0);
 }
 
 
@@ -369,6 +369,7 @@ float DrEngineCamera::getThingFollowingZOrder() {
 //##    Moves camera based on current speed / settings
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
+
     // ***** Update by fixed speed if not following an object
     if (m_follow_key == 0) {
         m_position.x = m_position.x + (m_speed.x * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
@@ -385,60 +386,61 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         ///m_position.z = m_target.z();
     }
 
-    // ***** Calculate average max speed per second
-    static double avg_speed_clock = 0;
-    static double avg_speed = 0;
-    avg_speed_clock += milliseconds;
-    if (avg_speed_clock > 16.0) {
-        while (avg_speed_clock > 16) {
-            while (m_avg_max_speed.size() > 30) {
-                m_avg_max_speed.pop_front();
-            }
-            m_avg_max_speed.push_back( static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y))) );
-            avg_speed_clock -= 16.0;
-        }
-        if (m_avg_max_speed.size() > 0) {
-            avg_speed = std::accumulate(m_avg_max_speed.begin(), m_avg_max_speed.end(), 0.0) / m_avg_max_speed.size();
-        }
-    }
 
     // ***** Update Speed Adjusted Zoom
     if (this->getEngineWorld()->zoom_from_movement) {
-        double target_zoom = m_speed_adjusted_zoom;
-        double lerp_zoom = 0.01 * milliseconds;
 
-        if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_Out) {
-            double min_limit = this->getEngineWorld()->zoom_multiplier * 0.09;
-            double speed_adjust = 1.0 - Dr::Clamp(avg_speed / 2.0, 0.0, min_limit);
-            target_zoom = (m_zoom * speed_adjust);
-
-        } else if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_In) {
-            double max_limit = this->getEngineWorld()->zoom_multiplier;
-            double speed_adjust = Dr::Clamp(avg_speed / 2.0, 0.0, max_limit);
-            target_zoom = m_zoom + (m_zoom * speed_adjust);
+        // ***** Calculate average speed per second
+        static double avg_speed_clock = 0;
+        static double avg_speed = 0;
+        avg_speed_clock += milliseconds;
+        while (avg_speed_clock > 16.0) {
+            while (m_avg_speed.size() > 60) m_avg_speed.pop_front();                                    // 16 milliseconds * 60 == 1 second average
+            m_avg_speed.push_back( static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y))) );
+            avg_speed_clock -= 16.0;
+            if (m_avg_speed.size() > 0) avg_speed = std::accumulate(m_avg_speed.begin(), m_avg_speed.end(), 0.0) / m_avg_speed.size();
         }
+
+        // ***** Calculate max speed over last 10 seconds
+        static double max_speed_clock = 0;
+        static double max_speed = 1.0;
+        max_speed_clock += milliseconds;
+        while (max_speed_clock > 1000.0) {
+            while (m_max_speed.size() > 10) m_max_speed.pop_front();                                    // 1000 milliseconds * 10 == 10 second average
+            if (m_avg_speed.size() > 0) {
+                double next_max_speed = *std::max_element(m_avg_speed.begin(), m_avg_speed.end());
+                m_max_speed.push_back( (next_max_speed > 1.0) ? next_max_speed : 1.0 );
+            }
+            max_speed_clock -= 1000.0;
+            if (m_max_speed.size() > 0) max_speed = *std::max_element(m_max_speed.begin(), m_max_speed.end());
+            if (max_speed < 1.0) max_speed = 1.0;
+        }
+
+        // ***** Figure out percentage of current speed vs max speed, apply percentage to multiplier for target zoom
+        double speed_adjust = Dr::Clamp(avg_speed / max_speed, 0.0, 1.0);
+        double multiplier = this->getEngineWorld()->zoom_multiplier;;
+        if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_Out) multiplier = 1.0 / multiplier;
+        multiplier = Dr::Lerp(1.0, multiplier, speed_adjust);
+        double target_zoom = m_zoom * multiplier;
 
         // ***** Calculate average target zoom per second
         static double avg_zoom_clock = 0;
         static double avg_zoom = m_zoom;
         avg_zoom_clock += milliseconds;
         while (avg_zoom_clock > 16.0) {
-            while (m_avg_target_zoom.size() > 30) {
-                m_avg_target_zoom.pop_front();
-            }
-            m_avg_target_zoom.push_back( target_zoom );
-            if (m_avg_target_zoom.size() > 0) {
-                avg_zoom = std::accumulate(m_avg_target_zoom.begin(), m_avg_target_zoom.end(), 0.0) / m_avg_target_zoom.size();
-            }
+            while (m_target_zoom.size() > 60) m_target_zoom.pop_front();                                // 16 milliseconds * 60 == 1 second average
+            m_target_zoom.push_back( target_zoom );
             avg_zoom_clock -= 16.0;
+            if (m_target_zoom.size() > 0) avg_zoom = std::accumulate(m_target_zoom.begin(), m_target_zoom.end(), 0.0) / m_target_zoom.size();
         }
 
-        g_info = "Target Zoom: " + std::to_string(avg_zoom);
+        g_info = "Target Zoom: " + std::to_string(avg_zoom) + ", Average Speed: " + std::to_string(avg_speed) + ", Max Speed: " + std::to_string(max_speed);
 
         // Lerp as power for smoother tweening
         double target_zoom_as_pow = DrOpenGL::zoomScaleToPow( avg_zoom );
-        double new_zoom_as_pow =    Dr::Lerp(DrOpenGL::zoomScaleToPow(m_speed_adjusted_zoom), target_zoom_as_pow, lerp_zoom);
+        double new_zoom_as_pow =    Dr::Lerp(DrOpenGL::zoomScaleToPow(m_speed_adjusted_zoom), target_zoom_as_pow, 0.01 * milliseconds);
         m_speed_adjusted_zoom =     DrOpenGL::zoomPowToScale(new_zoom_as_pow);
+
     } else {
         m_speed_adjusted_zoom = m_zoom;
     }
@@ -475,21 +477,25 @@ void DrEngineCamera::updateCamera() {
     m_average_speed.y = 0;
     m_average_speed.z = 0;
     if (update_x) {
-        while (m_avg_speed_x.size() <static_cast<unsigned long>(m_buffer_size + 1))
+        while (m_avg_speed_x.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_x.push_back( follow_pos_x - follow_previous_pos_x );
+        while (m_avg_speed_x.size() > m_buffer_size)
+            m_avg_speed_x.pop_front();
         m_avg_speed_x.pop_front();
         if (m_avg_speed_x.size() > 0) m_average_speed.x = static_cast<float>(std::accumulate(m_avg_speed_x.begin(), m_avg_speed_x.end(), 0.0) / m_avg_speed_x.size());
     }
     if (update_y) {
         while (m_avg_speed_y.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_y.push_back( follow_pos_y - follow_previous_pos_y );
-        m_avg_speed_y.pop_front();
+        while (m_avg_speed_y.size() > m_buffer_size)
+            m_avg_speed_y.pop_front();
         if (m_avg_speed_y.size() > 0) m_average_speed.y = static_cast<float>(std::accumulate(m_avg_speed_y.begin(), m_avg_speed_y.end(), 0.0) / m_avg_speed_y.size());
     }
     if (update_z) {
         while (m_avg_speed_z.size() < static_cast<unsigned long>(m_buffer_size + 1))
             m_avg_speed_z.push_back( follow_pos_z - follow_previous_pos_z );
-        m_avg_speed_z.pop_front();
+        while (m_avg_speed_z.size() > m_buffer_size)
+            m_avg_speed_z.pop_front();
         if (m_avg_speed_z.size() > 0) m_average_speed.z = static_cast<float>(std::accumulate(m_avg_speed_z.begin(), m_avg_speed_z.end(), 0.0) / m_avg_speed_z.size());
     }
 
