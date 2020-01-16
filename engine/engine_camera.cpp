@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 5/17/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//
+//      DrEngineCamera - Class Functions
 //
 //
 #include <numeric>
@@ -14,307 +14,6 @@
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 
-
-//####################################################################################
-//####################################################################################
-//##
-//##    Local Camera Functions
-//##
-//####################################################################################
-//####################################################################################
-
-//####################################################################################
-//##    Lerps an X,Y,Z triplet
-//####################################################################################
-static inline void SmoothMove(glm::vec3 &start, const glm::vec3 &target, const float &lerp, const float &milliseconds) {
-    float lerp_amount = Dr::Clamp(lerp * milliseconds, 0.001f, 1.0f);
-    start.x = Dr::Lerp(start.x, target.x, lerp_amount);
-    start.y = Dr::Lerp(start.y, target.y, lerp_amount);
-    start.z = Dr::Lerp(start.z, target.z, lerp_amount);
-
-    ///float lerp_amount = lerp * milliseconds * 10.f;
-    ///start.x = Dr::LerpConst(start.x, target.x, lerp_amount);
-    ///start.y = Dr::LerpConst(start.y, target.y, lerp_amount);
-    ///start.z = Dr::LerpConst(start.z, target.z, lerp_amount);
-}
-
-static inline void SmoothMove(double &start, const double &target, const double &lerp, const double &milliseconds) {
-    double  lerp_amount = Dr::Clamp(lerp * milliseconds, 0.001, 1.0);
-    start = Dr::Lerp(start, target, lerp_amount);
-
-    ///double lerp_amount = lerp * milliseconds * 10.0;
-    ///start = Dr::LerpConst(start, target, lerp_amount);
-}
-
-
-//####################################################################################
-//####################################################################################
-//##
-//##    DrEngineWorld - Camera Functions
-//##
-//####################################################################################
-//####################################################################################
-// Adds Camera to World, Default parameters: nullptr, 0, 0, c_default_camera_z
-DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z, int buffer_size) {
-    long new_key = getNextKey();
-    DrEngineCamera *camera = new DrEngineCamera(this, new_key, x, y, z, buffer_size);
-
-    m_cameras[new_key] = camera;
-
-    // If an object was passed in, attach camera to that object
-    DrEngineThing *follow = findThingByKey(thing_key_to_follow);
-    if (thing_key_to_follow != 0 && follow != nullptr) {
-        camera->setFollowThing( thing_key_to_follow );
-        camera->setPositionX(   static_cast<float>(follow->getPosition().x) + follow->getCameraPosition().x );
-        camera->setPositionY(   static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y );
-        camera->setPositionZ(   static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z );
-        camera->setRotation(    follow->getCameraRotation() );
-        camera->setZoom(        follow->getCameraZoom(), true );
-        camera->setLag(         follow->getCameraLag() );
-        camera->setMatchAngle(  follow->getCameraMatch() );
-        camera->setTarget(      camera->getPosition() );
-        camera->setUpVector(    follow->getCameraUpVector() );
-        follow->setActiveCameraKey(new_key);
-    }
-    return camera;
-}
-
-// Updates all cameras based on the objects they're following
-void DrEngineWorld::moveCameras(double milliseconds) {
-    for (auto camera_pair : m_cameras) {
-        camera_pair.second->moveCamera(milliseconds);
-    }
-
-    if (m_switching_cameras) {
-        m_switch_milliseconds += milliseconds;
-
-        DrEngineCamera *target_camera = getCamera(m_active_camera);
-
-        // Linear Interpolation of Temporary Values
-        glm::vec3 target_position = target_camera->getPosition();
-        glm::vec3 target_rotation = target_camera->getRotation();
-                  target_rotation.x = Dr::EqualizeAngle0to360(target_rotation.x);
-                  target_rotation.y = Dr::EqualizeAngle0to360(target_rotation.y);
-                  target_rotation.z = Dr::EqualizeAngle0to360(target_rotation.z);
-                  target_rotation.x = Dr::FindClosestAngle180(m_temp_rotation.x, target_rotation.x);
-                  target_rotation.y = Dr::FindClosestAngle180(m_temp_rotation.y, target_rotation.y);
-                  target_rotation.z = Dr::FindClosestAngle180(m_temp_rotation.z, target_rotation.z);
-        glm::vec3 target_up_vector = (target_camera->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
-        double    target_following_rotation = target_camera->getThingFollowingRotation();
-                  target_following_rotation = Dr::EqualizeAngle0to360(target_following_rotation);
-                  target_following_rotation = Dr::FindClosestAngle180(m_temp_follow_angle, target_following_rotation);
-        double    target_z_order = static_cast<double>(target_camera->getThingFollowingZOrder());
-
-        m_temp_follow_angle =   m_switch_follow_angle;
-        m_temp_position =       m_switch_position;
-        m_temp_rotation =       m_switch_rotation;
-        m_temp_up_vector =      m_switch_up_vector;
-        m_temp_z_order =        m_switch_z_order;
-        m_temp_match =          target_camera->getMatchAngle();
-
-        SmoothMove(m_temp_follow_angle, target_following_rotation,  0.001 * cam_switch_speed, m_switch_milliseconds );
-        SmoothMove(m_temp_z_order,      target_z_order,             0.001 * cam_switch_speed, m_switch_milliseconds );
-        SmoothMove(m_temp_position,     target_position,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-        SmoothMove(m_temp_rotation,     target_rotation,    0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-        SmoothMove(m_temp_up_vector,    target_up_vector,   0.001f * static_cast<float>(cam_switch_speed), static_cast<float>(m_switch_milliseconds) );
-
-        // Linear Interpolation of Zoom Values
-        double  target_zoom_as_pow = DrOpenGL::zoomScaleToPow( target_camera->getZoom() );
-        double  temp_zoom_as_pow =   DrOpenGL::zoomScaleToPow( m_temp_zoom );
-        bool    done_with_zoom = false;
-        m_temp_zoom = m_switch_zoom;
-
-        if (m_switch_zoom < target_camera->getZoom()) {
-            if (m_temp_zoom >= target_camera->getZoom()) done_with_zoom = true;
-        } else {
-            if (m_temp_zoom <= target_camera->getZoom()) done_with_zoom = true;
-        }
-        if (done_with_zoom == false) {
-            SmoothMove(temp_zoom_as_pow, target_zoom_as_pow, 0.00017 * cam_switch_speed, m_switch_milliseconds);
-            m_temp_zoom = DrOpenGL::zoomPowToScale( temp_zoom_as_pow );
-        }
-
-        // If distance and zoom are close to target, officially done switching cameras
-        if (glm::distance(m_temp_position, target_position) < (0.0001f) && done_with_zoom) {
-            m_temp_position =       target_position;
-            m_temp_rotation =       target_rotation;
-            m_temp_zoom =           DrOpenGL::zoomPowToScale( target_zoom_as_pow );
-            m_temp_follow_angle =   target_following_rotation;
-            m_temp_up_vector =      target_up_vector;
-            m_temp_match =          false;
-            m_switching_cameras =   false;
-        }
-    }
-}
-
-// Moves all cameras to their new locations based on their speed, etc
-void DrEngineWorld::updateCameras() {
-    for (auto camera_pair : m_cameras) {
-        camera_pair.second->updateCamera();
-    }
-}
-
-// Initiates a move to a new camera
-void DrEngineWorld::switchCameras(long new_camera) {
-    m_switch_milliseconds = 0;
-    m_switch_position =     getCameraPosition();
-    m_switch_rotation =     getCameraRotation();
-        m_switch_rotation.x =   Dr::EqualizeAngle0to360(m_switch_rotation.x);
-        m_switch_rotation.y =   Dr::EqualizeAngle0to360(m_switch_rotation.y);
-        m_switch_rotation.z =   Dr::EqualizeAngle0to360(m_switch_rotation.z);
-    m_switch_zoom =         getCameraZoom();
-    m_switch_follow_angle = Dr::EqualizeAngle0to360(getCameraFollowingRotation());
-    m_switch_up_vector =    getCameraUpVector();
-    m_switch_z_order =      static_cast<double>(getCameraFollowingZ());
-    m_switch_match =        getCameraMatching();
-
-    m_temp_position =       m_switch_position;
-    m_temp_rotation =       m_switch_rotation;
-    m_temp_zoom =           m_switch_zoom;
-    m_temp_follow_angle =   m_switch_follow_angle;
-    m_temp_up_vector =      m_switch_up_vector;
-    m_temp_z_order =        m_switch_z_order;
-    m_temp_match =          m_switch_match;
-
-    m_switching_cameras = true;
-    m_active_camera = new_camera;
-}
-
-void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bool switch_player_controls) {
-    // Only one camera, cancel switching
-    if (m_cameras.size() <= 1) return;
-
-    // Find next available camera
-    auto it = m_cameras.find(m_active_camera);
-    bool found_camera = false;
-    do {
-        it++;
-        if (it == m_cameras.end()) it = m_cameras.begin();              // End of map, loop back around
-        if ((*it).second->getKey() == m_active_camera) return;          // Made it back to active camera, cancel switching
-
-        if ((*it).second->wasFollowLost() == false) {
-            if ((*it).second->getThingFollowingKey() != 0) {
-                DrEngineThing *following = findThingByKey((*it).second->getThingFollowingKey());
-                if (following != nullptr) {
-                    if (only_switch_to_character_cameras == false || following->getThingType() == DrThingType::Object)
-                        found_camera = true;
-                }
-            } else if (only_switch_to_character_cameras == false) {
-                found_camera = true;
-            }
-        }
-    } while (found_camera == false);
-
-    // If not active camera already, switch cameras
-    long new_key = (*it).second->getKey();
-    if (new_key != m_active_camera) {
-
-        DrEngineThing  *thing_new =  nullptr;
-        DrEngineObject *object_new = nullptr;
-
-        // Switch on new player if there is one
-        bool switched = false;
-        if (m_cameras[new_key]->getThingFollowingKey() != 0) {
-            thing_new = findThingByKey(m_cameras[new_key]->getThingFollowingKey());
-            if (thing_new != nullptr && thing_new->getThingType() == DrThingType::Object) {
-                object_new = dynamic_cast<DrEngineObject*>(thing_new);
-                if (switch_player_controls && object_new != nullptr) {
-                    object_new->setLostControl(false);
-                    switched = true;
-                }
-            }
-        }
-
-        // Switch off other players if we switched to new player
-        if (switched) {
-            for (auto &thing : m_things) {
-                if (thing->getKey() != thing_new->getKey()) {
-                    if (thing_new->getThingType() == DrThingType::Object) {
-                        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                        if (object != nullptr) object->setLostControl(true);
-                    }
-                }
-            }
-        }
-
-        switchCameras(new_key);
-    }
-}
-
-
-//####################################################################################
-//##    DrEngineWorld - Camera Property Getters
-//##                    #NOTE: Takes into account camera switching
-//####################################################################################
-// Returns Camera Position
-glm::vec3 DrEngineWorld::getCameraPosition() {
-    if (m_active_camera == 0) {                     return c_default_camera_pos;
-    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getPosition();
-    } else {                                        return m_temp_position;
-    }
-}
-double DrEngineWorld::getCameraPositionX() { return static_cast<double>(getCameraPosition().x); }
-double DrEngineWorld::getCameraPositionY() { return static_cast<double>(getCameraPosition().y); }
-double DrEngineWorld::getCameraPositionZ() { return static_cast<double>(getCameraPosition().z); }
-
-// Returns Camera Rotation, also takes into handle camera switching
-glm::vec3 DrEngineWorld::getCameraRotation() {
-    if (m_active_camera == 0) {                     return c_default_camera_rot;
-    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getRotation();
-    } else {                                        return m_temp_rotation;
-    }
-}
-double DrEngineWorld::getCameraRotationX() { return static_cast<double>(getCameraRotation().x); }
-double DrEngineWorld::getCameraRotationY() { return static_cast<double>(getCameraRotation().y); }
-double DrEngineWorld::getCameraRotationZ() { return static_cast<double>(getCameraRotation().z); }
-
-// Tries to return Rotation of Thing camera is following, if not following returns 0
-double DrEngineWorld::getCameraFollowingRotation() {
-    if (m_active_camera == 0) {                     return 0.0;
-    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingRotation();
-    } else {                                        return m_temp_follow_angle;
-    }
-}
-
-// Tries to return Z Order of Thing camera is following, if not following returns 0
-float DrEngineWorld::getCameraFollowingZ() {
-    if (m_active_camera == 0) {                     return 0.0f;
-    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingZOrder();
-    } else {                                        return static_cast<float>(m_temp_z_order);
-    }
-}
-
-// Returns Camera Zoom
-double DrEngineWorld::getCameraZoom() {
-    if (m_active_camera == 0) {                     return 1.0;
-    } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getZoom();
-    } else {                                        return m_temp_zoom;
-    }
-}
-
-// Returns Camera Up Vector
-glm::vec3 DrEngineWorld::getCameraUpVector() {
-    if (m_active_camera == 0) {                     return c_up_vector_y;
-    } else if (m_switching_cameras == false) {      return (m_cameras[m_active_camera]->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
-    } else {                                        return m_temp_up_vector;
-    }
-}
-
-// Returns Camera Matching Object Angle
-bool DrEngineWorld::getCameraMatching() {
-    if (m_active_camera == 0) {                     return false;
-    } else if (m_switching_cameras == false) {      return (m_cameras[m_active_camera]->getMatchAngle());
-    } else {                                        return (m_temp_match || m_switch_match);
-    }
-}
-
-//####################################################################################
-//####################################################################################
-//##
-//##    DrEngineCamera - Class Functions
-//##
-//####################################################################################
-//####################################################################################
 
 //####################################################################################
 //##    Constructor / Destructor
@@ -338,13 +37,17 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 DrEngineThing* DrEngineCamera::getThingFollowing() {
     DrEngineThing *follow = m_world->findThingByKey(m_follow_key);
     if (follow == nullptr) {
-        if (m_follow_key != 0) {
-            m_follow_key = 0;
+        if (m_follow_key != c_no_key) {
+            m_follow_key = c_no_key;
             m_follow_lost = true;
         }
         return nullptr;
     }
-    if (follow->getThingType() != DrThingType::Object) {    m_follow_key = 0;   m_follow_lost = true;   return nullptr;     }
+    if (follow->getThingType() != DrThingType::Object) {
+        m_follow_key = c_no_key;
+        m_follow_lost = true;
+        return nullptr;
+    }
     return follow;
 }
 
@@ -366,8 +69,9 @@ float DrEngineCamera::getThingFollowingZOrder() {
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
 
+    // ********** Update Speed / Position
     // ***** Update by fixed speed if not following an object
-    if (m_follow_key == 0) {
+    if (m_follow_key == c_no_key) {
         m_position.x = m_position.x + (m_speed.x * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
         m_position.y = m_position.y + (m_speed.y * static_cast<float>((milliseconds*m_world->getTimeWarp())/1000.0));
 
@@ -383,37 +87,39 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
     }
 
 
-    // ***** Update Speed Adjusted Zoom
-    if (this->getEngineWorld()->zoom_from_movement) {
+    // ********** Update Speed Adjusted Zoom
+    if (this->getEngineWorld()->zoom_from_movement && m_follow_key != c_no_key) {
 
         // ***** Calculate average speed per xxx seconds
         static double avg_speed_clock = 0;
-        static double avg_speed = 0;
+        static double avg_speed =       0;
+        double avg_speed_wait_time =    16.0;                                               // 16 milliseconds * 30 == 1/2 second average
+        size_t avg_speed_elements =     30;
         avg_speed_clock += milliseconds;
-        while (avg_speed_clock > 16.0) {                                                                // 16 milliseconds * 30 == 1/2 second average
-            while (m_avg_speed.size() <= 30) m_avg_speed.push_back( static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y))) );
-            while (m_avg_speed.size() >  30) m_avg_speed.pop_front();
+        while (avg_speed_clock > avg_speed_wait_time) {
+            while (m_avg_speed.size() <= avg_speed_elements) m_avg_speed.push_back( static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y))) );
+            while (m_avg_speed.size() >  avg_speed_elements) m_avg_speed.pop_front();
             avg_speed = std::accumulate(m_avg_speed.begin(), m_avg_speed.end(), 0.0) / m_avg_speed.size();
-            avg_speed_clock -= 16.0;
+            avg_speed_clock -= avg_speed_wait_time;
         }
 
         // ***** Calculate max speed over last xxx seconds
         static double max_speed_clock = 0;
-        static double max_average = 1.0;
+        static double max_average =     1.0;
+        double max_average_wait_time =  200.0;                                              // 200 milliseconds * 20 == 4 second average
+        size_t max_average_elements =   20;
         max_speed_clock += milliseconds;
-        while (max_speed_clock > 200.0) {                                                               // 200 milliseconds * 20 == 4 second average
+        while (max_speed_clock > max_average_wait_time) {
             // Max speed
             double next_max_speed = *std::max_element(m_avg_speed.begin(), m_avg_speed.end());
-            while (m_max_speed.size() <= 20) m_max_speed.push_back( next_max_speed );
-            while (m_max_speed.size() >  20) m_max_speed.pop_front();
+            while (m_max_speed.size() <= max_average_elements) m_max_speed.push_back( next_max_speed );
+            while (m_max_speed.size() >  max_average_elements) m_max_speed.pop_front();
             double max_speed = *std::max_element(m_max_speed.begin(), m_max_speed.end());
-
             // Average of max speeds
-            while (m_max_average.size() <= 20) m_max_average.push_back( max_speed );
-            while (m_max_average.size() >  20) m_max_average.pop_front();
+            while (m_max_average.size() <= max_average_elements) m_max_average.push_back( max_speed );
+            while (m_max_average.size() >  max_average_elements) m_max_average.pop_front();
             max_average = Dr::Max(std::accumulate(m_max_average.begin(), m_max_average.end(), 0.0) / m_max_average.size(), 1.0);
-
-            max_speed_clock -= 200.0;
+            max_speed_clock -= max_average_wait_time;
         }
 
         // ***** Figure out percentage of current speed vs max speed, apply percentage to multiplier for target zoom
@@ -424,23 +130,27 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         double target_zoom = m_zoom * multiplier;
 
         // ***** Calculate average target zoom per xxx seconds
-        static double avg_zoom_clock = 0;
-        static double avg_zoom = m_zoom;
+        static double avg_zoom_clock =  0;
+        static double avg_zoom =        m_zoom;
+        double avg_zoom_wait_time =     10.0 * this->getEngineWorld()->zoom_damping;        // 10 to 100 milliseconds * 60 == 3/5 of a second to 6 second average
+        size_t avg_zoom_elements =      60;
         avg_zoom_clock += milliseconds;
-        while (avg_zoom_clock > 50.0) {                                                                 // 50 milliseconds * 60 == 3 second average
-            while (m_target_zoom.size() <= 60) m_target_zoom.push_back( target_zoom );
-            while (m_target_zoom.size() >  60) m_target_zoom.pop_front();
+        while (avg_zoom_clock > avg_zoom_wait_time) {
+            while (m_target_zoom.size() <= avg_zoom_elements) m_target_zoom.push_back( target_zoom );
+            while (m_target_zoom.size() >  avg_zoom_elements) m_target_zoom.pop_front();
             avg_zoom = std::accumulate(m_target_zoom.begin(), m_target_zoom.end(), 0.0) / m_target_zoom.size();
-            avg_zoom_clock -= 50.0;
+            avg_zoom_clock -= avg_zoom_wait_time;
         }
 
-        g_info = "Target Zoom: " + std::to_string(avg_zoom) + ", Average Speed: " + std::to_string(avg_speed) + ", Max Average: " + std::to_string(max_average);
+        ///g_info = "Target Zoom: " + std::to_string(avg_zoom) + ", Average Speed: " + std::to_string(avg_speed) + ", Max Average: " + std::to_string(max_average);
 
         // Lerp as power for smoother tweening
+        double lerp_zoom = (0.01 / this->getEngineWorld()->zoom_damping) * milliseconds;
         double target_zoom_as_pow = DrOpenGL::zoomScaleToPow( avg_zoom );
-        double new_zoom_as_pow =    Dr::Lerp(DrOpenGL::zoomScaleToPow(m_speed_adjusted_zoom), target_zoom_as_pow, 0.01 * milliseconds);
+        double new_zoom_as_pow =    Dr::Lerp(DrOpenGL::zoomScaleToPow(m_speed_adjusted_zoom), target_zoom_as_pow, lerp_zoom);
         m_speed_adjusted_zoom =     DrOpenGL::zoomPowToScale(new_zoom_as_pow);
-
+        // Alternate no power conversion
+        ///m_speed_adjusted_zoom =     Dr::Lerp(m_speed_adjusted_zoom, avg_zoom, lerp_zoom);
     } else {
         m_speed_adjusted_zoom = m_zoom;
     }
@@ -452,7 +162,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 //####################################################################################
 void DrEngineCamera::updateCamera() {        
     // Movement is based on following an object stored in m_follow
-    if (m_follow_key == 0) return;
+    if (m_follow_key == c_no_key) return;
     DrEngineThing *follow = getThingFollowing();
     if (follow == nullptr) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
@@ -526,6 +236,10 @@ void DrEngineCamera::updateCamera() {
     if (update_y) m_target.y = static_cast<float>(pos_y);
     if (update_z) m_target.z = static_cast<float>(pos_z);    
 }
+
+
+
+
 
 
 

@@ -55,15 +55,18 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                                               "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");
 
     std::vector<DrVariant> auto_zoom_properties { static_cast<int>(Properties::World_Camera_Zoom_In_Or_Out),
-                                                  static_cast<int>(Properties::World_Camera_Zoom_Multiplier) };
+                                                  static_cast<int>(Properties::World_Camera_Zoom_Multiplier),
+                                                  static_cast<int>(Properties::World_Camera_Zoom_Damping) };
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Enabled, Property_Type::BoolEnabled,
                            std::vector<DrVariant>({false, auto_zoom_properties }),
                            "Auto Zoom?", "Check this box to have Character Cameras change zoom automatically based on Characters speed.");
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out, Property_Type::List, static_cast<int>(Auto_Zoom::Zoom_Out),
                            "Zoom Type", "Select whether auto zoom should zoom in or zoom out.");
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Multiplier, Property_Type::RangedDouble, std::vector<DrVariant>({2.0, 1.0, 100.0, 0.1}),
-                           "Zoom Amount", "This value is a multiplier that controls how much of a potential zoom can occur. Minimum value of 1x, maximum of 100x.");
-
+                           "Zoom Multiplier", "This multiplier controls how much of a potential zoom can occur. Range: 1.0 (1 x current zoom level) to "
+                                              "maximum of 100.0 (100 x current zoom level)");
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Damping, Property_Type::RangedDouble, std::vector<DrVariant>({5.0, 1.0, 10.0, 0.1}),
+                           "Zoom Damping", "The higher this number, the slower the camera performs Auto Zoom. Range: 1.0 (fastest) to 10.0 (slowest)");
 
     addComponent(Components::World_Physics, "Physics", "Starting physics settings for this world, this affects all Objects that have \"Physics?\" "
                                                        "enabled.", Component_Colors::Orange_Pastel, true);

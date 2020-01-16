@@ -255,6 +255,7 @@ SOURCES += \
     engine/world/engine_world.cpp \
     engine/world/engine_world__build_player.cpp \
     engine/world/engine_world__build_world.cpp \
+    engine/world/engine_world__cameras.cpp \
     engine/world/engine_world__clear.cpp \
     engine/world/engine_world__collision.cpp \
     engine/world/engine_world__load_characters.cpp \

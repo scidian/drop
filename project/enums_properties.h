@@ -311,8 +311,8 @@ enum class Properties {
 
     World_Camera_Zoom_Enabled           = 240,      // bool enabled
     World_Camera_Zoom_In_Or_Out         = 241,          // SUB: list
-    World_Camera_Zoom_Multiplier        = 242,          // SUB: ranged double, 0 to 10
-
+    World_Camera_Zoom_Multiplier        = 242,          // SUB: ranged double, 0 to 100
+    World_Camera_Zoom_Damping           = 243,          // SUB: ranged double, 0 to 100
 
 
     // Appearance

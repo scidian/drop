@@ -482,8 +482,8 @@ int main(int arg, char **argv)
 ////
 ////
 
-#ifndef __STB_INCLUDE_STB_TRUETYPE_H__
-#define __STB_INCLUDE_STB_TRUETYPE_H__
+#ifndef STB_INCLUDE_STB_TRUETYPE_H
+#define STB_INCLUDE_STB_TRUETYPE_H
 
 #ifdef STBTT_STATIC
 #define STBTT_DEF static
@@ -1062,7 +1062,7 @@ enum { // languageID for STBTT_PLATFORM_ID_MAC
 }
 #endif
 
-#endif // __STB_INCLUDE_STB_TRUETYPE_H__
+#endif // STB_INCLUDE_STB_TRUETYPE_H
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -1535,6 +1535,13 @@ STBTT_DEF int stbtt_FindGlyphIndex(const stbtt_fontinfo *info, int unicode_codep
    STBTT_assert(0);
    return 0;
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 
 STBTT_DEF int stbtt_GetCodepointShape(const stbtt_fontinfo *info, int unicode_codepoint, stbtt_vertex **vertices)
 {
@@ -4743,11 +4750,6 @@ static int stbtt_FindMatchingFont_internal(unsigned char *font_collection, char 
          return off;
    }
 }
-
-#if defined(__GNUC__) || defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-qual"
-#endif
 
 STBTT_DEF int stbtt_BakeFontBitmap(const unsigned char *data, int offset,
                                 float pixel_height, unsigned char *pixels, int pw, int ph,

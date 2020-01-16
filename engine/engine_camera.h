@@ -41,7 +41,7 @@ private:
 
     glm::vec3       m_target;                                   // Calculated point this camera is moving towards
 
-    long            m_follow_key = 0;                           // Unique DrEngineWorld key this camera should follow
+    long            m_follow_key =  c_no_key;                    // Unique DrEngineWorld key this camera should follow
     bool            m_follow_lost = false;                      // Set to true by engine when was following and now is not following
     size_t          m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
     bool            m_wants_active = false;                     // If set to true in Editor, this camera tries to take Active when in Start Stage
@@ -76,7 +76,7 @@ public:
     double              getThingFollowingRotation();
     float               getThingFollowingZOrder();
     long                getThingFollowingKey() { return m_follow_key; }
-    void                setFollowThing(long follow_key) { m_follow_key = follow_key; }
+    void                setThingFollowingKey(long follow_key) { m_follow_key = follow_key; }
     bool                wasFollowLost() { return m_follow_lost; }
 
     const size_t&       getBufferSize()     { return m_buffer_size; }
