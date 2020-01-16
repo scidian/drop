@@ -54,8 +54,9 @@ private:
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
 
     // Auto zoom arrays
-    std::deque<double>  m_max_speed;                            // Max speed over last 10 seconds,      used for auto zoom
     std::deque<double>  m_avg_speed;                            // Average speed per second,            used for auto zoom
+    std::deque<double>  m_max_speed;                            // Max speed over last 10 seconds,      used for auto zoom
+    std::deque<double>  m_max_average;                          // Max average speed,                   used for auto zoom
     std::deque<double>  m_target_zoom;                          // Average target zoom,                 used for auto zoom
 
 

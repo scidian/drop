@@ -61,7 +61,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Auto Zoom?", "Check this box to have Character Cameras change zoom automatically based on Characters speed.");
     addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out, Property_Type::List, static_cast<int>(Auto_Zoom::Zoom_Out),
                            "Zoom Type", "Select whether auto zoom should zoom in or zoom out.");
-    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Multiplier, Property_Type::RangedDouble, std::vector<DrVariant>({4.0, 1.0, 100.0, 0.1}),
+    addPropertyToComponent(Components::World_Camera, Properties::World_Camera_Zoom_Multiplier, Property_Type::RangedDouble, std::vector<DrVariant>({2.0, 1.0, 100.0, 0.1}),
                            "Zoom Amount", "This value is a multiplier that controls how much of a potential zoom can occur. Minimum value of 1x, maximum of 100x.");
 
 
