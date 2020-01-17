@@ -20,7 +20,7 @@
 //####################################################################################
 //##    Sets Z-Order and appropriate Sub Order
 //####################################################################################
-void ShiftOrder(std::list<OrderInfo> &order_info, int needs_to_be_empty) {
+void ShiftOrder(std::list<Order_Info> &order_info, int needs_to_be_empty) {
     for (auto &order : order_info) {
         if (order.sub_order == needs_to_be_empty) {
             ShiftOrder(order_info, needs_to_be_empty + 1);
@@ -42,12 +42,12 @@ void DrThing::setZOrderWithSub(double z_order, Z_Insert insert, int position) {
     setComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order, z_order);
 
     // ***** Get list of sub orders along same Z-Axis
-    std::list<OrderInfo> order_info;
+    std::list<Order_Info> order_info;
     for (auto &thing_pair : m_parent_stage->getThingMap()) {
         if (thing_pair.first == getKey()) continue;
         double thing_z =   thing_pair.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
         int    thing_sub = thing_pair.second->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
-        if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { order_info.push_back(OrderInfo { thing_pair.first, thing_pair.second, thing_sub }); }
+        if (Dr::IsCloseTo(thing_z, z_order, 0.0001)) { order_info.push_back(Order_Info { thing_pair.first, thing_pair.second, thing_sub }); }
     }
 
     // ***** Start at back

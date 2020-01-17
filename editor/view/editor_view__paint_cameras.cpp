@@ -12,6 +12,7 @@
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/view/editor_view.h"
+#include "engine/engine_camera.h"
 #include "engine/opengl/opengl.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
@@ -24,6 +25,25 @@
 // Local Constants
 const float c_ring_size = 200.f;            // Diameter of camera circle
 const int   c_outline_width = 2;            // Pen width of QPainter
+
+
+//####################################################################################
+//##    Paints corners of Character Camera Frame
+//####################################################################################
+void paintCornerSquare(QPainter &painter, QPointF location) {
+    double square_radius = 4.0;
+    QRectF square(location - QPointF(square_radius, square_radius), location + QPointF(square_radius, square_radius));
+    painter.drawRect(square);
+}
+
+void paintFrameEdge(QPainter &painter, QPointF point1, QPointF point2) {
+    double square_radius = 3.0;
+    QPolygonF poly;
+    poly << point1 << point2;
+    QRectF box = poly.boundingRect();
+    QRectF square(box.topLeft() - QPointF(square_radius, square_radius), box.bottomRight() + QPointF(square_radius, square_radius));
+    painter.drawRect(square);
+}
 
 
 //####################################################################################
@@ -47,7 +67,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
 
         // ***** Load Camera Info
         QTransform  cam_transform;
-        CamInfo     cam;
+        Cam_Info    cam;
         DrPointF    cam_position;
 
         if (thing->getThingType() == DrThingType::Character) {
@@ -80,44 +100,53 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
 
             // ***** Initial Set Up of QPainter
-            DrColor color = Dr::white;
-            QPen cosmetic_pen(QBrush(Dr::ToQColor(color)), c_outline_width);
-            cosmetic_pen.setCosmetic(true);
-            painter.setPen(cosmetic_pen);
-            QColor brush_color = Dr::ToQColor(color);
-            brush_color.setAlpha(64);
-            painter.setBrush(QBrush(brush_color));
+            QColor box_fill = Dr::ToQColor(Dr::white);
+                   box_fill.setAlpha(64);
+
+            std::map<Frame_Edge, QBrush> frame_brushes;
+            frame_brushes[Frame_Edge::Normal] =    QBrush(Dr::ToQColor(0xFF75F42E));//0xFF388E3C));
+            frame_brushes[Frame_Edge::Blocking] =  QBrush(Dr::ToQColor(0xFFFFD71E));//0xFFFFA000));
+            frame_brushes[Frame_Edge::Death] =     QBrush(Dr::ToQColor(0xFFEF1C16));//0xFFC2185B));
 
             // ***** Draw Lag Box
-            painter.drawPolygon(square);
+            bool aliasing = painter.renderHints() & QPainter::Antialiasing;
+            painter.setRenderHint(QPainter::Antialiasing, false);
 
-            // ***** Y Up Vector Arrow
-            /**
-            QPen outline_pen = QPen(QBrush(Qt::black), c_outline_width);
-            outline_pen.setCosmetic(true);
-            painter.setPen(outline_pen);
-            if (cam.up == Up_Vector::Y) {
-                QPointF p1 =    mapFromScene( cam_transform.map(QPointF(cam_position.x,      (cam_position.y-cam.lag.y/2) - 9)) );
-                QPointF p2 =    mapFromScene( cam_transform.map(QPointF(cam_position.x - 12, (cam_position.y-cam.lag.y/2) + 9)) );
-                QPointF p3 =    mapFromScene( cam_transform.map(QPointF(cam_position.x + 12, (cam_position.y-cam.lag.y/2) + 9)) );
-                ///painter.drawLine(middle, p1);
+            if (thing->getThingType() == DrThingType::Character) {
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(QBrush(box_fill));
+                painter.drawPolygon(square);
 
-                QPolygonF arrow;
-                arrow << p1 << p2 << p3;
-                painter.drawPolygon(arrow);
-                }
-            */
+                QPen edge_pen = QPen(QBrush(Dr::ToQColor(Dr::black)), 1);
+                     edge_pen.setCosmetic(true);
+                painter.setPen(edge_pen);
+                painter.setBrush(frame_brushes[Frame_Edge::Normal]);
+                paintFrameEdge(painter, tl_b, tr_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);
+                paintFrameEdge(painter, tr_b, br_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Death]);
+                paintFrameEdge(painter, br_b, bl_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);
+                paintFrameEdge(painter, bl_b, tl_b);
 
-            // ***** Z Up Vector Circle
-            /**
-            if (cam.up == Up_Vector::Z) {
-                QPointF c =     mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
-                painter.drawEllipse(c, 10 * currentZoomLevel(), 10 * currentZoomLevel());
+                QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::black)), 1);
+                     corner_pen.setCosmetic(true);
+                painter.setPen(corner_pen);
+                painter.setBrush(Dr::ToQColor(Dr::white));
+                paintCornerSquare(painter, tl_b);
+                paintCornerSquare(painter, tr_b);
+                paintCornerSquare(painter, br_b);
+                paintCornerSquare(painter, bl_b);
+
+            } else {
+                QPen normal_box = QPen(QBrush(Dr::ToQColor(Dr::white)), c_outline_width);
+                painter.setPen(normal_box);
+                painter.setBrush(QBrush(box_fill));
+                painter.drawPolygon(square);
             }
-            **/
+            painter.setRenderHint(QPainter::Antialiasing, aliasing);
 
             // ***** Rotational Circles
-            painter.setPen(cosmetic_pen);
             painter.setBrush(Qt::NoBrush);
             float radius = c_ring_size * static_cast<float>(currentZoomLevel());
             ///radius *= (1.f / static_cast<float>(cam.zoom));
@@ -168,7 +197,9 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 pen_x.setBrush(brush_x);
                 painter.setPen(pen_x);
             } else {
-                painter.setPen(cosmetic_pen);
+                QPen pen_zero(Dr::ToQColor(Dr::white));
+                pen_zero.setWidth(c_outline_width);
+                painter.setPen(pen_zero);
             }
             painter.translate(middle);
             painter.drawRect(QRectF(QPointF(double(tl_x.x()), double(tl_x.y())), QPointF(double(br_x.x()), double(br_x.y()))));
@@ -200,7 +231,9 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 pen_y.setBrush(brush_y);
                 painter.setPen(pen_y);
             } else {
-                painter.setPen(cosmetic_pen);
+                QPen pen_zero(Dr::ToQColor(Dr::white));
+                pen_zero.setWidth(c_outline_width);
+                painter.setPen(pen_zero);
             }
             painter.translate(middle);
             painter.drawEllipse(QRectF(QPointF(double(tl_y.x()), double(tl_y.y())), QPointF(double(br_y.x()), double(br_y.y()))));

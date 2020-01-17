@@ -15,6 +15,7 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
+#include "editor/trees/tree_inspector.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
@@ -32,20 +33,21 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list);
 
 
 //####################################################################################
-//##    Looks through Items and it finds an Item representing DrThing argument, selects that Item
+//##    For Camera Mode
+//##        Looks through Items and if it finds an Item representing DrThing argument, clears selection and sets
+//##        Object Inspector to that Item. Makes it easier to interact with camera settings without selection box in the way
 //####################################################################################
-QGraphicsItem* DrView::ensureItemSelected(DrThing *thing) {
+QGraphicsItem* DrView::setInspectorClearSelection(DrThing *thing) {
     QGraphicsItem *found_item = nullptr;
     for (auto &item : items()) {
         DrItem *dr_item = dynamic_cast<DrItem*>(item);
         if (dr_item == nullptr) continue;
         if (dr_item->getThing() == thing) {
             found_item = dr_item;
-            m_editor_relay->buildInspector( { thing->getKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
-            if (my_scene->getSelectionItems().contains(found_item) == false) {
-                my_scene->clearSelection();
-                if (thing->isLocked() == false) found_item->setSelected(true);
+            if (my_scene->selectedItems().count() > 0) my_scene->clearSelection();
+            if (m_editor_relay->getInspector()->getSelectedKey() != thing->getKey()) {
+                m_editor_relay->buildInspector( { thing->getKey() } );
+                m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
             }
             break;
         }
@@ -121,8 +123,8 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 
                 // ******************** If clicked on camera, need to start rotating it
                 if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
-                    // Select camera's parent graphics item in DrView
-                    QGraphicsItem *check_selected = ensureItemSelected(m_cam_mouse_over);
+                    // Select camera's parent graphics item in Object Inspector
+                    QGraphicsItem *check_selected = setInspectorClearSelection(m_cam_mouse_over);
                     if (check_selected != nullptr) m_origin_item = check_selected;
 
                     // Set mode to Moving Camera, start the rotation and exit
@@ -349,14 +351,16 @@ void DrView::wheelEvent(QWheelEvent *event) {
     // ********** If over a Camera, need to zoom it In / Out
     if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
         if (m_cam_mouse_over->isLocked() == false) {
-            ensureItemSelected(m_cam_mouse_over);
+            setInspectorClearSelection(m_cam_mouse_over);
             double change = (event->delta() > 0) ? 0.25 : -0.25;
             if (m_cam_mouse_over->getThingType() == DrThingType::Character) {
                 double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble() + change;
+                if (cam_zoom < 0) cam_zoom = 0;
                 m_cam_mouse_over->setComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, cam_zoom);
                 m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over }, { Properties::Thing_Character_Camera_Zoom });
             } else if (m_cam_mouse_over->getThingType() == DrThingType::Camera) {
                 double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble() + change;
+                if (cam_zoom < 0) cam_zoom = 0;
                 m_cam_mouse_over->setComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, cam_zoom);
                 m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over }, { Properties::Thing_Camera_Zoom });
             }

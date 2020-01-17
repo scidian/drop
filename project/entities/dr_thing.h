@@ -19,7 +19,7 @@ class DrStage;
 class DrThing;
 
 // Local Structs / Enums
-struct OrderInfo {
+struct Order_Info {
     long        key;
     DrThing    *thing;
     int         sub_order;

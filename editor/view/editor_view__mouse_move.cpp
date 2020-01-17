@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QDebug>
 #include <QMouseEvent>
 #include <QTimer>
 
@@ -164,7 +165,10 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
                     }
                 }
                 m_cam_mouse_over = over;
-                if (m_cam_mouse_over != nullptr) m_over_handle = Position_Flags::Over_Camera;
+                if (m_cam_mouse_over != nullptr)
+                    m_over_handle = Position_Flags::Over_Camera;
+                else if (m_over_handle == Position_Flags::Over_Camera)
+                    m_over_handle = Position_Flags::No_Position;
                 if (before_check != m_cam_mouse_over) this->update();
             }
         }
@@ -271,9 +275,10 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     // ***** If we're not doing anything, update the advisor based on item under the mouse
     if (m_view_mode == View_Mode::None) {
-        if (item_under_mouse != nullptr && m_project != nullptr) {
+        if (m_over_handle == Position_Flags::Over_Camera) {
+            m_editor_relay->setAdvisorInfo(Advisor_Info::Camera_Edit);
+        } else if (item_under_mouse != nullptr && m_project != nullptr) {
             QString header, body;
-
             long item_key = item_under_mouse->data(User_Roles::Key).toLongLong();
             DrThing *thing = m_project->findThingFromKey(item_key);
             if (thing != nullptr) {

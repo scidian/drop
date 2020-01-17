@@ -260,7 +260,7 @@ public:
     void            paintToolTip(QPainter &painter);
 
     // Selection Functions
-    QGraphicsItem*  ensureItemSelected(DrThing *thing);
+    QGraphicsItem*  setInspectorClearSelection(DrThing *thing);
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
 

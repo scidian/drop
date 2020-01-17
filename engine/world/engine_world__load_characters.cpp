@@ -18,8 +18,8 @@
 //####################################################################################
 //##   Loads Camera Info from Character Camera component
 //####################################################################################
-CamInfo DrEngineWorld::loadCharacterCameraSettings(DrThing *thing) {
-    CamInfo cam;
+Cam_Info DrEngineWorld::loadCharacterCameraSettings(DrThing *thing) {
+    Cam_Info cam;
     cam.position =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position).toPointF();
     cam.rotation =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
     cam.tilt =          thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
@@ -42,10 +42,10 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset =     m_project->findAssetFromKey(asset_key);
             if (asset == nullptr) return;
-    ThingInfo   info =      loadThingBasicInfo(thing);
+    Thing_Info  info =      loadThingBasicInfo(thing);
 
     // ***** Load Character Camera Properties
-    CamInfo     cam =       loadCharacterCameraSettings(thing);
+    Cam_Info    cam =       loadCharacterCameraSettings(thing);
 
     // ***** Load Character Settings
     DrPointF max_speed =        asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();

@@ -32,6 +32,7 @@
 #include "project/enums_entity_types.h"
 
 // Forward Class Declarations
+class DebugVertex;
 class DrColor;
 class DrEngine;
 class DrEngineFire;
@@ -44,9 +45,6 @@ class DrEngineThing;
 class DrEngineVertexData;
 class DrEngineWater;
 class FormEngine;
-
-// Forward Struct Declarations
-struct DebugVertex;
 
 // Type Definitions
 typedef std::chrono::high_resolution_clock Clock;

@@ -10,6 +10,13 @@
 
 #include "engine/globals_engine.h"
 
+// Local Enumerations
+enum class Frame_Edge {
+    Normal,                     // Edge allows movement
+    Blocking,                   // Edge does not allow movement
+    Death,                      // Edge causes character death
+};
+
 
 //####################################################################################
 //##    DrEngineCamera
@@ -52,6 +59,12 @@ private:
     std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
     std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
+
+    // Character Camera Frame
+    Frame_Edge          m_edge_top =    Frame_Edge::Normal;     // For character cameras, determines behavior of top    edge of camera frame
+    Frame_Edge          m_edge_bottom = Frame_Edge::Normal;     // For character cameras, determines behavior of bottom edge of camera frame
+    Frame_Edge          m_edge_left =   Frame_Edge::Normal;     // For character cameras, determines behavior of left   edge of camera frame
+    Frame_Edge          m_edge_right =  Frame_Edge::Normal;     // For character cameras, determines behavior of right  edge of camera frame
 
     // Auto Zoom Variables
     std::deque<double>  m_avg_speed;                            // Average speed per second

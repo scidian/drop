@@ -256,7 +256,7 @@ public:
 
     bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
-    bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false);
+    bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false, bool force_death = false);
 
     bool            shouldCollide(DrEngineObject *object);
 

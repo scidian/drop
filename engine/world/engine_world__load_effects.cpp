@@ -30,7 +30,7 @@ const double    c_light_size_adjuster = 1.15;           // Multiplier to equal o
 //##    Loads one DrProject DrThingType::Fisheye to World / Space
 //####################################################################################
 void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              loadThingBasicInfo( thing );
+    Thing_Info  info =              loadThingBasicInfo( thing );
 
     DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
@@ -53,7 +53,7 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
 //##    Loads one DrProject DrThingType::Fire to World / Space
 //####################################################################################
 void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              loadThingBasicInfo( thing );
+    Thing_Info  info =              loadThingBasicInfo( thing );
 
     int         mask =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape).toInt();
     DrColor     color_1 =           DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
@@ -87,19 +87,19 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
 //##    Loads one DrProject DrThingType::Light to World / Space
 //####################################################################################
 void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =          loadThingBasicInfo( thing );
-    DrColor     light_color =   DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-    int         light_type =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
+    Thing_Info  info =              loadThingBasicInfo( thing );
+    DrColor     light_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
+    int         light_type =        thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
 
-    double      cone_start =    thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toDouble();
-    double      cone_end =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toDouble();
-    float       intensity =     thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-    float       blur =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-    float       shadows =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
-    bool        draw_shadows =  thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
+    double      cone_start =        thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toDouble();
+    double      cone_end =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toDouble();
+    float       intensity =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
+    float       blur =              thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+    float       shadows =           thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
+    bool        draw_shadows =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
 
-    float       pulse =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
-    float       pulse_speed =   thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
+    float       pulse =             thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
+    float       pulse_speed =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
 
     info.size.x = info.size.x * c_light_size_adjuster;
 
@@ -114,7 +114,7 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 //##    Loads one DrProject DrThingType::Mirror to World / Space
 //####################################################################################
 void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              loadThingBasicInfo( thing );
+    Thing_Info  info =              loadThingBasicInfo( thing );
 
     DrColor color_1 =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
     DrColor color_2 =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
@@ -140,7 +140,7 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
 //##    Loads one DrProject DrThingType::Swirl to World / Space
 //####################################################################################
 void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              loadThingBasicInfo( thing );
+    Thing_Info  info =              loadThingBasicInfo( thing );
 
     DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
     float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint).toFloat() / 100.0f;
@@ -163,7 +163,7 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
 //##    Loads one DrProject DrThingType::Water to World / Space
 //####################################################################################
 void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =              loadThingBasicInfo( thing );
+    Thing_Info  info =              loadThingBasicInfo( thing );
 
     int         texture =           thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Texture).toInt();
     DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());

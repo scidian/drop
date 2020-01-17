@@ -130,7 +130,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
 //##    Load DrEngineCamera
 //####################################################################################
 void DrEngineWorld::loadCameraToWorld(DrThing *thing, double offset_x, double offset_y) {
-    ThingInfo   info =          loadThingBasicInfo( thing );
+    Thing_Info  info =          loadThingBasicInfo( thing );
     bool        wants_active =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Set_As_Active).toBool();
     DrPointF    cam_speed =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Speed).toPointF();
     DrPointF    cam_rotation =  thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();

@@ -191,12 +191,19 @@ bool DrEngineObject::shouldCollide(DrEngineObject *b) {
 
 
 //####################################################################################
-//##    Take Damage / Heal
+//##    Take Damage / Heal,
+//##        - If force_death is true, object dies no matter what
+//##        - Returns
+//##            TRUE:  just killed this object / object dead,
+//              FALSE: did not kill this object / object alive
 //####################################################################################
-// Returns TRUE: just killed this object / object dead, FALSE: did not kill this object / object alive
-bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, bool death_touch) {
+bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, bool death_touch, bool force_death) {
     // If dying or dead exit now
     if (!m_alive || m_dying) return true;
+    if (force_death) {
+        m_health = 0.0;
+        return true;
+    }
 
     // Check if unlimited health
     bool unlimited_health = (m_health < 0.0);

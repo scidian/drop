@@ -136,6 +136,11 @@ namespace Advisor_Info {
                                                                      "variable amount to the initial value. For example, an initial value of 100 with "
                                                                      "a variable amount of 5, allows for values ranging from 95 to 105." };
 
+    // View Items
+    const HeaderBodyList Camera_Edit            { "Camera Edit", "While Camera Boxes are On, cameras are interactive. Cameras can be dragged to desired position. "
+                                                                 "Also possible to change zoom level of camera using Mouse Wheel (when available)." };
+
+
     // Other
     const HeaderBodyList Not_Set                { "Not Set", "Fix me!!!!!!" };
 };

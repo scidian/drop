@@ -22,7 +22,7 @@
 
 
 // Local Structs
-struct SpaceTime {
+struct Space_Time {
     cpSpace *space;
     double   time_step;
 };
@@ -36,7 +36,7 @@ struct SpaceTime {
 //    cpConstraintFree(constraint);
 //    if (was_mouse) g_mouse_joint = nullptr;
 //}
-//static void CheckJointForce(cpConstraint *constraint, SpaceTime *space_time) {
+//static void CheckJointForce(cpConstraint *constraint, Space_Time *space_time) {
 //    // The most recent impulse that constraint applied. To convert this to a force, divide by the timestep passed to cpSpaceStep()
 //    cpFloat joint_force = cpConstraintGetImpulse(constraint) / (space_time->time_step);
 //    cpBody *body_a = cpConstraintGetBodyA(constraint);
@@ -66,7 +66,7 @@ void DrEngineWorld::updateSpace(double time_passed) {
     cpSpaceStep(m_space, step_time);
 
     // Check Joint Forces
-    ///SpaceTime space_time { m_space, step_time };
+    ///Space_Time space_time { m_space, step_time };
     ///cpSpaceEachConstraint(m_space, cpSpaceConstraintIteratorFunc(CheckJointForce), &space_time);
 }
 

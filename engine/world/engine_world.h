@@ -11,7 +11,7 @@
 #include "engine/globals_engine.h"
 
 // Local Structs
-struct ThingInfo {                                          // Basic Thing Properties
+struct Thing_Info {                                         // Basic Thing Properties
     double      angle =         0.0;
     float       opacity =       1.0;
     DrPointF    position =      DrPointF(0.0, 0.0);
@@ -20,7 +20,7 @@ struct ThingInfo {                                          // Basic Thing Prope
     double      z_order =       0.0;
 };
 
-struct CamInfo {                                            // Character Camera Properties
+struct Cam_Info {                                           // Character Camera Properties
     DrPointF    position =      DrPointF(0, 0);
     DrPointF    rotation =      DrPointF(0, 0);
     double      tilt =          0.0;
@@ -182,10 +182,10 @@ public:
     void            clearWorld();
     int             countCharacters();
 
-    static CamInfo      loadCharacterCameraSettings(DrThing *thing);
+    static Cam_Info     loadCharacterCameraSettings(DrThing *thing);
     void                loadThing3DSettings(DrThing *thing, DrEngineThing *object);
     void                loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
-    static ThingInfo    loadThingBasicInfo(DrThing *thing);
+    static Thing_Info   loadThingBasicInfo(DrThing *thing);
     void                loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
     void                loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
     void                loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);

@@ -19,8 +19,8 @@
 //####################################################################################
 //##    Loads Basic DrThing Info from Layering / Transform components
 //####################################################################################
-ThingInfo DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
-    ThingInfo info;
+Thing_Info DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
+    Thing_Info info;
     info.angle =        thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
     info.position =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
     info.scale =        thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
@@ -177,7 +177,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     long        asset_key = thing->getAssetKey();
     DrAsset    *asset =     m_project->findAssetFromKey(asset_key);
             if (asset == nullptr) return nullptr;
-    ThingInfo   info =          loadThingBasicInfo( thing );
+    Thing_Info  info =          loadThingBasicInfo( thing );
                 info.scale.x *= scale_x;
                 info.scale.y *= scale_y;
                 info.angle   -= angle;

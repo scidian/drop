@@ -14,7 +14,8 @@
 //####################################################################################
 //##    Vertex for Debug Shapes
 //############################
-struct DebugVertex {
+class DebugVertex {
+public:
     std::vector<float> position;                        // in sets of x, y
     std::vector<float> texture_coordinates;             // in sets of x, y
     std::vector<float> radiuses;                        // in sets of r
