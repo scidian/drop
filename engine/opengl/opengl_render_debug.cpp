@@ -85,7 +85,7 @@ void DrOpenGL::drawDebug() {
     ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                    // Finds max texture size available on system
     ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );         // Finds max number of textures can bind at one time
     ///glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
-    ///painter.drawText( QPointF(20, 80), "Max Texture Size: " +  QString::number(g_max_texture_size));
+    ///fonsDrawText(fs, 20, 80, std::string("Max Texture Size: " +  std::to_string(g_max_texture_size)).c_str(), nullptr );
 }
 
 

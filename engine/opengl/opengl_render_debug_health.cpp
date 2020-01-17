@@ -58,10 +58,10 @@ void DrOpenGL::drawDebugHealth() {
         half_width =  font_size / 2.0f;
         half_height = font_size / 2.0f;
 
-        QVector3D top_right = QVector3D( half_width,  half_height, 0);
-        QVector3D top_left =  QVector3D(-half_width,  half_height, 0);
-        QVector3D bot_right = QVector3D( half_width, -half_height, 0);
-        QVector3D bot_left =  QVector3D(-half_width, -half_height, 0);
+        DrVec3 top_right = DrVec3( half_width,  half_height, 0);
+        DrVec3 top_left =  DrVec3(-half_width,  half_height, 0);
+        DrVec3 bot_right = DrVec3( half_width, -half_height, 0);
+        DrVec3 bot_left =  DrVec3(-half_width, -half_height, 0);
 
         // ***** Create Texture Coordinate and Vertex arrays
         std::vector<float> texture_coordinates;
@@ -89,7 +89,7 @@ void DrOpenGL::drawDebugHealth() {
             setNumberTextureCoordinates(hp.substr(i, 1), texture_coordinates);
 
             // Set Vertices
-            setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));
+            setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, DrVec3(x, y, z));
 
             x += (half_width * 2.0f * spacing);
 

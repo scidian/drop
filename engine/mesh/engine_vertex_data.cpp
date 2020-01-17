@@ -109,7 +109,7 @@ void DrEngineVertexData::initializeTextureCone() {
     DrVec3 point_bl(x2, y2, +c_extrude_depth);
     DrVec3 point_br(x3, y3, +c_extrude_depth);
 
-    glm::mat4 rotate = glm::mat4(1.0);
+    glm::mat4 rotate = glm::mat4(1.0);                  // Set to identity
 
     for (int i = 0; i < 4; ++i) {
         // ... If wanting to use just bottom half and rotate quarters around texture

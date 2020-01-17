@@ -5,7 +5,6 @@
 //
 //
 //
-#include <QDebug>
 #include <QVector3D>
 
 #include "engine/engine.h"

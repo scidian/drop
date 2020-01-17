@@ -188,8 +188,7 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     double y = static_cast<double>(vec.y);
     ///double z = static_cast<double>(vec.z());
 
-    QPointF mouse_position = QPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
-    g_mouse_position = DrPointF(mouse_position.x(), mouse_position.y());
+    g_mouse_position = DrPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
 
     // If running, process mouse move
     if (m_form_engine->isTimerActive()) {

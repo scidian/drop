@@ -26,6 +26,7 @@
 #include "core/dr_string.h"
 #include "core/types/dr_point.h"
 #include "core/types/dr_pointf.h"
+#include "core/types/dr_vec3.h"
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
 #include "project/enums_entity_types.h"
@@ -220,8 +221,8 @@ public:
     void            setShaderDefaultValues(float texture_width, float texture_height);
     void            setNumberTextureCoordinates(std::string letter, std::vector<float> &texture_coordinates);
     void            setQuadVertices(std::vector<float> &vertices, float width, float height, DrPointF center, float z);
-    void            setQuadRotatedVertices(std::vector<float> &vertices, QVector3D &top_right, QVector3D &top_left,
-                                           QVector3D &bot_left, QVector3D &bot_right, QVector3D position);
+    void            setQuadRotatedVertices(std::vector<float> &vertices, DrVec3 &top_right, DrVec3 &top_left,
+                                           DrVec3 &bot_left, DrVec3 &bot_right, DrVec3 position);
 
     // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);

@@ -89,15 +89,15 @@ void DrOpenGL::setQuadVertices(std::vector<float> &vertices, float width, float 
 //##    Returns list of vertices at z plane from 4 corners
 //####################################################################################
 void DrOpenGL::setQuadRotatedVertices(std::vector<float> &vertices,
-                                      QVector3D &top_right, QVector3D &top_left,
-                                      QVector3D &bot_left,  QVector3D &bot_right,
-                                      QVector3D position) {
+                                      DrVec3 &top_right, DrVec3 &top_left,
+                                      DrVec3 &bot_left,  DrVec3 &bot_right,
+                                      DrVec3 position) {
     vertices.clear();
     vertices.resize( 12 );              // in sets of x, y, z
-    vertices[ 0] = top_right.x() + position.x();    vertices[ 1] = top_right.y() + position.y();    vertices[ 2] = position.z();    // Top Right
-    vertices[ 3] = top_left.x()  + position.x();    vertices[ 4] = top_left.y()  + position.y();    vertices[ 5] = position.z();    // Top Left
-    vertices[ 6] = bot_right.x() + position.x();    vertices[ 7] = bot_right.y() + position.y();    vertices[ 8] = position.z();    // Bottom Right
-    vertices[ 9] = bot_left.x()  + position.x();    vertices[10] = bot_left.y()  + position.y();    vertices[11] = position.z();    // Bottom Left
+    vertices[ 0] = top_right.x + position.x;    vertices[ 1] = top_right.y + position.y;    vertices[ 2] = position.z;      // Top Right
+    vertices[ 3] = top_left.x  + position.x;    vertices[ 4] = top_left.y  + position.y;    vertices[ 5] = position.z;      // Top Left
+    vertices[ 6] = bot_right.x + position.x;    vertices[ 7] = bot_right.y + position.y;    vertices[ 8] = position.z;      // Bottom Right
+    vertices[ 9] = bot_left.x  + position.x;    vertices[10] = bot_left.y  + position.y;    vertices[11] = position.z;      // Bottom Left
 }
 
 
@@ -117,17 +117,21 @@ void DrOpenGL::getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *t
 
     // ***** Create rotation matrix, apply rotation to object
     float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);
-    QMatrix4x4 matrix;
-    if (Dr::FuzzyCompare(thing->getAngleX(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleX()), 1.f, 0.f, 0.f);
-    if (Dr::FuzzyCompare(thing->getAngleY(), 0.0) == false) matrix.rotate(now * static_cast<float>(thing->getAngleY()), 0.f, 1.f, 0.f);
-    matrix.rotate( static_cast<float>(thing->getAngle()), 0.0, 0.0, 1.0 );
-    QVector3D top_right = matrix * QVector3D( half_width,  half_height, 0);
-    QVector3D top_left =  matrix * QVector3D(-half_width,  half_height, 0);
-    QVector3D bot_right = matrix * QVector3D( half_width, -half_height, 0);
-    QVector3D bot_left =  matrix * QVector3D(-half_width, -half_height, 0);
+    glm::mat4 matrix;
+    float rotate_x = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngleX()));
+    float rotate_y = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngleY()));
+    float rotate_z = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngle()));
+    if (Dr::FuzzyCompare(thing->getAngleX(), 0.0) == false) matrix = glm::rotate(matrix, rotate_x, glm::vec3(1.0, 0.0, 0.0));
+    if (Dr::FuzzyCompare(thing->getAngleY(), 0.0) == false) matrix = glm::rotate(matrix, rotate_y, glm::vec3(0.0, 1.0, 0.0));
+    matrix = glm::rotate(matrix, rotate_z, glm::vec3(0.0, 0.0, 1.0));
+
+    DrVec3 top_right = matrix * DrVec3( half_width,  half_height, 0);
+    DrVec3 top_left =  matrix * DrVec3(-half_width,  half_height, 0);
+    DrVec3 bot_right = matrix * DrVec3( half_width, -half_height, 0);
+    DrVec3 bot_left =  matrix * DrVec3(-half_width, -half_height, 0);
 
     // ***** Load vertices for this object
-    setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, QVector3D(x, y, z));
+    setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, DrVec3(x, y, z));
 }
 
 

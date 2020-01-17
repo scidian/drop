@@ -22,7 +22,8 @@ class DrPointF;
 
 //####################################################################################
 //##    PolylineSimplification
-//##        Finds concave hulls from a random set of points
+//##        Decimates a curve composed of line segments to a similar curve with fewer points
+//##        (that is to say, reduces number of points in a polygon)...
 //############################
 class PolylineSimplification
 {

@@ -33,20 +33,20 @@ private:
                                                                 //              Y Rotation, controls left / right
                                                                 //              Z Rotation, tilts head
 
-    DrPointF        m_lag = { 0.0, 0.0 };                       // Current camera lag when following object
-    bool            m_match_angle = false;                      // Does this camera match angle of following object
+    DrPointF            m_lag = { 0.0, 0.0 };                   // Current camera lag when following object
+    bool                m_match_angle = false;                  // Does this camera match angle of following object
 
-    double          m_speed_adjusted_zoom = 1.0;                // Zoom affected by speed
-    double          m_zoom = 1.0;                               // Current camera zoom level
+    double              m_speed_adjusted_zoom = 1.0;            // Zoom affected by speed
+    double              m_zoom = 1.0;                           // Current camera zoom level
 
-    glm::vec3       m_target;                                   // Calculated point this camera is moving towards
+    glm::vec3           m_target;                               // Calculated point this camera is moving towards
 
-    long            m_follow_key =  c_no_key;                    // Unique DrEngineWorld key this camera should follow
-    bool            m_follow_lost = false;                      // Set to true by engine when was following and now is not following
-    size_t          m_buffer_size = c_slop_buffer_size;         // Number of past object speeds to average together for camera follow
-    bool            m_wants_active = false;                     // If set to true in Editor, this camera tries to take Active when in Start Stage
+    long                m_follow_key =  c_no_key;               // Unique DrEngineWorld key this camera should follow
+    bool                m_follow_lost = false;                  // Set to true by engine when was following and now is not following
+    size_t              m_buffer_size = c_slop_buffer_size;     // Number of past object speeds to average together for camera follow
+    bool                m_wants_active = false;                 // If set to true in Editor, this camera tries to take Active when in Start Stage
 
-    Up_Vector       m_up_vector = Up_Vector::Y;                 // Up Vector of Camera, usually Y, Z for first person
+    Up_Vector           m_up_vector = Up_Vector::Y;             // Up Vector of Camera, usually Y, Z for first person
 
     glm::vec3           m_average_speed;                        // Holds the calculated average (averaged in updateCamera()) of the arrays below
     std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
