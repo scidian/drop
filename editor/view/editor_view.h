@@ -260,6 +260,7 @@ public:
     void            paintToolTip(QPainter &painter);
 
     // Selection Functions
+    QGraphicsItem*  ensureItemSelected(DrThing *thing);
     void            startSelect(QMouseEvent *event);
     void            processSelection(QPoint mouse_in_view);
 
@@ -286,6 +287,7 @@ public:
     double          currentZoomLevel() { return m_zoom_scale; }
     bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
     DrScene*        getDrScene() { return my_scene; }
+    IEditorRelay*   getEditorRelay() { return m_editor_relay; }
     Mouse_Mode      getMouseMode() { return m_mouse_mode; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
     void            setMouseMode(Mouse_Mode mode) { m_mouse_mode = mode; }

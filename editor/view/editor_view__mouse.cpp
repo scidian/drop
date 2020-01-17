@@ -32,6 +32,29 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list);
 
 
 //####################################################################################
+//##    Looks through Items and it finds an Item representing DrThing argument, selects that Item
+//####################################################################################
+QGraphicsItem* DrView::ensureItemSelected(DrThing *thing) {
+    QGraphicsItem *found_item = nullptr;
+    for (auto &item : items()) {
+        DrItem *dr_item = dynamic_cast<DrItem*>(item);
+        if (dr_item == nullptr) continue;
+        if (dr_item->getThing() == thing) {
+            found_item = dr_item;
+            m_editor_relay->buildInspector( { thing->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
+            if (my_scene->getSelectionItems().contains(found_item) == false) {
+                my_scene->clearSelection();
+                if (thing->isLocked() == false) found_item->setSelected(true);
+            }
+            break;
+        }
+    }
+    return found_item;
+}
+
+
+//####################################################################################
 //##    Mouse Pressed
 //####################################################################################
 // Forwards a double click as just another mouse down
@@ -99,20 +122,8 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                 // ******************** If clicked on camera, need to start rotating it
                 if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
                     // Select camera's parent graphics item in DrView
-                    for (auto &item : items()) {
-                        DrItem *dr_item = dynamic_cast<DrItem*>(item);
-                        if (dr_item == nullptr) continue;
-                        if (dr_item->getThing() == m_cam_mouse_over) {
-                            m_origin_item = dr_item;
-                            m_editor_relay->buildInspector( { m_cam_mouse_over->getKey() } );
-                            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { m_cam_mouse_over->getKey() } );
-                            if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
-                                my_scene->clearSelection();
-                                if (m_cam_mouse_over->isLocked() == false) m_origin_item->setSelected(true);
-                            }
-                            break;
-                        }
-                    }
+                    QGraphicsItem *check_selected = ensureItemSelected(m_cam_mouse_over);
+                    if (check_selected != nullptr) m_origin_item = check_selected;
 
                     // Set mode to Moving Camera, start the rotation and exit
                     if (m_cam_mouse_over->isLocked() == false) {
@@ -329,20 +340,39 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
 void DrView::wheelEvent(QWheelEvent *event) {
-    // Allow for scene scrolling if ctrl (cmd) is down
+    // ********** Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
         return;
     }
 
-    // Force View to know mouse position in Interactive Mode (good if in Hand mode)
+    // ********** If over a Camera, need to zoom it In / Out
+    if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
+        if (m_cam_mouse_over->isLocked() == false) {
+            ensureItemSelected(m_cam_mouse_over);
+            double change = (event->delta() > 0) ? 0.25 : -0.25;
+            if (m_cam_mouse_over->getThingType() == DrThingType::Character) {
+                double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble() + change;
+                m_cam_mouse_over->setComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, cam_zoom);
+                m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over }, { Properties::Thing_Character_Camera_Zoom });
+            } else if (m_cam_mouse_over->getThingType() == DrThingType::Camera) {
+                double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble() + change;
+                m_cam_mouse_over->setComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, cam_zoom);
+                m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over }, { Properties::Thing_Camera_Zoom });
+            }
+            update();
+            return;
+        }
+    }
+
+    // ********** Force View to know mouse position in Interactive Mode (good if in Hand mode)
     Mouse_Mode before_zoom = m_mouse_mode;
     m_mouse_mode = Mouse_Mode::None;
     spaceBarUp();
     QMouseEvent temp_event(QMouseEvent::Type::Move, event->pos(), Qt::MouseButton::NoButton, { }, { });
     mouseMoveEvent(&temp_event);
 
-    // Process Zoom
+    // ********** Process Zoom
     if (event->delta() > 0) zoomInOut( 10);                 // In
     else                    zoomInOut(-10);                 // Out
     event->accept();
