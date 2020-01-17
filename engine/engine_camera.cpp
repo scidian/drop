@@ -65,6 +65,19 @@ float DrEngineCamera::getThingFollowingZOrder() {
 
 
 //####################################################################################
+//##    Sets new Zoom setting
+//##        Updates related variables if requested, generally upon camera creation
+//####################################################################################
+void DrEngineCamera::setZoom(double zoom, bool update_speed_zoom) {
+    m_zoom = zoom;
+    if (update_speed_zoom) {
+        m_speed_adjusted_zoom = zoom;
+        m_avg_zoom = zoom;
+    }
+}
+
+
+//####################################################################################
 //##    Moves camera based on current speed / settings
 //####################################################################################
 void DrEngineCamera::moveCamera(const double& milliseconds) {
@@ -105,25 +118,21 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         }
 
         // ***** Calculate average speed per xxx seconds
-        static double avg_speed_clock = 0;
-        static double avg_speed =       0;
         double avg_speed_wait_time =    16.0;                                               // 16 milliseconds * 30 == 1/2 second average
         size_t avg_speed_elements =     30;
-        avg_speed_clock += milliseconds;
-        while (avg_speed_clock > avg_speed_wait_time) {
+        m_last_speed_clock += milliseconds;
+        while (m_last_speed_clock > avg_speed_wait_time) {
             while (m_avg_speed.size() <= avg_speed_elements) m_avg_speed.push_back( average_speed );
             while (m_avg_speed.size() >  avg_speed_elements) m_avg_speed.pop_front();
-            avg_speed = std::accumulate(m_avg_speed.begin(), m_avg_speed.end(), 0.0) / m_avg_speed.size();
-            avg_speed_clock -= avg_speed_wait_time;
+            m_last_speed = std::accumulate(m_avg_speed.begin(), m_avg_speed.end(), 0.0) / m_avg_speed.size();
+            m_last_speed_clock -= avg_speed_wait_time;
         }
 
         // ***** Calculate max speed over last xxx seconds
-        static double max_speed_clock = 0;
-        static double max_average =     1.0;
         double max_average_wait_time =  200.0;                                              // 200 milliseconds * 20 == 4 second average
         size_t max_average_elements =   20;
-        max_speed_clock += milliseconds;
-        while (max_speed_clock > max_average_wait_time) {
+        m_max_speed_clock += milliseconds;
+        while (m_max_speed_clock > max_average_wait_time) {
             // Max speed
             double next_max_speed = *std::max_element(m_avg_speed.begin(), m_avg_speed.end());
             while (m_max_speed.size() <= max_average_elements) m_max_speed.push_back( next_max_speed );
@@ -132,35 +141,35 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
             // Average of max speeds
             while (m_max_average.size() <= max_average_elements) m_max_average.push_back( max_speed );
             while (m_max_average.size() >  max_average_elements) m_max_average.pop_front();
-            max_average = Dr::Max(std::accumulate(m_max_average.begin(), m_max_average.end(), 0.0) / m_max_average.size(), 1.0);
-            max_speed_clock -= max_average_wait_time;
+            m_max_speed_average = Dr::Max(std::accumulate(m_max_average.begin(), m_max_average.end(), 0.0) / m_max_average.size(), 1.0);
+            m_max_speed_clock -= max_average_wait_time;
         }
 
         // ***** Figure out percentage of current speed vs max speed, apply percentage to multiplier for target zoom
-        double speed_adjust = Dr::Clamp(avg_speed / max_average, 0.0, 1.0);
+        double speed_adjust = Dr::Clamp(m_last_speed / m_max_speed_average, 0.0, 1.0);
         double multiplier = this->getEngineWorld()->zoom_multiplier;;
         if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_Out) multiplier = 1.0 / multiplier;
         multiplier = Dr::Lerp(1.0, multiplier, speed_adjust);
         double target_zoom = m_zoom * multiplier;
 
         // ***** Calculate average target zoom per xxx seconds
-        static double avg_zoom_clock =  0;
-        static double avg_zoom =        m_zoom;
         double avg_zoom_wait_time =     10.0 * this->getEngineWorld()->zoom_damping;        // 10 to 100 milliseconds * 60 == 3/5 of a second to 6 second average
         size_t avg_zoom_elements =      60;
-        avg_zoom_clock += milliseconds;
-        while (avg_zoom_clock > avg_zoom_wait_time) {
+        m_avg_zoom_clock += milliseconds;
+        while (m_avg_zoom_clock > avg_zoom_wait_time) {
             while (m_target_zoom.size() <= avg_zoom_elements) m_target_zoom.push_back( target_zoom );
             while (m_target_zoom.size() >  avg_zoom_elements) m_target_zoom.pop_front();
-            avg_zoom = std::accumulate(m_target_zoom.begin(), m_target_zoom.end(), 0.0) / m_target_zoom.size();
-            avg_zoom_clock -= avg_zoom_wait_time;
+            m_avg_zoom = std::accumulate(m_target_zoom.begin(), m_target_zoom.end(), 0.0) / m_target_zoom.size();
+            m_avg_zoom_clock -= avg_zoom_wait_time;
         }
 
-        ///g_info = "Target Zoom: " + std::to_string(avg_zoom) + ", Average Speed: " + std::to_string(avg_speed) + ", Max Average: " + std::to_string(max_average);
+        // Debug Output
+        ///g_info = "Target Zoom: " + std::to_string(m_avg_zoom) + ", Average Speed: " + std::to_string(m_last_speed) +
+        ///       ", Max Average: " + std::to_string(m_max_speed_average);
 
         // Lerp as power for smoother tweening
         double lerp_zoom = (0.01 / this->getEngineWorld()->zoom_damping) * milliseconds;
-        double target_zoom_as_pow = DrOpenGL::zoomScaleToPow( avg_zoom );
+        double target_zoom_as_pow = DrOpenGL::zoomScaleToPow( m_avg_zoom );
         double new_zoom_as_pow =    Dr::Lerp(DrOpenGL::zoomScaleToPow(m_speed_adjusted_zoom), target_zoom_as_pow, lerp_zoom);
         m_speed_adjusted_zoom =     DrOpenGL::zoomPowToScale(new_zoom_as_pow);
         // Alternate no power conversion

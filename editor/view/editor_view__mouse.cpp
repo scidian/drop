@@ -98,11 +98,31 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 
                 // ******************** If clicked on camera, need to start rotating it
                 if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
-                    m_view_mode = View_Mode::Moving_Camera;
-                    startRotateCamera(m_origin);
-                    my_scene->scene_mutex.unlock();
-                    return;
+                    // Select camera's parent graphics item in DrView
+                    for (auto &item : items()) {
+                        DrItem *dr_item = dynamic_cast<DrItem*>(item);
+                        if (dr_item == nullptr) continue;
+                        if (dr_item->getThing() == m_cam_mouse_over) {
+                            m_origin_item = dr_item;
+                            m_editor_relay->buildInspector( { m_cam_mouse_over->getKey() } );
+                            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { m_cam_mouse_over->getKey() } );
+                            if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
+                                my_scene->clearSelection();
+                                if (m_cam_mouse_over->isLocked() == false) m_origin_item->setSelected(true);
+                            }
+                            break;
+                        }
+                    }
+
+                    // Set mode to Moving Camera, start the rotation and exit
+                    if (m_cam_mouse_over->isLocked() == false) {
+                        m_view_mode = View_Mode::Moving_Camera;
+                        startRotateCamera(m_origin);
+                        my_scene->scene_mutex.unlock();
+                        return;
+                    }
                 }
+
 
                 if (my_scene->getSelectionCount() > 0) {
                     // ******************* If clicked while holding Alt key start rotating

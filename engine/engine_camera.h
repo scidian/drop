@@ -53,11 +53,17 @@ private:
     std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
 
-    // Auto zoom arrays
-    std::deque<double>  m_avg_speed;                            // Average speed per second,            used for auto zoom
-    std::deque<double>  m_max_speed;                            // Max speed over last 10 seconds,      used for auto zoom
-    std::deque<double>  m_max_average;                          // Max average speed,                   used for auto zoom
-    std::deque<double>  m_target_zoom;                          // Average target zoom,                 used for auto zoom
+    // Auto Zoom Variables
+    std::deque<double>  m_avg_speed;                            // Average speed per second
+    std::deque<double>  m_max_speed;                            // Max speed over last 10 seconds
+    std::deque<double>  m_max_average;                          // Max average speed
+    std::deque<double>  m_target_zoom;                          // Average target zoom
+    double m_last_speed_clock =     0.0;                        // Used to update current speed (m_avg_speed) array
+    double m_last_speed =           0.0;                        // Holds current speed, used to calculate current speed to max speed ratio
+    double m_max_speed_clock =      0.0;                        // Used to update max speed (m_max_speed) array
+    double m_max_speed_average =    1.0;                        // Holds current max speed, used to calculate current speed to max speed ratio
+    double m_avg_zoom_clock =       0.0;                        // Used to update target zoom speed (m_target_zoom_ array
+    double m_avg_zoom =          m_zoom;                        // Holds current average zooom target
 
 
 public:
@@ -120,7 +126,7 @@ public:
     void                setTarget(glm::vec3 target) { m_target = target; }
     void                setUpVector(Up_Vector up) { m_up_vector = up; }
     void                setWantActive(bool wants) { m_wants_active = wants; }
-    void                setZoom(double zoom, bool update_speed_zoom = false) { m_zoom = zoom; if (update_speed_zoom) m_speed_adjusted_zoom = zoom; }
+    void                setZoom(double zoom, bool update_speed_zoom = false);
 
 };
 
