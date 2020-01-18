@@ -61,13 +61,13 @@ void TreeProject::focusInEvent(QFocusEvent *event) {
 //####################################################################################
 void TreeProject::buildProjectTree(bool total_rebuild) {
 
-    // Store current scroll bar position
-    int scroll_position = this->verticalScrollBar()->value();
-    if (total_rebuild) this->clear();
-
     // ********** Turn off selection event during build
     bool started_empty = this->invisibleRootItem()->childCount() < 1;
     setAllowSelectionEvent(false);
+
+    // Store current scroll bar position
+    int scroll_position = this->verticalScrollBar()->value();
+    if (total_rebuild) this->clear();
 
     // ********** Store some data about the tree so we can restore after its rebuilt
     QMap<long, QTreeWidgetItem*> item_map;
