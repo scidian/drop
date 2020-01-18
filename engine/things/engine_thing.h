@@ -60,6 +60,7 @@ private:
     DrPointF        m_camera_lag      { 0.0, 0.0 };                 // Camera Movement Lag Amount         for this objects Active (Follow) Camera
     Up_Vector       m_camera_up       { Up_Vector::Y };             // Camera Up Vector                   usually Y, Z for first person
     bool            m_camera_match_angle = false;                   // Should Camera Match Angle of Object Following
+    std::map<Edge_Location, Frame_Edge> m_camera_edges;             // Describes edges of camera frame
 
 public:
     // ***** Image Post Processing Attributes
@@ -172,6 +173,8 @@ public:
     double                  getCameraZoom()                 { return m_camera_zoom; }
     void                    setCameraZoom(double zoom)      { m_camera_zoom = zoom; }
 
+    Frame_Edge              getCameraEdge(Edge_Location edge_location) { return m_camera_edges[edge_location]; }
+    void                    setCameraEdge(Edge_Location edge_location, Frame_Edge edge_type) { m_camera_edges[edge_location] = edge_type; }
 
 
     // 3D Properties

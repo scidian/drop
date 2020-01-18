@@ -72,6 +72,10 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
         camera->setMatchAngle(  follow->getCameraMatch() );
         camera->setTarget(      camera->getPosition() );
         camera->setUpVector(    follow->getCameraUpVector() );
+        camera->setEdge(        Edge_Location::Top,     follow->getCameraEdge(Edge_Location::Top));
+        camera->setEdge(        Edge_Location::Right,   follow->getCameraEdge(Edge_Location::Right));
+        camera->setEdge(        Edge_Location::Bottom,  follow->getCameraEdge(Edge_Location::Bottom));
+        camera->setEdge(        Edge_Location::Left,    follow->getCameraEdge(Edge_Location::Left));
         follow->setActiveCameraKey(new_key);
     }
     return camera;

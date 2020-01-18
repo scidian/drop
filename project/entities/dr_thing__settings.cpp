@@ -84,7 +84,7 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
     addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, Property_Type::PositiveDouble, 1.0,
                            "Camera Zoom", "Every Character has a Camera attached which always looks directly at the Character. "
                                           "This is the magnification zoom level of that camera. Generally less than 10.");
-    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::PositiveSizeF, DrPointF(100, 100),
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag, Property_Type::PositiveSizeF, DrPointF(200, 200),
                            "Camera Lag", "Every Character has a Camera attached which always looks directly at the Character. "
                                          "This setting allows the character to move around a box of this many World units (i.e. pixels) before the "
                                          "camera starts to move.");
@@ -95,6 +95,10 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
                            "Rotation Follow", "Should this camera rotate to so that it matches the Character's Z Rotation? "
                                               "When Up Vector is set to Y the whole world will spin. When it is set to Z, it allows you to have "
                                               "first person directional looking. ");
+    // !!!!! Hidden Property
+    addPropertyToComponent(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Sides, Property_Type::Array, std::vector<DrVariant>({0, 0, 0, 0}),
+                           "Frame Edges", "This is a list of the 4 edges of the camera frame, in order: top, right, bottom, left. "
+                                          "0 is Normal, 1 is Blocked, 2 is Death", true, false);
 }
 
 //####################################################################################

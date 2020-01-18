@@ -115,6 +115,20 @@ enum class Auto_Zoom {
     Zoom_In                 = 1,
 };
 
+enum class Frame_Edge {
+    Normal                  = 0,            // Edge allows movement
+    Blocking                = 1,            // Edge does not allow movement
+    Death                   = 2,            // Edge causes character death
+};
+
+enum class Edge_Location {
+    Top                     = 0,
+    Right                   = 1,
+    Bottom                  = 2,
+    Left                    = 3,
+};
+
+
 //####################################################################################
 //##    Control Enumerations
 //############################

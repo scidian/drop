@@ -29,6 +29,11 @@ Cam_Info DrEngineWorld::loadCharacterCameraSettings(DrThing *thing) {
     int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
     cam.match_angle =   thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle).toBool();
     cam.up =            static_cast<Up_Vector>(up_vector);
+    auto sides =        thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Sides).toVector();
+    cam.frame_top =     static_cast<Frame_Edge>(sides[0].toInt());
+    cam.frame_right =   static_cast<Frame_Edge>(sides[1].toInt());
+    cam.frame_bottom =  static_cast<Frame_Edge>(sides[2].toInt());
+    cam.frame_left =    static_cast<Frame_Edge>(sides[3].toInt());
     return cam;
 }
 
@@ -88,6 +93,10 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->setCameraLag( cam.lag );
     player->setCameraUpVector(cam.up);
     player->setCameraMatch(cam.match_angle);
+    player->setCameraEdge(Edge_Location::Top,    cam.frame_top);
+    player->setCameraEdge(Edge_Location::Right,  cam.frame_right);
+    player->setCameraEdge(Edge_Location::Bottom, cam.frame_bottom);
+    player->setCameraEdge(Edge_Location::Left,   cam.frame_left);
 
     // ***** Apply Character Settings
     player->setMaxSpeedX( max_speed.x );

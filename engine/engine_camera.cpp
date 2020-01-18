@@ -28,6 +28,12 @@ DrEngineCamera::DrEngineCamera(DrEngineWorld *world, long unique_key, float x, f
 
     // Lag slop buffer size
     setBufferSize(buffer_size);
+
+    // Initialize Frame Edges
+    m_camera_edges[Edge_Location::Top] =    Frame_Edge::Normal;
+    m_camera_edges[Edge_Location::Right] =  Frame_Edge::Normal;
+    m_camera_edges[Edge_Location::Bottom] = Frame_Edge::Normal;
+    m_camera_edges[Edge_Location::Left] =   Frame_Edge::Normal;
 }
 
 

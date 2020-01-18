@@ -56,11 +56,11 @@ void DrView::startRotateCamera(QPoint mouse_in_view) {
 void DrView::rotateCamera(QPointF mouse_in_view) {
 
     // Calculate difference between starting mouse position and current mouse posisiton. Use that to assign new rotation angle
-    double x_diff = ((mouse_in_view.x() - m_cam_mouse_start.x()) * 0.25) / currentZoomLevel();
-    double y_diff = ((mouse_in_view.y() - m_cam_mouse_start.y()) * 0.25) / currentZoomLevel();
+    double x_diff = ((mouse_in_view.x() - m_cam_mouse_start.x()) * 0.20) / currentZoomLevel();
+    double y_diff = ((mouse_in_view.y() - m_cam_mouse_start.y()) * 0.20) / currentZoomLevel();
     DrPointF rotation;
-    rotation.x = m_cam_angle_x_start + ((m_cam_reversed) ? -y_diff : y_diff);
-    rotation.y = m_cam_angle_y_start + ((m_cam_at_back) ? x_diff : -x_diff);
+    rotation.x = m_cam_angle_x_start + ((m_cam_reversed) ? -y_diff :  y_diff);
+    rotation.y = m_cam_angle_y_start + ((m_cam_at_back)  ?  x_diff : -x_diff);
 
     // Update data model
     if (m_cam_selected->getThingType() == DrThingType::Character) {

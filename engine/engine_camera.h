@@ -10,13 +10,6 @@
 
 #include "engine/globals_engine.h"
 
-// Local Enumerations
-enum class Frame_Edge {
-    Normal,                     // Edge allows movement
-    Blocking,                   // Edge does not allow movement
-    Death,                      // Edge causes character death
-};
-
 
 //####################################################################################
 //##    DrEngineCamera
@@ -61,10 +54,7 @@ private:
     std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
 
     // Character Camera Frame
-    Frame_Edge          m_edge_top =    Frame_Edge::Normal;     // For character cameras, determines behavior of top    edge of camera frame
-    Frame_Edge          m_edge_bottom = Frame_Edge::Normal;     // For character cameras, determines behavior of bottom edge of camera frame
-    Frame_Edge          m_edge_left =   Frame_Edge::Normal;     // For character cameras, determines behavior of left   edge of camera frame
-    Frame_Edge          m_edge_right =  Frame_Edge::Normal;     // For character cameras, determines behavior of right  edge of camera frame
+    std::map<Edge_Location, Frame_Edge> m_camera_edges;         // For character cameras, describes edges of camera frame
 
     // Auto Zoom Variables
     std::deque<double>  m_avg_speed;                            // Average speed per second
@@ -112,6 +102,9 @@ public:
     void                setLag(DrPointF lag) { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
                                                m_lag.y = (lag.y <= 0) ? 0 : lag.y; }
     void                setMatchAngle(bool match) { m_match_angle = match; }
+
+    Frame_Edge          getEdge(Edge_Location edge_location) { return m_camera_edges[edge_location]; }
+    void                setEdge(Edge_Location edge_location, Frame_Edge edge_type) { m_camera_edges[edge_location] = edge_type; }
 
     void                setPosition(glm::vec3 new_position) {       m_position = new_position; }
     void                setPosition(double x, double y, double z) { m_position = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }

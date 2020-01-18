@@ -13,7 +13,7 @@
 //##    Used to track what the DrVariant m_value data type really is
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:    32
+//##    !!!!! NEXT AVAILABLE NUMBER:    33
 //##
 //############################
 enum class Property_Type {
@@ -61,15 +61,13 @@ enum class Property_Type {
     Variable        = 26,   // DrPointF             Decimal point pair, number followed by a +/- number
 
     List            = 27,   // long                 Index of a particular enum list
+    Array           = 28,   // vector<variant>      List of DrVariants, some parts NOT IMPLEMENTED !!!!!
 
-    Color           = 28,   // unsigned int         For colors (compatible with DrColor.rgba())
-    Image           = 29,   // long                 Index of a particular DrAnimation within the Project
+    Color           = 29,   // unsigned int         For colors (compatible with DrColor.rgba())
+    Image           = 30,   // long                 Index of a particular DrAnimation within the Project
 
-    Collision       = 30,   // DrPropertyCollision  For Collision Shapes
-
-
-    // !!!!! NOT IMPLEMENTED:
-    Icon            = 31,   // -----
+    Collision       = 31,   // DrPropertyCollision  For Collision Shapes
+    Icon            = 32,   // -----                NOT IMPLEMENTED !!!!!
 };
 
 
@@ -152,9 +150,9 @@ enum class Components {
 //##    Possible DrProperties of DrComponents
 //##        Numbers are SAVE FILE CRITICAL and CANNOT BE CHANGED once set
 //##
-//##    !!!!! NEXT AVAILABLE NUMBER:   243
+//##    !!!!! NEXT AVAILABLE NUMBER:   244
 //##
-//##    Checked for doubles up through 243 on 01/14/2020
+//##    Checked for doubles up through 244 on 01/14/2020
 //############################
 enum class Properties {
 
@@ -426,6 +424,7 @@ enum class Properties {
     Thing_Character_Camera_Zoom         = 181,      // double
     Thing_Character_Camera_Lag          = 182,      // double
     Thing_Character_Camera_Match_Angle  = 183,      // bool
+    Thing_Character_Camera_Sides        = 243,      // array
 
     // Object Settings
     Thing_Object_Physics_Type           = 184,      // list, enum class Body_Type (Static, Kinematic, Dynamic)

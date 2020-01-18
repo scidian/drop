@@ -18,6 +18,11 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
     m_original_project_key = original_key;
 
     m_camera_rotation = c_default_camera_rot;
+
+    m_camera_edges[Edge_Location::Top] =    Frame_Edge::Normal;
+    m_camera_edges[Edge_Location::Right] =  Frame_Edge::Normal;
+    m_camera_edges[Edge_Location::Bottom] = Frame_Edge::Normal;
+    m_camera_edges[Edge_Location::Left] =   Frame_Edge::Normal;
 }
 
 DrEngineThing::~DrEngineThing() {

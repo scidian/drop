@@ -25,7 +25,7 @@
 //####################################################################################
 //##    Local Constants
 //####################################################################################
-const float     c_ring_size =       200.f;              // Diameter of Camera Circle
+const float     c_ring_size =       250.f;              // Diameter of Camera Circle
 const int       c_outline_width =   2;                  // Pen width of QPainter
 const double    c_square_radius =   4.0;                // Size of square / circle corner and side handles
 const double    c_edge_radius =     3.0;                // Size of frame edges
@@ -123,10 +123,10 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
                 QPen edge_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), 1);
                      edge_pen.setCosmetic(true);
                 painter.setPen(edge_pen);
-                painter.setBrush(frame_brushes[Frame_Edge::Normal]);    paintFrameEdge(painter, tl_b, tr_b);
-                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);  paintFrameEdge(painter, tr_b, br_b);
-                painter.setBrush(frame_brushes[Frame_Edge::Death]);     paintFrameEdge(painter, br_b, bl_b);
-                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);  paintFrameEdge(painter, bl_b, tl_b);
+                painter.setBrush(frame_brushes[cam.frame_top]);     paintFrameEdge(painter, tl_b, tr_b);
+                painter.setBrush(frame_brushes[cam.frame_right]);   paintFrameEdge(painter, tr_b, br_b);
+                painter.setBrush(frame_brushes[cam.frame_bottom]);  paintFrameEdge(painter, br_b, bl_b);
+                painter.setBrush(frame_brushes[cam.frame_left]);    paintFrameEdge(painter, bl_b, tl_b);
 
                 paintCornerSquare(painter, tl_b);
                 paintCornerSquare(painter, tr_b);
@@ -209,7 +209,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
 
             // ***** Draw Big Y Circle
             QLinearGradient gradient_y;
-            QColor ring_y_back(Qt::white);
+            QColor ring_y_back( Qt::white);
             QColor ring_y_front(Qt::white);
             float distance_y = (tl_y.x() > tr_y.x()) ? (tl_y.x() - tr_y.x()) : (tr_y.x() - tl_y.x());
             float percent_y = 1.0f - ((distance_y / (radius * 2.f)) / 2.f);
@@ -266,7 +266,7 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.resetTransform();
             */
 
-            float rad = ((radius * static_cast<float>(cam.zoom)) / 24.f) + 10.f;
+            float rad = ((radius * static_cast<float>(cam.zoom)) / 32.f) + 10.f;
             float curve =  0.925f;
             float curve2 = 0.71f;
 

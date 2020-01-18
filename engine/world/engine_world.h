@@ -29,6 +29,10 @@ struct Cam_Info {                                           // Character Camera 
     DrPointF    lag =           DrPointF(0, 0);
     bool        match_angle =   false;
     Up_Vector   up =            Up_Vector::Y;
+    Frame_Edge  frame_top =     Frame_Edge::Normal;
+    Frame_Edge  frame_right =   Frame_Edge::Normal;
+    Frame_Edge  frame_bottom =  Frame_Edge::Normal;
+    Frame_Edge  frame_left =    Frame_Edge::Normal;
 };
 
 // Global Forward Declarations for static Chipmunk callbacks
