@@ -80,10 +80,6 @@ private:
     Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;         // Tracks current view mouse mode
     View_Mode               m_view_mode = View_Mode::None;              // Tracks current view interaction mode
 
-    const QPixmap p_circle = QPixmap(":/assets/gui_misc/handle_circle.png");
-    const QPixmap p_square = QPixmap(":/assets/gui_misc/handle_square.png");
-    const QPixmap p_rotate = QPixmap(":/assets/gui_misc/handle_rotate.png");
-
     // Display Variables
     int             m_zoom = 200; // (50%)                              // Zoom level of current view, 200 is 50% - 250 is 100%
     double          m_zoom_scale = 0.5;                                 // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY

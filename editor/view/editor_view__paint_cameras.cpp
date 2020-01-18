@@ -22,26 +22,36 @@
 #include "project/properties/property_collision.h"
 
 
-// Local Constants
-const float c_ring_size = 200.f;            // Diameter of camera circle
-const int   c_outline_width = 2;            // Pen width of QPainter
+//####################################################################################
+//##    Local Constants
+//####################################################################################
+const float     c_ring_size =       200.f;              // Diameter of Camera Circle
+const int       c_outline_width =   2;                  // Pen width of QPainter
+const double    c_square_radius =   4.0;                // Size of square / circle corner and side handles
+const double    c_edge_radius =     3.0;                // Size of frame edges
+
 
 
 //####################################################################################
 //##    Paints corners of Character Camera Frame
 //####################################################################################
 void paintCornerSquare(QPainter &painter, QPointF location) {
-    double square_radius = 4.0;
-    QRectF square(location - QPointF(square_radius, square_radius), location + QPointF(square_radius, square_radius));
+    QRectF square(location - QPointF(c_square_radius, c_square_radius), location + QPointF(c_square_radius, c_square_radius));
+    QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), 1);
+         corner_pen.setCosmetic(true);
+    painter.setPen(corner_pen);
+    QLinearGradient corner_fade(square.topLeft(), square.bottomRight());
+    corner_fade.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight).lighter(150)));
+    corner_fade.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight).darker( 200)));
+    painter.setBrush(corner_fade);
     painter.drawRect(square);
 }
 
 void paintFrameEdge(QPainter &painter, QPointF point1, QPointF point2) {
-    double square_radius = 3.0;
     QPolygonF poly;
     poly << point1 << point2;
     QRectF box = poly.boundingRect();
-    QRectF square(box.topLeft() - QPointF(square_radius, square_radius), box.bottomRight() + QPointF(square_radius, square_radius));
+    QRectF square(box.topLeft() - QPointF(c_edge_radius, c_edge_radius), box.bottomRight() + QPointF(c_edge_radius, c_edge_radius));
     painter.drawRect(square);
 }
 
@@ -61,15 +71,11 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
 
         // ***** Load Thing Info
         DrPointF center =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-        ///DrPointF size =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
-        ///DrPointF scale =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
         double   angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
 
         // ***** Load Camera Info
-        QTransform  cam_transform;
         Cam_Info    cam;
         DrPointF    cam_position;
-
         if (thing->getThingType() == DrThingType::Character) {
             cam = DrEngineWorld::loadCharacterCameraSettings(thing);
             cam_position = center + DrPointF(cam.position.x, -cam.position.y);
@@ -82,15 +88,13 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
             cam.up =            static_cast<Up_Vector>(up_vector);
         }
-        if (cam.match_angle) cam_transform = cam_transform.translate(center.x, center.y).rotate(angle).translate(-center.x, -center.y);
-        cam_transform = cam_transform.translate(cam_position.x, cam_position.y).rotate(cam.tilt).translate(-cam_position.x, -cam_position.y);
 
-        // ***** Camera Lag Box
-        QPointF middle = mapFromScene( cam_transform.map(QPointF(cam_position.x, cam_position.y)) );
-        QPointF tl_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
-        QPointF tr_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y-cam.lag.y/2)) );
-        QPointF br_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x+cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
-        QPointF bl_b =   mapFromScene( cam_transform.map(QPointF(cam_position.x-cam.lag.x/2, cam_position.y+cam.lag.y/2)) );
+        // ***** Figure out Camera Lag Box
+        QPointF middle = mapFromScene( QPointF(cam_position.x, cam_position.y) );
+        QPointF tl_b =   mapFromScene( QPointF(cam_position.x-cam.lag.x/2, cam_position.y-cam.lag.y/2) );
+        QPointF tr_b =   mapFromScene( QPointF(cam_position.x+cam.lag.x/2, cam_position.y-cam.lag.y/2) );
+        QPointF br_b =   mapFromScene( QPointF(cam_position.x+cam.lag.x/2, cam_position.y+cam.lag.y/2) );
+        QPointF bl_b =   mapFromScene( QPointF(cam_position.x-cam.lag.x/2, cam_position.y+cam.lag.y/2) );
         QPolygonF square;
         square << tl_b << tr_b << br_b << bl_b;
 
@@ -99,52 +103,45 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
         if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box) || (bounding_box.width() == 0 && bounding_box.height() == 0)) &&
             (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
 
-            // ***** Initial Set Up of QPainter
-            QColor box_fill = Dr::ToQColor(Dr::white);
-                   box_fill.setAlpha(64);
-
-            std::map<Frame_Edge, QBrush> frame_brushes;
-            frame_brushes[Frame_Edge::Normal] =    QBrush(Dr::ToQColor(0xFF75F42E));//0xFF388E3C));
-            frame_brushes[Frame_Edge::Blocking] =  QBrush(Dr::ToQColor(0xFFFFD71E));//0xFFFFA000));
-            frame_brushes[Frame_Edge::Death] =     QBrush(Dr::ToQColor(0xFFEF1C16));//0xFFC2185B));
-
             // ***** Draw Lag Box
             bool aliasing = painter.renderHints() & QPainter::Antialiasing;
             painter.setRenderHint(QPainter::Antialiasing, false);
+            QColor box_fill = Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight));
+                   box_fill.setAlpha(64);
 
+            std::map<Frame_Edge, QBrush> frame_brushes;
+            frame_brushes[Frame_Edge::Normal] =    QBrush(Dr::ToQColor(0xFF75F42E));    // Green
+            frame_brushes[Frame_Edge::Blocking] =  QBrush(Dr::ToQColor(0xFFFFD71E));    // Yellow
+            frame_brushes[Frame_Edge::Death] =     QBrush(Dr::ToQColor(0xFFEF1C16));    // Red
+
+            // Adjustable Box Frame
             if (thing->getThingType() == DrThingType::Character) {
                 painter.setPen(Qt::NoPen);
                 painter.setBrush(QBrush(box_fill));
                 painter.drawPolygon(square);
 
-                QPen edge_pen = QPen(QBrush(Dr::ToQColor(Dr::black)), 1);
+                QPen edge_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), 1);
                      edge_pen.setCosmetic(true);
                 painter.setPen(edge_pen);
-                painter.setBrush(frame_brushes[Frame_Edge::Normal]);
-                paintFrameEdge(painter, tl_b, tr_b);
-                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);
-                paintFrameEdge(painter, tr_b, br_b);
-                painter.setBrush(frame_brushes[Frame_Edge::Death]);
-                paintFrameEdge(painter, br_b, bl_b);
-                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);
-                paintFrameEdge(painter, bl_b, tl_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Normal]);    paintFrameEdge(painter, tl_b, tr_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);  paintFrameEdge(painter, tr_b, br_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Death]);     paintFrameEdge(painter, br_b, bl_b);
+                painter.setBrush(frame_brushes[Frame_Edge::Blocking]);  paintFrameEdge(painter, bl_b, tl_b);
 
-                QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::black)), 1);
-                     corner_pen.setCosmetic(true);
-                painter.setPen(corner_pen);
-                painter.setBrush(Dr::ToQColor(Dr::white));
                 paintCornerSquare(painter, tl_b);
                 paintCornerSquare(painter, tr_b);
                 paintCornerSquare(painter, br_b);
                 paintCornerSquare(painter, bl_b);
 
+            // Non-Adjustable Box
             } else {
-                QPen normal_box = QPen(QBrush(Dr::ToQColor(Dr::white)), c_outline_width);
-                painter.setPen(normal_box);
-                painter.setBrush(QBrush(box_fill));
-                painter.drawPolygon(square);
+                ///QPen normal_box = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))), c_outline_width);
+                ///painter.setPen(normal_box);
+                ///painter.setBrush(QBrush(box_fill));
+                ///painter.drawPolygon(square);
             }
             painter.setRenderHint(QPainter::Antialiasing, aliasing);
+
 
             // ***** Rotational Circles
             painter.setBrush(Qt::NoBrush);
@@ -152,9 +149,12 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             ///radius *= (1.f / static_cast<float>(cam.zoom));
 
             // Calculate circle bounds
-            QMatrix4x4 circle_x, circle_y;
+            QMatrix4x4 circle_x, circle_y, circle_z;
             circle_y.rotate(static_cast<float>(-cam.rotation.y) + 0.0001f, 0.0f, 1.0f, 0.0f);
             circle_x.rotate(static_cast<float>( cam.rotation.x) + 0.0001f, 1.0f, 0.0f, 0.0f);
+
+            double z_angle = ((cam.match_angle) ? angle : 0.0) + cam.tilt;
+            circle_z.rotate(static_cast<float>( z_angle       ) + 0.0001f, 0.0f, 0.0f, 1.0f);
 
             QVector3D tl_x, tr_x, bl_x, br_x;
             QVector3D tl_y, tr_y, bl_y, br_y;
@@ -298,10 +298,10 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.drawPath(path);
 
             // ***** Cone Lines
-            QVector3D tl_c2 = circle_y * (circle_x * QVector3D(-rad*curve2, -rad*curve2, -radius));
-            QVector3D tr_c2 = circle_y * (circle_x * QVector3D( rad*curve2, -rad*curve2, -radius));
-            QVector3D br_c2 = circle_y * (circle_x * QVector3D( rad*curve2,  rad*curve2, -radius));
-            QVector3D bl_c2 = circle_y * (circle_x * QVector3D(-rad*curve2,  rad*curve2, -radius));
+            QVector3D tl_c2 = circle_y * (circle_x * (circle_z * QVector3D(-rad*curve2, -rad*curve2, -radius)));
+            QVector3D tr_c2 = circle_y * (circle_x * (circle_z * QVector3D( rad*curve2, -rad*curve2, -radius)));
+            QVector3D br_c2 = circle_y * (circle_x * (circle_z * QVector3D( rad*curve2,  rad*curve2, -radius)));
+            QVector3D bl_c2 = circle_y * (circle_x * (circle_z * QVector3D(-rad*curve2,  rad*curve2, -radius)));
             QPointF tl2 = QPointF(static_cast<double>(tl_c2.x()), static_cast<double>(tl_c2.y()));
             QPointF tr2 = QPointF(static_cast<double>(tr_c2.x()), static_cast<double>(tr_c2.y()));
             QPointF br2 = QPointF(static_cast<double>(br_c2.x()), static_cast<double>(br_c2.y()));
@@ -313,14 +313,14 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             painter.drawLine(mid, bl2);
 
             // ***** Camera Housing
-            QVector3D box1_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*1.0f)));
-            QVector3D box1_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*1.0f)));
-            QVector3D box1_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*1.0f)));
-            QVector3D box1_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*1.0f)));
-            QVector3D box2_tl = circle_y * (circle_x * QVector3D(-rad, -rad, -radius - (rad*3.0f)));
-            QVector3D box2_tr = circle_y * (circle_x * QVector3D( rad, -rad, -radius - (rad*3.0f)));
-            QVector3D box2_br = circle_y * (circle_x * QVector3D( rad,  rad, -radius - (rad*3.0f)));
-            QVector3D box2_bl = circle_y * (circle_x * QVector3D(-rad,  rad, -radius - (rad*3.0f)));
+            QVector3D box1_tl = circle_y * (circle_x * (circle_z * QVector3D(-rad, -rad, -radius - (rad*1.0f))));
+            QVector3D box1_tr = circle_y * (circle_x * (circle_z * QVector3D( rad, -rad, -radius - (rad*1.0f))));
+            QVector3D box1_br = circle_y * (circle_x * (circle_z * QVector3D( rad,  rad, -radius - (rad*1.0f))));
+            QVector3D box1_bl = circle_y * (circle_x * (circle_z * QVector3D(-rad,  rad, -radius - (rad*1.0f))));
+            QVector3D box2_tl = circle_y * (circle_x * (circle_z * QVector3D(-rad, -rad, -radius - (rad*3.0f))));
+            QVector3D box2_tr = circle_y * (circle_x * (circle_z * QVector3D( rad, -rad, -radius - (rad*3.0f))));
+            QVector3D box2_br = circle_y * (circle_x * (circle_z * QVector3D( rad,  rad, -radius - (rad*3.0f))));
+            QVector3D box2_bl = circle_y * (circle_x * (circle_z * QVector3D(-rad,  rad, -radius - (rad*3.0f))));
             QPointF b1_tl = QPointF(static_cast<double>(box1_tl.x()),   static_cast<double>(box1_tl.y()));
             QPointF b1_tr = QPointF(static_cast<double>(box1_tr.x()),   static_cast<double>(box1_tr.y()));
             QPointF b1_br = QPointF(static_cast<double>(box1_br.x()),   static_cast<double>(box1_br.y()));

@@ -18,6 +18,14 @@
 
 
 //####################################################################################
+//##    Local Constants
+//####################################################################################
+const double c_rotate_radius = 4.5;             // Determines size of rotate handle
+const double c_square_radius = 3.5;             // Determines size of square / circle corner and side handles
+
+
+
+//####################################################################################
 //##    PAINT: Paints outline around every selected item
 //####################################################################################
 void DrView::paintItemOutlines(QPainter &painter) {
@@ -81,7 +89,6 @@ void DrView::paintBoundingBox(QPainter &painter) {
 //##    PAINT: Paints handles onto view
 //####################################################################################
 void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
-    painter.setBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)));
     painter.resetTransform();
 
     QList<Position_Flags> handles {
@@ -90,39 +97,55 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
         Position_Flags::Rotate
     };
 
-    double rotate_size  =   10;                         // Determines size of rotate handle
-    double handle_size  =    8;                         // Determines size of circular corner and side handles
-    double square_scale = .225;                         // Determines size of square   corner and side handles
     for (auto handle : handles) {
 
         // Draw Cornder and Side Handles
         if (handle != Position_Flags::Rotate) {
             QPointF draw_center = mapFromScene(m_selection_points[handle]);
-            QRectF  to_draw( draw_center.x() - (handle_size / 2), draw_center.y() - (handle_size / 2), handle_size, handle_size);
+            painter.translate(draw_center);
+            painter.rotate( m_grid_rotate );
 
-            if (shape_to_draw == Handle_Shapes::Circles) {
-                painter.drawPixmap(to_draw, p_circle, p_circle.rect());
+            QRectF square(QPointF(-c_square_radius, -c_square_radius), QPointF(c_square_radius, c_square_radius));
+            QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight))), 1);
+                 corner_pen.setCosmetic(true);
+            painter.setPen(corner_pen);
+            QLinearGradient corner_fade(square.topLeft(), square.bottomRight());
+            corner_fade.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light).lighter(150)));
+            corner_fade.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark ).darker( 200)));
+            painter.setBrush(corner_fade);
+
+            if (shape_to_draw == Handle_Shapes::Circles) {                
+                painter.drawEllipse(square);
             } else if (shape_to_draw == Handle_Shapes::Squares) {
-                painter.translate(to_draw.center());
-                painter.rotate( m_grid_rotate );
-                painter.scale( square_scale, square_scale );
-                painter.drawPixmap(-p_square.rect().center(), p_square);
-                painter.resetTransform();
+                painter.drawRect(square);
             }
 
         // Draw rotate handle
         } else {
             QPointF draw_center = m_handles_centers[Position_Flags::Rotate];
-            QRectF  to_draw( draw_center.x() - (rotate_size / 2), draw_center.y() - (rotate_size / 2), rotate_size, rotate_size);
+            painter.translate(draw_center);
+            painter.rotate( m_grid_rotate );
 
-            painter.drawPixmap(to_draw, p_rotate, p_rotate.rect());
+            QRectF circle(QPointF(-c_rotate_radius, -c_rotate_radius), QPointF(c_rotate_radius, c_rotate_radius));
+            QPen rotate_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light).lighter(150))), 1);
+                 rotate_pen.setCosmetic(true);
+            painter.setPen(rotate_pen);
+            QLinearGradient rotate_fade(circle.topLeft(), circle.bottomRight());
+            rotate_fade.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight).lighter(150)));
+            rotate_fade.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight).darker( 200)));
+            painter.setBrush(rotate_fade);
+            painter.drawEllipse(circle);
         }
+        painter.resetTransform();
+
     }
 
     // !!!!! #DEBUG:    Paint rects of all mouse resizing grip handles
     if (Dr::CheckDebugFlag(Debug_Flags::Paint_Size_Grip_Handles)) {
-        for (auto h : m_handles)
+        painter.setBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)));
+        for (auto h : m_handles) {
             painter.drawPolygon(h.second);
+        }
     }
     // !!!!! END
 }
