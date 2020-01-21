@@ -12,7 +12,7 @@
 #include <QSpinBox>
 
 #include "editor/event_filters.h"
-#include "editor/forms/form_main.h"
+#include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/pixmap/pixmap.h"

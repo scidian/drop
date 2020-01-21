@@ -8,7 +8,7 @@
 #include <QButtonGroup>
 #include <QDebug>
 
-#include "editor/forms/form_main.h"
+#include "editor/form_main/form_main.h"
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"

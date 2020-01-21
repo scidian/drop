@@ -7,7 +7,7 @@
 //
 #include <QButtonGroup>
 
-#include "editor/forms/form_main.h"
+#include "editor/form_main/form_main.h"
 #include "editor/preferences.h"
 #include "editor/view/editor_view.h"
 

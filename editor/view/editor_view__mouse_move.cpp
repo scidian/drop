@@ -46,7 +46,7 @@ namespace Mouse_Cursors {
 
 
 //####################################################################################
-//##    Mouse Moved
+//##    Mouse Leaves View
 //####################################################################################
 void DrView::leaveEvent(QEvent *event) {
     (void)event;
@@ -55,7 +55,9 @@ void DrView::leaveEvent(QEvent *event) {
 
 
 //####################################################################################
+//##
 //##    Mouse Moved
+//##
 //####################################################################################
 void DrView::mouseMoveEvent(QMouseEvent *event) {
     // Test for scene and lock the scene

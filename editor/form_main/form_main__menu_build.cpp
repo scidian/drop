@@ -14,7 +14,7 @@
 
 #include "core/colors/colors.h"
 #include "editor/debug.h"
-#include "editor/forms/form_main.h"
+#include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"

@@ -125,6 +125,18 @@ SOURCES += \
     editor/docks/docks_initialize.cpp \
     editor/enums_editor.cpp \
     editor/event_filters.cpp \
+    editor/form_main/form_main.cpp \
+    editor/form_main/form_main__build.cpp \
+    editor/form_main/form_main__build_central_widget.cpp \
+    editor/form_main/form_main__interface_editor.cpp \
+    editor/form_main/form_main__menu.cpp \
+    editor/form_main/form_main__menu_build.cpp \
+    editor/form_main/form_main__toolbar.cpp \
+    editor/form_main/form_main__toolbar_build.cpp \
+    editor/form_main/form_main__toolbar_click.cpp \
+    editor/form_main/form_main__view_toolbar.cpp \
+    editor/form_main/form_main__view_toolbar_build.cpp \
+    editor/form_main/form_main__view_toolbar_click.cpp \
     editor/forms/form_about.cpp \
     editor/forms/form_animation.cpp \
     editor/forms/form_animation__build.cpp \
@@ -133,18 +145,6 @@ SOURCES += \
     editor/forms/form_color_magnifier.cpp \
     editor/forms/form_expire.cpp \
     editor/forms/form_fonts.cpp \
-    editor/forms/form_main.cpp \
-    editor/forms/form_main__build.cpp \
-    editor/forms/form_main__build_central_widget.cpp \
-    editor/forms/form_main__interface_editor.cpp \
-    editor/forms/form_main__menu.cpp \
-    editor/forms/form_main__menu_build.cpp \
-    editor/forms/form_main__toolbar.cpp \
-    editor/forms/form_main__toolbar_build.cpp \
-    editor/forms/form_main__toolbar_click.cpp \
-    editor/forms/form_main__view_toolbar.cpp \
-    editor/forms/form_main__view_toolbar_build.cpp \
-    editor/forms/form_main__view_toolbar_click.cpp \
     editor/forms/form_popup.cpp \
     editor/forms/form_popup__add_entity.cpp \
     editor/forms/form_popup__grid_snap.cpp \
@@ -200,8 +200,10 @@ SOURCES += \
     editor/view/editor_view__drag_drop.cpp \
     editor/view/editor_view__grid.cpp \
     editor/view/editor_view__key_press.cpp \
-    editor/view/editor_view__mouse.cpp \
     editor/view/editor_view__mouse_move.cpp \
+    editor/view/editor_view__mouse_press.cpp \
+    editor/view/editor_view__mouse_release.cpp \
+    editor/view/editor_view__mouse_wheel.cpp \
     editor/view/editor_view__paint.cpp \
     editor/view/editor_view__paint_cameras.cpp \
     editor/view/editor_view__paint_collision.cpp \
@@ -924,13 +926,13 @@ HEADERS += \
     editor/docks/docks.h \
     editor/enums_editor.h \
     editor/event_filters.h \
+    editor/form_main/form_main.h \
     editor/forms/form_about.h \
     editor/forms/form_animation.h \
     editor/forms/form_blank.h \
     editor/forms/form_color_magnifier.h \
     editor/forms/form_expire.h \
     editor/forms/form_fonts.h \
-    editor/forms/form_main.h \
     editor/forms/form_popup.h \
     editor/forms/form_settings.h \
     editor/helper_library.h \

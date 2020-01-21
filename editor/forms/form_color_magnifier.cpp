@@ -12,8 +12,8 @@
 #include <QPainter>
 #include <QScreen>
 
+#include "editor/form_main/form_main.h"
 #include "editor/forms/form_color_magnifier.h"
-#include "editor/forms/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 
