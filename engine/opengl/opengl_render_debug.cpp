@@ -126,16 +126,39 @@ void DrOpenGL::drawDebugJoints() {
     // ***** Build mesh of joints
     DebugVertex vertexes;
     for (auto joint : joint_list) {
-        cpBody *body_a = cpConstraintGetBodyA( joint );
-        cpBody *body_b = cpConstraintGetBodyB( joint );
+        cpVect point_a, point_b, pivot_point;
+        bool   has_pivot = false;
 
-        // Load Object Positions
-        cpVect body_pos_a = cpBodyGetPosition(body_a);
-        cpVect body_pos_b = cpBodyGetPosition(body_b);
+        // Find Joint Coordinates
+        cpBody *body_a = cpConstraintGetBodyA(joint);
+        cpBody *body_b = cpConstraintGetBodyB(joint);
+        cpVect  body_pos_a = cpBodyGetPosition(body_a);
+        cpVect  body_pos_b = cpBodyGetPosition(body_b);
+        if (cpConstraintIsSlideJoint(joint)) {
+            cpVect    slide_a = cpSlideJointGetAnchorA(joint);
+            DrPointF  rotate_a = Dr::RotatePointAroundOrigin(DrPointF(slide_a.x, slide_a.y), DrPointF(0, 0), cpBodyGetAngle(body_a), true);
+            point_a = body_pos_a + cpv(rotate_a.x, rotate_a.y);
 
-        addDebugLine(vertexes, body_pos_a, body_pos_b, 1.5f/combinedZoomScale(), Dr::white, Dr::white);
-        addDebugCircle(vertexes, DrPointF(body_pos_a.x, body_pos_a.y), 3.f, 0.f, fill_color, Dr::white, false);
-        addDebugCircle(vertexes, DrPointF(body_pos_b.x, body_pos_b.y), 3.f, 0.f, fill_color, Dr::white, false);
+            cpVect    slide_b = cpSlideJointGetAnchorB(joint);
+            DrPointF  rotate_b = Dr::RotatePointAroundOrigin(DrPointF(slide_b.x, slide_b.y), DrPointF(0, 0), cpBodyGetAngle(body_b), true);
+            point_b = body_pos_b + cpv(rotate_b.x, rotate_b.y);
+        } else if (cpConstraintIsPivotJoint(joint)) {
+            point_a = body_pos_a;
+            point_b = body_pos_b;
+
+            cpVect    pivot = cpPivotJointGetAnchorA(joint);
+            DrPointF  rotate_p = Dr::RotatePointAroundOrigin(DrPointF(pivot.x, pivot.y),     DrPointF(0, 0), cpBodyGetAngle(body_a), true);
+            pivot_point = body_pos_a + cpv(rotate_p.x, rotate_p.y);
+            has_pivot = true;
+        } else {
+            point_a = body_pos_a;
+            point_b = body_pos_b;
+        }
+
+        addDebugLine(vertexes, point_a, point_b, 1.5f/combinedZoomScale(), Dr::white, Dr::white);
+        addDebugCircle(vertexes, DrPointF(point_a.x, point_a.y), 3.f, 0.f, fill_color, Dr::white, false);
+        addDebugCircle(vertexes, DrPointF(point_b.x, point_b.y), 3.f, 0.f, fill_color, Dr::white, false);
+        if (has_pivot) addDebugCircle(vertexes, DrPointF(pivot_point.x, pivot_point.y), 3.f, 0.f, fill_color, Dr::orange, false);
     }
 
     // ***** Draw joint triangles

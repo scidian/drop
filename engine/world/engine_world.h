@@ -175,13 +175,15 @@ public:
     DrEngineThing*  findThingByKey(long key);
     long            getNextKey()            { return m_key_generator++; }
 
-
-    // World Construction / Handling
+    // World Adding
     void            addPlayer(Demo_Player new_player_type);
-    void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void            addSoftBody(DrPointF point);                // TEMP
     void            addStage();
     void            addThing(DrEngineThing *thing);
     void            addThings(std::list<DrEngineThing*> things);
+
+    // World Construction / Handling
+    void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
     void            buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
     void            clearWorld();
     int             countCharacters();

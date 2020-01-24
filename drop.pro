@@ -264,6 +264,7 @@ SOURCES += \
     engine/world/engine_world__load_effects.cpp \
     engine/world/engine_world__load_objects.cpp \
     engine/world/engine_world__load_stage.cpp \
+    engine/world/engine_world__nape_soft_bodies.cpp \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
