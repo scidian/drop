@@ -29,7 +29,9 @@ public:
     // Constructors
     DrVec3();
     DrVec3(float f);
-    DrVec3(float x_, float y_, float z_);
+    DrVec3(float  x_, float  y_, float  z_);
+    DrVec3(double x_, double y_, double z_);
+    DrVec3(int    x_, int    y_, int    z_);
     DrVec3(const DrVec3 &v);
     DrVec3(const glm::vec3 &v);
 

@@ -61,7 +61,7 @@ private:
     EngineTextureMap   &m_textures;                 // Reference to map of Textures used for Rendering
 
     // Local Variables
-    long                m_key_generator = 1;        // Variable to hand out unique id key's to all children items, keys start at 1
+    long                m_key_generator = 100;      // Variable to hand out unique id key's to all children items, keys start at 1
     long                m_world;                    // Key of world from Project represented in this instance of DrEngineWorld
 
     // **********
@@ -177,7 +177,8 @@ public:
 
     // World Adding
     void            addPlayer(Demo_Player new_player_type);
-    void            addSoftBody(DrPointF point);                // TEMP
+    void            addSoftBodyCircle(DrPointF point, double diameter);                 // TEMP
+    void            addSoftBodySquare(DrPointF point);                                  // TEMP
     void            addStage();
     void            addThing(DrEngineThing *thing);
     void            addThings(std::list<DrEngineThing*> things);

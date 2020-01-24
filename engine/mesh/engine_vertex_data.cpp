@@ -105,7 +105,7 @@ void DrEngineVertexData::initializeTextureCone() {
     tx3 = 1.0; ty3 = 0.0;
 
     DrVec3 n = DrVec3::triangleNormal(DrVec3(x1, y1, 0.f), DrVec3(x3, y3, 0.f), DrVec3(x2, y2, 0.f));
-    DrVec3 point_t( x1, y1,                0);
+    DrVec3 point_t( x1, y1,              0.f);
     DrVec3 point_bl(x2, y2, +c_extrude_depth);
     DrVec3 point_br(x3, y3, +c_extrude_depth);
 

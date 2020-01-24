@@ -224,6 +224,7 @@ SOURCES += \
     engine/engine_texture.cpp \
     engine/enums_engine.cpp \
     engine/form_engine.cpp \
+    engine/mesh/engine_mesh.cpp \
     engine/mesh/engine_vertex_data.cpp \
     engine/mesh/engine_vertex_data__extrude.cpp \
     engine/mesh/engine_vertex_data__smooth.cpp \
@@ -243,6 +244,7 @@ SOURCES += \
     engine/opengl/opengl_render_fbo.cpp \
     engine/opengl/opengl_render_lights.cpp \
     engine/opengl/opengl_render_objects.cpp \
+    engine/opengl/opengl_render_soft_body.cpp \
     engine/opengl/opengl_render_space.cpp \
     engine/things/engine_thing.cpp \
     engine/things/engine_thing_fire.cpp \
@@ -264,7 +266,8 @@ SOURCES += \
     engine/world/engine_world__load_effects.cpp \
     engine/world/engine_world__load_objects.cpp \
     engine/world/engine_world__load_stage.cpp \
-    engine/world/engine_world__nape_soft_bodies.cpp \
+    engine/world/engine_world__test_foliage.cpp \
+    engine/world/engine_world__test_soft_bodies.cpp \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \

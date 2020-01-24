@@ -18,7 +18,9 @@
 //####################################################################################
 DrVec3::DrVec3()                                { x = 0.f;                      y = 0.f;                        z = 0.f; }
 DrVec3::DrVec3(float f)                         { x = f;                        y = f;                          z = f; }
-DrVec3::DrVec3(float x_, float y_, float z_)    { x = x_;                       y = y_;                         z = z_; }
+DrVec3::DrVec3(float  x_, float  y_, float  z_) { x = x_;                       y = y_;                         z = z_; }
+DrVec3::DrVec3(double x_, double y_, double z_) { x = static_cast<float>(x_);   y = static_cast<float>(y_);     z = static_cast<float>(z_);  }
+DrVec3::DrVec3(int    x_, int    y_, int    z_) { x = static_cast<float>(x_);   y = static_cast<float>(y_);     z = static_cast<float>(z_);  }
 DrVec3::DrVec3(const DrVec3 &v)                 { x = static_cast<float>(v.x);  y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
 DrVec3::DrVec3(const glm::vec3 &v)              { x = static_cast<float>(v.x);  y = static_cast<float>(v.y);    z = static_cast<float>(v.z); }
 

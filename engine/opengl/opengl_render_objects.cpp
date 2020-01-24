@@ -275,8 +275,22 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
 
     // ***** Draw triangles using shader program
-    if (draw2D) {
-        // Simple Quad Render
+    // Soft Body Render
+    if (object->circle_soft_body) {
+        m_default_shader.enableAttributeArray( a_default_vertex );
+        m_default_shader.enableAttributeArray( a_default_texture_coord );
+        m_default_shader.enableAttributeArray( a_default_barycentric );
+        m_default_shader.setAttributeArray(    a_default_vertex,        object->m_soft_vertices.data(),             3 );
+        m_default_shader.setAttributeArray(    a_default_texture_coord, object->m_soft_texture_coordinates.data(),  2 );
+        m_default_shader.setAttributeArray(    a_default_barycentric,   object->m_soft_barycentric.data(),          3 );
+        glDrawArrays( GL_TRIANGLES, 0, object->m_soft_triangles*3 );
+        m_default_shader.disableAttributeArray( a_default_vertex );
+        m_default_shader.disableAttributeArray( a_default_texture_coord );
+        m_default_shader.disableAttributeArray( a_default_barycentric );
+        addTriangles( object->m_soft_triangles );
+
+    // Simple Quad Render
+    } else if (draw2D) {
         m_default_shader.enableAttributeArray( a_default_vertex );
         m_default_shader.enableAttributeArray( a_default_texture_coord );
         m_default_shader.enableAttributeArray( a_default_barycentric );
@@ -295,6 +309,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         ///m_quad_vbo->release();
         addTriangles( 2 );
 
+    // 3D Cube Render
     } else if (object->get3DType() == Convert_3D_Type::Cube) {
         setDefaultAttributeBuffer(m_cube_vbo);
         int cube_vertices =  m_cube_vbo->size() / (c_vertex_length * c_float_size);
@@ -303,6 +318,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         m_cube_vbo->release();
         addTriangles( 12 );      // aka 'cube_vertices / 3'
 
+    // 3D Cone Render
     } else if (object->get3DType() == Convert_3D_Type::Cone) {
         setDefaultAttributeBuffer(m_cone_vbo);
         int cone_vertices =  m_cone_vbo->size() / (c_vertex_length * c_float_size);
@@ -311,6 +327,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         m_cone_vbo->release();
         addTriangles( 6 );      // aka 'cone_vertices / 3'
 
+    // 3D Extrude Render
     } else {
         setDefaultAttributeBuffer(m_texture_vbos[texture_number]);
         glDrawArrays(GL_TRIANGLES, 0, m_texture_data[texture_number]->vertexCount() );

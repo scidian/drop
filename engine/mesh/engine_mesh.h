@@ -12,14 +12,23 @@
 #include "engine/globals_engine.h"
 
 
-
+//####################################################################################
+//##    Vertex
+//##        Basic vertex struct
+//############################
 struct Vertex {
-    DrVec3      position;
-    DrVec3      normal;
-    DrVec3      texture_coords;             // Only using x and y
-    DrVec3      barycentric;
+    DrVec3      position        { 0, 0, 0 };
+    DrVec3      normal          { 0, 0, 0 };
+    DrVec3      texture_coords  { 0, 0, 0 };        // !!!!! #NOTE: Only uses x and y
+    DrVec3      barycentric     { 0, 0, 0 };
+
+    static      Vertex createVertex(DrVec3 pos, DrVec3 norm, DrVec3 uv, DrVec3 bary);
 };
 
+
+//####################################################################################
+//##    Other Mesh Structs
+//############################
 struct Triangle {
     std::vector<Vertex>     points;
 };

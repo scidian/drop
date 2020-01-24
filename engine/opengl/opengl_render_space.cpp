@@ -14,6 +14,7 @@
 #include "engine/engine_texture.h"
 #include "engine/enums_engine.h"
 #include "engine/form_engine.h"
+#include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_fire.h"
 #include "engine/things/engine_thing_fisheye.h"
@@ -78,16 +79,25 @@ void DrOpenGL::drawSpace() {
         }      
 
         // ***** Draw Thing with appropriate Shader
-        bool draw2D;
         switch (thing->getThingType()) {
             case DrThingType::Character:
-            case DrThingType::Object:
+            case DrThingType::Object: {
+                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+                if (object == nullptr) continue;
+                if (object->isPhysicsChild()) continue;
+
                 // If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
-                draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
+                bool draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
                 if (thing->get3DType() == Convert_3D_Type::None || Dr::FuzzyCompare(thing->getDepth(), 0.0))
                     draw2D = true;
                 else if (thing->extrude_3d)
                     draw2D = false;
+
+                // Handle Soft Body
+                if (object->circle_soft_body == true) {
+                    if (calculateSoftBodyMesh(object) == false) continue;
+                    draw2D = true;
+                }
 
                 // Draw Object / Character
                 if (draw2D) {
@@ -106,7 +116,7 @@ void DrOpenGL::drawSpace() {
                 }
                 cullingOff();
                 break;
-
+            }
             case DrThingType::Camera:
                 break;
 

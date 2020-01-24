@@ -132,18 +132,23 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
 
         } else if (event->button() & Qt::RightButton) {
-            for (int i = 0; i < 25; i++ ) {
-                DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
-                block->addShapeBoxFromTexture(Asset_Textures::Block);
-                block->set3DType(Convert_3D_Type::Cube);
-                block->setDepth(61);
-                world->addThing(block);
+            if (m_form_engine->demo_player == Demo_Player::Jump) {
+                world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(30, 200));
 
-                double hue = Dr::RandomDouble(0.0, 1.0);
-                block->hue = static_cast<float>(hue);
+            } else {
+                for (int i = 0; i < 25; i++ ) {
+                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
+                    block->addShapeBoxFromTexture(Asset_Textures::Block);
+                    block->set3DType(Convert_3D_Type::Cube);
+                    block->setDepth(61);
+                    world->addThing(block);
 
-                ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
-                ///block->saturation = static_cast<float>(saturation);
+                    double hue = Dr::RandomDouble(0.0, 1.0);
+                    block->hue = static_cast<float>(hue);
+
+                    ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
+                    ///block->saturation = static_cast<float>(saturation);
+                }
             }
         }
     }

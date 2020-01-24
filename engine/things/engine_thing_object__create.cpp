@@ -59,10 +59,10 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset)
         applyShapeSettings(shape, area, Shape_Type::Circle);
     }
 }
-void DrEngineObject::addShapeCircleFromTexture(long texture_number) {
+void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier) {
     double width =  getWorld()->getTexture(texture_number)->width();
     double height = getWorld()->getTexture(texture_number)->height();
-    double radius = width / 2.0;
+    double radius = (width / 2.0) * radius_multiplier;
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  TEMP WATER

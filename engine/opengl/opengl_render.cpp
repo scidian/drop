@@ -125,10 +125,10 @@ void DrOpenGL::getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *t
     if (Dr::FuzzyCompare(thing->getAngleY(), 0.0) == false) matrix = glm::rotate(matrix, rotate_y, glm::vec3(0.0, 1.0, 0.0));
     matrix = glm::rotate(matrix, rotate_z, glm::vec3(0.0, 0.0, 1.0));
 
-    DrVec3 top_right = matrix * DrVec3( half_width,  half_height, 0);
-    DrVec3 top_left =  matrix * DrVec3(-half_width,  half_height, 0);
-    DrVec3 bot_right = matrix * DrVec3( half_width, -half_height, 0);
-    DrVec3 bot_left =  matrix * DrVec3(-half_width, -half_height, 0);
+    DrVec3 top_right = matrix * DrVec3( half_width,  half_height, 0.f);
+    DrVec3 top_left =  matrix * DrVec3(-half_width,  half_height, 0.f);
+    DrVec3 bot_right = matrix * DrVec3( half_width, -half_height, 0.f);
+    DrVec3 bot_left =  matrix * DrVec3(-half_width, -half_height, 0.f);
 
     // ***** Load vertices for this object
     setQuadRotatedVertices(vertices, top_right, top_left, bot_left, bot_right, DrVec3(x, y, z));

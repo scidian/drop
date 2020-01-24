@@ -44,6 +44,10 @@ private:
     Collision_Groups    m_collide_with = Collision_Groups::All;     // Types of other objects this should collide with (physcics and collision)
     long                m_texture_number;                           // Reference to which texture to use from Engine->EngineTexture map
 
+    // Object Parent / Child Settings
+    bool                m_is_physics_child = false;                 // This becomes true to signify this is a physics object used by another DrEngineObject
+    DrEngineObject     *m_physics_parent = nullptr;                 // Owner of this physics object
+
     // Object Properties - Bounce / Friction
     double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
     double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
@@ -85,7 +89,6 @@ private:
     double          m_touch_drag_force = 100.0;     // Max force the constraint holding this object to the mouse_body can apply (as a percentange)
     bool            m_touch_damage = false;         // Should this object receive damage when tapped / clicked?
     double          m_touch_damage_points = 1.0;    // Amount of damage to receive when tapped / clicked
-
 
     // Object Movement - PlayerUpdateVelocity Callback Func
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
@@ -155,8 +158,18 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
-    bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
+    bool        cast_shadows = true;                                    // Will cast shadows when in front of a Light
 
+    bool                            circle_soft_body = false;           // Turn this to true to enable soft rendering
+    double                          soft_diameter = 0.0;                // Stores diameter of soft body
+    double                          soft_scale = 1.0;                   // Stores scale difference between outside of soft body and ball location
+    std::vector<DrEngineObject*>    soft_balls;                         // Stores pointers to childeren soft bodies
+    std::vector<DrPointF>           soft_start;                         // Soft body starting positions
+    std::vector<DrPointF>           soft_uv;                            // Soft body texture coordinates
+    std::vector<float>      m_soft_vertices;                    // Used to keep soft body textured quad coordinates
+    std::vector<float>      m_soft_texture_coordinates;         // Used to keep the coordinates of rendering an entire texture as a soft body
+    std::vector<float>      m_soft_barycentric;                 // Used to keep soft body textured quad barycentric coords
+    int                     m_soft_triangles;                   // Stores number of triangles
 
 
 public:
@@ -177,7 +190,7 @@ public:
     void                    addShapeBox(cpBB box);
     void                    addShapeBoxFromTexture(long texture_number);
     void                    addShapeCircle(double circle_radius, DrPointF shape_offset);
-    void                    addShapeCircleFromTexture(long texture_number);
+    void                    addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0);
     void                    addShapeTriangleFromTexture(long texture_number);
     void                    addShapePolygon(const std::vector<DrPointF> &points);
     void                    addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
@@ -196,6 +209,10 @@ public:
     void                setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void                setCollidesWith(Collision_Groups groups) { m_collide_with = groups; }
     void                setTextureNumber(long texture_number) { m_texture_number = texture_number; }
+
+    // Object Physics Parent / Child Settings
+    const bool&         isPhysicsChild()        { return m_is_physics_child; }
+    void                setPhysicsParent(DrEngineObject *parent) { m_physics_parent = parent; m_is_physics_child = (parent != nullptr); }
 
     // Object Properties - Bounce / Friction
     const double&   getCustomFriction()         { return m_custom_friction; }

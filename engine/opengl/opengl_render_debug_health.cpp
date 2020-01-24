@@ -42,6 +42,7 @@ void DrOpenGL::drawDebugHealth() {
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if ( thing->getThingType() != DrThingType::Object)  continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+        if (object->isPhysicsChild()) continue;
 
         // Get health as string
         std::string health = Dr::RoundToDecimalPlace(object->getHealth(), 2);
@@ -58,10 +59,10 @@ void DrOpenGL::drawDebugHealth() {
         half_width =  font_size / 2.0f;
         half_height = font_size / 2.0f;
 
-        DrVec3 top_right = DrVec3( half_width,  half_height, 0);
-        DrVec3 top_left =  DrVec3(-half_width,  half_height, 0);
-        DrVec3 bot_right = DrVec3( half_width, -half_height, 0);
-        DrVec3 bot_left =  DrVec3(-half_width, -half_height, 0);
+        DrVec3 top_right = DrVec3( half_width,  half_height, 0.f);
+        DrVec3 top_left =  DrVec3(-half_width,  half_height, 0.f);
+        DrVec3 bot_right = DrVec3( half_width, -half_height, 0.f);
+        DrVec3 bot_left =  DrVec3(-half_width, -half_height, 0.f);
 
         // ***** Create Texture Coordinate and Vertex arrays
         std::vector<float> texture_coordinates;

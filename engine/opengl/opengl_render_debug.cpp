@@ -150,6 +150,8 @@ void DrOpenGL::drawDebugJoints() {
             DrPointF  rotate_p = Dr::RotatePointAroundOrigin(DrPointF(pivot.x, pivot.y),     DrPointF(0, 0), cpBodyGetAngle(body_a), true);
             pivot_point = body_pos_a + cpv(rotate_p.x, rotate_p.y);
             has_pivot = true;
+        } else if (cpConstraintIsDampedSpring(joint)) {
+            continue;
         } else {
             point_a = body_pos_a;
             point_b = body_pos_b;
