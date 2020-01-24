@@ -133,7 +133,8 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
         } else if (event->button() & Qt::RightButton) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
-                world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(30, 200));
+                world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
+                ///world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(100, 110), Dr::RandomDouble(0.0, 0.1));       // Really gooey
 
             } else {
                 for (int i = 0; i < 25; i++ ) {

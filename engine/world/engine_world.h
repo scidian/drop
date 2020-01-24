@@ -177,8 +177,8 @@ public:
 
     // World Adding
     void            addPlayer(Demo_Player new_player_type);
-    void            addSoftBodyCircle(DrPointF point, double diameter);                 // TEMP
-    void            addSoftBodySquare(DrPointF point);                                  // TEMP
+    void            addSoftBodyCircle(DrPointF point, double diameter, double stiffness);
+    void            addSoftBodySquare(DrPointF point);
     void            addStage();
     void            addThing(DrEngineThing *thing);
     void            addThings(std::list<DrEngineThing*> things);

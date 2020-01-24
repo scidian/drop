@@ -31,6 +31,20 @@ void addSoftTriangle(DrEngineObject *object, Vertex v1, Vertex v2, Vertex v3) {
 
 
 //####################################################################################
+//##    Grabs and Vertex index from Array avoiding index out of bounds
+//####################################################################################
+Vertex& getVertex(std::vector<Vertex> &vertices, int get_at) {
+    if (get_at < 0) {
+        return vertices[ vertices.size() + get_at ];
+    } else if (get_at > static_cast<int>(vertices.size()-1)) {
+        return vertices[ get_at - vertices.size() ];
+    } else {
+        return vertices[get_at];
+    }
+}
+
+
+//####################################################################################
 //##    Recalculates Soft Body Mesh
 //##        RETURNS: true if ready to render, false if there was an error
 //####################################################################################
@@ -58,21 +72,13 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object) {
 
     // Smooth Points
     std::vector<DrVec3> smoothed_points;
-    for (size_t i = 0; i < vertices.size(); ++i) {
-        DrVec3 p1, p3;
-        DrVec3 p2 = vertices[i].position;
-        if (i == 0) {
-            p1 = vertices[vertices.size()-1].position;
-            p3 = vertices[i+1].position;
-        } else if (i == vertices.size() - 1) {
-            p1 = vertices[i-1].position;
-            p3 = vertices[0].position;
-        } else {
-            p1 = vertices[i-1].position;
-            p3 = vertices[i+1].position;
-        }
-        DrVec3 average = p1 + p2 + p3;
-               average = average / 3.0;
+    for (int i = 0; i < static_cast<int>(vertices.size()); ++i) {
+        DrVec3 p1 = getVertex(vertices, i-2).position;
+        DrVec3 p2 = getVertex(vertices, i-1).position;
+        DrVec3 p3 = getVertex(vertices, i  ).position;
+        DrVec3 p4 = getVertex(vertices, i+1).position;
+        DrVec3 p5 = getVertex(vertices, i+2).position;
+        DrVec3 average = (p1 + p2 + p3 + p4 + p5) / 5.0;
         smoothed_points.push_back( average );
     }
     for (size_t i = 0; i < vertices.size(); ++i) {

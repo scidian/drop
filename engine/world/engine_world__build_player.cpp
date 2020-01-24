@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_math.h"
+#include "core/dr_random.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
@@ -92,7 +93,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         // !!!!! TEMP: Testing soft body implementations
         //addSoftBodySquare(DrPointF(200 + (100*x), 100 + (100*y)));
-        addSoftBodyCircle(DrPointF(400, 400), 200);
+        //addSoftBodyCircle(DrPointF(400, 400), 200, Dr::RandomDouble(0.25, 1.0));
 
 
     } else if (new_player_type == Demo_Player::Light) {
