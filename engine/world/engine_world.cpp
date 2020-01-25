@@ -34,6 +34,16 @@ DrEngineThing* DrEngineWorld::findThingByKey(long key) {
     return nullptr;
 }
 
+// Finds a Object by Unique Key
+DrEngineObject* DrEngineWorld::findObjectByKey(long key) {
+    for (auto thing : m_things) {
+        if (thing->getKey() == key) {
+            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
+            return object;
+        }
+    }
+    return nullptr;
+}
 
 //####################################################################################
 //##    Adds Things to the World

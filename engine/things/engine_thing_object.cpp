@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
@@ -99,6 +100,22 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 //##    Destructor
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
+    // Seperates physics body from parent
+    if (circle_soft_body == true) {
+        for (auto &ball_number : soft_balls) {
+            DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
+            if (ball != nullptr) ball->setPhysicsParent(nullptr);
+        }
+    } else if (isPhysicsChild()) {
+        if (getPhysicsParent() != nullptr) {
+            for (auto &ball_number : getPhysicsParent()->soft_balls) {
+                if (ball_number == this->getKey()) ball_number = c_no_key;
+            }
+        }
+        setPhysicsParent(nullptr);
+    }
+
+    // If object has a body, delete it and all shapes / joints associated to it
     if (body != nullptr) {
         cpSpace *space = cpBodyGetSpace(body);
 

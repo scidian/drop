@@ -173,6 +173,7 @@ public:
 
     // Important Functions
     DrEngineThing*  findThingByKey(long key);
+    DrEngineObject* findObjectByKey(long key);
     long            getNextKey()            { return m_key_generator++; }
 
     // World Adding

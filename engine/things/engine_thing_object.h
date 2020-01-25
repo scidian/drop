@@ -164,7 +164,7 @@ public:
     double                          height_width_ratio = 1.0;           // Stores ratio for rectangular bodies
     double                          soft_diameter = 0.0;                // Stores diameter of soft body
     double                          soft_scale = 1.0;                   // Stores scale difference between outside of soft body and ball location
-    std::vector<DrEngineObject*>    soft_balls;                         // Stores pointers to childeren soft bodies
+    std::vector<long>               soft_balls;                         // Stores keys of children soft bodies
     std::vector<DrPointF>           soft_start;                         // Soft body starting positions
     std::vector<DrPointF>           soft_uv;                            // Soft body texture coordinates
     std::vector<float>      m_soft_vertices;                    // Used to keep soft body textured quad coordinates
@@ -213,6 +213,7 @@ public:
 
     // Object Physics Parent / Child Settings
     const bool&         isPhysicsChild()        { return m_is_physics_child; }
+    DrEngineObject*     getPhysicsParent()      { return m_physics_parent; }
     void                setPhysicsParent(DrEngineObject *parent) { m_physics_parent = parent; m_is_physics_child = (parent != nullptr); }
 
     // Object Properties - Bounce / Friction

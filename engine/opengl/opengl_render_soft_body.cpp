@@ -5,9 +5,11 @@
 //
 //
 //
+#include "engine/engine.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
 #include "engine/things/engine_thing_object.h"
+#include "engine/world/engine_world.h"
 
 
 //####################################################################################
@@ -53,14 +55,14 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object) {
     if (object->soft_balls.size() < 3) return false;
 
     // Calculate Object Angle
-    DrEngineObject *first_ball = object->soft_balls[0];
+    DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
     if (first_ball == nullptr) return false;
     object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - 90);
 
     // Calculate Current Points
     std::vector<Vertex> vertices;
     for (size_t i = 0; i < object->soft_balls.size(); ++i) {
-        DrEngineObject *next_ball = object->soft_balls[i];
+        DrEngineObject *next_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[i]);
         if (next_ball == nullptr) return false;
         DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle());
                  unrotated = unrotated - object->getPosition();
