@@ -100,12 +100,18 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 //##    Destructor
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
-    // Seperates physics body from parent
+    // Signal physics children to remove themselves
     if (circle_soft_body == true) {
         for (auto &ball_number : soft_balls) {
-            DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
-            if (ball != nullptr) ball->setPhysicsParent(nullptr);
+            if (getWorld() != nullptr) {
+                DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
+                if (ball != nullptr) {
+                    ball->setPhysicsParent(nullptr);
+                    ball->removeMe();
+                }
+            }
         }
+    // Seperates physics body from parent
     } else if (isPhysicsChild()) {
         if (getPhysicsParent() != nullptr) {
             for (auto &ball_number : getPhysicsParent()->soft_balls) {

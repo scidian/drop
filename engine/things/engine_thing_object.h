@@ -29,6 +29,8 @@ public:
     ShapeMap                shape_type;                     // Shape Types of Shapes of Object
     PolygonList             polygons;                       // List of concave polygon Shapes (for debug drawing)
 
+
+    // Animation
     std::deque<long>    animation_idle_keys;                // Image frame keys
     long                animation_idle_frame = 1;           // Current frame
     double              animation_speed = 15;               // Frames per second
@@ -129,6 +131,8 @@ private:
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
+    bool        m_remove_me = false;                        // Set to true for forced removal next update cycle
+
     int         m_remaining_jumps =         0;              // How many jumps player has left before it must hit ground before it can jump again
     double      m_remaining_boost =         0.0;            // Used by Engine Update to process Jump Timeout boost
     double      m_remaining_ground_time =   0.0;            // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
@@ -158,19 +162,20 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
-    bool        cast_shadows = true;                                    // Will cast shadows when in front of a Light
+    bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
 
-    bool                            circle_soft_body = false;           // Turn this to true to enable soft rendering
-    double                          height_width_ratio = 1.0;           // Stores ratio for rectangular bodies
-    double                          soft_diameter = 0.0;                // Stores diameter of soft body
-    double                          soft_scale = 1.0;                   // Stores scale difference between outside of soft body and ball location
-    std::vector<long>               soft_balls;                         // Stores keys of children soft bodies
-    std::vector<DrPointF>           soft_start;                         // Soft body starting positions
-    std::vector<DrPointF>           soft_uv;                            // Soft body texture coordinates
-    std::vector<float>      m_soft_vertices;                    // Used to keep soft body textured quad coordinates
-    std::vector<float>      m_soft_texture_coordinates;         // Used to keep the coordinates of rendering an entire texture as a soft body
-    std::vector<float>      m_soft_barycentric;                 // Used to keep soft body textured quad barycentric coords
-    int                     m_soft_triangles;                   // Stores number of triangles
+    // Soft Body Variables
+    bool                    circle_soft_body = false;       // Turn this to true to enable soft rendering
+    double                  height_width_ratio = 1.0;       // Stores ratio for rectangular bodies
+    double                  soft_diameter = 0.0;            // Stores diameter of soft body
+    double                  soft_scale = 1.0;               // Stores scale difference between outside of soft body and ball location
+    std::vector<long>       soft_balls;                     // Stores keys of children soft bodies
+    std::vector<DrPointF>   soft_start;                     // Soft body starting positions
+    std::vector<DrPointF>   soft_uv;                        // Soft body texture coordinates
+    std::vector<float>      m_soft_vertices;                // Used to keep soft body textured quad coordinates
+    std::vector<float>      m_soft_texture_coordinates;     // Used to keep the coordinates of rendering an entire texture as a soft body
+    std::vector<float>      m_soft_barycentric;             // Used to keep soft body textured quad barycentric coords
+    int                     m_soft_triangles = 0;           // Stores number of triangles
 
 
 public:
@@ -349,6 +354,7 @@ public:
     void            setMouseRotate(bool mouse_rotate) { m_mouse_rotate = mouse_rotate; }
 
     // ***** Local Variables - Updated By Engine
+    void            removeMe()                      { m_remove_me = true; }
     const int&      getRemainingJumps()             { return m_remaining_jumps; }
     const double&   getRemainingBoost()             { return m_remaining_boost; }
     const double&   getRemainingGroundTime()        { return m_remaining_ground_time; }
