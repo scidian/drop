@@ -269,7 +269,7 @@ public:
     void            setInvincible(bool invincible) { m_invincible = invincible; }
     void            setDeathTouch(bool should_have_death_touch) { m_death_touch = should_have_death_touch; }
     void            setMaxHealth(double new_max_health) { m_max_health = new_max_health; }
-    void            setHealth(double new_health) { m_health = new_health; }
+    void            setHealth(double new_health, bool taking_damage = false);
     void            setDamage(double new_damage) { m_damage = new_damage; }
     void            setDamageDelay(long new_damage_delay) { m_damage_delay = new_damage_delay; }
     void            setAutoDamage(double new_auto_damage) { m_auto_damage = new_auto_damage; }
@@ -281,6 +281,8 @@ public:
     bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false, bool force_death = false);
+    void            updateChildrenHealth();
+    void            updateRelativeHealth();
 
     bool            shouldCollide(DrEngineObject *object);
 
@@ -385,6 +387,9 @@ public:
     DrTime&         getDamageTimer()                { return m_damage_timer; }
     DrTime&         getDeathTimer()                 { return m_death_timer; }
     DrTime&         getFadeTimer()                  { return m_fade_timer; }
+    void            setDamageTimer(DrTime time)     { m_damage_timer = time; }
+    void            setDeathTimer(DrTime time)      { m_death_timer = time; }
+    void            setFadeTimer(DrTime time)       { m_fade_timer = time; }
 
     bool            isFlippedX()                    { return (m_flipped_x); }
     bool            isFlippedY()                    { return (m_flipped_y); }
