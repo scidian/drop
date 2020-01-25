@@ -91,10 +91,6 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->setTouchDrag(true);
         ball2->setTouchDragForce(2000.0);
 
-        // !!!!! TEMP: Testing soft body implementations
-        //addSoftBodySquare(DrPointF(200 + (100*x), 100 + (100*y)));
-        //addSoftBodyCircle(DrPointF(400, 400), 200, Dr::RandomDouble(0.25, 1.0));
-
 
     } else if (new_player_type == Demo_Player::Light) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false);

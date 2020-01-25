@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine_texture.h"
 #include "engine/things/engine_thing_object.h"
@@ -98,7 +99,6 @@ void joinCenterBody(cpSpace *space, cpBody *center_body, cpBody *body2, cpVect c
     double mul = (body_distance / 100.0);
            mul = Dr::Clamp(mul, 1.5, 5.0);
            mul = mul * (Dr::Clamp(((stiffness+0.25)*0.8)*10.0, 1.0, 10.0));
-    //cpSpaceAddConstraint( space, cpSlideJointNew(   center_body, body2, center_join, cpvzero, body_distance - (body_distance*0.20), body_distance) );
     cpSpaceAddConstraint( space, cpSlideJointNew(   center_body, body2, center_join, cpvzero, body_distance * 0.0, body_distance) );
 
     cpFloat full_distance = cpvdist(cpBodyGetPosition(center_body), cpBodyGetPosition(body2));
@@ -111,8 +111,9 @@ void joinCenterBody(cpSpace *space, cpBody *center_body, cpBody *body2, cpVect c
 
 //####################################################################################
 //##    Creates Circle Soft Body
+//##        RETURNS: Central body of soft body
 //####################################################################################
-void DrEngineWorld::addSoftBodyCircle(DrPointF point, double diameter, double stiffness) {
+DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture_number, DrPointF point, double diameter, double stiffness) {
     // Number of circles to use to make soft body
     long number_of_circles = 36;
     if (diameter < 100) number_of_circles = 24;
@@ -122,8 +123,9 @@ void DrEngineWorld::addSoftBodyCircle(DrPointF point, double diameter, double st
     double inner_size = 0.80 - ((1.0-stiffness) * 0.30);                    // Reduce size of central ball with softer objects
 
     // Figure out actual diameter of texture / scaling
-    long   center_texture =     Asset_Textures::Ball;
+    long   center_texture =     texture_number;
     double center_diameter =    getTexture(center_texture)->width();
+    double height_width_ratio = static_cast<double>(getTexture(center_texture)->height()) / static_cast<double>(getTexture(center_texture)->width());
     double center_scale =       diameter/center_diameter;
     double center_radius =      (center_diameter * center_scale) / 2.0;
 
@@ -132,8 +134,7 @@ void DrEngineWorld::addSoftBodyCircle(DrPointF point, double diameter, double st
     DrEngineObject *central = addBall(this, center_list, center_texture, Soft_Shape::Circle, point.x, point.y, DrPointF(center_scale, center_scale), inner_size, true, true);
                     central->circle_soft_body = true;
                     central->soft_diameter = diameter;
-                    central->saturation = 255.0;
-                    central->hue = static_cast<float>(Dr::RandomDouble(0, 360));
+                    central->height_width_ratio = height_width_ratio;
     cpBody *center_ball = center_list[0]->body;
 
     // Calculate size and location of soft balls
@@ -152,19 +153,22 @@ void DrEngineWorld::addSoftBodyCircle(DrPointF point, double diameter, double st
     std::vector<DrEngineObject*> &balls = central->soft_balls;
     for (int circle = 0; circle < number_of_circles; circle++) {
         // Figure out location
-        DrPointF ball_at =    Dr::RotatePointAroundOrigin(DrPointF(inside_radius, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
-        DrPointF outside_at = Dr::RotatePointAroundOrigin(DrPointF(center_radius, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
+        DrPointF ball_at =      Dr::RotatePointAroundOrigin(DrPointF(inside_radius, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
+                 ball_at.y =    ball_at.y * height_width_ratio;
+        DrPointF outside_at =   Dr::RotatePointAroundOrigin(DrPointF(center_radius, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
 
-        // Store converted texture coordinates
+        // Store Starting Position, and also Converted Texture Coordinates
         central->soft_start.push_back(ball_at);
-        central->soft_uv.push_back(DrPointF((outside_at.x + center_radius)/diameter, (outside_at.y + center_radius)/diameter));
+        DrPointF uv_coord = DrPointF((outside_at.x + center_radius)/diameter, (outside_at.y + center_radius)/diameter);
+        central->soft_uv.push_back(uv_coord);
 
         // Add soft ball to world
         DrEngineObject *soft_ball = addBall(this, balls, c_key_image_empty, Soft_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y, DrPointF(empty_scale, empty_scale), 1.0);
                         soft_ball->setPhysicsParent(central);
 
         // Create joints to central body / neighbor body
-        DrPointF center_join = Dr::RotatePointAroundOrigin(DrPointF(center_radius * inner_size, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
+        DrPointF center_join =      Dr::RotatePointAroundOrigin(DrPointF(center_radius * inner_size, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
+                 center_join.y =    center_join.y * height_width_ratio;
         joinCenterBody(m_space, center_ball, balls[balls.size()-1]->body, cpv(center_join.x, center_join.y), stiffness);
         if (balls.size() > 1) joinBodies(m_space, balls[balls.size()-1]->body, balls[balls.size()-2]->body, stiffness);
     }
@@ -184,6 +188,8 @@ void DrEngineWorld::addSoftBodyCircle(DrPointF point, double diameter, double st
             cpShapeSetFilter( shape, filter);
         }
     }
+
+    return central;
 }
 
 

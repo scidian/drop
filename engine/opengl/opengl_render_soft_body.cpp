@@ -66,6 +66,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object) {
                  unrotated = unrotated - object->getPosition();
                  unrotated = unrotated / object->soft_diameter;             // Equalize mesh from -0.5 to +0.5
                  unrotated = unrotated * object->soft_scale;                // Scale soft balls to outer radius
+                 unrotated.y = unrotated.y / object->height_width_ratio;
         Vertex v = Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0), c_up_vector_z, DrVec3(object->soft_uv[i].x,object->soft_uv[i].y,0.0), DrVec3(0,0,0));
         vertices.push_back(v);
     }

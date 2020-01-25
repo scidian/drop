@@ -133,8 +133,15 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
         } else if (event->button() & Qt::RightButton) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
-                world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
+                DrEngineObject *soft_body = nullptr;
+                if (Dr::RandomInt(0, 10) == 1) {
+                    soft_body = world->addSoftBodyCircle(Asset_Textures::Plant, DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
+                } else {
+                    soft_body = world->addSoftBodyCircle(Asset_Textures::Ball, DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
+                }
                 ///world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(100, 110), Dr::RandomDouble(0.0, 0.1));       // Really gooey
+                soft_body->saturation = 255.0;
+                soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
 
             } else {
                 for (int i = 0; i < 25; i++ ) {

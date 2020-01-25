@@ -161,6 +161,7 @@ public:
     bool        cast_shadows = true;                                    // Will cast shadows when in front of a Light
 
     bool                            circle_soft_body = false;           // Turn this to true to enable soft rendering
+    double                          height_width_ratio = 1.0;           // Stores ratio for rectangular bodies
     double                          soft_diameter = 0.0;                // Stores diameter of soft body
     double                          soft_scale = 1.0;                   // Stores scale difference between outside of soft body and ball location
     std::vector<DrEngineObject*>    soft_balls;                         // Stores pointers to childeren soft bodies
