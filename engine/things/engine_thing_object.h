@@ -263,7 +263,7 @@ public:
     const long&     getDeathDelay()             { return m_death_delay; }
     Death_Animation getDeathAnimation()         { return m_death_animation; }
     const long&     getDeathDuration()          { return m_death_duration; }
-    const double&   getDamageRecoil()           { return m_damage_recoil; }
+    const double&   getDamageRecoil()           { return (getPhysicsParent() == nullptr) ? m_damage_recoil : getPhysicsParent()->getDamageRecoil(); }
 
     void            setCollisionType(Collision_Type what_should_collide);
     void            setInvincible(bool invincible) { m_invincible = invincible; }

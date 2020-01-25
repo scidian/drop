@@ -120,6 +120,8 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 //##    Applies Recoil Force after being damaged another object
 //####################################################################################
 static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
+    if (object->getPhysicsParent() != nullptr) object = object->getPhysicsParent();
+
     // METHOD: Apply damage_recoil opposite velocity
     cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
     cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body

@@ -65,7 +65,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Jump) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 0, 100, 10, c_scale1x1, 0.25, 0.5, true, false);
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 0, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         ball1->setDepth(30);
         addThing(ball1);
@@ -80,7 +80,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setTouchDrag(true);
         ball1->setTouchDragForce(2000.0);
 
-        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 100, 100, 10, c_scale1x1, 1, 0.5);
+        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 100, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
         ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
         ball2->setDepth(30);
         addThing(ball2);

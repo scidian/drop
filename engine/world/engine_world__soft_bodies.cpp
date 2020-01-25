@@ -16,8 +16,8 @@
 //##    Local Constants
 //####################################################################################
 const Body_Type         c_body_type =       Body_Type::Dynamic;
-const double            c_add_friction =    0.25;
-const double            c_add_bounce =      0.25;
+const double            c_add_friction =    0.50;
+const double            c_add_bounce =      0.50;
 
 const double            c_stiff =         100.0;    // Range from 100 to 1000
 const double            c_damp =            1.0;    // Range from   1 to   10
