@@ -131,8 +131,19 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
         cpVect  player_v = cpBodyGetVelocity( object->body );
         cpFloat jump_vx = object->getJumpForceX() * 2.0 * dt;
         cpFloat jump_vy = object->getJumpForceY() * 2.0 * dt;
-        player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
-        cpBodySetVelocity( object->body, player_v );
+
+        // Soft Body Jump
+        if (object->circle_soft_body) {
+            double root = 4.0;
+            double soft_body_mass = std::pow(cpBodyGetMass(object->body), 1.0/root) / 1.72;
+            g_info = "Mass: " + std::to_string(soft_body_mass);
+            player_v = cpvadd(player_v * 0.01, cpv(jump_vx, jump_vy));                   // Reduces how much current velocity affects jump force
+            cpBodyApplyForceAtWorldPoint( object->body, player_v * 2800.0 * soft_body_mass, cpBodyGetPosition(object->body) );
+        // Normal Body Jump
+        } else {
+            player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
+            cpBodySetVelocity( object->body, player_v );
+        }
     }
 
     // ********** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, jump!
@@ -202,8 +213,17 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             ///if (Dr::FuzzyCompare(jump_vx, 0.0) == false) player_v.x = 0;
             ///if (Dr::FuzzyCompare(jump_vy, 0.0) == false) player_v.y = 0;
 
-            player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
-            cpBodySetVelocity( object->body, player_v );
+            // Soft Body Jump
+            if (object->circle_soft_body) {
+                double root = 4.0;
+                double soft_body_mass = std::pow(cpBodyGetMass(object->body), 1.0/root) / 1.72;
+                player_v = cpvadd(player_v * 0.1, cpv(jump_vx, jump_vy));                   // Reduces how much current velocity affects jump force
+                cpBodyApplyForceAtWorldPoint( object->body, player_v * 3500.0 * soft_body_mass, cpBodyGetPosition(object->body) + player_v );
+            // Normal Body Jump
+            } else {
+                player_v = cpvadd(player_v, cpv(jump_vx, jump_vy));
+                cpBodySetVelocity( object->body, player_v );
+            }
 
             // Reset wall_timeout, jump timeout boost and subtract remaining jumps until ground
             object->setRemainingGroundTime( 0.0 );

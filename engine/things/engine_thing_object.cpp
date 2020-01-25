@@ -78,10 +78,10 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
     // Create Body
     this->body_type = body_type;
     switch (body_type) {
-        case Body_Type::Static:      this->body = cpBodyNewStatic();                                break;
-        ///case Body_Type::Static:      this->body = cpSpaceGetStaticBody(getWorld()->getSpace());     break;
-        case Body_Type::Dynamic:     this->body = cpBodyNew( 0.0, 0.0 );                            break;
-        case Body_Type::Kinematic:   this->body = cpBodyNewKinematic();                             break;
+        ///case Body_Type::Static:  this->body = cpSpaceGetStaticBody(getWorld()->getSpace());      break;
+        case Body_Type::Static:     this->body = cpBodyNewStatic();                                 break;
+        case Body_Type::Dynamic:    this->body = cpBodyNew( 0.0, 0.0 );                             break;
+        case Body_Type::Kinematic:  this->body = cpBodyNewKinematic();                              break;
     }
     cpBodySetPosition( this->body, cpv(x, y));
     cpBodySetAngle(    this->body, Dr::DegreesToRadians(-angle) );

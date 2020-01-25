@@ -73,9 +73,7 @@ void DrEngineWorld::updateSpace(double time_passed) {
 void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Calculate area that if Things are within, they can stay in the Space
-    DrRectF threshold(getCameraPositionX() - getDeleteThresholdX(),
-                      getCameraPositionY() - getDeleteThresholdY(),
-                      getDeleteThresholdX()*2.0, getDeleteThresholdY()*2.0);
+    DrRectF threshold(getCameraPositionX() - getDeleteThresholdX(), getCameraPositionY() - getDeleteThresholdY(), getDeleteThresholdX()*2.0, getDeleteThresholdY()*2.0);
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );

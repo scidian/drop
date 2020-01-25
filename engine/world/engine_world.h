@@ -178,7 +178,8 @@ public:
 
     // World Adding
     void            addPlayer(Demo_Player new_player_type);
-    DrEngineObject* addSoftBodyCircle(long texture_number, DrPointF point, double diameter, double stiffness);
+    DrEngineObject* addSoftBodyCircle(long texture_number, DrPointF point, double diameter, double stiffness,
+                                      double friction, double bounce, bool can_rotate = true);
     void            addSoftBodySquare(DrPointF point);
     void            addStage();
     void            addThing(DrEngineThing *thing);

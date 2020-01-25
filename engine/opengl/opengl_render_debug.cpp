@@ -152,6 +152,8 @@ void DrOpenGL::drawDebugJoints() {
             has_pivot = true;
         } else if (cpConstraintIsDampedSpring(joint)) {
             continue;
+        } else if (cpConstraintIsRotaryLimitJoint(joint)) {
+            continue;
         } else {
             point_a = body_pos_a;
             point_b = body_pos_b;
