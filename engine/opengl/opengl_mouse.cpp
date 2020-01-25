@@ -137,9 +137,9 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 if (Dr::RandomInt(0, 10) == 1) {
                     soft_body = world->addSoftBodyCircle(Asset_Textures::Plant, DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
                 } else {
-                    soft_body = world->addSoftBodyCircle(Asset_Textures::Ball, DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
+                    soft_body = world->addSoftBodyCircle(Asset_Textures::Ball,  DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0));
                 }
-                ///world->addSoftBodyCircle(DrPointF(x, y), Dr::RandomInt(100, 110), Dr::RandomDouble(0.0, 0.1));       // Really gooey
+                ///soft_body = world->addSoftBodyCircle(Asset_Textures::Ball, DrPointF(x, y), Dr::RandomInt(100, 110), Dr::RandomDouble(0.0, 0.1));       // Really gooey
                 soft_body->saturation = 255.0;
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
                 soft_body->setDamageRecoil(1000.0);
