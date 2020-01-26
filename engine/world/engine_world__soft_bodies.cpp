@@ -168,7 +168,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture_number, DrPointF p
         target_size = (circumference) / static_cast<double>(number_of_circles);
         empty_scale = target_size / empty_diameter;
     } while (inside_radius + (target_size/2.0) > center_radius);
-    central->soft_scale = (center_radius / inside_radius) * render_scale;
+    central->soft_scale.x = (center_radius / inside_radius) * render_scale;
 
     // Add Soft Balls
     std::vector<long> &ball_list = central->soft_balls;
@@ -221,8 +221,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture_number, DrPointF p
 DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture_number, DrPointF point, DrPointF scale,
                                                  double stiffness, double friction, double bounce, bool can_rotate) {
     double max_radius = 0.70;
-    long   min_balls =  6;
-    double render_scale = 1.05;
+    long   min_balls =  7;
 
     // SOFTNESS
     stiffness = (Dr::Clamp(stiffness, 0.0, 1.0) + 0.25) * 0.8;              // Percentage of 0.0 == gooey, 1.0 == stiff
@@ -260,7 +259,8 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture_number, DrPointF p
     double inside_x_spacing =  (center_width -  target_diameter) / static_cast<double>(x_balls - 1);
     double inside_y_spacing =  (center_height - target_diameter) / static_cast<double>(y_balls - 1);
     double inside_radius = target_diameter/2.0;
-    central->soft_scale = ((center_width/2.0) / ((center_width - target_diameter)/2.0)) * render_scale;
+    central->soft_scale.x = ((center_width/2.0) /  ((center_width  - target_diameter)/2.0));
+    central->soft_scale.y = ((center_height/2.0) / ((center_height - target_diameter)/2.0));
 
     // Add Soft Balls
     std::vector<long> &ball_list = central->soft_balls;
@@ -287,7 +287,7 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture_number, DrPointF p
             ball_at.y =     -(center_height/2.0) + inside_radius + (static_cast<double>(y) * inside_y_spacing);
             outside_at.x =   (center_width/ 2.0);
             outside_at.y =  -(center_height/2.0) + (static_cast<double>(y) * outside_y_spacing);
-            if (y == x_balls-1) is_corner = true;
+            if (y == y_balls-1) is_corner = true;
             y++; if (y > y_balls - 1) { loop++; x = x_balls - 2; y = 0; }
 
         // Top
@@ -370,19 +370,19 @@ void DrEngineWorld::addSoftBodySquare(DrPointF point) {
     long center_texture = Asset_Textures::Block;
     DrEngineObject *central = AddBall(this, center_list, center_texture, Soft_Shape::Circle, point.x, point.y,
                                       DrPointF(4.0, 4.0), 1.0, friction, bounce, false, true);
-                    central->body_style = Body_Style::Square_Blob;
+                    ///central->body_style = Body_Style::Square_Blob;
                     central->soft_diameter = 100;
                     central->height_width_ratio = 1;
     cpBody *center_ball = central->body;
 
     // Soft Balls
-    std::vector<long> ball_list;// = central->soft_balls;
+    std::vector<long> &ball_list = central->soft_balls;
 
     double empty_diameter = getTexture(c_key_image_empty)->width();
     double empty_scale =    soft_ball_size / empty_diameter;
     double row_width = (ball_spacing*static_cast<double>(row_size-1)) + (empty_diameter * empty_scale);
 
-    // Bottom
+    // Grid
     for (long y = 0; y < row_size; y++) {
         for (long x = 0; x < row_size; x++) {
             double px = ball_spacing * static_cast<double>(x) + point.x - (row_width/2.0) + (empty_diameter * empty_scale / 2.0);
@@ -414,6 +414,8 @@ void DrEngineWorld::addSoftBodySquare(DrPointF point) {
         }
     }
 
+    // Set collision groups so that soft bodies do not collide with each other, but do other things
+    ApplyCategoryMask(this, central);
 }
 
 

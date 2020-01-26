@@ -33,7 +33,7 @@ void addSoftTriangle(DrEngineObject *object, Vertex v1, Vertex v2, Vertex v3) {
 
 
 //####################################################################################
-//##    Grabs and Vertex index from Array avoiding index out of bounds
+//##    Grabs a Vertex at index from Array avoiding index out of bounds
 //####################################################################################
 Vertex& getVertex(std::vector<Vertex> &vertices, int get_at) {
     if (get_at < 0) {
@@ -42,6 +42,19 @@ Vertex& getVertex(std::vector<Vertex> &vertices, int get_at) {
         return vertices[ get_at - vertices.size() ];
     } else {
         return vertices[get_at];
+    }
+}
+
+//####################################################################################
+//##    Grabs a DrEngineObject at index from Array avoiding index out of bounds
+//####################################################################################
+DrEngineObject* getEngineObject(std::vector<DrEngineObject*> &objects, int get_at) {
+    if (get_at < 0) {
+        return objects[ objects.size() + get_at ];
+    } else if (get_at > static_cast<int>(objects.size()-1)) {
+        return objects[ get_at - objects.size() ];
+    } else {
+        return objects[get_at];
     }
 }
 
@@ -76,7 +89,13 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle());
                  unrotated = unrotated - object->getPosition();
                  unrotated = unrotated / object->soft_diameter;             // Equalize mesh from -0.5 to +0.5
-                 unrotated = unrotated * object->soft_scale;                // Scale soft balls to outer radius
+                 // Scale soft balls to outer radius
+                 if (body_style == Body_Style::Square_Blob) {
+                     unrotated.x = unrotated.x * object->soft_scale.x;
+                     unrotated.y = unrotated.y * object->soft_scale.y;
+                 } else if (body_style == Body_Style::Circular_Blob) {
+                     unrotated = unrotated * object->soft_scale.x;
+                 }
                  unrotated.y = unrotated.y / object->height_width_ratio;
         Vertex v = Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0), c_up_vector_z, DrVec3(object->soft_uv[i].x,object->soft_uv[i].y,0.0), DrVec3(0,0,0));
         vertices.push_back(v);
@@ -94,12 +113,16 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
             DrVec3 p5 = getVertex(vertices, i+2).position;
             average = (p1 + p2 + p3 + p4 + p5) / 5.0;
         } if (body_style == Body_Style::Square_Blob) {
-            DrVec3 p1 = getVertex(vertices, i-1).position * 0.5;
-            DrVec3 p2 = getVertex(vertices, i  ).position;
-            DrVec3 p3 = getVertex(vertices, i+1).position * 0.5;
-            average = (p1 + p2 + p3) / 2.0;
+            if (getEngineObject(balls, i-1)->soft_corner || getEngineObject(balls, i  )->soft_corner || getEngineObject(balls, i+1)->soft_corner) {
+                average = getVertex(vertices, i  ).position;
+            } else {
+                DrVec3 p1 = getVertex(vertices, i-1).position;
+                DrVec3 p2 = getVertex(vertices, i  ).position;
+                DrVec3 p3 = getVertex(vertices, i+1).position;
+                average = (p1 + p2 + p3) / 3.0;
+            }
         }
-        smoothed_points.push_back( ((balls[i]->soft_corner) ? getVertex(vertices, i  ).position : average) );
+        smoothed_points.push_back( average);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
         vertices[i].position = smoothed_points[i];
