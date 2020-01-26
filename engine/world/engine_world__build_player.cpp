@@ -65,7 +65,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Jump) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 0, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -50, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         ball1->setDepth(30);
         addThing(ball1);
@@ -91,15 +91,21 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 //        ball2->setTouchDrag(true);
 //        ball2->setTouchDragForce(2000.0);
 
-        ///DrEngineObject *softy = addSoftBodyCircle( m_project->findAssetFromKey(1036)->getIdleAnimationFirstFrameImageKey(), DrPointF(100, 100), 100, 0.8, 0.50, 0.25, true);
-        DrEngineObject *softy = addSoftBodyCircle( Asset_Textures::Ball, DrPointF(100, 100), 200, 0.8, 0.50, 0.25, true);
+        DrEngineObject *softy = addSoftBodyCircle(Asset_Textures::Ball, DrPointF(100, 100), 200, 0.8, 0.50, 0.25, true);
         assignPlayerControls(softy, false, true, false);
         ///softy->setMoveSpeedX(800);
         softy->setRotateSpeedZ( 20 );
-        softy->setJumpCount( c_unlimited_jump );
-        softy->setTouchDrag(true);
-        softy->setTouchDragForce(2000.0);
+        softy->setJumpCount( 1 );
+        softy->setCanWallJump(false);
 
+        if (m_project->findAssetFromKey(1036) != nullptr) {
+            DrEngineObject *softy2 = addSoftBodyCircle(m_project->findAssetFromKey(1036)->getIdleAnimationFirstFrameImageKey(),
+                                                       DrPointF(300, 100), 100, 0.8, 0.50, 0.25, true);
+            assignPlayerControls(softy2, false, true, false);
+            softy2->setRotateSpeedZ( 20 );
+            softy2->setJumpCount( 1 );
+            softy2->setCanWallJump(false);
+        }
 
     } else if (new_player_type == Demo_Player::Light) {
         DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false);
