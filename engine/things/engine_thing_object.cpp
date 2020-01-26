@@ -101,7 +101,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
     // ***** Signal physics children to remove themselves
-    if (body_style == Body_Style::Circular_Blob) {
+    if (body_style == Body_Style::Circular_Blob || body_style == Body_Style::Square_Blob) {
         for (auto &ball_number : soft_balls) {
             if (getWorld() != nullptr) {
                 DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
@@ -282,7 +282,7 @@ void DrEngineObject::setHealth(double new_health, bool taking_damage) {
 //##    Updates Health of related Physics Parent / Physics Children
 //####################################################################################
 void DrEngineObject::updateRelativeHealth() {
-    if (body_style == Body_Style::Circular_Blob) {
+    if (body_style == Body_Style::Circular_Blob || body_style == Body_Style::Square_Blob) {
         updateChildrenHealth();
     } else {
         if (getPhysicsParent() == nullptr) return;

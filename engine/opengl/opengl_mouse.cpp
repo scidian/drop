@@ -135,22 +135,23 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
 
                 // Original Square Grid of Soft Balls
-                world->addSoftBodySquare(DrPointF(x, y));
+//                world->addSoftBodySquare(DrPointF(x, y));
 
-//                DrEngineObject *soft_body = nullptr;
-//                double stiffness =      Dr::RandomDouble(0.0, 1.0);///0.1); // <-- Really gooey
-//                if (Dr::RandomBool()) {
-//                    double scale_x = Dr::RandomDouble(0.5, 3.0);
-//                    double scale_y = Dr::RandomDouble(0.5, 3.0);
-//                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), stiffness, 0.5, 0.5, true);
-//                } else {
-//                    long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-//                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(50, 200), stiffness, 0.5, 0.5, true);
+                DrEngineObject *soft_body = nullptr;
+                if (Dr::RandomBool()) {
+                    double stiffness =      Dr::RandomDouble(0.6, 1.0);///0.1); // <-- Really gooey
+                    double scale_x = Dr::RandomDouble(0.5, 3.0);
+                    double scale_y = Dr::RandomDouble(0.5, 3.0);
+                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), stiffness, 0.5, 0.5, true);
+                } else {
+                    double stiffness =      Dr::RandomDouble(0.0, 1.0);///0.1); // <-- Really gooey
+                    long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
+                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(50, 200), stiffness, 0.5, 0.5, true);
 
-//                }
-//                soft_body->saturation = 255.0;
-//                soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
-//                soft_body->setDamageRecoil(1000.0);
+                }
+                soft_body->saturation = 255.0;
+                soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
+                soft_body->setDamageRecoil(1000.0);
 
             } else {
                 for (int i = 0; i < 25; i++ ) {

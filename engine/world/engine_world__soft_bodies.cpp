@@ -65,13 +65,16 @@ void JoinBodies(cpSpace *space, cpBody *body1, cpBody *body2, double stiffness) 
     double body_distance = cpvdist(body_a, body_b);
 
     // WORKS #1, BEST:  Springy Slide Joint
-    double mul = 5.0 * (Dr::Clamp(((stiffness+0.25)*0.8)*10.0, 1.0, 10.0));
-    cpSpaceAddConstraint( space, cpSlideJointNew(   body1, body2, cpvzero, cpvzero, body_distance - (body_distance*0.10), body_distance) );
-    cpSpaceAddConstraint( space, cpDampedSpringNew( body1, body2, cpvzero, cpvzero, body_distance, c_stiff*mul, c_damp*mul) );
+    ///double mul = 5.0 * (Dr::Clamp(((stiffness+0.25)*0.8)*10.0, 1.0, 10.0));
+    ///cpSpaceAddConstraint( space, cpSlideJointNew(   body1, body2, cpvzero, cpvzero, body_distance - (body_distance*0.10), body_distance) );
+    ///cpSpaceAddConstraint( space, cpDampedSpringNew( body1, body2, cpvzero, cpvzero, body_distance, c_stiff*mul, c_damp*mul) );
 
-    // WORKS #2:        Pivot Joint in Middle of Bodies - Very stiff
-    ///cpVect middle_of_bodies = cpvsub(cpBodyGetPosition(body2), cpvmult(cpvsub(cpBodyGetPosition(body2), cpBodyGetPosition(body1)), 0.5));
-    ///cpSpaceAddConstraint( space, cpPivotJointNew(body1, body2, middle_of_bodies) );
+    // WORKS #2:        Pivot Joint in Middle of Bodies - Used to be very stiff, improved with SetMaxForce
+    double mul = sqrt(Dr::Clamp(((stiffness+0.25)*0.8)*10.0, 1.0, 10.0));
+    cpVect middle_of_bodies = cpvsub(cpBodyGetPosition(body2), cpvmult(cpvsub(cpBodyGetPosition(body2), cpBodyGetPosition(body1)), 0.5));
+    cpConstraint *pivot = cpPivotJointNew(body1, body2, middle_of_bodies);
+    cpConstraintSetMaxForce(pivot, 2000.0*mul);
+    cpSpaceAddConstraint( space, pivot );
 
     // WORKS #3:        Simple Pivot Around One Body
     ///cpSpaceAddConstraint(space, cpPivotJointNew(body1, body2, cpBodyGetPosition(body2)));
