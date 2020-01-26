@@ -27,6 +27,10 @@ DrPointF        g_mouse_position = DrPointF(0, 0);
 
 std::string     g_info = "";
 
+bool            g_bool = false;
+int             g_int = 0;
+double          g_double = 0.0;
+
 
 //####################################################################################
 //##    Calculate angles of player collisions to find if we're on ground
@@ -56,7 +60,7 @@ static void SelectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *grou
 //####################################################################################
 void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, bool initial_jump) {
     // Soft Body Jump
-    if (object->circle_soft_body) {
+    if (object->body_style == Body_Style::Circular_Blob) {
         double root = 3.2;
         double soft_body_mass = cpBodyGetMass(object->body);
         double vel_multiplier = std::pow(soft_body_mass, 1.0/root) * 1050.0;

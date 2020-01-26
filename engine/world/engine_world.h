@@ -38,6 +38,7 @@ struct Cam_Info {                                           // Character Camera 
 // Global Forward Declarations for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
 extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
+extern void     PostSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                   // defined in engine_world_collision.cpp
 extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
 
 extern void     KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);         // defined in engine_world__update.cpp
@@ -178,8 +179,8 @@ public:
 
     // World Adding
     void            addPlayer(Demo_Player new_player_type);
-    DrEngineObject* addSoftBodyCircle(long texture_number, DrPointF point, double diameter, double stiffness,
-                                      double friction, double bounce, bool can_rotate = true);
+    DrEngineObject* addSoftBodyCircle(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject* addSoftBodySquare(long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
     void            addSoftBodySquare(DrPointF point);
     void            addStage();
     void            addThing(DrEngineThing *thing);

@@ -72,7 +72,6 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );         //      object if colliding and should cancel / adjust it
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 
-
     // Check for dealing damage
     bool should_damage = object_a->shouldDamage(object_b->getCollisionType());
 
@@ -106,6 +105,23 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     return cpTrue;
 }
 
+extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
+    CP_ARBITER_GET_SHAPES(arb, a, b)
+    DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
+    DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a == nullptr || object_b == nullptr) return;
+
+    if (cpArbiterIsFirstContact(arb)) {
+        // Divide the impulse by the timestep to get the collision force.
+        double impact = cpvlength(cpArbiterTotalImpulse(arb)) / cpSpaceGetCurrentTimeStep(space);
+
+        if (impact > 1.0) {
+
+        }
+    }
+}
+
+
 extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
@@ -115,6 +131,7 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     // Stop canceling gravity when seperates
     object_a->setTempGravityMultiplier( 1.0 );
 }
+
 
 //####################################################################################
 //##    Applies Recoil Force after being damaged another object

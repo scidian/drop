@@ -61,6 +61,9 @@ extern DrPointF      g_mouse_position;                  // Stores last known mou
 
 extern std::string   g_info;                            // Used to draw some debug text onto the Engine screen
 
+extern bool          g_bool;                            // Global bool   to use for debuging
+extern int           g_int;                             // Global int    to use for debuging
+extern double        g_double;                          // Global double to use for debuging
 
 
 #endif // GLOBALS_ENGINE_H

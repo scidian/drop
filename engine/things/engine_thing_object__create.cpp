@@ -40,9 +40,9 @@ void DrEngineObject::addShapeBox(cpBB box) {
     double    area = ((box.r - box.l) * (box.t - box.b));
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
-void DrEngineObject::addShapeBoxFromTexture(long texture_number) {
-    double width =  getWorld()->getTexture(texture_number)->width();
-    double height = getWorld()->getTexture(texture_number)->height();
+void DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
+    double width =  getWorld()->getTexture(texture_number)->width() * extra_scale.x;
+    double height = getWorld()->getTexture(texture_number)->height() * extra_scale.y;
     addShapeBox(width, height);
 }
 

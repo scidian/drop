@@ -50,20 +50,29 @@ Vertex& getVertex(std::vector<Vertex> &vertices, int get_at) {
 //##    Recalculates Soft Body Mesh
 //##        RETURNS: true if ready to render, false if there was an error
 //####################################################################################
-bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object) {
+bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style) {
     if (object == nullptr) return false;
     if (object->soft_balls.size() < 3) return false;
 
     // Calculate Object Angle
     DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
     if (first_ball == nullptr) return false;
-    object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - 90);
+    double angle_adjust = 0.0;
+    if (body_style == Body_Style::Square_Blob) {
+        angle_adjust = object->soft_start_angle;/// - g_double;
+    } else if (body_style == Body_Style::Circular_Blob) {
+        angle_adjust = 90.0;
+    }
+    ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
+    object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
 
     // Calculate Current Points
+    std::vector<DrEngineObject*> balls;
     std::vector<Vertex> vertices;
     for (size_t i = 0; i < object->soft_balls.size(); ++i) {
         DrEngineObject *next_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[i]);
         if (next_ball == nullptr) return false;
+        balls.push_back(next_ball);
         DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle());
                  unrotated = unrotated - object->getPosition();
                  unrotated = unrotated / object->soft_diameter;             // Equalize mesh from -0.5 to +0.5
@@ -76,13 +85,21 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object) {
     // Smooth Points
     std::vector<DrVec3> smoothed_points;
     for (int i = 0; i < static_cast<int>(vertices.size()); ++i) {
-        DrVec3 p1 = getVertex(vertices, i-2).position;
-        DrVec3 p2 = getVertex(vertices, i-1).position;
-        DrVec3 p3 = getVertex(vertices, i  ).position;
-        DrVec3 p4 = getVertex(vertices, i+1).position;
-        DrVec3 p5 = getVertex(vertices, i+2).position;
-        DrVec3 average = (p1 + p2 + p3 + p4 + p5) / 5.0;
-        smoothed_points.push_back( average );
+        DrVec3 average;
+        if (body_style == Body_Style::Circular_Blob) {
+            DrVec3 p1 = getVertex(vertices, i-2).position;
+            DrVec3 p2 = getVertex(vertices, i-1).position;
+            DrVec3 p3 = getVertex(vertices, i  ).position;
+            DrVec3 p4 = getVertex(vertices, i+1).position;
+            DrVec3 p5 = getVertex(vertices, i+2).position;
+            average = (p1 + p2 + p3 + p4 + p5) / 5.0;
+        } if (body_style == Body_Style::Square_Blob) {
+            DrVec3 p1 = getVertex(vertices, i-1).position * 0.5;
+            DrVec3 p2 = getVertex(vertices, i  ).position;
+            DrVec3 p3 = getVertex(vertices, i+1).position * 0.5;
+            average = (p1 + p2 + p3) / 2.0;
+        }
+        smoothed_points.push_back( ((balls[i]->soft_corner) ? getVertex(vertices, i  ).position : average) );
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
         vertices[i].position = smoothed_points[i];
@@ -104,11 +121,6 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object) {
 
     return true;
 }
-
-
-
-
-
 
 
 

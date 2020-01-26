@@ -58,9 +58,10 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
                                                 Collision_Type::Damage_All };
     for (Collision_Type collision : collide_types) {
         cpCollisionHandler *custom_collision_handler = cpSpaceAddWildcardHandler(m_space, static_cast<cpCollisionType>(collision));
-        custom_collision_handler->beginFunc =    BeginFuncWildcard;
-        custom_collision_handler->preSolveFunc = PreSolveFuncWildcard;
-        custom_collision_handler->separateFunc = SeperateFuncWildcard;
+        custom_collision_handler->beginFunc =       BeginFuncWildcard;
+        custom_collision_handler->preSolveFunc =    PreSolveFuncWildcard;
+        custom_collision_handler->postSolveFunc =   PostSolveFuncWildcard;
+        custom_collision_handler->separateFunc =    SeperateFuncWildcard;
     }
 
 

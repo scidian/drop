@@ -162,6 +162,12 @@ enum class Shape_Type {
     Polygon                 = 3,            // cpPolyShapeNew
 };
 
+enum class Body_Style {
+    Rigid_Body              = 0,
+    Circular_Blob           = 1,
+    Square_Blob             = 2,
+};
+
 enum class Collision_Type {
     Damage_None             = 0,
     Damage_Player           = 1,

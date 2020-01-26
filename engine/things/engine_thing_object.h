@@ -162,20 +162,22 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
-    bool        cast_shadows = true;                        // Will cast shadows when in front of a Light
+    bool        cast_shadows = true;                                // Will cast shadows when in front of a Light
 
     // Soft Body Variables
-    bool                    circle_soft_body = false;       // Turn this to true to enable soft rendering
-    double                  height_width_ratio = 1.0;       // Stores ratio for rectangular bodies
-    double                  soft_diameter = 0.0;            // Stores diameter of soft body
-    double                  soft_scale = 1.0;               // Stores scale difference between outside of soft body and ball location
-    std::vector<long>       soft_balls;                     // Stores keys of children soft bodies
-    std::vector<DrPointF>   soft_start;                     // Soft body starting positions
-    std::vector<DrPointF>   soft_uv;                        // Soft body texture coordinates
-    std::vector<float>      m_soft_vertices;                // Used to keep soft body textured quad coordinates
-    std::vector<float>      m_soft_texture_coordinates;     // Used to keep the coordinates of rendering an entire texture as a soft body
-    std::vector<float>      m_soft_barycentric;             // Used to keep soft body textured quad barycentric coords
-    int                     m_soft_triangles = 0;           // Stores number of triangles
+    Body_Style              body_style = Body_Style::Rigid_Body;    // Rigid_Body, Circular_Blob, etc
+    double                  height_width_ratio = 1.0;               // Stores ratio for rectangular bodies
+    double                  soft_diameter = 0.0;                    // Stores diameter of soft body
+    double                  soft_scale = 1.0;                       // Stores scale difference between outside of soft body and ball location
+    std::vector<long>       soft_balls;                             // Stores keys of children soft bodies
+    std::vector<DrPointF>   soft_start;                             // Soft body starting positions
+    std::vector<DrPointF>   soft_uv;                                // Soft body texture coordinates
+    bool                    soft_corner = false;                    // Used to store corners of soft bodies to stop from average corners of mesh
+    double                  soft_start_angle = 0.0;                 // Tracks starting angle of 1st soft child
+    std::vector<float>      m_soft_vertices;                        // Used to keep soft body textured quad coordinates
+    std::vector<float>      m_soft_texture_coordinates;             // Used to keep the coordinates of rendering an entire texture as a soft body
+    std::vector<float>      m_soft_barycentric;                     // Used to keep soft body textured quad barycentric coords
+    int                     m_soft_triangles = 0;                   // Stores number of triangles
 
 
 public:
@@ -194,7 +196,7 @@ public:
     // Shape Creation
     void                    addShapeBox(double width, double height);
     void                    addShapeBox(cpBB box);
-    void                    addShapeBoxFromTexture(long texture_number);
+    void                    addShapeBoxFromTexture(long texture_number, DrPointF extra_scale = DrPointF(1.0, 1.0));
     void                    addShapeCircle(double circle_radius, DrPointF shape_offset);
     void                    addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0);
     void                    addShapeTriangleFromTexture(long texture_number);

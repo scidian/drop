@@ -32,6 +32,9 @@ void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 
     } else if (event->key() == Qt::Key_Space)   { g_shoot_button = true;
 
+    } else if (event->key() == Qt::Key_Y)       { g_double -= 5.0;
+    } else if (event->key() == Qt::Key_U)       { g_double += 5.0;
+
     } else if (event->key() == Qt::Key::Key_P) {
         QString file_name = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
         file_name += "/" + QString::fromStdString(m_engine->getProject()->getOption(Project_Options::Name).toString());

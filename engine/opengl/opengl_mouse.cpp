@@ -133,14 +133,21 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
         } else if (event->button() & Qt::RightButton) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
+
+                // Original Square Grid of Soft Balls
+                ///world->addSoftBodySquare(DrPointF(x, y));
+
                 DrEngineObject *soft_body = nullptr;
-                if (Dr::RandomInt(0, 10) == 1) {
-                    soft_body = world->addSoftBodyCircle(Asset_Textures::Plant, DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0), 0.5, 0.5);
+                double stiffness =      Dr::RandomDouble(0.0, 1.0);///0.1); // <-- Really gooey
+                if (Dr::RandomBool()) {
+                    double scale_x = Dr::RandomDouble(0.5, 3.0);
+                    double scale_y = Dr::RandomDouble(0.5, 3.0);
+                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), stiffness, 0.5, 0.5);
                 } else {
-                    soft_body = world->addSoftBodyCircle(Asset_Textures::Ball,  DrPointF(x, y), Dr::RandomInt(50, 200), Dr::RandomDouble(0.0, 1.0), 0.5, 0.5);
+                    long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
+                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(50, 200), stiffness, 0.5, 0.5);
+
                 }
-                // Really gooey
-                ///soft_body = world->addSoftBodyCircle(Asset_Textures::Ball, DrPointF(x, y), Dr::RandomInt(100, 110), Dr::RandomDouble(0.0, 0.1), 0.5, 0.5);
                 soft_body->saturation = 255.0;
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
                 soft_body->setDamageRecoil(1000.0);
