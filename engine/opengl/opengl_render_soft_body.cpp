@@ -104,24 +104,31 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     // Smooth Points
     std::vector<DrVec3> smoothed_points;
     for (int i = 0; i < static_cast<int>(vertices.size()); ++i) {
-        DrVec3 average;
+        DrVec3 average (0.0, 0.0, 0.0);
+        float  total =  0.0;
         if (body_style == Body_Style::Circular_Blob) {
-            DrVec3 p1 = getVertex(vertices, i-2).position;
-            DrVec3 p2 = getVertex(vertices, i-1).position;
-            DrVec3 p3 = getVertex(vertices, i  ).position;
-            DrVec3 p4 = getVertex(vertices, i+1).position;
-            DrVec3 p5 = getVertex(vertices, i+2).position;
-            average = (p1 + p2 + p3 + p4 + p5) / 5.0;
+            average += getVertex(vertices, i-2).position; total++;
+            average += getVertex(vertices, i-1).position; total++;
+            average += getVertex(vertices, i  ).position; total++;
+            average += getVertex(vertices, i+1).position; total++;
+            average += getVertex(vertices, i+2).position; total++;
         } if (body_style == Body_Style::Square_Blob) {
-            if (getEngineObject(balls, i-1)->soft_corner || getEngineObject(balls, i  )->soft_corner || getEngineObject(balls, i+1)->soft_corner) {
-                average = getVertex(vertices, i  ).position;
-            } else {
-                DrVec3 p1 = getVertex(vertices, i-1).position;
-                DrVec3 p2 = getVertex(vertices, i  ).position;
-                DrVec3 p3 = getVertex(vertices, i+1).position;
-                average = (p1 + p2 + p3) / 3.0;
+            average += getVertex(vertices, i  ).position; total++;
+
+            if (getEngineObject(balls, i-1)->soft_corner == false &&
+                getEngineObject(balls, i  )->soft_corner == false &&
+                getEngineObject(balls, i+1)->soft_corner == false) {
+                average += getVertex(vertices, i-1).position; total++;
+                average += getVertex(vertices, i+1).position; total++;
+
+                if (getEngineObject(balls, i-2)->soft_corner == false &&
+                    getEngineObject(balls, i+2)->soft_corner == false) {
+                    average += getVertex(vertices, i-2).position; total++;
+                    average += getVertex(vertices, i+2).position; total++;
+                }
             }
         }
+        average = (average) / total;
         smoothed_points.push_back( average);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {

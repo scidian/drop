@@ -37,36 +37,56 @@ namespace Dr {
     //##    Comparison Functions
     //############################
     // Returns number_to_check fit to within the bounds of min / max
-    template<class T> T      Clamp(const T& number_to_check, const T& min, const T& max) {
+    template<class T> T     Clamp(const T& number_to_check, const T& min, const T& max) {
         if (number_to_check < min) return min;
         if (number_to_check > max) return max;
         return number_to_check;
     }
 
     // Return the Max of two values
-    template<class T> T      Max(const T& a, const T& b) { return (a > b) ? a : b; }
+    template<class T> T     Max(const T& a, const T& b) { return (a > b) ? a : b; }
 
     // Return the Min of two values
-    template<class T> T      Min(const T& a, const T& b) { return (a < b) ? a : b; }
+    template<class T> T     Min(const T& a, const T& b) { return (a < b) ? a : b; }
 
     // Linear Interpolation between two values
-    template<class T> T      Lerp(const T& f1, const T& f2, const T& t) { return (f1 * (static_cast<T>(1.0) - t)) + (f2 * t); }
+    template<class T> T     Lerp(const T& f1, const T& f2, const T& t) { return (f1 * (static_cast<T>(1.0) - t)) + (f2 * t); }
 
     // Linear Interpolation between two values by no more than d
-    template<class T> T      LerpConst(const T& f1, const T& f2, const T& d) { return f1 + Clamp(f2 - f1, -d, d); }
+    template<class T> T     LerpConst(const T& f1, const T& f2, const T& d) { return f1 + Clamp(f2 - f1, -d, d); }
 
     // Swaps two values
-    template<class T> void   Swap(T& number1, T& number2) { T temp = number1; number1 = number2; number2 = temp; }
+    template<class T> void  Swap(T& number1, T& number2) { T temp = number1; number1 = number2; number2 = temp; }
 
+
+    //####################################################################################
+    //##    Range Functions
+    //############################
+    // Converts value from one range to another
+    template<class T> T     RangeConvert(T value, T old_range_min, T old_range_max, T new_range_min, T new_range_max) {
+        if (value < old_range_min) value = old_range_min;
+        if (value > old_range_max) value = old_range_max;
+
+        T old_range = (old_range_max - old_range_min);
+        T new_range = old_range;
+        T new_value = value;
+        if (Dr::FuzzyCompare(old_range, static_cast<T>(0))) {
+            new_value = new_range_min;
+        } else {
+            new_range = (new_range_max - new_range_min);
+            new_value = (((value - old_range_min) * new_range) / old_range) + new_range_min;
+        }
+        return new_value;
+    }
 
     //####################################################################################
     //##    Angle Functions
     //############################
-    template<class T> T      RadiansToDegrees(const T& rad) { return (rad * 57.295779513082321); }           // == (180.0 / 3.141592653589793238463);
-    template<class T> T      DegreesToRadians(const T& degrees) { return degrees * (DR_PI / 180.0); }
+    template<class T> T     RadiansToDegrees(const T& rad)      { return (rad * 57.295779513082321);    }       // == (180.0 / 3.141592653589793238463);
+    template<class T> T     DegreesToRadians(const T& degrees)  { return degrees * (DR_PI / 180.0);     }
 
     // Equalizes x, y, and z angles to within 0 to 360
-    template<class T> T      EqualizeAngle0to360(const T& angle) {
+    template<class T> T     EqualizeAngle0to360(const T& angle) {
         T equalized = angle;
         while (equalized <   0) { equalized += 360; }
         while (equalized > 360) { equalized -= 360; }
@@ -74,7 +94,7 @@ namespace Dr {
     }
 
     // Finds closest angle within 180 degrees of angle (both angles must be between 0 to 360)
-    template<class T> T      FindClosestAngle180(const T& start, const T& angle) {
+    template<class T> T     FindClosestAngle180(const T& start, const T& angle) {
         T closest = angle;
         if (closest - start > 180)
             closest -= 360;

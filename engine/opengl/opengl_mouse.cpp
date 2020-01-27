@@ -139,14 +139,12 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                 DrEngineObject *soft_body = nullptr;
                 if (Dr::RandomBool()) {
-                    double stiffness =      Dr::RandomDouble(0.6, 1.0);///0.1); // <-- Really gooey
-                    double scale_x = Dr::RandomDouble(0.5, 3.0);
-                    double scale_y = Dr::RandomDouble(0.5, 3.0);
-                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), stiffness, 0.5, 0.5, true);
+                    double scale_x = Dr::RandomDouble(0.5, 4.0);
+                    double scale_y = Dr::RandomDouble(0.5, 4.0);
+                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, 0.5, 0.5, true);
                 } else {
-                    double stiffness =      Dr::RandomDouble(0.0, 1.0);///0.1); // <-- Really gooey
                     long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(50, 200), stiffness, 0.5, 0.5, true);
+                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(40, 300), g_double, 0.5, 0.5, true);
 
                 }
                 soft_body->saturation = 255.0;
@@ -154,11 +152,15 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 soft_body->setDamageRecoil(1000.0);
 
             } else {
+
+                // Color Blocks
                 for (int i = 0; i < 25; i++ ) {
                     DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
                     block->addShapeBoxFromTexture(Asset_Textures::Block);
                     block->set3DType(Convert_3D_Type::Cube);
                     block->setDepth(61);
+                    block->setTouchDrag(true);
+                    block->setTouchDragForce(5000.0);
                     world->addThing(block);
 
                     double hue = Dr::RandomDouble(0.0, 1.0);

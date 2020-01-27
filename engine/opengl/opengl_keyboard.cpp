@@ -32,8 +32,8 @@ void DrOpenGL::keyPressEvent(QKeyEvent *event) {
 
     } else if (event->key() == Qt::Key_Space)   { g_shoot_button = true;
 
-    } else if (event->key() == Qt::Key_Y)       { g_double -= 5.0;
-    } else if (event->key() == Qt::Key_U)       { g_double += 5.0;
+    } else if (event->key() == Qt::Key_Minus)   { g_double -= 0.1; g_info = "Global Double: " + std::to_string(g_double);
+    } else if (event->key() == Qt::Key_Equal)   { g_double += 0.1; g_info = "Global Double: " + std::to_string(g_double);
 
     } else if (event->key() == Qt::Key::Key_P) {
         QString file_name = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
