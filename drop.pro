@@ -93,6 +93,7 @@ SOURCES += \
     3rd_party/chipmunk/cpSpaceStep.c \
     3rd_party/chipmunk/cpSpatialIndex.c \
     3rd_party/chipmunk/cpSweep1D.c \
+    3rd_party/delaunator.cpp \
     3rd_party/glm/detail/glm.cpp \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \

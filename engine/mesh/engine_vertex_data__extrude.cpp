@@ -394,7 +394,7 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
 
 
         // Run triangulation, add triangles to vertex data
-        Delaunator::Delaunator d(no_duplicates);
+        Delaunator d(no_duplicates);
 
         // Delaunay Trianglulation returns a collection of triangles filling a convex hull of a collection of points.
         // So no we have to go through the triangles returned and remove any that are over transparent areas of our object.

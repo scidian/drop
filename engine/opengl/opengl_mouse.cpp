@@ -139,12 +139,12 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                 DrEngineObject *soft_body = nullptr;
                 if (Dr::RandomBool()) {
-                    double scale_x = Dr::RandomDouble(0.5, 4.0);
-                    double scale_y = Dr::RandomDouble(0.5, 4.0);
+                    double scale_x = Dr::RandomDouble(1.0, 3.0);
+                    double scale_y = Dr::RandomDouble(1.0, 3.0);
                     soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, 0.75, 0.5, true);
                 } else {
                     long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(40, 300), g_double, 0.75, 0.5, true);
+                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, 0.75, 0.5, true);
 
                 }
                 soft_body->saturation = 255.0;

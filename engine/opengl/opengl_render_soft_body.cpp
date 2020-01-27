@@ -5,6 +5,7 @@
 //
 //
 //
+#include "3rd_party/delaunator.h"
 #include "engine/engine.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
@@ -63,7 +64,7 @@ DrEngineObject* getEngineObject(std::vector<DrEngineObject*> &objects, int get_a
 //##    Recalculates Soft Body Mesh
 //##        RETURNS: true if ready to render, false if there was an error
 //####################################################################################
-bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style) {
+bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, bool delaunator) {
     if (object == nullptr) return false;
     if (object->soft_balls.size() < 3) return false;
 
@@ -88,7 +89,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         balls.push_back(next_ball);
         DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle());
                  unrotated = unrotated - object->getPosition();
-                 unrotated = unrotated / object->soft_diameter;             // Equalize mesh from -0.5 to +0.5
+                 unrotated = unrotated / object->soft_size.x;             // Equalize mesh from -0.5 to +0.5
                  // Scale soft balls to outer radius
                  if (body_style == Body_Style::Square_Blob) {
                      unrotated.x = unrotated.x * object->soft_scale.x;
@@ -97,8 +98,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
                      unrotated = unrotated * object->soft_scale.x;
                  }
                  unrotated.y = unrotated.y / object->height_width_ratio;
-        Vertex v = Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0), c_up_vector_z, DrVec3(object->soft_uv[i].x,object->soft_uv[i].y,0.0), DrVec3(0,0,0));
-        vertices.push_back(v);
+        vertices.push_back(Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0), c_up_vector_z, DrVec3(object->soft_uv[i].x,object->soft_uv[i].y,0.0), DrVec3(0,0,0)));
     }
 
     // Smooth Points
@@ -142,23 +142,61 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         vertices[i].position = smoothed_points[i];
     }
 
-    // Center Point
-    Vertex center_v = Vertex::createVertex(DrVec3(0.0,0.0,0.0), c_up_vector_z, DrVec3(0.5,0.5,0.0), DrVec3(0,0,0));
+    // Delaunay Triangulation
+    if (delaunator) {
+        // Add Center Point
+        vertices.push_back(Vertex::createVertex(DrVec3( 0.0, 0.0,0.0), c_up_vector_z, DrVec3(0.5,0.5,0.0), DrVec3(0,0,0)));
 
-    // Build Mesh
-    object->m_soft_vertices.clear();
-    object->m_soft_texture_coordinates.clear();
-    object->m_soft_barycentric.clear();
-    object->m_soft_triangles = 0;
+        // Corner Points
+        ///vertices.push_back(Vertex::createVertex(DrVec3(-0.5, 0.5,0.0), c_up_vector_z, DrVec3(0.0,1.0,0.0), DrVec3(0,0,0)));
+        ///vertices.push_back(Vertex::createVertex(DrVec3( 0.5, 0.5,0.0), c_up_vector_z, DrVec3(1.0,1.0,0.0), DrVec3(0,0,0)));
+        ///vertices.push_back(Vertex::createVertex(DrVec3( 0.5,-0.5,0.0), c_up_vector_z, DrVec3(1.0,0.0,0.0), DrVec3(0,0,0)));
+        ///vertices.push_back(Vertex::createVertex(DrVec3(-0.5,-0.5,0.0), c_up_vector_z, DrVec3(0.0,0.0,0.0), DrVec3(0,0,0)));
 
-    for (size_t i = 0; i < vertices.size() - 1; ++i) {
-        addSoftTriangle(object, vertices[i], vertices[i+1], center_v);
+        // Get ready for Triangulation, coordinates are stored in x, y pairs
+        std::vector<double> coordinates;
+        for (std::size_t i = 0; i < vertices.size(); i++) {
+            coordinates.push_back(static_cast<double>(vertices[i].position.x));
+            coordinates.push_back(static_cast<double>(vertices[i].position.y));
+        }
+        if (coordinates.size() < 6) return false;                                           // We need at least 3 points!!
+
+        // Run triangulation, add triangles to vertex data
+        Delaunator d(coordinates);
+
+        // Build Mesh
+        object->m_soft_vertices.clear();
+        object->m_soft_texture_coordinates.clear();
+        object->m_soft_barycentric.clear();
+        object->m_soft_triangles = 0;
+
+        // Build Triangles
+        for (size_t i = 0; i < d.triangles.size(); i += 3) {
+            size_t triangle_index_1 = d.triangles[i + 0];
+            size_t triangle_index_2 = d.triangles[i + 1];
+            size_t triangle_index_3 = d.triangles[i + 2];
+            addSoftTriangle(object, vertices[triangle_index_1], vertices[triangle_index_2], vertices[triangle_index_3]);
+        }
+
+    // Radial Triangulation
+    } else {
+        // Center Point
+        Vertex center_v = Vertex::createVertex(DrVec3(0.0,0.0,0.0), c_up_vector_z, DrVec3(0.5,0.5,0.0), DrVec3(0,0,0));
+
+        // Build Mesh
+        object->m_soft_vertices.clear();
+        object->m_soft_texture_coordinates.clear();
+        object->m_soft_barycentric.clear();
+        object->m_soft_triangles = 0;
+
+        for (size_t i = 0; i < vertices.size() - 1; ++i) {
+            addSoftTriangle(object, vertices[i], vertices[i+1], center_v);
+        }
+        addSoftTriangle(object, vertices[0], vertices[vertices.size()-1], center_v);
     }
-    addSoftTriangle(object, vertices[0], vertices[vertices.size()-1], center_v);
 
     return true;
 }
-
 
 
 
