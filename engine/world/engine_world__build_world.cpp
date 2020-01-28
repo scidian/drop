@@ -203,21 +203,16 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     cpSpaceAddConstraint( m_space, cpPivotJointNew(chain_7->body,  chain_8->body, cpBodyGetPosition(chain_8->body)) );
     cpSpaceAddConstraint( m_space, cpPivotJointNew(chain_8->body, anchor_b->body, cpBodyGetPosition(anchor_b->body)) );
 
-    unsigned int all_categories = ~(static_cast<unsigned int>(0));
-    cpShapeFilter filter;
-    filter.group = 56;                      // Any int > 0, maybe use unique project id of parent? or keep a key generator when Engine starts
-    filter.categories = all_categories;     // CP_ALL_CATEGORIES
-    filter.mask =       all_categories;     // CP_ALL_CATEGORIES
-    for (auto shape : anchor_a->shapes) cpShapeSetFilter( shape, filter);
-    for (auto shape : anchor_b->shapes) cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_1->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_2->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_3->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_4->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_5->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_6->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_7->shapes)  cpShapeSetFilter( shape, filter);
-    for (auto shape : chain_8->shapes)  cpShapeSetFilter( shape, filter);
+    applyCategoryMask(anchor_a, anchor_a->getKey());
+    applyCategoryMask(anchor_b, anchor_a->getKey());
+    applyCategoryMask(chain_1,  anchor_a->getKey());
+    applyCategoryMask(chain_2,  anchor_a->getKey());
+    applyCategoryMask(chain_3,  anchor_a->getKey());
+    applyCategoryMask(chain_4,  anchor_a->getKey());
+    applyCategoryMask(chain_5,  anchor_a->getKey());
+    applyCategoryMask(chain_6,  anchor_a->getKey());
+    applyCategoryMask(chain_7,  anchor_a->getKey());
+    applyCategoryMask(chain_8,  anchor_a->getKey());
     */
 
 }

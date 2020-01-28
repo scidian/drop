@@ -71,8 +71,8 @@ bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area)
         if (Dr::IsCloseTo(0.0, getRotateSpeedZ(), 0.001) == false) {
             switch (g_pedal) {
                 case Pedal::None:               break;
-                case Pedal::Clockwise:          cpBodySetAngularVelocity( body, -getRotateSpeedZ() );    break;
-                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( body,  getRotateSpeedZ() );    break;
+                case Pedal::Clockwise:          cpBodySetAngularVelocity( body, -getRotateSpeedZ() );   break;
+                case Pedal::CounterClockwise:   cpBodySetAngularVelocity( body,  getRotateSpeedZ() );   break;
                 case Pedal::Brake:              cpBodySetAngularVelocity( body,  0 );                   break;
             }
         }

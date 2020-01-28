@@ -19,6 +19,12 @@
 //############################
 class DrEngineTexture
 {
+public:
+    // Constructor / Destructor
+    DrEngineTexture(QPixmap &from_pixmap);
+
+
+    // #################### VARIABLES ####################
 private:
     // Local Variables
     QOpenGLTexture     *m_texture;                      // Stores a pointer to an OpenGLTexture
@@ -28,11 +34,10 @@ private:
 
     DrColor             m_average_color;                // Average Color of Texture
 
-public:
-    // Constructor / Destructor
-    DrEngineTexture(QPixmap &from_pixmap);
 
-    // Function Calls
+    // #################### FUNCTIONS ####################
+public:
+    // Texture Calls
     void            deleteTexture()   { delete m_texture; }
     void            loadTexture(QPixmap &from_pixmap);
 

@@ -40,6 +40,7 @@ class FormEngine;
 
 // Type definitions
 typedef std::chrono::high_resolution_clock  Clock;
+typedef std::vector<   DrEngineCamera*>     EngineCameraList;
 typedef std::map<long, DrEngineCamera*>     EngineCameraMap;
 typedef std::vector<   DrEngineSpawner*>    EngineSpawners;
 typedef std::map<long, DrEngineTexture*>    EngineTextureMap;

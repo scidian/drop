@@ -80,7 +80,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setTouchDrag(true);
         ball1->setTouchDragForce(2000.0);
 
-        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 100, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
+        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
         ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
         ball2->setDepth(30);
         addThing(ball2);
@@ -94,8 +94,10 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         DrEngineObject *softy = addSoftBodyCircle(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(100, 100), 150, 0.8, 0.50, 0.25, false);
         if (softy != nullptr) {
             assignPlayerControls(softy, false, true, false);
+            if (getCamerasFollowThing(softy->getKey()).size() > 0)
+                getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
             softy->setMoveSpeedX(800);
-            softy->setRotateSpeedZ( 20 );
+            softy->setRotateSpeedZ( 7 );
             softy->setJumpCount( -1 );
             softy->setCanWallJump(false);
         }
@@ -208,33 +210,12 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ///cpConstraint *wheel_motor_2 = cpSimpleMotorNew(rover->body, wheel2->body, .2);
         ///cpSpaceAddConstraint( m_space, wheel_motor_2);
 
-        // Set body and wheels to same group so they don't collide, example:
-        //
-        // #define GRABBABLE_MASK_BIT (1<<31)
-        // cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
-        // cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
-        //
-        // filter.group = no_group = 0 = could collide all
-        //              = set all children to unique project_id to stop them from colliding with each other
-        // categories   = what not to collide with  (player, player bullet, enemy, enemy bullet, wall, etc)
-        // mask         = what to collide with      (walls, enemy bullet)
-        //
-        enum Shape_Groups {
-            A = 1 << 0,
-            B = 1 << 1,
-            C = 1 << 2,
-        };
-        unsigned int all_categories = ~(static_cast<unsigned int>(0));
-
-        cpShapeFilter filter;
-        filter.group = 43;                      // Any int > 0, maybe use unique project id of parent? or keep a key generator when Engine starts
-        filter.categories = all_categories;     // CP_ALL_CATEGORIES
-        filter.mask =       all_categories;     // CP_ALL_CATEGORIES
-        for (auto shape : rover->shapes)  cpShapeSetFilter( shape, filter);
-        for (auto shape : wheel1->shapes) cpShapeSetFilter( shape, filter);
-        for (auto shape : wheel2->shapes) cpShapeSetFilter( shape, filter);
-        for (auto shape : wheel3->shapes) cpShapeSetFilter( shape, filter);
-        for (auto shape : spare1->shapes) cpShapeSetFilter( shape, filter);
+        // Set body and wheels to same group so they don't collide
+        applyCategoryMask(rover,  rover->getKey());
+        applyCategoryMask(wheel1, rover->getKey());
+        applyCategoryMask(wheel2, rover->getKey());
+        applyCategoryMask(wheel3, rover->getKey());
+        applyCategoryMask(spare1, rover->getKey());
     }
 }
 

@@ -168,6 +168,21 @@ enum class Body_Style {
     Square_Blob             = 2,
 };
 
+enum class Soft_Body_Shape {
+    None                    = 0,
+    Circle                  = 1,
+    Square                  = 2,
+    Double_Jointed          = 3,
+};
+
+enum class Soft_Sides {
+    Bottom                  = 0,
+    Right                   = 1,
+    Top                     = 2,
+    Left                    = 3,
+    None,
+};
+
 enum class Collision_Type {
     Damage_None             = 0,
     Damage_Player           = 1,

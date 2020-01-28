@@ -138,7 +138,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 ///world->addSoftBodySquare(DrPointF(x, y));
 
                 DrEngineObject *soft_body = nullptr;
-                double friction = 0.5;
+                double friction = 0.25;
                 double bounce =   0.5;
                 if (Dr::RandomBool()) {
                     double scale_x = Dr::RandomDouble(1.0, 3.0);
@@ -153,11 +153,11 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
                 soft_body->setDamageRecoil(1000.0);
 
-                world->assignPlayerControls(soft_body, false, true, false);
+                ///world->assignPlayerControls(soft_body, false, true, false);
                 ///softy->setMoveSpeedX(800);
-                soft_body->setRotateSpeedZ( 20 );
-                soft_body->setJumpCount( 1 );
-                soft_body->setCanWallJump(false);
+                ///soft_body->setRotateSpeedZ( 20 );
+                ///soft_body->setJumpCount( 1 );
+                ///soft_body->setCanWallJump(false);
 
             } else {
 

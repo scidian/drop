@@ -21,6 +21,16 @@ typedef std::vector<std::vector<cpVect>> PolygonList;
 class DrEngineObject : public DrEngineThing
 {
 public:
+    // Constructor / Destructor
+    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key);
+    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key = 0,
+                   double x = 0, double y = 0, double z = 0, DrPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
+                   bool should_collide = true, bool can_rotate = true, double angle = c_zero_rotate, float opacity = c_opaque);
+    virtual ~DrEngineObject() override;
+
+
+    // #################### VARIABLES ####################
+public:
     // Object Body and Shapes
     cpBody                 *body = nullptr;                 // Physical Body of object
     Body_Type               body_type;                      // Body_Type
@@ -158,8 +168,6 @@ private:
     bool        m_flipped_y = false;                        // True when image is flipped (going down) over the y axis
 
 
-
-
 public:
     // ***** Image Post Processing Attributes
     bool        cast_shadows = true;                                // Will cast shadows when in front of a Light
@@ -180,14 +188,8 @@ public:
     int                     m_soft_triangles = 0;                   // Stores number of triangles
 
 
+    // #################### FUNCTIONS ####################
 public:
-    // Constructor / Destructor
-    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key);
-    DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key = 0,
-                   double x = 0, double y = 0, double z = 0, DrPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
-                   bool should_collide = true, bool can_rotate = true, double angle = c_zero_rotate, float opacity = c_opaque);
-    virtual ~DrEngineObject() override;
-
     // Abstract Engine Thing Overrides
     virtual void        addToWorld() override;
     virtual DrThingType getThingType() override { return DrThingType::Object; }

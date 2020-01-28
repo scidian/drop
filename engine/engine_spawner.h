@@ -17,6 +17,18 @@
 //############################
 class DrEngineSpawner
 {
+public:
+    // Constructor / Destructor
+    DrEngineSpawner(DrThing *thing);
+    DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location,
+                    double rate, double rate_variable,
+                    bool spawn_instantly, int spawn_count, int spawns_remaining, double spawn_chance,
+                    DrEngineThing *attached, long attached_id,
+                    double x, double y, double x_variable, double y_variable);
+    ~DrEngineSpawner() { }
+
+
+    // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
     DrEngineWorld  *m_world = nullptr;                          // Points to current parent DrEngineWorld
@@ -54,21 +66,12 @@ private:
     double          m_spawn_variable_y = 0.0;                   // Vartable Y location amount
 
 
+    // #################### FUNCTIONS ####################
 private:
     void            setReadyForRemoval() { m_delete_me = true; }
 
-
 public:
-    // Constructor / Destructor
-    DrEngineSpawner(DrThing *thing);
-    DrEngineSpawner(DrEngineWorld *engine_world, DrThing *thing, Spawn_Type type, DrPointF location,
-                    double rate, double rate_variable,
-                    bool spawn_instantly, int spawn_count, int spawns_remaining, double spawn_chance,
-                    DrEngineThing *attached, long attached_id,
-                    double x, double y, double x_variable, double y_variable);
-    ~DrEngineSpawner() { }
-
-    // Function Calls
+    // Cleanup
     bool            readyForRemoval()       { return m_delete_me; }
 
     // Spawning

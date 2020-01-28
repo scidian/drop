@@ -19,6 +19,12 @@
 //############################
 class DrEngine
 {
+public:
+    // Constructor / Destrcutor / Cleanup
+    DrEngine(DrProject *project, long stage_key);
+
+
+    // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
     DrOpenGL           *m_opengl;                       // Pointer to QOpenGLWidget instance
@@ -38,9 +44,10 @@ public:
     cpBody             *mouse_body = nullptr;           // A Body to use for mouse tracking / grabbing
     cpConstraint       *mouse_joint = nullptr;          // A Joint to use to attach to mouse
 
+
+    // #################### FUNCTIONS ####################
 public:
-    // Constructor / Destrcutor / Cleanup
-    DrEngine(DrProject *project, long stage_key);
+    // Cleanup
     void    clearWorlds();
     void    deleteTextures();
 

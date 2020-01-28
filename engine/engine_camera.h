@@ -17,6 +17,12 @@
 //############################
 class DrEngineCamera
 {
+public:
+    // Constructor
+    DrEngineCamera(DrEngineWorld *engine_world, long unique_key, float x = 0, float y = 0, float z = 0, int buffer_size = c_slop_buffer_size);
+
+
+    // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
     DrEngineWorld  *m_world;                                    // Pointer to the parent DrEngineWorld
@@ -69,10 +75,8 @@ private:
     double m_avg_zoom =          m_zoom;                        // Holds current average zooom target
 
 
+    // #################### FUNCTIONS ####################
 public:
-    // Constructor
-    DrEngineCamera(DrEngineWorld *engine_world, long unique_key, float x = 0, float y = 0, float z = 0, int buffer_size = c_slop_buffer_size);
-
     // Function Calls
     void            moveCamera(const double& milliseconds);
     void            updateCamera();
@@ -84,9 +88,9 @@ public:
     DrEngineThing*      getThingFollowing();
     double              getThingFollowingRotation();
     float               getThingFollowingZOrder();
-    long                getThingFollowingKey() { return m_follow_key; }
-    void                setThingFollowingKey(long follow_key) { m_follow_key = follow_key; }
-    bool                wasFollowLost() { return m_follow_lost; }
+    long                getThingFollowingKey()                  { return m_follow_key; }
+    void                setThingFollowingKey(long follow_key)   { m_follow_key = follow_key; }
+    bool                wasFollowLost()                         { return m_follow_lost; }
 
     const size_t&       getBufferSize()     { return m_buffer_size; }
     const DrPointF&     getLag()            { return m_lag; }
@@ -98,40 +102,40 @@ public:
     const bool&         getWantsActive()    { return m_wants_active; }
     const double&       getZoom()           { return m_speed_adjusted_zoom; }
 
-    void                setBufferSize(int slop) { m_buffer_size = (slop < 1) ? 1 : slop; }
-    void                setLag(DrPointF lag) { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
-                                               m_lag.y = (lag.y <= 0) ? 0 : lag.y; }
-    void                setMatchAngle(bool match) { m_match_angle = match; }
+    void                setBufferSize(int slop)     { m_buffer_size = (slop < 1) ? 1 : slop; }
+    void                setLag(DrPointF lag)        { m_lag.x = (lag.x <= 0) ? 0 : lag.x;
+                                                      m_lag.y = (lag.y <= 0) ? 0 : lag.y; }
+    void                setMatchAngle(bool match)   { m_match_angle = match; }
 
-    Frame_Edge          getEdge(Edge_Location edge_location) { return m_camera_edges[edge_location]; }
-    void                setEdge(Edge_Location edge_location, Frame_Edge edge_type) { m_camera_edges[edge_location] = edge_type; }
+    Frame_Edge          getEdge(Edge_Location edge_location)                        { return m_camera_edges[edge_location]; }
+    void                setEdge(Edge_Location edge_location, Frame_Edge edge_type)  { m_camera_edges[edge_location] = edge_type; }
 
-    void                setPosition(glm::vec3 new_position) {       m_position = new_position; }
-    void                setPosition(double x, double y, double z) { m_position = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
-    void                setPosition(float x, float y, float z) {    m_position = glm::vec3(x, y, z); }
-    void                setPosition(int x, int y, int z) {          m_position = glm::vec3(x, y, z); }
+    void                setPosition(glm::vec3 new_position)         { m_position = new_position; }
+    void                setPosition(double x, double y, double z)   { m_position = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
+    void                setPosition(float x, float y, float z)      { m_position = glm::vec3(x, y, z); }
+    void                setPosition(int x, int y, int z)            { m_position = glm::vec3(x, y, z); }
     void                setPositionX(float x) { m_position.x = x; }
     void                setPositionY(float y) { m_position.y = y; }
     void                setPositionZ(float z) { m_position.z = z; }
 
-    void                setRotation(glm::vec3 new_rotation) {       m_rotation = new_rotation; }
-    void                setRotation(double x, double y, double z) { m_rotation = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
-    void                setRotation(float x, float y, float z) {    m_rotation = glm::vec3(x, y, z); }
-    void                setRotation(int x, int y, int z) {          m_rotation = glm::vec3(x, y, z); }
+    void                setRotation(glm::vec3 new_rotation)         { m_rotation = new_rotation; }
+    void                setRotation(double x, double y, double z)   { m_rotation = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
+    void                setRotation(float x, float y, float z)      { m_rotation = glm::vec3(x, y, z); }
+    void                setRotation(int x, int y, int z)            { m_rotation = glm::vec3(x, y, z); }
     void                setRotationX(float x) { m_rotation.x = x; }
     void                setRotationY(float y) { m_rotation.y = y; }
     void                setRotationZ(float z) { m_rotation.z = z; }
 
-    void                setSpeed(glm::vec3 new_speed) {          m_speed = new_speed; }
-    void                setSpeed(double x, double y, double z) { m_speed = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
-    void                setSpeed(float x, float y, float z) {    m_speed = glm::vec3(x, y, z); }
+    void                setSpeed(glm::vec3 new_speed)           { m_speed = new_speed; }
+    void                setSpeed(double x, double y, double z)  { m_speed = glm::vec3(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)); }
+    void                setSpeed(float x, float y, float z)     { m_speed = glm::vec3(x, y, z); }
     void                setSpeedX(float x) { m_speed.x = x; }
     void                setSpeedY(float y) { m_speed.y = y; }
     void                setSpeedZ(float z) { m_speed.z = z; }
 
     void                setTarget(glm::vec3 target) { m_target = target; }
-    void                setUpVector(Up_Vector up) { m_up_vector = up; }
-    void                setWantActive(bool wants) { m_wants_active = wants; }
+    void                setUpVector(Up_Vector up)   { m_up_vector = up; }
+    void                setWantActive(bool wants)   { m_wants_active = wants; }
     void                setZoom(double zoom, bool update_speed_zoom = false);
 
 };

@@ -28,6 +28,45 @@ static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
 
 
 //####################################################################################
+//##    Set DrEngineObject and all physics children to designated group filter so they don't collide
+//##        DEFAULTS:   reset_groups == true
+//####################################################################################
+void DrEngineWorld::applyCategoryMask(DrEngineObject *central, long group_id) {
+    // #define GRABBABLE_MASK_BIT (1<<31)
+    // cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
+    // cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
+    //
+    // filter.group = no_group = 0 = could collide all
+    //              = set all children to unique project_id to stop them from colliding with each other
+    // categories   = what not to collide with  (player, player bullet, enemy, enemy bullet, wall, etc)
+    // mask         = what to collide with      (walls, enemy bullet)
+    //
+    ///enum Shape_Groups {
+    ///    A = 1 << 0,
+    ///    B = 1 << 1,
+    ///    C = 1 << 2,
+    ///};
+    unsigned int all_categories = ~(static_cast<unsigned int>(0));
+    cpShapeFilter filter;
+    filter.group =      group_id;               // Any int > 0, useful to use unique project id of parent (i.e. object->getKey())
+    filter.categories = all_categories;         // CP_ALL_CATEGORIES
+    filter.mask =       all_categories;         // CP_ALL_CATEGORIES
+    for (auto shape : central->shapes) {
+        cpShapeSetFilter(shape, filter);
+    }
+    if (central->soft_balls.size() > 0) {
+        for (auto ball_number : central->soft_balls) {
+            DrEngineObject *ball = this->findObjectByKey(ball_number);
+            if (ball == nullptr) continue;
+            for (auto shape : ball->shapes) {
+                cpShapeSetFilter( shape, filter);
+            }
+        }
+    }
+}
+
+
+//####################################################################################
 //##    Chipmunk Collision Callbacks
 //##        Support for object collisions, damage, recoil, one way platforms and more
 //####################################################################################

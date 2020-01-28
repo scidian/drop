@@ -69,12 +69,13 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     if (object->soft_balls.size() < 3) return false;
 
     // Calculate Object Angle
-    DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
-    if (first_ball == nullptr) return false;
-    double angle_adjust = 0.0;
-    angle_adjust = object->soft_start_angle;/// - g_double;
-    ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
-    object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
+    if (object->canRotate()) {
+        DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
+        if (first_ball == nullptr) return false;
+        double angle_adjust = object->soft_start_angle;/// - g_double;
+        ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
+        object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
+    }
 
     // Calculate Current Points
     std::vector<DrEngineObject*> balls;

@@ -54,7 +54,13 @@ extern cpBool   WaterPreSolve(cpArbiter *arb, cpSpace *space, void *);
 //############################
 class DrEngineWorld
 {
+public:
+    // Constructor / Destrcutor
+    DrEngineWorld(DrEngine *engine, DrProject *project, EngineTextureMap &textures, long world_key);
+    ~DrEngineWorld();
 
+
+    // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
     DrEngine           *m_engine;                   // Pointer to Engine
@@ -79,9 +85,9 @@ private:
     cpSpace        *m_space = nullptr;              // Current physics space shown on screen
                                                     //
     const int       m_iterations = 10;              // Times physics are processed each update, 10 is default and should be good enough for most games
-    const double    m_time_step = 1.0 / 60.0;       // Speed at which want to try to update the Space, 1 / 60 = 60 times per second to up
+    const double    m_time_step =  1.0 / 60.0;      // Speed at which want to try to update the Space, 1 / 60 = 60 times per second to up
                                                     //      It is *highly* recommended to use a fixed size time step (calling Update at a fixed interval)
-    cpFloat         m_time_warp = 1.0;              // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
+    cpFloat         m_time_warp =  1.0;             // Speeds up or slows down physics time, 1 = 100% = Normal Time, Lower than 1 = slower, Higher = faster
                                                     //
     cpVect          m_gravity;                      // Current global gravity applied to current space. Defaults to cpvzero. Can be overridden on
                                                     //      a per body basis by writing custom integration functions. Changing the gravity will
@@ -167,30 +173,36 @@ public:
     bool            wavy = false;                               // Wavy (Ripple)        True / False
 
 
+    // #################### FUNCTIONS ####################
 public:
-    // Constructor / Destrcutor / Cleanup
-    DrEngineWorld(DrEngine *engine, DrProject *project, EngineTextureMap &textures, long world_key);
-    ~DrEngineWorld();
-
     // Important Functions
-    DrEngineThing*  findThingByKey(long key);
-    DrEngineObject* findObjectByKey(long key);
-    long            getNextKey()            { return m_key_generator++; }
+    DrEngineThing*      findThingByKey(long key);
+    DrEngineObject*     findObjectByKey(long key);
+    long                getNextKey()            { return m_key_generator++; }
 
-    // World Adding
-    void            addPlayer(Demo_Player new_player_type);
-    DrEngineObject* addSoftBodyCircle(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject* addSoftBodySquare(long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
-    void            addSoftBodySquare(DrPointF point);
-    void            addStage();
-    void            addThing(DrEngineThing *thing);
-    void            addThings(std::list<DrEngineThing*> things);
 
-    // World Construction / Handling
-    void            assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
-    void            buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
-    void            clearWorld();
-    int             countCharacters();
+    // Soft Bodies
+    DrEngineObject*     addBall(DrEngineWorld *world, std::vector<long> &ball_keys, long texture, Soft_Body_Shape shape,
+                                double pos_x, double pos_y, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce,
+                                bool collides, bool can_rotate);
+    DrEngineObject*     addSoftBodyCircle(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject*     addSoftBodyDouble(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject*     addSoftBodySquare(long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
+    void                addSoftBodySquare(DrPointF point);
+
+    // Physics
+    void                applyCategoryMask(DrEngineObject *central, long group_id);
+
+    // Building / Updating
+    void                addPlayer(Demo_Player new_player_type);
+    void                addStage();
+    void                addThing(DrEngineThing *thing);
+    void                addThings(std::list<DrEngineThing*> things);
+
+    void                assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void                buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
+    void                clearWorld();
+    int                 countCharacters();
 
     static Cam_Info     loadCharacterCameraSettings(DrThing *thing);
     void                loadThing3DSettings(DrThing *thing, DrEngineThing *object);
@@ -200,23 +212,23 @@ public:
     void                loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
     void                loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
 
-    void            loadCameraToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadCharacterToWorld(DrThing *thing);
-    void            loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
-    DrEngineObject* loadObjectToWorld(DrThing *thing, double offset_x, double offset_y, double scale_x, double scale_y,
-                                      double angle, double x_velocity, double y_velocity, double rotate_spawn = 0.0);
-    void            loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
-    void            loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
-    void            loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadCameraToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadCharacterToWorld(DrThing *thing);
+    void                loadFireToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
+    DrEngineObject*     loadObjectToWorld(DrThing *thing, double offset_x, double offset_y, double scale_x, double scale_y,
+                                          double angle, double x_velocity, double y_velocity, double rotate_spawn = 0.0);
+    void                loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
+    void                loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
 
-    void            updateSpace(double time_passed);
-    void            updateSpawners(double time_passed, double time_warp, DrRectF &area);
-    void            updateThings(double time_passed, double time_warp, DrRectF &area);
-    void            updateWorld(double time_passed);
-    void            wakeAllBodies();
+    void                updateSpace(double time_passed);
+    void                updateSpawners(double time_passed, double time_warp, DrRectF &area);
+    void                updateThings(double time_passed, double time_warp, DrRectF &area);
+    void                updateWorld(double time_passed);
+    void                wakeAllBodies();
 
 
     // Textures
@@ -232,7 +244,8 @@ public:
     DrEngineCamera*     addCamera(long thing_key_to_follow = 0, float x = 0, float y = 0, float z = c_default_camera_z, int buffer_size = c_slop_buffer_size);
     const long&         getActiveCamera() { return m_active_camera; }
     void                setActiveCamera(long new_camera) { m_active_camera = new_camera; }
-    DrEngineCamera*     getCamera(long camera_id) { return m_cameras[camera_id]; }
+    DrEngineCamera*     getCamera(long camera_id);
+    EngineCameraList    getCamerasFollowThing(long thing_id);
     EngineCameraMap&    getCameraMap() { return m_cameras; }
     glm::vec3           getCameraPosition();
     double              getCameraPositionX();

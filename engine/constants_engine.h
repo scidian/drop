@@ -53,6 +53,10 @@ constexpr   double      c_extra_radius =    0.50;               // Radius added 
 constexpr   double      c_mass_multiplier = 0.002;              // Shapes Area times this multiplier = shape mass
 
 
+// Soft Body Constants
+constexpr   double      c_soft_stiff =         100.0;           // Base multiplier for soft body stiffness
+constexpr   double      c_soft_damp =            1.0;           // Base multiplier for soft body damping
+
 
 
 

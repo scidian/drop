@@ -52,6 +52,24 @@ static inline void SmoothMove(double &start, const double &target, const double 
 //##
 //####################################################################################
 //####################################################################################
+// Finds Camera with camera_id
+DrEngineCamera* DrEngineWorld::getCamera(long camera_id) {
+    for (auto camera : m_cameras) {
+        if (camera.second->getKey() == camera_id) return camera.second;
+    }
+    return nullptr;
+}
+
+// Finds Cameras following thing_id
+EngineCameraList DrEngineWorld::getCamerasFollowThing(long thing_id) {
+    std::vector<DrEngineCamera*> cameras;
+    cameras.clear();
+    for (auto camera : m_cameras) {
+        if (camera.second->getThingFollowingKey() == thing_id) cameras.push_back(camera.second);
+    }
+    return cameras;
+}
+
 // Adds Camera to World, Default parameters: nullptr, 0, 0, c_default_camera_z
 DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, float y, float z, int buffer_size) {
     long new_key = getNextKey();

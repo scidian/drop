@@ -267,7 +267,8 @@ SOURCES += \
     engine/world/engine_world__load_effects.cpp \
     engine/world/engine_world__load_objects.cpp \
     engine/world/engine_world__load_stage.cpp \
-    engine/world/engine_world__soft_bodies.cpp \
+    engine/world/engine_world__soft_body.cpp \
+    engine/world/engine_world__soft_body_testing.cpp \
     engine/world/engine_world__test_foliage.cpp \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \

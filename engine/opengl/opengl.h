@@ -73,6 +73,13 @@ class DrOpenGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
+public:
+    // Constructor / Destructor
+    DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
+    ~DrOpenGL() override;
+
+
+    // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
     FormEngine     *m_form_engine;                              // Pointer to parent FormEngine
@@ -127,11 +134,8 @@ private:
     std::vector<DrEngineLight*> m_glow_lights;
 
 
+    // #################### FUNCTIONS ####################
 public:
-    // Constructor / Destructor
-    DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine);
-    ~DrOpenGL() override;
-
     // Event Overrides
     virtual void    keyPressEvent(QKeyEvent *event) override;
     virtual void    keyReleaseEvent(QKeyEvent *event) override;
