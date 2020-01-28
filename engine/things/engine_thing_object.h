@@ -167,7 +167,7 @@ public:
     // Soft Body Variables
     Body_Style              body_style = Body_Style::Rigid_Body;    // Rigid_Body, Circular_Blob, Square Blob, etc
     double                  height_width_ratio = 1.0;               // Stores ratio for rectangular bodies
-    DrPointF                soft_size  { 0.0, 0.0 };                // Stores total size of soft body object
+    DrPointF                soft_size  { 1.0, 1.0 };                // Stores total size of soft body object
     DrPointF                soft_scale { 1.0, 1.0 };                // Stores scale difference between outside of soft body and ball location
     std::vector<long>       soft_balls;                             // Stores keys of children soft bodies
     std::vector<DrPointF>   soft_start;                             // Soft body starting positions

@@ -135,21 +135,29 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
 
                 // Original Square Grid of Soft Balls
-//                world->addSoftBodySquare(DrPointF(x, y));
+                ///world->addSoftBodySquare(DrPointF(x, y));
 
                 DrEngineObject *soft_body = nullptr;
+                double friction = 0.5;
+                double bounce =   0.5;
                 if (Dr::RandomBool()) {
                     double scale_x = Dr::RandomDouble(1.0, 3.0);
                     double scale_y = Dr::RandomDouble(1.0, 3.0);
-                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, 0.75, 0.5, true);
+                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
                 } else {
                     long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, 0.75, 0.5, true);
+                    soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, friction, bounce, true);
 
                 }
                 soft_body->saturation = 255.0;
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
                 soft_body->setDamageRecoil(1000.0);
+
+                world->assignPlayerControls(soft_body, false, true, false);
+                ///softy->setMoveSpeedX(800);
+                soft_body->setRotateSpeedZ( 20 );
+                soft_body->setJumpCount( 1 );
+                soft_body->setCanWallJump(false);
 
             } else {
 

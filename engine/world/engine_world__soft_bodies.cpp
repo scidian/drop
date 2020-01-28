@@ -73,22 +73,24 @@ void JoinBodies(cpSpace *space, cpBody *body1, cpBody *body2, double stiffness, 
 
     double max_force(0);
     if (side == Sides::Circle) {
-        max_force = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 10000.0,  60000.0);
+        ///max_force = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 10000.0, 1000000.0);
+        max_force = 10000.0 + std::pow(Dr::Clamp(stiffness, 0.0, 1.0) * 15.85, 5.0);
     } else if (side == Sides::Square) {
-        max_force = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15000.0, 100000.0);
+        ///max_force = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15000.0, 1000000.0);
+        max_force = 10000.0 + std::pow(Dr::Clamp(stiffness, 0.0, 1.0) * 13.79, 5.0);
     }
 
     if (side == Sides::Circle || side == Sides::Square) {
-        // WORKS #1, BEST:  Springy Slide Joint
-        ///double mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 5.0, 50.0);
-        ///cpSpaceAddConstraint( space, cpSlideJointNew(   body1, body2, cpvzero, cpvzero, body_distance - (body_distance*0.10), body_distance) );
-        ///cpSpaceAddConstraint( space, cpDampedSpringNew( body1, body2, cpvzero, cpvzero, body_distance, c_stiff*mul, c_damp*mul) );
-
-        // WORKS #2:        Pivot Joint in Middle of Bodies - Used to be very stiff, improved with SetMaxForce
+        // WORKS #1, BEST:  Pivot Joint in Middle of Bodies - Used to be very stiff, improved with SetMaxForce
         cpVect middle_of_bodies = cpvsub(cpBodyGetPosition(body2), cpvmult(cpvsub(cpBodyGetPosition(body2), cpBodyGetPosition(body1)), 0.5));
         cpConstraint *pivot = cpPivotJointNew(body1, body2, middle_of_bodies);
         cpConstraintSetMaxForce(pivot, max_force);
         cpSpaceAddConstraint( space, pivot );
+
+        // WORKS #2:        Springy Slide Joint
+        ///double mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 5.0, 50.0);
+        ///cpSpaceAddConstraint( space, cpSlideJointNew(   body1, body2, cpvzero, cpvzero, body_distance - (body_distance*0.10), body_distance) );
+        ///cpSpaceAddConstraint( space, cpDampedSpringNew( body1, body2, cpvzero, cpvzero, body_distance, c_stiff*mul, c_damp*mul) );
 
         // WORKS #3:        Simple Pivot Around One Body
         ///cpSpaceAddConstraint(space, cpPivotJointNew(body1, body2, cpBodyGetPosition(body2)));
@@ -132,16 +134,16 @@ void JoinCenterBody(cpSpace *space, cpBody *center_body, cpBody *body2, cpVect c
     // Springy Slide Joint
     cpFloat body_distance = cpvdist(cpBodyGetPosition(center_body) + center_join, cpBodyGetPosition(body2));
     cpFloat full_distance = cpvdist(cpBodyGetPosition(center_body), cpBodyGetPosition(body2));
-    double  stiff_mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 60.0);
+    double  stiff_mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 90.0);
     double  damp_mul =  Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 60.0);
 
-    cpConstraint *slide_joint =   cpSlideJointNew(center_body, body2, center_join, cpvzero, body_distance * 0.0, body_distance);
+    cpConstraint *slide_joint =   cpSlideJointNew(center_body, body2, center_join, cpvzero, body_distance * 0.0, body_distance * 1.25);
     cpConstraint *damped_spring = cpDampedSpringNew(center_body, body2, cpvzero, cpvzero, full_distance, c_stiff*stiff_mul, c_damp*damp_mul);
     cpSpaceAddConstraint( space, slide_joint );
     cpSpaceAddConstraint( space, damped_spring );
 
     // Rotary Limit - Stops soft balls from rotating, this helps soft ball movement and motor movement (like a wheel)
-    cpConstraint *rotary_joint = cpRotaryLimitJointNew(center_body, body2, Dr::DegreesToRadians(-10), Dr::DegreesToRadians(10));
+    cpConstraint *rotary_joint = cpRotaryLimitJointNew(center_body, body2, Dr::DegreesToRadians(-5), Dr::DegreesToRadians(5));
     cpSpaceAddConstraint( space, rotary_joint );
 }
 
@@ -156,14 +158,14 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture_number, DrPointF p
                                                  double stiffness, double friction, double bounce, bool can_rotate) {
     // Number of circles to use to make soft body
     long   number_of_circles =  36;
-    double max_radius =         0.65;
-    double render_scale =       1.04;
-    if (diameter < 100) { number_of_circles = 24; max_radius = 0.60; render_scale = 1.08; }
-    if (diameter <  70) { number_of_circles = 16; max_radius = 0.55; render_scale = 1.16; }
+    double max_radius =         0.70;
+    double render_scale =       1.03;
+    if (diameter < 100) { number_of_circles = 24; render_scale = 1.06; }
+    if (diameter <  70) { number_of_circles = 16; render_scale = 1.12; }
 
     // SOFTNESS
     stiffness = Dr::Clamp(stiffness, 0.0, 1.0);                                             // Percentage of 0.0 == gooey, 1.0 == stiff
-    double inner_size = max_radius - ((1.0-stiffness) * 0.20);                              // Reduce size of central ball with softer objects
+    double inner_size = max_radius - ((1.0-stiffness) * 0.25);                              // Reduce size of central ball with softer objects
 
     // Figure out actual diameter of texture / scaling
     long   center_texture =     texture_number;
@@ -207,6 +209,11 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture_number, DrPointF p
         central->soft_uv.push_back(uv_coord);
         central->soft_start.push_back(ball_at);
 
+        // Store starting angle of first child
+        if (circle == 0) {
+            central->soft_start_angle = Dr::CalcRotationAngleInDegrees(DrPointF(0, 0), ball_at);
+        }
+
         // Add soft ball to world
         DrEngineObject *soft_ball = AddBall(this, ball_list, c_key_image_empty, Soft_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
                                             DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
@@ -244,13 +251,13 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture_number, DrPointF p
 //####################################################################################
 DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture_number, DrPointF point, DrPointF scale,
                                                  double stiffness, double friction, double bounce, bool can_rotate) {
-    double max_radius =     0.50;
+    double max_radius =     0.60;
     long   min_balls =      5;
-    double render_scale =   1.02;
+    double render_scale =   1.015;
 
     // SOFTNESS
     stiffness = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 0.2, 1.0);       // Percentage of 0.0 == gooey, 1.0 == stiff
-    double inner_size = max_radius - ((1.0-stiffness) * 0.15);                              // Reduce size of central ball with softer objects
+    double inner_size = max_radius - ((1.0-stiffness) * 0.25);                              // Reduce size of central ball with softer objects
 
     // Figure out actual diameter of texture / scaling
     long   center_texture =     texture_number;
@@ -364,7 +371,7 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture_number, DrPointF p
         // Increment loop variables
         if (loop == static_cast<long>(Sides::Bottom)) {
             if (x == 0 || x == x_balls-1) is_corner = true;
-            x++; if (x > x_balls - 1) { loop++; x = 0; y = 0; }
+            x++; if (x > x_balls - 1) { loop++; x = 0; y = 1; }
         } else if (loop == static_cast<long>(Sides::Right)) {
             if (y == y_balls-1) is_corner = true;
             y++; if (y > y_balls - 1) { loop++; x = x_balls - 2; y = 0; }

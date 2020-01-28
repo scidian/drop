@@ -95,7 +95,7 @@ void DrOpenGL::drawSpace() {
 
                 // Handle Soft Body
                 if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
-                    if (calculateSoftBodyMesh(object, object->body_style, true) == false) continue;
+                    if (calculateSoftBodyMesh(object, object->body_style, false) == false) continue;
                     draw2D = true;
                 }
 

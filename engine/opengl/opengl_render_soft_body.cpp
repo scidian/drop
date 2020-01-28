@@ -72,11 +72,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
     if (first_ball == nullptr) return false;
     double angle_adjust = 0.0;
-    if (body_style == Body_Style::Square_Blob) {
-        angle_adjust = object->soft_start_angle;/// - g_double;
-    } else if (body_style == Body_Style::Circular_Blob) {
-        angle_adjust = 90.0;
-    }
+    angle_adjust = object->soft_start_angle;/// - g_double;
     ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
     object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
 
@@ -109,33 +105,42 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         float  weight =         0.f;
         if (body_style == Body_Style::Circular_Blob) {
             weight = 1.0f;
-            average += getVertex(vertices, i  ).position * weight; total_weight += weight;
-            weight = 0.75f;
-            average += getVertex(vertices, i-1).position * weight; total_weight += weight;
-            average += getVertex(vertices, i+1).position * weight; total_weight += weight;
-            weight = 0.25f;
-            average += getVertex(vertices, i-2).position * weight; total_weight += weight;
-            average += getVertex(vertices, i+2).position * weight; total_weight += weight;
+            average += getVertex(vertices, i).position * weight;    total_weight += weight;
+            weight = 1.00f;
+            average += getVertex(vertices, i-1).position * weight;  total_weight += weight;
+            average += getVertex(vertices, i+1).position * weight;  total_weight += weight;
+            weight = 0.50f;
+            average += getVertex(vertices, i-2).position * weight;  total_weight += weight;
+            average += getVertex(vertices, i+2).position * weight;  total_weight += weight;
+            average = (average) / total_weight;
         } else if (body_style == Body_Style::Square_Blob) {
             weight = 1.0f;
-            average += getVertex(vertices, i  ).position * weight; total_weight += weight;
+            average += getVertex(vertices, i).position * weight;            total_weight += weight;
 
             if (getEngineObject(balls, i-1)->soft_corner == false &&
                 getEngineObject(balls, i  )->soft_corner == false &&
                 getEngineObject(balls, i+1)->soft_corner == false) {
                 weight = 0.75f;
-                average += getVertex(vertices, i-1).position * weight; total_weight += weight;
-                average += getVertex(vertices, i+1).position * weight; total_weight += weight;
+                average += getVertex(vertices, i-1).position * weight;      total_weight += weight;
+                average += getVertex(vertices, i+1).position * weight;      total_weight += weight;
 
                 if (getEngineObject(balls, i-2)->soft_corner == false &&
                     getEngineObject(balls, i+2)->soft_corner == false) {
-                    weight = 0.25f;
-                    average += getVertex(vertices, i-2).position * weight; total_weight += weight;
-                    average += getVertex(vertices, i+2).position * weight; total_weight += weight;
+                    weight = 0.50f;
+                    average += getVertex(vertices, i-2).position * weight;  total_weight += weight;
+                    average += getVertex(vertices, i+2).position * weight;  total_weight += weight;
                 }
+            } else if (getEngineObject(balls, i)->soft_corner == false) {
+                weight = 0.50f;
+                average += getVertex(vertices, i-1).position * weight;      total_weight += weight;
+                average += getVertex(vertices, i+1).position * weight;      total_weight += weight;
+            } else {
+                weight = 0.05f;
+                average += getVertex(vertices, i-1).position * weight; total_weight += weight;
+                average += getVertex(vertices, i+1).position * weight; total_weight += weight;
             }
+            average = (average) / total_weight;
         }
-        average = (average) / total_weight;
         smoothed_points.push_back( average);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
