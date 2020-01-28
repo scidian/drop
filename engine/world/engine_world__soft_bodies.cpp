@@ -487,8 +487,3 @@ void DrEngineWorld::addSoftBodySquare(DrPointF point) {
 
 
 
-
-
-
-
-
