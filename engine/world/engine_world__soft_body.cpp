@@ -55,8 +55,8 @@ void JoinBodies(cpSpace *space, cpBody *body1, cpBody *body2, double stiffness, 
         cpSpaceAddConstraint( space, pivot );
 
         // WORKS #2:        Springy Slide Joint
-        ///double mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 90.0);
-        ///cpSpaceAddConstraint( space, cpSlideJointNew(   body1, body2, cpvzero, cpvzero, body_distance*0.98, body_distance*1.02) );
+        ///double mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 60.0);
+        ///cpSpaceAddConstraint( space, cpSlideJointNew(   body1, body2, cpvzero, cpvzero, body_distance*0.9, body_distance*1.1) );
         ///cpSpaceAddConstraint( space, cpDampedSpringNew( body1, body2, cpvzero, cpvzero, body_distance, c_soft_stiff*mul, c_soft_damp*mul) );
 
         // WORKS #3:        Simple Pivot Around One Body
@@ -97,27 +97,22 @@ void JoinBodies(cpSpace *space, cpBody *body1, cpBody *body2, double stiffness, 
 //####################################################################################
 //##    Joins circle of soft bodies to circular central body
 //####################################################################################
-void JoinCenterBody(cpSpace *space, cpBody *center_body, cpBody *body2, cpVect center_join, double stiffness) {
+void JoinCenterBody(cpSpace *space, DrEngineObject *center, cpBody *body2, cpVect center_join, double stiffness) {
     // Springy Slide Joint
-    cpFloat body_distance = cpvdist(cpBodyGetPosition(center_body) + center_join, cpBodyGetPosition(body2));
-    cpFloat full_distance = cpvdist(cpBodyGetPosition(center_body), cpBodyGetPosition(body2));
+    cpFloat body_distance = cpvdist(cpBodyGetPosition(center->body) + center_join, cpBodyGetPosition(body2));
+    cpFloat full_distance = cpvdist(cpBodyGetPosition(center->body), cpBodyGetPosition(body2));
     double  stiff_mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 90.0);
     double  damp_mul =  Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 15.0, 60.0);
 
-    cpConstraint *slide_joint =     cpSlideJointNew(  center_body, body2, center_join, cpvzero, body_distance * 0.0, body_distance * 1.25);
-    cpConstraint *damped_spring_1 = cpDampedSpringNew(center_body, body2, cpvzero,     cpvzero, full_distance, c_soft_stiff*stiff_mul, c_soft_damp*damp_mul);
-    ///cpConstraint *damped_spring_2 = cpDampedSpringNew(center_body, body2, cpvzero,     cpvzero, full_distance, c_soft_stiff*stiff_mul, c_soft_damp*damp_mul);
-    ///cpConstraint *damped_spring_3 = cpDampedSpringNew(center_body, body2, cpvzero,     cpvzero, full_distance, c_soft_stiff*stiff_mul, c_soft_damp*damp_mul);
-    ///cpConstraint *damped_spring_in = cpDampedSpringNew(center_body, body2, center_join, cpvzero, body_distance, c_soft_stiff*stiff_mul, c_soft_damp*damp_mul);
+    cpConstraint *slide_joint =     cpSlideJointNew(  center->body, body2, center_join, cpvzero, body_distance * 0.0, body_distance * 1.25);
+    cpConstraint *damped_spring_1 = cpDampedSpringNew(center->body, body2, cpvzero,     cpvzero, full_distance, c_soft_stiff*stiff_mul, c_soft_damp*damp_mul);
     cpSpaceAddConstraint( space, slide_joint );
     cpSpaceAddConstraint( space, damped_spring_1 );
-    ///cpSpaceAddConstraint( space, damped_spring_2 );
-    ///cpSpaceAddConstraint( space, damped_spring_3 );
-    ///cpSpaceAddConstraint( space, damped_spring_in );
 
     // Rotary Limit - Stops soft balls from rotating, this helps soft ball movement and motor movement (like a wheel)
-    ///cpConstraint *rotary_joint = cpRotaryLimitJointNew(center_body, body2, Dr::DegreesToRadians(-10), Dr::DegreesToRadians(10));
-    cpConstraint *rotary_joint = cpRotaryLimitJointNew(center_body, body2, Dr::DegreesToRadians(0), Dr::DegreesToRadians(0));
+    double min_angle = Dr::DegreesToRadians(-0);///-10);
+    double max_angle = Dr::DegreesToRadians( 0);/// 10);
+    cpConstraint *rotary_joint = cpRotaryLimitJointNew(center->body, body2, min_angle, max_angle);
     cpSpaceAddConstraint( space, rotary_joint );
 }
 
@@ -155,7 +150,6 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture, DrPointF point, d
                     central->body_style = Body_Style::Circular_Blob;
                     central->soft_size = DrPointF(diameter, diameter*height_width_ratio);
                     central->height_width_ratio = height_width_ratio;
-    cpBody *center_ball = central->body;
 
     // Calculate size and location of soft balls
     double empty_diameter = getTexture(c_key_image_empty)->width();
@@ -197,7 +191,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture, DrPointF point, d
         DrPointF center_join =   Dr::RotatePointAroundOrigin(DrPointF(center_radius * inner_size, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
                  center_join.y = center_join.y * height_width_ratio;
         DrEngineObject *ball_1 = findObjectByKey(ball_list[ball_list.size()-1]);
-        JoinCenterBody(m_space, center_ball, ball_1->body, cpv(center_join.x, center_join.y), stiffness);
+        JoinCenterBody(m_space, central, ball_1->body, cpv(center_join.x, center_join.y), stiffness);
         if (ball_list.size() > 1) {
             DrEngineObject *ball_2 = findObjectByKey(ball_list[ball_list.size()-2]);
             JoinBodies(m_space, ball_1->body, ball_2->body, stiffness, Soft_Body_Shape::Circle);
@@ -258,7 +252,6 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture, DrPointF point, D
                     central->body_style = Body_Style::Square_Blob;
                     central->height_width_ratio = height_width_ratio;
                     central->soft_size = DrPointF(center_width, center_height);
-    cpBody *center_ball = central->body;
 
     // Calculate size and location of soft balls
     double  empty_diameter =  getTexture(c_key_image_empty)->width();
@@ -333,7 +326,7 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture, DrPointF point, D
         // Create joints to central body / neighbor body
         DrPointF center_join = DrPointF(outside_at.x * radius_multiplier.x, outside_at.y * radius_multiplier.y);
         DrEngineObject *ball_1 = findObjectByKey(ball_list[ball_list.size()-1]);
-        JoinCenterBody(m_space, center_ball, ball_1->body, cpv(center_join.x, center_join.y), stiffness);
+        JoinCenterBody(m_space, central, ball_1->body, cpv(center_join.x, center_join.y), stiffness);
         if (ball_list.size() > 1) {
             DrEngineObject *ball_2 = findObjectByKey(ball_list[ball_list.size()-2]);
             if      (loop == static_cast<long>(Soft_Sides::Bottom)) {

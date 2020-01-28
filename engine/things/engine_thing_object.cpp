@@ -160,8 +160,9 @@ void DrEngineObject::addToWorld() {
         cpSpaceAddShape( getWorld()->getSpace(), shape );
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
-    if (this->canRotate() == false)
+    if (this->canRotate() == false) {
         cpBodySetMoment( this->body, static_cast<double>(INFINITY) );
+    }
 
     // Set initial velocity to forced velocity
     cpVect forced_velocity = cpv( getForcedSpeedX(), getForcedSpeedY() );
