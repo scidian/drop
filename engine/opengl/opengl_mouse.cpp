@@ -144,15 +144,16 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                     double scale_y = Dr::RandomDouble(1.0, 3.0);
                     soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
                 } else {
-                    ///long asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-                    ///soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, friction, bounce, true);
-
-                    // Original Square Grid of Soft Balls
                     double scale_x = 0.4;//Dr::RandomDouble(1.0, 3.0);
                     double scale_y = 0.4;//Dr::RandomDouble(1.0, 3.0);
-                    ///long asset_texture = Asset_Textures::Block;
-                    long asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
-                    soft_body = world->addSoftBodyMesh(asset_texture, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    long asset_texture;
+                    if (world->getProject()->findAssetFromKey(1092) != nullptr) {
+                        asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
+                        soft_body = world->addSoftBodyMesh(asset_texture, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    } else {
+                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
+                        soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, friction, bounce, true);
+                    }
                 }
                 soft_body->saturation = 255.0;
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));

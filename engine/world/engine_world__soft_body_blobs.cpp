@@ -15,7 +15,7 @@
 //####################################################################################
 //##    Adds Body to World
 //####################################################################################
-DrEngineObject* DrEngineWorld::addBall(DrEngineWorld *world, std::vector<long> &ball_keys, long texture, Soft_Body_Shape shape,
+DrEngineObject* DrEngineWorld::addBall(DrEngineWorld *world, long texture, Soft_Body_Shape shape,
                                        double pos_x, double pos_y, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce,
                                        bool collides, bool can_rotate) {
     DrEngineObject *ball = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, texture, pos_x, pos_y, 0,
@@ -23,8 +23,7 @@ DrEngineObject* DrEngineWorld::addBall(DrEngineWorld *world, std::vector<long> &
     ball->setTouchDrag(true);
     ball->setTouchDragForce(5000.0);
     if (shape == Soft_Body_Shape::Circle)       ball->addShapeCircleFromTexture(texture, radius_multiplier.x);
-    else if (shape == Soft_Body_Shape::Square)  ball->addShapeBoxFromTexture(texture, radius_multiplier);
-    ball_keys.push_back(ball->getKey());
+    else if (shape == Soft_Body_Shape::Square)  ball->addShapeBoxFromTexture(   texture, radius_multiplier);
     world->addThing(ball);
     return ball;
 }
@@ -144,8 +143,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture, DrPointF point, d
     double center_radius =      (center_diameter * center_scale) / 2.0;
 
     // Main Central Ball
-    std::vector<long> center_list;
-    DrEngineObject *central = addBall(this, center_list, center_texture, Soft_Body_Shape::Circle, point.x, point.y,
+    DrEngineObject *central = addBall(this, center_texture, Soft_Body_Shape::Circle, point.x, point.y,
                                       DrPointF(center_scale, center_scale), DrPointF(inner_size, inner_size), friction, bounce, true, can_rotate);
                     central->body_style = Body_Style::Circular_Blob;
                     central->soft_size = DrPointF(diameter, diameter*height_width_ratio);
@@ -183,9 +181,10 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture, DrPointF point, d
         }
 
         // Add soft ball to world
-        DrEngineObject *soft_ball = addBall(this, ball_list, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
+        DrEngineObject *soft_ball = addBall(this, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
                                             DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                         soft_ball->setPhysicsParent(central);
+        ball_list.push_back(soft_ball->getKey());
 
         // Create joints to central body / neighbor body
         DrPointF center_join =   Dr::RotatePointAroundOrigin(DrPointF(center_radius * inner_size, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
@@ -246,12 +245,11 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture, DrPointF point, D
     }
 
     // Main Central Ball
-    std::vector<long> center_list;
-    DrEngineObject *central = addBall(this, center_list, center_texture, Soft_Body_Shape::Square, point.x, point.y,
+    DrEngineObject *central = addBall(this, center_texture, Soft_Body_Shape::Square, point.x, point.y,
                                       scale, radius_multiplier, friction, bounce, true, can_rotate);
                     central->body_style = Body_Style::Square_Blob;
                     central->height_width_ratio = height_width_ratio;
-                    central->soft_size = DrPointF(center_width, center_height);
+                    central->soft_size = DrPointF(center_width, center_height);                   
 
     // Calculate size and location of soft balls
     double  empty_diameter =  getTexture(c_key_image_empty)->width();
@@ -302,9 +300,10 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture, DrPointF point, D
         }
 
         // Add soft ball to world
-        DrEngineObject *soft_ball = addBall(this, ball_list, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
+        DrEngineObject *soft_ball = addBall(this, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
                                             DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                         soft_ball->setPhysicsParent(central);
+        ball_list.push_back(soft_ball->getKey());
 
         // Create joints to central body / neighbor body
         DrPointF center_join = DrPointF(outside_at.x * radius_multiplier.x, outside_at.y * radius_multiplier.y);

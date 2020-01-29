@@ -53,11 +53,25 @@ namespace Dr {
         return found;
     }
 
+    template<class T> void VectorCopy(std::vector<T> &copy_from, std::vector<T> &copy_to) {
+        copy_to.clear();
+        if (copy_from.size() > 0) {
+            for (auto element : copy_from)
+                copy_to.push_back(element);
+        }
+    }
 
 
 }   // End namespace Dr
 
 #endif // DR_CONTAINERS_H
+
+
+
+
+
+
+
 
 
 

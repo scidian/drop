@@ -64,7 +64,7 @@ DrEngineObject* getEngineObject(std::vector<DrEngineObject*> &objects, int get_a
 //##    Recalculates Soft Body Mesh
 //##        RETURNS: true if ready to render, false if there was an error
 //####################################################################################
-bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, bool delaunator) {
+bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, Soft_Mesh_Style mesh_style) {
     if (object == nullptr) return false;
     if (object->soft_balls.size() < 3) return false;
 
@@ -160,7 +160,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     object->m_soft_triangles = 0;
 
     // Square Mesh
-    if (body_style == Body_Style::Mesh_Blob) {
+    if (mesh_style == Soft_Mesh_Style::Grid_Square) {
 
         for (long y = 1; y < object->soft_grid_size.y; y++) {
             for (long x = 1; x < object->soft_grid_size.x; x++) {
@@ -175,7 +175,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         }
 
     // Delaunay Triangulation
-    } else if (delaunator) {
+    } else if (mesh_style == Soft_Mesh_Style::Delaunay) {
         // Add Center Point
         ///vertices.push_back(Vertex::createVertex(DrVec3( 0.0, 0.0,0.0), c_up_vector_z, DrVec3(0.5,0.5,0.0), DrVec3(0,0,0)));
 
@@ -212,7 +212,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         for (size_t i = 0; i < vertices.size() - 1; ++i) {
             addSoftTriangle(object, vertices[i], vertices[i+1], center_v);
         }
-        addSoftTriangle(object, vertices[0], vertices[vertices.size()-1], center_v);
+        addSoftTriangle(object, vertices[0], center_v, vertices[vertices.size()-1]);
     }
 
     return true;

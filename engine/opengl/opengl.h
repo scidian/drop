@@ -244,7 +244,7 @@ public:
     long            getTriangleCount()              { return m_triangles; }
 
     // Soft Bodies
-    bool            calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, bool delaunator = false);
+    bool            calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, Soft_Mesh_Style mesh_style);
 
 
 //####################################################################################

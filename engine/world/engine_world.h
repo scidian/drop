@@ -182,9 +182,8 @@ public:
 
 
     // Soft Bodies
-    DrEngineObject*     addBall(DrEngineWorld *world, std::vector<long> &ball_keys, long texture, Soft_Body_Shape shape,
-                                double pos_x, double pos_y, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce,
-                                bool collides, bool can_rotate);
+    DrEngineObject*     addBall(DrEngineWorld *world, long texture, Soft_Body_Shape shape,
+                                double pos_x, double pos_y, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce, bool collides, bool can_rotate);
     DrEngineObject*     addSoftBodyCircle(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
     DrEngineObject*     addSoftBodyDouble(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
     DrEngineObject*     addSoftBodySquare(long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);

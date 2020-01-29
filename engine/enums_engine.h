@@ -184,6 +184,12 @@ enum class Soft_Sides {
     None,
 };
 
+enum class Soft_Mesh_Style {
+    Radial,
+    Delaunay,
+    Grid_Square,
+};
+
 enum class Collision_Type {
     Damage_None             = 0,
     Damage_Player           = 1,
