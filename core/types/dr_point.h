@@ -28,6 +28,7 @@ public:
     // Constructors
     DrPoint();
     DrPoint(int x, int y_);
+    DrPoint(long x, long y_);
     DrPoint(float x_, float y_);
     DrPoint(double x_, double y_);
     DrPoint(const DrPointF pointf);

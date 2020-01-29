@@ -7,6 +7,7 @@
 //
 #include "core/dr_debug.h"
 #include "core/dr_random.h"
+#include "core/types/dr_point.h"
 #include "engine/engine_texture.h"
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
@@ -94,7 +95,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
 
     // SOFTNESS
     stiffness = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 0.2, 1.0);       // Percentage of 0.0 == gooey, 1.0 == stiff
-    double inner_size =     0.9;
+    double inner_size =     0.80;
 
     // Figure out actual diameter of texture / scaling
     long   center_texture =     texture;
@@ -136,6 +137,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
     }
     x_balls = Dr::Min(x_balls, static_cast<long>(15));
     y_balls = Dr::Min(y_balls, static_cast<long>(15));
+    central->soft_grid_size = DrPoint(x_balls, y_balls);
     double empty_scale = target_diameter / empty_diameter;
     double outside_x_spacing = (center_width ) / static_cast<double>(x_balls - 1);
     double outside_y_spacing = (center_height) / static_cast<double>(y_balls - 1);
@@ -173,12 +175,24 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
                                                 DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                             soft_ball->setPhysicsParent(central);
 
-            if (x == 0 || y == 0 || x == x_balls-1 || y == y_balls-1) {
+            // Pin center body to middle soft balls
+//            if (x == 0 || y == 0 || x == x_balls-1 || y == y_balls-1) {
+//                DrEngineObject *this_ball = findObjectByKey(ball_list[ball_list.size()-1]);
+//                cpFloat body_distance = cpvdist(cpBodyGetPosition(central->body), cpBodyGetPosition(this_ball->body));
+//                double mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 1.0, 10.0);
+//                cpSpaceAddConstraint(m_space, cpDampedSpringNew(central->body, this_ball->body, cpvzero, cpvzero, body_distance, c_soft_stiff*mul, c_soft_damp*mul));
+//                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(central->body, this_ball->body, Dr::DegreesToRadians(-10), Dr::DegreesToRadians(10)));
+//            }
+            if ((x == (x_balls/2) && y == (y_balls/2)) ||
+                    (x == (x_balls/2)+1 && y == (y_balls/2)) ||
+                    (x == (x_balls/2)-1 && y == (y_balls/2)) ||
+                    (x == (x_balls/2) && y == (y_balls/2)+1) ||
+                    (x == (x_balls/2) && y == (y_balls/2)-1)) {
                 DrEngineObject *this_ball = findObjectByKey(ball_list[ball_list.size()-1]);
-                cpFloat body_distance = cpvdist(cpBodyGetPosition(central->body), cpBodyGetPosition(this_ball->body));
-                double mul = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 1.0, 10.0);
-                cpSpaceAddConstraint(m_space, cpDampedSpringNew(central->body, this_ball->body, cpvzero, cpvzero, body_distance, c_soft_stiff*mul, c_soft_damp*mul));
-                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(central->body, this_ball->body, Dr::DegreesToRadians(-10), Dr::DegreesToRadians(10)));
+                cpConstraint *pivot_joint = cpPivotJointNew(central->body, this_ball->body, cpBodyGetPosition(central->body));
+                cpConstraintSetMaxForce(pivot_joint, 100000);
+                cpSpaceAddConstraint(m_space, pivot_joint);
+                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(central->body, this_ball->body, Dr::DegreesToRadians(-1), Dr::DegreesToRadians(1)));
             }
 
             if (x > 0) {

@@ -24,6 +24,11 @@ DrPoint::DrPoint(int x_, int y_) {
     y = y_;
 }
 
+DrPoint::DrPoint(long x_, long y_) {
+    x = static_cast<int>(x_);
+    y = static_cast<int>(y_);
+}
+
 DrPoint::DrPoint(float x_, float y_) {
     x = static_cast<int>(x_);
     y = static_cast<int>(y_);
