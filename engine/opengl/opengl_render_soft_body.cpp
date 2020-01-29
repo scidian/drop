@@ -70,11 +70,11 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
 
     // Calculate Object Angle
     if (object->canRotate()) {
-        DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
-        if (first_ball == nullptr) return false;
-        double angle_adjust = object->soft_start_angle;/// - g_double;
-        ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
-        object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
+//        DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
+//        if (first_ball == nullptr) return false;
+//        double angle_adjust = object->soft_start_angle;/// - g_double;
+//        ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
+//        object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
     }
 
     // Calculate Current Points
@@ -88,7 +88,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
                  unrotated = unrotated - object->getPosition();
                  unrotated = unrotated / object->soft_size.x;             // Equalize mesh from -0.5 to +0.5
                  // Scale soft balls to outer radius
-                 if (body_style == Body_Style::Square_Blob) {
+                 if (body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
                      unrotated.x = unrotated.x * object->soft_scale.x;
                      unrotated.y = unrotated.y * object->soft_scale.y;
                  } else if (body_style == Body_Style::Circular_Blob) {
@@ -141,9 +141,14 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
                 average += getVertex(vertices, i+1).position * weight; total_weight += weight;
             }
             average = (average) / total_weight;
+        } else if (body_style == Body_Style::Mesh_Blob) {
+            weight = 1.0f;
+            average += getVertex(vertices, i).position * weight;    total_weight += weight;
+            average = (average) / total_weight;
         }
         smoothed_points.push_back( average);
     }
+    // Updated smoothed points
     for (size_t i = 0; i < vertices.size(); ++i) {
         vertices[i].position = smoothed_points[i];
     }
@@ -151,7 +156,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     // Delaunay Triangulation
     if (delaunator) {
         // Add Center Point
-        vertices.push_back(Vertex::createVertex(DrVec3( 0.0, 0.0,0.0), c_up_vector_z, DrVec3(0.5,0.5,0.0), DrVec3(0,0,0)));
+        ///vertices.push_back(Vertex::createVertex(DrVec3( 0.0, 0.0,0.0), c_up_vector_z, DrVec3(0.5,0.5,0.0), DrVec3(0,0,0)));
 
         // Corner Points
         ///vertices.push_back(Vertex::createVertex(DrVec3(-0.5, 0.5,0.0), c_up_vector_z, DrVec3(0.0,1.0,0.0), DrVec3(0,0,0)));

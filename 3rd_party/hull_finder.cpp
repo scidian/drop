@@ -229,7 +229,7 @@ Winding_Orientation HullFinder::FindWindingOrientation(const std::vector<DrPoint
     }
     if (area > 0) return Winding_Orientation::CounterClockwise;
     if (area < 0) return Winding_Orientation::Clockwise;
-    return Winding_Orientation::Unknown;
+    return Winding_Orientation::LineSegment;
 }
 
 

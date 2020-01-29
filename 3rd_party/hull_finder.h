@@ -28,14 +28,7 @@
 
 // Forward Declarations
 class DrPointF;
-
-// Local Enums
-enum class Winding_Orientation {
-    Clockwise,
-    CounterClockwise,
-    Unknown,
-};
-
+enum class Winding_Orientation;
 
 //####################################################################################
 //##    HullFinder

@@ -14,8 +14,16 @@ class DrPoint;
 class DrPointF;
 
 // Local Defines
-#define EPSILON 0.00001
-#define DR_PI   3.141592653589793238463
+#define EPSILON     0.00001
+#define DR_INFINITY 1e300
+#define DR_PI       3.141592653589793238463
+
+// Math Enums
+enum class Winding_Orientation {
+    Clockwise           = 0,
+    CounterClockwise    = 1,
+    LineSegment         = 2,
+};
 
 namespace Dr {
 

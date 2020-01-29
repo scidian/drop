@@ -60,7 +60,9 @@ static void SelectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *grou
 //####################################################################################
 void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, bool initial_jump) {
     // Soft Body Jump
-    if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
+    if (object->body_style == Body_Style::Circular_Blob ||
+            object->body_style == Body_Style::Square_Blob ||
+            object->body_style == Body_Style::Mesh_Blob) {
         double root = 3.2;
         double soft_body_mass = cpBodyGetMass(object->body);
         double vel_multiplier = std::pow(soft_body_mass, 1.0/root) * 1050.0;

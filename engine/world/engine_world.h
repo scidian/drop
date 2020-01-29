@@ -188,7 +188,7 @@ public:
     DrEngineObject*     addSoftBodyCircle(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
     DrEngineObject*     addSoftBodyDouble(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
     DrEngineObject*     addSoftBodySquare(long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
-    void                addSoftBodySquare(DrPointF point);
+    DrEngineObject*     addSoftBodyMesh(  long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
 
     // Physics
     void                applyCategoryMask(DrEngineObject *central, long group_id);

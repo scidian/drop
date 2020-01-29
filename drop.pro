@@ -115,6 +115,7 @@ SOURCES += \
     core/types/dr_color.cpp \
     core/types/dr_point.cpp \
     core/types/dr_pointf.cpp \
+    core/types/dr_polygonf.cpp \
     core/types/dr_rect.cpp \
     core/types/dr_rectf.cpp \
     core/types/dr_variant.cpp \
@@ -267,8 +268,8 @@ SOURCES += \
     engine/world/engine_world__load_effects.cpp \
     engine/world/engine_world__load_objects.cpp \
     engine/world/engine_world__load_stage.cpp \
-    engine/world/engine_world__soft_body.cpp \
-    engine/world/engine_world__soft_body_testing.cpp \
+    engine/world/engine_world__soft_body_blobs.cpp \
+    engine/world/engine_world__soft_body_mesh.cpp \
     engine/world/engine_world__test_foliage.cpp \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
@@ -922,6 +923,7 @@ HEADERS += \
     core/types/dr_color.h \
     core/types/dr_point.h \
     core/types/dr_pointf.h \
+    core/types/dr_polygonf.h \
     core/types/dr_rect.h \
     core/types/dr_rectf.h \
     core/types/dr_variant.h \

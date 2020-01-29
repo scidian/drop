@@ -277,7 +277,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     // ***** Draw triangles using shader program
     // Soft Body Render
     if (object->body_style == Body_Style::Circular_Blob ||
-        object->body_style == Body_Style::Square_Blob) {
+        object->body_style == Body_Style::Square_Blob ||
+        object->body_style == Body_Style::Mesh_Blob) {
         m_default_shader.enableAttributeArray( a_default_vertex );
         m_default_shader.enableAttributeArray( a_default_texture_coord );
         m_default_shader.enableAttributeArray( a_default_barycentric );

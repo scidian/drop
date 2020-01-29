@@ -24,6 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+//  !!!!! NOTE: This is the August 5, 2019 version, pulled from a bug patch update at: h
+//              https://github.com/soerendd/delaunator-cpp
+//           ...Original was hanging every few thousand calls during legalize()
 //
 #pragma once
 
@@ -37,7 +40,7 @@
 #include <vector>
 
 
-/// @see https://stackoverflow.com/questions/33333363/built-in-mod-vs-custom-mod-function-improve-the-performance-of-modulus-op/33333636#33333636
+//@see https://stackoverflow.com/questions/33333363/built-in-mod-vs-custom-mod-function-improve-the-performance-of-modulus-op/33333636#33333636
 inline size_t fast_mod(const size_t i, const size_t c) {
     return i >= c ? i % c : i;
 }
@@ -126,13 +129,12 @@ inline std::pair<double, double> circumcenter(
 
 struct compare {
 
+    std::vector<double> const& dists;
     std::vector<double> const& coords;
-    double cx;
-    double cy;
 
     bool operator()(std::size_t i, std::size_t j) {
-        const double d1 = dist(coords[2 * i], coords[2 * i + 1], cx, cy);
-        const double d2 = dist(coords[2 * j], coords[2 * j + 1], cx, cy);
+        const double d1 = dists[i];
+        const double d2 = dists[j];
         const double diff1 = d1 - d2;
         const double diff2 = coords[2 * i] - coords[2 * j];
         const double diff3 = coords[2 * i + 1] - coords[2 * j + 1];
@@ -172,7 +174,7 @@ inline bool in_circle(
             ap * (ex * fy - ey * fx)) < 0.0;
 }
 
-constexpr double      EPSILON =       std::numeric_limits<double>::epsilon();
+constexpr double EPSILON = std::numeric_limits<double>::epsilon();
 constexpr std::size_t INVALID_INDEX = std::numeric_limits<std::size_t>::max();
 
 inline bool check_pts_equal(double x1, double y1, double x2, double y2) {

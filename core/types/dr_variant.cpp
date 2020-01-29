@@ -251,6 +251,13 @@ DrPointF DrVariant::toPointF() {
         }
     }
 }
+// Try to return from DrPolygonF
+DrPolygonF DrVariant::toPolygonF() {
+    try { return boost::any_cast<DrPolygonF>(m_value); }
+    catch (const boost::bad_any_cast &) {
+        return DrPolygonF();
+    }
+}
 // Try to return from DrRect, otherwise DrRectF, otherwise glm::vec4, otherwise return DrRect(0, 0, 0, 0)
 DrRect DrVariant::toRect() {
     try { return boost::any_cast<DrRect>(m_value); }

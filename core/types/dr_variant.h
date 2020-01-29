@@ -13,6 +13,7 @@
 #include "core/types/dr_bitmap.h"
 #include "core/types/dr_point.h"
 #include "core/types/dr_pointf.h"
+#include "core/types/dr_polygonf.h"
 #include "core/types/dr_rect.h"
 #include "core/types/dr_rectf.h"
 #include "core/types/dr_vec2.h"
@@ -26,7 +27,7 @@
 class DrVariant
 {
 public:
-    boost::any m_value;                                       // Holds the variant value
+    boost::any      m_value;                                        // Holds the variant value
 
 public:
     // Constructors
@@ -58,6 +59,7 @@ public:
     DrBitmap                toImage();
     DrPoint                 toPoint();
     DrPointF                toPointF();
+    DrPolygonF              toPolygonF();
     DrRect                  toRect();
     DrRectF                 toRectF();
     DrVec2                  toVec2();

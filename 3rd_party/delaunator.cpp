@@ -92,7 +92,6 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
         }
     }
 
-    // !!!!! #NOTE: To avoid this error make sure point list does not include duplicates
     if (!(min_radius < std::numeric_limits<double>::max())) {
         throw std::runtime_error("not triangulation");
     }
@@ -108,8 +107,16 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
 
     std::tie(m_center_x, m_center_y) = circumcenter(i0x, i0y, i1x, i1y, i2x, i2y);
 
+    std::vector<double> dists;
+    dists.reserve(ids.size());
+
+    for (auto&& id : ids) {
+        const double d = dist(coords[2 * id], coords[2 * id + 1], m_center_x, m_center_y);
+        dists.push_back(d);
+    }
+
     // sort the points by distance from the seed triangle circumcenter
-    std::sort(ids.begin(), ids.end(), compare{ coords, m_center_x, m_center_y });
+    std::sort(ids.begin(), ids.end(), compare{ dists, coords });
 
     // initialize a hash table for storing edges of the advancing convex hull
     m_hash_size = static_cast<std::size_t>(std::llround(std::ceil(std::sqrt(n))));
@@ -197,7 +204,9 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
 
         // walk forward through the hull, adding more triangles and flipping recursively
         std::size_t next = hull_next[e];
-        while (q = hull_next[next], orient(x, y, coords[2 * next], coords[2 * next + 1], coords[2 * q], coords[2 * q + 1])) {
+        while (
+            q = hull_next[next],
+            orient(x, y, coords[2 * next], coords[2 * next + 1], coords[2 * q], coords[2 * q + 1])) {
             t = add_triangle(next, i, q, hull_tri[i], INVALID_INDEX, hull_tri[next]);
             hull_tri[i] = legalize(t + 2);
             hull_next[next] = next; // mark as removed
@@ -207,7 +216,9 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
 
         // walk backward from the other side, adding more triangles and flipping
         if (e == start) {
-            while (q = hull_prev[e], orient(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1])) {
+            while (
+                q = hull_prev[e],
+                orient(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1])) {
                 t = add_triangle(q, i, e, INVALID_INDEX, hull_tri[e], hull_tri[q]);
                 legalize(t + 2);
                 hull_tri[q] = t;
@@ -310,7 +321,7 @@ std::size_t Delaunator::legalize(std::size_t a) {
                         hull_tri[e] = a;
                         break;
                     }
-                    e = hull_next[e];
+                    e = hull_prev[e];
                 } while (e != hull_start);
             }
             link(a, hbl);
