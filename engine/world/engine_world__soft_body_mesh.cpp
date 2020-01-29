@@ -90,12 +90,12 @@ DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, DrPointF point, d
 //####################################################################################
 DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrPointF scale,
                                                double stiffness, double friction, double bounce, bool can_rotate) {
-    long   min_balls =      6;
+    long   min_balls =      10;
     double render_scale =   1.01;
 
     // SOFTNESS
     stiffness = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 0.2, 1.0);       // Percentage of 0.0 == gooey, 1.0 == stiff
-    double inner_size =     0.80;
+    double inner_size = 0.80 - ((1.0-stiffness) * 0.50);                                    // Reduce size of central ball with softer objects
 
     // Figure out actual diameter of texture / scaling
     long   center_texture =     texture;
@@ -190,7 +190,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
                     (x == (x_balls/2) && y == (y_balls/2)-1)) {
                 DrEngineObject *this_ball = findObjectByKey(ball_list[ball_list.size()-1]);
                 cpConstraint *pivot_joint = cpPivotJointNew(central->body, this_ball->body, cpBodyGetPosition(central->body));
-                cpConstraintSetMaxForce(pivot_joint, 100000);
+                cpConstraintSetMaxForce(pivot_joint, 1000000);
                 cpSpaceAddConstraint(m_space, pivot_joint);
                 cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(central->body, this_ball->body, Dr::DegreesToRadians(-1), Dr::DegreesToRadians(1)));
             }

@@ -16,6 +16,7 @@
 #include "engine/things/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
+#include "project/entities/dr_asset.h"
 
 
 // Local File Scope Globals
@@ -147,9 +148,10 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                     ///soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, friction, bounce, true);
 
                     // Original Square Grid of Soft Balls
-                    double scale_x = Dr::RandomDouble(1.0, 3.0);
-                    double scale_y = Dr::RandomDouble(1.0, 3.0);
-                    long asset_texture = Asset_Textures::Block;
+                    double scale_x = 0.4;//Dr::RandomDouble(1.0, 3.0);
+                    double scale_y = 0.4;//Dr::RandomDouble(1.0, 3.0);
+                    ///long asset_texture = Asset_Textures::Block;
+                    long asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
                     soft_body = world->addSoftBodyMesh(asset_texture, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
                 }
                 soft_body->saturation = 255.0;
