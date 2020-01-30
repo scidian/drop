@@ -111,8 +111,6 @@ DrEngineObject::~DrEngineObject() {
                 }
             }
         }
-        Dr::PrintDebug("Parent!");
-
     // Seperates physics body from parent
     } else if (isPhysicsChild()) {
         if (getPhysicsParent() != nullptr) {
@@ -121,8 +119,6 @@ DrEngineObject::~DrEngineObject() {
             }
         }
         setPhysicsParent(nullptr);
-
-        Dr::PrintDebug("Child!");
     }
 
     // ***** Delete cpBody and all cpShapes / cpConstraints (joints) associated with it
@@ -137,9 +133,6 @@ DrEngineObject::~DrEngineObject() {
         }
         std::vector<cpConstraint*> joint_list;
         cpBodyEachConstraint(body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
-
-        Dr::PrintDebug("Soft Ball Number: " + std::to_string(this->soft_balls.size()) + ", Size Joint List: " + std::to_string(joint_list.size()));
-
         for (auto joint : joint_list) {
             // Check if constraint to remove is mouse joint (drag joint)
             if (getWorld() && getWorld()->getEngine()) {

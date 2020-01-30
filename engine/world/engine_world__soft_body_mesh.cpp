@@ -198,9 +198,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
     // Copy soft ball arrays to Central Ball
     for (size_t i = 0; i < balls.size(); ++i) {
         if (can_rotate == false) {
-            //if (i % 2 == 0) {
-                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->body, central->body, 0.0, 0.0));
-            //}
+            cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->body, central->body, 0.0, 0.0));
         }
         balls[i]->setPhysicsParent(central);
         central->soft_balls.push_back(balls[i]->getKey());

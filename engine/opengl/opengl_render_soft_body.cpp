@@ -89,7 +89,7 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         DrEngineObject *next_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[i]);
         if (next_ball == nullptr) return false;
         balls.push_back(next_ball);
-        DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle() + angle_diff);
+        DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), angle_diff);
                  unrotated = unrotated - object->getPosition();
                  // Scale soft balls to outer radius
                  if (body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
