@@ -68,18 +68,17 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     if (object == nullptr) return false;
     if (object->soft_balls.size() < 3) return false;
 
-    // ***** Adjust Shakiness of non-rotating circular blob
-    double angle_diff = 0.0;
+    // ***** Adjust shakiness of non-rotating soft bodies
+    double angle_diff = -object->getAngle();
     if (object->canRotate() == false) {
-        if (body_style == Body_Style::Circular_Blob) {
+        ///if (body_style == Body_Style::Circular_Blob) {
             DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
             if (first_ball == nullptr) return false;
             double angle_start = object->soft_start_angle;
             double angle_now =   Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition());
             angle_diff =  angle_start - angle_now;
             ///g_info = "Start Angle: " +   std::to_string(angle_start) + ", Angle Now: " + std::to_string(angle_now) + ", Diff: " +    std::to_string(angle_diff);
-            ///object->setAngle( object->getAngle() + angle_diff*1.0);
-        }
+        ///}
     }
 
     // ***** Calculate Current Points

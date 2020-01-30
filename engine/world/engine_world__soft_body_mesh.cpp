@@ -197,9 +197,13 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
 
     // Copy soft ball arrays to Central Ball
     for (size_t i = 0; i < balls.size(); ++i) {
+        // Attach rotary limit joints to help fight rotation for non rotating soft bodies
         if (can_rotate == false) {
-            cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->body, central->body, 0.0, 0.0));
+            ///if (i % 2 == 0) {    // #NOTE: Chipmunk doesnt like too many constraints on one body
+                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->body, central->body, 0.0, 0.0));
+            ///}
         }
+        // Copy ball data
         balls[i]->setPhysicsParent(central);
         central->soft_balls.push_back(balls[i]->getKey());
         central->soft_uv.push_back(   uv_coordinates[i]);

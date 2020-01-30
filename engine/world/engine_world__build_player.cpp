@@ -91,43 +91,47 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 //        ball2->setTouchDrag(true);
 //        ball2->setTouchDragForce(2000.0);
 
-        DrEngineObject *softy = addSoftBodyCircle(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(0, 100), 150, 0.8, 0.50, 0.25, false);
-        if (softy != nullptr) {
-            assignPlayerControls(softy, false, true, false);
-            if (getCamerasFollowThing(softy->getKey()).size() > 0)
-                getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
-            softy->setMoveSpeedX(800);
-            ///softy->setJumpForceY(500);
-            softy->setJumpTimeout(5000);
-            softy->setRotateSpeedZ( 7 );
-            softy->setJumpCount( -1 );
-            softy->setCanWallJump(false);
-        }
+        DrAsset *dragon = m_project->findAssetFromKey(1024);
+        if (dragon != nullptr) {
+            DrEngineObject *softy = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(0, 100), 150, 0.8, 0.50, 0.25, false);
+            if (softy != nullptr) {
+                assignPlayerControls(softy, true, true, true);
+                if (getCamerasFollowThing(softy->getKey()).size() > 0)
+                    getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
+                softy->setMoveSpeedX(800);
+                softy->setJumpForceY(350);
+                softy->setJumpTimeout(5000);
+                softy->setRotateSpeedZ( 7 );
+                softy->setJumpCount( 1 );
+                softy->setCanWallJump(true);
+                softy->setCanWallJump(false);
+            }
 
-        DrEngineObject *softy2 = addSoftBodyMesh(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(200, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
-        if (softy2 != nullptr) {
-            assignPlayerControls(softy2, false, true, false);
-            if (getCamerasFollowThing(softy2->getKey()).size() > 0)
-                getCamerasFollowThing(softy2->getKey())[0]->setLag(DrPointF(200, 200));
-            softy2->setMoveSpeedX(800);
-            ///softy2->setJumpForceY(500);
-            softy2->setJumpTimeout(5000);
-            softy2->setRotateSpeedZ( 7 );
-            softy2->setJumpCount( -1 );
-            softy2->setCanWallJump(false);
-        }
+            DrEngineObject *softy2 = addSoftBodyMesh(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(200, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
+            if (softy2 != nullptr) {
+                assignPlayerControls(softy2, false, true, false);
+                if (getCamerasFollowThing(softy2->getKey()).size() > 0)
+                    getCamerasFollowThing(softy2->getKey())[0]->setLag(DrPointF(200, 200));
+                softy2->setMoveSpeedX(800);
+                ///softy2->setJumpForceY(500);
+                softy2->setJumpTimeout(5000);
+                softy2->setRotateSpeedZ( 7 );
+                softy2->setJumpCount( -1 );
+                softy2->setCanWallJump(false);
+            }
 
-        DrEngineObject *softy3 = addSoftBodyCircle(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(-200, 250), 400, 0.8, 0.50, 0.25, false);
-        if (softy3 != nullptr) {
-            assignPlayerControls(softy3, false, true, false);
-            if (getCamerasFollowThing(softy3->getKey()).size() > 0)
-                getCamerasFollowThing(softy3->getKey())[0]->setLag(DrPointF(200, 200));
-            softy3->setMoveSpeedX(800);
-            ///softy3->setJumpForceY(500);
-            softy3->setJumpTimeout(5000);
-            softy3->setRotateSpeedZ( 7 );
-            softy3->setJumpCount( -1 );
-            softy3->setCanWallJump(false);
+//            DrEngineObject *softy3 = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(-200, 250), 400, 0.8, 0.50, 0.25, false);
+//            if (softy3 != nullptr) {
+//                assignPlayerControls(softy3, false, true, false);
+//                if (getCamerasFollowThing(softy3->getKey()).size() > 0)
+//                    getCamerasFollowThing(softy3->getKey())[0]->setLag(DrPointF(200, 200));
+//                softy3->setMoveSpeedX(800);
+//                ///softy3->setJumpForceY(500);
+//                softy3->setJumpTimeout(5000);
+//                softy3->setRotateSpeedZ( 7 );
+//                softy3->setJumpCount( -1 );
+//                softy3->setCanWallJump(false);
+//            }
         }
 
     } else if (new_player_type == Demo_Player::Light) {
