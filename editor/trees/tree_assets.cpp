@@ -15,7 +15,6 @@
 #include <QVBoxLayout>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/event_filters.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
@@ -24,6 +23,7 @@
 #include "editor/project/project.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_assets.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_asset.h"

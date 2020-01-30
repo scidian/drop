@@ -11,9 +11,9 @@
 #include <QMimeData>
 #include <QPainter>
 
-#include "editor/debug.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_project.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
 

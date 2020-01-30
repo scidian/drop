@@ -11,7 +11,6 @@
 #include <QOpenGLWidget>
 #include <QScrollBar>
 
-#include "editor/debug.h"
 #include "editor/docks/docks.h"
 #include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
@@ -23,6 +22,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "engine/debug_flags.h"
 
 
 //####################################################################################
@@ -166,7 +166,7 @@ void FormMain::buildCentralWidgetEditor() {
                         ///viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
                         viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
-                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
+                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
                             viewEditor->setRenderHint(QPainter::Antialiasing, false);
                         else
                             viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);

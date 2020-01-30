@@ -12,13 +12,13 @@
 #include <QScrollBar>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_view.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"

@@ -129,7 +129,7 @@ void DrOpenGL::drawDebugJoints() {
         cpVect point_a, point_b, pivot_point;
         bool   has_pivot = false;
 
-        // Find Joint Coordinates
+        // Find Joint Coordinates        
         cpBody *body_a = cpConstraintGetBodyA(joint);
         cpBody *body_b = cpConstraintGetBodyB(joint);
         cpVect  body_pos_a = cpBodyGetPosition(body_a);

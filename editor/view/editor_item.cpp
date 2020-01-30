@@ -9,13 +9,13 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
 #include "editor/project/project.h"
 #include "editor/view/editor_item.h"
+#include "engine/debug_flags.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
@@ -172,7 +172,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     m_start_x = start_pos.x;
     m_start_y = start_pos.y;
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
         setTransformationMode(Qt::SmoothTransformation);                            // Turn on anti aliasing
 
     // Set up initial item settings

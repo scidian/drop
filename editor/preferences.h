@@ -56,6 +56,10 @@ enum class Preferences {
 //############################
 namespace Dr {
 
+    // ***** Startup
+    bool            CheckDoneLoading();
+    void            SetDoneLoading(bool done);
+
 
     // ***** Prefereces
     void            LoadPreferences();

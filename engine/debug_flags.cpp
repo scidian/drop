@@ -1,13 +1,13 @@
 //
-//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/30/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles debug flags for use in debugging / troubleshooting Editor
+//
 //
 //
 #include <bitset>
 
-#include "editor/debug.h"
+#include "engine/debug_flags.h"
 
 namespace Dr {
 
@@ -44,7 +44,7 @@ void LoadDebugFlags() {
     //SetDebugFlag( Debug_Flags::Show_Bottom_Debug_Labels );
     //SetDebugFlag( Debug_Flags::Show_Hidden_Component );
 
-    SetDebugFlag( Debug_Flags::Turn_On_Antialiasing );
+    SetDebugFlag( Debug_Flags::Turn_On_Antialiasing_in_Editor );
     //SetDebugFlag( Debug_Flags::Turn_On_OpenGL_in_Editor );
 
     SetDebugFlag( Debug_Flags::Label_FPS );
@@ -65,6 +65,19 @@ void LoadDebugFlags() {
 
 
 }   // namespace Dr
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,18 +1,24 @@
 //
-//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/30/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //      Handles debug flags for use in debugging / troubleshooting
 //
 //
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef DEBUG_FLAGS_H
+#define DEBUG_FLAGS_H
 
 
 //####################################################################################
 //##    Possible debug options
 //############################
 enum class Debug_Flags {
+
+    // ***** ENGINE
+    Render_Soft_Body_All_Shapes,        // When true debug render of soft bodies show all objects, otherwise just outlines
+
+
+    // ***** EDITOR
     Load_Test_Project,                  // Loads the Test Project into editor when program starts
 
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
@@ -20,7 +26,7 @@ enum class Debug_Flags {
     Show_Bottom_Debug_Labels,           // Shows Scene View Debug labels
     Show_Hidden_Component,              // Shows hidden custom Entity Advisor component / properties
 
-    Turn_On_Antialiasing,               // Turns on antialiasing in the World Editor GraphicsView
+    Turn_On_Antialiasing_in_Editor,     // Turns on antialiasing in the World Editor GraphicsView
     Turn_On_OpenGL_in_Editor,           // Turns on opengl optimizations for World Editor GraphicsView
 
     Label_FPS,                          // Show frames per second of DrView
@@ -37,6 +43,7 @@ enum class Debug_Flags {
 
     Paint_Rotating_Angles,              // Paints mouse origin and mouse position lines during Rotating
     Paint_Size_Grip_Handles,            // Paints rects of resize grip handles
+
     Total,
 };
 
@@ -52,16 +59,27 @@ namespace Dr {
     void FlipDebugFlag(Debug_Flags flag);
     void SetDebugFlag(Debug_Flags flag);
 
-    bool CheckDoneLoading();
-    void SetDoneLoading(bool done);
-
     void LoadDebugFlags();
-
 
 
 }   // namespace Dr
 
-#endif // DEBUG_H
+
+#endif // DEBUG_FLAGS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

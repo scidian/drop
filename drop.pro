@@ -121,7 +121,6 @@ SOURCES += \
     core/types/dr_variant.cpp \
     core/types/dr_vec2.cpp \
     core/types/dr_vec3.cpp \
-    editor/debug.cpp \
     editor/docks/docks_build.cpp \
     editor/docks/docks_handle.cpp \
     editor/docks/docks_initialize.cpp \
@@ -220,6 +219,7 @@ SOURCES += \
     editor/widgets/widgets_combobox.cpp \
     editor/widgets/widgets_slider.cpp \
     editor/widgets/widgets_spin.cpp \
+    engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
     engine/engine_spawner.cpp \
@@ -930,7 +930,6 @@ HEADERS += \
     core/types/dr_vec2.h \
     core/types/dr_vec3.h \
     editor/constants_advisor_info.h \
-    editor/debug.h \
     editor/docks/docks.h \
     editor/enums_editor.h \
     editor/event_filters.h \
@@ -959,6 +958,7 @@ HEADERS += \
     editor/interface_editor_relay.h \
     editor/widgets/widgets.h \
     engine/constants_engine.h \
+    engine/debug_flags.h \
     engine/engine.h \
     engine/engine_camera.h \
     engine/engine_spawner.h \

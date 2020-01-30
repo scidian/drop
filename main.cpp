@@ -112,11 +112,11 @@
 #include <QSurfaceFormat>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/form_main/form_main.h"
 #include "editor/forms/form_expire.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
+#include "engine/debug_flags.h"
 
 
 //####################################################################################
@@ -127,7 +127,7 @@
 int main(int argc, char *argv[]) {
 
     // ***** Initiliaze application
-    QApplication drop(argc, argv);                                  // Declare application
+    QApplication drop(argc, argv);                                      // Declare application
 
     // Check if we need to open a file (NOT FOR MACOS)
     QString open_file ="";
@@ -135,10 +135,10 @@ int main(int argc, char *argv[]) {
 
 
     // ***** Load Global Data
-    Dr::LoadDebugFlags();                                           // Sets debug flags
-    Dr::LoadCustomFonts();                                          // Loads font from resource file
-    Dr::LoadPalettes();                                             // Loads color data into global vector
-    Dr::LoadPreferences();                                          // Loads user preferences
+    Dr::LoadDebugFlags();                                               // Sets debug flags
+    Dr::LoadCustomFonts();                                              // Loads font from resource file
+    Dr::LoadPalettes();                                                 // Loads color data into global vector
+    Dr::LoadPreferences();                                              // Loads user preferences
 
     // ***** Version
     Dr::SetPreference(Preferences::Version_Major, "1");
@@ -147,17 +147,18 @@ int main(int argc, char *argv[]) {
 
     // ***** Temporary-ish options
     Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
+    Dr::SetDebugFlag( Debug_Flags::Render_Soft_Body_All_Shapes );
     Dr::SetDebugFlag( Debug_Flags::Show_Secret_Menu );
-    ///Dr::SetDebugFlag(Debug_Flags::Load_Test_Project);            // Turns on Test Project loading into editor upon startup
+    ///Dr::SetDebugFlag(Debug_Flags::Load_Test_Project);                // Turns on Test Project loading into editor upon startup
 
 
     // ***** Set OpenGL surface format of QOpenGLWidgets
     QSurfaceFormat format;
-    format.setDepthBufferSize(24);                                  // Enable Depth Buffer
-    format.setSwapInterval(1);                                      // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS?)
-    ///format.setSwapInterval(0);                                   // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS?)
-    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);        // Use Off Screen Double Buffer
-    ///format.setSamples(4);                                        // Multi-sampling, not needed if rendering to offscreen fbo with its own multisampling
+    format.setDepthBufferSize(24);                                      // Enable Depth Buffer
+    format.setSwapInterval(1);                                          // Enable V-Sync (set to 1 to enable, doesn't seem to work on macOS?)
+    ///format.setSwapInterval(0);                                       // Disable V-Sync (set to 0 to disable, doesn't seem to work on iOS?)
+    ///format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);            // Use Off Screen Double Buffer
+    ///format.setSamples(4);                                            // Multi-sampling, not needed if rendering to offscreen fbo with its own multisampling
     ///format.setStencilBufferSize(8);
     ///format.setVersion(3,3);
     ///format.setProfile(QSurfaceFormat::CoreProfile);
@@ -166,9 +167,9 @@ int main(int argc, char *argv[]) {
 
 
     // ***** Declare / Load QMainWindows
-    ///FormMain     form_main(nullptr, open_file);                  // FormMain, main editor Form, trys to open command line argument as a file
-    FormMain     form_main;                                         // FormMain, main editor Form
-    FormExpire   form_expire;                                       // FormExpire used for demo versions that are expired
+    ///FormMain     form_main(nullptr, open_file);                      // FormMain, main editor Form, trys to open command line argument as a file
+    FormMain     form_main;                                             // FormMain, main editor Form
+    FormExpire   form_expire;                                           // FormExpire used for demo versions that are expired
 
     // ***** Check date for expired versions
     QDateTime now =     QDateTime::currentDateTime();
@@ -179,14 +180,14 @@ int main(int argc, char *argv[]) {
 
     // ***** Create main form
     } else {
-        Dr::SetActiveFormMain(&form_main);                          // Set main form to active FormMain
-        Dr::SetActiveEditorRelay(&form_main);                       // Set main form to active EditorRelay
-        qApp->installEventFilter(&form_main);                       // Installs application wide event filter attached to FormMain (acts as key grabber)
-        form_main.show();                                           // Show FormMain
+        Dr::SetActiveFormMain(&form_main);                              // Set main form to active FormMain
+        Dr::SetActiveEditorRelay(&form_main);                           // Set main form to active EditorRelay
+        qApp->installEventFilter(&form_main);                           // Installs application wide event filter attached to FormMain (acts as key grabber)
+        form_main.show();                                               // Show FormMain
 
         // ***** Process events and mark as loaded
-        qApp->processEvents();                                      // Ensure FormMain finishes showing
-        Dr::SetDoneLoading(true);                                   // Marks FormMain as finished loading
+        qApp->processEvents();                                          // Ensure FormMain finishes showing
+        Dr::SetDoneLoading(true);                                       // Marks FormMain as finished loading
     }
 
     // ***** Run Program

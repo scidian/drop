@@ -12,13 +12,13 @@
 #include <QOpenGLFunctions>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
@@ -88,7 +88,7 @@ void DrView::paintEvent(QPaintEvent *event) {
     // Initiate QPainter object
     QPainter painter(viewport());
 
-    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing)) {
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     }

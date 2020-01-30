@@ -34,6 +34,15 @@ static PreferenceMap    l_options;                          // Map holding PROGR
 static FormMain        *l_active_form_main;                 // Stores active FormMain reference
 static IEditorRelay    *l_active_editor;                    // Stores active IEditorRelay reference
 
+static bool             l_done_loading = false;             // True after initial startup of FormMain, ensures done loading before any calls to SetLabelText
+
+
+//####################################################################################
+//##    Functions to initialize, set and check flags
+//####################################################################################
+bool        CheckDoneLoading()              { return l_done_loading; }
+void        SetDoneLoading(bool done)       { l_done_loading = done; }
+
 
 //####################################################################################
 //##    Preferences

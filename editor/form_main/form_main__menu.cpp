@@ -14,7 +14,6 @@
 #include <QStandardPaths>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/form_main/form_main.h"
 #include "editor/forms/form_about.h"
 #include "editor/helper_library.h"
@@ -26,6 +25,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
 
 

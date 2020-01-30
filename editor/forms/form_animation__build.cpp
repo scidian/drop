@@ -7,7 +7,6 @@
 //
 #include <QHeaderView>
 
-#include "editor/debug.h"
 #include "editor/docks/docks.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_animation.h"
@@ -17,6 +16,7 @@
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "engine/debug_flags.h"
 
 
 //####################################################################################
@@ -188,7 +188,7 @@ void FormAnimation::buildCentralWidget() {
                         ///viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
                         viewEditor->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
-                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing))
+                        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
                             viewEditor->setRenderHint(QPainter::Antialiasing, false);
                         else
                             viewEditor->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);

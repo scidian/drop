@@ -9,11 +9,11 @@
 #include <QScrollBar>
 
 #include "core/colors/colors.h"
-#include "editor/debug.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/view/editor_view.h"
 #include "editor/view/editor_scene.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
