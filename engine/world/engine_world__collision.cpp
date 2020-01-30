@@ -274,8 +274,8 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
 
     // Apply the buoyancy force as an impulse
     cpVect impulse = cpvmult(g, -displaced_mass * dt);
-    if (isnan(impulse.x)) impulse.x = 0.0;
-    if (isnan(impulse.y)) impulse.y = 0.0;
+    if (Dr::RealDouble(impulse.x) == false) impulse.x = 0.0;
+    if (Dr::RealDouble(impulse.y) == false) impulse.y = 0.0;
     cpBodyApplyImpulseAtWorldPoint(object_b->body, impulse, centroid);
 
 
@@ -285,8 +285,8 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
     cpFloat damping =    clipped_area * FLUID_DRAG * FLUID_DENSITY;
     cpFloat v_coef =     cpfexp(-damping * dt * k);                                     // linear drag
     impulse = cpvmult(cpvsub(cpvmult(v_centroid, v_coef), v_centroid), 1.0 / k);
-    if (isnan(impulse.x)) impulse.x = 0.0;
-    if (isnan(impulse.y)) impulse.y = 0.0;
+    if (Dr::RealDouble(impulse.x) == false) impulse.x = 0.0;
+    if (Dr::RealDouble(impulse.y) == false) impulse.y = 0.0;
     cpBodyApplyImpulseAtWorldPoint(object_b->body, impulse, centroid);
 
 
@@ -295,7 +295,7 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
     cpFloat w_damping = cpMomentForPoly(FLUID_DRAG * FLUID_DENSITY * clipped_area, static_cast<int>(clipped.size()), clipped.data(), cpvneg(cog), 0.01);
     cpFloat moment = cpBodyGetMoment(object_b->body);
     cpFloat angular_velocity = cpBodyGetAngularVelocity(object_b->body) * cpfexp(-w_damping*dt / moment);
-    if (isnan(angular_velocity)) angular_velocity = 0.0;
+    if (Dr::RealDouble(angular_velocity) == false) angular_velocity = 0.0;
     cpBodySetAngularVelocity(object_b->body, angular_velocity);
 
     return cpTrue;

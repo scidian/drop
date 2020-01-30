@@ -15,7 +15,7 @@
 enum class Debug_Flags {
 
     // ***** ENGINE
-    Render_Soft_Body_All_Shapes,        // When true debug render of soft bodies show all objects, otherwise just outlines
+    Render_Soft_Body_Shapes,            // When true, debug render of soft bodies shows all objects and joints, otherwise just soft body outline
 
 
     // ***** EDITOR

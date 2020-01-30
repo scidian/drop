@@ -5,6 +5,7 @@
 //
 //
 //
+#include "engine/debug_flags.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
@@ -132,6 +133,18 @@ void DrOpenGL::drawDebugJoints() {
         // Find Joint Coordinates        
         cpBody *body_a = cpConstraintGetBodyA(joint);
         cpBody *body_b = cpConstraintGetBodyB(joint);
+
+        // Dont draw joints for soft bodies unless debug flag is on
+        if (body_a != m_engine->mouse_body && body_b != m_engine->mouse_body) {
+            DrEngineObject *object_a = static_cast<DrEngineObject*>(cpBodyGetUserData(body_a));
+            DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
+            if (object_a == nullptr || object_b == nullptr) continue;
+            if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
+                if (object_a->isPhysicsChild() || object_b->isPhysicsChild()) continue;
+            }
+        }
+
+        // Get Joint Info
         cpVect  body_pos_a = cpBodyGetPosition(body_a);
         cpVect  body_pos_b = cpBodyGetPosition(body_b);
         if (cpConstraintIsSlideJoint(joint)) {

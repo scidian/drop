@@ -178,11 +178,17 @@ public:
     DrPoint                 soft_grid_size { 1, 1 };                // Stores width and height of soft ball array (for Body_Style::Mesh_Blob)
     DrPointF                soft_size  { 1.0, 1.0 };                // Stores total size of soft body object
     DrPointF                soft_scale { 1.0, 1.0 };                // Stores scale difference between outside of soft body and ball location
+
     std::vector<long>       soft_balls;                             // Stores keys of children soft bodies
     std::vector<DrPointF>   soft_start;                             // Soft body starting positions
     std::vector<DrPointF>   soft_uv;                                // Soft body texture coordinates
+
     bool                    soft_corner = false;                    // Used to store corners of soft bodies to stop from average corners of mesh
     double                  soft_start_angle = 0.0;                 // Tracks starting angle of 1st soft child
+
+    std::vector<size_t>     soft_outline_indexes;                   // Stores array indexes of soft_balls that represent outline point list for debug drawing
+    DrPointF                soft_position;                          // Stores current relative shape coordinate, used in debug drawing
+
     std::vector<float>      m_soft_vertices;                        // Used to keep soft body textured quad coordinates
     std::vector<float>      m_soft_texture_coordinates;             // Used to keep the coordinates of rendering an entire texture as a soft body
     std::vector<float>      m_soft_barycentric;                     // Used to keep soft body textured quad barycentric coords
@@ -201,7 +207,7 @@ public:
     void                    addShapeBox(cpBB box);
     void                    addShapeBoxFromTexture(long texture_number, DrPointF extra_scale = DrPointF(1.0, 1.0));
     void                    addShapeCircle(double circle_radius, DrPointF shape_offset);
-    void                    addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0);
+    void                    addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0, DrPointF extra_scale = DrPointF(1.0, 1.0));
     void                    addShapeTriangleFromTexture(long texture_number);
     void                    addShapePolygon(const std::vector<DrPointF> &points);
     void                    addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);

@@ -31,13 +31,15 @@ std::vector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &ce
 //##    Add Shapes to Object
 //####################################################################################
 void DrEngineObject::addShapeBox(double width, double height) {
-    cpShape *shape = cpBoxShapeNew(this->body, width * static_cast<double>(this->getScaleX()), height * static_cast<double>(this->getScaleY()), c_extra_radius);
-    double    area = (width * height);
+    width =  width *  static_cast<double>(this->getScaleX());
+    height = height * static_cast<double>(this->getScaleY());
+    cpShape *shape = cpBoxShapeNew(this->body, width, height, c_extra_radius);
+    double   area = (width * height);
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBox(cpBB box) {
     cpShape *shape = cpBoxShapeNew2(this->body, box, 14);//c_extra_radius);
-    double    area = ((box.r - box.l) * (box.t - box.b));
+    double   area = ((box.r - box.l) * (box.t - box.b));
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
@@ -59,9 +61,9 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset)
         applyShapeSettings(shape, area, Shape_Type::Circle);
     }
 }
-void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier) {
-    double width =  getWorld()->getTexture(texture_number)->width();
-    double height = getWorld()->getTexture(texture_number)->height();
+void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
+    double width =  getWorld()->getTexture(texture_number)->width() *  extra_scale.x;
+    double height = getWorld()->getTexture(texture_number)->height() * extra_scale.y;
     double radius = (width / 2.0) * radius_multiplier;
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -104,7 +106,7 @@ void DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
 void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
 
     // Apply scale to points, verify Winding
-    int old_point_count =static_cast<int>(points.size());
+    int old_point_count = static_cast<int>(points.size());
     double scale_x = static_cast<double>(this->getScaleX());
     double scale_y = static_cast<double>(this->getScaleY());
     std::vector<DrPointF> scaled_points;

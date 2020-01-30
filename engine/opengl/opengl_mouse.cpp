@@ -120,7 +120,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                             m_engine->mouse_joint = cpPivotJointNew(m_engine->mouse_body, touch->body, cpBodyGetPosition(touch->body));
                             double max_force = 10000;
                             double body_mass = cpBodyGetMass(touch->body);
-                            if (isinf(body_mass) == false && isnan(body_mass) == false) max_force *= body_mass * (touch->getTouchDragForce() / 100.0);
+                            if (Dr::RealDouble(body_mass)) max_force *= body_mass * (touch->getTouchDragForce() / 100.0);
                             cpConstraintSetMaxForce(m_engine->mouse_joint, max_force);
                             cpSpaceAddConstraint(world->getSpace(), m_engine->mouse_joint);
                             should_jump = false;
@@ -136,17 +136,23 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
 
                 DrEngineObject *soft_body = nullptr;
+                long   asset_texture;
                 double friction = 0.25;
                 double bounce =   0.5;
 
                 if (Dr::RandomBool()) {
-                    double scale_x = Dr::RandomDouble(1.0, 3.0);
-                    double scale_y = Dr::RandomDouble(1.0, 3.0);
-                    soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    double scale_x = Dr::RandomDouble(0.8, 3.0);
+                    double scale_y = Dr::RandomDouble(0.8, 3.0);
+                    if (Dr::RandomBool()) {
+                        soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    } else {
+                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
+                        soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), int(scale_x * 100.0), g_double, friction, bounce, true);
+                    }
                 } else {
-                    double scale_x = 0.4;//Dr::RandomDouble(1.0, 3.0);
-                    double scale_y = 0.4;//Dr::RandomDouble(1.0, 3.0);
-                    long asset_texture;
+                    double scale_x = Dr::RandomDouble(0.4, 0.6);
+                    double scale_y = Dr::RandomDouble(0.4, 0.6);
+
                     if (world->getProject()->findAssetFromKey(1092) != nullptr) {
                         asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
                         soft_body = world->addSoftBodyMesh(asset_texture, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);

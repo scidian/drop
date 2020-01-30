@@ -44,8 +44,8 @@ struct Space_Time {
 //    double  mass_a = cpBodyGetMass(body_a);
 //    double  mass_b = cpBodyGetMass(body_b);
 //    double  total_mass = 1;
-//    if (isinf(mass_a) == false && isnan(mass_a) == false) total_mass += mass_a;
-//    if (isinf(mass_b) == false && isnan(mass_b) == false) total_mass += mass_b;
+//    if (Dr::RealDouble(mass_a)) total_mass += mass_a;
+//    if (Dr::RealDouble(mass_b)) total_mass += mass_b;
 //    joint_force /= total_mass;
 
 //    if (joint_force > 5000000) {

@@ -68,13 +68,18 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     if (object == nullptr) return false;
     if (object->soft_balls.size() < 3) return false;
 
-    // ***** Calculate Object Angle
-    if (object->canRotate()) {
-//        DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
-//        if (first_ball == nullptr) return false;
-//        double angle_adjust = object->soft_start_angle;/// - g_double;
-//        ///g_info = "Angle Adjust: " + std::to_string(angle_adjust) + ", Global Double: " + std::to_string(g_double);
-//        object->setAngle(Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition()) - angle_adjust);
+    // ***** Adjust Shakiness of non-rotating circular blob
+    double angle_diff = 0.0;
+    if (object->canRotate() == false) {
+        if (body_style == Body_Style::Circular_Blob) {
+            DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
+            if (first_ball == nullptr) return false;
+            double angle_start = object->soft_start_angle;
+            double angle_now =   Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition());
+            angle_diff =  angle_start - angle_now;
+            ///g_info = "Start Angle: " +   std::to_string(angle_start) + ", Angle Now: " + std::to_string(angle_now) + ", Diff: " +    std::to_string(angle_diff);
+            ///object->setAngle( object->getAngle() + angle_diff*1.0);
+        }
     }
 
     // ***** Calculate Current Points
@@ -84,9 +89,8 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
         DrEngineObject *next_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[i]);
         if (next_ball == nullptr) return false;
         balls.push_back(next_ball);
-        DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle());
+        DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), -object->getAngle() + angle_diff);
                  unrotated = unrotated - object->getPosition();
-                 unrotated = unrotated / object->soft_size.x;             // Equalize mesh from -0.5 to +0.5
                  // Scale soft balls to outer radius
                  if (body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
                      unrotated.x = unrotated.x * object->soft_scale.x;
@@ -94,7 +98,10 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
                  } else if (body_style == Body_Style::Circular_Blob) {
                      unrotated = unrotated * object->soft_scale.x;
                  }
+                 next_ball->soft_position = unrotated;
+
                  unrotated.y = unrotated.y / object->height_width_ratio;
+                 unrotated = unrotated / object->soft_size.x;               // Equalize mesh from -0.5 to +0.5 (due to how scale is handled during opengl_render_object.cpp)
         vertices.push_back(Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0), c_up_vector_z, DrVec3(object->soft_uv[i].x,object->soft_uv[i].y,0.0), DrVec3(0,0,0)));
     }
 

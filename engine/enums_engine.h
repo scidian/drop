@@ -173,7 +173,7 @@ enum class Soft_Body_Shape {
     None                    = 0,
     Circle                  = 1,
     Square                  = 2,
-    Double_Jointed          = 3,
+    Mesh                    = 3,
 };
 
 enum class Soft_Sides {

@@ -110,6 +110,7 @@ void DrEngineWorld::moveCameras(double milliseconds) {
     if (m_switching_cameras) {
         m_switch_milliseconds += milliseconds;
 
+        if (m_active_camera == c_no_key) return;
         DrEngineCamera *target_camera = getCamera(m_active_camera);
 
         // Linear Interpolation of Temporary Values
@@ -206,8 +207,10 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
     // Only one camera, cancel switching
     if (m_cameras.size() <= 1) return;
 
+
     // Find next available camera
     auto it = m_cameras.find(m_active_camera);
+    if (it == m_cameras.end()) it = m_cameras.begin();
     bool found_camera = false;
     do {
         it++;
@@ -270,7 +273,7 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
 //####################################################################################
 // Returns Camera Position
 glm::vec3 DrEngineWorld::getCameraPosition() {
-    if (m_active_camera == 0) {                     return c_default_camera_pos;
+    if (m_active_camera == c_no_key) {              return c_default_camera_pos;
     } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getPosition();
     } else {                                        return m_temp_position;
     }
@@ -281,7 +284,7 @@ double DrEngineWorld::getCameraPositionZ() { return static_cast<double>(getCamer
 
 // Returns Camera Rotation, also takes into handle camera switching
 glm::vec3 DrEngineWorld::getCameraRotation() {
-    if (m_active_camera == 0) {                     return c_default_camera_rot;
+    if (m_active_camera == c_no_key) {              return c_default_camera_rot;
     } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getRotation();
     } else {                                        return m_temp_rotation;
     }
@@ -292,7 +295,7 @@ double DrEngineWorld::getCameraRotationZ() { return static_cast<double>(getCamer
 
 // Tries to return Rotation of Thing camera is following, if not following returns 0
 double DrEngineWorld::getCameraFollowingRotation() {
-    if (m_active_camera == 0) {                     return 0.0;
+    if (m_active_camera == c_no_key) {              return 0.0;
     } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingRotation();
     } else {                                        return m_temp_follow_angle;
     }
@@ -300,7 +303,7 @@ double DrEngineWorld::getCameraFollowingRotation() {
 
 // Tries to return Z Order of Thing camera is following, if not following returns 0
 float DrEngineWorld::getCameraFollowingZ() {
-    if (m_active_camera == 0) {                     return 0.0f;
+    if (m_active_camera == c_no_key) {              return 0.0f;
     } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getThingFollowingZOrder();
     } else {                                        return static_cast<float>(m_temp_z_order);
     }
@@ -308,7 +311,7 @@ float DrEngineWorld::getCameraFollowingZ() {
 
 // Returns Camera Zoom
 double DrEngineWorld::getCameraZoom() {
-    if (m_active_camera == 0) {                     return 1.0;
+    if (m_active_camera == c_no_key) {              return 1.0;
     } else if (m_switching_cameras == false) {      return m_cameras[m_active_camera]->getZoom();
     } else {                                        return m_temp_zoom;
     }
@@ -316,7 +319,7 @@ double DrEngineWorld::getCameraZoom() {
 
 // Returns Camera Up Vector
 glm::vec3 DrEngineWorld::getCameraUpVector() {
-    if (m_active_camera == 0) {                     return c_up_vector_y;
+    if (m_active_camera == c_no_key) {              return c_up_vector_y;
     } else if (m_switching_cameras == false) {      return (m_cameras[m_active_camera]->getUpVector() == Up_Vector::Y) ? c_up_vector_y : c_up_vector_z;
     } else {                                        return m_temp_up_vector;
     }
@@ -324,7 +327,7 @@ glm::vec3 DrEngineWorld::getCameraUpVector() {
 
 // Returns Camera Matching Object Angle
 bool DrEngineWorld::getCameraMatching() {
-    if (m_active_camera == 0) {                     return false;
+    if (m_active_camera == c_no_key) {              return false;
     } else if (m_switching_cameras == false) {      return (m_cameras[m_active_camera]->getMatchAngle());
     } else {                                        return (m_temp_match || m_switch_match);
     }

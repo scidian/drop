@@ -101,7 +101,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
     // ***** Signal physics children to remove themselves
-    if (body_style == Body_Style::Circular_Blob || body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
+    if (body_style != Body_Style::Rigid_Body) {
         for (auto &ball_number : soft_balls) {
             if (getWorld() != nullptr) {
                 DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
@@ -111,6 +111,8 @@ DrEngineObject::~DrEngineObject() {
                 }
             }
         }
+        Dr::PrintDebug("Parent!");
+
     // Seperates physics body from parent
     } else if (isPhysicsChild()) {
         if (getPhysicsParent() != nullptr) {
@@ -119,10 +121,12 @@ DrEngineObject::~DrEngineObject() {
             }
         }
         setPhysicsParent(nullptr);
+
+        Dr::PrintDebug("Child!");
     }
 
     // ***** Delete cpBody and all cpShapes / cpConstraints (joints) associated with it
-    if (body != nullptr) {
+    if (this->body != nullptr) {
         cpSpace *space = cpBodyGetSpace(body);
 
         std::vector<cpShape*> shape_list;
@@ -133,13 +137,16 @@ DrEngineObject::~DrEngineObject() {
         }
         std::vector<cpConstraint*> joint_list;
         cpBodyEachConstraint(body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
+
+        Dr::PrintDebug("Soft Ball Number: " + std::to_string(this->soft_balls.size()) + ", Size Joint List: " + std::to_string(joint_list.size()));
+
         for (auto joint : joint_list) {
             // Check if constraint to remove is mouse joint (drag joint)
             if (getWorld() && getWorld()->getEngine()) {
                 if (joint == getWorld()->getEngine()->mouse_joint) {
                     getWorld()->getEngine()->mouse_joint = nullptr;
                 }
-            }
+            }     
             cpSpaceRemoveConstraint(space, joint);
             cpConstraintFree(joint);
         }

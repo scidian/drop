@@ -59,23 +59,27 @@ static void SelectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *grou
 //##    Applies Jump Force
 //####################################################################################
 void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, bool initial_jump) {
-    // Soft Body Jump
-    if (object->body_style == Body_Style::Circular_Blob ||
-            object->body_style == Body_Style::Square_Blob ||
-            object->body_style == Body_Style::Mesh_Blob) {
-        double root = 3.2;
-        double soft_body_mass = cpBodyGetMass(object->body);
-        double vel_multiplier = std::pow(soft_body_mass, 1.0/root) * 1050.0;
-        ///g_info = "Mass: " + std::to_string(soft_body_mass) + ", Multiplier: " + std::to_string(vel_multiplier);
+    player_vel = cpvadd(player_vel, jump_vel);
 
-        // Reduces how much current velocity affects jump force
-        player_vel = cpvadd(player_vel * 0.01, jump_vel);
-        // Apply increased force at world point
+    // Soft Body Jump
+    if (object->body_style != Body_Style::Rigid_Body) {
+        // Adjust initial velocity for soft bodies
+        player_vel = player_vel * 0.85;
+
+        // Apply force to Parent Object
         if (initial_jump) cpBodySetVelocity( object->body, player_vel );
-        cpBodyApplyForceAtWorldPoint( object->body, player_vel * vel_multiplier, cpBodyGetPosition(object->body) );
+        else cpBodyApplyForceAtWorldPoint( object->body, jump_vel * cpBodyGetMass(object->body) * 50.0, cpBodyGetPosition(object->body) );
+
+        // Apply force to Children Soft Ball Objects
+        for (auto ball_number : object->soft_balls) {
+            DrEngineObject *soft_ball = object->getWorld()->findObjectByKey(ball_number);
+            if (soft_ball == nullptr) return;
+            if (initial_jump) cpBodySetVelocity( soft_ball->body, player_vel );
+            else cpBodyApplyForceAtWorldPoint( soft_ball->body, jump_vel * cpBodyGetMass(soft_ball->body) * 50.0, cpBodyGetPosition(soft_ball->body) );
+        }
+
     // Normal Body Jump
     } else {
-        player_vel = cpvadd(player_vel, jump_vel);
         cpBodySetVelocity( object->body, player_vel );
     }
 }
@@ -159,7 +163,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     if (object->getRemainingBoost() > 0) object->setRemainingBoost( object->getRemainingBoost() - dt );
     if (key_jump && (object->getRemainingBoost() > 0.0 || object->getJumpTimeout() < 0.0)) {
         cpVect player_v = cpBodyGetVelocity( object->body );
-        cpVect jump_v = cpv(object->getJumpForceX() * 2.0 * dt, object->getJumpForceY() * 2.0 * dt);
+        cpVect jump_v =   cpv(object->getJumpForceX() * 2.0 * dt, object->getJumpForceY() * 2.0 * dt);
         ApplyJumpForce(object, player_v, jump_v, false);
     }
 
@@ -396,7 +400,30 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
 
     // ********** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    cpBodySetVelocity( object->body, velocity );
+    if (object->body_style != Body_Style::Rigid_Body) {
+        // Apply force to Children Soft Ball Objects
+        double velocity_ratio_x = cpBodyGetVelocity(object->body).x / velocity.x;
+        double velocity_ratio_y = cpBodyGetVelocity(object->body).y / velocity.y;
+
+        // Apply force to Parent Soft Body Object
+        cpBodySetVelocity( object->body, velocity );
+
+//        g_info = "Velocity X: " + std::to_string(cpBodyGetVelocity(object->body).x) + ", RatioX: " + std::to_string(velocity_ratio_x);
+
+//        for (auto ball_number : object->soft_balls) {
+//            DrEngineObject *soft_ball = object->getWorld()->findObjectByKey(ball_number);
+//            if (soft_ball == nullptr) return;
+//            cpVect soft_ball_velocity = cpBodyGetVelocity(soft_ball->body);
+//            if (Dr::RealDouble(velocity_ratio_x)) soft_ball_velocity.x *= velocity_ratio_x;
+//            if (Dr::RealDouble(velocity_ratio_y)) soft_ball_velocity.y *= velocity_ratio_y;
+//            ///cpBodySetVelocity( soft_ball->body, soft_ball_velocity );
+//        }
+
+    // Normal Body Jump
+    } else {
+        cpBodySetVelocity( object->body, velocity );
+    }
+
     cpBodyUpdateVelocity(body, cpv(actual_gravity_x, actual_gravity_y), damping, dt);
 }
 

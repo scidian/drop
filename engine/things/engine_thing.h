@@ -53,7 +53,7 @@ private:
     double          m_rotate_y_speed = 0.0;             // Y axis rotation speed
 
     // Thing Properties - Camera
-    long            m_active_camera   { 0 };                        // Set to ID of last camera that followed this object, 0 == no camera
+    long            m_active_camera   { c_no_key };                 // Set to ID of last camera that followed this object, c_no_key == no camera
     glm::vec3       m_camera_position { c_default_camera_pos };     // X, Y, and Z Camera Position Offset for this objects Active (Follow) Camera
     glm::vec3       m_camera_rotation { 0, 0, 0 };                  // X, Y, and Z Camera Rotation        for this objects Active (Follow) Camera
     double          m_camera_zoom     { 1.0 };                      // Camera Magnification Level         for this objects Active (Follow) Camera
@@ -148,7 +148,7 @@ public:
 
     // Thing Properties - Camera
     const long&             getActiveCameraKey()    { return m_active_camera; }
-    bool                    hasActiveCamera()       { return (m_active_camera == 0) ? false : true; }
+    bool                    hasActiveCamera()       { return (m_active_camera == c_no_key) ? false : true; }
     void                    setActiveCameraKey(const long &new_camera_key) { m_active_camera = new_camera_key; }
 
     glm::vec3&              getCameraPosition()                             { return m_camera_position; }

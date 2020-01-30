@@ -5,6 +5,7 @@
 //
 //
 //
+#include "engine/debug_flags.h"
 #include "engine/engine.h"
 #include "engine/mesh/engine_vertex_debug.h"
 #include "engine/opengl/opengl.h"
@@ -18,14 +19,14 @@
 //####################################################################################
 void DrOpenGL::drawDebugShapes() {
 
-    // ***** Go through Things and add triangles for Shapes
+    // ********** Go through Things and add triangles for Shapes
     DebugVertex vertexes;
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (thing->getThingType() != DrThingType::Object) continue;
         DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
         if (object->getCollidesWith() == Collision_Groups::None) continue;
 
-        // Figure out what color to make the debug shapes
+        // ***** Figure out what color to make the debug shapes
         DrColor color = objectDebugColor(object->getCollisionType(), cpBodyIsSleeping(object->body));
         if (object->isDying() || !object->isAlive()) color = Dr::gray;
         if (!object->doesCollide()) color = color.lighter();
@@ -33,66 +34,96 @@ void DrOpenGL::drawDebugShapes() {
         DrColor fill_color =    color;
                 fill_color.setAlphaF(0.4);
 
-        // Load Object Position
+        // ***** Load Object Position
         DrPointF center = object->getPosition();
 
-        // ***** Add Objects' Shapes
-        for (auto shape : object->shapes) {
-
-            if (object->shape_type[shape] == Shape_Type::Circle) {
-                cpVect offset = cpCircleShapeGetOffset(shape);
-                float  radius = static_cast<float>(cpCircleShapeGetRadius(shape));
-                addDebugCircle( vertexes, DrPointF(center.x + offset.x, center.y + offset.y), radius, static_cast<float>(object->getAngle()), fill_color, fill_color );
-
-            } else if (object->shape_type[shape] == Shape_Type::Segment) {
-                cpVect a = cpSegmentShapeGetA( shape );
-                cpVect b = cpSegmentShapeGetB( shape );
-                float  radius = static_cast<float>(cpSegmentShapeGetRadius( shape ));
-                addDebugLine( vertexes, a, b, radius, fill_color, border_color );
-
-            } else if ((object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box)) {
-                float radius = static_cast<float>(cpPolyShapeGetRadius(shape));
+        // ***** Soft Body Shapes
+        bool add_shapes = false;
+        if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
+            if (object->isPhysicsChild()) continue;
+            if (object->body_style != Body_Style::Rigid_Body) {
                 std::vector<cpVect> vertices;
-
                 DrPointF centroid(0, 0);
-                int point_count = cpPolyShapeGetCount(shape);
-                for (int i = 0; i < point_count; i++) {
-                    cpVect vert = cpPolyShapeGetVert(shape, i) + cpv(center.x, center.y);
+                size_t   point_count = object->soft_outline_indexes.size();
+                if (point_count == 0) continue;
+                for (size_t i = 0; i < point_count; ++i) {
+                    DrEngineObject *soft_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[object->soft_outline_indexes[i]]);
+                    if (soft_ball == nullptr) continue;
+
+                    cpVect vert = cpv(soft_ball->soft_position.x, soft_ball->soft_position.y) + cpv(center.x, center.y);
                     centroid.x += vert.x;
                     centroid.y += vert.y;
                     DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);
                     vertices.push_back(cpv(mapped.x, mapped.y));
                 }
-                centroid.x /= point_count;
-                centroid.y /= point_count;
+                centroid.x /= static_cast<double>(point_count);
+                centroid.y /= static_cast<double>(point_count);
                 centroid = Dr::RotatePointAroundOrigin(DrPointF(centroid.x, centroid.y), center, object->getAngle(), false);
 
-                addDebugPolygon( vertexes, vertices, centroid, radius, fill_color, border_color, object->polygons.empty() );
-
-            }   // End If
-        }   // End For shape
-
-        // ***** Add concave polygon outlines
-        if (object->polygons.empty() == false) {
-            for (auto poly : object->polygons) {
-                // Map points
-                std::vector<cpVect> vertices;
-                for (int i = 0; i < static_cast<int>(poly.size()); i++) {
-                    cpVect vert = poly[i] + cpv(center.x, center.y);
-                    DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);
-                    vertices.push_back(cpv(mapped.x, mapped.y));
-                }
-                // Add lines
-                int count = static_cast<int>(vertices.size());
-                for (int i = 0; i < count - 1; i++) {
-                    addDebugLine(vertexes, vertices[i], vertices[i+1], 1.5f/combinedZoomScale(), border_color, border_color);
-                }
-                addDebugLine(vertexes, vertices[count-1], vertices[0], 1.5f/combinedZoomScale(), border_color, border_color);
+                addDebugPolygon( vertexes, vertices, centroid, 0.0, fill_color, border_color, true );
+            } else {
+                add_shapes = true;
             }
+        } else {
+            add_shapes = true;
         }
 
-    }   // End For object
+        // ***** Add Objects' Shapes
+        if (add_shapes) {
+            for (auto shape : object->shapes) {
+                if (object->shape_type[shape] == Shape_Type::Circle) {
+                    cpVect offset = cpCircleShapeGetOffset(shape);
+                    float  radius = static_cast<float>(cpCircleShapeGetRadius(shape));
+                    addDebugCircle( vertexes, DrPointF(center.x + offset.x, center.y + offset.y), radius, static_cast<float>(object->getAngle()), fill_color, fill_color );
 
+                } else if (object->shape_type[shape] == Shape_Type::Segment) {
+                    cpVect a = cpSegmentShapeGetA( shape );
+                    cpVect b = cpSegmentShapeGetB( shape );
+                    float  radius = static_cast<float>(cpSegmentShapeGetRadius( shape ));
+                    addDebugLine( vertexes, a, b, radius, fill_color, border_color );
+
+                } else if ((object->shape_type[shape] == Shape_Type::Polygon || object->shape_type[shape] == Shape_Type::Box)) {
+                    float radius = static_cast<float>(cpPolyShapeGetRadius(shape));
+                    std::vector<cpVect> vertices;
+
+                    DrPointF centroid(0, 0);
+                    int point_count = cpPolyShapeGetCount(shape);
+                    for (int i = 0; i < point_count; i++) {
+                        cpVect vert = cpPolyShapeGetVert(shape, i) + cpv(center.x, center.y);
+                        centroid.x += vert.x;
+                        centroid.y += vert.y;
+                        DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);
+                        vertices.push_back(cpv(mapped.x, mapped.y));
+                    }
+                    centroid.x /= point_count;
+                    centroid.y /= point_count;
+                    centroid = Dr::RotatePointAroundOrigin(DrPointF(centroid.x, centroid.y), center, object->getAngle(), false);
+
+                    addDebugPolygon( vertexes, vertices, centroid, radius, fill_color, border_color, object->polygons.empty() );
+
+                }   // End If
+            }   // End For shape
+
+            // ***** Add concave polygon outlines (if object has polygons (non-box polygons), their outlines weren't drawn in previous step)
+            if (object->polygons.empty() == false) {
+                for (auto poly : object->polygons) {
+                    // Map points
+                    std::vector<cpVect> vertices;
+                    for (int i = 0; i < static_cast<int>(poly.size()); i++) {
+                        cpVect vert = poly[i] + cpv(center.x, center.y);
+                        DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);
+                        vertices.push_back(cpv(mapped.x, mapped.y));
+                    }
+                    // Add lines
+                    int count = static_cast<int>(vertices.size());
+                    for (int i = 0; i < count - 1; i++) {
+                        addDebugLine(vertexes, vertices[i], vertices[i+1], 1.5f/combinedZoomScale(), border_color, border_color);
+                    }
+                    addDebugLine(vertexes, vertices[count-1], vertices[0], 1.5f/combinedZoomScale(), border_color, border_color);
+                }
+            }
+        }   // End if add_shapes
+    }   // End For object
 
     // ***** Draw Debug Triangles
     drawDebugTriangles(m_projection * m_view, vertexes);

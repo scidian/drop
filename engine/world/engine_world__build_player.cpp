@@ -65,41 +65,69 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Jump) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -50, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
-        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
-        ball1->setDepth(30);
-        addThing(ball1);
-        ball1->setCameraPositionXY( DrPointF(0, 50) );
-        assignPlayerControls(ball1, true, true, true);
-        ball1->setJumpCount( 1 );
-        ball1->setCanAirJump( false );
-        ball1->setCanWallJump( true );
-        ball1->setHealth( 80.0 );
-        ///ball1->setDeathTouch( true );
-        ball1->setMoveSpeedY( 300 );
-        ball1->setTouchDrag(true);
-        ball1->setTouchDragForce(2000.0);
+//        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
+//        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+//        ball1->setDepth(30);
+//        addThing(ball1);
+//        ball1->setCameraPositionXY( DrPointF(0, 50) );
+//        assignPlayerControls(ball1, true, true, true);
+//        ball1->setJumpCount( 1 );
+//        ball1->setCanAirJump( false );
+//        ball1->setCanWallJump( true );
+//        ball1->setHealth( 80.0 );
+//        ///ball1->setDeathTouch( true );
+//        ball1->setMoveSpeedY( 300 );
+//        ball1->setTouchDrag(true);
+//        ball1->setTouchDragForce(2000.0);
 
-        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
-        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
-        ball2->setDepth(30);
-        addThing(ball2);
-        ball2->setCameraRotation( -25, -40, 0 );
-        assignPlayerControls(ball2, false, true, false);
-        ball2->setJumpCount( c_unlimited_jump );
-        ball2->setRotateSpeedZ( 20.0 );
-        ball2->setTouchDrag(true);
-        ball2->setTouchDragForce(2000.0);
+//        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
+//        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
+//        ball2->setDepth(30);
+//        addThing(ball2);
+//        ball2->setCameraRotation( -25, -40, 0 );
+//        assignPlayerControls(ball2, false, true, false);
+//        ball2->setJumpCount( c_unlimited_jump );
+//        ball2->setRotateSpeedZ( 20.0 );
+//        ball2->setTouchDrag(true);
+//        ball2->setTouchDragForce(2000.0);
 
-        DrEngineObject *softy = addSoftBodyCircle(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(100, 100), 150, 0.8, 0.50, 0.25, false);
+        DrEngineObject *softy = addSoftBodyCircle(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(0, 100), 150, 0.8, 0.50, 0.25, false);
         if (softy != nullptr) {
             assignPlayerControls(softy, false, true, false);
             if (getCamerasFollowThing(softy->getKey()).size() > 0)
                 getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
             softy->setMoveSpeedX(800);
+            ///softy->setJumpForceY(500);
+            softy->setJumpTimeout(5000);
             softy->setRotateSpeedZ( 7 );
             softy->setJumpCount( -1 );
             softy->setCanWallJump(false);
+        }
+
+        DrEngineObject *softy2 = addSoftBodyMesh(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(200, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
+        if (softy2 != nullptr) {
+            assignPlayerControls(softy2, false, true, false);
+            if (getCamerasFollowThing(softy2->getKey()).size() > 0)
+                getCamerasFollowThing(softy2->getKey())[0]->setLag(DrPointF(200, 200));
+            softy2->setMoveSpeedX(800);
+            ///softy2->setJumpForceY(500);
+            softy2->setJumpTimeout(5000);
+            softy2->setRotateSpeedZ( 7 );
+            softy2->setJumpCount( -1 );
+            softy2->setCanWallJump(false);
+        }
+
+        DrEngineObject *softy3 = addSoftBodyCircle(m_project->findAssetFromKey(1024)->getIdleAnimationFirstFrameImageKey(), DrPointF(-200, 250), 400, 0.8, 0.50, 0.25, false);
+        if (softy3 != nullptr) {
+            assignPlayerControls(softy3, false, true, false);
+            if (getCamerasFollowThing(softy3->getKey()).size() > 0)
+                getCamerasFollowThing(softy3->getKey())[0]->setLag(DrPointF(200, 200));
+            softy3->setMoveSpeedX(800);
+            ///softy3->setJumpForceY(500);
+            softy3->setJumpTimeout(5000);
+            softy3->setRotateSpeedZ( 7 );
+            softy3->setJumpCount( -1 );
+            softy3->setCanWallJump(false);
         }
 
     } else if (new_player_type == Demo_Player::Light) {

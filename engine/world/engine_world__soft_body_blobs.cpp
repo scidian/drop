@@ -24,6 +24,7 @@ DrEngineObject* DrEngineWorld::addBall(DrEngineWorld *world, long texture, Soft_
     ball->setTouchDragForce(5000.0);
     if (shape == Soft_Body_Shape::Circle)       ball->addShapeCircleFromTexture(texture, radius_multiplier.x);
     else if (shape == Soft_Body_Shape::Square)  ball->addShapeBoxFromTexture(   texture, radius_multiplier);
+    else if (shape == Soft_Body_Shape::Mesh)    ball->addShapeCircleFromTexture(texture, 1.0, radius_multiplier);
     world->addThing(ball);
     return ball;
 }
@@ -163,7 +164,8 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture, DrPointF point, d
     central->soft_scale.y = central->soft_scale.x;
 
     // Add Soft Balls
-    std::vector<long> &ball_list = central->soft_balls;
+    std::vector<long>   &ball_list =        central->soft_balls;
+    std::vector<size_t> &outline_indexes =  central->soft_outline_indexes;
     for (int circle = 0; circle < number_of_circles; circle++) {
         // Figure out location
         DrPointF ball_at =      Dr::RotatePointAroundOrigin(DrPointF(inside_radius, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
@@ -185,6 +187,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long texture, DrPointF point, d
                                             DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                         soft_ball->setPhysicsParent(central);
         ball_list.push_back(soft_ball->getKey());
+        outline_indexes.push_back(circle);
 
         // Create joints to central body / neighbor body
         DrPointF center_join =   Dr::RotatePointAroundOrigin(DrPointF(center_radius * inner_size, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
@@ -275,7 +278,8 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture, DrPointF point, D
     central->soft_scale.y = ((center_height/2.0) / ((center_height - target_diameter)/2.0)) * render_scale;
 
     // Add Soft Balls
-    std::vector<long> &ball_list = central->soft_balls;
+    std::vector<long>   &ball_list =        central->soft_balls;
+    std::vector<size_t> &outline_indexes =  central->soft_outline_indexes;
     long count = 0;
     long loop = 0;
     long x =    0;
@@ -304,6 +308,7 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long texture, DrPointF point, D
                                             DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                         soft_ball->setPhysicsParent(central);
         ball_list.push_back(soft_ball->getKey());
+        outline_indexes.push_back(count);
 
         // Create joints to central body / neighbor body
         DrPointF center_join = DrPointF(outside_at.x * radius_multiplier.x, outside_at.y * radius_multiplier.y);

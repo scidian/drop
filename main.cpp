@@ -147,8 +147,8 @@ int main(int argc, char *argv[]) {
 
     // ***** Temporary-ish options
     Dr::SetPreference(Preferences::Limit_Frames_Rendered, false);
-    Dr::SetDebugFlag( Debug_Flags::Render_Soft_Body_All_Shapes );
     Dr::SetDebugFlag( Debug_Flags::Show_Secret_Menu );
+    Dr::SetDebugFlag( Debug_Flags::Render_Soft_Body_Shapes );
     ///Dr::SetDebugFlag(Debug_Flags::Load_Test_Project);                // Turns on Test Project loading into editor upon startup
 
 

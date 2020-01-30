@@ -102,7 +102,7 @@ private:
                                                     //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
 
     // Camera Variables
-    long            m_active_camera = 0;            // Key to active camera in the Engine, 0 == No Camera
+    long            m_active_camera = c_no_key;     // Key to active camera in the Engine, c_no_key == No Camera
     bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
 
     double          m_switch_milliseconds;                                  // Used for tweening between cameras

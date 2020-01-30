@@ -17,15 +17,11 @@ namespace Dr {
 //####################################################################################
 const  int flags = static_cast<int>(Debug_Flags::Total);
 static std::bitset<flags>   l_debug_flags;
-static bool                 l_done_loading = false;      // True after initial startup of FormMain, ensures done loading before any calls to SetLabelText
 
 
 //####################################################################################
 //##    Functions to initialize, set and check flags
 //####################################################################################
-bool CheckDoneLoading() { return l_done_loading; }
-void SetDoneLoading(bool done) { l_done_loading = done; }
-
 bool CheckDebugFlag(Debug_Flags flag) {
     return l_debug_flags.test(static_cast<size_t>(flag));
 }

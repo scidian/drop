@@ -87,9 +87,8 @@ DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, DrPointF point, d
 
 
 //####################################################################################
-//##    Creates Square Soft Body - ORIGINAL
-//##      This implementation creates a grid of soft bodies, works but tangles a lot
-//##      and also doesnt collapse well when using lower stiffness values
+//##    Creates Square Soft Body Mesh - ORIGINAL
+//##      This implementation creates a grid of soft bodies for a truly full soft body
 //####################################################################################
 DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrPointF scale,
                                                double stiffness, double friction, double bounce, bool can_rotate) {
@@ -157,9 +156,9 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
             // Add soft ball to world
             DrEngineObject *soft_ball;
             if (x == (x_balls/2) && y == (y_balls/2)) {
-                soft_ball = addBall(this, center_texture, Soft_Body_Shape::Square, ball_at.x + point.x, ball_at.y + point.y,
+                soft_ball = addBall(this, center_texture, Soft_Body_Shape::Mesh, ball_at.x + point.x, ball_at.y + point.y,
                                     scale, radius_multiplier, friction, bounce, true, can_rotate);
-                central = soft_ball;
+                central =   soft_ball;
             } else {
                 soft_ball = addBall(this, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
                                     DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
@@ -193,13 +192,42 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
         }
     }
 
+    // Set central mass to match other soft balls
+    cpBodySetMass(central->body, cpBodyGetMass(balls[0]->body));
+
     // Copy soft ball arrays to Central Ball
     for (size_t i = 0; i < balls.size(); ++i) {
+        if (can_rotate == false) {
+            //if (i % 2 == 0) {
+                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->body, central->body, 0.0, 0.0));
+            //}
+        }
         balls[i]->setPhysicsParent(central);
         central->soft_balls.push_back(balls[i]->getKey());
         central->soft_uv.push_back(   uv_coordinates[i]);
         central->soft_start.push_back(starting_positions[i]);
     }
+
+    // Built outline ball list (for debug drawing)
+    long outline_count = 0;
+    long outline_loop = 0;
+    long ox = 0, oy = 0;
+    do {
+        size_t outline_index = (oy * x_balls) + ox;
+        central->soft_outline_indexes.push_back(outline_index);
+
+        // Increment loop variables
+        if (outline_loop == static_cast<long>(Soft_Sides::Bottom)) {
+            ox++;   if (ox > x_balls - 1)   { outline_loop++; ox = x_balls - 1; oy = 1; }
+        } else if (outline_loop == static_cast<long>(Soft_Sides::Right)) {
+            oy++;   if (oy > y_balls - 1)   { outline_loop++; ox = x_balls - 2; oy = y_balls - 1; }
+        } else if (outline_loop == static_cast<long>(Soft_Sides::Top)) {
+            ox--;   if (ox < 0)             { outline_loop++; ox = 0;           oy = y_balls - 2; }
+        } else if (outline_loop == static_cast<long>(Soft_Sides::Left)) {
+            oy--;   if (oy < 1)             { outline_loop++; }
+        }
+        outline_count++;
+    } while (outline_loop < 4);
 
     // Update Central Ball properties
     central->setPhysicsParent(nullptr);
