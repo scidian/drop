@@ -65,8 +65,8 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         key_pressed == Qt::Key_Left ||
         key_pressed == Qt::Key_Right) {
         if (m_current_stage == nullptr) return;
-        DrPointF grid_scale = m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF();
-        DrPointF grid_size =  m_current_stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF();
+        DrPointF grid_scale = m_current_stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Scale).toPointF();
+        DrPointF grid_size =  m_current_stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Size).toPointF();
 
         // Amount to move items when arrow keys are pressed
         QPointF move_by (grid_size.x * grid_scale.x, grid_size.y * grid_scale.y);
@@ -164,8 +164,8 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         this->updateItemZValues();
         m_editor_relay->buildProjectTree();
         m_editor_relay->getProjectTree()->ensureSelectionVisible();
-        m_editor_relay->getInspector()->updateInspectorPropertyBoxesOfSelectedItem( { static_cast<int>(Properties::Thing_Z_Order),
-                                                                                      static_cast<int>(Properties::Thing_Sub_Z_Order) } );
+        m_editor_relay->getInspector()->updateInspectorPropertyBoxesOfSelectedItem( { static_cast<int>(Props::Thing_Z_Order),
+                                                                                      static_cast<int>(Props::Thing_Sub_Z_Order) } );
     }
 
 
@@ -200,10 +200,10 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                 case Qt::Key::Key_A:
                 case Qt::Key::Key_S:
                 case Qt::Key::Key_D:
-                    new_x = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().x;
-                    new_y = drthing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF().y;
-                    new_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Z_Order).toDouble();
-                    sub_z = drthing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Sub_Z_Order).toInt();
+                    new_x = drthing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF().x;
+                    new_y = drthing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF().y;
+                    new_z = drthing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Z_Order).toDouble();
+                    sub_z = drthing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Sub_Z_Order).toInt();
 
                     if (key_pressed == Qt::Key::Key_W) new_y = new_y - source_rect.height();
                     if (key_pressed == Qt::Key::Key_A) new_x = new_x - source_rect.width();
@@ -212,7 +212,7 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
                     new_object = drstage->addThing(drthing->getThingType(), drthing->getAssetKey(), new_x, new_y, new_z);
                     new_object->copyEntitySettings(drthing);
-                    new_object->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position, DrPointF(new_x, new_y));
+                    new_object->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position, DrPointF(new_x, new_y));
                     new_object->setZOrderWithSub(new_z, Z_Insert::At_Position, sub_z + 1);
                     this->updateItemZValues();
 

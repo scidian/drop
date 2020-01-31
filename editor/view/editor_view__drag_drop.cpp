@@ -84,8 +84,8 @@ void DrView::dropEvent(QDropEvent *event) {
     int  sub_order = 0;
     int  thing_count = 0;
     for (auto test_z : my_scene->getSelectionItemsAsThings()) {
-        double test_z_order = test_z->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Z_Order).toDouble();
-        int  test_sub_order = test_z->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Sub_Z_Order).toInt();
+        double test_z_order = test_z->getComponentPropertyValue(Comps::Thing_Layering, Props::Thing_Z_Order).toDouble();
+        int  test_sub_order = test_z->getComponentPropertyValue(Comps::Thing_Layering, Props::Thing_Sub_Z_Order).toInt();
         if (((test_z_order >= z_order) && (test_sub_order >= sub_order)) || thing_count == 0) {
             z_order =   test_z_order;
             sub_order = test_sub_order;
@@ -152,7 +152,7 @@ void DrView::dropEvent(QDropEvent *event) {
         }
 
         my_scene->addItemToSceneFromThing( thing );
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { Properties::Thing_Size } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { Props::Thing_Size } );
         if (thing_count > 0) {
             thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
             my_scene->updateItemZValues();

@@ -93,10 +93,10 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
 
     // ***** Some local item variables, prepping for update
     QTransform transform;
-    DrPointF position  = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-    DrPointF scale     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-    DrPointF size      = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
-    double   angle     = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+    DrPointF position  = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
+    DrPointF scale     = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
+    DrPointF size      = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size).toPointF();
+    double   angle     = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
     double   pre_angle = item->data(User_Roles::Rotation).toDouble();
     double   transform_scale_x, transform_scale_y;
 
@@ -106,61 +106,61 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
 
     // ***** Go through each property that we have been notified has changed and update as appropriately
     for (auto one_property : property_keys) {
-        Properties  property    = static_cast<Properties>(one_property);
+        Props  property    = static_cast<Props>(one_property);
         DrProperty *dr_property = thing->findPropertyFromPropertyKey(one_property);
         DrVariant   new_value   = dr_property->getValue();
 
 
         switch (property) {
 
-            case Properties::Hidden_Hide_From_Trees:
+            case Props::Hidden_Hide_From_Trees:
                 if (new_value.toBool() == true) {
-                    thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked, true);
+                    thing->setComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Item_Locked, true);
                 }
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Item_Locked });
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Props::Hidden_Item_Locked });
                 break;
-            case Properties::Hidden_Item_Locked:
+            case Props::Hidden_Item_Locked:
                 if (new_value.toBool() == false) {
-                    if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool() == true) {
-                        thing->setComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, false);
+                    if (thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Hide_From_Trees).toBool() == true) {
+                        thing->setComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Hide_From_Trees, false);
                     }
                 }
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Hidden_Hide_From_Trees });
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Props::Hidden_Hide_From_Trees });
                 break;
 
-            case Properties::Thing_Object_Physics_Type: {
-                bool pretest = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->isEditable();
-                Body_Type type = static_cast<Body_Type>(thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Physics_Type).toInt());
+            case Props::Thing_Object_Physics_Type: {
+                bool pretest = thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Velocity_X)->isEditable();
+                Body_Type type = static_cast<Body_Type>(thing->getComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type).toInt());
                 bool      test = (type == Body_Type::Kinematic || type == Body_Type::Dynamic) ? true : false;
                 if (test != pretest) {
-                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_X)->setEditable(test);
-                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Velocity_Y)->setEditable(test);
-                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Spin_Velocity)->setEditable(test);
+                    thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Velocity_X)->setEditable(test);
+                    thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Velocity_Y)->setEditable(test);
+                    thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Spin_Velocity)->setEditable(test);
                     m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
-                                    { Properties::Thing_Velocity_X, Properties::Thing_Velocity_Y, Properties::Thing_Spin_Velocity });
+                                    { Props::Thing_Velocity_X, Props::Thing_Velocity_Y, Props::Thing_Spin_Velocity });
                 }
 
-                bool pretest_velocity = thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->isEditable();
-                bool pretest_player =   thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Player)->isEditable();
+                bool pretest_velocity = thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Angle_Velocity)->isEditable();
+                bool pretest_player =   thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Angle_Player)->isEditable();
                 test = (type == Body_Type::Kinematic) ? true : false;
                 if (test != pretest_velocity) {
-                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Velocity)->setEditable(test);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Angle_Velocity });
+                    thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Angle_Velocity)->setEditable(test);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Props::Thing_Angle_Velocity });
                 }
                 if (test != pretest_player) {
-                    thing->getComponentProperty(Components::Thing_Movement, Properties::Thing_Angle_Player)->setEditable(test);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Angle_Player });
+                    thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Angle_Player)->setEditable(test);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Props::Thing_Angle_Player });
                 }
                 break;
             }
 
-            case Properties::Thing_Position:
+            case Props::Thing_Position:
                 setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
                 break;
 
-            case Properties::Thing_Size:
-            case Properties::Thing_Scale:
-            case Properties::Thing_Rotation: {
+            case Props::Thing_Size:
+            case Props::Thing_Scale:
+            case Props::Thing_Rotation: {
                 // ***** Keep Thing Square: Size / scale change override for Things that need to be square (light, etc)
                 // ***** Also limits max size
                 //       #KEYWORD: "keep square", "lock size", "same size", "limit size"
@@ -170,7 +170,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 bool    keep_square = thing->keepSquare();
 
                 if (keep_square || has_max_x || has_max_y || has_min_x || has_min_y) {
-                    if (property == Properties::Thing_Size) {
+                    if (property == Props::Thing_Size) {
                         if (has_max_x && size.x > thing->maxSize().x) size.x = thing->maxSize().x;
                         if (has_min_x && size.x < thing->minSize().x) size.x = thing->minSize().x;
                         if (has_max_y && size.y > thing->maxSize().y) size.y = thing->maxSize().y;
@@ -181,7 +181,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                         }
                         pretest = true;
 
-                    } else if (property == Properties::Thing_Scale) {
+                    } else if (property == Props::Thing_Scale) {
                         if (has_max_x && scale.x * item->getAssetWidth() >  thing->maxSize().x) scale.x = thing->maxSize().x / item->getAssetWidth();
                         if (has_min_x && scale.x * item->getAssetWidth() <  thing->minSize().x) scale.x = thing->minSize().x / item->getAssetWidth();
                         if (has_max_y && scale.y * item->getAssetHeight() > thing->maxSize().y) scale.y = thing->maxSize().y / item->getAssetHeight();
@@ -195,7 +195,7 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 }
 
                 // ***** If property that changed was size, calculate the proper scale based on size
-                if (property == Properties::Thing_Size) {
+                if (property == Props::Thing_Size) {
                     scale.x = size.x / item->getAssetWidth();
                     scale.y = size.y / item->getAssetHeight();
                 // Otherwise calculate the size based on the scale
@@ -214,42 +214,42 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
 
                 // ***** If size or scale was changed, update the other and update the widgets in the Inspector
-                if (property == Properties::Thing_Size || pretest) {
-                    thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, scale);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Scale });
+                if (property == Props::Thing_Size || pretest) {
+                    thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale, scale);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Props::Thing_Scale });
                 }
-                if (property == Properties::Thing_Scale || pretest) {
-                    thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, size);
-                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Properties::Thing_Size });
+                if (property == Props::Thing_Scale || pretest) {
+                    thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size, size);
+                    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { Props::Thing_Size });
                 }
 
                 break;
             }
 
-            case Properties::Thing_Z_Order:
+            case Props::Thing_Z_Order:
                 item->setZValue( thing->getZOrderWithSub() );
                 break;
 
 
-            case Properties::Thing_Filter_Brightness:
-            case Properties::Thing_Filter_Contrast:
-            case Properties::Thing_Filter_Saturation:
-            case Properties::Thing_Filter_Hue:
-            case Properties::Thing_Filter_Grayscale:
-            case Properties::Thing_Filter_Negative:
-            case Properties::Thing_Filter_Pixelation:
-            case Properties::Thing_Filter_Bitrate:
+            case Props::Thing_Filter_Brightness:
+            case Props::Thing_Filter_Contrast:
+            case Props::Thing_Filter_Saturation:
+            case Props::Thing_Filter_Hue:
+            case Props::Thing_Filter_Grayscale:
+            case Props::Thing_Filter_Negative:
+            case Props::Thing_Filter_Pixelation:
+            case Props::Thing_Filter_Bitrate:
                 item->applyFilters();
                 break;
 
-            case Properties::Thing_Fire_Color_1:
-            case Properties::Thing_Fire_Color_2:
-            case Properties::Thing_Fire_Color_Smoke:
-            case Properties::Thing_Fire_Shape: {
-                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
-                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
-                QColor sm = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt());
-                int  mask = item->getThing()->getComponentProperty(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape)->getValue().toInt();
+            case Props::Thing_Fire_Color_1:
+            case Props::Thing_Fire_Color_2:
+            case Props::Thing_Fire_Color_Smoke:
+            case Props::Thing_Fire_Shape: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_1).toUInt());
+                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_2).toUInt());
+                QColor sm = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_Smoke).toUInt());
+                int  mask = item->getThing()->getComponentProperty(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape)->getValue().toInt();
                 item->setPixmap( Dr::DrawFire(cs, ce, sm, static_cast<Fire_Mask>(mask)) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
@@ -258,8 +258,8 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 break;
             }
 
-            case Properties::Thing_Fisheye_Color: {
-                uint color =        item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt();
+            case Props::Thing_Fisheye_Color: {
+                uint color =        item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color).toUInt();
                 item->setPixmap( Dr::DrawFisheye( QColor::fromRgba(color) ) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
@@ -268,26 +268,26 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 break;
             }
 
-            case Properties::Thing_Light_Color:
-            case Properties::Thing_Light_Cone_Start:
-            case Properties::Thing_Light_Cone_End:
-            case Properties::Thing_Light_Intensity:
-            case Properties::Thing_Light_Blur: {
-                QColor light_color = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-                float  cone_start =  item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toFloat();
-                float  cone_end =    item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toFloat();
-                float  intensity =   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-                float  blur =        item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+            case Props::Thing_Light_Color:
+            case Props::Thing_Light_Cone_Start:
+            case Props::Thing_Light_Cone_End:
+            case Props::Thing_Light_Intensity:
+            case Props::Thing_Light_Blur: {
+                QColor light_color = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Color).toUInt());
+                float  cone_start =  item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start).toVector()[0].toFloat();
+                float  cone_end =    item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End).toVector()[0].toFloat();
+                float  intensity =   item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Intensity).toFloat();
+                float  blur =        item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Blur).toFloat();
                 item->setPixmap( Dr::DrawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
                 item->setAssetWidth(  item->pixmap().width() );
                 item->setAssetHeight( item->pixmap().height() );
                 break;
             }
 
-            case Properties::Thing_Mirror_Start_Color:
-            case Properties::Thing_Mirror_End_Color: {
-                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
-                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
+            case Props::Thing_Mirror_Start_Color:
+            case Props::Thing_Mirror_End_Color: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color).toUInt());
+                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_End_Color).toUInt());
                 item->setPixmap( Dr::DrawMirror(cs, ce) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
@@ -296,10 +296,10 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 break;
             }
 
-            case Properties::Thing_Swirl_Start_Color:
-            case Properties::Thing_Swirl_Angle: {
-                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
-                float  a =                   item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
+            case Props::Thing_Swirl_Start_Color:
+            case Props::Thing_Swirl_Angle: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color).toUInt());
+                float  a =                   item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Angle).toFloat();
                 item->setPixmap( Dr::DrawSwirl(cs, static_cast<double>(a)) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
@@ -308,10 +308,10 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 break;
             }
 
-            case Properties::Thing_Water_Start_Color:
-            case Properties::Thing_Water_End_Color: {
-                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
-                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
+            case Props::Thing_Water_Start_Color:
+            case Props::Thing_Water_End_Color: {
+                QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Start_Color).toUInt());
+                QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_End_Color).toUInt());
                 item->setPixmap( Dr::DrawWater(cs, ce) );
                 item->setBasePixmap(  item->pixmap() );
                 item->setAssetWidth(  item->pixmap().width() );
@@ -320,8 +320,8 @@ void DrScene::updateItemInScene(DrSettings* changed_item, std::list<long> proper
                 break;
             }
 
-            case Properties::Thing_Text_User_Text: {
-                std::string text = item->getThing()->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+            case Props::Thing_Text_User_Text: {
+                std::string text = item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Text, Props::Thing_Text_User_Text).toString();
                 if (text == "") text = " ";
                 item->setPixmap( Dr::CreateText(m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getKey() ), text ));
                 item->setAssetWidth(  item->pixmap().width() );

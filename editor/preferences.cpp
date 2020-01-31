@@ -19,7 +19,7 @@
 #include "editor/preferences.h"
 
 typedef std::map<Asset_Category, bool>      AssetCategoryMap;
-typedef std::map<Components,  bool>         ComponentMap;
+typedef std::map<std::string, bool>         ComponentMap;
 typedef std::map<Preferences, DrVariant>    PreferenceMap;
 
 namespace Dr {
@@ -82,8 +82,10 @@ void AddToColorHistory(DrColor color) {
 bool        GetAssetExpanded(Asset_Category asset_type)                         { return l_asset_categories[asset_type]; }
 void        SetAssetExpanded(Asset_Category asset_type, bool expanded)          { l_asset_categories[asset_type] = expanded; }
 
-bool        GetInspectorExpanded(Components component_to_check)                 { return l_components[component_to_check]; }
-void        SetInspectorExpanded(Components component_to_set, bool expanded)    { l_components[component_to_set] = expanded; }
+bool        GetInspectorExpanded(std::string component_name_to_check) {
+                auto it = l_components.find(component_name_to_check);
+                if (it != l_components.end()) return it->second; else return false; }
+void        SetInspectorExpanded(std::string component_name_to_set, bool expanded) { l_components[component_name_to_set] = expanded; }
 
 
 //####################################################################################
@@ -161,39 +163,36 @@ void LoadPreferences() {
 
 
     // List of Inspector Component Categories Being Expanded
-    for (int i = 0; i < static_cast<int>(Components::Total); ++i) {
-        Dr::SetInspectorExpanded(static_cast<Components>(i),        false);
-    }
-    Dr::SetInspectorExpanded(Components::Entity_Settings,           true);
-    Dr::SetInspectorExpanded(Components::Hidden_Settings,           true);
-    Dr::SetInspectorExpanded(Components::Size_Settings,             true);
+    Dr::SetInspectorExpanded(Comps::Entity_Settings,           true);
+    Dr::SetInspectorExpanded(Comps::Hidden_Settings,           true);
+    Dr::SetInspectorExpanded(Comps::Size_Settings,             true);
 
-    Dr::SetInspectorExpanded(Components::Asset_Animation,           true);
-    Dr::SetInspectorExpanded(Components::Asset_Settings_Character,  true);
-    Dr::SetInspectorExpanded(Components::Asset_Settings_Font,       true);
-    Dr::SetInspectorExpanded(Components::Asset_Settings_Object,     true);
+    Dr::SetInspectorExpanded(Comps::Asset_Animation,           true);
+    Dr::SetInspectorExpanded(Comps::Asset_Settings_Character,  true);
+    Dr::SetInspectorExpanded(Comps::Asset_Settings_Font,       true);
+    Dr::SetInspectorExpanded(Comps::Asset_Settings_Object,     true);
 
-    Dr::SetInspectorExpanded(Components::World_Settings,            true);
-    Dr::SetInspectorExpanded(Components::World_Physics,             true);
+    Dr::SetInspectorExpanded(Comps::World_Settings,            true);
+    Dr::SetInspectorExpanded(Comps::World_Physics,             true);
 
-    Dr::SetInspectorExpanded(Components::Stage_Settings,            true);
-    Dr::SetInspectorExpanded(Components::Stage_Grid,                true);
+    Dr::SetInspectorExpanded(Comps::Stage_Settings,            true);
+    Dr::SetInspectorExpanded(Comps::Stage_Grid,                true);
 
-    Dr::SetInspectorExpanded(Components::Thing_Layering,            true);
-    Dr::SetInspectorExpanded(Components::Thing_Transform,           true);
-    Dr::SetInspectorExpanded(Components::Thing_Movement,            true);
+    Dr::SetInspectorExpanded(Comps::Thing_Layering,            true);
+    Dr::SetInspectorExpanded(Comps::Thing_Transform,           true);
+    Dr::SetInspectorExpanded(Comps::Thing_Movement,            true);
 
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Camera,     true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Character,  true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Object,     true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Text,       true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Camera,     true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Character,  true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Object,     true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Text,       true);
 
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Fire,       true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Fisheye,    true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Light,      true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Mirror,     true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Swirl,      true);
-    Dr::SetInspectorExpanded(Components::Thing_Settings_Water,      true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Fire,       true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Fisheye,    true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Light,      true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Mirror,     true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Swirl,      true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Water,      true);
 
 }
 

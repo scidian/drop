@@ -30,21 +30,21 @@ void TreeProject::updateItems(std::list<DrSettings*> changed_items, std::list<lo
         if (item_in_tree == nullptr) continue;
 
         for (auto property : property_keys) {
-            Properties check_property = static_cast<Properties>(property);
+            Props check_property = static_cast<Props>(property);
 
-            if (check_property == Properties::Entity_Name) {
+            if (check_property == Props::Entity_Name) {
                 QString new_name = QString::fromStdString(entity->getName());
                 if (entity->getType() == DrType::World) new_name = "World: " + new_name;
                 if (entity->getType() == DrType::Stage) new_name = "Stage: " + new_name;
                 item_in_tree->setText(COLUMN_TITLE, new_name);
             }
 
-            if (check_property == Properties::Hidden_Item_Locked ||
-                check_property == Properties::Hidden_Hide_From_Trees) {
+            if (check_property == Props::Hidden_Item_Locked ||
+                check_property == Props::Hidden_Hide_From_Trees) {
                 if (entity->getType() == DrType::Thing) installLockBox(entity, item_in_tree);
             }
 
-            if (check_property == Properties::Thing_Z_Order) {
+            if (check_property == Props::Thing_Z_Order) {
                 DrThing *thing = dynamic_cast<DrThing*>(entity);
                 if (thing) {
                     item_in_tree->setData(COLUMN_Z_ORDER, Qt::DisplayRole, thing->getZOrderWithSub());

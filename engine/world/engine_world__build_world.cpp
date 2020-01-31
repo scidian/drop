@@ -70,68 +70,68 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
     // ***** World Settings
-    m_game_direction =      world->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
-    m_delete_threshold_x =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Deletion_Threshold).toInt();
-    m_delete_threshold_y =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Deletion_Threshold).toInt();
+    m_game_direction =      world->getComponentPropertyValue(Comps::World_Settings, Props::World_Game_Direction).toDouble();
+    m_delete_threshold_x =  world->getComponentPropertyValue(Comps::World_Settings, Props::World_Deletion_Threshold).toInt();
+    m_delete_threshold_y =  world->getComponentPropertyValue(Comps::World_Settings, Props::World_Deletion_Threshold).toInt();
     m_game_start = DrPointF(0, 0);                      // Set starting load position
     m_loaded_to = 0;                                    // Reset how far we've loaded
 
 
-    if (world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toVector()[0].toBool()) {
-        m_background_color = DrColor(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
+    if (world->getComponentPropertyValue(Comps::World_Settings, Props::World_Use_Background_Color).toVector()[0].toBool()) {
+        m_background_color = DrColor(world->getComponentPropertyValue(Comps::World_Settings, Props::World_Background_Color).toUInt());
     }
 
     // ***** World Physics Settings
-    m_time_warp =           world->getComponentPropertyValue(Components::World_Physics, Properties::World_Time_Warp).toDouble();
-    m_damping =             world->getComponentPropertyValue(Components::World_Physics, Properties::World_Drag).toDouble();
-    m_friction =            world->getComponentPropertyValue(Components::World_Physics, Properties::World_Friction).toDouble();
-    m_bounce =              world->getComponentPropertyValue(Components::World_Physics, Properties::World_Bounce).toDouble();
-    DrPointF get_gravity =  world->getComponentPropertyValue(Components::World_Physics, Properties::World_Gravity).toPointF();
+    m_time_warp =           world->getComponentPropertyValue(Comps::World_Physics, Props::World_Time_Warp).toDouble();
+    m_damping =             world->getComponentPropertyValue(Comps::World_Physics, Props::World_Drag).toDouble();
+    m_friction =            world->getComponentPropertyValue(Comps::World_Physics, Props::World_Friction).toDouble();
+    m_bounce =              world->getComponentPropertyValue(Comps::World_Physics, Props::World_Bounce).toDouble();
+    DrPointF get_gravity =  world->getComponentPropertyValue(Comps::World_Physics, Props::World_Gravity).toPointF();
     m_gravity = cpv(get_gravity.x, get_gravity.y);
 
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
 
     // ***** World Camera Settings
-    int render =            world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Type).toInt();
-    cam_switch_speed =      world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Switch_Speed).toDouble();
+    int render =            world->getComponentPropertyValue(Comps::World_Camera, Props::World_Camera_Type).toInt();
+    cam_switch_speed =      world->getComponentPropertyValue(Comps::World_Camera, Props::World_Camera_Switch_Speed).toDouble();
     render_type = static_cast<Render_Type>(render);
-    if (world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Enabled).toVector()[0].toBool()) {
+    if (world->getComponentPropertyValue(Comps::World_Camera, Props::World_Camera_Zoom_Enabled).toVector()[0].toBool()) {
         zoom_from_movement = true;
-        zoom_damping =      world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Damping).toVector()[0].toDouble();
-        zoom_multiplier =   world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_Multiplier).toVector()[0].toDouble();
-        int in_out =        world->getComponentPropertyValue(Components::World_Camera, Properties::World_Camera_Zoom_In_Or_Out).toInt();
+        zoom_damping =      world->getComponentPropertyValue(Comps::World_Camera, Props::World_Camera_Zoom_Damping).toVector()[0].toDouble();
+        zoom_multiplier =   world->getComponentPropertyValue(Comps::World_Camera, Props::World_Camera_Zoom_Multiplier).toVector()[0].toDouble();
+        int in_out =        world->getComponentPropertyValue(Comps::World_Camera, Props::World_Camera_Zoom_In_Or_Out).toInt();
         zoom_type =         static_cast<Auto_Zoom>(in_out);
     } else {
         zoom_from_movement = false;
     }
 
     // ***** World Lighting Settings
-    m_ambient_light =       world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Ambient).toDouble();
-    m_glow_light_z_order =  world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Layer).toDouble();
-    m_glow_blend_mode =     world->getComponentPropertyValue(Components::World_Lighting, Properties::World_Light_Blend).toInt();
+    m_ambient_light =       world->getComponentPropertyValue(Comps::World_Lighting, Props::World_Light_Ambient).toDouble();
+    m_glow_light_z_order =  world->getComponentPropertyValue(Comps::World_Lighting, Props::World_Light_Layer).toDouble();
+    m_glow_blend_mode =     world->getComponentPropertyValue(Comps::World_Lighting, Props::World_Light_Blend).toInt();
 
     // ***** World Camera Settings
-    bitrate =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF pixelation =   world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Pixelation).toPointF();
+    bitrate =               world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF pixelation =   world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Pixelation).toPointF();
     pixel_x =               static_cast<float>(pixelation.x);
     pixel_y =               static_cast<float>(pixelation.y);
-    brightness =        world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Brightness).toVector()[0].toInt() / 255.f;
-    contrast =          world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Contrast).toVector()[0].toInt() / 255.f;
-    saturation =        world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Saturation).toVector()[0].toInt() / 255.f;
-    hue =               world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Hue).toVector()[0].toInt() / 360.f;
-    grayscale =         world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Grayscale).toBool();
-    negative =          world->getComponentPropertyValue(Components::World_Appearance, Properties::World_Filter_Negative).toBool();
+    brightness =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Brightness).toVector()[0].toInt() / 255.f;
+    contrast =          world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Contrast).toVector()[0].toInt() / 255.f;
+    saturation =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Saturation).toVector()[0].toInt() / 255.f;
+    hue =               world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Hue).toVector()[0].toInt() / 360.f;
+    grayscale =         world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Grayscale).toBool();
+    negative =          world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Negative).toBool();
 
-    bool draw_3D =      world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Convert_3D).toBool();
+    bool draw_3D =      world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Convert_3D).toBool();
     render_mode =       draw_3D ? Render_Mode::Mode_3D : Render_Mode::Mode_2D;
-    wireframe =         world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toVector()[0].toBool();
-    wireframe_width =   world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wireframe).toVector()[1].toFloat();
-    cartoon =           world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toVector()[0].toBool();
-    cartoon_width =     world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cartoon).toVector()[1].toFloat();
-    cross_hatch =       world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toVector()[0].toBool();
-    cross_hatch_width = world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Cross_Hatch).toVector()[1].toFloat();
-    wavy =              world->getComponentPropertyValue(Components::World_Special_Effects, Properties::World_Filter_Wavy).toBool();
+    wireframe =         world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wireframe).toVector()[0].toBool();
+    wireframe_width =   world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wireframe).toVector()[1].toFloat();
+    cartoon =           world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cartoon).toVector()[0].toBool();
+    cartoon_width =     world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cartoon).toVector()[1].toFloat();
+    cross_hatch =       world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cross_Hatch).toVector()[0].toBool();
+    cross_hatch_width = world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cross_Hatch).toVector()[1].toFloat();
+    wavy =              world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wavy).toBool();
 
 
     // ***** Load Start Stage Players

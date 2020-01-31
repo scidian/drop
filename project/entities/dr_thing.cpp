@@ -8,7 +8,7 @@
 #include "core/dr_debug.h"
 #include "engine/enums_engine.h"
 #include "engine/opengl/opengl.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_font.h"
@@ -36,9 +36,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     m_thing_type = new_thing_type;                  // assign thing type
     m_asset_key =  from_asset_key;                  // associated asset key
 
-    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
-    getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(true);
-    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Asset_Key, Property_Type::Int, from_asset_key,
+    getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->setEditable(false);
+    getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(true);
+    addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Asset_Key, Property_Type::Int, from_asset_key,
                            "Asset ID Key", "ID Key of Asset this item represents.", false, false);
 
     DrSettings *entity = getParentProject()->findSettingsFromKey(from_asset_key);
@@ -48,8 +48,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     switch (new_thing_type) {
         case DrThingType::Character: {
             DrAsset *asset = dynamic_cast<DrAsset*>(entity);
-            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(false);
-            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setDisplayName("Character ID Key");
+            getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(false);
+            getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setDisplayName("Character ID Key");
             addComponentSettingsCharacter(new_thing_name);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Character);
             addComponentLayering(z);
@@ -61,8 +61,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
         }
         case DrThingType::Object: {
             DrAsset *asset = dynamic_cast<DrAsset*>(entity);
-            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setHidden(false);
-            getComponentProperty(Components::Entity_Settings, Properties::Entity_Key)->setDisplayName("Object ID Key");
+            getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(false);
+            getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setDisplayName("Object ID Key");
             addComponentSettingsObject(new_thing_name, should_collide);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
@@ -80,8 +80,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Camera);
             addComponentLayering(z, 100.0, false);
             addComponentAppearance(true, false);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, DrPointF(100, 100));
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, DrPointF(100, 100));
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Max_Size, DrPointF(100, 100));
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Min_Size, DrPointF(100, 100));
             break;
 
         case DrThingType::Text: {
@@ -99,8 +99,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(static_cast<int>(c_image_size * 0.625), c_image_size, x, -y, DrThingType::Fire);
             addComponentLayering(z, 100.0);
             addComponent3D();
-            getComponentProperty(Components::Thing_3D, Properties::Thing_3D_Type)->setHidden(true);
-            getComponentProperty(Components::Thing_3D, Properties::Thing_3D_Depth)->setHidden(true);
+            getComponentProperty(Comps::Thing_3D, Props::Thing_3D_Type)->setHidden(true);
+            getComponentProperty(Comps::Thing_3D, Props::Thing_3D_Depth)->setHidden(true);
             addComponentAppearance(true);
             break;
         case DrThingType::Fisheye:
@@ -113,9 +113,9 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsLight(Dr::white);
             addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Light);
             addComponentLayering(z);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size, DrPointF( c_desired_light_fbo_size,  c_desired_light_fbo_size));
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size, DrPointF(-c_desired_light_fbo_size, -c_desired_light_fbo_size));
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Keep_Square, true);
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Max_Size, DrPointF( c_desired_light_fbo_size,  c_desired_light_fbo_size));
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Min_Size, DrPointF(-c_desired_light_fbo_size, -c_desired_light_fbo_size));
             break;
         case DrThingType::Mirror:
             addComponentSettingsMirror();
@@ -128,7 +128,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Swirl);
             addComponentLayering(z);
             addComponentAppearance(true);
-            setComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square, true);
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Keep_Square, true);
             break;
         case DrThingType::Water:
             addComponentSettingsWater();

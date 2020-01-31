@@ -6,7 +6,7 @@
 //
 //
 #include "core/colors/colors.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_world.h"
@@ -21,41 +21,41 @@
 //##    Property loading - initializeStageSettings
 //####################################################################################
 void DrStage::initializeStageSettings(std::string new_name) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setDisplayName("Stage Name");
     property_name->setDescription("Name of this Stage.");
     property_name->setValue(new_name);
 
-    addComponent(Components::Stage_Settings, "Stage Settings", "Settings for this Stage.", Component_Colors::White_Snow, true);
-    getComponent(Components::Stage_Settings)->setIcon(Component_Icons::Settings);
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Enabled, Property_Type::Bool, true,
+    addComponent(Comps::Stage_Settings, "Stage Settings", "Settings for this Stage.", Component_Colors::White_Snow, true);
+    getComponent(Comps::Stage_Settings)->setIcon(Component_Icons::Settings);
+    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Enabled, Property_Type::Bool, true,
                            "Enabled?", "Should this Stage be able to be shown?");
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Start, Property_Type::Positive, 0,
+    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Start, Property_Type::Positive, 0,
                            "Start", "Start randomly showing this Stage at this distance.");
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_End, Property_Type::Int, -1,
+    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_End, Property_Type::Int, -1,
                            "End", "Stop randomly showing this Stage at this distance. Use a value of <= 0 (i.e. -1) for an infinite end distance. Does not apply to the "
                                   "Start Stage (Start Stage is always only shown exactly once).");
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Size, Property_Type::Positive, 1200,
+    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Size, Property_Type::Positive, 1200,
                            "Size", "Length of stage.");
-    addPropertyToComponent(Components::Stage_Settings, Properties::Stage_Cooldown, Property_Type::Positive, 0,
+    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after stage plays before it is possible to start showing again.");
 
 
-    addComponent(Components::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "
+    addComponent(Comps::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "
                                                  "to 45 degrees, and set \"Grid Scale\" X value twice the size \"Grid Scale\" Y value (i.e. X: 2, Y: 1).",
                                                  Component_Colors::Pink_Pearl, true);
-    getComponent(Components::Stage_Grid)->setIcon(Component_Icons::Transform);
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Style, Property_Type::List, static_cast<int>(0),
+    getComponent(Comps::Stage_Grid)->setIcon(Component_Icons::Transform);
+    addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Style, Property_Type::List, static_cast<int>(0),
                            "Grid Style", "Visual style of alignment grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point, Property_Type::PointF, DrPointF(0, 0),
+    addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Origin_Point, Property_Type::PointF, DrPointF(0, 0),
                            "Grid Origin Point", "Origin point in stage the grid begins at. Allows for small adjustments of enitre grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Size, Property_Type::GridF, DrPointF(32, 32),
+    addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Size, Property_Type::GridF, DrPointF(32, 32),
                            "Grid Cell Size", "Width and height of the cells in the grid.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Scale, Property_Type::GridScaleF, DrPointF(1, 1),
+    addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Scale, Property_Type::GridScaleF, DrPointF(1, 1),
                            "Grid Scale", "X and Y stretch factor after grid has been rotated. For Isometric Grids, set X value twice that of Y value.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Rotation, Property_Type::Angle, 0,
+    addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Rotation, Property_Type::Angle, 0,
                            "Grid Rotation", "Rotation of the grid lines. For Isometric Grids, set \"Grid Rotation\" to 45 degrees.");
-    addPropertyToComponent(Components::Stage_Grid, Properties::Stage_Grid_Color, Property_Type::Color, Dr::GetColor(Window_Colors::Background_Light).rgba(),
+    addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Color, Property_Type::Color, Dr::GetColor(Window_Colors::Background_Light).rgba(),
                            "Grid Color", "Color of grid lines.", true);
 
 }

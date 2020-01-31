@@ -341,10 +341,10 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
 
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrPropertyCollision class
-            if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Collision_Image_Shape)) continue;
+            if (property->getPropertyKey() == static_cast<int>(Props::Asset_Collision_Image_Shape)) continue;
 
             // !!!!! #NOTE: Base Key / Idle Animation is set upon Asset Creation
-            if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) continue;
+            if (property->getPropertyKey() == static_cast<int>(Props::Asset_Animation_Idle)) continue;
 
 
 
@@ -378,16 +378,16 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
                 }
 
-                if (property->getPropertyKey() != static_cast<long>(Properties::Entity_Key)) {
+                if (property->getPropertyKey() != static_cast<long>(Props::Entity_Key)) {
                     k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
                     k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
                 }
 
                 // Check that name is disabled for Things
-                if (entity->getType() == DrType::Thing && property->getPropertyKey() == static_cast<long>(Properties::Entity_Name)) {
+                if (entity->getType() == DrType::Thing && property->getPropertyKey() == static_cast<long>(Props::Entity_Name)) {
                     property->setEditable( false );
                 // Keep Sub Order hidden
-                } else if (property->getPropertyKey() == static_cast<long>(Properties::Thing_Sub_Z_Order)) {
+                } else if (property->getPropertyKey() == static_cast<long>(Props::Thing_Sub_Z_Order)) {
                     property->setEditable( false );
                     property->setHidden( true );
                 }

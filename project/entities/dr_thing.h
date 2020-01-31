@@ -70,9 +70,9 @@ public:
     void            setThingType(DrThingType type) { m_thing_type = type; }
 
     // Size Limits
-    bool            keepSquare()        { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Keep_Square).toBool(); }
-    DrPointF        maxSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Max_Size).toPointF();  }
-    DrPointF        minSize()           { return getComponentPropertyValue(Components::Size_Settings, Properties::Size_Min_Size).toPointF();  }
+    bool            keepSquare()        { return getComponentPropertyValue(Comps::Size_Settings, Props::Size_Keep_Square).toBool(); }
+    DrPointF        maxSize()           { return getComponentPropertyValue(Comps::Size_Settings, Props::Size_Max_Size).toPointF();  }
+    DrPointF        minSize()           { return getComponentPropertyValue(Comps::Size_Settings, Props::Size_Min_Size).toPointF();  }
 
     // Z-Ordering
     void            moveBackward();

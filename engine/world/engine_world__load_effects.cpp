@@ -32,12 +32,12 @@ const double    c_light_size_adjuster = 1.15;           // Multiplier to equal o
 void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y) {
     Thing_Info  info =              loadThingBasicInfo( thing );
 
-    DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color).toUInt());
-    float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
-    float       zoom =              thing->getComponentPropertyValue(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Lens_Zoom).toVector()[0].toFloat();
+    DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color).toUInt());
+    float       tint =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
+    float       zoom =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Lens_Zoom).toVector()[0].toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
     DrEngineFisheye *lens = new DrEngineFisheye(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                 info.z_order, info.angle, info.opacity, info.size,
@@ -55,17 +55,17 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
 void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offset_y) {
     Thing_Info  info =              loadThingBasicInfo( thing );
 
-    int         mask =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape).toInt();
-    DrColor     color_1 =           DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt());
-    DrColor     color_2 =           DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt());
-    DrColor     smoke =             DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt());
-    float       intensity =         thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Intensity).toFloat() / 100.f;
-    float       smooth =            thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Smoothness).toFloat() / 100.f;
-    float       wave =              thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Wavy).toFloat() / 100.f;
-    float       speed =             thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Speed).toFloat();
+    int         mask =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape).toInt();
+    DrColor     color_1 =           DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_1).toUInt());
+    DrColor     color_2 =           DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_2).toUInt());
+    DrColor     smoke =             DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_Smoke).toUInt());
+    float       intensity =         thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Intensity).toFloat() / 100.f;
+    float       smooth =            thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Smoothness).toFloat() / 100.f;
+    float       wave =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Wavy).toFloat() / 100.f;
+    float       speed =             thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Speed).toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
     // Calculate original size used in editor
     info.size.x = info.size.x / info.scale.x;
@@ -88,18 +88,18 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
 //####################################################################################
 void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double offset_y) {
     Thing_Info  info =              loadThingBasicInfo( thing );
-    DrColor     light_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt());
-    int         light_type =        thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Type).toInt();
+    DrColor     light_color =       DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Color).toUInt());
+    int         light_type =        thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Type).toInt();
 
-    double      cone_start =        thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toDouble();
-    double      cone_end =          thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toDouble();
-    float       intensity =         thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-    float       blur =              thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
-    float       shadows =           thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Shadows).toFloat();
-    bool        draw_shadows =      thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Draw_Shadows).toBool();
+    double      cone_start =        thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start).toVector()[0].toDouble();
+    double      cone_end =          thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End).toVector()[0].toDouble();
+    float       intensity =         thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Intensity).toFloat();
+    float       blur =              thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Blur).toFloat();
+    float       shadows =           thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Shadows).toFloat();
+    bool        draw_shadows =      thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Draw_Shadows).toBool();
 
-    float       pulse =             thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse).toFloat();
-    float       pulse_speed =       thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Pulse_Speed).toFloat();
+    float       pulse =             thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Pulse).toFloat();
+    float       pulse_speed =       thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Pulse_Speed).toFloat();
 
     info.size.x = info.size.x * c_light_size_adjuster;
 
@@ -116,15 +116,15 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y) {
     Thing_Info  info =              loadThingBasicInfo( thing );
 
-    DrColor color_1 =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt());
-    DrColor color_2 =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt());
-    float       color_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Color_Tint).toFloat() / 100.0f;
-    float       blur =              thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur).toFloat();
-    float       blur_stretch =      thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Blur_Stretch).toFloat();
-    float       scale =             thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Scale).toVector()[0].toFloat();
+    DrColor color_1 =       DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color).toUInt());
+    DrColor color_2 =       DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_End_Color).toUInt());
+    float       color_tint =        thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Color_Tint).toFloat() / 100.0f;
+    float       blur =              thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Blur).toFloat();
+    float       blur_stretch =      thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Blur_Stretch).toFloat();
+    float       scale =             thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Scale).toVector()[0].toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
     DrEngineMirror *mirror = new DrEngineMirror(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                 info.z_order, info.angle, info.opacity, info.size,
@@ -142,12 +142,12 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
 void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y) {
     Thing_Info  info =              loadThingBasicInfo( thing );
 
-    DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt());
-    float       tint =              thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Color_Tint).toFloat() / 100.0f;
-    float       rotation =          thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
+    DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color).toUInt());
+    float       tint =              thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Color_Tint).toFloat() / 100.0f;
+    float       rotation =          thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Angle).toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
     DrEngineSwirl *swirl = new DrEngineSwirl(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.angle, info.opacity, info.size,
@@ -165,34 +165,34 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
 void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double offset_y) {
     Thing_Info  info =              loadThingBasicInfo( thing );
 
-    int         texture =           thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Texture).toInt();
-    DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt());
-    DrColor     end_color =         DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt());
-    float       water_tint =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Color_Tint).toFloat() / 100.0f;
-    float       reflection =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Reflection).toFloat() / 100.0f;
-    float       move_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Movement_Speed).toFloat();
+    int         texture =           thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Texture).toInt();
+    DrColor     start_color =       DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Start_Color).toUInt());
+    DrColor     end_color =         DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_End_Color).toUInt());
+    float       water_tint =        thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Color_Tint).toFloat() / 100.0f;
+    float       reflection =        thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Reflection).toFloat() / 100.0f;
+    float       move_speed =        thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Movement_Speed).toFloat();
 
-    float       ripple_freq =       thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Frequency).toFloat();
-    float       ripple_speed =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Speed).toFloat();
-    float       ripple_amplitude =  thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Amplitude).toFloat();
-    float       ripple_stretch =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Ripple, Properties::Thing_Water_Ripple_Stretch).toFloat();
+    float       ripple_freq =       thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Ripple, Props::Thing_Water_Ripple_Frequency).toFloat();
+    float       ripple_speed =      thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Ripple, Props::Thing_Water_Ripple_Speed).toFloat();
+    float       ripple_amplitude =  thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Ripple, Props::Thing_Water_Ripple_Amplitude).toFloat();
+    float       ripple_stretch =    thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Ripple, Props::Thing_Water_Ripple_Stretch).toFloat();
 
-    float       wave_freq =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Frequency).toFloat();
-    float       wave_speed =        thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Speed).toFloat();
-    float       wave_amplitude =    thing->getComponentPropertyValue(Components::Thing_Settings_Water_Wave, Properties::Thing_Water_Wave_Amplitude).toFloat();
+    float       wave_freq =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Wave, Props::Thing_Water_Wave_Frequency).toFloat();
+    float       wave_speed =        thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Wave, Props::Thing_Water_Wave_Speed).toFloat();
+    float       wave_amplitude =    thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Wave, Props::Thing_Water_Wave_Amplitude).toFloat();
 
-    float       refract_1 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Reflection).toFloat();
-    float       refract_2 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Underwater).toFloat();
-    float       refract_3 =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Texture).toFloat();
-    float       foam_refract =      thing->getComponentPropertyValue(Components::Thing_Settings_Water_Refract, Properties::Thing_Water_Refract_Foam).toFloat();
+    float       refract_1 =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Reflection).toFloat();
+    float       refract_2 =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Underwater).toFloat();
+    float       refract_3 =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Texture).toFloat();
+    float       foam_refract =      thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Foam).toFloat();
 
-    DrColor     foam_color =         DrColor(thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Color).toUInt());
-    float       foam_tint =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Tint).toFloat() / 100.0f;
-    float       foam_height =       thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Height).toFloat();
-    bool        foam_flat =         thing->getComponentPropertyValue(Components::Thing_Settings_Water_Foam, Properties::Thing_Water_Surface_Is_Flat).toBool();
+    DrColor     foam_color =         DrColor(thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Color).toUInt());
+    float       foam_tint =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Tint).toFloat() / 100.0f;
+    float       foam_height =       thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Height).toFloat();
+    bool        foam_flat =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Is_Flat).toBool();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
+    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
     DrEngineWater *water = new DrEngineWater(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.angle, info.opacity, info.size,

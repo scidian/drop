@@ -109,7 +109,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
 
     if (clicked == Buttons_Transform::Reset_Object) {
         std::list<DrSettings*> settings;
-        std::list<Properties>  properties { Properties::Thing_Scale, Properties::Thing_Rotation };
+        std::list<Props>  properties { Props::Thing_Scale, Props::Thing_Rotation };
 
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);
@@ -118,8 +118,8 @@ void FormMain::buttonGroupTransformClicked(int id) {
             if (thing == nullptr) continue;
 
             settings.push_back(thing);
-            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale, DrPointF(1, 1));
-            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation, 0);
+            thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale, DrPointF(1, 1));
+            thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation, 0);
         }
         sceneEditor->resetSelectionGroup();
         updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties );

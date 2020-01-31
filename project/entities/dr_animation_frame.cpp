@@ -7,7 +7,7 @@
 //
 #include "core/dr_debug.h"
 #include "core/types/dr_pointf.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_image.h"
@@ -42,20 +42,20 @@ DrFrame::~DrFrame() { }
 //##    Transform Components
 //####################################################################################
 void DrFrame::addComponentTransform(double width, double height, double x, double y) {
-    addComponent(Components::Thing_Transform, "Transform", "Sets the size and angle of the Image in the current Frame.", Component_Colors::Green_SeaGrass, true);
-    getComponent(Components::Thing_Transform)->setIcon(Component_Icons::Transform);
+    addComponent(Comps::Thing_Transform, "Transform", "Sets the size and angle of the Image in the current Frame.", Component_Colors::Green_SeaGrass, true);
+    getComponent(Comps::Thing_Transform)->setIcon(Component_Icons::Transform);
 
     std::string position_text = "Location of Image within the current Frame.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Position, Property_Type::PositionF, DrPointF(x, y), "Position", position_text);
+    addPropertyToComponent(Comps::Thing_Transform, Props::Thing_Position, Property_Type::PositionF, DrPointF(x, y), "Position", position_text);
 
     std::string transform_text = "Rotation, in degrees, of Image on the Z Axis.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Rotation, Property_Type::Angle, 0, "Rotation", transform_text);
+    addPropertyToComponent(Comps::Thing_Transform, Props::Thing_Rotation, Property_Type::Angle, 0, "Rotation", transform_text);
 
     std::string size_text = "Width and Height of Image in pixels, affected by Scale property.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Size, Property_Type::SizeF, DrPointF(width, height), "Size", size_text);
+    addPropertyToComponent(Comps::Thing_Transform, Props::Thing_Size, Property_Type::SizeF, DrPointF(width, height), "Size", size_text);
 
     std::string scale_text = "X and Y scale of Image within the current Frame.";
-    addPropertyToComponent(Components::Thing_Transform, Properties::Thing_Scale, Property_Type::ScaleF, DrPointF(1, 1), "Scale", scale_text);
+    addPropertyToComponent(Comps::Thing_Transform, Props::Thing_Scale, Property_Type::ScaleF, DrPointF(1, 1), "Scale", scale_text);
 }
 
 

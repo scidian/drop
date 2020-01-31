@@ -36,7 +36,7 @@ void FormAnimation::buildProjectTree() { };
 void FormAnimation::buildScene(long stage_key) { };
 
 void FormAnimation::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
-                                                       std::list<Properties> property_keys) { };
+                                                       std::list<Props> property_keys) { };
 void FormAnimation::updateInspectorEnabledProperties() { };
 void FormAnimation::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) { };
 

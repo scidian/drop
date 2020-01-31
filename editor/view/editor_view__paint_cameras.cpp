@@ -70,8 +70,8 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
         if (thing->getThingType() != DrThingType::Character && thing->getThingType() != DrThingType::Camera) continue;
 
         // ***** Load Thing Info
-        DrPointF center =   thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-        double   angle =    thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
+        DrPointF center =   thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
+        double   angle =    thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
 
         // ***** Load Camera Info
         Cam_Info    cam;
@@ -83,9 +83,9 @@ void DrView::paintCameras(QPainter &painter, DrStage *stage) {
             cam_position = center;
             cam.lag = DrPointF(100, 100);
             cam.tilt = angle;
-            cam.rotation =      thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Rotation).toPointF();
-            cam.zoom =          thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble();
-            int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Up_Vector).toInt();
+            cam.rotation =      thing->getComponentPropertyValue(Comps::Thing_Settings_Camera, Props::Thing_Camera_Rotation).toPointF();
+            cam.zoom =          thing->getComponentPropertyValue(Comps::Thing_Settings_Camera, Props::Thing_Camera_Zoom).toDouble();
+            int up_vector =     thing->getComponentPropertyValue(Comps::Thing_Settings_Camera, Props::Thing_Camera_Up_Vector).toInt();
             cam.up =            static_cast<Up_Vector>(up_vector);
         }
 

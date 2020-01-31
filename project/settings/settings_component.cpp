@@ -6,7 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -39,7 +39,7 @@ DrComponent::~DrComponent() {
 //####################################################################################
 //##    Get Property
 //####################################################################################
-DrProperty* DrComponent::getProperty(Properties setting) { return getProperty(static_cast<long>(setting)); }
+DrProperty* DrComponent::getProperty(Props setting) { return getProperty(static_cast<long>(setting)); }
 DrProperty* DrComponent::getProperty(long setting) {
     auto it = m_properties.find(setting);
     if (it == m_properties.end()) {
@@ -60,7 +60,7 @@ DrProperty* DrComponent::getProperty(long setting) {
 //####################################################################################
 //##    addProperty functions
 //####################################################################################
-DrProperty* DrComponent::addProperty(Properties setting,
+DrProperty* DrComponent::addProperty(Props setting,
                                      Property_Type type,
                                      DrVariant value,
                                      std::string display_name,

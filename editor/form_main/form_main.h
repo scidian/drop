@@ -150,7 +150,7 @@ public:
     virtual void        buildScene(long stage_key) override;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
-                                                           std::list<Properties> property_keys) override;
+                                                           std::list<Props> property_keys) override;
     virtual void        updateInspectorEnabledProperties() override;
     virtual void        updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list = QList<long>{ }) override;
 

@@ -15,8 +15,8 @@
 #include <QTreeWidget>
 
 #include "core/types/dr_variant.h"
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
-#include "project/enums_properties.h"
 
 
 // Forward declarations

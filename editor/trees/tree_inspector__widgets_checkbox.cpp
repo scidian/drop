@@ -21,6 +21,7 @@
 #include "editor/widgets/widgets.h"
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
 
@@ -40,6 +41,9 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
     check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+
+    check->setProperty(User_Property::CompKey, QVariant::fromValue(property->getParentComponent()->getComponentKey()) );
+    check->setProperty(User_Property::PropKey, QVariant::fromValue(property->getPropertyKey()) );
 
     if (check_type == Property_Type::BoolEnabled) {
         std::vector<DrVariant> prop_list = property->getValue().toVector();

@@ -5,7 +5,7 @@
 //
 //
 //
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_effect.h"
 #include "project/settings/settings_component_property.h"
@@ -20,7 +20,7 @@ DrEffect::DrEffect(DrProject *parent_project, long key, DrEffectType effect_type
     m_effect_type = effect_type;
 
     // ***** Initialize Effect Settings
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setEditable(false);
     property_name->setDisplayName("Effect Name");
     property_name->setDescription("Name of this Effect Asset.");

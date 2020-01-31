@@ -20,16 +20,16 @@
 //####################################################################################
 Cam_Info DrEngineWorld::loadCharacterCameraSettings(DrThing *thing) {
     Cam_Info cam;
-    cam.position =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Position).toPointF();
-    cam.rotation =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Rotation).toPointF();
-    cam.tilt =          thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Tilt).toDouble();
-    cam.distance =      thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Distance).toDouble();
-    cam.zoom =          thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble();
-    cam.lag =           thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Lag).toPointF();
-    int up_vector =     thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Up_Vector).toInt();
-    cam.match_angle =   thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Match_Angle).toBool();
+    cam.position =      thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Position).toPointF();
+    cam.rotation =      thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Rotation).toPointF();
+    cam.tilt =          thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Tilt).toDouble();
+    cam.distance =      thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Distance).toDouble();
+    cam.zoom =          thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Zoom).toDouble();
+    cam.lag =           thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Lag).toPointF();
+    int up_vector =     thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Up_Vector).toInt();
+    cam.match_angle =   thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Match_Angle).toBool();
     cam.up =            static_cast<Up_Vector>(up_vector);
-    auto sides =        thing->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Sides).toVector();
+    auto sides =        thing->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Sides).toVector();
     cam.frame_top =     static_cast<Frame_Edge>(sides[0].toInt());
     cam.frame_right =   static_cast<Frame_Edge>(sides[1].toInt());
     cam.frame_bottom =  static_cast<Frame_Edge>(sides[2].toInt());
@@ -53,30 +53,30 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     Cam_Info    cam =       loadCharacterCameraSettings(thing);
 
     // ***** Load Character Settings
-    DrPointF max_speed =        asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Max_Speed).toPointF();
-    DrPointF forced_speed =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Forced_Speed).toPointF();
-    DrPointF move_speed =       asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Move_Speed).toPointF();
-    bool     angle_move =       asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Angle_Movement).toBool();
+    DrPointF max_speed =        asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Max_Speed).toPointF();
+    DrPointF forced_speed =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Forced_Speed).toPointF();
+    DrPointF move_speed =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Move_Speed).toPointF();
+    bool     angle_move =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Angle_Movement).toBool();
 
-    DrPointF jump_force =       asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Force).toPointF();
-    int      jump_timeout =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Timeout).toInt();
-    int      jump_count =       asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Counter).toInt();
-    bool     jump_air =         asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Air).toBool();
-    bool     jump_wall =        asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Jump_Wall).toBool();
+    DrPointF jump_force =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Force).toPointF();
+    int      jump_timeout =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Timeout).toInt();
+    int      jump_count =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Counter).toInt();
+    bool     jump_air =         asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Air).toBool();
+    bool     jump_wall =        asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Wall).toBool();
 
-    double   acceleration =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Acceleration).toDouble();
-    double   air_drag =         asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Air_Drag).toDouble();
-    double   ground_drag =      asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Ground_Drag).toDouble();
-    double   rotate_drag =      asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Rotation_Drag).toDouble();
+    double   acceleration =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Acceleration).toDouble();
+    double   air_drag =         asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Air_Drag).toDouble();
+    double   ground_drag =      asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Ground_Drag).toDouble();
+    double   rotate_drag =      asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Rotation_Drag).toDouble();
 
-    bool     flip_image_x =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_X).toBool();
-    bool     flip_image_y =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Flip_Image_Y).toBool();
-    bool     mouse_rotate =     asset->getComponentPropertyValue(Components::Asset_Settings_Character, Properties::Asset_Character_Mouse_Rotate).toBool();
+    bool     flip_image_x =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_X).toBool();
+    bool     flip_image_y =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_Y).toBool();
+    bool     mouse_rotate =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Mouse_Rotate).toBool();
 
-    DrPointF gravity_scale =            asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Gravity_Scale).toPointF();
-    std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toVector();
-    std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toVector();
-    bool     can_rotate =               asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate).toBool();
+    DrPointF gravity_scale =            asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
+    std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction).toVector();
+    std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce).toVector();
+    bool     can_rotate =               asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate).toBool();
     double   use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double   use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 

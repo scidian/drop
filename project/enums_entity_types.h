@@ -14,7 +14,7 @@
 // Forward declarations
 class       DrSettings;
 enum class  Editor_Widgets;
-enum class  Properties;
+enum class  Props;
 
 // Global Enum Constants
 constexpr int   c_no_key =        -1;               // Value that represents no item selected
@@ -141,7 +141,7 @@ namespace Dr {
     std::string         StringFromEffectType(DrEffectType type);
     std::string         StringFromThingType(DrThingType type);
 
-    std::list<long>     ConvertPropertyListToLongs(std::list<Properties> list);
+    std::list<long>     ConvertPropertyListToLongs(std::list<Props> list);
 }
 
 

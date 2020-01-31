@@ -55,7 +55,7 @@ public:
     void            deleteAnimations();
     long            getIdleAnimationKey();
     long            getIdleAnimationFirstFrameImageKey();
-    void            updateAnimationProperty(std::list<long> image_keys, Properties animation_property);
+    void            updateAnimationProperty(std::list<long> image_keys, Props animation_property);
 
     // Initialize Calls
     void        initializeAssetSettingsCharacter(std::string new_name);

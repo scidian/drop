@@ -170,7 +170,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
 
                 // ***** Hide / Unhide as necessary
                 bool should_hide = false;
-                if (thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
+                if (thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Hide_From_Trees).toBool()) {
                     if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) should_hide = true;
                 }
                 if (should_hide) thing_item->setHidden(should_hide);

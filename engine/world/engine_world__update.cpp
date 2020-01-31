@@ -178,12 +178,12 @@ void DrEngineWorld::addStage() {
         DrStage *stage = stage_pair.second;
         if (stage == nullptr) continue;
 
-        bool stage_enabled = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Enabled).toBool();
-        int  stage_start =   stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Start).toInt();
-        int  stage_end =     stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_End).toInt();
+        bool stage_enabled = stage->getComponentPropertyValue(Comps::Stage_Settings, Props::Stage_Enabled).toBool();
+        int  stage_start =   stage->getComponentPropertyValue(Comps::Stage_Settings, Props::Stage_Start).toInt();
+        int  stage_end =     stage->getComponentPropertyValue(Comps::Stage_Settings, Props::Stage_End).toInt();
 
         // !!!!! NEED TO IMPLEMENT
-        int  cooldown =      stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Cooldown).toInt();
+        int  cooldown =      stage->getComponentPropertyValue(Comps::Stage_Settings, Props::Stage_Cooldown).toInt();
 
         // "Play Stage" Mode
         if (m_engine->getStageKey() != c_no_key) {

@@ -60,7 +60,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
         }
 
     } else if (m_asset->getType() == DrType::Font) {
-        std::string text = m_thing->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();
+        std::string text = m_thing->getComponentPropertyValue(Comps::Thing_Settings_Text, Props::Thing_Text_User_Text).toString();
         m_pixmap = Dr::CreateText(m_editor_relay->currentProject()->findFontFromKey( m_asset->getKey() ), text );
         setPixmap(m_pixmap);
         m_asset_width =  m_pixmap.width();
@@ -83,51 +83,51 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
         DrEffect *effect = dynamic_cast<DrEffect*>(m_asset);
         switch (effect->getEffectType()) {
             case DrEffectType::Fire: {
-                uint color_1 =      m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_1).toUInt();
-                uint color_2 =      m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_2).toUInt();
-                uint smoke =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Color_Smoke).toUInt();
-                int  mask  =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Fire, Properties::Thing_Fire_Shape).toInt();
+                uint color_1 =      m_thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_1).toUInt();
+                uint color_2 =      m_thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_2).toUInt();
+                uint smoke =        m_thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_Smoke).toUInt();
+                int  mask  =        m_thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape).toInt();
                 m_pixmap = Dr::DrawFire( QColor::fromRgba(color_1), QColor::fromRgba(color_2), QColor::fromRgba(smoke), static_cast<Fire_Mask>(mask) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Fisheye: {
-                uint color =        m_thing->getComponentProperty(Components::Thing_Settings_Fisheye, Properties::Thing_Fisheye_Color)->getValue().toUInt();
+                uint color =        m_thing->getComponentProperty(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color)->getValue().toUInt();
                 m_pixmap = Dr::DrawFisheye( QColor::fromRgba(color) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Light: {
-                uint light_color =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Color).toUInt();
-                float cone_start =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_Start).toVector()[0].toFloat();
-                float cone_end =    m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Cone_End).toVector()[0].toFloat();
-                float intensity =   m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Intensity).toFloat();
-                float blur =        m_thing->getComponentPropertyValue(Components::Thing_Settings_Light, Properties::Thing_Light_Blur).toFloat();
+                uint light_color =  m_thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Color).toUInt();
+                float cone_start =  m_thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start).toVector()[0].toFloat();
+                float cone_end =    m_thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End).toVector()[0].toFloat();
+                float intensity =   m_thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Intensity).toFloat();
+                float blur =        m_thing->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Blur).toFloat();
                 m_pixmap = Dr::DrawLight( QColor::fromRgba( light_color ), c_image_size, cone_start, cone_end, intensity, blur);
                 setPixmap(m_pixmap);
                 break;
             }
             case DrEffectType::Mirror: {
-                uint color_1 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_Start_Color).toUInt();
-                uint color_2 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Mirror, Properties::Thing_Mirror_End_Color).toUInt();
+                uint color_1 = m_thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color).toUInt();
+                uint color_2 = m_thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_End_Color).toUInt();
                 m_pixmap = Dr::DrawMirror( QColor::fromRgba(color_1), QColor::fromRgba(color_2) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Swirl: {
-                uint color_1 = m_thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Start_Color).toUInt();
-                float  angle = m_thing->getComponentPropertyValue(Components::Thing_Settings_Swirl, Properties::Thing_Swirl_Angle).toFloat();
+                uint color_1 = m_thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color).toUInt();
+                float  angle = m_thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Angle).toFloat();
                 m_pixmap = Dr::DrawSwirl( QColor::fromRgba(color_1), static_cast<double>(angle) );
                 setPixmap(m_pixmap);
                 applyFilters();
                 break;
             }
             case DrEffectType::Water: {
-                uint start_color =  m_thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_Start_Color).toUInt();
-                uint end_color =    m_thing->getComponentPropertyValue(Components::Thing_Settings_Water, Properties::Thing_Water_End_Color).toUInt();
+                uint start_color =  m_thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Start_Color).toUInt();
+                uint end_color =    m_thing->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_End_Color).toUInt();
                 m_pixmap = Dr::DrawWater( QColor::fromRgba(start_color), QColor::fromRgba(end_color) );
                 setPixmap(m_pixmap);
                 applyFilters();
@@ -141,15 +141,15 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
 
     // Store some initial user data
     setData(User_Roles::Name, QString::fromStdString(m_asset->getName()) );
-    std::string description = m_thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Advisor_Description).toString();
+    std::string description = m_thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromThingType(m_thing->getThingType());
     setData(User_Roles::Type, QString::fromStdString(description) );
     setData(User_Roles::Key, QVariant::fromValue(m_thing_key));
 
-    double   angle =   m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
-    DrPointF scale =   m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+    double   angle =   m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
+    DrPointF scale =   m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
     double   z_order = m_thing->getZOrderWithSub();
-    double   opacity = m_thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toDouble();
+    double   opacity = m_thing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Opacity).toDouble();
     setData(User_Roles::Rotation, angle);
     setData(User_Roles::Scale,    QPointF(scale.x, scale.y) );
     setData(User_Roles::Z_Order,  z_order);
@@ -168,7 +168,7 @@ DrItem::DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, b
     setTransform(t);
 
     // Load starting position
-    DrPointF start_pos = m_thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
+    DrPointF start_pos = m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
     m_start_x = start_pos.x;
     m_start_y = start_pos.y;
 
@@ -225,14 +225,14 @@ void DrItem::applyFilters() {
 
     if (m_thing == nullptr) return;
 
-    int      brightness = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toVector()[0].toInt();
-    int      contrast   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toVector()[0].toInt();
-    int      hue        = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toVector()[0].toInt();
-    int      saturation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toVector()[0].toInt();
-    bool     grayscale  = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
-    bool     negative   = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
-    DrPointF pixelation = m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-    int      bit_rate =   m_thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
+    int      brightness = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt();
+    int      contrast   = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt();
+    int      hue        = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Hue).toVector()[0].toInt();
+    int      saturation = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Saturation).toVector()[0].toInt();
+    bool     grayscale  = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Grayscale).toBool();
+    bool     negative   = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Negative).toBool();
+    DrPointF pixelation = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
+    int      bit_rate =   m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
 
     if ( pixelation.x > 1.0 || pixelation.y > 1.0 )
                                        Dr::ApplyPixelation( new_image, QPointF(pixelation.x, pixelation.y) );

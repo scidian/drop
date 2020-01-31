@@ -75,7 +75,7 @@ DrStage* DrWorld::addStageCopyFromStage(DrStage *from_stage, std::string new_nam
 
     // No longer a Start Stage, can edit name
     if (copy_stage->isStartStage() == false) {
-        DrProperty *my_name = copy_stage->getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+        DrProperty *my_name = copy_stage->getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
         my_name->setEditable(true);
     }
 

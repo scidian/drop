@@ -7,7 +7,7 @@
 //
 #include "core/dr_debug.h"
 #include "core/dr_containers.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_asset.h"

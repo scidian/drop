@@ -6,7 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/properties/property_collision.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
@@ -120,7 +120,7 @@ void DrAsset::deleteAnimations() {
 //##    Returns Key of Idle Animation
 //####################################################################################
 long DrAsset::getIdleAnimationKey() {
-    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
+    long idle_animation_key = getComponentPropertyValue(Comps::Asset_Animation, Props::Asset_Animation_Idle).toLong();
     return idle_animation_key;
 }
 
@@ -130,7 +130,7 @@ long DrAsset::getIdleAnimationKey() {
 long DrAsset::getIdleAnimationFirstFrameImageKey() {
     ///DrAnimation *animation = getParentProject()->findAnimationFromKey(getBaseKey());
 
-    long idle_animation_key = getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
+    long idle_animation_key = getComponentPropertyValue(Comps::Asset_Animation, Props::Asset_Animation_Idle).toLong();
     if (idle_animation_key == c_no_key) return c_key_image_empty;
 
     DrAnimation *animation =  getParentProject()->findAnimationFromKey(idle_animation_key);
@@ -143,7 +143,7 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
 //####################################################################################
 //##    Updates Default Animation Images / Collsion Shape
 //####################################################################################
-void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties animation_property) {
+void DrAsset::updateAnimationProperty(std::list<long> image_keys, Props animation_property) {
     if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
 
     // ***** Get existing DrProperty to Replace
@@ -155,7 +155,7 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties ani
     DrAnimation *animation = getParentProject()->addAnimation(image_keys);    
     property->setValue( animation->getKey() );
 
-    if (property->getPropertyKey() == static_cast<int>(Properties::Asset_Animation_Idle)) {
+    if (property->getPropertyKey() == static_cast<int>(Props::Asset_Animation_Idle)) {
         DrBitmap     new_bitmap = animation->getFirstFrameImage()->getBitmap();
         m_width =    new_bitmap.width;
         m_height =   new_bitmap.height;
@@ -163,7 +163,7 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Properties ani
 
         // Calculate new image collision shape
         DrPropertyCollision shape = autoCollisionShape(new_bitmap);
-        setComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape, shape);
+        setComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Image_Shape, shape);
     }
 
     // ***** Delete Old Animation

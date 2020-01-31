@@ -17,7 +17,11 @@
 namespace User_Property {
     const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
 
-    const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
+    ///const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
+
+    const char CompKey[8] =         "dr_comp";              // Stores Component Key of a Property in a widget
+    const char PropKey[8] =         "dr_prop";              // Stores Property  Key of a Property in a widget
+
     const char Color[9] =           "dr_color";             // Stores a color value (QColor.rgba())
     const char Order[9] =           "dr_order";             // Used for properties with mulitple values (like Size has X and Y),
                                                             //      the index of the single property we want (0, 1, 2, etc)

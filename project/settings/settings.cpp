@@ -6,7 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -38,33 +38,33 @@ DrSettings::~DrSettings() {
 //##    Initial Properties of all DrSettings
 //####################################################################################
 void DrSettings::addComponentEntitySettings() {
-    addComponent(Components::Entity_Settings, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
-    getComponent(Components::Entity_Settings)->setIcon(Component_Icons::Name);
-    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Name, Property_Type::String, "",
+    addComponent(Comps::Entity_Settings, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    getComponent(Comps::Entity_Settings)->setIcon(Component_Icons::Name);
+    addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Name, Property_Type::String, "",
                            "Name", "Name of the current item.");
-    addPropertyToComponent(Components::Entity_Settings, Properties::Entity_Key, Property_Type::Int, -1,
+    addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Key, Property_Type::Int, -1,
                            "ID Key", "Unique Project Key for this item.", false, false);
 }
 
 void DrSettings::addComponentHiddenSettings() {
-    addComponent(Components::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
-    getComponent(Components::Hidden_Settings)->setIcon(Component_Icons::Hidden);
-    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Advisor_Description, Property_Type::Textbox, "",
+    addComponent(Comps::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
+    getComponent(Comps::Hidden_Settings)->setIcon(Component_Icons::Hidden);
+    addPropertyToComponent(Comps::Hidden_Settings, Props::Hidden_Advisor_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor Description for this item.");
-    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Item_Locked, Property_Type::Bool, false,
+    addPropertyToComponent(Comps::Hidden_Settings, Props::Hidden_Item_Locked, Property_Type::Bool, false,
                            "Locked?", "Can this item be moved / changed by user?");
-    addPropertyToComponent(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees, Property_Type::Bool, false,
+    addPropertyToComponent(Comps::Hidden_Settings, Props::Hidden_Hide_From_Trees, Property_Type::Bool, false,
                            "Hide?", "Should this item be hidden from editor listings (Asset Tree / Project Tree?)");
 }
 
 void DrSettings::addComponentSizeSettings() {
-    addComponent(Components::Size_Settings, "Size Settings", "Hidden size settings for object while it's in Editor.", Component_Colors::Blue_Drop_3, true);
-    getComponent(Components::Size_Settings)->setIcon(Component_Icons::Transform);
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Keep_Square, Property_Type::Bool, false,
+    addComponent(Comps::Size_Settings, "Size Settings", "Hidden size settings for object while it's in Editor.", Component_Colors::Blue_Drop_3, true);
+    getComponent(Comps::Size_Settings)->setIcon(Component_Icons::Transform);
+    addPropertyToComponent(Comps::Size_Settings, Props::Size_Keep_Square, Property_Type::Bool, false,
                            "Keep Square?", "Should this item be forced to stay square?");
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Max_Size, Property_Type::PointF, DrPointF(0, 0),
+    addPropertyToComponent(Comps::Size_Settings, Props::Size_Max_Size, Property_Type::PointF, DrPointF(0, 0),
                            "Max Size", "Maximum size of item while it's in the Editor. A value of zero signifies no maximum size.");
-    addPropertyToComponent(Components::Size_Settings, Properties::Size_Min_Size, Property_Type::PointF, DrPointF(0, 0),
+    addPropertyToComponent(Comps::Size_Settings, Props::Size_Min_Size, Property_Type::PointF, DrPointF(0, 0),
                            "Min Size", "Minimum size of item while it's in the Editor. A value of zero signifies  no minimum size.");
 }
 
@@ -75,17 +75,17 @@ void DrSettings::addComponentSizeSettings() {
 void DrSettings::setComponentPropertyValue(long component, long property, DrVariant value) {
     m_components[component]->getProperty(property)->setValue(value);
 }
-void DrSettings::setComponentPropertyValue(Components component, Properties property, DrVariant value) {
+void DrSettings::setComponentPropertyValue(Comps component, Props property, DrVariant value) {
     m_components[static_cast<long>(component)]->getProperty(property)->setValue(value);
 }
 
 DrVariant DrSettings::getComponentPropertyValue(long component, long property) {
     return getComponentProperty(component, property)->getValue();
 }
-DrVariant DrSettings::getComponentPropertyValue(Components component, Properties property) {
+DrVariant DrSettings::getComponentPropertyValue(Comps component, Props property) {
     return getComponentProperty(static_cast<long>(component), static_cast<long>(property))->getValue();
 }
-DrProperty* DrSettings::getComponentProperty(Components component, Properties property) {
+DrProperty* DrSettings::getComponentProperty(Comps component, Props property) {
     return getComponentProperty(static_cast<long>(component), static_cast<long>(property));
 }
 
@@ -101,7 +101,7 @@ DrProperty* DrSettings::getComponentProperty(long component, long property) {
     return m_components[component]->getProperty(property);
 }
 
-DrProperty* DrSettings::findPropertyFromPropertyKey(Properties property_key_to_find) {
+DrProperty* DrSettings::findPropertyFromPropertyKey(Props property_key_to_find) {
     return findPropertyFromPropertyKey(static_cast<long>(property_key_to_find));
 }
 DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
@@ -115,7 +115,7 @@ DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
     return nullptr;
 }
 
-DrComponent* DrSettings::findComponentFromPropertyKey(Components property_key_to_find) {
+DrComponent* DrSettings::findComponentFromPropertyKey(Comps property_key_to_find) {
     return findComponentFromPropertyKey(static_cast<long>(property_key_to_find));
 }
 DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find) {
@@ -139,8 +139,8 @@ std::string DrSettings::getName() {
         case DrType::Stage:
         case DrType::Thing:
         case DrType::World:
-            name_component = getComponent(Components::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
-            name_property  = name_component->getProperty(Properties::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
+            name_component = getComponent(Comps::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
+            name_property  = name_component->getProperty(Props::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();
         case DrType::Frame:     return "DrFrame - Unknown Name";
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
@@ -152,8 +152,8 @@ std::string DrSettings::getName() {
 bool DrSettings::setName(std::string new_name) {
     DrComponent *name_component;
     DrProperty  *name_property;
-    name_component = getComponent(Components::Entity_Settings);                     if (name_component == nullptr) return false;
-    name_property  = name_component->getProperty(Properties::Entity_Name);          if (name_property == nullptr)  return false;
+    name_component = getComponent(Comps::Entity_Settings);                     if (name_component == nullptr) return false;
+    name_property  = name_component->getProperty(Props::Entity_Name);          if (name_property == nullptr)  return false;
     name_property->setValue(new_name);
     return true;
 }
@@ -162,14 +162,14 @@ bool DrSettings::setName(std::string new_name) {
 //####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
-DrComponent* DrSettings::addComponent(Components component, std::string display_name, std::string description, DrColor color, bool is_turned_on) {
+DrComponent* DrSettings::addComponent(Comps component, std::string display_name, std::string description, DrColor color, bool is_turned_on) {
     DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
     comp->setListOrder( static_cast<int>(m_components.size()) );
     m_components[static_cast<long>(component)] = comp;
     return comp;
 }
 
-DrProperty* DrSettings::addPropertyToComponent(Components component, Properties property_number, Property_Type type,
+DrProperty* DrSettings::addPropertyToComponent(Comps component, Props property_number, Property_Type type,
                                                DrVariant value, std::string display_name, std::string description, bool is_hidden, bool is_editable) {
     DrProperty *prop = m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
     return prop;
@@ -204,7 +204,7 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
             DrProperty *to_property =   getComponentProperty(component_pair.first, property_pair.first);
 
             // !!! DO NOT COPY UNIQUE ID KEY !!!
-            if (to_property->getPropertyKey() == static_cast<int>(Properties::Entity_Key)) continue;
+            if (to_property->getPropertyKey() == static_cast<int>(Props::Entity_Key)) continue;
 
             // Copy all other properties
             to_property->setValue(      from_property->getValue());

@@ -6,7 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_world.h"
@@ -33,7 +33,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
 
     // If start stage, make name hidden to stop user from changing it
     if (m_is_start_stage) {
-        DrProperty *my_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+        DrProperty *my_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
         my_name->setEditable(false);
     }
 }
@@ -74,7 +74,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::Mirror:
         case DrThingType::Swirl:
         case DrThingType::Water:
-            new_name = asset->getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->getValue().toString();
+            new_name = asset->getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->getValue().toString();
             break;
 
         ///case DrThingType::Camera:

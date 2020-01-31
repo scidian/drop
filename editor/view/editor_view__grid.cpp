@@ -35,16 +35,16 @@ void DrView::updateGrid() {
     scene()->setSceneRect( scene()->sceneRect().united(stage_rect) );
 
     // Update Grid Properties
-    m_grid_origin =     Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Origin_Point).toPointF());
-    m_grid_size =       Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Size).toPointF());
-    m_grid_scale =      Dr::ToQPointF(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Scale).toPointF());
-    m_grid_rotate =     stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Rotation).toDouble();
+    m_grid_origin =     Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Origin_Point).toPointF());
+    m_grid_size =       Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Size).toPointF());
+    m_grid_scale =      Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Scale).toPointF());
+    m_grid_rotate =     stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Rotation).toDouble();
     m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
-    m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Components::World_Settings, Properties::World_Background_Color).toUInt());
-    m_back_color_use =  world->getComponentPropertyValue(Components::World_Settings, Properties::World_Use_Background_Color).toVector()[0].toBool();
+    m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Comps::World_Settings, Props::World_Background_Color).toUInt());
+    m_back_color_use =  world->getComponentPropertyValue(Comps::World_Settings, Props::World_Use_Background_Color).toVector()[0].toBool();
 
-    int style =         stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Style).toInt();
+    int style =         stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Style).toInt();
     m_grid_style =      static_cast<Grid_Style>(style);
     m_grid_should_snap =  Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool();
     m_grid_resize_snap =  Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
@@ -115,8 +115,8 @@ QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage, double &hal
 
     // Calculate Game Frame, Get Stage Size, Game Direction
     QRectF game_frame = gameFrame(project);
-    int    stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
-    double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+    int    stage_size = stage->getComponentPropertyValue(Comps::Stage_Settings, Props::Stage_Size).toInt();
+    double game_direction = stage->getParentWorld()->getComponentPropertyValue(Comps::World_Settings, Props::World_Game_Direction).toDouble();
     half_height = game_frame.height() / 2.0;
     QTransform t_scene = QTransform().rotate( game_direction );
 

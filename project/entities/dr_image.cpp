@@ -5,7 +5,7 @@
 //
 //
 //
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/entities/dr_image.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -22,8 +22,8 @@ DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, Dr
     m_bitmap = bitmap;
 
     // Set name in DrSettings Entity properties
-    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setValue(m_simple_name);
-    getComponentProperty(Components::Entity_Settings, Properties::Entity_Name)->setEditable(false);
+    getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->setValue(m_simple_name);
+    getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->setEditable(false);
 }
 
 

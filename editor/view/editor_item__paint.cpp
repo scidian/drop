@@ -44,7 +44,7 @@ void DrItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     // Check opacity of current item
     double transparency = 0.01;
     if (m_thing != nullptr) {
-        transparency = m_thing->getComponentPropertyValue(Components::Thing_Layering, Properties::Thing_Opacity).toDouble() / 100;
+        transparency = m_thing->getComponentPropertyValue(Comps::Thing_Layering, Props::Thing_Opacity).toDouble() / 100;
         transparency = Dr::Clamp(transparency, 0.0, 1.0);
     }
 

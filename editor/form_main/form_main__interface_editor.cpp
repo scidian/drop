@@ -87,7 +87,7 @@ void FormMain::buildScene(long stage_key) {
     sceneEditor->scene_mutex.unlock();
 }
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<Properties> property_keys) {
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<Props> property_keys) {
     // If theres notthing to update, go ahead and get out now
     if (changed_items.empty()) return;
     if (property_keys.empty()) return;

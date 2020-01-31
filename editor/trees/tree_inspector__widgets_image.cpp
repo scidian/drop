@@ -247,7 +247,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 DrImage *image = Dr::AddImage(project, file_path);
                 image_keys.push_back(image->getKey());
             }
-            asset->updateAnimationProperty( image_keys, static_cast<Properties>(property->getPropertyKey()) );
+            asset->updateAnimationProperty( image_keys, static_cast<Props>(property->getPropertyKey()) );
 
             // Update all Things, Thing_Size that use Asset
             for (auto world_pair : project->getWorldMap()) {
@@ -255,9 +255,9 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                     for (auto thing_pair : stage_pair.second->getThingMap()) {
                         DrThing *thing = thing_pair.second;
                         if (thing->getAssetKey() == settings_key) {
-                            DrPointF scale = thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
+                            DrPointF scale = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
                             DrPointF new_size(width * scale.x, height * scale.y);
-                            thing->setComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size, new_size);
+                            thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size, new_size);
                         }
                     }
                 }

@@ -258,7 +258,7 @@ void DrView::paintGameFrame(QPainter &painter) {
         stage_rect = stageBoundingRect(m_project, stage, h2);
 
         // Get equalized game direction
-        double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+        double game_direction = stage->getParentWorld()->getComponentPropertyValue(Comps::World_Settings, Props::World_Game_Direction).toDouble();
         while (game_direction < 0)   game_direction += 360.0;
         while (game_direction > 360) game_direction -= 360.0;
 
@@ -294,8 +294,8 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     if (stage == nullptr) return;
 
     // Get Stage Size, Game Direction, figure out rotation QGraphicsScene transform
-    long   stage_size = stage->getComponentPropertyValue(Components::Stage_Settings, Properties::Stage_Size).toInt();
-    double game_direction = stage->getParentWorld()->getComponentPropertyValue(Components::World_Settings, Properties::World_Game_Direction).toDouble();
+    long   stage_size = stage->getComponentPropertyValue(Comps::Stage_Settings, Props::Stage_Size).toInt();
+    double game_direction = stage->getParentWorld()->getComponentPropertyValue(Comps::World_Settings, Props::World_Game_Direction).toDouble();
     QTransform t_scene = QTransform().rotate( game_direction );
 
     // Find width of rotated game frame

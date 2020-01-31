@@ -9,8 +9,8 @@
 #define DRCOMPONENT_H
 
 #include "core/types/dr_variant.h"
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
-#include "project/enums_properties.h"
 
 // Forward Declarations
 class DrSettings;
@@ -55,7 +55,7 @@ public:
 
     PropertyMap&        getPropertyMap() { return m_properties; }
     DrProperty*         getProperty(long setting);
-    DrProperty*         getProperty(Properties setting);
+    DrProperty*         getProperty(Props setting);
 
     std::string     getDisplayName() { return m_display_name; }
     std::string     getDescription() { return m_description; }
@@ -77,7 +77,7 @@ public:
     void            setListOrder(int order) { m_list_order = order; }
 
     // Building Calls
-    DrProperty*     addProperty(Properties      property_number,
+    DrProperty*     addProperty(Props      property_number,
                                 Property_Type   type,
                                 DrVariant       value,
                                 std::string     display_name,

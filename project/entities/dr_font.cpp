@@ -5,7 +5,7 @@
 //
 //
 //
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/entities/dr_font.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -42,17 +42,17 @@ DrFont::DrFont(DrProject *parent_project, long key,
 
 
     // ***** Initialize Font Settings
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setDisplayName("Font Name");
     property_name->setDescription("Name of this Font Asset.");
     property_name->setValue(m_name);
 
-    addComponent(Components::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
-    getComponent(Components::Asset_Settings_Font)->setIcon(Component_Icons::Font);
+    addComponent(Comps::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
+    getComponent(Comps::Asset_Settings_Font)->setIcon(Component_Icons::Font);
 
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Family, Property_Type::String, getPropertyFontFamily(),
+    addPropertyToComponent(Comps::Asset_Settings_Font, Props::Asset_Font_Family, Property_Type::String, getPropertyFontFamily(),
                            "Font Family", "Font used for this text asset.", false, false);
-    addPropertyToComponent(Components::Asset_Settings_Font, Properties::Asset_Font_Size, Property_Type::Int, getPropertyFontSize(),
+    addPropertyToComponent(Comps::Asset_Settings_Font, Props::Asset_Font_Size, Property_Type::Int, getPropertyFontSize(),
                            "Font Size", "Font size of this text asset.", false, false);
 }
 

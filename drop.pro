@@ -979,8 +979,9 @@ HEADERS += \
     engine/things/engine_thing_swirl.h \
     engine/things/engine_thing_water.h \
     engine/world/engine_world.h \
-    project/constants_components.h \
-    project/constants_keys.h \
+    project/components_and_properties.h \
+    project/constants_component_info.h \
+    project/constants_entity_keys.h \
     project/dr_project.h \
     project/entities/dr_animation.h \
     project/entities/dr_asset.h \
@@ -992,7 +993,6 @@ HEADERS += \
     project/entities/dr_thing.h \
     project/entities/dr_world.h \
     project/enums_entity_types.h \
-    project/enums_properties.h \
     project/properties/property_collision.h \
     project/settings/settings.h \
     project/settings/settings_component.h \

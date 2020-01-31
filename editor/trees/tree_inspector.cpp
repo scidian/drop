@@ -169,8 +169,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     for (auto component: components) {
         if (component->isTurnedOn() == false) {
             continue;
-        } else if (component->getComponentKey() == static_cast<int>(Components::Hidden_Settings) ||
-                   component->getComponentKey() == static_cast<int>(Components::Size_Settings)) {
+        } else if (component->getComponentKey() == static_cast<int>(Comps::Hidden_Settings) ||
+                   component->getComponentKey() == static_cast<int>(Comps::Size_Settings)) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
@@ -184,7 +184,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        if (component->getComponentKey() == static_cast<int>(Components::Entity_Settings)) {
+        if (component->getComponentKey() == static_cast<int>(Comps::Entity_Settings)) {
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
@@ -249,7 +249,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
             QFrame *single_row = new QFrame(properties_frame);
             single_row->setObjectName("propertyRow");
-            single_row->setProperty(User_Property::Key, QVariant::fromValue(property->getPropertyKey()) );
+            single_row->setProperty(User_Property::CompKey, QVariant::fromValue(property->getParentComponent()->getComponentKey()) );
+            single_row->setProperty(User_Property::PropKey, QVariant::fromValue(property->getPropertyKey()) );
 
             QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
             horizontal_split->setSpacing(6);

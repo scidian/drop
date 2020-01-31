@@ -64,7 +64,7 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
     if (property_keys.empty())    return;
 
     std::list<DrSettings*> newly_changed_items;
-    std::list<Properties>  newly_changed_properties;
+    std::list<Props>  newly_changed_properties;
 
     QFrame  *text_holder;
     QLabel  *asset_name;
@@ -78,10 +78,10 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
 
             if (entity_key == label_key) {
                 for (auto property : property_keys) {
-                    Properties check_property = static_cast<Properties>(property);
+                    Props check_property = static_cast<Props>(property);
 
                     switch (check_property) {
-                        case Properties::Entity_Name:
+                        case Props::Entity_Name:
                             asset_text = QString::fromStdString(entity->getName());
 
                             // Update all Things in the project that use this asset name
@@ -89,10 +89,10 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                                 for (auto stage : world.second->getStageMap()) {
                                     for (auto thing : stage.second->getThingMap()) {
                                         if (thing.second->getAssetKey() == entity->getKey()) {
-                                            thing.second->setComponentPropertyValue(Components::Entity_Settings, Properties::Entity_Name, asset_text.toStdString());
+                                            thing.second->setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Name, asset_text.toStdString());
                                             newly_changed_items.push_back(thing.second);
-                                            if (Dr::ListContains(newly_changed_properties, Properties::Entity_Name) == false) {
-                                                newly_changed_properties.push_back(Properties::Entity_Name);
+                                            if (Dr::ListContains(newly_changed_properties, Props::Entity_Name) == false) {
+                                                newly_changed_properties.push_back(Props::Entity_Name);
                                             }
                                         }
                                     }

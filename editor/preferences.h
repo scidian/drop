@@ -12,8 +12,8 @@
 
 #include "core/types/dr_variant.h"
 #include "editor/enums_editor.h"
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
-#include "project/enums_properties.h"
 
 
 // Forward declarations
@@ -73,8 +73,8 @@ namespace Dr {
     bool            GetAssetExpanded(Asset_Category asset_type);
     void            SetAssetExpanded(Asset_Category asset_type, bool expanded);
 
-    bool            GetInspectorExpanded(Components component_to_check);
-    void            SetInspectorExpanded(Components component_to_set, bool expanded);
+    bool            GetInspectorExpanded(Comps component_to_check);
+    void            SetInspectorExpanded(Comps component_to_set, bool expanded);
 
 
     // ***** Global Forms

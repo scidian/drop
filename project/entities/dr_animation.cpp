@@ -7,7 +7,7 @@
 //
 #include "core/dr_debug.h"
 #include "core/dr_string.h"
-#include "project/constants_components.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_image.h"
@@ -68,11 +68,11 @@ long DrAnimation::addFrame(long image_key) {
 //##    Returns image based on first frame
 //####################################################################################
 int DrAnimation::getStartFrameNumber() {
-    return getComponentPropertyValue(Components::Animation_Settings, Properties::Animation_Settings_Start_Frame).toInt();
+    return getComponentPropertyValue(Comps::Animation_Settings, Props::Animation_Settings_Start_Frame).toInt();
 }
 
 DrImage* DrAnimation::getFirstFrameImage() {
-    long first_frame = getComponentPropertyValue(Components::Animation_Settings, Properties::Animation_Settings_Start_Frame).toInt();
+    long first_frame = getComponentPropertyValue(Comps::Animation_Settings, Props::Animation_Settings_Start_Frame).toInt();
     long image_key =   getFrame(first_frame)->getKey();
     return getParentProject()->findImageFromKey(image_key);
 }
@@ -82,19 +82,19 @@ DrImage* DrAnimation::getFirstFrameImage() {
 //##    Property loading - initializeAnimationSettings
 //####################################################################################
 void DrAnimation::initializeAnimationSettings(std::string new_name) {
-    DrProperty *property_name = getComponentProperty(Components::Entity_Settings, Properties::Entity_Name);
+    DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setDisplayName("Animation Name");
     property_name->setDescription("Name of this Animation.");
     property_name->setValue(new_name);
 
-    addComponent(Components::Animation_Settings, "Animation Settings", "Settings for this Animation.", Component_Colors::White_Snow, true);
-    getComponent(Components::Animation_Settings)->setIcon(Component_Icons::Animation);
+    addComponent(Comps::Animation_Settings, "Animation Settings", "Settings for this Animation.", Component_Colors::White_Snow, true);
+    getComponent(Comps::Animation_Settings)->setIcon(Component_Icons::Animation);
 
-    addPropertyToComponent(Components::Animation_Settings, Properties::Animation_Settings_Speed, Property_Type::Double, 10.0,
+    addPropertyToComponent(Comps::Animation_Settings, Props::Animation_Settings_Speed, Property_Type::Double, 10.0,
                            "Play Speed", "Speed, in frames per second, that Animation will play.");
-    addPropertyToComponent(Components::Animation_Settings, Properties::Animation_Settings_Loops, Property_Type::Int, -1,
+    addPropertyToComponent(Comps::Animation_Settings, Props::Animation_Settings_Loops, Property_Type::Int, -1,
                            "Number of Loops", "Number of times to play Animation. Enter a value of -1 for infinite looping.");
-    addPropertyToComponent(Components::Animation_Settings, Properties::Animation_Settings_Start_Frame, Property_Type::Positive, 1,
+    addPropertyToComponent(Comps::Animation_Settings, Props::Animation_Settings_Start_Frame, Property_Type::Positive, 1,
                            "Start Frame", "Which frame to start playback of Animation. <b>NOTE:</b> If playing a specific number of loops, "
                                           "play will end on the LAST frame, not the frame before the start frame.");
 }

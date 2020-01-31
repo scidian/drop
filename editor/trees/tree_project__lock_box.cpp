@@ -23,7 +23,7 @@ void TreeProject::installLockBox(DrSettings *entity, QTreeWidgetItem *thing_item
     if (thing == nullptr) return;
 
     // Figure out style sheet
-    bool forced = thing->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool();
+    bool forced = thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Item_Locked).toBool();
     QString check_images = QString(" QCheckBox::indicator { width: 12px; height: 12px; } "
                                    " QCheckBox::indicator:unchecked { image: url(:/assets/tree_icons/tree_bullet.png); } ");
     if (forced) check_images +=    " QCheckBox::indicator:checked {   image: url(:/assets/tree_icons/tree_lock_disable.png); } ";
@@ -85,7 +85,7 @@ void TreeProject::processLockClick(QCheckBox *from_lock) {
         DrSettings *entity = getParentProject()->findSettingsFromKey( key );
         if (entity == nullptr) continue;
 
-        if (entity->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Item_Locked).toBool()) {
+        if (entity->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Item_Locked).toBool()) {
             lock->setCheckState( Qt::CheckState::Checked );
         } else {
             entity->setLocked( locked );

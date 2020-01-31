@@ -36,74 +36,74 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     long property_key = property->getPropertyKey();
 
     QStringList options;
-    if          (property_key == static_cast<int>(Properties::Thing_Object_Damage)) {
+    if          (property_key == static_cast<int>(Props::Thing_Object_Damage)) {
         options << tr("No Damage")
                 << tr("Damage Player")
                 << tr("Damage Enemy")
                 << tr("Damage All");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Object_Physics_Type)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Object_Physics_Type)) {
         options << tr("Static")
                 << tr("Kinematic")
                 << tr("Dynamic");
-    } else if   (property_key == static_cast<int>(Properties::Stage_Grid_Style)) {
+    } else if   (property_key == static_cast<int>(Props::Stage_Grid_Style)) {
         options << tr("Lines")
                 << tr("Dots");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Light_Type)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Light_Type)) {
         options << tr("Opaque")
                 << tr("Glow");
-    } else if   (property_key == static_cast<int>(Properties::World_Light_Blend)) {
+    } else if   (property_key == static_cast<int>(Props::World_Light_Blend)) {
         options << tr("Default")
                 << tr("Multiply")
                 << tr("Overlay")
                 << tr("Hard Light");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Water_Texture)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Water_Texture)) {
         options << tr("None")
                 << tr("Ripples")
                 << tr("Cells")
                 << tr("Caustic")
                 << tr("Liquid");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Fire_Shape)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Fire_Shape)) {
         options << tr("Torch")
                 << tr("Candle")
                 << tr("Square")
                 << tr("Triangle");
-    } else if   (property_key == static_cast<int>(Properties::Thing_3D_Type)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_3D_Type)) {
         options << tr("None")
                 << tr("Extruded")
                 << tr("Wrapped Cube")
                 << tr("Pyramid");
-    } else if   (property_key == static_cast<int>(Properties::Asset_Collision_One_Way_Type)) {
+    } else if   (property_key == static_cast<int>(Props::Asset_Collision_One_Way_Type)) {
         options << tr("None")
                 << tr("Pass Through")
                 << tr("Weak Spot");
-    } else if   (property_key == static_cast<int>(Properties::Asset_Collision_Shape)) {
+    } else if   (property_key == static_cast<int>(Props::Asset_Collision_Shape)) {
         options << tr("Image Shape")
                 << tr("Circle")
                 << tr("Square")
                 << tr("Triangle");
-    } else if   (property_key == static_cast<int>(Properties::Asset_Health_Death_Animation)) {
+    } else if   (property_key == static_cast<int>(Props::Asset_Health_Death_Animation)) {
         options << tr("None")
                 << tr("Fade")
                 << tr("Shrink");
-    } else if   (property_key == static_cast<int>(Properties::World_Camera_Type)) {
+    } else if   (property_key == static_cast<int>(Props::World_Camera_Type)) {
         options << tr("Perspective")
                 << tr("Orthographic");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Character_Camera_Up_Vector) ||
-                 property_key == static_cast<int>(Properties::Thing_Camera_Up_Vector)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Character_Camera_Up_Vector) ||
+                 property_key == static_cast<int>(Props::Thing_Camera_Up_Vector)) {
         options << tr("Y Axis (Default)")
                 << tr("Z Axis (First Person)");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Object_Collision_Group)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Object_Collision_Group)) {
         options << tr("None")
                 << tr("All")
                 << tr("Active Players Only")
                 << tr("Players")
                 << tr("Enemies");
-    } else if   (property_key == static_cast<int>(Properties::Thing_Spawn_Type)) {
+    } else if   (property_key == static_cast<int>(Props::Thing_Spawn_Type)) {
         options << tr("Permanent")
                 << tr("Shoot Button")
                 << tr("Jump Button")
                 << tr("Object Death");
-    } else if   (property_key == static_cast<int>(Properties::World_Camera_Zoom_In_Or_Out)) {
+    } else if   (property_key == static_cast<int>(Props::World_Camera_Zoom_In_Or_Out)) {
         options << tr("Zoom Out")
                 << tr("Zoom In");
     } else {
@@ -138,7 +138,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             this->updateSettingsFromNewValue(property_key, action->property(User_Property::Order).toInt());
         });
 
-        if (property_key == static_cast<int>(Properties::Thing_Object_Damage)) {
+        if (property_key == static_cast<int>(Props::Thing_Object_Damage)) {
             connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Damage_None[0],     Advisor_Info::Damage_None[1]);          break;
@@ -149,7 +149,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             });
         }
 
-        if (property_key == static_cast<int>(Properties::Thing_Object_Physics_Type)) {
+        if (property_key == static_cast<int>(Props::Thing_Object_Physics_Type)) {
             connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Object_Static[0],    Advisor_Info::Object_Static[1]);       break;
@@ -159,7 +159,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             });
         }
 
-        if (property_key == static_cast<int>(Properties::Thing_Light_Type)) {
+        if (property_key == static_cast<int>(Props::Thing_Light_Type)) {
             connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Light_Opaque[0],    Advisor_Info::Light_Opaque[1]);          break;

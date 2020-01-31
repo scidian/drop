@@ -21,11 +21,11 @@
 //####################################################################################
 Thing_Info DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
     Thing_Info info;
-    info.angle =        thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Rotation).toDouble();
-    info.position =     thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Position).toPointF();
-    info.scale =        thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Scale).toPointF();
-    info.size =         thing->getComponentPropertyValue(Components::Thing_Transform, Properties::Thing_Size).toPointF();
-    info.opacity =      thing->getComponentPropertyValue(Components::Thing_Layering,  Properties::Thing_Opacity).toFloat() / 100.0f;
+    info.angle =        thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
+    info.position =     thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
+    info.scale =        thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
+    info.size =         thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size).toPointF();
+    info.opacity =      thing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Opacity).toFloat() / 100.0f;
     info.z_order =      thing->getZOrderWithSub();
     return info;
 }
@@ -35,13 +35,13 @@ Thing_Info DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
 //##    Loads 3D Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
-    int      convert_type =     thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Type).toInt();
-    double   depth =            thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Depth).toDouble();
-    DrPointF x_axis_rotate =    thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Rotation).toPointF();
-    DrPointF y_axis_rotate =    thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Rotation).toPointF();
-    DrPointF x_axis_speed =     thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_X_Axis_Speed).toPointF();
-    DrPointF y_axis_speed =     thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Y_Axis_Speed).toPointF();
-    bool     billboard =        thing->getComponentPropertyValue(Components::Thing_3D, Properties::Thing_3D_Billboard).toBool();
+    int      convert_type =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Type).toInt();
+    double   depth =            thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Depth).toDouble();
+    DrPointF x_axis_rotate =    thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_X_Axis_Rotation).toPointF();
+    DrPointF y_axis_rotate =    thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Y_Axis_Rotation).toPointF();
+    DrPointF x_axis_speed =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_X_Axis_Speed).toPointF();
+    DrPointF y_axis_speed =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Y_Axis_Speed).toPointF();
+    bool     billboard =        thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Billboard).toBool();
     object->set3DType(static_cast<Convert_3D_Type>(convert_type));
     object->setAngleX( x_axis_rotate.x + (Dr::RandomDouble(0.0, x_axis_rotate.y * 2.0) - x_axis_rotate.y) );
     object->setAngleY( y_axis_rotate.x + (Dr::RandomDouble(0.0, y_axis_rotate.y * 2.0) - y_axis_rotate.y) );
@@ -56,22 +56,22 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
 //##    Loads Appearance Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object) {
-    bool    cast_shadows =  thing->getComponentPropertyValue(Components::Thing_Lighting,   Properties::Thing_Lighting_Cast_Shadows).toBool();
-    int     bit_rate =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF pixelation =   thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Pixelation).toPointF();
-    float   brightness =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Brightness).toVector()[0].toInt() / 255.f;
-    float   contrast =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Contrast).toVector()[0].toInt() / 255.f;
-    float   saturation =    thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Saturation).toVector()[0].toInt() / 255.f;
-    float   hue =           thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Hue).toVector()[0].toInt() / 360.f;
-    bool    grayscale =     thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Grayscale).toBool();
-    bool    negative =      thing->getComponentPropertyValue(Components::Thing_Appearance, Properties::Thing_Filter_Negative).toBool();
-    bool    instant_3d =    thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Convert_3D).toBool();
-    bool    wireframe =         thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toVector()[0].toBool();
-    float   wireframe_width =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Wireframe).toVector()[1].toFloat();
-    bool    cartoon =       thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toVector()[0].toBool();
-    float   cartoon_width = thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cartoon).toVector()[1].toFloat();
-    bool    cross_hatch =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
-    float   cross_width =   thing->getComponentPropertyValue(Components::Thing_Special_Effects, Properties::Thing_Filter_Cross_Hatch).toVector()[1].toFloat();
+    bool    cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
+    int     bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF pixelation =       thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
+    float   brightness =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt() / 255.f;
+    float   contrast =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt() / 255.f;
+    float   saturation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Saturation).toVector()[0].toInt() / 255.f;
+    float   hue =               thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Hue).toVector()[0].toInt() / 360.f;
+    bool    grayscale =         thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Grayscale).toBool();
+    bool    negative =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Negative).toBool();
+    bool    instant_3d =        thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Convert_3D).toBool();
+    bool    wireframe =         thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Wireframe).toVector()[0].toBool();
+    float   wireframe_width =   thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Wireframe).toVector()[1].toFloat();
+    bool    cartoon =           thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[0].toBool();
+    float   cartoon_width =     thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[1].toFloat();
+    bool    cross_hatch =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
+    float   cross_width =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[1].toFloat();
     object->cast_shadows =      cast_shadows;
     object->bitrate =           bit_rate;
     object->pixel_x =           static_cast<float>(pixelation.x);
@@ -96,17 +96,17 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
 //##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *object) {
-    double  max_health =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Max_Health).toDouble();
-    double  health =            asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Health).toDouble();
-    double  damage =            asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage).toDouble();
-    int     damage_delay =      asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Delay).toInt();
-    double  auto_damage =       asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Auto_Damage).toDouble();
-    int     death_delay =       asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Delay).toInt();
-    int     death_animation =   asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Animation).toInt();
-    int     death_duration =    asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Duration).toInt();
-    double  damage_recoil =     asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Damage_Recoil).toDouble();
-    bool    invincible =        asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Invincible).toBool();
-    bool    death_touch =       asset->getComponentPropertyValue(Components::Asset_Health, Properties::Asset_Health_Death_Touch).toBool();
+    double  max_health =        asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Max_Health).toDouble();
+    double  health =            asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Health).toDouble();
+    double  damage =            asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Damage).toDouble();
+    int     damage_delay =      asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Damage_Delay).toInt();
+    double  auto_damage =       asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Auto_Damage).toDouble();
+    int     death_delay =       asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Death_Delay).toInt();
+    int     death_animation =   asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Death_Animation).toInt();
+    int     death_duration =    asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Death_Duration).toInt();
+    double  damage_recoil =     asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Damage_Recoil).toDouble();
+    bool    invincible =        asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Invincible).toBool();
+    bool    death_touch =       asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Death_Touch).toBool();
     object->setMaxHealth(max_health);
     object->setHealth(health);
     object->setDamage(damage);
@@ -125,16 +125,13 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
 //##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *object) {
-    double  rotate_speed =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Rotate_Speed).toDouble();
-    bool    touch_drag =        asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag).toVector()[0].toBool();
-    double  touch_drag_force =  asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Drag).toVector()[1].toDouble();
-    bool    touch_damage =      asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toVector()[0].toBool();
-    double  touch_damage_pts =  asset->getComponentPropertyValue(Components::Asset_Controls, Properties::Asset_Controls_Touch_Damage).toVector()[1].toDouble();
+    double  rotate_speed =      asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Rotate_Speed).toDouble();
+    bool    touch_drag =        asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Drag).toVector()[0].toBool();
+    double  touch_drag_force =  asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Drag).toVector()[1].toDouble();
+    bool    touch_damage =      asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Damage).toVector()[0].toBool();
+    double  touch_damage_pts =  asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Damage).toVector()[1].toDouble();
 
-    if (Dr::FuzzyCompare(rotate_speed, 0.0) == false) {
-        ///object->setCanRotate( true );
-        object->setRotateSpeedZ(rotate_speed);
-    }
+    object->setRotateSpeedZ(      rotate_speed);
     object->setTouchDrag(         touch_drag);
     object->setTouchDragForce(    touch_drag_force);
     object->setTouchDamage(       touch_damage);
@@ -146,10 +143,10 @@ void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *ob
 //##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *object) {
-    int shape_type =        asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Shape).toInt();
+    int shape_type =        asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Shape).toInt();
     Collision_Shape shape = static_cast<Collision_Shape>(shape_type);
     if (shape == Collision_Shape::Image) {
-        DrVariant shapes =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Image_Shape);
+        DrVariant shapes =  asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Image_Shape);
         DrPropertyCollision shape = boost::any_cast<DrPropertyCollision>(shapes.value());
         for (auto poly : shape.getPolygons()) {
             object->addShapePolygon(poly);
@@ -182,14 +179,14 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
                 info.scale.y *= scale_y;
                 info.angle   -= angle;
 
-    bool        collide =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collide).toBool();
-    int         collide_with =  thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Collision_Group).toInt();
-    int         physics =       thing->getComponentPropertyValue(Components::Thing_Settings_Object,  Properties::Thing_Object_Physics_Type).toInt();
+    bool        collide =       thing->getComponentPropertyValue(Comps::Thing_Settings_Object,  Props::Thing_Object_Collide).toBool();
+    int         collide_with =  thing->getComponentPropertyValue(Comps::Thing_Settings_Object,  Props::Thing_Object_Collision_Group).toInt();
+    int         physics =       thing->getComponentPropertyValue(Comps::Thing_Settings_Object,  Props::Thing_Object_Physics_Type).toInt();
 
 
     // ***** Adjust loading position from Spawn Offset
-    DrPointF    spawn_off_x =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_X).toPointF();
-    DrPointF    spawn_off_y =   thing->getComponentPropertyValue(Components::Thing_Spawn,   Properties::Thing_Spawn_Offset_Y).toPointF();
+    DrPointF    spawn_off_x =   thing->getComponentPropertyValue(Comps::Thing_Spawn,   Props::Thing_Spawn_Offset_X).toPointF();
+    DrPointF    spawn_off_y =   thing->getComponentPropertyValue(Comps::Thing_Spawn,   Props::Thing_Spawn_Offset_Y).toPointF();
     double spawn_x = spawn_off_x.x + (Dr::RandomDouble(0.0, spawn_off_x.y * 2.0) - spawn_off_x.y);
     double spawn_y = spawn_off_y.x + (Dr::RandomDouble(0.0, spawn_off_y.y * 2.0) - spawn_off_y.y);
     DrPointF spawn_rotate;
@@ -200,10 +197,10 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double y_offset = spawn_rotate.y;
 
     // ***** Load Physics Properties
-    DrPointF gravity_scale =            asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Gravity_Scale).toPointF();
-    std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Friction).toVector();
-    std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Custom_Bounce).toVector();
-    bool    can_rotate =                asset->getComponentPropertyValue(Components::Asset_Physics, Properties::Asset_Physics_Can_Rotate).toBool();
+    DrPointF gravity_scale =            asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
+    std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction).toVector();
+    std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce).toVector();
+    bool    can_rotate =                asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate).toBool();
     double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
     double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;  
 
@@ -225,16 +222,16 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
 
     // ***** Set collision type
-    long     damage_type = thing->getComponentPropertyValue(Components::Thing_Settings_Object, Properties::Thing_Object_Damage).toInt();
+    long     damage_type =      thing->getComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Damage).toInt();
     block->setCollisionType(static_cast<Collision_Type>(damage_type));
     block->setGravityScale( DrPointF(gravity_scale.x, gravity_scale.y) );
 
     // ***** Velocity settings
-    DrPointF vel_x =    thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_X).toPointF();
-    DrPointF vel_y =    thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Velocity_Y).toPointF();
-    DrPointF rotation_vel =     thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Spin_Velocity).toPointF();
-    bool     angle_velocity =   thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Velocity).toBool();
-    bool     angle_player =     thing->getComponentPropertyValue(Components::Thing_Movement, Properties::Thing_Angle_Player).toBool();
+    DrPointF vel_x =            thing->getComponentPropertyValue(Comps::Thing_Movement, Props::Thing_Velocity_X).toPointF();
+    DrPointF vel_y =            thing->getComponentPropertyValue(Comps::Thing_Movement, Props::Thing_Velocity_Y).toPointF();
+    DrPointF rotation_vel =     thing->getComponentPropertyValue(Comps::Thing_Movement, Props::Thing_Spin_Velocity).toPointF();
+    bool     angle_velocity =   thing->getComponentPropertyValue(Comps::Thing_Movement, Props::Thing_Angle_Velocity).toBool();
+    bool     angle_player =     thing->getComponentPropertyValue(Comps::Thing_Movement, Props::Thing_Angle_Player).toBool();
 
     cpVect velocity;
     velocity.x = vel_x.x + (Dr::RandomDouble(0.0, vel_x.y * 2.0) - vel_x.y);
@@ -253,10 +250,10 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
 
     // ***** Additional Collision Settings
-    int         one_way_type =  asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Type).toInt();
-    double      one_way_angle = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_One_Way_Direction).toDouble();
-    double      gravity_multi = asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Gravity_Multiplier).toDouble();
-    DrPointF    surface_vel =   asset->getComponentPropertyValue(Components::Asset_Collision, Properties::Asset_Collision_Surface_Velocity).toPointF();
+    int         one_way_type =  asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Type).toInt();
+    double      one_way_angle = asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Direction).toDouble();
+    double      gravity_multi = asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Gravity_Multiplier).toDouble();
+    DrPointF    surface_vel =   asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Surface_Velocity).toPointF();
 
     DrPointF one_way_point = Dr::RotatePointAroundOrigin( DrPointF(0.0, 1.0), DrPointF(0, 0), one_way_angle - info.angle);
              one_way_point.x *= info.scale.x;

@@ -217,7 +217,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     for (auto entity: entities) {
         if (entity == nullptr) continue;
 
-        if (entity->getComponentPropertyValue(Components::Hidden_Settings, Properties::Hidden_Hide_From_Trees).toBool()) {
+        if (entity->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Hide_From_Trees).toBool()) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
@@ -260,20 +260,20 @@ void TreeAssets::buildAssetTree(QString search_text) {
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             QString description;
-            std::string hidden_txt = entity->getComponentProperty(Components::Hidden_Settings, Properties::Hidden_Advisor_Description)->getValue().toString();
+            std::string hidden_txt = entity->getComponentProperty(Comps::Hidden_Settings, Props::Hidden_Advisor_Description)->getValue().toString();
 
             if (entity->getType() == DrType::Asset) {
                 DrAsset *asset = dynamic_cast<DrAsset*>(entity);
                 switch (asset->getAssetType()) {
                     case DrAssetType::Character: {
-                        long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
+                        long animation_key = asset->getComponentPropertyValue(Comps::Asset_Animation, Props::Asset_Animation_Idle).toLong();
                         DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
                         if (ani != nullptr) pix = Dr::ToQPixmap(ani->getFirstFrameImage()->getBitmap());
                         description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Character[1];
                         break;
                     }
                     case DrAssetType::Object: {
-                        long animation_key = asset->getComponentPropertyValue(Components::Asset_Animation, Properties::Asset_Animation_Idle).toLong();
+                        long animation_key = asset->getComponentPropertyValue(Comps::Asset_Animation, Props::Asset_Animation_Idle).toLong();
                         DrAnimation *ani = getParentProject()->findAnimationFromKey(animation_key);
                         if (ani != nullptr) pix = Dr::ToQPixmap(ani->getFirstFrameImage()->getBitmap());
                         description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Object[1];

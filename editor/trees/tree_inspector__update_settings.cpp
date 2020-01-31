@@ -43,8 +43,8 @@ void TreeInspector::updateLockedSettings() {
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
-        if (prop->getParentComponent()->getComponentKey() == static_cast<int>(Components::Hidden_Settings) ||
-            prop->getParentComponent()->getComponentKey() == static_cast<int>(Components::Size_Settings)) {
+        if (prop->getParentComponent()->getComponentKey() == static_cast<int>(Comps::Hidden_Settings) ||
+            prop->getParentComponent()->getComponentKey() == static_cast<int>(Comps::Size_Settings)) {
             widget->setEnabled( true );
         } else {
             bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());
@@ -56,8 +56,8 @@ void TreeInspector::updateLockedSettings() {
                 }
             }
 
-            if ( prop->getPropertyKey() == static_cast<int>(Properties::Entity_Key) ||
-                 prop->getPropertyKey() == static_cast<int>(Properties::Entity_Asset_Key)) {
+            if ( prop->getPropertyKey() == static_cast<int>(Props::Entity_Key) ||
+                 prop->getPropertyKey() == static_cast<int>(Props::Entity_Asset_Key)) {
                 QSpinBox *spin = dynamic_cast<QSpinBox*>(widget);
                 if (spin != nullptr) {
                     spin->setReadOnly(true);

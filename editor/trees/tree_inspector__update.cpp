@@ -211,7 +211,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 //##    Updates the appropriate DrSettings DrProperty Values of the item changed
 //##        in the Inspector after a new value has been accepted
 //####################################################################################
-void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_value, long sub_order) {
+void TreeInspector::updateSettingsFromNewValue(long component_key, long property_key, DrVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;
     DrSettings *settings = getParentProject()->findSettingsFromKey( m_selected_key );
 
@@ -316,7 +316,7 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_
                 break;
         }
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, { settings }, { static_cast<Properties>(property_key) } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, { settings }, { static_cast<Props>(property_key) } );
     }
 }
 
@@ -327,14 +327,14 @@ void TreeInspector::updateSettingsFromNewValue(long property_key, DrVariant new_
 void TreeInspector::handleCollapsed(QTreeWidgetItem *item) {
     long key = item->data(0, User_Roles::Key).toLongLong();
     if (key < 0) return;
-    Components comp = static_cast<Components>(key);
+    Comps comp = static_cast<Comps>(key);
     Dr::SetInspectorExpanded(comp, false);
 }
 
 void TreeInspector::handleExpanded(QTreeWidgetItem *item) {
     long key = item->data(0, User_Roles::Key).toLongLong();
     if (key < 0) return;
-    Components comp = static_cast<Components>(key);
+    Comps comp = static_cast<Comps>(key);
     Dr::SetInspectorExpanded(comp, true);
 }
 
@@ -348,7 +348,7 @@ void TreeInspector::expandCollapseComponents() {
         long comp_key = item->data(0, User_Roles::Key).toLongLong();
         if (comp_key < 0) continue;
 
-        if (Dr::GetInspectorExpanded(static_cast<Components>(comp_key))) {
+        if (Dr::GetInspectorExpanded(static_cast<Comps>(comp_key))) {
             if (item->isExpanded() == false) {
                 this->expandItem( item );
                 ///this->expandRecursively( this->indexFromItem(item) );
