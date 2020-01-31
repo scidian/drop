@@ -137,8 +137,8 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     float cam_y = world->getCameraPosition().y * scale;
     float cam_z = world->getCameraPosition().z;
     // Smooth position
-    cam_x = (int(cam_x) / 5) * 5;
-    cam_y = (int(cam_y) / 5) * 5;
+    cam_x = (static_cast<int>(cam_x) / 5) * 5;
+    cam_y = (static_cast<int>(cam_y) / 5) * 5;
 
     float plane_scale = scale;
     if (plane_scale < 1.0f) plane_scale = 1.0f;

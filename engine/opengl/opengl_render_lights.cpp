@@ -48,12 +48,12 @@ void DrOpenGL::process2DLights() {
         glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
         // Code to have the Occluder Map fbo pop up so we can take a look
-        ///static int count = 0;
-        ///count++;
-        ///if (count % 500 == 0) {
-        ///    Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
-        ///    count = 0;
-        ///}
+        static int count = 0;
+        count++;
+        if (count % 500 == 0) {
+            Dr::ShowMessageBox("fbo", QPixmap::fromImage( m_occluder_fbo->toImage() ).scaled(512, 512) );
+            count = 0;
+        }
 
         // Calculate Light 1D Shadow Maps
         drawShadowMaps();

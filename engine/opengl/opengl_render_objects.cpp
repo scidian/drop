@@ -465,7 +465,7 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 //##    Renders the light to the using the Shadow Map
 //####################################################################################
 bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
-    if ( thing->getThingType() != DrThingType::Object) return false;
+    if (thing->getThingType() != DrThingType::Object) return false;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
     if (object == nullptr) return false;
 
