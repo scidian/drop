@@ -109,7 +109,8 @@ void FormMain::buttonGroupTransformClicked(int id) {
 
     if (clicked == Buttons_Transform::Reset_Object) {
         std::list<DrSettings*> settings;
-        std::list<Props>  properties { Props::Thing_Scale, Props::Thing_Rotation };
+        std::list<ComponentProperty> properties { std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
+                                                  std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) };
 
         for (auto item : sceneEditor->getSelectionItems()) {
             DrItem   *dritem = dynamic_cast<DrItem*>(item);

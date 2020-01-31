@@ -72,11 +72,11 @@ public:
     void                    expandCollapseComponents();
     QList<QTreeWidgetItem*> getListOfTopLevelItems();
     void                    forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                // #NOTE: Forces updating of QTreeWidget, yay!
-    void                    updateInspectorPropertyBoxes(std::list<DrSettings*> changed_items, std::list<long> property_keys_to_update);
-    void                    updateInspectorPropertyBoxesOfSelectedItem(std::list<long> property_keys_to_update);
+    void                    updateInspectorPropertyBoxes(std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys_to_update);
+    void                    updateInspectorPropertyBoxesOfSelectedItem(std::list<ComponentProperty> property_keys_to_update);
     void                    updateLockedSettings();
     void                    updateSubProperties(bool called_from_build = false);
-    void                    updateSettingsFromNewValue(long property_key, DrVariant new_value, long sub_order = 0);
+    void                    updateSettingsFromNewValue(ComponentProperty component_property_pair, DrVariant new_value, long sub_order = 0);
 
     // Getters and Setters
     DrProject*              getParentProject()  { return m_project; }

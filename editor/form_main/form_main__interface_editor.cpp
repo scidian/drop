@@ -49,18 +49,18 @@ void FormMain::buildAssetTree() {
 }
 
 // Sends new list to Inspector
-void FormMain::buildInspector(QList<long> key_list, bool rebuild_only) {
+void FormMain::buildInspector(QList<long> entity_key_list, bool rebuild_only) {
     // If passed the no key constant, remove it to make an empty list
-    key_list.removeOne(c_no_key);
+    entity_key_list.removeOne(c_no_key);
 
     // If we're currently in the middle of selecting with rubber band box, don't update yet
     if (currentViewMode() == View_Mode::Selecting) return;
 
     // If key_list.count() == 0, then an empty list was passed in. This will clear the Inspector.
     // If we're doing anything at all in viewEditor (i.e. View_Mode != None), let's wait to clear the Inspector.
-    if (currentViewMode() != View_Mode::None && key_list.count() == 0) return;
+    if (currentViewMode() != View_Mode::None && entity_key_list.count() == 0) return;
 
-    treeInspector->buildInspectorFromKeys(key_list, rebuild_only);
+    treeInspector->buildInspectorFromKeys(entity_key_list, rebuild_only);
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long build_count = 0;
@@ -87,7 +87,7 @@ void FormMain::buildScene(long stage_key) {
     sceneEditor->scene_mutex.unlock();
 }
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<Props> property_keys) {
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys) {
     // If theres notthing to update, go ahead and get out now
     if (changed_items.empty()) return;
     if (property_keys.empty()) return;
@@ -98,14 +98,11 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
     if (currentViewMode() == View_Mode::Resizing)       return;
     if (currentViewMode() == View_Mode::Rotating)       return;
 
-    // Convert list to longs
-    std::list<long> property_keys_as_long = Dr::ConvertPropertyListToLongs(property_keys);
-
     // ***** This order is semi important, best not to try and change it
-    if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItems(changed_items, property_keys_as_long);
-    if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys_as_long);
+    if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItems(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys);
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long update_count = 0;

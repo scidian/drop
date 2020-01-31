@@ -31,11 +31,12 @@
 //##
 //##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
-void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(std::list<long> property_keys_to_update) {
+void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(std::list<ComponentProperty> property_keys_to_update) {
     updateInspectorPropertyBoxes( { getParentProject()->findSettingsFromKey(m_selected_key) }, property_keys_to_update);
 }
 
-void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_items, std::list<long> property_keys_to_update) {
+// !!!!! #NOTE: If property_keys_to_update is empty, all boxes are updated!!!!!
+void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys_to_update) {
     if (changed_items.empty()) return;
     // ***** #NOTE: Don't do the following!
     // *****        This function is designed so that all properties update if empty list is passed in!
@@ -50,18 +51,25 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
     if (thing == nullptr) return;
     // !!!!!
 
+    std::list<std::string> component_list;
+    std::list<std::string> property_list;
+    for (auto component_property_pair : property_keys_to_update) {
+        component_list.push_back(component_property_pair.first);
+        property_list.push_back(component_property_pair.second);
+    }
 
     if (thing->getKey() != m_selected_key) return;
     if (m_selected_type != DrType::Thing)  return;
 
     // Go through list of property widgets in inspector
     for (auto widget : m_widgets) {
-        long prop_key = widget->property(User_Property::Key).toInt();
+        std::string component_key = widget->property(User_Property::CompKey).toString().toStdString();
+        std::string property_key =  widget->property(User_Property::PropKey).toString().toStdString();
 
-        if (Dr::ListContains(property_keys_to_update, prop_key) == false &&
-            property_keys_to_update.size() != 0) continue;
+        if (Dr::ListContains(component_list, component_key) == false && property_keys_to_update.size() != 0) continue;
+        if (Dr::ListContains(property_list,  property_key)  == false && property_keys_to_update.size() != 0) continue;
 
-        DrProperty *prop = thing->findPropertyFromPropertyKey(prop_key);
+        DrProperty *prop = thing->getComponentProperty(component_key, property_key);
         if (prop == nullptr) continue;
 
         // ***** Must turn off signals while updating or we will cause recursive function calling as changes to the
@@ -211,14 +219,14 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 //##    Updates the appropriate DrSettings DrProperty Values of the item changed
 //##        in the Inspector after a new value has been accepted
 //####################################################################################
-void TreeInspector::updateSettingsFromNewValue(long component_key, long property_key, DrVariant new_value, long sub_order) {
+void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_property_pair, DrVariant new_value, long sub_order) {
     if (m_selected_key == c_no_key) return;
     DrSettings *settings = getParentProject()->findSettingsFromKey( m_selected_key );
 
     DrPointF temp_pointf;
 
     if (settings != nullptr) {
-        DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
+        DrProperty *property = settings->getComponentProperty(component_property_pair);
 
         switch (property->getPropertyType()) {
             case Property_Type::BoolEnabled: {
@@ -316,7 +324,7 @@ void TreeInspector::updateSettingsFromNewValue(long component_key, long property
                 break;
         }
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, { settings }, { static_cast<Props>(property_key) } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, { settings }, { component_property_pair } );
     }
 }
 
@@ -325,17 +333,15 @@ void TreeInspector::updateSettingsFromNewValue(long component_key, long property
 //##    SLOTS: Handles Expand / Collapse of QTreeWidgetItems
 //####################################################################################
 void TreeInspector::handleCollapsed(QTreeWidgetItem *item) {
-    long key = item->data(0, User_Roles::Key).toLongLong();
-    if (key < 0) return;
-    Comps comp = static_cast<Comps>(key);
-    Dr::SetInspectorExpanded(comp, false);
+    std::string component_key = item->data(0, User_Roles::CompKey).toString().toStdString();
+    if (component_key == "") return;
+    Dr::SetInspectorExpanded(component_key, false);
 }
 
 void TreeInspector::handleExpanded(QTreeWidgetItem *item) {
-    long key = item->data(0, User_Roles::Key).toLongLong();
-    if (key < 0) return;
-    Comps comp = static_cast<Comps>(key);
-    Dr::SetInspectorExpanded(comp, true);
+    std::string component_key = item->data(0, User_Roles::CompKey).toString().toStdString();
+    if (component_key == "") return;
+    Dr::SetInspectorExpanded(component_key, true);
 }
 
 
@@ -345,10 +351,10 @@ void TreeInspector::handleExpanded(QTreeWidgetItem *item) {
 void TreeInspector::expandCollapseComponents() {
     ///this->expandAll();
     for (auto &item : getListOfTopLevelItems()) {
-        long comp_key = item->data(0, User_Roles::Key).toLongLong();
-        if (comp_key < 0) continue;
+        std::string component_key = item->data(0, User_Roles::CompKey).toString().toStdString();
+        if (component_key == "") continue;
 
-        if (Dr::GetInspectorExpanded(static_cast<Comps>(comp_key))) {
+        if (Dr::GetInspectorExpanded(component_key)) {
             if (item->isExpanded() == false) {
                 this->expandItem( item );
                 ///this->expandRecursively( this->indexFromItem(item) );

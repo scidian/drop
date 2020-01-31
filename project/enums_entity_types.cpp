@@ -86,14 +86,6 @@ std::string StringFromEffectType(DrEffectType type) {
     }
 }
 
-std::list<long> ConvertPropertyListToLongs(std::list<Props> list) {
-    std::list<long> new_list;
-    for (auto item : list) {
-        new_list.push_back(static_cast<long>(item));
-    }
-    return new_list;
-}
-
 
 
 

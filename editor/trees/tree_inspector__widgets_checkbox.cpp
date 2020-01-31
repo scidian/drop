@@ -29,7 +29,7 @@
 //##    Checkbox
 //####################################################################################
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type check_type) {
-    long property_key = property->getPropertyKey();
+    std::string property_key = property->getPropertyKey();
 
     DrQCheckBox *check = new DrQCheckBox();
     check->setObjectName("checkInspector");
@@ -40,10 +40,8 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setTristate(false);
     check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
-    check->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
-
-    check->setProperty(User_Property::CompKey, QVariant::fromValue(property->getParentComponent()->getComponentKey()) );
-    check->setProperty(User_Property::PropKey, QVariant::fromValue(property->getPropertyKey()) );
+    check->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    check->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
 
     if (check_type == Property_Type::BoolEnabled) {
         std::vector<DrVariant> prop_list = property->getValue().toVector();
@@ -55,7 +53,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     getHoverHandler()->attachToHoverHandler(check, property);
     addToWidgetList(check);
 
-    connect (check, &QCheckBox::toggled, [this, property_key](bool checked) { updateSettingsFromNewValue( property_key, checked );  });
+    connect (check, &QCheckBox::toggled, [this, property](bool checked) { updateSettingsFromNewValue( property->getCompPropPair(), checked );  });
 
     return check;
 }
@@ -66,7 +64,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 //##        std::vector<DrVariant> of 6 values: bool, double value, min, max, double step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
-    long property_key = property->getPropertyKey();
+    std::string property_key = property->getPropertyKey();
 
     QFrame *spin_pair = new QFrame();
     spin_pair->setFixedHeight(25);
@@ -86,7 +84,8 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     check_left->setTristate(false);
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
-    check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    check_left->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    check_left->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
@@ -96,7 +95,8 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
     spin_right->setRange(property->getValue().toVector()[2].toDouble(), property->getValue().toVector()[3].toDouble());
     spin_right->setSingleStep(property->getValue().toVector()[4].toDouble());
-    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_right->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    spin_right->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     spin_right->setEnabled(property->getValue().toVector()[0].toBool());
 
     horizontal_split->addWidget(check_left);
@@ -111,12 +111,12 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     spin_right->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_right));
 
-    connect (check_left, &QCheckBox::toggled, [this, property_key, spin_right](bool checked) {
-        updateSettingsFromNewValue( property_key, checked );
+    connect (check_left, &QCheckBox::toggled, [this, property, spin_right](bool checked) {
+        updateSettingsFromNewValue( property->getCompPropPair(), checked );
         spin_right->setEnabled( checked );
     });
     connect (spin_right, QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
-         this, [this, property_key] (double d) { updateSettingsFromNewValue(property_key, d, 1); });
+         this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 1); });
 
     return spin_pair;
 }
@@ -127,7 +127,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 //##        std::vector<DrVariant> of 6 values: bool, int value, min, max, int step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
-    long property_key = property->getPropertyKey();
+    std::string property_key = property->getPropertyKey();
 
     QFrame *spin_pair = new QFrame();
     spin_pair->setFixedHeight(25);
@@ -148,7 +148,8 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     check_left->setTristate(false);
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
-    check_left->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    check_left->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    check_left->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
@@ -163,7 +164,8 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     spin_right->setRange(property->getValue().toVector()[2].toInt(), property->getValue().toVector()[3].toInt());
     spin_right->setSingleStep(property->getValue().toVector()[4].toInt());
     spin_right->setValue(property->getValue().toVector()[1].toInt());
-    spin_right->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    spin_right->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    spin_right->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     spin_right->setEnabled(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(spin_right, property);
 
@@ -179,12 +181,12 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     spin_right->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     spin_right->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_right));
 
-    connect (check_left, &QCheckBox::toggled, [this, property_key, spin_right](bool checked) {
-        updateSettingsFromNewValue( property_key, checked );
+    connect (check_left, &QCheckBox::toggled, [this, property, spin_right](bool checked) {
+        updateSettingsFromNewValue( property->getCompPropPair(), checked );
         spin_right->setEnabled( checked );
     });
     connect (spin_right, QOverload<int>::of(&QSpinBox::valueChanged),
-         this, [this, property_key] (int i) { updateSettingsFromNewValue(property_key, i, 1); });
+         this, [this, property] (int i) { updateSettingsFromNewValue(property->getCompPropPair(), i, 1); });
 
     return spin_pair;
 }

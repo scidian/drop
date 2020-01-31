@@ -15,6 +15,7 @@
 #include "core/types/dr_variant.h"
 #include "editor/constants_advisor_info.h"
 #include "editor/enums_editor.h"
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
 
 // Forward declarations
@@ -48,11 +49,11 @@ public:
 
     // Editor Functions
     virtual void        buildAssetTree() = 0;
-    virtual void        buildInspector(QList<long> key_list, bool rebuild_only = false) = 0;
+    virtual void        buildInspector(QList<long> entity_key_list, bool rebuild_only = false) = 0;
     virtual void        buildProjectTree() = 0;
     virtual void        buildScene(long stage_key) = 0;
 
-    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<Props> property_keys) = 0;
+    virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys) = 0;
     virtual void        updateInspectorEnabledProperties() = 0;
     virtual void        updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list = QList<long>{ }) = 0;
 

@@ -82,10 +82,10 @@ void AddToColorHistory(DrColor color) {
 bool        GetAssetExpanded(Asset_Category asset_type)                         { return l_asset_categories[asset_type]; }
 void        SetAssetExpanded(Asset_Category asset_type, bool expanded)          { l_asset_categories[asset_type] = expanded; }
 
-bool        GetInspectorExpanded(std::string component_name_to_check) {
-                auto it = l_components.find(component_name_to_check);
+bool        GetInspectorExpanded(std::string component_key_to_check) {
+                auto it = l_components.find(component_key_to_check);
                 if (it != l_components.end()) return it->second; else return false; }
-void        SetInspectorExpanded(std::string component_name_to_set, bool expanded) { l_components[component_name_to_set] = expanded; }
+void        SetInspectorExpanded(std::string component_key_to_set, bool expanded) { l_components[component_key_to_set] = expanded; }
 
 
 //####################################################################################

@@ -17,7 +17,7 @@ class DrSettings;
 class DrProperty;
 
 // Type definitions
-typedef std::map<long, DrProperty*> PropertyMap;
+typedef std::map<std::string, DrProperty*> PropertyMap;
 
 
 //####################################################################################
@@ -35,11 +35,11 @@ private:
 
     // The 6 Parts of Data for Every Component
     std::string     m_display_name = "Unknown Component";
-    std::string     m_description = "No description";
+    std::string     m_description = "No description.";
     std::string     m_icon = "";
     DrColor         m_color = DrColor(128, 128, 128, 255);
     bool            m_turned_on = false;
-    long            m_component_key;
+    std::string     m_component_key = "";
 
     // For now this is not stored, assignined during creation in void DrStage::addComponent()
     // Used for sorting in Object Inspector
@@ -47,22 +47,21 @@ private:
 
 public:
     // Constructor / Destructor
-    DrComponent(DrSettings *parent_settings, std::string new_display_name, std::string new_description, DrColor new_color, long new_key, bool new_turned_on);
+    DrComponent(DrSettings *parent_settings, std::string new_display_name, std::string new_description, DrColor new_color, std::string new_key, bool new_turned_on);
     ~DrComponent();
 
     // Getters / Setters
     DrSettings*         getParentSettings() { return m_parent_settings; }
 
     PropertyMap&        getPropertyMap() { return m_properties; }
-    DrProperty*         getProperty(long setting);
-    DrProperty*         getProperty(Props setting);
+    DrProperty*         getProperty(std::string property_key);
 
     std::string     getDisplayName() { return m_display_name; }
     std::string     getDescription() { return m_description; }
     std::string     getIcon() { return m_icon; }
     DrColor         getColor() { return m_color; }
     bool            isTurnedOn() { return m_turned_on; }
-    long            getComponentKey() { return m_component_key; }
+    std::string     getComponentKey() { return m_component_key; }
 
     void            setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
     void            setDescription(std::string new_description) { m_description = new_description; }
@@ -77,7 +76,7 @@ public:
     void            setListOrder(int order) { m_list_order = order; }
 
     // Building Calls
-    DrProperty*     addProperty(Props      property_number,
+    DrProperty*     addProperty(std::string     property_key,
                                 Property_Type   type,
                                 DrVariant       value,
                                 std::string     display_name,

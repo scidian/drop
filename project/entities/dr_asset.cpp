@@ -143,11 +143,11 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
 //####################################################################################
 //##    Updates Default Animation Images / Collsion Shape
 //####################################################################################
-void DrAsset::updateAnimationProperty(std::list<long> image_keys, Props animation_property) {
+void DrAsset::updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key) {
     if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
 
     // ***** Get existing DrProperty to Replace
-    DrProperty *property =   findPropertyFromPropertyKey(animation_property);
+    DrProperty *property =   getComponentProperty(animation_component_property_key);
     if (property == nullptr) return;
     long old_animation = property->getValue().toLong();
 
@@ -155,7 +155,7 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, Props animatio
     DrAnimation *animation = getParentProject()->addAnimation(image_keys);    
     property->setValue( animation->getKey() );
 
-    if (property->getPropertyKey() == static_cast<int>(Props::Asset_Animation_Idle)) {
+    if (property->getPropertyKey() == Props::Asset_Animation_Idle) {
         DrBitmap     new_bitmap = animation->getFirstFrameImage()->getBitmap();
         m_width =    new_bitmap.width;
         m_height =   new_bitmap.height;

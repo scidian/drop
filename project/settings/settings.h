@@ -18,7 +18,7 @@ class DrProperty;
 class DrComponent;
 
 // Type definitions
-typedef std::map<long, DrComponent*> ComponentMap;
+typedef std::map<std::string, DrComponent*> ComponentMap;
 
 
 //####################################################################################
@@ -67,25 +67,20 @@ public:
     ComponentMap&   getComponentMap()                   { return m_components; }
     long            getComponentCount()                 { return static_cast<int>(m_components.size()); }
 
-    DrComponent*    getComponent(long component)        { return m_components[component]; }
-    DrComponent*    getComponent(Comps component)  { return m_components[static_cast<long>(component)]; }
-    DrProperty*     getComponentProperty(long component, long property);
-    DrProperty*     getComponentProperty(Comps component, Props property);
-    DrVariant       getComponentPropertyValue(long component, long property);
-    DrVariant       getComponentPropertyValue(Comps component, Props property);
+    DrComponent*    getComponent(std::string component_key)  { return m_components[component_key]; }
+    DrProperty*     getComponentProperty(std::string component_key, std::string property);
+    DrProperty*     getComponentProperty(ComponentProperty component_property_pair);
+    DrVariant       getComponentPropertyValue(std::string component_key, std::string property_key);
 
-    void            setComponentPropertyValue(long component, long property, DrVariant value);
-    void            setComponentPropertyValue(Comps component, Props property, DrVariant value);
+    void            setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value);
 
     // Component / Property Searching
-    DrComponent*    findComponentFromPropertyKey(long property_key_to_find);
-    DrComponent*    findComponentFromPropertyKey(Comps property_key_to_find);
-    DrProperty*     findPropertyFromPropertyKey(long property_key_to_find);
-    DrProperty*     findPropertyFromPropertyKey(Props property_key_to_find);
+    DrComponent*    findComponentFromPropertyKey(std::string property_key_to_find);
+    DrProperty*     findPropertyFromPropertyKey(std::string property_key_to_find);
 
     // Component / Property Building
-    DrComponent*    addComponent(Comps component, std::string display_name, std::string description, DrColor color, bool is_turned_on);
-    DrProperty*     addPropertyToComponent(Comps component, Props property_number, Property_Type type, DrVariant value,
+    DrComponent*    addComponent(std::string component_key, std::string display_name, std::string description, DrColor color, bool is_turned_on);
+    DrProperty*     addPropertyToComponent(std::string component_key, std::string property_key, Property_Type type, DrVariant value,
                                            std::string display_name, std::string description, bool is_hidden = false, bool is_editable = true);
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();

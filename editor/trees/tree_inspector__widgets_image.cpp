@@ -51,10 +51,11 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     image_frame->setMinimumHeight(frame_height);
     image_frame->setObjectName("inspectorImageFrame");
 
-    long property_key = property->getPropertyKey();
+    std::string property_key = property->getPropertyKey();
     image_frame->setProperty(User_Property::Mouse_Over, false);                             // Initialize mouse user data, event filter updates this info
     image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                       // Used to track when the mouse
-    image_frame->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    image_frame->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    image_frame->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     getHoverHandler()->attachToHoverHandler(image_frame, property);
     addToWidgetList(image_frame);
 
@@ -151,8 +152,10 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     DrImageHolder *frame = dynamic_cast<DrImageHolder*>(object);
     if (frame == nullptr) return QObject::eventFilter(object, event);
     long settings_key = getEditorRelay()->getInspector()->getSelectedKey();
-    long property_key = frame->property(User_Property::Key).toLongLong();
-    if (settings_key <= 0 || property_key <= 0) return QObject::eventFilter(object, event);
+    std::string component_key = frame->property(User_Property::CompKey).toString().toStdString();
+    std::string property_key =  frame->property(User_Property::PropKey).toString().toStdString();
+
+    if (settings_key <= 0 || property_key == "") return QObject::eventFilter(object, event);
     DrProject  *project =   m_editor_relay->currentProject();               if (project == nullptr)  return QObject::eventFilter(object, event);
     DrSettings *settings =  project->findSettingsFromKey(settings_key);     if (settings == nullptr) return QObject::eventFilter(object, event);
 
@@ -247,7 +250,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 DrImage *image = Dr::AddImage(project, file_path);
                 image_keys.push_back(image->getKey());
             }
-            asset->updateAnimationProperty( image_keys, static_cast<Props>(property->getPropertyKey()) );
+            asset->updateAnimationProperty( image_keys, property->getCompPropPair() );
 
             // Update all Things, Thing_Size that use Asset
             for (auto world_pair : project->getWorldMap()) {

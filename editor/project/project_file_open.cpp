@@ -325,7 +325,7 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     // ***** Go through and load Components
     for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
-        QString map_key = QString::number(component->getComponentKey()) + ":";
+        QString map_key = QString::fromStdString(component->getComponentKey()) + ":";
         QString k;
         ///k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString().toStdString()   );
         k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString().toStdString()   );
@@ -341,15 +341,15 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
 
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrPropertyCollision class
-            if (property->getPropertyKey() == static_cast<int>(Props::Asset_Collision_Image_Shape)) continue;
+            if (property->getPropertyKey() == Props::Asset_Collision_Image_Shape) continue;
 
             // !!!!! #NOTE: Base Key / Idle Animation is set upon Asset Creation
-            if (property->getPropertyKey() == static_cast<int>(Props::Asset_Animation_Idle)) continue;
+            if (property->getPropertyKey() == Props::Asset_Animation_Idle) continue;
 
 
 
             // ***** Check data type is the same as we were expecting
-            QString map_key = QString::number(component->getComponentKey()) + ":" + QString::number(property->getPropertyKey()) + ":";
+            QString map_key = QString::fromStdString(component->getComponentKey()) + ":" + QString::fromStdString(property->getPropertyKey()) + ":";
             Property_Type check_property_type;
             k = map_key + "data_type";
             if (checkMapHasKey(map, k)) {
@@ -378,16 +378,16 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
                 }
 
-                if (property->getPropertyKey() != static_cast<long>(Props::Entity_Key)) {
+                if (property->getPropertyKey() != Props::Entity_Key) {
                     k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
                     k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
                 }
 
                 // Check that name is disabled for Things
-                if (entity->getType() == DrType::Thing && property->getPropertyKey() == static_cast<long>(Props::Entity_Name)) {
+                if (entity->getType() == DrType::Thing && property->getPropertyKey() == Props::Entity_Name) {
                     property->setEditable( false );
                 // Keep Sub Order hidden
-                } else if (property->getPropertyKey() == static_cast<long>(Props::Thing_Sub_Z_Order)) {
+                } else if (property->getPropertyKey() == Props::Thing_Sub_Z_Order) {
                     property->setEditable( false );
                     property->setHidden( true );
                 }

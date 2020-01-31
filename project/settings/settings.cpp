@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
+#include "project/components_and_properties.h"
 #include "project/constants_component_info.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
@@ -72,39 +73,32 @@ void DrSettings::addComponentSizeSettings() {
 //####################################################################################
 //##    Component / Property fetching
 //####################################################################################
-void DrSettings::setComponentPropertyValue(long component, long property, DrVariant value) {
-    m_components[component]->getProperty(property)->setValue(value);
-}
-void DrSettings::setComponentPropertyValue(Comps component, Props property, DrVariant value) {
-    m_components[static_cast<long>(component)]->getProperty(property)->setValue(value);
+void DrSettings::setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value) {
+    m_components[component_key]->getProperty(property_key)->setValue(value);
 }
 
-DrVariant DrSettings::getComponentPropertyValue(long component, long property) {
-    return getComponentProperty(component, property)->getValue();
-}
-DrVariant DrSettings::getComponentPropertyValue(Comps component, Props property) {
-    return getComponentProperty(static_cast<long>(component), static_cast<long>(property))->getValue();
-}
-DrProperty* DrSettings::getComponentProperty(Comps component, Props property) {
-    return getComponentProperty(static_cast<long>(component), static_cast<long>(property));
+DrVariant DrSettings::getComponentPropertyValue(std::string component_key, std::string property_key) {
+    DrProperty *property = getComponentProperty(component_key, property_key);
+    return ((property == nullptr) ? 0 : property->getValue());
 }
 
-DrProperty* DrSettings::getComponentProperty(long component, long property) {
-    auto it = m_components.find(component);
+DrProperty* DrSettings::getComponentProperty(ComponentProperty component_property_pair) {
+    return getComponentProperty(component_property_pair.first, component_property_pair.second);
+}
+DrProperty* DrSettings::getComponentProperty(std::string component_key, std::string property_key) {
+    auto it = m_components.find(component_key);
     if (it == m_components.end()) {
         Dr::PrintDebug("Error Code: " + Error_Code::NoComponent + "\n\n"
                        "Component not found in current object \n\n"
-                       "Component ID: \t" + std::to_string(component) + "\n"
+                       "Component ID: \t" + component_key + "\n"
                        "Object Name: \t" + this->getName() + ". \n"
                        "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+        return nullptr;
     }
-    return m_components[component]->getProperty(property);
+    return m_components[component_key]->getProperty(property_key);
 }
 
-DrProperty* DrSettings::findPropertyFromPropertyKey(Props property_key_to_find) {
-    return findPropertyFromPropertyKey(static_cast<long>(property_key_to_find));
-}
-DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
+DrProperty* DrSettings::findPropertyFromPropertyKey(std::string property_key_to_find) {
     for (auto component: m_components) {
         for (auto property: component.second->getPropertyMap()) {
             if (property.second->getPropertyKey() == property_key_to_find) {
@@ -115,10 +109,7 @@ DrProperty* DrSettings::findPropertyFromPropertyKey(long property_key_to_find) {
     return nullptr;
 }
 
-DrComponent* DrSettings::findComponentFromPropertyKey(Comps property_key_to_find) {
-    return findComponentFromPropertyKey(static_cast<long>(property_key_to_find));
-}
-DrComponent* DrSettings::findComponentFromPropertyKey(long property_key_to_find) {
+DrComponent* DrSettings::findComponentFromPropertyKey(std::string property_key_to_find) {
     return findPropertyFromPropertyKey(property_key_to_find)->getParentComponent();
 }
 
@@ -162,16 +153,16 @@ bool DrSettings::setName(std::string new_name) {
 //####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
-DrComponent* DrSettings::addComponent(Comps component, std::string display_name, std::string description, DrColor color, bool is_turned_on) {
-    DrComponent *comp = new DrComponent(this, display_name, description, color, static_cast<long>(component), is_turned_on);
+DrComponent* DrSettings::addComponent(std::string component_key, std::string display_name, std::string description, DrColor color, bool is_turned_on) {
+    DrComponent *comp = new DrComponent(this, display_name, description, color, component_key, is_turned_on);
     comp->setListOrder( static_cast<int>(m_components.size()) );
-    m_components[static_cast<long>(component)] = comp;
+    m_components[component_key] = comp;
     return comp;
 }
 
-DrProperty* DrSettings::addPropertyToComponent(Comps component, Props property_number, Property_Type type,
+DrProperty* DrSettings::addPropertyToComponent(std::string component_key, std::string property_key, Property_Type type,
                                                DrVariant value, std::string display_name, std::string description, bool is_hidden, bool is_editable) {
-    DrProperty *prop = m_components[static_cast<long>(component)]->addProperty(property_number, type, value, display_name, description, is_hidden, is_editable);
+    DrProperty *prop = m_components[component_key]->addProperty(property_key, type, value, display_name, description, is_hidden, is_editable);
     return prop;
 }
 
@@ -204,7 +195,7 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
             DrProperty *to_property =   getComponentProperty(component_pair.first, property_pair.first);
 
             // !!! DO NOT COPY UNIQUE ID KEY !!!
-            if (to_property->getPropertyKey() == static_cast<int>(Props::Entity_Key)) continue;
+            if (to_property->getPropertyKey() == Props::Entity_Key) continue;
 
             // Copy all other properties
             to_property->setValue(      from_property->getValue());

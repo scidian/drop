@@ -19,6 +19,7 @@
 #include "editor/trees/tree_inspector.h"
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
 
@@ -31,16 +32,17 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     edit->setSizePolicy(size_policy);
     edit->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-    long property_key = property->getPropertyKey();
+    std::string property_key = property->getPropertyKey();
 
-    edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    edit->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    edit->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     edit->setText(QString::fromStdString(property->getValue().toString()));
 
     getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QLineEdit::editingFinished,
-             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->text().toStdString() ); });
+             this, [this, property, edit] () { updateSettingsFromNewValue( property->getCompPropPair(), edit->text().toStdString() ); });
 
     return edit;
 }
@@ -55,16 +57,17 @@ QTextEdit* TreeInspector::createTextEdit(DrProperty *property, QFont &font, QSiz
     edit->setLineWrapMode(QTextEdit::LineWrapMode::WidgetWidth);
     edit->setFixedHeight(90);
 
-    long property_key = property->getPropertyKey();
+    std::string property_key = property->getPropertyKey();
 
-    edit->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+    edit->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+    edit->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
     edit->setText(QString::fromStdString(property->getValue().toString()));
 
     getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
     connect (edit,  &QTextEdit::textChanged,
-             this, [this, property_key, edit] () { updateSettingsFromNewValue( property_key, edit->toPlainText().toStdString()); }); /// edit->toHtml() ); });
+             this, [this, property, edit] () { updateSettingsFromNewValue( property->getCompPropPair(), edit->toPlainText().toStdString()); }); /// edit->toHtml() ); });
 
     return edit;
 }

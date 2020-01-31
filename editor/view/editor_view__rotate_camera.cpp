@@ -65,10 +65,12 @@ void DrView::rotateCamera(QPointF mouse_in_view) {
     // Update data model
     if (m_cam_selected->getThingType() == DrThingType::Character) {
         m_cam_selected->setComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Rotation, rotation);
-        m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected }, { Props::Thing_Character_Camera_Rotation });
+        m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected },
+                        { std::make_pair(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Rotation) });
     } else if (m_cam_selected->getThingType() == DrThingType::Camera) {
         m_cam_selected->setComponentPropertyValue(Comps::Thing_Settings_Camera, Props::Thing_Camera_Rotation, rotation);
-        m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected }, { Props::Thing_Camera_Rotation });
+        m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_selected },
+                        { std::make_pair(Comps::Thing_Settings_Camera, Props::Thing_Camera_Rotation) });
     }
 
 }

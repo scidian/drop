@@ -80,8 +80,8 @@ public:
 
     // Other Widget Update Calls
     IEditorRelay*   getEditorRelay() { return m_editor_relay; }
-    void            updateChangesInScene(std::list<DrSettings*> changed_items, std::list<long> property_keys);
-    void            updateItemInScene(DrSettings* changed_item, std::list<long> property_keys);
+    void            updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs);
+    void            updateItemInScene(DrSettings* changed_item, std::list<ComponentProperty> component_property_pairs);
     void            updateItemZValues();
     void            updateSelectionFromKeyList(QList<long> key_list);
     void            updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);

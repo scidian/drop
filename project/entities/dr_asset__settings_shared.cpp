@@ -168,17 +168,14 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            "Touch Drag", "Should this " + type + " be able to be dragged by mouse / touch? If so, how much force "
                                          "to apply? <br><br> <b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!");
 
-    std::vector<DrVariant> sling_properties  {  static_cast<int>(Props::Asset_Slingshot_Arrow_Image),
-                                                static_cast<int>(Props::Asset_Slingshot_Arrow_Offset),
-                                                static_cast<int>(Props::Asset_Slingshot_Arrow_Scale),
-                                                static_cast<int>(Props::Asset_Slingshot_Tail_Image),
-                                                static_cast<int>(Props::Asset_Slingshot_Tail_Offset),
-                                                static_cast<int>(Props::Asset_Slingshot_Tail_Scale),
-                                                static_cast<int>(Props::Asset_Slingshot_Max_Distance),
-                                                static_cast<int>(Props::Asset_Slingshot_Force_Multiplier),
-                                                static_cast<int>(Props::Asset_Slingshot_Future_1),
-                                                static_cast<int>(Props::Asset_Slingshot_Future_2),
-                                                static_cast<int>(Props::Asset_Slingshot_Future_3) };
+    std::vector<DrVariant> sling_properties  {  Props::Asset_Slingshot_Arrow_Image,
+                                                Props::Asset_Slingshot_Arrow_Offset,
+                                                Props::Asset_Slingshot_Arrow_Scale,
+                                                Props::Asset_Slingshot_Tail_Image,
+                                                Props::Asset_Slingshot_Tail_Offset,
+                                                Props::Asset_Slingshot_Tail_Scale,
+                                                Props::Asset_Slingshot_Max_Distance,
+                                                Props::Asset_Slingshot_Force_Multiplier };
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Slingshot_Enabled, Property_Type::BoolEnabled,
                            std::vector<DrVariant>({false, sling_properties }),
                            "Touch Slingshot", "Should this " + type + " be able to be shot by slingshot control? "

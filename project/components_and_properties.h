@@ -5,11 +5,15 @@
 //
 //
 //
-#ifndef ENUMS_DR_SETTINGS_H
-#define ENUMS_DR_SETTINGS_H
+#ifndef COMPONENTS_AND_PROPERTIES_H
+#define COMPONENTS_AND_PROPERTIES_H
 
 #include <map>
 #include <string>
+
+// Type used to hold a Component / Property combo key set
+typedef std::pair<std::string, std::string>     ComponentProperty;
+
 
 //####################################################################################
 //##    Used to track what the DrVariant m_value data type really is
@@ -524,7 +528,7 @@ namespace Props {
 };
 
 
-#endif // ENUMS_DR_SETTINGS_H
+#endif // COMPONENTS_AND_PROPERTIES_H
 
 
 

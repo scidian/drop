@@ -19,7 +19,7 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
                          std::string    new_display_name,
                          std::string    new_description,
                          DrColor        new_color,
-                         long           new_key,
+                         std::string    new_key,
                          bool           new_turned_on) {
     m_parent_settings = parent_settings;
 
@@ -39,37 +39,35 @@ DrComponent::~DrComponent() {
 //####################################################################################
 //##    Get Property
 //####################################################################################
-DrProperty* DrComponent::getProperty(Props setting) { return getProperty(static_cast<long>(setting)); }
-DrProperty* DrComponent::getProperty(long setting) {
-    auto it = m_properties.find(setting);
+DrProperty* DrComponent::getProperty(std::string property_key) {
+    auto it = m_properties.find(property_key);
     if (it == m_properties.end()) {
         Dr::PrintDebug("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
                        "Property not found in object / component \n\n"
-                       "Property ID: \t" +    std::to_string(setting) + "\n"
+                       "Property ID: \t" + property_key + "\n"
                        "Component Name: \t" + this->getDisplayName() + "\n"
-                       "Component ID: \t" +   std::to_string(this->getComponentKey()) + "\n"
+                       "Component ID: \t" + this->getComponentKey() + "\n"
                        "Object Name: \t" + this->m_parent_settings->getName() + "\n"
                        "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + " - End Error.....");
+        return nullptr;
     }
-    return m_properties[setting];
+    return m_properties[property_key];
 }
-
-
 
 
 //####################################################################################
 //##    addProperty functions
 //####################################################################################
-DrProperty* DrComponent::addProperty(Props setting,
+DrProperty* DrComponent::addProperty(std::string property_key,
                                      Property_Type type,
                                      DrVariant value,
                                      std::string display_name,
                                      std::string description,
                                      bool is_hidden,
                                      bool is_editable) {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, static_cast<int>(setting), is_hidden, is_editable);
+    DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, property_key, is_hidden, is_editable);
     prop->setListOrder( static_cast<int>(m_properties.size()) );
-    m_properties[static_cast<int>(setting)] = prop;
+    m_properties[property_key] = prop;
     return prop;
 }
 

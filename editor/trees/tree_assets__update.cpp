@@ -59,12 +59,12 @@ void TreeAssets::ensureSelectedKeyVisible() {
 //####################################################################################
 //##    Updates Asset List (like asset names) if items have been changed
 //####################################################################################
-void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::list<long> property_keys) {
+void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::list<ComponentProperty> component_property_pairs) {
     if (changed_entities.empty()) return;
-    if (property_keys.empty())    return;
+    if (component_property_pairs.empty()) return;
 
     std::list<DrSettings*> newly_changed_items;
-    std::list<Props>  newly_changed_properties;
+    std::list<ComponentProperty> newly_changed_properties;
 
     QFrame  *text_holder;
     QLabel  *asset_name;
@@ -77,40 +77,37 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
             long label_key = frame->property(User_Property::Key).toLongLong();
 
             if (entity_key == label_key) {
-                for (auto property : property_keys) {
-                    Props check_property = static_cast<Props>(property);
+                for (auto component_property_pair : component_property_pairs) {
+                    std::string comp = component_property_pair.first;
+                    std::string prop = component_property_pair.second;
 
-                    switch (check_property) {
-                        case Props::Entity_Name:
-                            asset_text = QString::fromStdString(entity->getName());
+                    if (comp == Comps::Entity_Settings && prop == Props::Entity_Name) {
+                        asset_text = QString::fromStdString(entity->getName());
 
-                            // Update all Things in the project that use this asset name
-                            for (auto world : getParentProject()->getWorldMap()) {
-                                for (auto stage : world.second->getStageMap()) {
-                                    for (auto thing : stage.second->getThingMap()) {
-                                        if (thing.second->getAssetKey() == entity->getKey()) {
-                                            thing.second->setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Name, asset_text.toStdString());
-                                            newly_changed_items.push_back(thing.second);
-                                            if (Dr::ListContains(newly_changed_properties, Props::Entity_Name) == false) {
-                                                newly_changed_properties.push_back(Props::Entity_Name);
-                                            }
+                        // Update all Things in the project that use this asset name
+                        for (auto world : getParentProject()->getWorldMap()) {
+                            for (auto stage : world.second->getStageMap()) {
+                                for (auto thing : stage.second->getThingMap()) {
+                                    if (thing.second->getAssetKey() == entity->getKey()) {
+                                        thing.second->setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Name, asset_text.toStdString());
+                                        newly_changed_items.push_back(thing.second);
+                                        if (Dr::ListContains(newly_changed_properties, component_property_pair) == false) {
+                                            newly_changed_properties.push_back(component_property_pair);
                                         }
                                     }
                                 }
                             }
+                        }
 
-                            // Update asset name label
-                            asset_name = frame->findChild<QLabel*>("assetName");
-                            if (asset_name != nullptr) {
-                                text_holder = frame->findChild<QFrame*>("textHolder");
-                                asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
-                                asset_name->setText( asset_text );
-                            }
-
-                            break;
-
-                        default: ;
+                        // Update asset name label
+                        asset_name = frame->findChild<QLabel*>("assetName");
+                        if (asset_name != nullptr) {
+                            text_holder = frame->findChild<QFrame*>("textHolder");
+                            asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
+                            asset_name->setText( asset_text );
+                        }
                     }
+
                 }
             }
         }

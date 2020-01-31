@@ -77,7 +77,10 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
             QList<DrSettings*> selected_entities = ConvertItemListToSettings(my_scene->getSelectionItems());
             m_editor_relay->updateEditorWidgetsAfterItemChange(
                         Editor_Widgets::Stage_View, { selected_entities.begin(), selected_entities.end() },
-                        { Props::Thing_Position, Props::Thing_Size, Props::Thing_Scale, Props::Thing_Rotation });
+                        {   std::make_pair(Comps::Thing_Transform, Props::Thing_Position),
+                            std::make_pair(Comps::Thing_Transform, Props::Thing_Size),
+                            std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
+                            std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) });
         }
 
         // Release camera

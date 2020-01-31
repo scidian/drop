@@ -25,6 +25,7 @@
 #include "editor/trees/tree_inspector.h"
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
 
@@ -32,8 +33,8 @@
 //##    Colorful button used to represent a Color property
 //####################################################################################
 QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy) {
-    long   property_key =  property->getPropertyKey();
-    QColor color =     QColor::fromRgba(property->getValue().toUInt());
+    std::string property_key = property->getPropertyKey();
+    QColor color = QColor::fromRgba(property->getValue().toUInt());
 
     QWidget *color_box = new QWidget();
     color_box->setSizePolicy(size_policy);
@@ -47,7 +48,8 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         color_button->setObjectName(QStringLiteral("buttonColorBox"));
         color_button->setFont(font);
         color_button->setSizePolicy(size_policy);
-        color_button->setProperty(User_Property::Key, QVariant::fromValue( property_key ));
+        color_button->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
+        color_button->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
         this->updateColorButton(color_button, color);
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
             FormPopupColor *color_popup = new FormPopupColor(getParentProject(), color_box, color_button, -18, 5);
@@ -105,7 +107,9 @@ void TreeInspector::setButtonColor(QWidget *button, DrColor color) {
         ///Dr::AddToColorHistory( DrColor( button->property(User_Property::Color).toUInt() ));
         Dr::AddToColorHistory( color );
         this->updateColorButton(push, Dr::ToQColor(color));
-        this->updateSettingsFromNewValue(push->property(User_Property::Key).toInt(), color.rgba());
+        std::string component_key = push->property(User_Property::CompKey).toString().toStdString();
+        std::string property_key =  push->property(User_Property::PropKey).toString().toStdString();
+        this->updateSettingsFromNewValue(std::make_pair(component_key, property_key), color.rgba());
     }
 }
 
@@ -126,8 +130,10 @@ void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
     if (m_selected_key != c_no_key) {
         DrSettings *settings = getParentProject()->findSettingsFromKey(m_selected_key);
         if (settings) {
-            DrProperty *property = settings->findPropertyFromPropertyKey( button->property(User_Property::Key).toInt() );
-            if (property) {
+            std::string component_key = button->property(User_Property::CompKey).toString().toStdString();
+            std::string property_key =  button->property(User_Property::PropKey).toString().toStdString();
+            DrProperty *property = settings->getComponentProperty(component_key, property_key);
+            if (property != nullptr) {
                 button->setProperty(User_Property::Body, QString::fromStdString(property->getDescription()) + "<br><br><b>Selected:</b> " + color_as_string);
             }
         }

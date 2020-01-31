@@ -15,6 +15,7 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
 
 // Forward declarations
@@ -77,7 +78,7 @@ public:
 
     // Function Calls
     void            forceUpdateOfItemSizes() { this->scheduleDelayedItemsLayout(); }                    // !!!!! #NOTE: Forces updating of QTreeWidget, yay!
-    void            updateAssetList(std::list<DrSettings*> changed_entities, std::list<long> property_keys);
+    void            updateAssetList(std::list<DrSettings*> changed_entities, std::list<ComponentProperty> component_property_pairs);
 
     // Getters / Setters
     IEditorRelay*           getEditorRelay() { return m_editor_relay; }

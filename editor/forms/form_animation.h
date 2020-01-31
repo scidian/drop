@@ -76,12 +76,12 @@ public:
     virtual DrView*             getStageView() override     { return viewEditor; }
 
     virtual void        buildAssetTree() override;
-    virtual void        buildInspector(QList<long> key_list, bool rebuild_only = false) override;
+    virtual void        buildInspector(QList<long> entity_key_list, bool rebuild_only = false) override;
     virtual void        buildProjectTree() override;
     virtual void        buildScene(long stage_key) override;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
-                                                           std::list<Props> property_keys) override;
+                                                           std::list<ComponentProperty> property_keys) override;
     virtual void        updateInspectorEnabledProperties() override;
     virtual void        updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list = QList<long>{ }) override;
 

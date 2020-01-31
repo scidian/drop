@@ -34,7 +34,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
 
 
-    std::vector<DrVariant> background_color_properties { static_cast<int>(Props::World_Background_Color) };
+    std::vector<DrVariant> background_color_properties { Props::World_Background_Color };
     addPropertyToComponent(Comps::World_Settings, Props::World_Use_Background_Color, Property_Type::BoolEnabled,
                            std::vector<DrVariant>({false, background_color_properties }),
                            "Background Color?", "Check this box to use a custom Background Color for this world, otherwise"
@@ -54,9 +54,9 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Switching Speed", "Multiplier to affect how fast Camera switching happens. A value lower than 1.0 will decrease switching "
                                               "speed, higher than 1.0 will increase switching speed (i.e. 0.1 will be slow, 10.0 is very fast).");
 
-    std::vector<DrVariant> auto_zoom_properties { static_cast<int>(Props::World_Camera_Zoom_In_Or_Out),
-                                                  static_cast<int>(Props::World_Camera_Zoom_Multiplier),
-                                                  static_cast<int>(Props::World_Camera_Zoom_Damping) };
+    std::vector<DrVariant> auto_zoom_properties { Props::World_Camera_Zoom_In_Or_Out,
+                                                  Props::World_Camera_Zoom_Multiplier,
+                                                  Props::World_Camera_Zoom_Damping };
     addPropertyToComponent(Comps::World_Camera, Props::World_Camera_Zoom_Enabled, Property_Type::BoolEnabled,
                            std::vector<DrVariant>({false, auto_zoom_properties }),
                            "Auto Zoom?", "Check this box to have Character Cameras change zoom automatically based on Characters speed.");

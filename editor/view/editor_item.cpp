@@ -16,6 +16,7 @@
 #include "editor/project/project.h"
 #include "editor/view/editor_item.h"
 #include "engine/debug_flags.h"
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"

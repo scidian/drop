@@ -152,7 +152,7 @@ void DrView::dropEvent(QDropEvent *event) {
         }
 
         my_scene->addItemToSceneFromThing( thing );
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { Props::Thing_Size } );
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { std::make_pair(Comps::Thing_Transform, Props::Thing_Size) } );
         if (thing_count > 0) {
             thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
             my_scene->updateItemZValues();

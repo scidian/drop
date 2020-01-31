@@ -73,8 +73,8 @@ namespace Dr {
     bool            GetAssetExpanded(Asset_Category asset_type);
     void            SetAssetExpanded(Asset_Category asset_type, bool expanded);
 
-    bool            GetInspectorExpanded(Comps component_to_check);
-    void            SetInspectorExpanded(Comps component_to_set, bool expanded);
+    bool            GetInspectorExpanded(std::string component_key_to_check);
+    void            SetInspectorExpanded(std::string component_key_to_set, bool expanded);
 
 
     // ***** Global Forms

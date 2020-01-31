@@ -17,7 +17,7 @@
 namespace User_Property {
     const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
 
-    ///const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
+    const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
 
     const char CompKey[8] =         "dr_comp";              // Stores Component Key of a Property in a widget
     const char PropKey[8] =         "dr_prop";              // Stores Property  Key of a Property in a widget
@@ -42,6 +42,9 @@ namespace User_Property {
 enum User_Roles {
     Key = 0x0100,                                           // Stores Object Key in User Data of widget / graphicsitem
                                                             // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
+    CompKey,                                                // Stores Component Key
+    PropKey,                                                // Stores Property  Key
+
     Scale,      Pre_Resize_Scale,
     Rotation,   Pre_Rotate_Rotation,
     Z_Order,

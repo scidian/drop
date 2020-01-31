@@ -35,15 +35,17 @@ void DrView::wheelEvent(QWheelEvent *event) {
             setInspectorClearSelection(m_cam_mouse_over);
             double change = (event->delta() > 0) ? 0.25 : -0.25;
             if (m_cam_mouse_over->getThingType() == DrThingType::Character) {
-                double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom).toDouble() + change;
+                double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Zoom).toDouble() + change;
                 if (cam_zoom < 0) cam_zoom = 0;
-                m_cam_mouse_over->setComponentPropertyValue(Components::Thing_Settings_Character, Properties::Thing_Character_Camera_Zoom, cam_zoom);
-                m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over }, { Properties::Thing_Character_Camera_Zoom });
+                m_cam_mouse_over->setComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Zoom, cam_zoom);
+                m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over },
+                                { std::make_pair(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Zoom) });
             } else if (m_cam_mouse_over->getThingType() == DrThingType::Camera) {
-                double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom).toDouble() + change;
+                double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Comps::Thing_Settings_Camera, Props::Thing_Camera_Zoom).toDouble() + change;
                 if (cam_zoom < 0) cam_zoom = 0;
-                m_cam_mouse_over->setComponentPropertyValue(Components::Thing_Settings_Camera, Properties::Thing_Camera_Zoom, cam_zoom);
-                m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over }, { Properties::Thing_Camera_Zoom });
+                m_cam_mouse_over->setComponentPropertyValue(Comps::Thing_Settings_Camera, Props::Thing_Camera_Zoom, cam_zoom);
+                m_editor_relay->updateEditorWidgetsAfterItemChange( Editor_Widgets::Stage_View, { m_cam_mouse_over },
+                                { std::make_pair(Comps::Thing_Settings_Camera, Props::Thing_Camera_Zoom) });
             }
             update();
             return;

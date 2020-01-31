@@ -19,7 +19,7 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
                        std::string      description,
                        Property_Type    type,
                        DrVariant        value,
-                       long             new_key,
+                       std::string      new_key,
                        bool             is_hidden,
                        bool             is_editable) {
     m_parent_settings =     parent_settings;
@@ -34,6 +34,14 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
 
     m_is_hidden =       is_hidden;
     m_is_editable =     is_editable;
+}
+
+
+//####################################################################################
+//##    Returns a std::pair of this properties parent component key, and this properties key
+//####################################################################################
+ComponentProperty DrProperty::getCompPropPair() {
+    return std::make_pair(m_parent_component->getComponentKey(), m_property_key);
 }
 
 

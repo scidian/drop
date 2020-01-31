@@ -13,6 +13,7 @@
 #include <QProxyStyle>
 #include <QTreeWidget>
 
+#include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
 
 // Forward declarations
@@ -61,7 +62,7 @@ public:
     QList<QTreeWidgetItem*>     getListOfChildrenFromItem( QTreeWidgetItem *item);
     void                        installLockBox(DrSettings *entity, QTreeWidgetItem *thing_item);
     void                        processLockClick(QCheckBox *from_lock);
-    void                        updateItems(std::list<DrSettings*> changed_items, std::list<long> property_keys);
+    void                        updateItems(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs);
     void                        updateSelectionFromKeyList(QList<long> key_list);
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 

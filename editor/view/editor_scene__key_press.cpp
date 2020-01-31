@@ -164,8 +164,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         this->updateItemZValues();
         m_editor_relay->buildProjectTree();
         m_editor_relay->getProjectTree()->ensureSelectionVisible();
-        m_editor_relay->getInspector()->updateInspectorPropertyBoxesOfSelectedItem( { static_cast<int>(Props::Thing_Z_Order),
-                                                                                      static_cast<int>(Props::Thing_Sub_Z_Order) } );
+        m_editor_relay->getInspector()->updateInspectorPropertyBoxesOfSelectedItem(
+                                        {   std::make_pair(Comps::Thing_Layering, Props::Thing_Z_Order),
+                                            std::make_pair(Comps::Thing_Layering, Props::Thing_Sub_Z_Order) } );
     }
 
 

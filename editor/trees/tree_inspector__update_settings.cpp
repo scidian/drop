@@ -38,13 +38,14 @@ QList<QTreeWidgetItem*> TreeInspector::getListOfTopLevelItems() {
 void TreeInspector::updateLockedSettings() {
     // Go through each widget in Object Inspector property widget list
     for (auto widget : m_widgets) {
-        long prop_key = widget->property(User_Property::Key).toInt();
-        DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(prop_key);
+        std::string component_key = widget->property(User_Property::CompKey).toString().toStdString();
+        std::string property_key =  widget->property(User_Property::PropKey).toString().toStdString();
+        DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->getComponentProperty(component_key, property_key);
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
-        if (prop->getParentComponent()->getComponentKey() == static_cast<int>(Comps::Hidden_Settings) ||
-            prop->getParentComponent()->getComponentKey() == static_cast<int>(Comps::Size_Settings)) {
+        if (prop->getParentComponent()->getComponentKey() == Comps::Hidden_Settings ||
+            prop->getParentComponent()->getComponentKey() == Comps::Size_Settings) {
             widget->setEnabled( true );
         } else {
             bool enabled = prop->isEditable() && !(prop->getParentSettings()->isLocked());
@@ -56,8 +57,8 @@ void TreeInspector::updateLockedSettings() {
                 }
             }
 
-            if ( prop->getPropertyKey() == static_cast<int>(Props::Entity_Key) ||
-                 prop->getPropertyKey() == static_cast<int>(Props::Entity_Asset_Key)) {
+            if ( prop->getPropertyKey() == Props::Entity_Key ||
+                 prop->getPropertyKey() == Props::Entity_Asset_Key) {
                 QSpinBox *spin = dynamic_cast<QSpinBox*>(widget);
                 if (spin != nullptr) {
                     spin->setReadOnly(true);
@@ -91,9 +92,10 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
         // Go through each property in component property list
         for (int i = 0; i < property_layout->count(); ++i) {
             QWidget *row = property_layout->itemAt(i)->widget();                                if (row == nullptr) continue;
-            long row_key = row->property(User_Property::Key).toLongLong();
+            std::string component_key = row->property(User_Property::CompKey).toString().toStdString();
+            std::string property_key =  row->property(User_Property::PropKey).toString().toStdString();
 
-            DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->findPropertyFromPropertyKey(row_key);
+            DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->getComponentProperty(component_key, property_key);
             if (prop == nullptr) continue;
 
             // We found a property that has sub properties, enabled / disable sub properties based on if on or off
@@ -107,11 +109,11 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
             } else {
                 if (last_found != -1) {
 
-                    std::vector<long> affected_as_longs;
+                    std::vector<std::string> affected_as_strings;
                     for (auto variant : affected)
-                        affected_as_longs.push_back(variant.toLong());
+                        affected_as_strings.push_back(variant.toString());
 
-                    if (Dr::VectorContains(affected_as_longs, prop->getPropertyKey())) {
+                    if (Dr::VectorContains(affected_as_strings, prop->getPropertyKey())) {
                         row->setStyleSheet(QString::fromStdString("QFrame#propertyRow { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"));
                         row->setVisible(enabled);
                         changed = true;
