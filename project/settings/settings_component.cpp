@@ -51,7 +51,7 @@ DrProperty* DrComponent::getProperty(std::string property_key) {
                        "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + " - End Error.....");
         return nullptr;
     }
-    return m_properties[property_key];
+    return (*it).second;
 }
 
 
@@ -67,7 +67,7 @@ DrProperty* DrComponent::addProperty(std::string property_key,
                                      bool is_editable) {
     DrProperty *prop = new DrProperty(m_parent_settings, this, display_name, description, type, value, property_key, is_hidden, is_editable);
     prop->setListOrder( static_cast<int>(m_properties.size()) );
-    m_properties[property_key] = prop;
+    m_properties.insert(std::make_pair(property_key, prop));
     return prop;
 }
 

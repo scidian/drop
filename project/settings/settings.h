@@ -29,13 +29,13 @@ class DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrProject   *m_parent_project;                      // Holds reference to parent Project
+    DrProject   *m_parent_project;                              // Holds reference to parent Project
 
     // Local Variables
-    ComponentMap m_components;                          // Map of pointers to DrComponent classes
+    ComponentMap m_components;                                  // Map of pointers to DrComponent classes
 
-    long         m_is_visible = true;                   // Should this be visible in editor?
-    long         m_is_locked = false;                   // Should this Entity be locked from editing?
+    long         m_is_visible = true;                           // Should this be visible in editor?
+    long         m_is_locked = false;                           // Should this Entity be locked from editing?
 
 
 protected:       // so derived classes can access
@@ -51,27 +51,29 @@ public:
 
     // Getters / Setters
     DrProject*          getParentProject()      { return m_parent_project; }
-
     long                getKey()                { return getComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Key).toLong(); }
-    virtual std::string getName();                                                  // Returns Name from shared "Entity_Name" component
-    virtual bool        setName(std::string new_name);                              // Returns true if successful
 
-    bool                isLocked()                  { return (m_is_locked ||
-                                                              getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Item_Locked).toBool()); }
-    bool                isVisible()                 { return m_is_visible; }
-    void                setLocked(bool locked)      { m_is_locked = locked; }
-    void                setVisible(bool visible)    { m_is_visible = visible; }
+    virtual std::string getName();                              // Returns Name from shared "Entity_Name" component
+    virtual bool        setName(std::string new_name);          // Returns true if successful
+
+    bool            isLocked()                  { return (m_is_locked || getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Item_Locked).toBool()); }
+    bool            isVisible()                 { return m_is_visible; }
+    void            setLocked(bool locked)      { m_is_locked = locked; }
+    void            setVisible(bool visible)    { m_is_visible = visible; }
 
 
     // Component Handling
-    ComponentMap&   getComponentMap()                   { return m_components; }
-    long            getComponentCount()                 { return static_cast<int>(m_components.size()); }
+    ComponentMap&   getComponentMap()           { return m_components; }
+    long            getComponentCount()         { return static_cast<int>(m_components.size()); }
 
-    DrComponent*    getComponent(std::string component_key)  { return m_components[component_key]; }
+    bool            hasComponent(std::string component_key);
+
+    DrComponent*    getComponent(std::string component_key);
     DrProperty*     getComponentProperty(std::string component_key, std::string property);
     DrProperty*     getComponentProperty(ComponentProperty component_property_pair);
     DrVariant       getComponentPropertyValue(std::string component_key, std::string property_key);
 
+    void            setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value);
     void            setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value);
 
     // Component / Property Searching

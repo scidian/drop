@@ -73,19 +73,11 @@ void DrSettings::addComponentSizeSettings() {
 //####################################################################################
 //##    Component / Property fetching
 //####################################################################################
-void DrSettings::setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value) {
-    m_components[component_key]->getProperty(property_key)->setValue(value);
+bool DrSettings::hasComponent(std::string component_key) {
+    return (m_components.find(component_key) != m_components.end());
 }
 
-DrVariant DrSettings::getComponentPropertyValue(std::string component_key, std::string property_key) {
-    DrProperty *property = getComponentProperty(component_key, property_key);
-    return ((property == nullptr) ? 0 : property->getValue());
-}
-
-DrProperty* DrSettings::getComponentProperty(ComponentProperty component_property_pair) {
-    return getComponentProperty(component_property_pair.first, component_property_pair.second);
-}
-DrProperty* DrSettings::getComponentProperty(std::string component_key, std::string property_key) {
+DrComponent* DrSettings::getComponent(std::string component_key) {
     auto it = m_components.find(component_key);
     if (it == m_components.end()) {
         Dr::PrintDebug("Error Code: " + Error_Code::NoComponent + "\n\n"
@@ -95,7 +87,31 @@ DrProperty* DrSettings::getComponentProperty(std::string component_key, std::str
                        "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
         return nullptr;
     }
-    return m_components[component_key]->getProperty(property_key);
+    return (*it).second;
+}
+
+void DrSettings::setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value) {
+    setComponentPropertyValue(component_property_pair.first, component_property_pair.second, value);
+}
+
+void DrSettings::setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value) {
+    DrComponent *component = getComponent(component_key);                       if (component == nullptr) return;
+    DrProperty *property = component->getProperty(property_key);                if (property == nullptr)  return;
+    property->setValue(value);
+}
+
+DrVariant DrSettings::getComponentPropertyValue(std::string component_key, std::string property_key) {
+    DrProperty *property = getComponentProperty(component_key, property_key);
+    return ((property == nullptr) ? DrVariant(static_cast<int>(0)) : property->getValue());
+}
+
+DrProperty* DrSettings::getComponentProperty(ComponentProperty component_property_pair) {
+    return getComponentProperty(component_property_pair.first, component_property_pair.second);
+}
+DrProperty* DrSettings::getComponentProperty(std::string component_key, std::string property_key) {
+    DrComponent *component = getComponent(component_key);
+    if (component == nullptr) return nullptr;
+    return component->getProperty(property_key);
 }
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(std::string property_key_to_find) {
@@ -130,8 +146,8 @@ std::string DrSettings::getName() {
         case DrType::Stage:
         case DrType::Thing:
         case DrType::World:
-            name_component = getComponent(Comps::Entity_Settings);             if (name_component == nullptr) return "No Name Component";
-            name_property  = name_component->getProperty(Props::Entity_Name);  if (name_property ==  nullptr) return "No Name Property";
+            name_component = getComponent(Comps::Entity_Settings);              if (name_component == nullptr) return "No Name Component";
+            name_property  = name_component->getProperty(Props::Entity_Name);   if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();
         case DrType::Frame:     return "DrFrame - Unknown Name";
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
@@ -143,8 +159,8 @@ std::string DrSettings::getName() {
 bool DrSettings::setName(std::string new_name) {
     DrComponent *name_component;
     DrProperty  *name_property;
-    name_component = getComponent(Comps::Entity_Settings);                     if (name_component == nullptr) return false;
-    name_property  = name_component->getProperty(Props::Entity_Name);          if (name_property == nullptr)  return false;
+    name_component = getComponent(Comps::Entity_Settings);                      if (name_component == nullptr) return false;
+    name_property  = name_component->getProperty(Props::Entity_Name);           if (name_property == nullptr)  return false;
     name_property->setValue(new_name);
     return true;
 }
@@ -156,13 +172,14 @@ bool DrSettings::setName(std::string new_name) {
 DrComponent* DrSettings::addComponent(std::string component_key, std::string display_name, std::string description, DrColor color, bool is_turned_on) {
     DrComponent *comp = new DrComponent(this, display_name, description, color, component_key, is_turned_on);
     comp->setListOrder( static_cast<int>(m_components.size()) );
-    m_components[component_key] = comp;
+    m_components.insert(std::make_pair(component_key, comp));
     return comp;
 }
 
 DrProperty* DrSettings::addPropertyToComponent(std::string component_key, std::string property_key, Property_Type type,
                                                DrVariant value, std::string display_name, std::string description, bool is_hidden, bool is_editable) {
-    DrProperty *prop = m_components[component_key]->addProperty(property_key, type, value, display_name, description, is_hidden, is_editable);
+    DrComponent *component = getComponent(component_key);                       if (component == nullptr) return nullptr;
+    DrProperty *prop = component->addProperty(property_key, type, value, display_name, description, is_hidden, is_editable);
     return prop;
 }
 
