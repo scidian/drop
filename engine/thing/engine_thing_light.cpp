@@ -47,7 +47,7 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long origina
 
 
 DrEngineLight::~DrEngineLight() {
-    getWorld()->mark_light_as_deleted.push_back( getKey() );
+    world()->mark_light_as_deleted.push_back( getKey() );
 }
 
 
@@ -55,7 +55,7 @@ DrEngineLight::~DrEngineLight() {
 //##    Override for DrEngineThing::addToWorld()
 //####################################################################################
 void DrEngineLight::addToWorld() {
-    getWorld()->light_count++;
+    world()->light_count++;
 
     DrEngineThing::addToWorld();
 }

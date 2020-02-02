@@ -111,8 +111,8 @@ DrEngineObject::~DrEngineObject() {
     // ***** Signal physics children to remove themselves
     if (body_style != Body_Style::Rigid_Body) {
         for (auto &ball_number : soft_balls) {
-            if (getWorld() != nullptr) {
-                DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
+            if (world() != nullptr) {
+                DrEngineObject *ball = world()->findObjectByKey(ball_number);
                 if (ball != nullptr) {
                     ball->setPhysicsParent(nullptr);
                     ball->remove();
@@ -143,9 +143,9 @@ DrEngineObject::~DrEngineObject() {
         cpBodyEachConstraint(body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
         for (auto joint : joint_list) {
             // Check if constraint to remove is mouse joint (drag joint)
-            if (getWorld() && getWorld()->getEngine()) {
-                if (joint == getWorld()->getEngine()->mouse_joint) {
-                    getWorld()->getEngine()->mouse_joint = nullptr;
+            if (world() && world()->getEngine()) {
+                if (joint == world()->getEngine()->mouse_joint) {
+                    world()->getEngine()->mouse_joint = nullptr;
                 }
             }     
             cpSpaceRemoveConstraint(space, joint);
@@ -163,9 +163,9 @@ DrEngineObject::~DrEngineObject() {
 //####################################################################################
 void DrEngineObject::addToWorld() {
     // Add Body and Shapes to Space
-    cpSpaceAddBody(getWorld()->getSpace(), this->body);
+    cpSpaceAddBody(world()->getSpace(), this->body);
     for (auto shape : shapes)
-        cpSpaceAddShape( getWorld()->getSpace(), shape );
+        cpSpaceAddShape( world()->getSpace(), shape );
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
     if (this->canRotate() == false) {
@@ -181,7 +181,7 @@ void DrEngineObject::addToWorld() {
 }
 
 DrPointF DrEngineObject::mapPositionToScreen() {
-    return getWorld()->getEngine()->getOpenGL()->mapToScreen( getPosition().x, getPosition().y, getZOrder() );
+    return world()->getEngine()->getOpenGL()->mapToScreen( getPosition().x, getPosition().y, getZOrder() );
 }
 
 
@@ -306,9 +306,9 @@ void DrEngineObject::updateRelativeHealth() {
 //####################################################################################
 void DrEngineObject::updateChildrenHealth() {
     if (body_style == Body_Style::Rigid_Body) return;
-    if (getWorld() == nullptr) return;
+    if (world() == nullptr) return;
     for (auto &ball_number : soft_balls) {
-        DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
+        DrEngineObject *ball = world()->findObjectByKey(ball_number);
         if (ball != nullptr) {
             ball->setHealth(this->getHealth());
             ball->setDamageTimer(this->getDamageTimer());

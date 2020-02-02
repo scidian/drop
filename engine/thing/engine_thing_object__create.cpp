@@ -43,8 +43,8 @@ void DrEngineObject::addShapeBox(cpBB box) {
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
-    double width =  getWorld()->getTexture(texture_number)->width() *  extra_scale.x;
-    double height = getWorld()->getTexture(texture_number)->height() * extra_scale.y;
+    double width =  world()->getTexture(texture_number)->width() *  extra_scale.x;
+    double height = world()->getTexture(texture_number)->height() * extra_scale.y;
     addShapeBox(width, height);
 }
 
@@ -62,8 +62,8 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset)
     }
 }
 void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
-    double width =  getWorld()->getTexture(texture_number)->width() *  extra_scale.x;
-    double height = getWorld()->getTexture(texture_number)->height() * extra_scale.y;
+    double width =  world()->getTexture(texture_number)->width() *  extra_scale.x;
+    double height = world()->getTexture(texture_number)->height() * extra_scale.y;
     double radius = (width / 2.0) * radius_multiplier;
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -88,8 +88,8 @@ void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radiu
 }
 
 void DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
-    double width =  getWorld()->getTexture(texture_number)->width();
-    double height = getWorld()->getTexture(texture_number)->height();
+    double width =  world()->getTexture(texture_number)->width();
+    double height = world()->getTexture(texture_number)->height();
     std::vector<DrPointF> points;
     points.push_back(DrPointF(       0.0, +height/2.0));
     points.push_back(DrPointF(-width/2.0, -height/2.0));
@@ -176,8 +176,8 @@ void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
 //####################################################################################
 void DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type) {
     // Figrue out friction and bounce to use for this object
-    double friction = (this->getCustomFriction() < 0) ? getWorld()->getFriction() : this->getCustomFriction();
-    double bounce =   (this->getCustomBounce() < 0)   ? getWorld()->getBounce()   : this->getCustomBounce();
+    double friction = (this->getCustomFriction() < 0) ? world()->getFriction() : this->getCustomFriction();
+    double bounce =   (this->getCustomBounce() < 0)   ? world()->getBounce()   : this->getCustomBounce();
 
     // Setting mass of shape, body mass and moment of inertia are calculated by Chipmunk
     cpShapeSetMass( shape, area * c_mass_multiplier );

@@ -12,7 +12,9 @@
 #include "engine/thing/engine_thing.h"
 #include "project/properties/property_collision.h"
 
+// Type Definitions
 typedef std::vector<std::vector<cpVect>> PolygonList;
+
 
 //####################################################################################
 //##    DrEngineObject

@@ -104,6 +104,7 @@ public:
     // Misc Functions
     std::string         name();                                                             // Returns name of this Entity
     void                remove()                    { m_remove_me = true; }                 // Call to remove this Thing
+    DrEngineWorld*      world()                     { return m_world; }                     // Returns DrWorld this Entity is currently in
 
     // Thing Components
     DrEngineComponent  *component(std::string component_name);
@@ -144,7 +145,6 @@ public:
     void                    setComponent3D(ThingComp3D *component);
     void                    setComponentCamera(ThingCompCamera *component);
 
-
     // Misc Internal Functions
     void                    calculateTimeSinceLastUpdate();
 
@@ -157,7 +157,6 @@ public:
     virtual DrPointF        getSize()  const        { return m_size; }                      // Returns original Thing size
     virtual const double&   getVelocityX() const    { return m_velocity_x; }
     virtual const double&   getVelocityY() const    { return m_velocity_y; }
-    DrEngineWorld*          getWorld()              { return m_world; }
     virtual const double&   getZOrder() const       { return m_z_order; }
 
     virtual void            setAngle(double new_angle)      { m_angle_z = new_angle; }
@@ -171,9 +170,6 @@ public:
     void                    setVelocityX(double x_vel)      { m_velocity_x = x_vel; }
     void                    setVelocityY(double y_vel)      { m_velocity_y = y_vel; }
     virtual void            setZOrder(double z_order)       { m_z_order = z_order; }   
-
-    // World Functions
-    void                    setWorld(DrEngineWorld *world)  { m_world = world; }
 
 };
 

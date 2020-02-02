@@ -72,7 +72,7 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
 
         // Apply force to Children Soft Ball Objects
         for (auto ball_number : object->soft_balls) {
-            DrEngineObject *soft_ball = object->getWorld()->findObjectByKey(ball_number);
+            DrEngineObject *soft_ball = object->world()->findObjectByKey(ball_number);
             if (soft_ball == nullptr) return;
             if (initial_jump) cpBodySetVelocity( soft_ball->body, player_vel );
             else cpBodyApplyForceAtWorldPoint( soft_ball->body, jump_vel * cpBodyGetMass(soft_ball->body) * 50.0, cpBodyGetPosition(soft_ball->body) );

@@ -80,9 +80,6 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
     // If an object was passed in, attach camera to that object
     DrEngineThing *follow = findThingByKey(thing_key_to_follow);
     if (thing_key_to_follow != 0 && follow != nullptr) {
-        // Add Camera Component
-        follow->setComponentCamera(new ThingCompCamera(this, follow));
-
         camera->setThingFollowingKey( thing_key_to_follow );
         camera->setPositionX(   static_cast<float>(follow->getPosition().x) + follow->compCamera()->getCameraPosition().x );
         camera->setPositionY(   static_cast<float>(follow->getPosition().y) + follow->compCamera()->getCameraPosition().y );

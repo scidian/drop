@@ -28,10 +28,14 @@
 //####################################################################################
 // Sets up an object to be controlled as a "player", i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool set_active_camera) {
-    // Create camera
+    // Add Player Components
+    object->setComponentCamera(new ThingCompCamera(this, object));
+
+    // Create Camera
     DrEngineCamera *camera = addCamera(object->getKey());
     if (set_active_camera) setActiveCamera( camera->getKey() );
 
+    // Make Player Changes
     object->setCollisionType( Collision_Type::Damage_Enemy );
     object->setKeyControls( true );
     object->setLostControl( !has_controls_now );                            // Turn on jump / movement buttons
