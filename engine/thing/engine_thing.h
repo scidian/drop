@@ -96,6 +96,7 @@ public:
     DrTime      update_timer = Clock::now();            // Used to keep track of time passed since update() was called last
 
 
+
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Virtual Update Functions
@@ -118,6 +119,14 @@ public:
     void                addComponent(DrEngineComponent *component);
     DrEngineComponent  *component(std::string component_name);
 
+    // Cameras
+    ///long             followCameraID();                                                   // Returns ID of following camera if there is one
+
+    // Properties
+    /// Disable, Enable
+    /// Position, Rotation, Scale, Size, Velocity
+    /// SetColor, GetColor??
+
 
     // #################### INTERNAL FUNCTIONS ####################
 public:
@@ -139,7 +148,7 @@ public:
 
     // Built In Thing Components
     ThingComp3D        *comp3D() { return m_comp_3d; }
-    void                setComponent3D(ThingComp3D *component) { m_comp_3d = component; }
+    void                setComponent3D(ThingComp3D *component);
 
 
     // Misc Internal Functions

@@ -181,6 +181,9 @@ public:
     ///DrEngineThing   *create(std::string name);                           // Will create a Thing based on an DrAsset name
     EngineThings        find(std::string name);                             // Returns a list of Things (entities) with designated name
 
+    // Cameras
+    ///DrEngineCamera  *camera(long camera_id);                             // Returns a camera by ID number
+
     // Variables
     ///DrVariant        global(std::string name);                           // Returns global variable
     ///void             setGlobal(std::string name, DrVariant value);       // Sets global variable
@@ -189,6 +192,7 @@ public:
     ///std::string      device();                                           // Returns device name
     ///DrPointF         screenSize();                                       // Returns screen size of rendering window
     ///void             vibrate(double intensity);                          // Cause device to vibrate
+
 
 
     // #################### INTERNAL FUNCTIONS ####################

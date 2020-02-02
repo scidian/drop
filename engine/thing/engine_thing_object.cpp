@@ -32,13 +32,15 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, std::vector<cpShape*> *sh
 //####################################################################################
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key) : DrEngineThing (world, unique_key, original_key) {
     // Initialize Components
-    addCom
-    setComponent3D(new ThingComp3D());
+    setComponent3D(new ThingComp3D(world, this));
 }
 
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key,
                                double x, double y, double z, DrPointF scale, double friction, double bounce,
                                bool should_collide, bool can_rotate, double angle, float opacity) : DrEngineThing (world, unique_key, original_key) {
+    // Initialize Components
+    setComponent3D(new ThingComp3D(world, this));
+
     // Initialize variables
     polygons.clear();
 

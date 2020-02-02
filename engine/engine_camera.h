@@ -75,7 +75,14 @@ private:
     double m_avg_zoom =          m_zoom;                        // Holds current average zooom target
 
 
-    // #################### FUNCTIONS ####################
+
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
+public:
+    /// Move Camera, Camera Position, Camera Zoom, Camera Spin, Camera Shake
+
+
+
+    // #################### INTERNAL FUNCTIONS ####################
 public:
     // Function Calls
     void            moveCamera(const double& milliseconds);
