@@ -260,6 +260,7 @@ SOURCES += \
     engine/thing/engine_thing_swirl.cpp \
     engine/thing/engine_thing_water.cpp \
     engine/thing_component/thing_comp_3d.cpp \
+    engine/thing_component/thing_comp_camera.cpp \
     engine/world/engine_world.cpp \
     engine/world/engine_world__build_player.cpp \
     engine/world/engine_world__build_world.cpp \
@@ -982,6 +983,7 @@ HEADERS += \
     engine/thing/engine_thing_swirl.h \
     engine/thing/engine_thing_water.h \
     engine/thing_component/thing_comp_3d.h \
+    engine/thing_component/thing_comp_camera.h \
     engine/world/engine_world.h \
     project/components_and_properties.h \
     project/constants_component_info.h \

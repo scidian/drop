@@ -165,7 +165,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
                 soft_body->setDamageRecoil(1000.0);
 
-                ///world->assignPlayerControls(soft_body, false, true, false);
+                ///world->assignPlayerControls(soft_body, false, false);
                 ///softy->setMoveSpeedX(800);
                 ///soft_body->setRotateSpeedZ( 20 );
                 ///soft_body->setJumpCount( 1 );

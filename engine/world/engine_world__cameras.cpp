@@ -80,21 +80,24 @@ DrEngineCamera* DrEngineWorld::addCamera(long thing_key_to_follow, float x, floa
     // If an object was passed in, attach camera to that object
     DrEngineThing *follow = findThingByKey(thing_key_to_follow);
     if (thing_key_to_follow != 0 && follow != nullptr) {
+        // Add Camera Component
+        follow->setComponentCamera(new ThingCompCamera(this, follow));
+
         camera->setThingFollowingKey( thing_key_to_follow );
-        camera->setPositionX(   static_cast<float>(follow->getPosition().x) + follow->getCameraPosition().x );
-        camera->setPositionY(   static_cast<float>(follow->getPosition().y) + follow->getCameraPosition().y );
-        camera->setPositionZ(   static_cast<float>(follow->getZOrder() )    + follow->getCameraPosition().z );
-        camera->setRotation(    follow->getCameraRotation() );
-        camera->setZoom(        follow->getCameraZoom(), true );
-        camera->setLag(         follow->getCameraLag() );
-        camera->setMatchAngle(  follow->getCameraMatch() );
+        camera->setPositionX(   static_cast<float>(follow->getPosition().x) + follow->compCamera()->getCameraPosition().x );
+        camera->setPositionY(   static_cast<float>(follow->getPosition().y) + follow->compCamera()->getCameraPosition().y );
+        camera->setPositionZ(   static_cast<float>(follow->getZOrder() )    + follow->compCamera()->getCameraPosition().z );
+        camera->setRotation(    follow->compCamera()->getCameraRotation() );
+        camera->setZoom(        follow->compCamera()->getCameraZoom(), true );
+        camera->setLag(         follow->compCamera()->getCameraLag() );
+        camera->setMatchAngle(  follow->compCamera()->getCameraMatch() );
         camera->setTarget(      camera->getPosition() );
-        camera->setUpVector(    follow->getCameraUpVector() );
-        camera->setEdge(        Edge_Location::Top,     follow->getCameraEdge(Edge_Location::Top));
-        camera->setEdge(        Edge_Location::Right,   follow->getCameraEdge(Edge_Location::Right));
-        camera->setEdge(        Edge_Location::Bottom,  follow->getCameraEdge(Edge_Location::Bottom));
-        camera->setEdge(        Edge_Location::Left,    follow->getCameraEdge(Edge_Location::Left));
-        follow->setActiveCameraKey(new_key);
+        camera->setUpVector(    follow->compCamera()->getCameraUpVector() );
+        camera->setEdge(        Edge_Location::Top,     follow->compCamera()->getCameraEdge(Edge_Location::Top));
+        camera->setEdge(        Edge_Location::Right,   follow->compCamera()->getCameraEdge(Edge_Location::Right));
+        camera->setEdge(        Edge_Location::Bottom,  follow->compCamera()->getCameraEdge(Edge_Location::Bottom));
+        camera->setEdge(        Edge_Location::Left,    follow->compCamera()->getCameraEdge(Edge_Location::Left));
+        follow->compCamera()->setActiveCameraKey(new_key);
     }
     return camera;
 }

@@ -142,21 +142,21 @@ namespace Comps {
     const std::string Thing_Appearance                  = "Appearance";
     const std::string Thing_Special_Effects             = "SpecialEffects";
 
-    const std::string Thing_Settings_Camera             = "SeCamera";
-    const std::string Thing_Settings_Character          = "SeCharacter";
-    const std::string Thing_Settings_Object             = "SeObject";
-    const std::string Thing_Settings_Text               = "SeText";
+    const std::string Thing_Settings_Camera             = "Camera";
+    const std::string Thing_Settings_Character          = "Character";
+    const std::string Thing_Settings_Object             = "Object";
+    const std::string Thing_Settings_Text               = "Text";
 
-    const std::string Thing_Settings_Fire               = "SeFire";
-    const std::string Thing_Settings_Fisheye            = "SeFisheye";
-    const std::string Thing_Settings_Light              = "SeLight";
-    const std::string Thing_Settings_Mirror             = "SeMirror";
-    const std::string Thing_Settings_Swirl              = "SeSwirl";
-    const std::string Thing_Settings_Water              = "SeWater";
-    const std::string Thing_Settings_Water_Ripple       = "SeWRipple";
-    const std::string Thing_Settings_Water_Wave         = "SeWWave";
-    const std::string Thing_Settings_Water_Refract      = "SeWRefract";
-    const std::string Thing_Settings_Water_Foam         = "SeWFoam";
+    const std::string Thing_Settings_Fire               = "Fire";
+    const std::string Thing_Settings_Fisheye            = "Fisheye";
+    const std::string Thing_Settings_Light              = "Light";
+    const std::string Thing_Settings_Mirror             = "Mirror";
+    const std::string Thing_Settings_Swirl              = "Swirl";
+    const std::string Thing_Settings_Water              = "Water";
+    const std::string Thing_Settings_Water_Ripple       = "WaterRipple";
+    const std::string Thing_Settings_Water_Wave         = "WaterWave";
+    const std::string Thing_Settings_Water_Refract      = "WaterRefract";
+    const std::string Thing_Settings_Water_Foam         = "WaterFoam";
 };
 
 

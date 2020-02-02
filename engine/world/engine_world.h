@@ -224,7 +224,7 @@ public:
     void                addThing(DrEngineThing *thing);
     void                addThings(std::list<DrEngineThing*> things);
 
-    void                assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera);
+    void                assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool set_active_camera);
     void                buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
     void                clearWorld();
     int                 countCharacters();

@@ -86,17 +86,6 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 info.scale, use_friction, use_bounce,
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, player);                                                                 // Load collision shape(s)
-    player->setCameraPositionXY( cam.position );
-    player->setCameraPositionZ( cam.distance );
-    player->setCameraRotation( float(cam.rotation.x), float(cam.rotation.y), float(cam.tilt) );
-    player->setCameraZoom( cam.zoom );
-    player->setCameraLag( cam.lag );
-    player->setCameraUpVector(cam.up);
-    player->setCameraMatch(cam.match_angle);
-    player->setCameraEdge(Edge_Location::Top,    cam.frame_top);
-    player->setCameraEdge(Edge_Location::Right,  cam.frame_right);
-    player->setCameraEdge(Edge_Location::Bottom, cam.frame_bottom);
-    player->setCameraEdge(Edge_Location::Left,   cam.frame_left);
 
     // ***** Apply Character Settings
     player->setMaxSpeedX( max_speed.x );
@@ -143,7 +132,20 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     // Check if there are any active characters, if not, give controls
     bool should_we_give_control = (countCharacters() == 0);
     bool give_camera = should_we_give_control && (this->getActiveCamera() <= 0);
-    assignPlayerControls(player, should_we_give_control, true, give_camera);
+    assignPlayerControls(player, should_we_give_control, give_camera);
+
+    // ***** Camera settings
+    player->compCamera()->setCameraPositionXY( cam.position );
+    player->compCamera()->setCameraPositionZ( cam.distance );
+    player->compCamera()->setCameraRotation( float(cam.rotation.x), float(cam.rotation.y), float(cam.tilt) );
+    player->compCamera()->setCameraZoom( cam.zoom );
+    player->compCamera()->setCameraLag( cam.lag );
+    player->compCamera()->setCameraUpVector(cam.up);
+    player->compCamera()->setCameraMatch(cam.match_angle);
+    player->compCamera()->setCameraEdge(Edge_Location::Top,    cam.frame_top);
+    player->compCamera()->setCameraEdge(Edge_Location::Right,  cam.frame_right);
+    player->compCamera()->setCameraEdge(Edge_Location::Bottom, cam.frame_bottom);
+    player->compCamera()->setCameraEdge(Edge_Location::Left,   cam.frame_left);
 }
 
 

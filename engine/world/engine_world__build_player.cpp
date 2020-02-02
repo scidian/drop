@@ -27,12 +27,11 @@
 //##        i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 //####################################################################################
 // Sets up an object to be controlled as a "player", i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
-void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool add_camera, bool set_active_camera) {
+void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool set_active_camera) {
     // Create camera
-    if (add_camera) {
-        DrEngineCamera *camera = addCamera(object->getKey());
-        if (set_active_camera) setActiveCamera( camera->getKey() );
-    }
+    DrEngineCamera *camera = addCamera(object->getKey());
+    if (set_active_camera) setActiveCamera( camera->getKey() );
+
     object->setCollisionType( Collision_Type::Damage_Enemy );
     object->setKeyControls( true );
     object->setLostControl( !has_controls_now );                            // Turn on jump / movement buttons
@@ -70,7 +69,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 //        ball1->setDepth(30);
 //        addThing(ball1);
 //        ball1->setCameraPositionXY( DrPointF(0, 50) );
-//        assignPlayerControls(ball1, true, true, true);
+//        assignPlayerControls(ball1, true, true);
 //        ball1->setJumpCount( 1 );
 //        ball1->setCanAirJump( false );
 //        ball1->setCanWallJump( true );
@@ -85,7 +84,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 //        ball2->setDepth(30);
 //        addThing(ball2);
 //        ball2->setCameraRotation( -25, -40, 0 );
-//        assignPlayerControls(ball2, false, true, false);
+//        assignPlayerControls(ball2, false, false);
 //        ball2->setJumpCount( c_unlimited_jump );
 //        ball2->setRotateSpeedZ( 20.0 );
 //        ball2->setTouchDrag(true);
@@ -95,7 +94,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         if (dragon != nullptr) {
             DrEngineObject *softy = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(0, 100), 150, 0.8, 0.50, 0.25, false);
             if (softy != nullptr) {
-                assignPlayerControls(softy, true, true, true);
+                assignPlayerControls(softy, true, true);
                 if (getCamerasFollowThing(softy->getKey()).size() > 0)
                     getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
                 softy->setMoveSpeedX(800);
@@ -109,7 +108,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
             DrEngineObject *softy2 = addSoftBodyMesh(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(200, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy2 != nullptr) {
-                assignPlayerControls(softy2, false, true, false);
+                assignPlayerControls(softy2, false, false);
                 if (getCamerasFollowThing(softy2->getKey()).size() > 0)
                     getCamerasFollowThing(softy2->getKey())[0]->setLag(DrPointF(200, 200));
                 softy2->setMoveSpeedX(800);
@@ -122,7 +121,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 //            DrEngineObject *softy3 = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(-200, 250), 400, 0.8, 0.50, 0.25, false);
 //            if (softy3 != nullptr) {
-//                assignPlayerControls(softy3, false, true, false);
+//                assignPlayerControls(softy3, false, false);
 //                if (getCamerasFollowThing(softy3->getKey()).size() > 0)
 //                    getCamerasFollowThing(softy3->getKey())[0]->setLag(DrPointF(200, 200));
 //                softy3->setMoveSpeedX(800);
@@ -139,8 +138,8 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
-        ball1->setCameraRotation( -15, 15, 0 );
-        assignPlayerControls(ball1, true, true, true);
+        assignPlayerControls(ball1, true, true);
+        ball1->compCamera()->setCameraRotation( -15, 15, 0 );
         ball1->setJumpCount( -1 );
         ball1->setMoveSpeedY( 300 );
         ball1->cast_shadows = false;
@@ -191,9 +190,10 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         rover->addShapePolygon(points);
         rover->comp3D()->setDepth(30);
         addThing(rover);
+        rover->setComponentCamera(new ThingCompCamera(this, rover));
         ///rover->setCameraRotation( -15, 15, 0 );
-        rover->setCameraRotation( -15,  -25, 0 );
-        rover->setCameraPositionXY( DrPointF(0, 200) );
+        rover->compCamera()->setCameraRotation( -15,  -25, 0 );
+        rover->compCamera()->setCameraPositionXY( DrPointF(0, 200) );
         setActiveCamera( addCamera(rover->getKey())->getKey() );
 
 

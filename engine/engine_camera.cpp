@@ -194,14 +194,15 @@ void DrEngineCamera::updateCamera() {
     if (m_follow_key == c_no_key) return;
     DrEngineThing *follow = getThingFollowing();                        if (follow == nullptr) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);     if (object == nullptr) return;
+    ThingCompCamera *comp_camera = object->compCamera();                if (comp_camera == nullptr) return;
     if (object->isDying() || object->isDead()) return;
 
-    double follow_pos_x = object->getPosition().x + static_cast<double>(object->getCameraPosition().x);
-    double follow_pos_y = object->getPosition().y + static_cast<double>(object->getCameraPosition().y);
-    double follow_pos_z = object->getZOrder() +     static_cast<double>(object->getCameraPosition().z);
-    double follow_previous_pos_x = static_cast<double>(object->getPreviousPosition().x) + static_cast<double>(object->getCameraPosition().x);
-    double follow_previous_pos_y = static_cast<double>(object->getPreviousPosition().y) + static_cast<double>(object->getCameraPosition().y);
-    double follow_previous_pos_z = static_cast<double>(object->getPreviousPosition().z) + static_cast<double>(object->getCameraPosition().z);
+    double follow_pos_x = object->getPosition().x + static_cast<double>(comp_camera->getCameraPosition().x);
+    double follow_pos_y = object->getPosition().y + static_cast<double>(comp_camera->getCameraPosition().y);
+    double follow_pos_z = object->getZOrder() +     static_cast<double>(comp_camera->getCameraPosition().z);
+    double follow_previous_pos_x = static_cast<double>(object->getPreviousPosition().x) + static_cast<double>(comp_camera->getCameraPosition().x);
+    double follow_previous_pos_y = static_cast<double>(object->getPreviousPosition().y) + static_cast<double>(comp_camera->getCameraPosition().y);
+    double follow_previous_pos_z = static_cast<double>(object->getPreviousPosition().z) + static_cast<double>(comp_camera->getCameraPosition().z);
 
     // Check for Lag Bounding Box
     bool update_x = false;

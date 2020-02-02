@@ -22,13 +22,6 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
     m_key = unique_key;
     m_original_project_key = original_key;
 
-    m_camera_rotation = c_default_camera_rot;
-
-    m_camera_edges[Edge_Location::Top] =    Frame_Edge::Normal;
-    m_camera_edges[Edge_Location::Right] =  Frame_Edge::Normal;
-    m_camera_edges[Edge_Location::Bottom] = Frame_Edge::Normal;
-    m_camera_edges[Edge_Location::Left] =   Frame_Edge::Normal;
-
     init();
 }
 
@@ -149,7 +142,8 @@ void DrEngineThing::setComponent(std::string component_name, DrEngineComponent *
 //####################################################################################
 //##    Components Functions
 //####################################################################################
-void DrEngineThing::setComponent3D(ThingComp3D *component) {    m_comp_3d = component;      setComponent(component->name(), component); }
+void DrEngineThing::setComponent3D(ThingComp3D *component)          { m_comp_3d = component;        setComponent(component->name(), component); }
+void DrEngineThing::setComponentCamera(ThingCompCamera *component)  { m_comp_camera = component;    setComponent(component->name(), component); }
 
 
 //####################################################################################
