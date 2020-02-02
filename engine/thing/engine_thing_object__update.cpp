@@ -105,7 +105,7 @@ bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area)
     }
 
 
-    return (remove || DrEngineThing::update(time_passed, time_warp, area) || m_remove_me);
+    return (remove || DrEngineThing::update(time_passed, time_warp, area));
 };
 
 

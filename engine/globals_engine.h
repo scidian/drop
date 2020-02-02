@@ -17,6 +17,7 @@
 #include "core/types/dr_variant.h"
 #include "engine/constants_engine.h"
 #include "engine/enums_engine.h"
+#include "project/components_and_properties.h"
 #include "project/constants_entity_keys.h"
 #include "project/enums_entity_types.h"
 
@@ -40,13 +41,14 @@ class FormEngine;
 
 
 // Type definitions
-typedef std::chrono::high_resolution_clock  Clock;
-typedef std::vector<   DrEngineCamera*>     EngineCameraList;
-typedef std::map<long, DrEngineCamera*>     EngineCameraMap;
-typedef std::vector<   DrEngineSpawner*>    EngineSpawners;
-typedef std::map<long, DrEngineTexture*>    EngineTextureMap;
-typedef std::vector<   DrEngineThing*>      EngineThings;
-typedef std::map<long, DrEngineWorld*>      EngineWorldMap;
+typedef std::chrono::high_resolution_clock          Clock;
+typedef std::vector<   DrEngineCamera*>             EngineCameraList;
+typedef std::map<long, DrEngineCamera*>             EngineCameraMap;
+typedef std::map<std::string, DrEngineComponent*>   EngineComponents;
+typedef std::vector<   DrEngineSpawner*>            EngineSpawners;
+typedef std::map<long, DrEngineTexture*>            EngineTextureMap;
+typedef std::vector<   DrEngineThing*>              EngineThings;
+typedef std::map<long, DrEngineWorld*>              EngineWorldMap;
 
 
 // Input / Engine Globals - defined in engine_update_player.cpp

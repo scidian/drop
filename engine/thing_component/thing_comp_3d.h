@@ -8,18 +8,19 @@
 #ifndef THING_COMP_3D_H
 #define THING_COMP_3D_H
 
+#include "engine/engine_component.h"
 #include "engine/globals_engine.h"
 
 
 //####################################################################################
 //##    ThingComp3D
-//##        3D Component for DrEngineThing
+//##        Built-In Component for DrEngineThing dealing with 3D Properties
 //############################
-class ThingComp3D
+class ThingComp3D : public DrEngineComponent
 {
 public:
     // Constructor / Destructor
-    ThingComp3D();
+    ThingComp3D(DrEngineWorld *engine_world, DrEngineThing *parent_thing);
     virtual ~ThingComp3D();
 
 private:

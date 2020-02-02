@@ -133,30 +133,30 @@ namespace Comps {
     const std::string Stage_Grid                        = "StGrid";
 
     // ***** DrThing Components
-    const std::string Thing_Transform                   = "ThTransform";
-    const std::string Thing_Layering                    = "ThLayering";
-    const std::string Thing_Movement                    = "ThMovement";
-    const std::string Thing_Spawn                       = "ThSpawn";
-    const std::string Thing_Lighting                    = "ThLighting";
-    const std::string Thing_3D                          = "Th3D";
-    const std::string Thing_Appearance                  = "ThAppearance";
-    const std::string Thing_Special_Effects             = "ThSpecialEffects";
+    const std::string Thing_Transform                   = "Transform";
+    const std::string Thing_Layering                    = "Layering";
+    const std::string Thing_Movement                    = "Movement";
+    const std::string Thing_Spawn                       = "Spawn";
+    const std::string Thing_Lighting                    = "Lighting";
+    const std::string Thing_3D                          = "3D";
+    const std::string Thing_Appearance                  = "Appearance";
+    const std::string Thing_Special_Effects             = "SpecialEffects";
 
-    const std::string Thing_Settings_Camera             = "ThSeCamera";
-    const std::string Thing_Settings_Character          = "ThSeCharacter";
-    const std::string Thing_Settings_Object             = "ThSeObject";
-    const std::string Thing_Settings_Text               = "ThSeText";
+    const std::string Thing_Settings_Camera             = "SeCamera";
+    const std::string Thing_Settings_Character          = "SeCharacter";
+    const std::string Thing_Settings_Object             = "SeObject";
+    const std::string Thing_Settings_Text               = "SeText";
 
-    const std::string Thing_Settings_Fire               = "ThSeFire";
-    const std::string Thing_Settings_Fisheye            = "ThSeFisheye";
-    const std::string Thing_Settings_Light              = "ThSeLight";
-    const std::string Thing_Settings_Mirror             = "ThSeMirror";
-    const std::string Thing_Settings_Swirl              = "ThSeSwirl";
-    const std::string Thing_Settings_Water              = "ThSeWater";
-    const std::string Thing_Settings_Water_Ripple       = "ThSeWRipple";
-    const std::string Thing_Settings_Water_Wave         = "ThSeWWave";
-    const std::string Thing_Settings_Water_Refract      = "ThSeWRefract";
-    const std::string Thing_Settings_Water_Foam         = "ThSeWFoam";
+    const std::string Thing_Settings_Fire               = "SeFire";
+    const std::string Thing_Settings_Fisheye            = "SeFisheye";
+    const std::string Thing_Settings_Light              = "SeLight";
+    const std::string Thing_Settings_Mirror             = "SeMirror";
+    const std::string Thing_Settings_Swirl              = "SeSwirl";
+    const std::string Thing_Settings_Water              = "SeWater";
+    const std::string Thing_Settings_Water_Ripple       = "SeWRipple";
+    const std::string Thing_Settings_Water_Wave         = "SeWWave";
+    const std::string Thing_Settings_Water_Refract      = "SeWRefract";
+    const std::string Thing_Settings_Water_Foam         = "SeWFoam";
 };
 
 

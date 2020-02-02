@@ -29,31 +29,34 @@ public:
     DrEngineThing(DrEngineWorld *world, long unique_key, long original_key);
     virtual ~DrEngineThing();
 
+
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
-
-    // Containers
-    EngineSpawners  m_spawners;                         // Holds all Spawners that have been attached to this Thing
-
-    // Components
-    ThingComp3D    *m_comp_3d = nullptr;                // Component that handles 3D rendering
+    DrEngineWorld      *m_world = nullptr;                  // Points to current parent DrEngineWorld
 
     // Engine Info
-    long            m_key;                              // Unique key for this item
-    long            m_original_project_key;             // Key of item when it was in Project Data Model
+    long                m_key;                              // Unique key for this item
+    long                m_original_project_key;             // Key of item when it was in Project Data Model
+
+    // Containers
+    EngineSpawners      m_spawners;                         // Holds all Spawners that have been attached to this Thing
+
+    // Components
+    EngineComponents    m_components;                       // Container of all components this Thing owns
+    ThingComp3D        *m_comp_3d = nullptr;                // Component that handles 3D rendering
+
 
     // Basic Thing Properties
-    double          m_angle_z = 0.0;                    // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
-    float           m_opacity = 1.0f;                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
-    DrPointF        m_position;                         // Current center posiiton
-    double          m_z_order = 0.0;                    // Used for layering, used for distance sorting
-    float           m_scale_x = 1.0f;                   // Scale of Thing in world
-    float           m_scale_y = 1.0f;                   // Scale of Thing in world
-    DrPointF        m_size;                             // Original size of Thing
-    double          m_velocity_x = 0.0;                 // Current velocity
-    double          m_velocity_y = 0.0;                 // Current velocity
+    double          m_angle_z = 0.0;                        // Current angle (on Z axis), (for DrEngineObject this is updated every frame by update())
+    float           m_opacity = 1.0f;                       // Transparency of Thing (0.0 invisible, 1.0 opaque)
+    DrPointF        m_position;                             // Current center posiiton
+    double          m_z_order = 0.0;                        // Used for layering, used for distance sorting
+    float           m_scale_x = 1.0f;                       // Scale of Thing in world
+    float           m_scale_y = 1.0f;                       // Scale of Thing in world
+    DrPointF        m_size;                                 // Original size of Thing
+    double          m_velocity_x = 0.0;                     // Current velocity
+    double          m_velocity_y = 0.0;                     // Current velocity
 
     // Thing Properties - Camera
     long            m_active_camera   { c_no_key };                 // Set to ID of last camera that followed this object, c_no_key == no camera
@@ -88,16 +91,42 @@ public:
 
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
+    bool        m_remove_me = false;                    // Set to true for forced removal next update cycle
     double      time_since_last_update = 0.0;           // Milliseconds since update() was called last
     DrTime      update_timer = Clock::now();            // Used to keep track of time passed since update() was called last
 
 
-    // #################### FUNCTIONS ####################
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
+    // Virtual Update Functions
+    virtual void        init();                                                             // Called when first created
+    virtual void        addToWorld();                                                       // Called when Thing is added to m_things DrEngineWorld vector
+    virtual bool        update(double time_passed, double time_warp, DrRectF &area);        // Process one update iteration for this Thing
+    virtual void        signal(std::string name, DrVariant value);                          // IMPLEMENT: Call during updateWorld(), process all signals then delete them
+    virtual void        destroy();
+
+    // Virtual Event Functions
+    virtual void        onCollide() { }
+    virtual void        onDamaged() { }
+    virtual void        onDeath()   { }
+
+    // Misc Functions
+    std::string         name();                                                             // Returns name of this Entity
+    void                remove()                    { m_remove_me = true; }                 // Call to remove this Thing
+
+    // Thing Components
+    void                addComponent(DrEngineComponent *component);
+    DrEngineComponent  *component(std::string component_name);
+
+
+    // #################### INTERNAL FUNCTIONS ####################
+public:
+    // Abstract Virtual Functions
+    virtual DrThingType getThingType() = 0;                                                 // Returns DrThingType of this Thing
+
     // Entity Properties
     long                getKey() { return m_key; }                                          // Gets unique item key
     long                getOriginalKey() { return m_original_project_key; }                 // Gets original Project Data Model key
-
 
     // Spawners
     void                addSpawner(DrEngineSpawner *spawner) { m_spawners.push_back(spawner); }
@@ -108,25 +137,13 @@ public:
         }
     }
 
-
-    // Abstract Virtual Functions
-    virtual DrThingType getThingType() = 0;                                                 // Returns DrThingType of this Thing
-
-    // Virtual Update Functions
-    virtual void        addToWorld();                                                       // Called when Thing is added to m_things DrEngineWorld vector
-    virtual bool        update(double time_passed, double time_warp, DrRectF &area);        // Process one update iteration for this Thing
-
-    // Virtual Event Functions
-    virtual void        onCollide() { }
-    virtual void        onDamaged() { }
-    virtual void        onDeath()   { }
-
-    // Misc Functions
-    void                calculateTimeSinceLastUpdate();                                     // Processes update timer
-
-    // Thing Components
+    // Built In Thing Components
     ThingComp3D        *comp3D() { return m_comp_3d; }
     void                setComponent3D(ThingComp3D *component) { m_comp_3d = component; }
+
+
+    // Misc Internal Functions
+    void                    calculateTimeSinceLastUpdate();
 
     // Basic Properties
     virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)

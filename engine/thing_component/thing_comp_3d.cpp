@@ -5,61 +5,19 @@
 //      Abstract Item representing a thing that has a body in the Physics Engine (object, character, light, etc)
 //
 //
-#include "engine/thing/engine_thing.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component/thing_comp_3d.h"
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long original_key) {
-    m_world = world;
-    m_key = unique_key;
-    m_original_project_key = original_key;
-
-    m_camera_rotation = c_default_camera_rot;
-
-    m_camera_edges[Edge_Location::Top] =    Frame_Edge::Normal;
-    m_camera_edges[Edge_Location::Right] =  Frame_Edge::Normal;
-    m_camera_edges[Edge_Location::Bottom] = Frame_Edge::Normal;
-    m_camera_edges[Edge_Location::Left] =   Frame_Edge::Normal;
-}
-
-DrEngineThing::~DrEngineThing() {
+ThingComp3D::ThingComp3D(DrEngineWorld *engine_world, DrEngineThing *parent_thing)
+    : DrEngineComponent(engine_world, parent_thing, Comps::Thing_3D) {
 
 }
 
+ThingComp3D::~ThingComp3D() {
 
-//####################################################################################
-//##    Add to World, called when Thing is added to world
-//####################################################################################
-void DrEngineThing::addToWorld() {
-
-}
-
-
-//####################################################################################
-//##    Get time since last update
-//####################################################################################
-void DrEngineThing::calculateTimeSinceLastUpdate() {
-    time_since_last_update = Dr::MillisecondsElapsed( update_timer );
-    Dr::ResetTimer( update_timer );
-}
-
-
-//####################################################################################
-//##    Update Function, called every physics frame
-//####################################################################################
-bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) {
-    (void)time_passed;
-    (void)time_warp;
-
-    bool remove = false;
-
-
-    // ***** Delete object if ends up outside the deletion threshold
-    if (area.contains(getPosition()) == false) remove = true;
-    return remove;
 }
 
 

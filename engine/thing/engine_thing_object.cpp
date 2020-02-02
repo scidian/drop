@@ -32,7 +32,8 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, std::vector<cpShape*> *sh
 //####################################################################################
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key) : DrEngineThing (world, unique_key, original_key) {
     // Initialize Components
-    m_comp_3d = new ThingComp3D();
+    addCom
+    setComponent3D(new ThingComp3D());
 }
 
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key,
@@ -111,7 +112,7 @@ DrEngineObject::~DrEngineObject() {
                 DrEngineObject *ball = getWorld()->findObjectByKey(ball_number);
                 if (ball != nullptr) {
                     ball->setPhysicsParent(nullptr);
-                    ball->removeMe();
+                    ball->remove();
                 }
             }
         }

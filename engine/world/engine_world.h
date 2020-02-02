@@ -173,7 +173,25 @@ public:
     bool            wavy = false;                               // Wavy (Ripple)        True / False
 
 
-    // #################### FUNCTIONS ####################
+
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
+public:
+    ///void             addStage(std::string name);                         // Adds DrStage with name to the World
+    ///DrEngineThing   *clone();                                            // Will clone a Thing and return a copy of it
+    ///DrEngineThing   *create(std::string name);                           // Will create a Thing based on an DrAsset name
+    EngineThings        find(std::string name);                             // Returns a list of Things (entities) with designated name
+
+    // Variables
+    ///DrVariant        global(std::string name);                           // Returns global variable
+    ///void             setGlobal(std::string name, DrVariant value);       // Sets global variable
+
+    // System
+    ///std::string      device();                                           // Returns device name
+    ///DrPointF         screenSize();                                       // Returns screen size of rendering window
+    ///void             vibrate(double intensity);                          // Cause device to vibrate
+
+
+    // #################### INTERNAL FUNCTIONS ####################
 public:
     // Important Functions
     DrEngineThing*      findThingByKey(long key);

@@ -141,8 +141,6 @@ private:
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
-    bool        m_remove_me = false;                        // Set to true for forced removal next update cycle
-
     int         m_remaining_jumps =         0;              // How many jumps player has left before it must hit ground before it can jump again
     double      m_remaining_boost =         0.0;            // Used by Engine Update to process Jump Timeout boost
     double      m_remaining_ground_time =   0.0;            // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
@@ -367,7 +365,6 @@ public:
     void            setMouseRotate(bool mouse_rotate) { m_mouse_rotate = mouse_rotate; }
 
     // ***** Local Variables - Updated By Engine
-    void            removeMe()                      { m_remove_me = true; }
     const int&      getRemainingJumps()             { return m_remaining_jumps; }
     const double&   getRemainingBoost()             { return m_remaining_boost; }
     const double&   getRemainingGroundTime()        { return m_remaining_ground_time; }
