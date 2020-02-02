@@ -60,19 +60,25 @@ void DrEngineWorld::clearWorld() {
         has_scene = false;
 
         // Clear all Things (objects, lights, etc.)
-        for (auto thing : m_things)
+        for (auto &thing : m_things) {
             delete thing;
+            thing = nullptr;
+        }
         m_things.clear();
 
-        // Reset active camera to none, Clear all Cameras
+        // Reset active camera to none, clear all Cameras
         m_active_camera = c_no_key;
-        for (auto camera_pair : m_cameras)
+        for (auto &camera_pair : m_cameras) {
             delete camera_pair.second;
+            camera_pair.second = nullptr;
+        }
         m_cameras.clear();
 
         // Remove all Spawners
-        for (auto spawner : m_spawners)
+        for (auto &spawner : m_spawners) {
             delete spawner;
+            spawner = nullptr;
+        }
         m_spawners.clear();
 
         // Clear cpSpace from any remaining items, free Space

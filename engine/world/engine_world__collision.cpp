@@ -54,12 +54,14 @@ void DrEngineWorld::applyCategoryMask(DrEngineObject *central, long group_id) {
     for (auto shape : central->shapes) {
         cpShapeSetFilter(shape, filter);
     }
-    if (central->soft_balls.size() > 0) {
-        for (auto ball_number : central->soft_balls) {
-            DrEngineObject *ball = this->findObjectByKey(ball_number);
-            if (ball == nullptr) continue;
-            for (auto shape : ball->shapes) {
-                cpShapeSetFilter( shape, filter);
+    if (central->compSoftBody() != nullptr) {
+        if (central->compSoftBody()->soft_balls.size() > 0) {
+            for (auto ball_number : central->compSoftBody()->soft_balls) {
+                DrEngineObject *ball = this->findObjectByKey(ball_number);
+                if (ball == nullptr) continue;
+                for (auto shape : ball->shapes) {
+                    cpShapeSetFilter( shape, filter);
+                }
             }
         }
     }

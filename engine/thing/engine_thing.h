@@ -13,6 +13,7 @@
 #include "engine/thing_component/thing_comp_3d.h"
 #include "engine/thing_component/thing_comp_camera.h"
 #include "engine/thing_component/thing_comp_player.h"
+#include "engine/thing_component/thing_comp_soft_body.h"
 
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
@@ -44,9 +45,12 @@ private:
 
     // Components
     EngineComponents    m_components;                       // Container of all components this Thing owns
+
     ThingComp3D        *m_comp_3d = nullptr;                // Component that handles 3D rendering
     ThingCompCamera    *m_comp_camera = nullptr;            // Component that handles a following camera
     ThingCompPlayer    *m_comp_player = nullptr;            // Component that handles using Thing as a Player (character)
+    ThingCompSoftBody  *m_comp_soft_body = nullptr;         // Component that handles giving Thing a soft body
+
 
     // Basic Thing Properties
     double      m_angle_z = 0.0;                        // Current rotation angle (on Z axis), (for DrEngineObject this is updated every frame by update())
@@ -144,9 +148,11 @@ public:
     ThingComp3D*            comp3D()            { return m_comp_3d; }
     ThingCompCamera*        compCamera()        { return m_comp_camera; }
     ThingCompPlayer*        compPlayer()        { return m_comp_player; }
+    ThingCompSoftBody*      compSoftBody()      { return m_comp_soft_body; }
     void                    setComponent3D(ThingComp3D *component);
     void                    setComponentCamera(ThingCompCamera *component);
     void                    setComponentPlayer(ThingCompPlayer *component);
+    void                    setComponentSoftBody(ThingCompSoftBody *component);
 
     // Misc Internal Functions
     void                    calculateTimeSinceLastUpdate();

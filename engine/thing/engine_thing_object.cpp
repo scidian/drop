@@ -109,8 +109,8 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 //####################################################################################
 DrEngineObject::~DrEngineObject() {
     // ***** Signal physics children to remove themselves
-    if (body_style != Body_Style::Rigid_Body) {
-        for (auto &ball_number : soft_balls) {
+    if ((body_style != Body_Style::Rigid_Body) && (this->compSoftBody() != nullptr)) {
+        for (auto &ball_number : compSoftBody()->soft_balls) {
             if (world() != nullptr) {
                 DrEngineObject *ball = world()->findObjectByKey(ball_number);
                 if (ball != nullptr) {
@@ -122,8 +122,10 @@ DrEngineObject::~DrEngineObject() {
     // Seperates physics body from parent
     } else if (isPhysicsChild()) {
         if (getPhysicsParent() != nullptr) {
-            for (auto &ball_number : getPhysicsParent()->soft_balls) {
-                if (ball_number == this->getKey()) ball_number = c_no_key;
+            if (getPhysicsParent()->compSoftBody() != nullptr) {
+                for (auto &ball_number : getPhysicsParent()->compSoftBody()->soft_balls) {
+                    if (ball_number == this->getKey()) ball_number = c_no_key;
+                }
             }
         }
         setPhysicsParent(nullptr);
@@ -308,8 +310,9 @@ void DrEngineObject::updateRelativeHealth() {
 //####################################################################################
 void DrEngineObject::updateChildrenHealth() {
     if (body_style == Body_Style::Rigid_Body) return;
+    if (compSoftBody() == nullptr) return;
     if (world() == nullptr) return;
-    for (auto &ball_number : soft_balls) {
+    for (auto &ball_number : compSoftBody()->soft_balls) {
         DrEngineObject *ball = world()->findObjectByKey(ball_number);
         if (ball != nullptr) {
             ball->setHealth(this->getHealth());

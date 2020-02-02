@@ -42,15 +42,17 @@ void DrOpenGL::drawDebugShapes() {
         if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
             if (object->isPhysicsChild()) continue;
             if (object->body_style != Body_Style::Rigid_Body) {
+                if (object->compSoftBody() == nullptr) continue;
                 std::vector<cpVect> vertices;
                 DrPointF centroid(0, 0);
-                size_t   point_count = object->soft_outline_indexes.size();
+                size_t   point_count = object->compSoftBody()->soft_outline_indexes.size();
                 if (point_count == 0) continue;
                 for (size_t i = 0; i < point_count; ++i) {
-                    DrEngineObject *soft_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[object->soft_outline_indexes[i]]);
+                    DrEngineWorld  *world = m_engine->getCurrentWorld();
+                    DrEngineObject *soft_ball = world->findObjectByKey(object->compSoftBody()->soft_balls[object->compSoftBody()->soft_outline_indexes[i]]);
                     if (soft_ball == nullptr) continue;
 
-                    cpVect vert = cpv(soft_ball->soft_position.x, soft_ball->soft_position.y) + cpv(center.x, center.y);
+                    cpVect vert = cpv(soft_ball->compSoftBody()->soft_position.x, soft_ball->compSoftBody()->soft_position.y) + cpv(center.x, center.y);
                     centroid.x += vert.x;
                     centroid.y += vert.y;
                     DrPointF mapped = Dr::RotatePointAroundOrigin(DrPointF(vert.x, vert.y), center, object->getAngle(), false);

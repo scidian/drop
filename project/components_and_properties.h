@@ -143,6 +143,7 @@ namespace Comps {
     const std::string Thing_Special_Effects             = "SpecialEffects";
 
     const std::string Thing_Player                      = "Player";
+    const std::string Thing_Soft_Body                   = "SoftBody";
 
     const std::string Thing_Settings_Camera             = "Camera";
     const std::string Thing_Settings_Character          = "Character";

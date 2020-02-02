@@ -176,11 +176,11 @@ public:
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
+    // Basics
     ///void             addStage(std::string name);                         // Adds DrStage with name to the World
     ///DrEngineThing   *clone();                                            // Will clone a Thing and return a copy of it
     ///DrEngineThing   *create(std::string name);                           // Will create a Thing based on an DrAsset name
     EngineThings        find(std::string name);                             // Returns a list of Things (entities) with designated name
-
 
     // Cameras
     ///DrEngineCamera  *camera(long camera_id);                             // Returns a camera by ID number

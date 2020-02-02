@@ -17,19 +17,22 @@
 //##    Adds 1 Triangle to Soft Body Mesh
 //####################################################################################
 void addSoftTriangle(DrEngineObject *object, Vertex v1, Vertex v2, Vertex v3) {
-    object->m_soft_vertices.push_back(v1.position.x);   object->m_soft_vertices.push_back(v1.position.y);   object->m_soft_vertices.push_back(v1.position.z);
-    object->m_soft_vertices.push_back(v2.position.x);   object->m_soft_vertices.push_back(v2.position.y);   object->m_soft_vertices.push_back(v2.position.z);
-    object->m_soft_vertices.push_back(v3.position.x);   object->m_soft_vertices.push_back(v3.position.y);   object->m_soft_vertices.push_back(v3.position.z);
+    ThingCompSoftBody *softy = object->compSoftBody();
+    if (softy == nullptr) return;
 
-    object->m_soft_texture_coordinates.push_back(v1.texture_coords.x);  object->m_soft_texture_coordinates.push_back(v1.texture_coords.y);
-    object->m_soft_texture_coordinates.push_back(v2.texture_coords.x);  object->m_soft_texture_coordinates.push_back(v2.texture_coords.y);
-    object->m_soft_texture_coordinates.push_back(v3.texture_coords.x);  object->m_soft_texture_coordinates.push_back(v3.texture_coords.y);
+    softy->m_soft_vertices.push_back(v1.position.x);    softy->m_soft_vertices.push_back(v1.position.y);    softy->m_soft_vertices.push_back(v1.position.z);
+    softy->m_soft_vertices.push_back(v2.position.x);    softy->m_soft_vertices.push_back(v2.position.y);    softy->m_soft_vertices.push_back(v2.position.z);
+    softy->m_soft_vertices.push_back(v3.position.x);    softy->m_soft_vertices.push_back(v3.position.y);    softy->m_soft_vertices.push_back(v3.position.z);
 
-    object->m_soft_barycentric.push_back(1.0); object->m_soft_barycentric.push_back(0.0); object->m_soft_barycentric.push_back(0.0);
-    object->m_soft_barycentric.push_back(0.0); object->m_soft_barycentric.push_back(1.0); object->m_soft_barycentric.push_back(0.0);
-    object->m_soft_barycentric.push_back(0.0); object->m_soft_barycentric.push_back(0.0); object->m_soft_barycentric.push_back(1.0);
+    softy->m_soft_texture_coordinates.push_back(v1.texture_coords.x);  softy->m_soft_texture_coordinates.push_back(v1.texture_coords.y);
+    softy->m_soft_texture_coordinates.push_back(v2.texture_coords.x);  softy->m_soft_texture_coordinates.push_back(v2.texture_coords.y);
+    softy->m_soft_texture_coordinates.push_back(v3.texture_coords.x);  softy->m_soft_texture_coordinates.push_back(v3.texture_coords.y);
 
-    object->m_soft_triangles++;
+    softy->m_soft_barycentric.push_back(1.0); softy->m_soft_barycentric.push_back(0.0); softy->m_soft_barycentric.push_back(0.0);
+    softy->m_soft_barycentric.push_back(0.0); softy->m_soft_barycentric.push_back(1.0); softy->m_soft_barycentric.push_back(0.0);
+    softy->m_soft_barycentric.push_back(0.0); softy->m_soft_barycentric.push_back(0.0); softy->m_soft_barycentric.push_back(1.0);
+
+    softy->m_soft_triangles++;
 }
 
 
@@ -66,15 +69,17 @@ DrEngineObject* getEngineObject(std::vector<DrEngineObject*> &objects, int get_a
 //####################################################################################
 bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, Soft_Mesh_Style mesh_style) {
     if (object == nullptr) return false;
-    if (object->soft_balls.size() < 3) return false;
+    ThingCompSoftBody *soft_body = object->compSoftBody();
+    if (soft_body == nullptr) return false;
+    if (soft_body->soft_balls.size() < 3) return false;
 
     // ***** Adjust shakiness of non-rotating soft bodies
     double angle_diff = -object->getAngle();
     if (object->canRotate() == false) {
         ///if (body_style == Body_Style::Circular_Blob) {
-            DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[0]);
+            DrEngineObject *first_ball = m_engine->getCurrentWorld()->findObjectByKey(soft_body->soft_balls[0]);
             if (first_ball == nullptr) return false;
-            double angle_start = object->soft_start_angle;
+            double angle_start = soft_body->soft_start_angle;
             double angle_now =   Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition());
             angle_diff =  angle_start - angle_now;
             ///g_info = "Start Angle: " +   std::to_string(angle_start) + ", Angle Now: " + std::to_string(angle_now) + ", Diff: " +    std::to_string(angle_diff);
@@ -84,24 +89,29 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     // ***** Calculate Current Points
     std::vector<DrEngineObject*> balls;
     std::vector<Vertex> vertices;
-    for (size_t i = 0; i < object->soft_balls.size(); ++i) {
-        DrEngineObject *next_ball = m_engine->getCurrentWorld()->findObjectByKey(object->soft_balls[i]);
+    for (size_t i = 0; i < soft_body->soft_balls.size(); ++i) {
+        DrEngineObject *next_ball = m_engine->getCurrentWorld()->findObjectByKey(soft_body->soft_balls[i]);
         if (next_ball == nullptr) return false;
+        ThingCompSoftBody *next_body = next_ball->compSoftBody();
+        if (next_body == nullptr) return false;
+
         balls.push_back(next_ball);
         DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), angle_diff);
                  unrotated = unrotated - object->getPosition();
                  // Scale soft balls to outer radius
                  if (body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
-                     unrotated.x = unrotated.x * object->soft_scale.x;
-                     unrotated.y = unrotated.y * object->soft_scale.y;
+                     unrotated.x = unrotated.x * soft_body->soft_scale.x;
+                     unrotated.y = unrotated.y * soft_body->soft_scale.y;
                  } else if (body_style == Body_Style::Circular_Blob) {
-                     unrotated = unrotated * object->soft_scale.x;
+                     unrotated = unrotated * soft_body->soft_scale.x;
                  }
-                 next_ball->soft_position = unrotated;
+                 next_body->soft_position = unrotated;
 
-                 unrotated.y = unrotated.y / object->height_width_ratio;
-                 unrotated = unrotated / object->soft_size.x;               // Equalize mesh from -0.5 to +0.5 (due to how scale is handled during opengl_render_object.cpp)
-        vertices.push_back(Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0), c_up_vector_z, DrVec3(object->soft_uv[i].x,object->soft_uv[i].y,0.0), DrVec3(0,0,0)));
+                 unrotated.y = unrotated.y / soft_body->height_width_ratio;
+                 unrotated = unrotated / soft_body->soft_size.x;               // Equalize mesh from -0.5 to +0.5 (due to how scale is handled during opengl_render_object.cpp)
+        vertices.push_back(Vertex::createVertex(DrVec3(unrotated.x,unrotated.y,0.0),
+                                                c_up_vector_z,
+                                                DrVec3(soft_body->soft_uv[i].x,soft_body->soft_uv[i].y,0.0), DrVec3(0,0,0)));
     }
 
     // ***** Smooth Points
@@ -124,20 +134,20 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
             weight = 1.0f;
             average += getVertex(vertices, i).position * weight;            total_weight += weight;
 
-            if (getEngineObject(balls, i-1)->soft_corner == false &&
-                getEngineObject(balls, i  )->soft_corner == false &&
-                getEngineObject(balls, i+1)->soft_corner == false) {
+            if (getEngineObject(balls, i-1)->compSoftBody()->soft_corner == false &&
+                getEngineObject(balls, i  )->compSoftBody()->soft_corner == false &&
+                getEngineObject(balls, i+1)->compSoftBody()->soft_corner == false) {
                 weight = 0.75f;
                 average += getVertex(vertices, i-1).position * weight;      total_weight += weight;
                 average += getVertex(vertices, i+1).position * weight;      total_weight += weight;
 
-                if (getEngineObject(balls, i-2)->soft_corner == false &&
-                    getEngineObject(balls, i+2)->soft_corner == false) {
+                if (getEngineObject(balls, i-2)->compSoftBody()->soft_corner == false &&
+                    getEngineObject(balls, i+2)->compSoftBody()->soft_corner == false) {
                     weight = 0.50f;
                     average += getVertex(vertices, i-2).position * weight;  total_weight += weight;
                     average += getVertex(vertices, i+2).position * weight;  total_weight += weight;
                 }
-            } else if (getEngineObject(balls, i)->soft_corner == false) {
+            } else if (getEngineObject(balls, i)->compSoftBody()->soft_corner == false) {
                 weight = 0.50f;
                 average += getVertex(vertices, i-1).position * weight;      total_weight += weight;
                 average += getVertex(vertices, i+1).position * weight;      total_weight += weight;
@@ -160,20 +170,20 @@ bool DrOpenGL::calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_sty
     }
 
     // ***** Clear Mesh
-    object->m_soft_vertices.clear();
-    object->m_soft_texture_coordinates.clear();
-    object->m_soft_barycentric.clear();
-    object->m_soft_triangles = 0;
+    soft_body->m_soft_vertices.clear();
+    soft_body->m_soft_texture_coordinates.clear();
+    soft_body->m_soft_barycentric.clear();
+    soft_body->m_soft_triangles = 0;
 
     // Square Mesh
     if (mesh_style == Soft_Mesh_Style::Grid_Square) {
 
-        for (long y = 1; y < object->soft_grid_size.y; y++) {
-            for (long x = 1; x < object->soft_grid_size.x; x++) {
-                long corner_tr = ((y  ) * object->soft_grid_size.x) + (x  );                // Top Right
-                long corner_tl = ((y  ) * object->soft_grid_size.x) + (x-1);                // Top Left
-                long corner_bl = ((y-1) * object->soft_grid_size.x) + (x-1);                // Bottom Left
-                long corner_br = ((y-1) * object->soft_grid_size.x) + (x  );                // Bottom Right
+        for (long y = 1; y < soft_body->soft_grid_size.y; y++) {
+            for (long x = 1; x < soft_body->soft_grid_size.x; x++) {
+                long corner_tr = ((y  ) * soft_body->soft_grid_size.x) + (x  );                 // Top Right
+                long corner_tl = ((y  ) * soft_body->soft_grid_size.x) + (x-1);                 // Top Left
+                long corner_bl = ((y-1) * soft_body->soft_grid_size.x) + (x-1);                 // Bottom Left
+                long corner_br = ((y-1) * soft_body->soft_grid_size.x) + (x  );                 // Bottom Right
 
                 addSoftTriangle(object, vertices[corner_tr], vertices[corner_tl], vertices[corner_bl]);
                 addSoftTriangle(object, vertices[corner_tr], vertices[corner_bl], vertices[corner_br]);

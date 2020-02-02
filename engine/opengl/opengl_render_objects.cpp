@@ -295,20 +295,18 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // ***** Draw triangles using shader program
     // Soft Body Render
-    if (object->body_style == Body_Style::Circular_Blob ||
-        object->body_style == Body_Style::Square_Blob ||
-        object->body_style == Body_Style::Mesh_Blob) {
+    if ((object->body_style != Body_Style::Rigid_Body) && (object->compSoftBody() != nullptr)) {
         m_default_shader.enableAttributeArray( a_default_vertex );
         m_default_shader.enableAttributeArray( a_default_texture_coord );
         m_default_shader.enableAttributeArray( a_default_barycentric );
-        m_default_shader.setAttributeArray(    a_default_vertex,        object->m_soft_vertices.data(),             3 );
-        m_default_shader.setAttributeArray(    a_default_texture_coord, object->m_soft_texture_coordinates.data(),  2 );
-        m_default_shader.setAttributeArray(    a_default_barycentric,   object->m_soft_barycentric.data(),          3 );
-        glDrawArrays( GL_TRIANGLES, 0, object->m_soft_triangles*3 );
+        m_default_shader.setAttributeArray(    a_default_vertex,        object->compSoftBody()->m_soft_vertices.data(),             3 );
+        m_default_shader.setAttributeArray(    a_default_texture_coord, object->compSoftBody()->m_soft_texture_coordinates.data(),  2 );
+        m_default_shader.setAttributeArray(    a_default_barycentric,   object->compSoftBody()->m_soft_barycentric.data(),          3 );
+        glDrawArrays( GL_TRIANGLES, 0, object->compSoftBody()->m_soft_triangles*3 );
         m_default_shader.disableAttributeArray( a_default_vertex );
         m_default_shader.disableAttributeArray( a_default_texture_coord );
         m_default_shader.disableAttributeArray( a_default_barycentric );
-        addTriangles( object->m_soft_triangles );
+        addTriangles( object->compSoftBody()->m_soft_triangles );
 
     // Simple Quad Render
     } else if (draw2D) {

@@ -62,7 +62,7 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
     player_vel = cpvadd(player_vel, jump_vel);
 
     // Soft Body Jump
-    if (object->body_style != Body_Style::Rigid_Body) {
+    if ((object->body_style != Body_Style::Rigid_Body) && (object->compSoftBody() != nullptr)) {
         // Adjust initial velocity for soft bodies
         player_vel = player_vel * 0.85;
 
@@ -71,7 +71,7 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
         else cpBodyApplyForceAtWorldPoint( object->body, jump_vel * cpBodyGetMass(object->body) * 50.0, cpBodyGetPosition(object->body) );
 
         // Apply force to Children Soft Ball Objects
-        for (auto ball_number : object->soft_balls) {
+        for (auto ball_number : object->compSoftBody()->soft_balls) {
             DrEngineObject *soft_ball = object->world()->findObjectByKey(ball_number);
             if (soft_ball == nullptr) return;
             if (initial_jump) cpBodySetVelocity( soft_ball->body, player_vel );

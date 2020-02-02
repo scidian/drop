@@ -55,9 +55,6 @@ public:
 
 };
 
-
-
-
 #endif // THING_COMP_3D_H
 
 

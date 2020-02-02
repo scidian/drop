@@ -184,10 +184,10 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
                 JoinBodiesMesh(m_space, ball_1->body, ball_2->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
             }
 
-            if (x == 0         && y == 0)         soft_ball->soft_corner = true;
-            if (x == 0         && y == y_balls-1) soft_ball->soft_corner = true;
-            if (x == x_balls-1 && y == 0)         soft_ball->soft_corner = true;
-            if (x == x_balls-1 && y == y_balls-1) soft_ball->soft_corner = true;
+            if (x == 0         && y == 0)         soft_ball->compSoftBody()->soft_corner = true;
+            if (x == 0         && y == y_balls-1) soft_ball->compSoftBody()->soft_corner = true;
+            if (x == x_balls-1 && y == 0)         soft_ball->compSoftBody()->soft_corner = true;
+            if (x == x_balls-1 && y == y_balls-1) soft_ball->compSoftBody()->soft_corner = true;
             count++;
         }
     }
@@ -205,9 +205,9 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
         }
         // Copy ball data
         balls[i]->setPhysicsParent(central);
-        central->soft_balls.push_back(balls[i]->getKey());
-        central->soft_uv.push_back(   uv_coordinates[i]);
-        central->soft_start.push_back(starting_positions[i]);
+        central->compSoftBody()->soft_balls.push_back(balls[i]->getKey());
+        central->compSoftBody()->soft_uv.push_back(   uv_coordinates[i]);
+        central->compSoftBody()->soft_start.push_back(starting_positions[i]);
     }
 
     // Built outline ball list (for debug drawing)
@@ -216,7 +216,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
     long ox = 0, oy = 0;
     do {
         size_t outline_index = (oy * x_balls) + ox;
-        central->soft_outline_indexes.push_back(outline_index);
+        central->compSoftBody()->soft_outline_indexes.push_back(outline_index);
 
         // Increment loop variables
         if (outline_loop == static_cast<long>(Soft_Sides::Bottom)) {
@@ -233,13 +233,13 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
 
     // Update Central Ball properties
     central->setPhysicsParent(nullptr);
-    central->body_style =           Body_Style::Mesh_Blob;
-    central->height_width_ratio =   height_width_ratio;
-    central->soft_size =            DrPointF(center_width, center_height);
-    central->soft_grid_size =       DrPoint(x_balls, y_balls);
-    central->soft_scale.x =         ((center_width/2.0) /  ((center_width  - target_diameter)/2.0)) * render_scale;
-    central->soft_scale.y =         ((center_height/2.0) / ((center_height - target_diameter)/2.0)) * render_scale;
-    central->soft_start_angle =     first_ball_angle;
+    central->body_style = Body_Style::Mesh_Blob;
+    central->compSoftBody()->height_width_ratio =   height_width_ratio;
+    central->compSoftBody()->soft_size =            DrPointF(center_width, center_height);
+    central->compSoftBody()->soft_grid_size =       DrPoint(x_balls, y_balls);
+    central->compSoftBody()->soft_scale.x =         ((center_width/2.0) /  ((center_width  - target_diameter)/2.0)) * render_scale;
+    central->compSoftBody()->soft_scale.y =         ((center_height/2.0) / ((center_height - target_diameter)/2.0)) * render_scale;
+    central->compSoftBody()->soft_start_angle =     first_ball_angle;
 
     // Set collision groups so that soft bodies do not collide with each other, but do other things
     applyCategoryMask(central, central->getKey());

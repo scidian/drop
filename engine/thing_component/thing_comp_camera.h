@@ -70,7 +70,6 @@ public:
 
 };
 
-
 #endif // THING_COMP_CAMERA_H
 
 

@@ -136,7 +136,6 @@ public:
 
 };
 
-
 #endif // THING_COMP_PLAYER_H
 
 
