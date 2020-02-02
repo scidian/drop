@@ -9,7 +9,7 @@
 #define ENGINE_OBJECT_H
 
 #include "engine/globals_engine.h"
-#include "engine/things/engine_thing.h"
+#include "engine/thing/engine_thing.h"
 #include "project/properties/property_collision.h"
 
 typedef std::vector<std::vector<cpVect>> PolygonList;

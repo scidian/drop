@@ -11,7 +11,7 @@
 
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/things/engine_thing_object.h"
+#include "engine/thing/engine_thing_object.h"
 #include "project/dr_project.h"
 
 

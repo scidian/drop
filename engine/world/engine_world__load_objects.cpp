@@ -7,7 +7,7 @@
 //
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/things/engine_thing_object.h"
+#include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "project/properties/property_collision.h"
 #include "project/dr_project.h"

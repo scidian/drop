@@ -21,12 +21,18 @@ typedef std::map<cpShape*, Shape_Type> ShapeMap;
 //############################
 class DrEngineThing
 {
+public:
+    // Constructor / Destructor
+    DrEngineThing(DrEngineWorld *world, long unique_key, long original_key);
+    virtual ~DrEngineThing();
+
+    // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
     DrEngineWorld  *m_world = nullptr;                  // Points to current parent DrEngineWorld
 
     // Containers
-    EngineSpawners  m_spawners;                         // Holds all Spawners that have been attached to this Object
+    EngineSpawners  m_spawners;                         // Holds all Spawners that have been attached to this Thing
 
     // Engine Info
     long            m_key;                              // Unique key for this item
@@ -64,23 +70,23 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
-    bool        extrude_3d = false;                     // Auto convert to 3D   True / False
-    bool        wireframe = false;                      // Wireframe            True / False
-    float       wireframe_width = 1.0f;                 // Wireframe Width
-    bool        cartoon = false;                        // Cartoon              True / False
-    float       cartoon_width = 5.0;                    // Cartoon Width
-    bool        cross_hatch = false;                    // Cross Hatch          True / False
+    bool        extrude_3d =        false;              // Auto convert to 3D   True / False
+    bool        wireframe =         false;              // Wireframe            True / False
+    float       wireframe_width =   1.0f;               // Wireframe Width
+    bool        cartoon =           false;              // Cartoon              True / False
+    float       cartoon_width =     5.0;                // Cartoon Width
+    bool        cross_hatch =       false;              // Cross Hatch          True / False
     float       cross_hatch_width = 5.0;                // Cross Hatch Width
 
-    float       bitrate = 256.0;                        // Bitrate              1 to 256
-    float       pixel_x = 1.0;                          // Pixelation X         1.0+
-    float       pixel_y = 1.0;                          // Pixelation Y         1.0+
-    bool        negative = false;                       // Negative             True / False
-    bool        grayscale = false;                      // Grayscale            True / False
-    float       hue = 0.0f;                             // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
-    float       saturation = 0.0f;                      // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
-    float       contrast = 0.0f;                        // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
-    float       brightness = 0.0f;                      // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       bitrate =       256.0;                  // Bitrate              1 to 256
+    float       pixel_x =       1.0;                    // Pixelation X         1.0+
+    float       pixel_y =       1.0;                    // Pixelation Y         1.0+
+    bool        negative =      false;                  // Negative             True / False
+    bool        grayscale =     false;                  // Grayscale            True / False
+    float       hue =           0.0f;                   // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
+    float       saturation =    0.0f;                   // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       contrast =      0.0f;                   // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
+    float       brightness =    0.0f;                   // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
 
     // ********** Local Variables Updated by Engine
@@ -89,37 +95,37 @@ public:
     DrTime      update_timer = Clock::now();            // Used to keep track of time passed since update() was called last
 
 
-
+    // #################### FUNCTIONS ####################
 public:
-    DrEngineThing(DrEngineWorld *world, long unique_key, long original_key);
-    virtual ~DrEngineThing();
-
-
-    // Getters / Setters
+    // Entity Properties
     long                getKey() { return m_key; }                                          // Gets unique item key
     long                getOriginalKey() { return m_original_project_key; }                 // Gets original Project Data Model key
+
 
     // Spawners
     void                addSpawner(DrEngineSpawner *spawner) { m_spawners.push_back(spawner); }
     EngineSpawners&     getSpawners() { return m_spawners; }
     void                removeSpawner(DrEngineSpawner *spawner) {
         for (auto it = m_spawners.begin(); it != m_spawners.end(); ) {
-            if ((*it) == spawner) { it = m_spawners.erase(it); } else { ++it; }
+            if ((*it) == spawner) it = m_spawners.erase(it); else ++it;
         }
     }
+
 
     // Abstract Virtual Functions
     virtual DrThingType getThingType() = 0;                                                 // Returns DrThingType of this Thing
 
-    // Basic Update Functions
+    // Virtual Update Functions
     virtual void        addToWorld();                                                       // Called when Thing is added to m_things DrEngineWorld vector
-    void                calculateTimeSinceLastUpdate();                                     // Processes update timer
     virtual bool        update(double time_passed, double time_warp, DrRectF &area);        // Process one update iteration for this Thing
 
     // Virtual Event Functions
     virtual void        onCollide() { }
     virtual void        onDamaged() { }
     virtual void        onDeath()   { }
+
+    // Misc Functions
+    void                calculateTimeSinceLastUpdate();                                     // Processes update timer
 
     // Basic Properties
     virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)

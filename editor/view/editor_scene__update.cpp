@@ -82,7 +82,7 @@ void DrScene::updateItemZValues() {
 //####################################################################################
 //##    Updates the item in the scene based on the new property_keys
 //####################################################################################
-void DrScene::updateItemInScene(DrSettings* changed_item, std::list<ComponentProperty> component_property_pairs) {
+void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentProperty> component_property_pairs) {
     DrThing *thing = dynamic_cast<DrThing*>(changed_item);
     if (thing == nullptr) return;
     DrItem  *item =  thing->getDrItem();

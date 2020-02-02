@@ -9,7 +9,7 @@
 #define ENGINE_THING_SWIRL_H
 
 #include "engine/globals_engine.h"
-#include "engine/things/engine_thing.h"
+#include "engine/thing/engine_thing.h"
 
 
 //####################################################################################

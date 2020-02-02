@@ -9,8 +9,8 @@
 
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/things/engine_thing_object.h"
-#include "engine/things/engine_thing_light.h"
+#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing_light.h"
 #include "engine/world/engine_world.h"
 
 

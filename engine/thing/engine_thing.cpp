@@ -5,8 +5,8 @@
 //      Abstract Item representing a thing that has a body in the Physics Engine (object, character, light, etc)
 //
 //
-#include "engine/things/engine_thing.h"
-#include "engine/things/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
+#include "engine/thing/engine_thing_object.h"
 
 
 //####################################################################################

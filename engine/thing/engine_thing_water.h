@@ -9,7 +9,7 @@
 #define ENGINE_THING_WATER_H
 
 #include "engine/globals_engine.h"
-#include "engine/things/engine_thing.h"
+#include "engine/thing/engine_thing.h"
 
 
 //####################################################################################
@@ -51,11 +51,12 @@ public:
     // Constructor / Destructor
     DrEngineWater(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z, double angle, float opacity, DrPointF size,
                   Water_Texture texture, DrColor start_color, DrColor end_color,
-                  float tint, float reflection,
-                  float rip_length,     float rip_speed, float rip_amplitude, float rip_stretch,
-                  float w_length,       float w_speed,   float w_amplitude,
-                  DrColor foam_color,    float foam_tint, float foam_height, bool foam_flat,
-                  float r_reflection,   float r_underwater, float r_texture, float r_foam, float texture_movement);
+                  float tint,           float reflection,
+                  float rip_length,     float rip_speed,    float rip_amplitude,    float rip_stretch,
+                  float w_length,       float w_speed,      float w_amplitude,
+                  DrColor foam_color,   float foam_tint,    float foam_height,      bool foam_flat,
+                  float r_reflection,   float r_underwater, float r_texture,        float r_foam,
+                  float texture_movement);
     virtual ~DrEngineWater() override;
 
     // Abstract Engine Thing Overrides

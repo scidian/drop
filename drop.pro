@@ -248,16 +248,16 @@ SOURCES += \
     engine/opengl/opengl_render_objects.cpp \
     engine/opengl/opengl_render_soft_body.cpp \
     engine/opengl/opengl_render_space.cpp \
-    engine/things/engine_thing.cpp \
-    engine/things/engine_thing_fire.cpp \
-    engine/things/engine_thing_fisheye.cpp \
-    engine/things/engine_thing_light.cpp \
-    engine/things/engine_thing_mirror.cpp \
-    engine/things/engine_thing_object.cpp \
-    engine/things/engine_thing_object__create.cpp \
-    engine/things/engine_thing_object__update.cpp \
-    engine/things/engine_thing_swirl.cpp \
-    engine/things/engine_thing_water.cpp \
+    engine/thing/engine_thing.cpp \
+    engine/thing/engine_thing_fire.cpp \
+    engine/thing/engine_thing_fisheye.cpp \
+    engine/thing/engine_thing_light.cpp \
+    engine/thing/engine_thing_mirror.cpp \
+    engine/thing/engine_thing_object.cpp \
+    engine/thing/engine_thing_object__create.cpp \
+    engine/thing/engine_thing_object__update.cpp \
+    engine/thing/engine_thing_swirl.cpp \
+    engine/thing/engine_thing_water.cpp \
     engine/world/engine_world.cpp \
     engine/world/engine_world__build_player.cpp \
     engine/world/engine_world__build_world.cpp \
@@ -970,14 +970,14 @@ HEADERS += \
     engine/mesh/engine_vertex_data.h \
     engine/mesh/engine_vertex_debug.h \
     engine/opengl/opengl.h \
-    engine/things/engine_thing.h \
-    engine/things/engine_thing_fire.h \
-    engine/things/engine_thing_fisheye.h \
-    engine/things/engine_thing_light.h \
-    engine/things/engine_thing_mirror.h \
-    engine/things/engine_thing_object.h \
-    engine/things/engine_thing_swirl.h \
-    engine/things/engine_thing_water.h \
+    engine/thing/engine_thing.h \
+    engine/thing/engine_thing_fire.h \
+    engine/thing/engine_thing_fisheye.h \
+    engine/thing/engine_thing_light.h \
+    engine/thing/engine_thing_mirror.h \
+    engine/thing/engine_thing_object.h \
+    engine/thing/engine_thing_swirl.h \
+    engine/thing/engine_thing_water.h \
     engine/world/engine_world.h \
     project/components_and_properties.h \
     project/constants_component_info.h \

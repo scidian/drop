@@ -12,13 +12,13 @@
 #include "project/components_and_properties.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class DrProperty;
 class DrComponent;
 
-// Type definitions
-typedef std::map<std::string, DrComponent*> ComponentMap;
+// Type Definitions
+typedef std::map<std::string, DrComponent*>     ComponentMap;           // Map of pointers to DrComponent classes, built in keys in file components_and_properties.h
 
 
 //####################################################################################

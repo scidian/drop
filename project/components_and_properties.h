@@ -11,8 +11,8 @@
 #include <map>
 #include <string>
 
-// Type used to hold a Component / Property combo key set
-typedef std::pair<std::string, std::string>     ComponentProperty;
+// Type Definitions
+typedef std::pair<std::string, std::string>     ComponentProperty;      // Component / Property key set, first string is Component, second is Property
 
 
 //####################################################################################
