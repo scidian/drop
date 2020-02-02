@@ -57,22 +57,22 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
 //##    Loads Appearance Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object) {
-    bool    cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
-    int     bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF pixelation =       thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
-    float   brightness =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt() / 255.f;
-    float   contrast =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt() / 255.f;
-    float   saturation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Saturation).toVector()[0].toInt() / 255.f;
-    float   hue =               thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Hue).toVector()[0].toInt() / 360.f;
-    bool    grayscale =         thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Grayscale).toBool();
-    bool    negative =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Negative).toBool();
-    bool    instant_3d =        thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Convert_3D).toBool();
-    bool    wireframe =         thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Wireframe).toVector()[0].toBool();
-    float   wireframe_width =   thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Wireframe).toVector()[1].toFloat();
-    bool    cartoon =           thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[0].toBool();
-    float   cartoon_width =     thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[1].toFloat();
-    bool    cross_hatch =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
-    float   cross_width =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[1].toFloat();
+    bool        cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
+    int         bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
+    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
+    float       brightness =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt() / 255.f;
+    float       contrast =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt() / 255.f;
+    float       saturation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Saturation).toVector()[0].toInt() / 255.f;
+    float       hue =               thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Hue).toVector()[0].toInt() / 360.f;
+    bool        grayscale =         thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Grayscale).toBool();
+    bool        negative =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Negative).toBool();
+    bool        instant_3d =        thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Convert_3D).toBool();
+    bool        wireframe =         thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Wireframe).toVector()[0].toBool();
+    float       wireframe_width =   thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Wireframe).toVector()[1].toFloat();
+    bool        cartoon =           thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[0].toBool();
+    float       cartoon_width =     thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[1].toFloat();
+    bool        cross_hatch =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
+    float       cross_width =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[1].toFloat();
     object->cast_shadows =      cast_shadows;
     object->bitrate =           bit_rate;
     object->pixel_x =           static_cast<float>(pixelation.x);

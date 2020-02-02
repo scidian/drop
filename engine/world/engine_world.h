@@ -181,6 +181,7 @@ public:
     ///DrEngineThing   *create(std::string name);                           // Will create a Thing based on an DrAsset name
     EngineThings        find(std::string name);                             // Returns a list of Things (entities) with designated name
 
+
     // Cameras
     ///DrEngineCamera  *camera(long camera_id);                             // Returns a camera by ID number
 
@@ -198,9 +199,12 @@ public:
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Important Functions
+    long                getNextKey()            { return m_key_generator++; }
+
+    // Thing Finding
     DrEngineThing*      findThingByKey(long key);
     DrEngineObject*     findObjectByKey(long key);
-    long                getNextKey()            { return m_key_generator++; }
+
 
 
     // Soft Bodies

@@ -103,6 +103,27 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
     if (object == nullptr) return;
 
+    // Load possible 3D Info
+    ThingComp3D *comp_3d = object->comp3D();
+    Convert_3D_Type comp_3d_type = Convert_3D_Type::None;           // Type of 3D extrusion
+    double comp_3d_angle_x { 0.0 };                                 // X axis rotation
+    double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
+    double comp_3d_rotate_x_speed { 0.0 };                          // X axis rotation speed
+    double comp_3d_rotate_y_speed { 0.0 };                          // Y axis rotation speed
+    bool   comp_3d_billboard { false };                             // Make Object face camera?
+    double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
+    if (comp_3d != nullptr) {
+        comp_3d_type =           object->comp3D()->get3DType();
+        comp_3d_angle_x =        object->comp3D()->getAngleX();
+        comp_3d_angle_y =        object->comp3D()->getAngleY();
+        comp_3d_rotate_x_speed = object->comp3D()->getRotateSpeedX();
+        comp_3d_rotate_y_speed = object->comp3D()->getRotateSpeedY();
+        comp_3d_billboard =      object->comp3D()->getBillboard();
+        comp_3d_depth =          object->comp3D()->getDepth();
+    } else {
+        draw2D = true;
+    }
+
     // Don't draw Segments (lines)
     ///bool skip_object = false;
     ///for (auto shape : object->shapes) {
@@ -154,11 +175,11 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Rotate
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-    model.rotate(static_cast<float>(object->comp3D()->getAngleX() + (now * object->comp3D()->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    model.rotate(static_cast<float>(object->comp3D()->getAngleY() + (now * object->comp3D()->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
+    model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
     // Rotate Billboards
-    if (object->comp3D()->getBillboard()) {
+    if (comp_3d_billboard) {
         // Kinda works
         ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
 
@@ -178,7 +199,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Scale
-    bool  scale_2d = (draw2D || object->comp3D()->get3DType() == Convert_3D_Type::Cube || object->comp3D()->get3DType() == Convert_3D_Type::Cone);
+    bool  scale_2d = (draw2D || comp_3d_type == Convert_3D_Type::Cube || comp_3d_type == Convert_3D_Type::Cone);
     float add_pixel_x = 0.0;
     float add_pixel_y = 0.0;
     if (scale_2d) {
@@ -193,7 +214,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
     float final_x_scale = (object->getScaleX() + add_pixel_x) * flip_x;
     float final_y_scale = (object->getScaleY() + add_pixel_y) * flip_y;
-    model.scale( final_x_scale, final_y_scale, static_cast<float>(object->comp3D()->getDepth()) );
+    model.scale( final_x_scale, final_y_scale, static_cast<float>(comp_3d_depth) );
 
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
@@ -310,7 +331,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( 2 );
 
     // 3D Cube Render
-    } else if (object->comp3D()->get3DType() == Convert_3D_Type::Cube) {
+    } else if (comp_3d_type == Convert_3D_Type::Cube) {
         setDefaultAttributeBuffer(m_cube_vbo);
         int cube_vertices =  m_cube_vbo->size() / (c_vertex_length * c_float_size);
         glDrawArrays(GL_TRIANGLES, 0, cube_vertices );
@@ -319,7 +340,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( 12 );      // aka 'cube_vertices / 3'
 
     // 3D Cone Render
-    } else if (object->comp3D()->get3DType() == Convert_3D_Type::Cone) {
+    } else if (comp_3d_type == Convert_3D_Type::Cone) {
         setDefaultAttributeBuffer(m_cone_vbo);
         int cone_vertices =  m_cone_vbo->size() / (c_vertex_length * c_float_size);
         glDrawArrays(GL_TRIANGLES, 0, cone_vertices );
@@ -383,6 +404,21 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
     if (object == nullptr) return;
 
+    // Load possible 3D Info
+    ThingComp3D *comp_3d = object->comp3D();
+    double comp_3d_angle_x { 0.0 };                                 // X axis rotation
+    double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
+    double comp_3d_rotate_x_speed { 0.0 };                          // X axis rotation speed
+    double comp_3d_rotate_y_speed { 0.0 };                          // Y axis rotation speed
+    double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
+    if (comp_3d != nullptr) {
+        comp_3d_angle_x =        object->comp3D()->getAngleX();
+        comp_3d_angle_y =        object->comp3D()->getAngleY();
+        comp_3d_rotate_x_speed = object->comp3D()->getRotateSpeedX();
+        comp_3d_rotate_y_speed = object->comp3D()->getRotateSpeedY();
+        comp_3d_depth =          object->comp3D()->getDepth();
+    }
+
     // Don't draw Segments (lines)
     if (object->shapes.size() > 0) {
         if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
@@ -417,14 +453,14 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 
     // Rotate
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-    model.rotate(static_cast<float>(object->comp3D()->getAngleX() + (now * object->comp3D()->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    model.rotate(static_cast<float>(object->comp3D()->getAngleY() + (now * object->comp3D()->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
+    model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
     // Scale
     float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
     model.scale(static_cast<float>(texture->width()) * flip_x, static_cast<float>(texture->height()) * flip_y, 1.0f);
-    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->comp3D()->getDepth()) );
+    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(comp_3d_depth) );
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
     float alpha = object->getOpacity();                                                 // Start with object alpha
@@ -556,10 +592,26 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     // ***** Enable shader program
     if (!m_fire_shader.bind()) return false;
 
+    // Load possible 3D Info
+    ThingComp3D *comp_3d = fire->comp3D();
+    double comp_3d_angle_x { 0.0 };                                 // X axis rotation
+    double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
+    double comp_3d_rotate_x_speed { 0.0 };                          // X axis rotation speed
+    double comp_3d_rotate_y_speed { 0.0 };                          // Y axis rotation speed
+    bool   comp_3d_billboard { false };                             // Make Object face camera?
+    double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
+    if (comp_3d != nullptr) {
+        comp_3d_angle_x =        fire->comp3D()->getAngleX();
+        comp_3d_angle_y =        fire->comp3D()->getAngleY();
+        comp_3d_rotate_x_speed = fire->comp3D()->getRotateSpeedX();
+        comp_3d_rotate_y_speed = fire->comp3D()->getRotateSpeedY();
+        comp_3d_billboard =      fire->comp3D()->getBillboard();
+        comp_3d_depth =          fire->comp3D()->getDepth();
+    }
+
     // ***** Blend function
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
-
 
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
     float x =   static_cast<float>(thing->getPosition().x);
@@ -573,11 +625,11 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
 
     // Rotate
     model.rotate(static_cast<float>(fire->getAngle()), 0.f, 0.f, 1.f);
-    model.rotate(static_cast<float>(fire->comp3D()->getAngleX() + (now * fire->comp3D()->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    model.rotate(static_cast<float>(fire->comp3D()->getAngleY() + (now * fire->comp3D()->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
+    model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
     // Rotate Billboards
-    if (fire->comp3D()->getBillboard()) {
+    if (comp_3d_billboard) {
         ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
         QVector3D obj = QVector3D(x, y, z);
         QVector3D eye = m_eye / combinedZoomScale();
@@ -590,7 +642,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     model.scale( static_cast<float>(fire->getSize().x), static_cast<float>(fire->getSize().y), 1.0f );
     float final_x_scale = (fire->getScaleX());
     float final_y_scale = (fire->getScaleY());
-    model.scale( final_x_scale, final_y_scale, static_cast<float>(fire->comp3D()->getDepth()) );
+    model.scale( final_x_scale, final_y_scale, static_cast<float>(comp_3d_depth) );
 
     // Reverse Culling for Flipped Objects
     if ((final_x_scale < 0 && final_y_scale > 0) || (final_x_scale > 0 && final_y_scale < 0)) cullingOn(true);

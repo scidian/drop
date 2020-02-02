@@ -106,15 +106,36 @@ std::string DrEngineThing::name() {
 //####################################################################################
 //##    Components Functions
 //####################################################################################
-void DrEngineThing::addComponent(DrEngineComponent *component) {
-    m_components[component->name()] = component;
-}
-
+// Returns component with matching component_name
 DrEngineComponent* DrEngineThing::component(std::string component_name) {
+    if (component_name == "") return nullptr;
     auto it = m_components.find(component_name);
     if (it == m_components.end()) { return nullptr; }
     return (*it).second;
 }
+
+// Removes component with component_name
+void DrEngineThing::removeComponent(std::string component_name) {
+    if (component_name == "") return;
+    for (auto it = m_components.begin(); it != m_components.end(); ) {
+        if ((*it).first == component_name) {
+            it = m_components.erase(it);
+            continue;
+        }
+        it++;
+    }
+}
+
+// Sets Component to 'component', if nullptr is passed in, removes component
+void DrEngineThing::setComponent(std::string component_name, DrEngineComponent *component) {
+    if (component_name == "") return;
+    if (component == nullptr) {
+        removeComponent(component_name);
+    } else {
+        m_components[component_name] = component;
+    }
+}
+
 
 
 //####################################################################################
@@ -128,7 +149,7 @@ DrEngineComponent* DrEngineThing::component(std::string component_name) {
 //####################################################################################
 //##    Components Functions
 //####################################################################################
-void DrEngineThing::setComponent3D(ThingComp3D *component) {    m_comp_3d = component;      addComponent(component); }
+void DrEngineThing::setComponent3D(ThingComp3D *component) {    m_comp_3d = component;      setComponent(component->name(), component); }
 
 
 //####################################################################################

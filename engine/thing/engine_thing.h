@@ -114,8 +114,9 @@ public:
     void                remove()                    { m_remove_me = true; }                 // Call to remove this Thing
 
     // Thing Components
-    void                addComponent(DrEngineComponent *component);
     DrEngineComponent  *component(std::string component_name);
+    void                removeComponent(std::string component_name);
+    void                setComponent(std::string component_name, DrEngineComponent *component);
 
     // Cameras
     ///long             followCameraID();                                                   // Returns ID of following camera if there is one
