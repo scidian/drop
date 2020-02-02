@@ -109,7 +109,7 @@ void DrEngineVertexData::initializeTextureCone() {
     DrVec3 point_bl(x2, y2, +c_extrude_depth);
     DrVec3 point_br(x3, y3, +c_extrude_depth);
 
-    glm::mat4 rotate = glm::mat4(1.0);                  // Set to identity
+    glm::mat4 rotate = Dr::IdentityMatrix();
 
     for (int i = 0; i < 4; ++i) {
         // ... If wanting to use just bottom half and rotate quarters around texture
@@ -140,7 +140,7 @@ void DrEngineVertexData::initializeTextureCone() {
     tx3 = 1.0; ty3 = 0.0;
     tx4 = 0.0; ty4 = 0.0;
 
-    rotate = glm::mat4(1.0);                    // Set to identity matrix
+    rotate = Dr::IdentityMatrix();
     DrVec3  nf;                                 // Normal Front
     DrVec3  p1f, p2f, p3f, p4f;                 // Point 1 Front, etc
 
@@ -203,7 +203,7 @@ void DrEngineVertexData::cube(float x1, float y1, float tx1, float ty1,
                               float x2, float y2, float tx2, float ty2,
                               float x3, float y3, float tx3, float ty3,
                               float x4, float y4, float tx4, float ty4) {
-    glm::mat4 rotate = glm::mat4(1.0);
+    glm::mat4 rotate = Dr::IdentityMatrix();
     DrVec3 nf, nb;                                   // Normal Front, Normal Back
     DrVec3 p1f, p2f, p3f, p4f;                       // Point 1 Front, etc
     DrVec3 p1b, p2b, p3b, p4b;                       // Point 1 Back, etc

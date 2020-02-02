@@ -15,10 +15,12 @@ DrEngineComponent::DrEngineComponent(DrEngineWorld *engine_world, DrEngineThing 
     m_world = engine_world;
     m_thing = parent_thing;
     m_name =  component_name;
+
+    init();
 }
 
 DrEngineComponent::~DrEngineComponent() {
-
+    destroy();
 }
 
 

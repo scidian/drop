@@ -88,7 +88,7 @@ void DrOpenGL::drawSpace() {
 
                 // If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
                 bool draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
-                if (thing->get3DType() == Convert_3D_Type::None || Dr::FuzzyCompare(thing->getDepth(), 0.0))
+                if (thing->comp3D()->get3DType() == Convert_3D_Type::None || Dr::FuzzyCompare(thing->comp3D()->getDepth(), 0.0))
                     draw2D = true;
                 else if (thing->extrude_3d)
                     draw2D = false;

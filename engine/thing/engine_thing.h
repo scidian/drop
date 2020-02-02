@@ -10,9 +10,7 @@
 
 #include "core/dr_time.h"
 #include "engine/globals_engine.h"
-
-// Forward Declarations
-class   ThingComp3D;
+#include "engine/thing_component/thing_comp_3d.h"
 
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
@@ -147,7 +145,8 @@ public:
     }
 
     // Built In Thing Components
-    ThingComp3D        *comp3D() { return m_comp_3d; }
+    EngineComponents&   componentMap()      { return m_components; }
+    ThingComp3D*        comp3D()            { return m_comp_3d; }
     void                setComponent3D(ThingComp3D *component);
 
 

@@ -154,13 +154,11 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Rotate
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
-    if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
-        model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
-        model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(object->comp3D()->getAngleX() + (now * object->comp3D()->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    model.rotate(static_cast<float>(object->comp3D()->getAngleY() + (now * object->comp3D()->getRotateSpeedY())), 0.f, 1.f, 0.f);
 
     // Rotate Billboards
-    if (object->getBillboard()) {
+    if (object->comp3D()->getBillboard()) {
         // Kinda works
         ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
 
@@ -180,7 +178,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Scale
-    bool  scale_2d = (draw2D || object->get3DType() == Convert_3D_Type::Cube || object->get3DType() == Convert_3D_Type::Cone);
+    bool  scale_2d = (draw2D || object->comp3D()->get3DType() == Convert_3D_Type::Cube || object->comp3D()->get3DType() == Convert_3D_Type::Cone);
     float add_pixel_x = 0.0;
     float add_pixel_y = 0.0;
     if (scale_2d) {
@@ -195,7 +193,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
     float final_x_scale = (object->getScaleX() + add_pixel_x) * flip_x;
     float final_y_scale = (object->getScaleY() + add_pixel_y) * flip_y;
-    model.scale( final_x_scale, final_y_scale, static_cast<float>(object->getDepth()) );
+    model.scale( final_x_scale, final_y_scale, static_cast<float>(object->comp3D()->getDepth()) );
 
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
@@ -312,7 +310,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( 2 );
 
     // 3D Cube Render
-    } else if (object->get3DType() == Convert_3D_Type::Cube) {
+    } else if (object->comp3D()->get3DType() == Convert_3D_Type::Cube) {
         setDefaultAttributeBuffer(m_cube_vbo);
         int cube_vertices =  m_cube_vbo->size() / (c_vertex_length * c_float_size);
         glDrawArrays(GL_TRIANGLES, 0, cube_vertices );
@@ -321,7 +319,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( 12 );      // aka 'cube_vertices / 3'
 
     // 3D Cone Render
-    } else if (object->get3DType() == Convert_3D_Type::Cone) {
+    } else if (object->comp3D()->get3DType() == Convert_3D_Type::Cone) {
         setDefaultAttributeBuffer(m_cone_vbo);
         int cone_vertices =  m_cone_vbo->size() / (c_vertex_length * c_float_size);
         glDrawArrays(GL_TRIANGLES, 0, cone_vertices );
@@ -418,17 +416,15 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     model.translate(x, y, z);
 
     // Rotate
-    if (Dr::FuzzyCompare(object->getAngleX(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedX(), 0.0) == false)
-        model.rotate(static_cast<float>(object->getAngleX() + (now * object->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    if (Dr::FuzzyCompare(object->getAngleY(), 0.0) == false || Dr::FuzzyCompare(object->getRotateSpeedY(), 0.0) == false)
-        model.rotate(static_cast<float>(object->getAngleY() + (now * object->getRotateSpeedY())), 0.f, 1.f, 0.f);
     model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+    model.rotate(static_cast<float>(object->comp3D()->getAngleX() + (now * object->comp3D()->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    model.rotate(static_cast<float>(object->comp3D()->getAngleY() + (now * object->comp3D()->getRotateSpeedY())), 0.f, 1.f, 0.f);
 
     // Scale
     float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
     float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
     model.scale(static_cast<float>(texture->width()) * flip_x, static_cast<float>(texture->height()) * flip_y, 1.0f);
-    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->getDepth()) );
+    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(object->comp3D()->getDepth()) );
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
     float alpha = object->getOpacity();                                                 // Start with object alpha
@@ -577,13 +573,11 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
 
     // Rotate
     model.rotate(static_cast<float>(fire->getAngle()), 0.f, 0.f, 1.f);
-    if (Dr::FuzzyCompare(fire->getAngleX(), 0.0) == false || Dr::FuzzyCompare(fire->getRotateSpeedX(), 0.0) == false)
-        model.rotate(static_cast<float>(fire->getAngleX() + (now * fire->getRotateSpeedX())), 1.f, 0.f, 0.f);
-    if (Dr::FuzzyCompare(fire->getAngleY(), 0.0) == false || Dr::FuzzyCompare(fire->getRotateSpeedY(), 0.0) == false)
-        model.rotate(static_cast<float>(fire->getAngleY() + (now * fire->getRotateSpeedY())), 0.f, 1.f, 0.f);
+    model.rotate(static_cast<float>(fire->comp3D()->getAngleX() + (now * fire->comp3D()->getRotateSpeedX())), 1.f, 0.f, 0.f);
+    model.rotate(static_cast<float>(fire->comp3D()->getAngleY() + (now * fire->comp3D()->getRotateSpeedY())), 0.f, 1.f, 0.f);
 
     // Rotate Billboards
-    if (fire->getBillboard()) {
+    if (fire->comp3D()->getBillboard()) {
         ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
         QVector3D obj = QVector3D(x, y, z);
         QVector3D eye = m_eye / combinedZoomScale();
@@ -596,7 +590,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     model.scale( static_cast<float>(fire->getSize().x), static_cast<float>(fire->getSize().y), 1.0f );
     float final_x_scale = (fire->getScaleX());
     float final_y_scale = (fire->getScaleY());
-    model.scale( final_x_scale, final_y_scale, static_cast<float>(fire->getDepth()) );
+    model.scale( final_x_scale, final_y_scale, static_cast<float>(fire->comp3D()->getDepth()) );
 
     // Reverse Culling for Flipped Objects
     if ((final_x_scale < 0 && final_y_scale > 0) || (final_x_scale > 0 && final_y_scale < 0)) cullingOn(true);

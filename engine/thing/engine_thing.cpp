@@ -34,6 +34,10 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
 
 DrEngineThing::~DrEngineThing() {
     destroy();
+
+    for (auto component_pair : m_components) {
+        delete component_pair.second;
+    }
 }
 
 

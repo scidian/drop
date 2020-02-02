@@ -7,6 +7,7 @@
 //
 #include <cmath>
 
+#include "3rd_party/glm/mat4x4.hpp"
 #include "core/dr_math.h"
 #include "core/types/dr_pointf.h"
 
@@ -151,8 +152,24 @@ DrPointF RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, 
 }
 
 
+//####################################################################################
+//##
+//##    Matrix Functions
+//##
+//############################
+glm::mat4 IdentityMatrix() {
+    return glm::mat4(1.0);
+}
+
+
 
 }   // End namespace Dr
+
+
+
+
+
+
 
 
 

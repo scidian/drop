@@ -16,6 +16,9 @@ DrEngineFire::DrEngineFire(DrEngineWorld *world, long unique_key, long original_
                            Fire_Mask mask, DrColor color_1, DrColor color_2, DrColor smoke, float color_intensity, float smooth, float wave, float speed) :
     DrEngineThing(world, unique_key, original_key) {
 
+    // Initialize Components
+    setComponent3D(new ThingComp3D(world, this));
+
     this->setAngle(angle);
     this->setOpacity(opacity);
     this->setPosition(DrPointF(x, y));

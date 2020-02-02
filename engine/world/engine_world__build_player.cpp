@@ -189,7 +189,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.push_back( DrPointF(   5.5,  -5.0 ));
         DrEngineObject *rover = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true);
         rover->addShapePolygon(points);
-        rover->setDepth(30);
+        rover->comp3D()->setDepth(30);
         addThing(rover);
         ///rover->setCameraRotation( -15, 15, 0 );
         rover->setCameraRotation( -15,  -25, 0 );
@@ -204,9 +204,9 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         wheel1->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel2->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel3->addShapeCircleFromTexture(Asset_Textures::Wheel);
-        wheel1->setDepth(30);
-        wheel2->setDepth(30);
-        wheel3->setDepth(30);
+        wheel1->comp3D()->setDepth(30);
+        wheel2->comp3D()->setDepth(30);
+        wheel3->comp3D()->setDepth(30);
         addThings( { wheel1, wheel2, wheel3 } );
         wheel1->setRotateSpeedZ( 110.0 );
         wheel2->setRotateSpeedZ(  60.0 );
@@ -219,7 +219,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         // Add Careful Cargo
         DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 30, 415, 5, c_scale1x1, 0.7, 0);
         cargo->addShapeCircleFromTexture(Asset_Textures::Ball);
-        cargo->setDepth(31);
+        cargo->comp3D()->setDepth(31);
         addThing(cargo);
 
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel

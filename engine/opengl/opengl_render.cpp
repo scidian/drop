@@ -9,6 +9,7 @@
 
 #include <vector>
 
+#include "core/dr_math.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
@@ -117,12 +118,15 @@ void DrOpenGL::getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *t
 
     // ***** Create rotation matrix, apply rotation to object
     float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);
-    glm::mat4 matrix = glm::mat4(1.0);                                                                  // Set to identity
-    float rotate_x = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngleX()));
-    float rotate_y = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngleY()));
-    float rotate_z = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngle()));
-    if (Dr::FuzzyCompare(thing->getAngleX(), 0.0) == false) matrix = glm::rotate(matrix, rotate_x, glm::vec3(1.0, 0.0, 0.0));
-    if (Dr::FuzzyCompare(thing->getAngleY(), 0.0) == false) matrix = glm::rotate(matrix, rotate_y, glm::vec3(0.0, 1.0, 0.0));
+    glm::mat4 matrix = Dr::IdentityMatrix();
+    float rotate_x {0}, rotate_y {0}, rotate_z {0};
+    if (thing->comp3D() != nullptr) {
+        rotate_x = Dr::DegreesToRadians(now * static_cast<float>(thing->comp3D()->getAngleX()));
+        rotate_y = Dr::DegreesToRadians(now * static_cast<float>(thing->comp3D()->getAngleY()));
+    }
+    rotate_z = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngle()));
+    matrix = glm::rotate(matrix, rotate_x, glm::vec3(1.0, 0.0, 0.0));
+    matrix = glm::rotate(matrix, rotate_y, glm::vec3(0.0, 1.0, 0.0));
     matrix = glm::rotate(matrix, rotate_z, glm::vec3(0.0, 0.0, 1.0));
 
     DrVec3 top_right = matrix * DrVec3( half_width,  half_height, 0.f);

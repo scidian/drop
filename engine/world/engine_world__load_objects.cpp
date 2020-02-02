@@ -35,6 +35,7 @@ Thing_Info DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
 //##    Loads 3D Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
+    if (object->comp3D() == nullptr) return;
     int      convert_type =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Type).toInt();
     double   depth =            thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Depth).toDouble();
     DrPointF x_axis_rotate =    thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_X_Axis_Rotation).toPointF();
@@ -42,13 +43,13 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
     DrPointF x_axis_speed =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_X_Axis_Speed).toPointF();
     DrPointF y_axis_speed =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Y_Axis_Speed).toPointF();
     bool     billboard =        thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Billboard).toBool();
-    object->set3DType(static_cast<Convert_3D_Type>(convert_type));
-    object->setAngleX( x_axis_rotate.x + (Dr::RandomDouble(0.0, x_axis_rotate.y * 2.0) - x_axis_rotate.y) );
-    object->setAngleY( y_axis_rotate.x + (Dr::RandomDouble(0.0, y_axis_rotate.y * 2.0) - y_axis_rotate.y) );
-    object->setBillboard( billboard );
-    object->setDepth(depth);
-    object->setRotateSpeedX( (x_axis_speed.x + (Dr::RandomDouble(0.0, x_axis_speed.y * 2.0) - x_axis_speed.y)) / 100.0 );
-    object->setRotateSpeedY( (y_axis_speed.x + (Dr::RandomDouble(0.0, y_axis_speed.y * 2.0) - y_axis_speed.y)) / 100.0 );
+    object->comp3D()->set3DType(static_cast<Convert_3D_Type>(convert_type));
+    object->comp3D()->setAngleX( x_axis_rotate.x + (Dr::RandomDouble(0.0, x_axis_rotate.y * 2.0) - x_axis_rotate.y) );
+    object->comp3D()->setAngleY( y_axis_rotate.x + (Dr::RandomDouble(0.0, y_axis_rotate.y * 2.0) - y_axis_rotate.y) );
+    object->comp3D()->setBillboard( billboard );
+    object->comp3D()->setDepth(depth);
+    object->comp3D()->setRotateSpeedX( (x_axis_speed.x + (Dr::RandomDouble(0.0, x_axis_speed.y * 2.0) - x_axis_speed.y)) / 100.0 );
+    object->comp3D()->setRotateSpeedY( (y_axis_speed.x + (Dr::RandomDouble(0.0, y_axis_speed.y * 2.0) - y_axis_speed.y)) / 100.0 );
 }
 
 

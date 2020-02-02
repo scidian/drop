@@ -25,13 +25,13 @@ public:
 
 private:
     // Thing Properties - 3D
-    Convert_3D_Type     m_3d_type = Convert_3D_Type::Extrusion;
-    double              m_angle_x =   0.0;                              // X axis rotation
-    double              m_angle_y =   0.0;                              // Y axis rotation
-    bool                m_billboard = false;                            // Keeps object facing camera
-    double              m_depth = 0.0;                                  // Desired 3D Depth of 2D Objects
-    double              m_rotate_x_speed = 0.0;                         // X axis rotation speed
-    double              m_rotate_y_speed = 0.0;                         // Y axis rotation speed
+    Convert_3D_Type     m_3d_type           { Convert_3D_Type::Extrusion };
+    double              m_angle_x           { 0.0 };                                // X axis rotation
+    double              m_angle_y           { 0.0 };                                // Y axis rotation
+    bool                m_billboard         { false };                              // Keeps object facing camera
+    double              m_depth             { 0.0 };                                // Desired 3D Depth of 2D Objects
+    double              m_rotate_x_speed    { 0.0 };                                // X axis rotation speed
+    double              m_rotate_y_speed    { 0.0 };                                // Y axis rotation speed
 
 public:
     // Getters / Setters

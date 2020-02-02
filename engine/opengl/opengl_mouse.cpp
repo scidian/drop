@@ -177,8 +177,8 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 for (int i = 0; i < 25; i++ ) {
                     DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
                     block->addShapeBoxFromTexture(Asset_Textures::Block);
-                    block->set3DType(Convert_3D_Type::Cube);
-                    block->setDepth(61);
+                    block->comp3D()->set3DType(Convert_3D_Type::Cube);
+                    block->comp3D()->setDepth(61);
                     block->setTouchDrag(true);
                     block->setTouchDragForce(5000.0);
                     world->addThing(block);

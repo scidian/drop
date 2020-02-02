@@ -10,6 +10,7 @@
 #define DR_MATH_H
 
 // Forward Declarations
+#include "3rd_party/glm/fwd.hpp"
 class DrPoint;
 class DrPointF;
 
@@ -118,14 +119,19 @@ namespace Dr {
         return closest;
     }
 
-    double       CalcRotationAngleInDegrees(DrPointF center_point, DrPointF target_point);
-    double       Closest90DegreeAngle(double angle, double angle_to_find);
-    double       DifferenceBetween2Angles(double angle1, double angle2);
-    bool         IsSimilarAngle(double angle1, double angle2, double tolerance = 0.001);
-    bool         IsSquare(double check_angle);
-    bool         IsRectangle(DrPointF p1, DrPointF p2, DrPointF p3, DrPointF p4);
-    DrPointF     RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, bool angle_is_in_radians = false);
+    double      CalcRotationAngleInDegrees(DrPointF center_point, DrPointF target_point);
+    double      Closest90DegreeAngle(double angle, double angle_to_find);
+    double      DifferenceBetween2Angles(double angle1, double angle2);
+    bool        IsSimilarAngle(double angle1, double angle2, double tolerance = 0.001);
+    bool        IsSquare(double check_angle);
+    bool        IsRectangle(DrPointF p1, DrPointF p2, DrPointF p3, DrPointF p4);
+    DrPointF    RotatePointAroundOrigin(DrPointF point, DrPointF origin, double angle, bool angle_is_in_radians = false);
 
+
+    //####################################################################################
+    //##    Matrix Functions
+    //############################
+    glm::mat4   IdentityMatrix();
 
 
 }   // End namespace Dr
