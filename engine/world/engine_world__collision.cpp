@@ -81,7 +81,9 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 
     // Temp cancel gravity on another object if colliding and should cancel it
     if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
-        object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );
+        if (object_a->compPlayer() != nullptr) {
+            object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
+        }
     }
 
     // Check for one way platform
@@ -107,8 +109,11 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
-    if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false )             // Temp cancel / reduce / increase gravity on another
-        object_a->setTempGravityMultiplier( object_b->getGravityMultiplier() );         //      object if colliding and should cancel / adjust it
+    if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {           // Temp cancel / reduce / increase gravity on another
+        if (object_a->compPlayer() != nullptr) {                                        //      object if colliding and should cancel / adjust it
+            object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
+        }
+    }
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 
     // Check for dealing damage
@@ -169,7 +174,9 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if (object_a == nullptr || object_b == nullptr) return;
 
     // Stop canceling gravity when seperates
-    object_a->setTempGravityMultiplier( 1.0 );
+    if (object_a->compPlayer() != nullptr) {
+        object_a->compPlayer()->setTempGravityMultiplier( 1.0 );
+    }
 }
 
 

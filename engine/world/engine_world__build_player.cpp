@@ -29,7 +29,8 @@
 // Sets up an object to be controlled as a "player", i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool set_active_camera) {
     // Add Player Components
-    object->setComponentCamera(new ThingCompCamera(this, object));
+    if (object->compCamera() == nullptr) object->setComponentCamera(new ThingCompCamera(this, object));
+    if (object->compPlayer() == nullptr) object->setComponentPlayer(new ThingCompPlayer(this, object));
 
     // Create Camera
     DrEngineCamera *camera = addCamera(object->getKey());
@@ -101,13 +102,13 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 assignPlayerControls(softy, true, true);
                 if (getCamerasFollowThing(softy->getKey()).size() > 0)
                     getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
-                softy->setMoveSpeedX(800);
-                softy->setJumpForceY(350);
-                softy->setJumpTimeout(5000);
+                softy->compPlayer()->setMoveSpeedX(800);
+                softy->compPlayer()->setJumpForceY(350);
+                softy->compPlayer()->setJumpTimeout(5000);
+                softy->compPlayer()->setJumpCount( 1 );
+                softy->compPlayer()->setCanWallJump(true);
+                softy->compPlayer()->setCanWallJump(false);
                 softy->setRotateSpeedZ( 7 );
-                softy->setJumpCount( 1 );
-                softy->setCanWallJump(true);
-                softy->setCanWallJump(false);
             }
 
             DrEngineObject *softy2 = addSoftBodyMesh(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(200, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
@@ -115,12 +116,12 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 assignPlayerControls(softy2, false, false);
                 if (getCamerasFollowThing(softy2->getKey()).size() > 0)
                     getCamerasFollowThing(softy2->getKey())[0]->setLag(DrPointF(200, 200));
-                softy2->setMoveSpeedX(800);
-                ///softy2->setJumpForceY(500);
-                softy2->setJumpTimeout(5000);
+                softy2->compPlayer()->setMoveSpeedX(800);
+                ///softy2->compPlayer()->setJumpForceY(500);
+                softy2->compPlayer()->setJumpTimeout(5000);
+                softy2->compPlayer()->setJumpCount( -1 );
+                softy2->compPlayer()->setCanWallJump(false);
                 softy2->setRotateSpeedZ( 7 );
-                softy2->setJumpCount( -1 );
-                softy2->setCanWallJump(false);
             }
 
 //            DrEngineObject *softy3 = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(-200, 250), 400, 0.8, 0.50, 0.25, false);
@@ -128,12 +129,12 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 //                assignPlayerControls(softy3, false, false);
 //                if (getCamerasFollowThing(softy3->getKey()).size() > 0)
 //                    getCamerasFollowThing(softy3->getKey())[0]->setLag(DrPointF(200, 200));
-//                softy3->setMoveSpeedX(800);
-//                ///softy3->setJumpForceY(500);
-//                softy3->setJumpTimeout(5000);
-//                softy3->setRotateSpeedZ( 7 );
-//                softy3->setJumpCount( -1 );
-//                softy3->setCanWallJump(false);
+//                softy3->compPlayer()->setMoveSpeedX(800);
+//                ///softy3->compPlayer()->setJumpForceY(500);
+//                softy3->compPlayer()->setJumpTimeout(5000);
+//                softy3->compPlayer()->setRotateSpeedZ( 7 );
+//                softy3->compPlayer()->setJumpCount( -1 );
+//                softy3->compPlayer()->setCanWallJump(false);
 //            }
         }
 
@@ -144,10 +145,10 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         assignPlayerControls(ball1, true, true);
         ball1->compCamera()->setCameraRotation( -15, 15, 0 );
-        ball1->setJumpCount( -1 );
-        ball1->setMoveSpeedY( 300 );
+        ball1->compPlayer()->setJumpCount( -1 );
+        ball1->compPlayer()->setMoveSpeedY( 300 );
+        ball1->compPlayer()->setMouseRotate(true);
         ball1->cast_shadows = false;
-        ball1->setMouseRotate(true);
 
         if (this->getAmbientLight() > 3.0)
             this->setAmbientLight(3.0);

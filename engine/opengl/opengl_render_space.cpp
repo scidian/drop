@@ -109,11 +109,11 @@ void DrOpenGL::drawSpace() {
                 // Draw Object / Character
                 if (draw2D) {
                     // Standard Shader
-                    ///drawObject(thing, last_thing, draw2D);
+                    drawObject(thing, last_thing, draw2D);
                     // Simple Shader
-                    glEnable(GL_DEPTH_TEST);
-                    drawObjectSimple(thing);
-                    glDisable(GL_DEPTH_TEST);
+                    ///glEnable(GL_DEPTH_TEST);
+                    ///drawObjectSimple(thing);
+                    ///glDisable(GL_DEPTH_TEST);
                 } else {
                     cullingOn(false);
                     glEnable(GL_DEPTH_TEST);

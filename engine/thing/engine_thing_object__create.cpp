@@ -17,7 +17,7 @@
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-std::vector<DrPointF> DrEngineObject::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
+PointList DrEngineObject::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
     std::vector<DrPointF> ellipse;
     int count = point_count;
     for (int i = 0; i < count; i++) {

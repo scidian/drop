@@ -13,6 +13,7 @@
 #include "project/properties/property_collision.h"
 
 // Type Definitions
+typedef std::vector<DrPointF>            PointList;
 typedef std::vector<std::vector<cpVect>> PolygonList;
 
 
@@ -95,8 +96,14 @@ private:
 
     double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
 
-    // Object Movement - Rotation
+    // Object Movement
     double          m_rotate_speed =  0.0;          // Speed at which object should spin (on standard 2D Z axis) when Motor Rotate (gas pedal) is pressed
+
+    bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
+    DrPointF        m_gravity_scale { 1.0, 1.0 };   // Multiplies gravity by this scale for Dynamic objects, changes how gravity affects object
+
+    bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
+    bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
 
     // Object Controls
     bool            m_touch_drag = false;           // Should this object be able to be dragged by touch / mouse?
@@ -104,58 +111,14 @@ private:
     bool            m_touch_damage = false;         // Should this object receive damage when tapped / clicked?
     double          m_touch_damage_points = 1.0;    // Amount of damage to receive when tapped / clicked
 
-    // Object Movement - PlayerUpdateVelocity Callback Func
+    // Player Control
     bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
                                                     //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
     bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
 
-    double          m_max_speed_x =  2000.0;        // Maximum speed x of object
-    double          m_max_speed_y =  2000.0;        // Maximum speed y of object
-
-    double          m_forced_speed_x =  0.0;        // Forced move speed x of object
-    double          m_forced_speed_y =  0.0;        // Forced move speed y of object
-
-    double          m_move_speed_x =  400.0;        // Movement speed x
-    double          m_move_speed_y =  400.0;        // Movement speed y
-    bool            m_angle_movement = false;       // Should the objects angle affect the objects move speeds? (good for first person, etc)
-
-    double          m_jump_force_x =    0.0;        // Jump force x
-    double          m_jump_force_y =  250.0;        // Jump force y
-    long            m_jump_timeout =  800;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int             m_jump_count =      0;          // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
-
-    double          m_acceleration =   1.00;        // Affects move / switch speeds, 0.0 is instant, 1.0 is default, 5.0 is slower
-    double          m_air_drag =       1.00;        // Affects acceleration and decceleration in air (0 to 1+)
-    double          m_ground_drag =    1.00;        // Affects acceleration and decceleration on the ground (0 to 1+)
-    double          m_rotate_drag =    0.25;        // Affects rotation acceleration and decceleration (0 to 1+)
-
-    bool            m_air_jump = true;              // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
-    bool            m_wall_jump = false;            // Can this player jump off of walls?
-
-    bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
-    DrPointF        m_gravity_scale { 1.0, 1.0 };   // Multiplies gravity by this scale for Dynamic objects, changes how gravity affects object
-
-    bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
-    bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
-    bool            m_mouse_rotate = false;         // If turned to true, player rotates to mouse position
-
-
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
-    int         m_remaining_jumps =         0;              // How many jumps player has left before it must hit ground before it can jump again
-    double      m_remaining_boost =         0.0;            // Used by Engine Update to process Jump Timeout boost
-    double      m_remaining_ground_time =   0.0;            // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
-    double      m_remaining_wall_time =     0.0;            // Used by Engine Update to allow some time for a wall jump to occur
-
-    bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
-    bool        m_on_wall = false;                          // Used by Engine Update to keep track of if this object is on a wall
-    double      m_temp_gravity_multiplier = 1.0;            // Set multipler (0.0, 0.5, etc) when colliding with a gravity multiplying object (ladder, wall, etc)
-
-    cpVect      m_last_touched_ground_normal = cpvzero;     // Normal Vector of the last touched surface
-    double      m_last_touched_ground_dot = 1.0;            // Dot product of the last touched surface
-    Jump_State  m_jump_state = Jump_State::Need_To_Jump;    // Used by Engine Update to keep track of if the current jump button press has been processed
-
     bool        m_dying = false;                            // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
     bool        m_alive = true;                             // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
 
@@ -203,17 +166,16 @@ public:
     virtual bool        update(double time_passed, double time_warp, DrRectF &area) override;
 
     // Shape Creation
-    void                    addShapeBox(double width, double height);
-    void                    addShapeBox(cpBB box);
-    void                    addShapeBoxFromTexture(long texture_number, DrPointF extra_scale = DrPointF(1.0, 1.0));
-    void                    addShapeCircle(double circle_radius, DrPointF shape_offset);
-    void                    addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0, DrPointF extra_scale = DrPointF(1.0, 1.0));
-    void                    addShapeTriangleFromTexture(long texture_number);
-    void                    addShapePolygon(const std::vector<DrPointF> &points);
-    void                    addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
-    void                    applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
-    std::vector<DrPointF>   createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
-
+    void                addShapeBox(double width, double height);
+    void                addShapeBox(cpBB box);
+    void                addShapeBoxFromTexture(long texture_number, DrPointF extra_scale = DrPointF(1.0, 1.0));
+    void                addShapeCircle(double circle_radius, DrPointF shape_offset);
+    void                addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0, DrPointF extra_scale = DrPointF(1.0, 1.0));
+    void                addShapeTriangleFromTexture(long texture_number);
+    void                addShapePolygon(const std::vector<DrPointF> &points);
+    void                addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
+    void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
+    PointList           createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
 
 
     // Object Basic Settings
@@ -297,9 +259,18 @@ public:
 
     bool            shouldCollide(DrEngineObject *object);
 
-    // Object Movement - Rotation (On Z Axis)
+    // Object Movement
     const double&   getRotateSpeedZ()           { return m_rotate_speed; }
     void            setRotateSpeedZ(double new_rotate_speed) { m_rotate_speed = new_rotate_speed; }
+
+    const bool&     canRotate()                 { return m_can_rotate; }
+    DrPointF        getGravityScale()           { return m_gravity_scale; }
+    bool            shouldFlipImageX()          { return m_flip_image_x; }
+    bool            shouldFlipImageY()          { return m_flip_image_y; }
+    void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
+    void            setGravityScale(DrPointF gravity_scale) { m_gravity_scale = gravity_scale; }
+    void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
+    void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
 
     // Object Controls
     const bool&     hasTouchDrag()              { return m_touch_drag; }
@@ -313,80 +284,12 @@ public:
     void            setTouchDamagePoints(double damage)     { m_touch_damage_points = damage; }
 
 
-    // Object Movemnt - PlayerUpdateVelocity Callback Func
+    // #################### FUNCTIONS UPDATED BY ENGINE ####################
+    // Player Control
     const bool&     hasKeyControls()            { return m_key_controls; }
     const bool&     hasLostControl()            { return m_lost_control; }
-    const double&   getMaxSpeedX()              { return m_max_speed_x; }
-    const double&   getMaxSpeedY()              { return m_max_speed_y; }
-    const double&   getForcedSpeedX()           { return m_forced_speed_x; }
-    const double&   getForcedSpeedY()           { return m_forced_speed_y; }
-    const double&   getMoveSpeedX()             { return m_move_speed_x; }
-    const double&   getMoveSpeedY()             { return m_move_speed_y; }
-    const bool&     getAngleMovement()          { return m_angle_movement; }
-    const double&   getJumpForceX()             { return m_jump_force_x; }
-    const double&   getJumpForceY()             { return m_jump_force_y; }
-    const long&     getJumpTimeout()            { return m_jump_timeout; }
-    const int&      getJumpCount()              { return m_jump_count; }
-
-    const double&   getAcceleration()           { return m_acceleration; }
-    const double&   getAirDrag()                { return m_air_drag; }
-    const double&   getGroundDrag()             { return m_ground_drag; }
-    const double&   getRotateDrag()             { return m_rotate_drag; }
-    const bool&     canAirJump()                { return m_air_jump; }
-    const bool&     canWallJump()               { return m_wall_jump; }
-    const bool&     canRotate()                 { return m_can_rotate; }
-    DrPointF        getGravityScale()           { return m_gravity_scale; }
-    bool            shouldFlipImageX()          { return m_flip_image_x; }
-    bool            shouldFlipImageY()          { return m_flip_image_y; }
-    bool            shouldMouseRotate()         { return m_mouse_rotate; }
-
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
-    void            setMaxSpeedX(double new_max_speed_x) { m_max_speed_x = new_max_speed_x; }
-    void            setMaxSpeedY(double new_max_speed_y) { m_max_speed_y = new_max_speed_y; }
-    void            setForcedSpeedX(double new_forced_speed_x) { m_forced_speed_x = new_forced_speed_x; }
-    void            setForcedSpeedY(double new_forced_speed_y) { m_forced_speed_y = new_forced_speed_y; }
-    void            setMoveSpeedX(double new_move_speed_x) { m_move_speed_x = new_move_speed_x; }
-    void            setMoveSpeedY(double new_move_speed_y) { m_move_speed_y = new_move_speed_y; }
-    void            setAngleMovement(bool angle_should_affect_movement) { m_angle_movement = angle_should_affect_movement; }
-    void            setJumpForceX(double new_jump_force_x) { m_jump_force_x = new_jump_force_x; }
-    void            setJumpForceY(double new_jump_force_y) { m_jump_force_y = new_jump_force_y; }
-    void            setJumpTimeout(long new_jump_timeout) { m_jump_timeout = new_jump_timeout; }
-    void            setJumpCount(int new_jump_count) { m_jump_count = (new_jump_count < -1) ? c_unlimited_jump : new_jump_count; }
-
-    void            setAcceleration(double new_acceleration) { m_acceleration = new_acceleration; }
-    void            setAirDrag(double new_air_drag) { m_air_drag = new_air_drag; }
-    void            setGroundDrag(double new_ground_drag) { m_ground_drag = new_ground_drag; }
-    void            setRotateDrag(double new_rotate_drag) { m_rotate_drag = new_rotate_drag; }
-    void            setCanAirJump(bool can_air_jump) { m_air_jump = can_air_jump; }
-    void            setCanWallJump(bool can_wall_jump) { m_wall_jump = can_wall_jump; }
-    void            setCanRotate(bool can_rotate) { m_can_rotate = can_rotate; }
-    void            setGravityScale(DrPointF gravity_scale) { m_gravity_scale = gravity_scale; }
-    void            setFlipImageX(bool flip_x) { m_flip_image_x = flip_x; }
-    void            setFlipImageY(bool flip_y) { m_flip_image_y = flip_y; }
-    void            setMouseRotate(bool mouse_rotate) { m_mouse_rotate = mouse_rotate; }
-
-    // ***** Local Variables - Updated By Engine
-    const int&      getRemainingJumps()             { return m_remaining_jumps; }
-    const double&   getRemainingBoost()             { return m_remaining_boost; }
-    const double&   getRemainingGroundTime()        { return m_remaining_ground_time; }
-    const double&   getRemainingWallTime()          { return m_remaining_wall_time; }
-    const bool&     isOnGround()                    { return m_grounded; }
-    const bool&     isOnWall()                      { return m_on_wall; }
-    const double&   getTempGravityMultiplier()      { return m_temp_gravity_multiplier; }
-    const cpVect&   getLastTouchedGroundNormal()    { return m_last_touched_ground_normal; }
-    const double&   getLastTouchedGroundDot()       { return m_last_touched_ground_dot; }
-    Jump_State      getJumpState()                  { return m_jump_state; }
-    void            setRemainingJumps(int new_remaining_jumps) { m_remaining_jumps = new_remaining_jumps; }
-    void            setRemainingBoost(double boost_time) { m_remaining_boost = boost_time; }
-    void            setRemainingGroundTime(double ground_time) { m_remaining_ground_time = ground_time; }
-    void            setRemainingWallTime(double wall_time) { m_remaining_wall_time = wall_time; }
-    void            setOnGround(bool on_ground) { m_grounded = on_ground; }
-    void            setOnWall(bool on_wall) { m_on_wall = on_wall; }
-    void            setTempGravityMultiplier(double gravity_multiplier) { m_temp_gravity_multiplier = gravity_multiplier; }
-    void            setLastTouchedGroundNormal(cpVect last_touched_normal) { m_last_touched_ground_normal = last_touched_normal; }
-    void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
-    void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }
 
     const bool&     isDying()                       { return m_dying; }
     const bool&     isAlive()                       { return m_alive; }

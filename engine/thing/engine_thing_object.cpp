@@ -173,8 +173,10 @@ void DrEngineObject::addToWorld() {
     }
 
     // Set initial velocity to forced velocity
-    cpVect forced_velocity = cpv( getForcedSpeedX(), getForcedSpeedY() );
-    cpBodySetVelocity( body, forced_velocity );
+    if (compPlayer() != nullptr) {
+        cpVect forced_velocity = cpv( compPlayer()->getForcedSpeedX(), compPlayer()->getForcedSpeedY() );
+        cpBodySetVelocity( body, forced_velocity );
+    }
 
     // Reset Update Timer
     Dr::ResetTimer( update_timer );

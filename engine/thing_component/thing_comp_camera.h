@@ -14,7 +14,7 @@
 
 //####################################################################################
 //##    ThingCompCamera
-//##        Built-In Component for DrEngineThing dealing with 3D Properties
+//##        Built-In Component for DrEngineThing dealing with Camera Properties
 //############################
 class ThingCompCamera : public DrEngineComponent
 {

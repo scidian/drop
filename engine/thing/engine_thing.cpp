@@ -144,6 +144,7 @@ void DrEngineThing::setComponent(std::string component_name, DrEngineComponent *
 //####################################################################################
 void DrEngineThing::setComponent3D(ThingComp3D *component)          { m_comp_3d = component;        setComponent(component->name(), component); }
 void DrEngineThing::setComponentCamera(ThingCompCamera *component)  { m_comp_camera = component;    setComponent(component->name(), component); }
+void DrEngineThing::setComponentPlayer(ThingCompPlayer *component)  { m_comp_player = component;    setComponent(component->name(), component); }
 
 
 //####################################################################################

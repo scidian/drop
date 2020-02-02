@@ -118,12 +118,15 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, Dr
             DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing_attached_to);
             if (object != nullptr) {
                 // If character with forced velocity, find forced velocity
-                double forced_speed_x = object->getForcedSpeedX();
-                double forced_speed_y = object->getForcedSpeedY();
-                if (object->getAngleMovement()) {
-                    DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
-                        forced_speed_x = forced_angle.x;
-                        forced_speed_y = forced_angle.y;
+                double forced_speed_x {0}, forced_speed_y {0};
+                if (object->compPlayer() != nullptr) {
+                    forced_speed_x = object->compPlayer()->getForcedSpeedX();
+                    forced_speed_y = object->compPlayer()->getForcedSpeedY();
+                    if (object->compPlayer()->getAngleMovement()) {
+                        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
+                            forced_speed_x = forced_angle.x;
+                            forced_speed_y = forced_angle.y;
+                    }
                 }
 
                 // Use Forced Speed for Dynamic objects, otherwise use Current Velocity of Kinematic objects

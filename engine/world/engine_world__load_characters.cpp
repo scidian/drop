@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
@@ -87,52 +88,8 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                                 c_collide_true, can_rotate, info.angle, info.opacity);
     loadThingCollisionShape(asset, player);                                                                 // Load collision shape(s)
 
-    // ***** Apply Character Settings
-    player->setMaxSpeedX( max_speed.x );
-    player->setMaxSpeedY( max_speed.y );
-    player->setForcedSpeedX( forced_speed.x );
-    player->setForcedSpeedY( forced_speed.y );
-    player->setMoveSpeedX( move_speed.x );
-    player->setMoveSpeedY( move_speed.y );
-    player->setAngleMovement( angle_move );
-
-    player->setJumpForceX( jump_force.x );
-    player->setJumpForceY( jump_force.y );
-    player->setJumpTimeout( jump_timeout );
-    player->setJumpCount( jump_count );
-    player->setCanAirJump( jump_air );
-    player->setCanWallJump( jump_wall );
-
-    player->setAcceleration( acceleration );
-    player->setAirDrag( air_drag );
-    player->setGroundDrag( ground_drag );
-    player->setRotateDrag( rotate_drag );
-    player->setGravityScale( gravity_scale );
-
-    player->setFlipImageX( flip_image_x );
-    player->setFlipImageY( flip_image_y );
-    player->setMouseRotate( mouse_rotate );
-
-    // ***** Appearance settings
-    loadThingAppearanceSettings(thing, player);
-
-    // ***** Health / Damage Settings
-    loadThingHealthSettings(asset, player);
-
-    // ***** 3D Settings
-    loadThing3DSettings(thing, player);
-
-    // ***** Controls Settings
-    loadThingControlsSettings(asset, player);
-
-
-    // ********** Add to world
-    addThing(player);
-
-    // Check if there are any active characters, if not, give controls
-    bool should_we_give_control = (countCharacters() == 0);
-    bool give_camera = should_we_give_control && (this->getActiveCamera() <= 0);
-    assignPlayerControls(player, should_we_give_control, give_camera);
+    player->setComponentCamera(new ThingCompCamera(this, player));
+    player->setComponentPlayer(new ThingCompPlayer(this, player));
 
     // ***** Camera settings
     player->compCamera()->setCameraPositionXY( cam.position );
@@ -146,6 +103,53 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->compCamera()->setCameraEdge(Edge_Location::Right,  cam.frame_right);
     player->compCamera()->setCameraEdge(Edge_Location::Bottom, cam.frame_bottom);
     player->compCamera()->setCameraEdge(Edge_Location::Left,   cam.frame_left);
+
+    // ***** Apply Character Settings
+    player->compPlayer()->setMaxSpeedX( max_speed.x );
+    player->compPlayer()->setMaxSpeedY( max_speed.y );
+    player->compPlayer()->setForcedSpeedX( forced_speed.x );
+    player->compPlayer()->setForcedSpeedY( forced_speed.y );
+    player->compPlayer()->setMoveSpeedX( move_speed.x );
+    player->compPlayer()->setMoveSpeedY( move_speed.y );
+    player->compPlayer()->setAngleMovement( angle_move );
+
+    player->compPlayer()->setJumpForceX( jump_force.x );
+    player->compPlayer()->setJumpForceY( jump_force.y );
+    player->compPlayer()->setJumpTimeout( jump_timeout );
+    player->compPlayer()->setJumpCount( jump_count );
+    player->compPlayer()->setCanAirJump( jump_air );
+    player->compPlayer()->setCanWallJump( jump_wall );
+
+    player->compPlayer()->setAcceleration( acceleration );
+    player->compPlayer()->setAirDrag( air_drag );
+    player->compPlayer()->setGroundDrag( ground_drag );
+    player->compPlayer()->setRotateDrag( rotate_drag );
+    player->compPlayer()->setMouseRotate( mouse_rotate );
+
+    // ***** Object Movement Settings
+    player->setFlipImageX( flip_image_x );
+    player->setFlipImageY( flip_image_y );
+    player->setGravityScale( gravity_scale );
+
+    // ***** Appearance settings
+    loadThingAppearanceSettings(thing, player);
+
+    // ***** Health / Damage Settings
+    loadThingHealthSettings(asset, player);
+
+    // ***** 3D Settings
+    loadThing3DSettings(thing, player);
+
+    // ***** Controls Settings
+    loadThingControlsSettings(asset, player);
+
+    // ********** Add to world
+    addThing(player);
+
+    // Check if there are any active characters, if not, give controls
+    bool should_we_give_control = (countCharacters() == 0);
+    bool give_camera = should_we_give_control && (this->getActiveCamera() <= 0);
+    assignPlayerControls(player, should_we_give_control, give_camera);
 }
 
 
