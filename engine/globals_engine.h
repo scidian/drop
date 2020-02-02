@@ -26,6 +26,7 @@ class DrAsset;
 class DrEngine;
 class DrEngineLight;
 class DrEngineCamera;
+class DrEngineComponent;
 class DrEngineObject;
 class DrEngineSpawner;
 class DrEngineThing;

@@ -11,6 +11,9 @@
 #include "core/dr_time.h"
 #include "engine/globals_engine.h"
 
+// Forward Declarations
+class   ThingComp3D;
+
 // Type Definitions
 typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
@@ -34,6 +37,9 @@ private:
     // Containers
     EngineSpawners  m_spawners;                         // Holds all Spawners that have been attached to this Thing
 
+    // Components
+    ThingComp3D    *m_comp_3d = nullptr;                // Component that handles 3D rendering
+
     // Engine Info
     long            m_key;                              // Unique key for this item
     long            m_original_project_key;             // Key of item when it was in Project Data Model
@@ -48,15 +54,6 @@ private:
     DrPointF        m_size;                             // Original size of Thing
     double          m_velocity_x = 0.0;                 // Current velocity
     double          m_velocity_y = 0.0;                 // Current velocity
-
-    // Thing Properties - 3D
-    Convert_3D_Type m_3d_type = Convert_3D_Type::Extrusion;
-    double          m_angle_x =   0.0;                  // X axis rotation
-    double          m_angle_y =   0.0;                  // Y axis rotation
-    bool            m_billboard = false;                // Keeps object facing camera
-    double          m_depth = 0.0;                      // Desired 3D Depth of 2D Objects
-    double          m_rotate_x_speed = 0.0;             // X axis rotation speed
-    double          m_rotate_y_speed = 0.0;             // Y axis rotation speed
 
     // Thing Properties - Camera
     long            m_active_camera   { c_no_key };                 // Set to ID of last camera that followed this object, c_no_key == no camera
@@ -127,6 +124,10 @@ public:
     // Misc Functions
     void                calculateTimeSinceLastUpdate();                                     // Processes update timer
 
+    // Thing Components
+    ThingComp3D        *comp3D() { return m_comp_3d; }
+    void                setComponent3D(ThingComp3D *component) { m_comp_3d = component; }
+
     // Basic Properties
     virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)
     virtual const float&    getOpacity() const      { return m_opacity; }                   // Returns Opacity (alpha 0.0 to 1.0) of Thing
@@ -182,23 +183,6 @@ public:
     Frame_Edge              getCameraEdge(Edge_Location edge_location) { return m_camera_edges[edge_location]; }
     void                    setCameraEdge(Edge_Location edge_location, Frame_Edge edge_type) { m_camera_edges[edge_location] = edge_type; }
 
-
-    // 3D Properties
-    Convert_3D_Type         get3DType()         { return m_3d_type; }
-    const double&           getAngleX()         { return m_angle_x; }                       // Returns Thing X Axis Rotation (in degrees)
-    const double&           getAngleY()         { return m_angle_y; }                       // Returns Thing Y Axis Rotation (in degrees)
-    const bool&             getBillboard()      { return m_billboard; }
-    const double&           getDepth()          { return m_depth; }                         // Returns Thing 3D Extrusion Depth
-    const double&           getRotateSpeedX()   { return m_rotate_x_speed; }                // Returns Thing X Axis Rotational Speed
-    const double&           getRotateSpeedY()   { return m_rotate_y_speed; }                // Returns Thing Y Axis Rotational Speed
-
-    void                    set3DType(Convert_3D_Type type) {   m_3d_type = type; }
-    void                    setAngleX(double new_angle_x) {     m_angle_x = new_angle_x; }
-    void                    setAngleY(double new_angle_y) {     m_angle_y = new_angle_y; }
-    void                    setBillboard(bool billboard) {      m_billboard = billboard; }
-    void                    setDepth(double new_depth) {        m_depth = new_depth; }
-    void                    setRotateSpeedX(double new_speed) { m_rotate_x_speed = new_speed; }
-    void                    setRotateSpeedY(double new_speed) { m_rotate_y_speed = new_speed; }
 };
 
 

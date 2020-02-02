@@ -10,6 +10,7 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component/thing_comp_3d.h"
 #include "engine/opengl/opengl.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
@@ -29,7 +30,10 @@ static void GetBodyShapeList(cpBody *, cpShape *shape, std::vector<cpShape*> *sh
 //##    Object Constructor
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //####################################################################################
-DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key) : DrEngineThing (world, unique_key, original_key) { }
+DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key) : DrEngineThing (world, unique_key, original_key) {
+    // Initialize Components
+    m_comp_3d = new ThingComp3D();
+}
 
 DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long original_key, Body_Type body_type, long asset_key,
                                double x, double y, double z, DrPointF scale, double friction, double bounce,
