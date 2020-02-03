@@ -218,7 +218,7 @@ public:
     void            setInvincible(bool invincible) { m_invincible = invincible; }
     void            setDeathTouch(bool should_have_death_touch) { m_death_touch = should_have_death_touch; }
     void            setMaxHealth(double new_max_health) { m_max_health = new_max_health; }
-    void            setHealth(double new_health, bool taking_damage = false);
+    void            setHealth(double new_health, long damaged_by_key = c_no_key);
     void            setDamage(double new_damage) { m_damage = new_damage; }
     void            setDamageDelay(long new_damage_delay) { m_damage_delay = new_damage_delay; }
     void            setAutoDamage(double new_auto_damage) { m_auto_damage = new_auto_damage; }
@@ -229,9 +229,7 @@ public:
 
     bool            doesDamage();
     bool            shouldDamage(Collision_Type check_can_damage);
-    bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false, bool force_death = false);
-    void            updateChildrenHealth();
-    void            updateRelativeHealth();
+    bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false, bool force_death = false, long damaged_by_key = c_no_key);
 
     bool            shouldCollide(DrEngineObject *object);
 

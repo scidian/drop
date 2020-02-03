@@ -239,11 +239,11 @@ bool DrEngineObject::shouldCollide(DrEngineObject *b) {
 //##            TRUE:  just killed this object / object dead,
 //##            FALSE: did not kill this object / object alive
 //####################################################################################
-bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, bool death_touch, bool force_death) {
+bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, bool death_touch, bool force_death, long damaged_by_key) {
     // If dying or dead exit now
     if (!m_alive || m_dying) return true;
     if (force_death) {
-        setHealth(0.0, true);
+        setHealth(0.0, damaged_by_key);
         return true;
     }
 
@@ -252,9 +252,10 @@ bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, 
 
     // HEALING: If damage was negative (healing), add health, check max_health and exit
     if (damage_to_take < 0.0 && !unlimited_health) {
-        setHealth(getHealth() + abs(damage_to_take), true);
+        double new_health = getHealth() + abs(damage_to_take);
+        if (new_health > m_max_health && m_max_health > c_epsilon) new_health = m_max_health;
+        setHealth(new_health, damaged_by_key);
         if (reset_damage_timer) Dr::ResetTimer(m_damage_timer);
-        if (getHealth() > m_max_health && m_max_health > c_epsilon) setHealth(m_max_health, true);
         return false;
     }
 
@@ -266,16 +267,17 @@ bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, 
 
     // TAKE DAMAGE: If not unlimited health, apply damage, if killed exit
     if (!unlimited_health) {
-        setHealth(getHealth() - damage_to_take, true);
+        double new_health = getHealth() - damage_to_take;
+        if (new_health <= c_epsilon) new_health = 0.0;
+        setHealth(new_health, damaged_by_key);
         if (getHealth() <= c_epsilon) {
-            setHealth(0.0, true);
             return true;
         }
     }
 
     // DEATH TOUCH: If object was death touched, kill it and exit
     if (death_touch) {
-        setHealth(0.0, true);
+        setHealth(0.0, damaged_by_key);
         return true;
     }
 
@@ -286,43 +288,19 @@ bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, 
 //####################################################################################
 //##    Sets Health of Object
 //####################################################################################
-void DrEngineObject::setHealth(double new_health, bool taking_damage) {
+void DrEngineObject::setHealth(double new_health, long damaged_by_key) {
+    double health_change = m_health - new_health;
     m_health = new_health;
-    if (Dr::FuzzyCompare(m_health, 0.0) && (isPhysicsChild() == false))
-        emitSignal(Signals::ThingDied, true);
-    if (taking_damage == true)
-        updateRelativeHealth();
-}
-
-//####################################################################################
-//##    Updates Health of related Physics Parent / Physics Children
-//####################################################################################
-void DrEngineObject::updateRelativeHealth() {
-    if (body_style == Body_Style::Circular_Blob || body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
-        updateChildrenHealth();
-    } else {
-        if (getPhysicsParent() == nullptr) return;
-        getPhysicsParent()->setHealth(this->getHealth());
-        getPhysicsParent()->setDamageTimer(this->getDamageTimer());
-        getPhysicsParent()->updateChildrenHealth();
+    if (isPhysicsChild() == false) {
+        if      (Dr::FuzzyCompare(m_health,      0.0) == true)  emitSignal(Signals::ThingDied,    m_health,      damaged_by_key);
+        else if (Dr::FuzzyCompare(health_change, 0.0) == false) emitSignal(Signals::ThingDamaged, health_change, damaged_by_key);
     }
 }
 
-//####################################################################################
-//##    Updates Health of Physics Children to Match Parent
-//####################################################################################
-void DrEngineObject::updateChildrenHealth() {
-    if (body_style == Body_Style::Rigid_Body) return;
-    if (compSoftBody() == nullptr) return;
-    if (world() == nullptr) return;
-    for (auto &ball_number : compSoftBody()->soft_balls) {
-        DrEngineObject *ball = world()->findObjectByKey(ball_number);
-        if (ball != nullptr) {
-            ball->setHealth(this->getHealth());
-            ball->setDamageTimer(this->getDamageTimer());
-        }
-    }
-}
+
+
+
+
 
 
 

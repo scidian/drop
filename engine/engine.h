@@ -60,7 +60,7 @@ public:
 
     // Signals
     void                    clearSignals();
-    void                    pushSignal(std::string name, DrVariant value, long thing_key = c_no_key);
+    void                    pushSignal(std::string name, DrVariant value, long thing_a_key = c_no_key, long thing_b_key = c_no_key);
     EngineSignals           signalList(std::string name);
     void                    updateSignalList();
 

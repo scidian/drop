@@ -76,6 +76,8 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
+    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
 
     if (object_a->shouldCollide(object_b) == false) return cpArbiterIgnore(arb);
@@ -106,6 +108,8 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
+    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
 
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
@@ -135,7 +139,11 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         should_damage = false;
 
     if (should_damage) {
-        bool killed = object_b->takeDamage(object_a->getDamage(), true, object_a->hasDeathTouch());
+        long damaged_by_key = object_a->getKey();
+        if (object_a->isPhysicsChild() && object_a->getPhysicsParent() != nullptr)
+            damaged_by_key = object_a->getPhysicsParent()->getKey();
+
+        bool killed = object_b->takeDamage(object_a->getDamage(), true, object_a->hasDeathTouch(), false, damaged_by_key);
 
         // If we killed object and object wants instant death, cancel collision
         if (killed && object_b->getDeathDelay() == 0) return cpFalse;
@@ -173,6 +181,8 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
+    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
     if (object_a == nullptr || object_b == nullptr) return;
 
     // Stop canceling gravity when seperates

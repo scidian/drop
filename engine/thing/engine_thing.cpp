@@ -138,8 +138,8 @@ void DrEngineThing::setComponentSoftBody(ThingCompSoftBody *component)  { m_comp
 //##    Signals
 //####################################################################################
 // Adds signal to stack
-void DrEngineThing::emitSignal(std::string name, DrVariant value) {
-    m_world->getEngine()->pushSignal(name, value, this->getKey());
+void DrEngineThing::emitSignal(std::string name, DrVariant value, long thing_b) {
+    m_world->getEngine()->pushSignal(name, value, this->getKey(), thing_b);
 }
 
 

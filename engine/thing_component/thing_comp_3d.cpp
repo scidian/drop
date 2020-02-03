@@ -38,7 +38,7 @@ void ThingComp3D::init() {
 void ThingComp3D::update(double time_passed, double time_warp) {
 
     for (auto &signal : signalList(Signals::ThingDied)) {
-        if (signal->thingEngineKey() == thing()->getKey()) {
+        if (signal->thingEngineKeyA() == thing()->getKey()) {
             world()->setBackgroundColor( DrColor(Dr::RandomInt(0, 255), Dr::RandomInt(0, 255), Dr::RandomInt(0, 255)) );
         }
     }

@@ -82,27 +82,38 @@ EngineSignals DrEngine::signalList(std::string name) {
 }
 
 // Add signal to stack
-void DrEngine::pushSignal(std::string name, DrVariant value, long thing_key) {
-    std::string thing_name          { "" };
-    long        thing_asset_key     { c_no_key };
-    long        thing_engine_key    { thing_key };
-    if (thing_key != c_no_key) {
-        if (getCurrentWorld() != nullptr) {
-            DrEngineThing *engine_thing = getCurrentWorld()->findThingByKey(thing_key);
+void DrEngine::pushSignal(std::string name, DrVariant value, long thing_a_key, long thing_b_key) {
+    std::string thing_a_name          { "" };
+    std::string thing_b_name          { "" };
+    long        thing_a_asset_key     { c_no_key };
+    long        thing_b_asset_key     { c_no_key };
+    long        thing_a_engine_key    { thing_a_key };
+    long        thing_b_engine_key    { thing_b_key };
+
+    if (getCurrentWorld() != nullptr) {
+        if (thing_a_key != c_no_key) {
+            DrEngineThing *engine_thing = getCurrentWorld()->findThingByKey(thing_a_key);
             if (engine_thing != nullptr) {
-                thing_asset_key = engine_thing->getOriginalKey();
-                DrSettings *settings = m_project->findSettingsFromKey(thing_asset_key, false);
-                if (settings != nullptr) {
-                    if (settings->getType() == DrType::Thing) {
-                        DrThing *thing = dynamic_cast<DrThing*>(settings);
-                        if (thing != nullptr) thing_asset_key = thing->getAssetKey();
-                    }
-                    thing_name = settings->getName();
+                DrThing *thing = m_project->findThingFromKey(engine_thing->getOriginalKey());
+                if (thing != nullptr) {
+                    thing_a_asset_key = thing->getAssetKey();
+                    thing_a_name =      thing->getName();
+                }
+            }
+        }
+        if (thing_b_key != c_no_key) {
+            DrEngineThing *engine_thing = getCurrentWorld()->findThingByKey(thing_b_key);
+            if (engine_thing != nullptr) {
+                DrThing *thing = m_project->findThingFromKey(engine_thing->getOriginalKey());
+                if (thing != nullptr) {
+                    thing_b_asset_key = thing->getAssetKey();
+                    thing_b_name =      thing->getName();
                 }
             }
         }
     }
-    m_signals.push_back(new DrEngineSignal(name, value, thing_name, thing_asset_key, thing_engine_key));
+    m_signals.push_back(new DrEngineSignal(name, value, thing_a_name, thing_a_asset_key, thing_a_engine_key,
+                                                        thing_b_name, thing_b_asset_key, thing_b_engine_key));
 }
 
 // Sets new signals to active, kills old signals

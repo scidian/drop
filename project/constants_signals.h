@@ -12,13 +12,13 @@
 
 namespace Signals {
 
-    // Signal values can be string, bool, int, double or vector... If vector, first value has same limitations
+
 
 
     //############################ THINGS
-    const std::string ThingCollide              = "Thing Collide";              // vector:  int engine id, int id that collided with
-    const std::string ThingDamaged              = "Thing Damaged";              // vector:  int engine id, double amount +/- damaged
-    const std::string ThingDied                 = "Thing Died";                 // vector:  int engine id
+    const std::string ThingCollide              = "Thing Collide";              //
+    const std::string ThingDamaged              = "Thing Damaged";              // double:  amount +/- damaged
+    const std::string ThingDied                 = "Thing Died";                 // double:  current health
 
 
     //############################ INPUT

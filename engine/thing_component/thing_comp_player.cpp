@@ -45,9 +45,10 @@ void ThingCompPlayer::update(double time_passed, double time_warp) {
     }
 
     if (signalList(Signals::ThingDied).size() > 0) {
-        g_info = "Thing Died: " + signalList(Signals::ThingDied).front()->thingName() +
-               ", Engine Key: " + std::to_string(signalList(Signals::ThingDied).front()->thingEngineKey()) +
-                ", Asset Key: " + std::to_string(signalList(Signals::ThingDied).front()->thingAssetKey());;
+        g_info = "Thing Died: " + signalList(Signals::ThingDied).front()->thingNameA() +
+               ", Engine Key: " + std::to_string(signalList(Signals::ThingDied).front()->thingEngineKeyA()) +
+                ", Asset Key: " + std::to_string(signalList(Signals::ThingDied).front()->thingAssetKeyA()) +
+                ", Killed by: " + signalList(Signals::ThingDied).front()->thingNameB();
     }
 
 }

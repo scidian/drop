@@ -50,8 +50,8 @@ void DrEngineComponent::destroy() {
 //##    Component Functions
 //####################################################################################
 // Adds signal to stack
-void DrEngineComponent::emitSignal(std::string name, DrVariant value) {
-    m_world->getEngine()->pushSignal(name, value, m_thing->getKey());
+void DrEngineComponent::emitSignal(std::string name, DrVariant value, long thing_b) {
+    m_world->getEngine()->pushSignal(name, value, m_thing->getKey(), thing_b);
 }
 
 // Returns list of signals with name

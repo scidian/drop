@@ -147,7 +147,7 @@ public:
 
     // Misc Internal Functions
     void                    calculateTimeSinceLastUpdate();
-    void                    emitSignal(std::string name, DrVariant value);                  // Adds signal to stack
+    void                    emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);
 
     // Basic Properties
     virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)

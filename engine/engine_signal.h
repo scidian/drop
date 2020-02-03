@@ -27,7 +27,9 @@ class DrEngineSignal
 {
 public:
     // Constructor / Destructor
-    DrEngineSignal(std::string name, DrVariant value, std::string thing_name = "", long thing_asset_key = c_no_key, long thing_engine_key = c_no_key);
+    DrEngineSignal(std::string name, DrVariant value,
+                   std::string thing_a_name = "", long thing_a_asset_key = c_no_key, long thing_a_engine_key = c_no_key,
+                   std::string thing_b_name = "", long thing_b_asset_key = c_no_key, long thing_b_engine_key = c_no_key);
     ~DrEngineSignal();
 
 
@@ -36,9 +38,13 @@ private:
     DrVariant       m_value;                                // Event data
     Signal_Life     m_life;                                 // Tracks age of signal
 
-    std::string     m_thing_name        { "" };             // Name of Thing that emiited signal, empty ("") if none
-    long            m_thing_asset_key   { c_no_key };       // Project Asset ID Key of Thing that emiited signal, 0 if none
-    long            m_thing_engine_key  { c_no_key };       // Engine ID Key of Thing that emiited signal, 0 if none
+    std::string     m_thing_a_name        { "" };           // Name of Primary Thing that emiited signal
+    long            m_thing_a_asset_key   { c_no_key };     // Project Asset ID Key of Primary Thing that emiited signal
+    long            m_thing_a_engine_key  { c_no_key };     // Engine ID Key of Primary Thing that emiited signal
+
+    std::string     m_thing_b_name        { "" };           // Name of Primary Thing that emiited signal
+    long            m_thing_b_asset_key   { c_no_key };     // Project Asset ID Key of Primary Thing that emiited signal
+    long            m_thing_b_engine_key  { c_no_key };     // Engine ID Key of Primary Thing that emiited signal
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -46,9 +52,13 @@ public:
     std::string     name()                          { return m_name; }
     DrVariant&      value()                         { return m_value; }
 
-    std::string     thingName()                     { return m_thing_name; }
-    long            thingAssetKey()                 { return m_thing_asset_key; }
-    long            thingEngineKey()                { return m_thing_engine_key; }
+    std::string     thingNameA()                     { return m_thing_a_name; }
+    long            thingAssetKeyA()                 { return m_thing_a_asset_key; }
+    long            thingEngineKeyA()                { return m_thing_a_engine_key; }
+
+    std::string     thingNameB()                     { return m_thing_b_name; }
+    long            thingAssetKeyB()                 { return m_thing_b_asset_key; }
+    long            thingEngineKeyB()                { return m_thing_b_engine_key; }
 
 
     // #################### INTERNAL FUNCTIONS ####################

@@ -11,14 +11,20 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineSignal::DrEngineSignal(std::string name, DrVariant value, std::string thing_name, long thing_asset_key, long thing_engine_key) {
+DrEngineSignal::DrEngineSignal(std::string name, DrVariant value,
+                               std::string thing_a_name, long thing_a_asset_key, long thing_a_engine_key,
+                               std::string thing_b_name, long thing_b_asset_key, long thing_b_engine_key) {
     m_name =    name;
     m_value =   value;
     m_life =    Signal_Life::Born;
 
-    m_thing_name =          thing_name;
-    m_thing_asset_key =     thing_asset_key;
-    m_thing_engine_key =    thing_engine_key;
+    m_thing_a_name =        thing_a_name;
+    m_thing_a_asset_key =   thing_a_asset_key;
+    m_thing_a_engine_key =  thing_a_engine_key;
+
+    m_thing_b_name =        thing_b_name;
+    m_thing_b_asset_key =   thing_b_asset_key;
+    m_thing_b_engine_key =  thing_b_engine_key;
 }
 
 DrEngineSignal::~DrEngineSignal() {
