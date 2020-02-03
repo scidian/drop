@@ -70,6 +70,12 @@ private:
 
 
 public:
+    // Basic Component Events
+    virtual void    init();                                                         // Called when component is first created
+    virtual void    update(double time_passed, double time_warp);                   // Called during DrEngineWorld->updateWorld() step
+    virtual void    destroy();                                                      // Called when component is destroyed
+
+
     // Getters / Setters
     const double&   getMaxSpeedX()              { return m_max_speed_x; }
     const double&   getMaxSpeedY()              { return m_max_speed_y; }

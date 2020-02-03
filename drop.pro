@@ -223,6 +223,7 @@ SOURCES += \
     engine/engine.cpp \
     engine/engine_camera.cpp \
     engine/engine_component.cpp \
+    engine/engine_signal.cpp \
     engine/engine_spawner.cpp \
     engine/engine_texture.cpp \
     engine/enums_engine.cpp \
@@ -967,6 +968,7 @@ HEADERS += \
     engine/engine.h \
     engine/engine_camera.h \
     engine/engine_component.h \
+    engine/engine_signal.h \
     engine/engine_spawner.h \
     engine/engine_texture.h \
     engine/enums_engine.h \
@@ -989,9 +991,10 @@ HEADERS += \
     engine/thing_component/thing_comp_player.h \
     engine/thing_component/thing_comp_soft_body.h \
     engine/world/engine_world.h \
-    project/components_and_properties.h \
     project/constants_component_info.h \
+    project/constants_comps_and_props.h \
     project/constants_entity_keys.h \
+    project/constants_signals.h \
     project/dr_project.h \
     project/entities/dr_animation.h \
     project/entities/dr_asset.h \

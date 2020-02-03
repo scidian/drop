@@ -6,7 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
-#include "project/components_and_properties.h"
+#include "project/constants_comps_and_props.h"
 #include "project/constants_component_info.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"

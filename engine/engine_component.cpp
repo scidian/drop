@@ -5,7 +5,10 @@
 //
 //
 //
-#include "engine_component.h"
+#include "engine/engine.h"
+#include "engine/engine_component.h"
+#include "engine/thing/engine_thing.h"
+#include "engine/world/engine_world.h"
 
 
 //####################################################################################
@@ -37,11 +40,6 @@ void DrEngineComponent::update(double time_passed, double time_warp) {
 
 }
 
-// IMPLEMENT: Call during updateWorld(), process all signals then delete them
-void DrEngineComponent::signal(std::string name, DrVariant value) {
-
-}
-
 // Called when component is destroyed
 void DrEngineComponent::destroy() {
 
@@ -53,9 +51,13 @@ void DrEngineComponent::destroy() {
 //####################################################################################
 // Adds signal to stack
 void DrEngineComponent::emitSignal(std::string name, DrVariant value) {
-
+    m_world->getEngine()->pushSignal(name, value, m_thing->getKey());
 }
 
+// Returns list of signals with name
+EngineSignals DrEngineComponent::signalList(std::string name) {
+    return m_world->getEngine()->signalList(name);
+}
 
 //####################################################################################
 //##    Attributes

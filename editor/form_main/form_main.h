@@ -40,7 +40,7 @@
 
 #include "core/colors/colors.h"
 #include "editor/interface_editor_relay.h"
-#include "project/components_and_properties.h"
+#include "project/constants_comps_and_props.h"
 
 // Necessary forward declarations
 class FormPopup;

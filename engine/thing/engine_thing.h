@@ -93,18 +93,6 @@ public:
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
-    // Virtual Update Functions
-    virtual void        init();                                                             // Called when first created
-    virtual void        addToWorld();                                                       // Called when Thing is added to m_things DrEngineWorld vector
-    virtual bool        update(double time_passed, double time_warp, DrRectF &area);        // Process one update iteration for this Thing
-    virtual void        signal(std::string name, DrVariant value);                          // IMPLEMENT: Call during updateWorld(), process all signals then delete them
-    virtual void        destroy();
-
-    // Virtual Event Functions
-    virtual void        onCollide() { }
-    virtual void        onDamaged() { }
-    virtual void        onDeath()   { }
-
     // Misc Functions
     std::string         name();                                                             // Returns name of this Entity
     void                remove()                    { m_remove_me = true; }                 // Call to remove this Thing
@@ -133,6 +121,10 @@ public:
     long                    getKey() { return m_key; }                                      // Gets unique item key
     long                    getOriginalKey() { return m_original_project_key; }             // Gets original Project Data Model key
 
+    // Virtual Update Functions
+    virtual void            addToWorld();                                                   // Called when Thing is added to m_things DrEngineWorld vector
+    virtual bool            update(double time_passed, double time_warp, DrRectF &area);    // Process one update iteration for this Thing
+
     // Spawners
     void                    addSpawner(DrEngineSpawner *spawner) { m_spawners.push_back(spawner); }
     EngineSpawners&         getSpawners() { return m_spawners; }
@@ -155,6 +147,7 @@ public:
 
     // Misc Internal Functions
     void                    calculateTimeSinceLastUpdate();
+    void                    emitSignal(std::string name, DrVariant value);                  // Adds signal to stack
 
     // Basic Properties
     virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)

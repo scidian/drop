@@ -243,6 +243,7 @@ enum class Convert_3D_Type {
 namespace Dr {
     std::string StringFromBodyType(Body_Type type);
     std::string StringFromShapeType(Shape_Type type);
+    std::string StringFromPedal(Pedal pedal);
 }
 
 

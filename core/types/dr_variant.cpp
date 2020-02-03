@@ -10,6 +10,7 @@
 #include "3rd_party/glm/vec4.hpp"
 #include "core/dr_debug.h"
 #include "core/dr_containers.h"
+#include "core/dr_math.h"
 #include "core/types/dr_variant.h"
 
 
@@ -18,7 +19,28 @@
 //####################################################################################
 DrVariant& DrVariant::operator=(const DrVariant &other) {
     m_value = other.value();
+    m_type = other.getType();
     return *this;
+}
+
+bool DrVariant::operator==(DrVariant &other) {
+    if (m_type != other.getType()) return false;
+    switch (m_type) {
+        case Variant_Type::Bool:            return (toBool() ==     other.toBool());
+        case Variant_Type::Int:             return (toInt() ==      other.toInt());
+        case Variant_Type::Long:            return (toLong() ==     other.toLong());
+        case Variant_Type::Unsigned_Int:    return (toUInt() ==     other.toUInt());
+        case Variant_Type::Float:           return (Dr::FuzzyCompare(toFloat(),  other.toFloat()));
+        case Variant_Type::Double:          return (Dr::FuzzyCompare(toDouble(), other.toDouble()));
+        case Variant_Type::String:          return (toString() ==   other.toString());
+        case Variant_Type::Point:           return (toPoint() ==    other.toPoint());
+        case Variant_Type::PointF:          return (toPointF() ==   other.toPointF());
+        case Variant_Type::Vec2:            return (toVec2() ==     other.toBool());
+        case Variant_Type::Vec3:            return (toVec3() ==     other.toBool());
+        case Variant_Type::Vector:          return false;
+        case Variant_Type::Unknown:         return false;
+    }
+    return false;
 }
 
 

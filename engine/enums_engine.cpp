@@ -31,7 +31,14 @@ std::string StringFromShapeType(Shape_Type type) {
     }
 }
 
-
+std::string StringFromPedal(Pedal pedal) {
+    switch (pedal) {
+        case Pedal::None:               return "None";
+        case Pedal::Brake:              return "Brake";
+        case Pedal::Clockwise:          return "Clockwise";
+        case Pedal::CounterClockwise:   return "Counter Clockwise";
+    }
+}
 
 
 }   // End namespace Dr

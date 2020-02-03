@@ -22,6 +22,7 @@ class DrEngine
 public:
     // Constructor / Destrcutor / Cleanup
     DrEngine(DrProject *project, long stage_key);
+    ~DrEngine();
 
 
     // #################### VARIABLES ####################
@@ -31,6 +32,7 @@ private:
     DrProject          *m_project                   { nullptr };            // Pointer to Project to load into Engine
 
     // Local Variables
+    EngineSignals       m_signals;                                          // List of active Signals
     EngineTextureMap    m_textures;                                         // Map of Textures used for this Engine
     EngineWorldMap      m_worlds;                                           // Map of Physics Worlds loaded into the Engine
     long                m_current_world             { c_no_key };           // Project Key of current world shown in Engine
@@ -48,27 +50,31 @@ public:
     // #################### FUNCTIONS ####################
 public:
     // Cleanup
-    void    clearWorlds();
-    void    deleteTextures();
+    void                    clearWorlds();
+    void                    deleteTextures();
 
     // Textures
-    DrEngineTexture*    addTexture(long texture_id, QPixmap &pixmap);
-    DrEngineTexture*    getTexture(long texture_id) { return m_textures[texture_id]; }
-    EngineTextureMap&   getTextureMap() { return m_textures; }
+    DrEngineTexture*        addTexture(long texture_id, QPixmap &pixmap);
+    DrEngineTexture*        getTexture(long texture_id) { return m_textures[texture_id]; }
+    EngineTextureMap&       getTextureMap() { return m_textures; }
 
+    // Signals
+    void                    clearSignals();
+    void                    pushSignal(std::string name, DrVariant value, long thing_key = c_no_key);
+    EngineSignals           signalList(std::string name);
+    void                    updateSignalList();
 
     // Getter and Setters    
-    DrOpenGL*           getOpenGL()                 { return m_opengl; }
-    void                setOpenGl(DrOpenGL *opengl) { m_opengl = opengl; }
-    DrProject*          getProject()                { return m_project; }
+    DrOpenGL*               getOpenGL()                 { return m_opengl; }
+    void                    setOpenGl(DrOpenGL *opengl) { m_opengl = opengl; }
+    DrProject*              getProject()                { return m_project; }
 
-    long                getCurrentEditorWorld()     { return m_current_editor_world; }
-    DrEngineWorld*      getCurrentWorld()           { return m_worlds[m_current_world]; }
-    DrEngineWorld*      getWorld(long world_key)    { return m_worlds[world_key]; }
+    long                    getCurrentEditorWorld()     { return m_current_editor_world; }
+    DrEngineWorld*          getCurrentWorld()           { return m_worlds[m_current_world]; }
+    DrEngineWorld*          getWorld(long world_key)    { return m_worlds[world_key]; }
 
-    long                getStageKey()               { return m_stage_key; }
+    long                    getStageKey()               { return m_stage_key; }
 
-    std::string         pedalAsString();
 
 };
 

@@ -36,6 +36,12 @@ private:
 
 
 public:
+    // Basic Component Events
+    virtual void    init();                                                         // Called when component is first created
+    virtual void    update(double time_passed, double time_warp);                   // Called during DrEngineWorld->updateWorld() step
+    virtual void    destroy();                                                      // Called when component is destroyed
+
+
     // Getters / Setters
     Convert_3D_Type         get3DType()             { return m_3d_type; }
     const double&           getAngleX()             { return m_angle_x; }                       // Returns Thing X Axis Rotation (in degrees)

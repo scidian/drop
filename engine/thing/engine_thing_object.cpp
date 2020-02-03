@@ -288,7 +288,10 @@ bool DrEngineObject::takeDamage(double damage_to_take, bool reset_damage_timer, 
 //####################################################################################
 void DrEngineObject::setHealth(double new_health, bool taking_damage) {
     m_health = new_health;
-    if (taking_damage == true) updateRelativeHealth();
+    if (Dr::FuzzyCompare(m_health, 0.0) && (isPhysicsChild() == false))
+        emitSignal(Signals::ThingDied, true);
+    if (taking_damage == true)
+        updateRelativeHealth();
 }
 
 //####################################################################################

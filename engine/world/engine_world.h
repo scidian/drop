@@ -189,6 +189,9 @@ public:
     ///DrVariant        global(std::string name);                           // Returns global variable
     ///void             setGlobal(std::string name, DrVariant value);       // Sets global variable
 
+    // Input
+    ///DrPointF         mousePosition();                                    // Returns mouse world coordinate position
+
     // System
     ///std::string      device();                                           // Returns device name
     ///DrPointF         screenSize();                                       // Returns screen size of rendering window

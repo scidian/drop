@@ -5,7 +5,9 @@
 //      Abstract Item representing a thing that has a body in the Physics Engine (object, character, light, etc)
 //
 //
+#include "engine/engine.h"
 #include "engine/engine_component.h"
+#include "engine/engine_signal.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing_component/thing_comp_3d.h"
@@ -21,13 +23,9 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
     m_world = world;
     m_key = unique_key;
     m_original_project_key = original_key;
-
-    init();
 }
 
 DrEngineThing::~DrEngineThing() {
-    destroy();
-
     for (auto component_pair : m_components) {
         delete component_pair.second;
     }
@@ -45,11 +43,6 @@ DrEngineThing::~DrEngineThing() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when Thing is first created
-void DrEngineThing::init() {
-
-}
-
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
 
@@ -69,18 +62,6 @@ bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;
     return (remove || m_remove_me);
-}
-
-// Call during updateWorld(), process all signals then delete them
-void DrEngineThing::signal(std::string name, DrVariant value) {
-    for (auto component : m_components) {
-        component.second->signal(name, value);
-    }
-}
-
-// Called when Thing is being destroyed
-void DrEngineThing::destroy() {
-
 }
 
 
@@ -112,6 +93,11 @@ void DrEngineThing::removeComponent(std::string component_name) {
     if (component_name == "") return;
     for (auto it = m_components.begin(); it != m_components.end(); ) {
         if ((*it).first == component_name) {
+            if (component_name == Comps::Thing_3D)                  m_comp_3d =         nullptr;
+            if (component_name == Comps::Thing_Settings_Camera)     m_comp_camera =     nullptr;
+            if (component_name == Comps::Thing_Player)              m_comp_player =     nullptr;
+            if (component_name == Comps::Thing_Soft_Body)           m_comp_soft_body=   nullptr;
+            delete (*it).second;
             it = m_components.erase(it);
             continue;
         }
@@ -149,12 +135,24 @@ void DrEngineThing::setComponentSoftBody(ThingCompSoftBody *component)  { m_comp
 
 
 //####################################################################################
+//##    Signals
+//####################################################################################
+// Adds signal to stack
+void DrEngineThing::emitSignal(std::string name, DrVariant value) {
+    m_world->getEngine()->pushSignal(name, value, this->getKey());
+}
+
+
+//####################################################################################
 //##    Get time since last update
 //####################################################################################
 void DrEngineThing::calculateTimeSinceLastUpdate() {
     time_since_last_update = Dr::MillisecondsElapsed( update_timer );
     Dr::ResetTimer( update_timer );
 }
+
+
+
 
 
 

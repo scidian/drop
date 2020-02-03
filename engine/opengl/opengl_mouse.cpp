@@ -37,9 +37,19 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     double y = static_cast<double>(vec.y);
     double z = static_cast<double>(vec.z);
 
-    // ***** If running, process click
-    if (m_form_engine->isTimerActive() == false)
-        return;
+    // ***** If not running, don't process mousePressEvent
+    if (m_form_engine->isTimerActive() == false) return;
+
+    // ***** Push Signals onto Signal Stack
+    if        (event->button() & Qt::LeftButton) {
+        m_engine->pushSignal(Signals::MouseLeftDown, true);
+    } else if (event->button() & Qt::RightButton) {
+        m_engine->pushSignal(Signals::MouseRightDown, true);
+    } else if (event->button() & Qt::MiddleButton) {
+        m_engine->pushSignal(Signals::MouseMiddleDown, true);
+    }
+
+    // ***** Handle Demo Specific functions
     if (m_form_engine->demo_player == Demo_Player::Spawn) {
         if (event->button() & Qt::LeftButton) {
             for (int i = 0; i < 50; i++ ) {
@@ -199,6 +209,16 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
     DrEngineWorld *world = m_engine->getCurrentWorld();
 
+    // ***** Push Signals onto Signal Stack
+    if        (event->button() & Qt::LeftButton) {
+        m_engine->pushSignal(Signals::MouseLeftUp, true);
+    } else if (event->button() & Qt::RightButton) {
+        m_engine->pushSignal(Signals::MouseRightUp, true);
+    } else if (event->button() & Qt::MiddleButton) {
+        m_engine->pushSignal(Signals::MouseMiddleUp, true);
+    }
+
+    // ***** Process mouse up for current demo mode
     if (m_form_engine->demo_player == Demo_Player::Car) {
         if (event->buttons() == Qt::MouseButton::NoButton)
             g_pedal = Pedal::None;
@@ -257,6 +277,11 @@ void DrOpenGL::wheelEvent(QWheelEvent *event) {
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QOpenGLWidget::wheelEvent(event);
         return;
+    }
+
+    // ***** Push Signals onto Signal Stack
+    if (m_engine->getCurrentWorld()->has_scene) {
+        m_engine->pushSignal(Signals::MouseScroll, event->delta());
     }
 
     if (event->delta() > 0) { zoomInOut( 10); }

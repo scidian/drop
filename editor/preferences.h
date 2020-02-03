@@ -12,7 +12,7 @@
 
 #include "core/types/dr_variant.h"
 #include "editor/enums_editor.h"
-#include "project/components_and_properties.h"
+#include "project/constants_comps_and_props.h"
 #include "project/enums_entity_types.h"
 
 
