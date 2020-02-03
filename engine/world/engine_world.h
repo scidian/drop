@@ -63,8 +63,8 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngine           *m_engine;                   // Pointer to Engine
-    DrProject          *m_project;                  // Pointer to Project loaded into Engine
+    DrEngine           *m_engine    { nullptr };    // Pointer to Engine
+    DrProject          *m_project   { nullptr };    // Pointer to Project loaded into Engine
     EngineTextureMap   &m_textures;                 // Reference to map of Textures used for Rendering
 
     // Local Variables
@@ -102,8 +102,8 @@ private:
                                                     //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
 
     // Camera Variables
-    long            m_active_camera = c_no_key;     // Key to active camera in the Engine, c_no_key == No Camera
-    bool            m_switching_cameras = false;    // True when we want to start tweening towards a new camera
+    long            m_active_camera = c_no_key;                             // Key to active camera in the Engine, c_no_key == No Camera
+    bool            m_switching_cameras = false;                            // True when we want to start tweening towards a new camera
 
     double          m_switch_milliseconds;                                  // Used for tweening between cameras
     glm::vec3       m_switch_position,          m_temp_position;            // Used for tweening between cameras
@@ -116,61 +116,61 @@ private:
 
 
     // Scene Variables
-    double          m_delete_threshold_x = 5000;    // X distance away from camera an object can be before it's removed from the scene
-    double          m_delete_threshold_y = 5000;    // Y distance away from camera an object can be before it's removed from the scene
+    double          m_delete_threshold_x    { 5000.0 };                     // X distance away from camera an object can be before it's removed from the scene
+    double          m_delete_threshold_y    { 5000.0 };                     // Y distance away from camera an object can be before it's removed from the scene
 
-    double          m_ambient_light = 50.0;         // Ambient light percentage to use for World, mostly for use with Glow Lights
-    double          m_glow_light_z_order = 0.0;     // Z-Ordering for Glow Lights
-    int             m_glow_blend_mode = 0;          // enum class Blend_Mode decides how light layer is applied to screen
+    double          m_ambient_light         { 50.0 };                       // Ambient light percentage to use for World, mostly for use with Glow Lights
+    double          m_glow_light_z_order    { 0.0 };                        // Z-Ordering for Glow Lights
+    int             m_glow_blend_mode       { 0 };                          // enum class Blend_Mode decides how light layer is applied to screen
 
-    DrColor         m_background_color;             // Background color to use to clear screen during render
-    double          m_game_direction = 0.0;         // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
-    DrPointF        m_game_start {0, 0};            // Origin point start stage loaded at
-    double          m_game_distance = 0.0;          // Keeps track of distance traveled linearly from the start
-    double          m_max_game_distance = 0.0;      // Keeps track of maximum distance character has traveled linearly from the start
-    double          m_load_buffer = 3000;           // Distance further from m_game_distance we should already have preloaded
-    double          m_loaded_to = 0.0;              // Last distance we loaded a new stage
+    DrColor         m_background_color      { Dr::black };                  // Background color to use to clear screen during render
+    double          m_game_direction        { 0.0 };                        // Direction to load new levels, 0 = to the right, 90 = up, 180 = to the left, etc
+    DrPointF        m_game_start            { 0, 0 };                       // Origin point start stage loaded at
+    double          m_game_distance         { 0.0 };                        // Keeps track of distance traveled linearly from the start
+    double          m_max_game_distance     { 0.0 };                        // Keeps track of maximum distance character has traveled linearly from the start
+    double          m_load_buffer           { 3000 };                       // Distance further from m_game_distance we should already have preloaded
+    double          m_loaded_to             { 0.0 };                        // Last distance we loaded a new stage
 
 
 // ***** Public Variables not yet implemented into function calls / getters / setters
 public:
-    bool            has_scene = false;                          // True after a scene has been loaded into cpSpace    
-    Render_Type     render_type = Render_Type::Perspective;     // Should render Perspective or Orthographic?
-    Render_Mode     render_mode = Render_Mode::Mode_2D;         // Should render in 2D or 3D?
-    double          cam_switch_speed = 1.0;                     // Multiplier for Camera switching speed
-    bool            zoom_from_movement = false;                 // When true, camera changes zoom based on camera target average speed
-    Auto_Zoom       zoom_type = Auto_Zoom::Zoom_Out;            // When zoom_from_movement is true, decides whether cameras should zoom out or in upon movement
-    double          zoom_multiplier = 1.0;                      // When zoom_from_movement is true, decides multiplier of zoom change (1 = 100%, 2 = 200%, etc)
-    double          zoom_damping = 1.0;                         // When zoom_from_movement is true, decides damping of zoom change (1 = normal, 100 = slow)
+    bool            has_scene               { false };                      // True after a scene has been loaded into cpSpace
+    Render_Type     render_type             { Render_Type::Perspective };   // Should render Perspective or Orthographic?
+    Render_Mode     render_mode             { Render_Mode::Mode_2D };       // Should render in 2D or 3D?
+    double          cam_switch_speed        { 1.0 };                        // Multiplier for Camera switching speed
+    bool            zoom_from_movement      { false };                      // When true, camera changes zoom based on camera target average speed
+    Auto_Zoom       zoom_type               { Auto_Zoom::Zoom_Out };        // When zoom_from_movement is true, decides whether cameras should zoom out or in upon movement
+    double          zoom_multiplier         { 1.0 };                        // When zoom_from_movement is true, decides multiplier of zoom change (1 = 100%, 2 = 200%, etc)
+    double          zoom_damping            { 1.0 };                        // When zoom_from_movement is true, decides damping of zoom change (1 = normal, 100 = slow)
 
-    long            effect_count = 0;                           // Stores number of effects being rendered
-    long            light_count = 0;                            // Stores number of lights in scene
-    std::list<long> mark_light_as_deleted;                      // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
+    long            effect_count            { 0 };                          // Stores number of effects being rendered
+    long            light_count             { 0 };                          // Stores number of lights in scene
+    std::list<long> mark_light_as_deleted;                                  // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
 
     // !!!!! #TEMP: Variables
-    Demo_Player     demo_player = Demo_Player::Jump;
-    DrEngineObject *ball;
-    DrEngineLight  *light1;
-    DrEngineLight  *light2;
+    Demo_Player     demo_player             { Demo_Player::Jump };
+    DrEngineObject *ball                    { nullptr };
+    DrEngineLight  *light1                  { nullptr };
+    DrEngineLight  *light2                  { nullptr };
 
     // Image Post Processing Variables
-    float           bitrate = 256.0;                            // Bitrate              1 to 256
-    float           pixel_x = 1.0;                              // Pixelation X         1.0+
-    float           pixel_y = 1.0;                              // Pixelation Y         1.0+
-    bool            negative = false;                           // Negative             True / False
-    bool            grayscale = false;                          // Grayscale            True / False
-    float           hue = 0.0f;                                 // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
-    float           saturation = 0.0f;                          // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           contrast = 0.0f;                            // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           brightness = 0.0f;                          // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           bitrate                 { 256.0f };                     // Bitrate              1 to 256
+    float           pixel_x                 { 1.0f };                       // Pixelation X         1.0+
+    float           pixel_y                 { 1.0f };                       // Pixelation Y         1.0+
+    bool            negative                { false };                      // Negative             True / False
+    bool            grayscale               { false };                      // Grayscale            True / False
+    float           hue                     { 0.0f };                       // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
+    float           saturation              { 0.0f };                       // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           contrast                { 0.0f };                       // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           brightness              { 0.0f };                       // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
-    bool            wireframe = false;                          // Wireframe            True / False
-    float           wireframe_width = 1.0;                      // Wireframe Width
-    bool            cartoon = false;                            // Cartoon              True / False
-    float           cartoon_width = 5.0;                        // Cartoon Width
-    bool            cross_hatch = false;                        // Cross Hatch          True / False
-    float           cross_hatch_width = 5.0;                    // Cross Hatch Width
-    bool            wavy = false;                               // Wavy (Ripple)        True / False
+    bool            wireframe               { false };                      // Wireframe            True / False
+    float           wireframe_width         { 1.0f };                       // Wireframe Width
+    bool            cartoon                 { false };                      // Cartoon              True / False
+    float           cartoon_width           { 5.0f };                       // Cartoon Width
+    bool            cross_hatch             { false };                      // Cross Hatch          True / False
+    float           cross_hatch_width       { 5.0f };                       // Cross Hatch Width
+    bool            wavy                    { false };                      // Wavy (Ripple)        True / False
 
 
 

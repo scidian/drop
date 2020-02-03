@@ -27,7 +27,7 @@ public:
 
     // Info
     int triangleCount() { return static_cast<int>(radiuses.size() / 3); }
-    int vertexCount() { return static_cast<int>(radiuses.size()); }
+    int vertexCount()   { return static_cast<int>(radiuses.size()); }
 
     // Functions
     void addVertex(double x, double y, float uv_x, float uv_y, float r, DrColor fill, DrColor border);

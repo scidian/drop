@@ -25,54 +25,52 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld  *m_world;                                    // Pointer to the parent DrEngineWorld
+    DrEngineWorld  *m_world                     { nullptr };                // Pointer to the parent DrEngineWorld
 
     // Local Variables
-    long            m_key;                                      // Unique DrEngineWorld Key of for this camera in the DrEngineWorld EngineCameraMap
+    long            m_key                       { c_no_key };               // Unique DrEngineWorld Key of for this camera in the DrEngineWorld EngineCameraMap
 
-    glm::vec3       m_position = glm::vec3(0, 0, 0);            // Current camera position
+    glm::vec3       m_position                  { 0, 0, 0 };                // Current camera position
+    glm::vec3       m_speed                     { 0, 0, 0 };                // Current camera speed
+    glm::vec3       m_rotation                  { 0, 0, 0 };                // Current camera rotation
+                                                                            //      X Rotation, controls up / down
+                                                                            //      Y Rotation, controls left / right
+                                                                            //      Z Rotation, tilts head
 
-    glm::vec3       m_speed =    glm::vec3(0, 0, 0);            // Current camera speed
+    DrPointF            m_lag                   { 0.0, 0.0 };               // Current camera lag when following object
+    bool                m_match_angle           { false };                  // Does this camera match angle of following object
 
-    glm::vec3       m_rotation = glm::vec3(0, 0, 0);            // Current camera rotation
-                                                                //              X Rotation, controls up / down
-                                                                //              Y Rotation, controls left / right
-                                                                //              Z Rotation, tilts head
+    double              m_speed_adjusted_zoom   { 1.0 };                    // Zoom affected by speed
+    double              m_zoom                  { 1.0 };                    // Current camera zoom level
 
-    DrPointF            m_lag = { 0.0, 0.0 };                   // Current camera lag when following object
-    bool                m_match_angle = false;                  // Does this camera match angle of following object
+    glm::vec3           m_target                { 0, 0, 0 };                // Calculated point this camera is moving towards
 
-    double              m_speed_adjusted_zoom = 1.0;            // Zoom affected by speed
-    double              m_zoom = 1.0;                           // Current camera zoom level
+    long                m_follow_key            { c_no_key };               // Unique DrEngineWorld key this camera should follow
+    bool                m_follow_lost           { false };                  // Set to true by engine when was following and now is not following
+    size_t              m_buffer_size           { c_slop_buffer_size };     // Number of past object speeds to average together for camera follow
+    bool                m_wants_active          { false };                  // If set to true in Editor, this camera tries to take Active when in Start Stage
 
-    glm::vec3           m_target;                               // Calculated point this camera is moving towards
+    Up_Vector           m_up_vector             { Up_Vector::Y };           // Up Vector of Camera, usually Y, Z for first person
 
-    long                m_follow_key =  c_no_key;               // Unique DrEngineWorld key this camera should follow
-    bool                m_follow_lost = false;                  // Set to true by engine when was following and now is not following
-    size_t              m_buffer_size = c_slop_buffer_size;     // Number of past object speeds to average together for camera follow
-    bool                m_wants_active = false;                 // If set to true in Editor, this camera tries to take Active when in Start Stage
-
-    Up_Vector           m_up_vector = Up_Vector::Y;             // Up Vector of Camera, usually Y, Z for first person
-
-    glm::vec3           m_average_speed;                        // Holds the calculated average (averaged in updateCamera()) of the arrays below
-    std::deque<double>  m_avg_speed_x;                          // Average x speed of object this camera is following
-    std::deque<double>  m_avg_speed_y;                          // Average y speed of object this camera is following
-    std::deque<double>  m_avg_speed_z;                          // Average z speed of object this camera is following
+    glm::vec3           m_average_speed         { 0, 0, 0 };                // Holds the calculated average (averaged in updateCamera()) of the arrays below
+    std::deque<double>  m_avg_speed_x;                                      // Average x speed of object this camera is following
+    std::deque<double>  m_avg_speed_y;                                      // Average y speed of object this camera is following
+    std::deque<double>  m_avg_speed_z;                                      // Average z speed of object this camera is following
 
     // Character Camera Frame
-    std::map<Edge_Location, Frame_Edge> m_camera_edges;         // For character cameras, describes edges of camera frame
+    std::map<Edge_Location, Frame_Edge> m_camera_edges;                     // For character cameras, describes edges of camera frame
 
     // Auto Zoom Variables
-    std::deque<double>  m_avg_speed;                            // Average speed per second
-    std::deque<double>  m_max_speed;                            // Max speed over last 10 seconds
-    std::deque<double>  m_max_average;                          // Max average speed
-    std::deque<double>  m_target_zoom;                          // Average target zoom
-    double m_last_speed_clock =     0.0;                        // Used to update current speed (m_avg_speed) array
-    double m_last_speed =           0.0;                        // Holds current speed, used to calculate current speed to max speed ratio
-    double m_max_speed_clock =      0.0;                        // Used to update max speed (m_max_speed) array
-    double m_max_speed_average =    1.0;                        // Holds current max speed, used to calculate current speed to max speed ratio
-    double m_avg_zoom_clock =       0.0;                        // Used to update target zoom speed (m_target_zoom_ array
-    double m_avg_zoom =          m_zoom;                        // Holds current average zooom target
+    std::deque<double>  m_avg_speed;                                        // Average speed per second
+    std::deque<double>  m_max_speed;                                        // Max speed over last 10 seconds
+    std::deque<double>  m_max_average;                                      // Max average speed
+    std::deque<double>  m_target_zoom;                                      // Average target zoom
+    double m_last_speed_clock                   { 0.0 };                    // Used to update current speed (m_avg_speed) array
+    double m_last_speed                         { 0.0 };                    // Holds current speed, used to calculate current speed to max speed ratio
+    double m_max_speed_clock                    { 0.0 };                    // Used to update max speed (m_max_speed) array
+    double m_max_speed_average                  { 1.0 };                    // Holds current max speed, used to calculate current speed to max speed ratio
+    double m_avg_zoom_clock                     { 0.0 };                    // Used to update target zoom speed (m_target_zoom_ array
+    double m_avg_zoom                           { m_zoom };                 // Holds current average zooom target
 
 
 

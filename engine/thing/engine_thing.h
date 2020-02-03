@@ -54,7 +54,7 @@ private:
     // Basic Thing Properties
     double      m_angle_z           { 0.0 };                    // Current rotation angle (on Z axis), (for DrEngineObject this is updated every frame by update())
     float       m_opacity           { 1.0f };                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
-    DrPointF    m_position          { 0.0, 0.0};                // Current center posiiton
+    DrPointF    m_position          { 0.0, 0.0 };               // Current center posiiton
     double      m_z_order           { 0.0 };                    // Used for layering, used for distance sorting
     float       m_scale_x           { 1.0f };                   // Scale of Thing in world
     float       m_scale_y           { 1.0f };                   // Scale of Thing in world
@@ -68,13 +68,13 @@ public:
     bool        wireframe           { false };                  // Wireframe            True / False
     float       wireframe_width     { 1.0f };                   // Wireframe Width
     bool        cartoon             { false };                  // Cartoon              True / False
-    float       cartoon_width       { 5.0 };                    // Cartoon Width
+    float       cartoon_width       { 5.0f };                   // Cartoon Width
     bool        cross_hatch         { false };                  // Cross Hatch          True / False
-    float       cross_hatch_width   { 5.0 };                    // Cross Hatch Width
+    float       cross_hatch_width   { 5.0f };                   // Cross Hatch Width
 
-    float       bitrate             { 256.0 };                  // Bitrate              1 to 256
-    float       pixel_x             { 1.0 };                    // Pixelation X         1.0+
-    float       pixel_y             { 1.0 };                    // Pixelation Y         1.0+
+    float       bitrate             { 256.0f };                 // Bitrate              1 to 256
+    float       pixel_x             { 1.0f };                   // Pixelation X         1.0+
+    float       pixel_y             { 1.0f };                   // Pixelation Y         1.0+
     bool        negative            { false };                  // Negative             True / False
     bool        grayscale           { false };                  // Grayscale            True / False
     float       hue                 { 0.0f };                   // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0

@@ -20,12 +20,12 @@ class DrEngineMirror : public DrEngineThing
 {
 public:
     // Mirror Settings
-    DrColor         start_color =   DrColor(192, 192, 192);     // Color tint of top of mirror
-    DrColor         end_color =     DrColor(128, 128, 255);     // Color tint of bottom of mirror
-    float           tint_percent = 0.5f;                        // Color tint percentage     0 to  1
-    float           blur = 0.0f;                                // Scatter amount
-    float           blur_stretch = 0.0f;                        // Scatter stretch away from start
-    float           scale = 1.0f;                               // Noise (scatter) scale
+    DrColor         start_color =   DrColor(192, 192, 192);             // Color tint of top of mirror
+    DrColor         end_color =     DrColor(128, 128, 255);             // Color tint of bottom of mirror
+    float           tint_percent =  0.5f;                               // Color tint percentage     0 to  1
+    float           blur =          0.0f;                               // Scatter amount
+    float           blur_stretch =  0.0f;                               // Scatter stretch away from start
+    float           scale =          1.0f;                              // Noise (scatter) scale
 
 public:
     // Constructor / Destructor

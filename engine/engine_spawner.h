@@ -31,39 +31,39 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld  *m_world = nullptr;                          // Points to current parent DrEngineWorld
+    DrEngineWorld  *m_world                 { nullptr };                // Points to current parent DrEngineWorld
 
     // Local Variables
-    DrThing        *m_thing_to_spawn = nullptr;                 // Reference to the DrThing pointer we wish to spawn
-    DrPointF        m_original_location { 0, 0 };               // Original location of Spawner, used to take Spawner out of scene as
-                                                                // gameplay proceeds and not attached to Object
+    DrThing        *m_thing_to_spawn        { nullptr };                // Reference to the DrThing pointer we wish to spawn
+    DrPointF        m_original_location     { 0, 0 };                   // Original location of Spawner, used to take Spawner out of scene as
+                                                                        //      gameplay proceeds and not attached to Object
     // Time Variables
-    double          m_time_passed;                              // Time last spawn occured
-    double          m_next_spawn;                               // Seconds until next spawn
-    bool            m_delete_me = false;                        // Mark for deletion when spawner is empty
+    double          m_time_passed           { 0.0 };                    // Time last spawn occured
+    double          m_next_spawn            { 0.0 };                    // Seconds until next spawn
+    bool            m_delete_me             { false };                  // Mark for deletion when spawner is empty
 
     // Key Trackers
-    bool            m_last_key_jump_status = false;             // Track Jump Key
-    bool            m_last_key_shoot_status = false;            // Track Shoot Key
+    bool            m_last_key_jump_status  { false };                  // Track Jump Key
+    bool            m_last_key_shoot_status { false };                  // Track Shoot Key
 
     // Spawn Properties
-    bool            m_spawn_instantly = true;                   // Spawn instantly, or wait initial m_spawn_rate before spawning?
-    double          m_spawn_rate = 1000;                        // Spawn rate in seconds
-    double          m_spawn_rate_variable = 0;                  // Spawn rate + or - seconds
-    int             m_spawn_count = 1;                          // Total spawn count
-    int             m_spawn_start_count = 1;                    // Keeps track of initial spawn count
-    int             m_spawns_remaining = 1;                     // Spawns remaining, can be reset in case of Shoot or Jump button
-    Spawn_Type      m_spawn_type = Spawn_Type::Permanent;       // Spawn Type (permanent, shoot button, jump button, object death, etc)
-    double          m_spawn_chance = 100.0;                     // Percentage that object will appear when spawned
+    bool            m_spawn_instantly       { true };                   // Spawn instantly, or wait initial m_spawn_rate before spawning?
+    double          m_spawn_rate            { 1000.0 };                 // Spawn rate in seconds
+    double          m_spawn_rate_variable   { 0.0 };                    // Spawn rate + or - seconds
+    int             m_spawn_count           { 1 };                      // Total spawn count
+    int             m_spawn_start_count     { 1 };                      // Keeps track of initial spawn count
+    int             m_spawns_remaining      { 1 };                      // Spawns remaining, can be reset in case of Shoot or Jump button
+    Spawn_Type      m_spawn_type            { Spawn_Type::Permanent };  // Spawn Type (permanent, shoot button, jump button, object death, etc)
+    double          m_spawn_chance          { 100.0 };                  // Percentage that object will appear when spawned
 
-    bool            m_attached_to_object = false;               // Is attached to object?
-    long            m_attached_id_key = c_no_key;               // Attached object ID Key
-    DrEngineThing  *m_attached = nullptr;                       // Attached object
+    bool            m_attached_to_object    { false };                  // Is attached to object?
+    long            m_attached_id_key       { c_no_key };               // Attached object ID Key
+    DrEngineThing  *m_attached              { nullptr };                // Attached object
 
-    double          m_spawn_offset_x = 0.0;                     // Spawn location offset X
-    double          m_spawn_offset_y = 0.0;                     // Spawn location offset Y
-    double          m_spawn_variable_x = 0.0;                   // Variable X location amount
-    double          m_spawn_variable_y = 0.0;                   // Vartable Y location amount
+    double          m_spawn_offset_x        { 0.0 };                    // Spawn location offset X
+    double          m_spawn_offset_y        { 0.0 };                    // Spawn location offset Y
+    double          m_spawn_variable_x      { 0.0 };                    // Variable X location amount
+    double          m_spawn_variable_y      { 0.0 };                    // Vartable Y location amount
 
 
     // #################### FUNCTIONS ####################

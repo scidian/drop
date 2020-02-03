@@ -35,19 +35,19 @@ public:
     // #################### VARIABLES ####################
 public:
     // Object Body and Shapes
-    cpBody                 *body = nullptr;                         // Physical Body of object
-    Body_Type               body_type;                              // Body_Type
-    Body_Style              body_style = Body_Style::Rigid_Body;    // Rigid_Body or Soft Body (Circular_Blob, Square Blob, Mesh, etc)
+    cpBody                 *body            { nullptr };                    // Physical Body of object
+    Body_Type               body_type       { Body_Type::Static };          // Body_Type
+    Body_Style              body_style      { Body_Style::Rigid_Body };     // Rigid_Body or Soft Body (Circular_Blob, Square Blob, Mesh, etc)
 
-    std::vector<cpShape*>   shapes;                                 // Collision Shapes of object
-    ShapeMap                shape_type;                             // Shape Types of Shapes of Object
-    PolygonList             polygons;                               // List of concave polygon Shapes (for debug drawing)
+    std::vector<cpShape*>   shapes;                                         // Collision Shapes of object
+    ShapeMap                shape_type;                                     // Shape Types of Shapes of Object
+    PolygonList             polygons;                                       // List of concave polygon Shapes (for debug drawing)
 
     // Animation
-    std::deque<long>    animation_idle_keys;                        // Image frame keys
-    long                animation_idle_frame = 1;                   // Current frame
-    double              animation_speed = 15;                       // Frames per second
-    double              animation_idle_last_change = 0;             // Milliseconds since last change frame
+    std::deque<long>        animation_idle_keys;                            // Image frame keys
+    long                    animation_idle_frame        { 1 };              // Current frame
+    double                  animation_speed             { 15 };             // Frames per second
+    double                  animation_idle_last_change  { 0 };              // Milliseconds since last change frame
 
 
 private:
@@ -55,84 +55,83 @@ private:
     //      To be set for each object as desired
     //
     // Object Basic Settings
-    bool                m_does_collide = true;                      // Set to false to have this object not collide with anything
-    Collision_Groups    m_collide_with = Collision_Groups::All;     // Types of other objects this should collide with (physcics and collision)
-    long                m_texture_number;                           // Reference to which texture to use from Engine->EngineTexture map
+    bool                m_does_collide      { true };                       // Set to false to have this object not collide with anything
+    Collision_Groups    m_collide_with      { Collision_Groups::All };      // Types of other objects this should collide with (physcics and collision)
+    long                m_texture_number    { 0 };                          // Reference to which texture to use from Engine->EngineTexture map
 
     // Object Parent / Child Settings
-    bool                m_is_physics_child = false;                 // This becomes true to signify this is a physics object used by another DrEngineObject
-    DrEngineObject     *m_physics_parent = nullptr;                 // Owner of this physics object
+    bool                m_is_physics_child  { false };                      // This becomes true to signify this is a physics object used by another DrEngineObject
+    DrEngineObject     *m_physics_parent    { nullptr };                    // Owner of this physics object
 
     // Object Properties - Bounce / Friction
-    double          m_custom_friction = c_friction; // Defaults to c_friction (-1) if this item uses global m_friction, otherwise stores custom friction
-    double          m_custom_bounce = c_bounce;     // Defaults to c_bounce (-1) if this item uses global m_bounce, otherwise stores custom bounce
+    double          m_custom_friction       { c_friction };                 // Defaults c_friction (-1) means item uses global m_friction, otherwise stores custom friction
+    double          m_custom_bounce         { c_bounce };                   // Defaults c_bounce   (-1) means item uses global m_bounce, otherwise stores custom bounce
 
     // Object Properties - Movement
-    double          m_velocity_x;                   // Original x velocity when loaded into scene, used for KinematicUpdateVelocity func
-    double          m_velocity_y;                   // Original y velocity when loaded into scene, used for KinematicUpdateVelocity func
-    double          m_spin_velocity;                // Original angular velocity when loaded into scene, !!!!! #NOTE: In radians !!!!!
-    bool            m_use_angle_velocity = true;    // Should the angle of the object affect velocity? (only for Kinematic)
-    bool            m_rotate_to_player = false;     // Should the angle of the object rotate toward active player? (only for Kinematic)
+    double          m_velocity_x            { 0.0 };                        // Original x velocity when loaded into scene, used for KinematicUpdateVelocity func
+    double          m_velocity_y            { 0.0 };                        // Original y velocity when loaded into scene, used for KinematicUpdateVelocity func
+    double          m_spin_velocity         { 0.0 };                        // Original angular velocity when loaded into scene, !!!!! #NOTE: In radians !!!!!
+    bool            m_use_angle_velocity    { true  };                      // Should the angle of the object affect velocity? (only for Kinematic)
+    bool            m_rotate_to_player      { false };                      // Should the angle of the object rotate toward active player? (only for Kinematic)
 
     // Object Properties - One Way / Collision
-    One_Way         m_one_way = One_Way::None;      // Set one way collision type desired (None, Pass Through, Weak_Spot)
-    cpVect          m_one_way_direction {0, 1};     // Direction for one way collision, defaults to Up (i.e. objects can pass upwards through the bottom of a block)
-    double          m_gravity_multiplier = 1.0;     // Use to cancel gravity (0.0) on objects that collide (climbable ladders), or to reduce gravity (sticky wall)
-    cpVect          m_surface_velocity {0, 0};      // Provides surface movement on contact, useful for conveyor belts, etc.
+    One_Way         m_one_way               { One_Way::None };              // Set one way collision type desired (None, Pass Through, Weak_Spot)
+    cpVect          m_one_way_direction     { 0, 1 };                       // Direction for one way collision, defaults to Up (objects can pass upwards through the bottom of a block)
+    double          m_gravity_multiplier    { 1.0 };                        // Use to cancel gravity (0.0) on objects that collide (climbable ladders), or to reduce gravity (sticky wall)
+    cpVect          m_surface_velocity      { 0, 0 };                       // Provides surface movement on contact, useful for conveyor belts, etc.
 
     // Object Properties - Health / Damage
-    Collision_Type  m_collision_type = Collision_Type::Damage_None; // Specifies which types of objects this object can damage
-    bool            m_invincible = false;                           // When true this object takes no damage nor damage_recoil force, cannot be killed
-    bool            m_death_touch = false;                          // When true kills everything on contact, even unlimited health...but not invincible objects
-    double          m_max_health = 10.0;                            // Maximum object health, c_no_max_health (-1) = no maximum
-    double          m_health = 1.0;                                 // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
-    double          m_damage = 1.0;                                 // Damage caused to other objects of Type m_collision_type
-    long            m_damage_delay = 500;                           // Minimum time in milliseconds that must pass between receiving damage
-    double          m_auto_damage = 0.0;            // Take x damage per second (can be negative, i.e. add health)
-    long            m_death_delay = 100;            // Time it takes for item to die (can't deal damage while dying), in milliseconds
+    Collision_Type  m_collision_type =        Collision_Type::Damage_None;  // Specifies which types of objects this object can damage
+    bool            m_invincible            { false };                      // When true this object takes no damage nor damage_recoil force, cannot be killed
+    bool            m_death_touch           { false };                      // When true kills everything on contact, even unlimited health...but not invincible objects
+    double          m_max_health            { 10.0 };                       // Maximum object health, c_no_max_health (-1) = no maximum
+    double          m_health                { 1.0 };                        // Object Health, c_unlimited_health (-1) = infinite, otherwise should be > 0
+    double          m_damage                { 1.0 };                        // Damage caused to other objects of Type m_collision_type
+    long            m_damage_delay          { 500 };                        // Minimum time in milliseconds that must pass between receiving damage
+    double          m_auto_damage           { 0.0 };                        // Take x damage per second (can be negative, i.e. add health)
+    long            m_death_delay           { 100 };                        // Time it takes for item to die (can't deal damage while dying), in milliseconds
 
-    Death_Animation m_death_animation = Death_Animation::Fade;      // If true, object is slowly faded over death_delay time
-    long            m_death_duration = 750;                         // Duration (in milliseconds) of Death Animation (0 = remove immediately)
-
-    double          m_damage_recoil = 200.0;        // How much opposite force to apply when receiving damage
+    Death_Animation m_death_animation       { Death_Animation::Fade };      // If true, object is slowly faded over death_delay time
+    long            m_death_duration        { 750 };                        // Duration (in milliseconds) of Death Animation (0 = remove immediately)
+    double          m_damage_recoil         { 200.0 };                      // How much opposite force to apply when receiving damage
 
     // Object Movement
-    double          m_rotate_speed =  0.0;          // Speed at which object should spin (on standard 2D Z axis) when Motor Rotate (gas pedal) is pressed
+    double          m_rotate_speed          { 0.0 };                        // Speed at which object should spin (on standard 2D Z axis) when Motor Rotate (gas pedal) is pressed
+    bool            m_can_rotate            { true };                       // To be set during object creation, moment of inertia is set to infinity to stop rotation
 
-    bool            m_can_rotate = true;            // To be set during object creation, moment of inertia is set to infinity to stop rotation
-    DrPointF        m_gravity_scale { 1.0, 1.0 };   // Multiplies gravity by this scale for Dynamic objects, changes how gravity affects object
+    DrPointF        m_gravity_scale         { 1.0, 1.0 };                   // Multiplies gravity by this scale for Dynamic objects, changes how gravity affects object
 
-    bool            m_flip_image_x = false;         // If turned to true, player flips left / right depending on velocity
-    bool            m_flip_image_y = false;         // If turned to true, player flips up /   down depending on velocity
+    bool            m_flip_image_x          { false };                      // If turned to true, player flips left / right depending on velocity
+    bool            m_flip_image_y          { false };                      // If turned to true, player flips up /   down depending on velocity
 
     // Object Controls
-    bool            m_touch_drag = false;           // Should this object be able to be dragged by touch / mouse?
-    double          m_touch_drag_force = 100.0;     // Max force the constraint holding this object to the mouse_body can apply (as a percentange)
-    bool            m_touch_damage = false;         // Should this object receive damage when tapped / clicked?
-    double          m_touch_damage_points = 1.0;    // Amount of damage to receive when tapped / clicked
+    bool            m_touch_drag            { false };                      // Should this object be able to be dragged by touch / mouse?
+    double          m_touch_drag_force      { 100.0 };                      // Max force the constraint holding this object to the mouse_body can apply (as a percentange)
+    bool            m_touch_damage          { false };                      // Should this object receive damage when tapped / clicked?
+    double          m_touch_damage_points   { 1.0 };                        // Amount of damage to receive when tapped / clicked
 
     // Player Control
-    bool            m_key_controls = false;         // Set to true when object is a "player" and should respond to key / button / mouse events
-                                                    //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
-    bool            m_lost_control = false;         // Set to true when players should not have button control but have been assigned key_controls
+    bool            m_key_controls          { false };          // Set to true when object is a "player" and should respond to key / button / mouse events
+                                                                //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
+    bool            m_lost_control          { false };          // Set to true when players should not have button control but have been assigned key_controls
 
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
-    bool        m_dying = false;                            // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
-    bool        m_alive = true;                             // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
+    bool        m_dying                     { false };          // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
+    bool        m_alive                     { true };           // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
 
-    DrTime      m_damage_timer = Clock::now();              // Used to track last time this object was damaged to implement m_damage_delay
-    DrTime      m_death_timer =  Clock::now();              // Used to incorporate death_delay for object dying
-    DrTime      m_fade_timer =   Clock::now();              // Used to incorporate fade_delay for object fade / removal
+    DrTime      m_damage_timer              { Clock::now() };   // Used to track last time this object was damaged to implement m_damage_delay
+    DrTime      m_death_timer               { Clock::now() };   // Used to incorporate death_delay for object dying
+    DrTime      m_fade_timer                { Clock::now() };   // Used to incorporate fade_delay for object fade / removal
 
-    DrVec3      m_previous_position;                        // Previous frame position, updated every frame by update()
-    bool        m_flipped_x = false;                        // True when image is flipped (going left) over the x axis
-    bool        m_flipped_y = false;                        // True when image is flipped (going down) over the y axis
+    DrVec3      m_previous_position         { 0, 0, 0 };        // Previous frame position, updated every frame by update()
+    bool        m_flipped_x                 { false };          // True when image is flipped (going left) over the x axis
+    bool        m_flipped_y                 { false };          // True when image is flipped (going down) over the y axis
 
 public:
     // ***** Image Post Processing Attributes
-    bool        cast_shadows = true;                                // Will cast shadows when in front of a Light  
+    bool        cast_shadows                { true };           // Will cast shadows when in front of a Light
 
 
     // #################### FUNCTIONS ####################

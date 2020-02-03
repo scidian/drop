@@ -36,8 +36,8 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld  *m_world;                                    // Pointer to the parent DrEngineWorld
-    DrEngineThing  *m_thing;                                    // Pointer to the parent DrEngineThing
+    DrEngineWorld  *m_world     { nullptr };                    // Pointer to the parent DrEngineWorld
+    DrEngineThing  *m_thing     { nullptr };                    // Pointer to the parent DrEngineThing
 
     // Local Variables
     std::string     m_name;                                     // Name of this component
