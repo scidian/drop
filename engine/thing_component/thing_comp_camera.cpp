@@ -12,7 +12,6 @@
 #include "engine/world/engine_world.h"
 
 
-
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
@@ -28,6 +27,29 @@ ThingCompCamera::ThingCompCamera(DrEngineWorld *engine_world, DrEngineThing *par
 ThingCompCamera::~ThingCompCamera() {
 
 }
+
+
+//####################################################################################
+//##    Basic Virtual Component Functions
+//####################################################################################
+// Called when component is first created
+void ThingCompCamera::init() {
+
+}
+
+// Called during DrEngineWorld->updateWorld() step
+void ThingCompCamera::update(double time_passed, double time_warp) {
+    (void) time_passed;
+    (void) time_warp;
+
+}
+
+// Called when component is destroyed
+void ThingCompCamera::destroy() {
+
+}
+
+
 
 
 

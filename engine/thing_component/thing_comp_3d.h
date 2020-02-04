@@ -24,6 +24,7 @@ public:
     virtual ~ThingComp3D();
 
 
+    // #################### VARIABLES ####################
 private:
     // Thing Properties - 3D
     Convert_3D_Type     m_3d_type           { Convert_3D_Type::Extrusion };
@@ -35,6 +36,7 @@ private:
     double              m_rotate_y_speed    { 0.0 };                                // Y axis rotation speed
 
 
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
     virtual void    init();                                                         // Called when component is first created
@@ -42,6 +44,8 @@ public:
     virtual void    destroy();                                                      // Called when component is destroyed
 
 
+    // #################### INTERNAL FUNCTIONS ####################
+public:
     // Getters / Setters
     Convert_3D_Type         get3DType()             { return m_3d_type; }
     const double&           getAngleX()             { return m_angle_x; }                       // Returns Thing X Axis Rotation (in degrees)

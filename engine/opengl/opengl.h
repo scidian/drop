@@ -243,8 +243,6 @@ public:
     void            addTriangles(long triangles)    { m_triangles += triangles; }
     long            getTriangleCount()              { return m_triangles; }
 
-    // Soft Bodies
-    bool            calculateSoftBodyMesh(DrEngineObject *object, Body_Style body_style, Soft_Mesh_Style mesh_style);
 
 
 //####################################################################################

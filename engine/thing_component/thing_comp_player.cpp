@@ -35,6 +35,8 @@ void ThingCompPlayer::init() {
 
 // Called during DrEngineWorld->updateWorld() step
 void ThingCompPlayer::update(double time_passed, double time_warp) {
+    (void) time_passed;
+    (void) time_warp;
 
     if (signalList(Signals::MouseLeftDown).size() > 0) {
         thing()->hue = static_cast<float>(Dr::RandomDouble(0, 360));

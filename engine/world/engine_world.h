@@ -192,6 +192,16 @@ public:
     // Input
     ///DrPointF         mousePosition();                                    // Returns mouse world coordinate position
 
+    // Math
+    /// Comparison, Random, Vectors
+
+    // Logic
+    /// If Then, Loop
+
+    // Sound
+
+    // Timers
+
     // System
     ///std::string      device();                                           // Returns device name
     ///DrPointF         screenSize();                                       // Returns screen size of rendering window

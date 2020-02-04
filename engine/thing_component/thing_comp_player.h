@@ -24,6 +24,7 @@ public:
     virtual ~ThingCompPlayer();
 
 
+    // #################### VARIABLES ####################
 private:
     // Player Movement (if DrEngineObject has this component, its physics update callback function is PlayerUpdateVelocity)
     double          m_max_speed_x =  2000.0;        // Maximum speed x of object
@@ -68,7 +69,7 @@ private:
     Jump_State  m_jump_state = Jump_State::Need_To_Jump;    // Used by Engine Update to keep track of if the current jump button press has been processed
 
 
-
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
     virtual void    init();                                                         // Called when component is first created
@@ -76,6 +77,8 @@ public:
     virtual void    destroy();                                                      // Called when component is destroyed
 
 
+    // #################### INTERNAL FUNCTIONS ####################
+public:
     // Getters / Setters
     const double&   getMaxSpeedX()              { return m_max_speed_x; }
     const double&   getMaxSpeedY()              { return m_max_speed_y; }

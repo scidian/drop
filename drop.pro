@@ -248,7 +248,6 @@ SOURCES += \
     engine/opengl/opengl_render_fbo.cpp \
     engine/opengl/opengl_render_lights.cpp \
     engine/opengl/opengl_render_objects.cpp \
-    engine/opengl/opengl_render_soft_body.cpp \
     engine/opengl/opengl_render_space.cpp \
     engine/thing/engine_thing.cpp \
     engine/thing/engine_thing_fire.cpp \

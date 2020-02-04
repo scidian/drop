@@ -24,6 +24,7 @@ public:
     virtual ~ThingCompCamera();
 
 
+    // #################### VARIABLES ####################
 private:
     // Thing Properties - Camera
     long        m_active_camera         { c_no_key };                   // Set to ID of last camera that followed this object, c_no_key == no camera
@@ -37,6 +38,15 @@ private:
     std::map<Edge_Location, Frame_Edge> m_camera_edges;                 // Describes edges of camera frame
 
 
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
+public:
+    // Basic Component Events
+    virtual void    init();                                                         // Called when component is first created
+    virtual void    update(double time_passed, double time_warp);                   // Called during DrEngineWorld->updateWorld() step
+    virtual void    destroy();
+
+
+    // #################### INTERNAL FUNCTIONS ####################
 public:
     // Getters / Setters
     const long&             getActiveCameraKey()    { return m_active_camera; }

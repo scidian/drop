@@ -11,6 +11,9 @@
 #include "engine/engine_component.h"
 #include "engine/globals_engine.h"
 
+// Forward Declarations
+struct Vertex;
+
 
 //####################################################################################
 //##    ThingCompSoftBody
@@ -23,6 +26,8 @@ public:
     ThingCompSoftBody(DrEngineWorld *engine_world, DrEngineThing *parent_thing);
     virtual ~ThingCompSoftBody();
 
+
+    // #################### VARIABLES ####################
 public:
     // Soft Body Variables
     double                  height_width_ratio  { 1.0 };            // Stores ratio for rectangular bodies
@@ -44,6 +49,22 @@ public:
     std::vector<float>      m_soft_texture_coordinates;             // Used to keep the coordinates of rendering an entire texture as a soft body
     std::vector<float>      m_soft_barycentric;                     // Used to keep soft body textured quad barycentric coords
     int                     m_soft_triangles    { 0 };              // Stores number of triangles
+
+
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
+public:
+    // Basic Component Events
+    virtual void    init();                                                         // Called when component is first created
+    virtual void    update(double time_passed, double time_warp);                   // Called during DrEngineWorld->updateWorld() step
+    virtual void    destroy();
+
+
+    // #################### INTERNAL FUNCTIONS ####################
+public:
+    // Mesh Functions
+    void            addSoftTriangle(Vertex v1, Vertex v2, Vertex v3);
+    bool            calculateSoftBodyMesh(Body_Style body_style, Soft_Mesh_Style mesh_style);
+
 
 };
 
