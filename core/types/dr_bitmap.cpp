@@ -65,7 +65,7 @@ DrBitmap DrBitmap::copy(DrRect &copy_rect) {
         int source_y = copy_rect.top();
         for (int y = 0; y < copy.height; ++y) {
             copy.setPixel(x, y, this->getPixel(source_x, source_y));
-            source_y++;
+            ++source_y;
         }
         ++source_x;
     }

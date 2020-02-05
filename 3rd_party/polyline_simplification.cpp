@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "3rd_party/polyline_simplification.h"
+#include "core/dr_debug.h"
 #include "core/types/dr_pointf.h"
 
 
@@ -51,11 +52,8 @@ std::vector<DrPointF> PolylineSimplification::RamerDouglasPeucker(const std::vec
 
     if (point_list.size() < 2) {
         ///throw std::invalid_argument("Not enough points to simplify");
-        simplified.clear();
-        for (size_t i = 0; i < point_list.size(); i++) {
-            simplified.push_back(point_list[i]);
-        }
-        return simplified;
+        Dr::PrintDebug("Error in RamerDouglasPeucker line simplification: Not enough points to simplify!");
+        return point_list;
     }
 
     // Find the point with the maximum distance from line between start and end
@@ -81,8 +79,11 @@ std::vector<DrPointF> PolylineSimplification::RamerDouglasPeucker(const std::vec
         // Build the result list
         simplified.assign(recursive_results1.begin(), recursive_results1.end() - 1);
         simplified.insert(simplified.end(), recursive_results2.begin(), recursive_results2.end());
-        if (simplified.size() < 2)
-            throw std::runtime_error("Problem assembling output for Polyline Simplification...");
+        if (simplified.size() < 2) {
+            ///throw std::runtime_error("Problem assembling output for Polyline Simplification...");
+            Dr::PrintDebug("Error in RamerDouglasPeucker line simplification:Problem assembling output!");
+            return point_list;
+        }
 
     } else {
         //Just return start and end points

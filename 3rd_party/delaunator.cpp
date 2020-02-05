@@ -6,7 +6,7 @@
 //
 //
 #include "3rd_party/delaunator.h"
-
+#include "core/dr_debug.h"
 
 
 Delaunator::Delaunator(std::vector<double> const& in_coords)
@@ -93,7 +93,9 @@ Delaunator::Delaunator(std::vector<double> const& in_coords)
     }
 
     if (!(min_radius < std::numeric_limits<double>::max())) {
-        throw std::runtime_error("not triangulation");
+        ///throw std::runtime_error("not triangulation");
+        Dr::PrintDebug("Delaunator Error: Not triangulation!");
+        return;
     }
 
     double i2x = coords[2 * i2];

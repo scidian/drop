@@ -80,9 +80,9 @@ void DrView::dropEvent(QDropEvent *event) {
     if (stage == nullptr) return;
 
     // ***** Find Z Position to insert
-    double z_order = 0.0;
-    int  sub_order = 0;
-    int  thing_count = 0;
+    double z_order =     0.0;
+    int    sub_order =   0;
+    int    thing_count = 0;
     for (auto test_z : my_scene->getSelectionItemsAsThings()) {
         double test_z_order = test_z->getComponentPropertyValue(Comps::Thing_Layering, Props::Thing_Z_Order).toDouble();
         int  test_sub_order = test_z->getComponentPropertyValue(Comps::Thing_Layering, Props::Thing_Sub_Z_Order).toInt();

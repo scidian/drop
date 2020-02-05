@@ -41,17 +41,17 @@ void DrEngineVertexData::initializeExtrudedBitmap(const DrBitmap &bitmap, bool w
         std::vector<DrPointF> points = Dr::TraceImageOutline(image);
 
         // Smooth point list
-        points = smoothPoints( points, 5, 5.0, 0.5 );
+        points = smoothPoints( points, 5, 10.0, 0.5 );
 
         // Run Polyline Simplification algorithm
-        points = PolylineSimplification::RamerDouglasPeucker(points, 0.1);
+        points = PolylineSimplification::RamerDouglasPeucker(points, 0.15);
 
         // Check winding
         HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
 
         // Old Way of Simplifying Points on Similar Slopes
         ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
-        ///points = simplifyPoints(points, 0.030,     5, true);             // First run with averaging points to reduce triangles among similar slopes
+        ///points = simplifyPoints(points, 0.030,     5, true );            // First run with averaging points to reduce triangles among similar slopes
         ///points = simplifyPoints(points, 0.001, split, false);            // Run again with smaller tolerance to reduce triangles along straight lines
 
         // ***** Copy image and finds holes as seperate outlines
@@ -194,7 +194,8 @@ const double c_smooth_min_size = 50.0;
 
 // Smooths points, neighbors is in each direction (so 1 is index +/- 1 more point in each direction
 std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight) {
-    std::vector<DrPointF> smooth_points;
+    std::vector<DrPointF> smooth_points { };
+    if (outline_points.size() < 1) return smooth_points;
 
     // Check size of polygon, accomodate smoothing for small images
     double x_min = outline_points[0].x;
@@ -222,8 +223,8 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
         return smooth_points;
     }
 
-    // Go through and smooth the points (simple average)
-    const double c_sharp_angle = 120.0;
+    // Go through and smooth the points (simple average), don't smooth angles less than 110 degrees
+    const double c_sharp_angle = 110.0;
 
     for (int i = 0; i < static_cast<int>(outline_points.size()); i++) {
         // Current Point
@@ -267,7 +268,7 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
             // Skip point we're on from adding into average, already added it
             if (j != i) {
                 DrPointF check_point = pointAt(outline_points, j);
-                if (QLineF(this_point.x, this_point.y, check_point.x, check_point.y).length() < neighbor_distance) {
+                if (this_point.distance(check_point) < neighbor_distance) {
                     x += (check_point.x * weight * angle_reduction);
                     y += (check_point.y * weight * angle_reduction);
                     total_used +=        (weight * angle_reduction);

@@ -27,21 +27,14 @@ namespace Dr
 DrBitmap BlackAndWhiteFromAlpha(const DrBitmap &bitmap, double alpha_tolerance, bool inverse) {
     DrColor color1 = Dr::transparent;
     DrColor color2 = Dr::white;
-    if (inverse) {
-        color1 = Dr::white;
-        color2 = Dr::transparent;
-    }
+    if (inverse) Dr::Swap(color1, color2);
 
     DrBitmap black_white(bitmap);
     int alpha_i = static_cast<int>(alpha_tolerance * 255.0);
 
     for (int x = 0; x < bitmap.width; ++x) {
         for (int y = 0; y < bitmap.height; ++y) {
-            if (bitmap.getPixel(x, y).alpha() < alpha_i) {
-                black_white.setPixel(x, y, color1);
-            } else {
-                black_white.setPixel(x, y, color2);
-            }
+            black_white.setPixel(x, y, ((bitmap.getPixel(x, y).alpha() < alpha_i) ? color1 : color2));
         }
     }
     return black_white;
@@ -202,37 +195,71 @@ void FillBorder(DrBitmap &bitmap, DrColor fill_color, DrRect rect) {
 //##            Black where around the ouside of of the object, and the object itself is white.
 //##        Rects of images are returned in 'rects'
 //####################################################################################
+#define INVERTED_COLORS     true
+
 int FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, std::vector<DrRect> &rects, double alpha_tolerance, bool convert) {
     DrBitmap     black_white;
-    if (convert) black_white = BlackAndWhiteFromAlpha(bitmap, alpha_tolerance, true);
+    if (convert) black_white = BlackAndWhiteFromAlpha(bitmap, alpha_tolerance, INVERTED_COLORS);
     else         black_white = bitmap;
 
-    // Loop through every pixel in image, if we find a spot that has an object,
-    // flood fill that spot and add the resulting image shape to the array of object images
     DrColor compare(Dr::transparent);
-    int object_count = 0;
 
-    for (int x = 0; x < black_white.width; ++x) {
-        for (int y = 0; y < black_white.height; ++y) {
-            if (black_white.getPixel(x, y) == compare) {
-                DrRect      rect;
-                int         flood_pixel_count;
-                DrBitmap    flood_fill = FloodFill(black_white, x, y, Dr::red, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
+    // If convert is true, all object pixels will be transparent pixels. If all pixels are transparent we don't need to fill, we can
+    // just return a solid square later on and not have to run expensive flood fill routine
+    bool pixels = false;
+    if (convert == true) {
+        for (int x = 0; x < black_white.width; ++x) {
+            for (int y = 0; y < black_white.height; ++y) {
+                if (black_white.getPixel(x, y) != compare) {
+                    pixels = true;
+                    break;
+                }
+            }
+            if (pixels) break;
+        }
+    }
 
-                if (flood_pixel_count > 1) {
-                    rects.push_back( rect );
-                    bitmaps.push_back( flood_fill );
+    // There are transparent pixels, we need to run flood fill routines to isolate objects
+    if (pixels || convert == false) {
+        // Loop through every pixel in image, if we find a spot that has an object,
+        // flood fill that spot and add the resulting image shape to the array of object images
+        for (int x = 0; x < black_white.width; ++x) {
+            for (int y = 0; y < black_white.height; ++y) {
+                if (black_white.getPixel(x, y) == compare) {
+                    DrRect      rect;
+                    int         flood_pixel_count;
+                    DrBitmap    flood_fill = FloodFill(black_white, x, y, Dr::red, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
+
+                    if (flood_pixel_count > 1) {
+                        rects.push_back( rect );
+                        bitmaps.push_back( flood_fill );
+                    }
                 }
             }
         }
+
+    // No non-object pixels, fill with Dr::red and return
+    } else {
+        if (black_white.width > 0 && black_white.height > 0) {
+            for (int x = 0; x < black_white.width; ++x) {
+                for (int y = 0; y < black_white.height; ++y) {
+                    black_white.setPixel(x, y, Dr::red);
+                }
+            }
+            rects.push_back( black_white.rect() );
+            bitmaps.push_back( black_white );
+        }
     }
-    return object_count;
+
+    return static_cast<int>(bitmaps.size());
 }
 
 
 
 //####################################################################################
-//##    Returns a clockwise list of points representing an alpha outline of an image
+//##    Returns a clockwise list of points representing an alpha outline of an image.
+//##    This algorithm works by moving around the image in a clockwise manner trying to stay
+//##    on the largest angle between two points. Idea and code written by Scidian Software.
 //##        !!!!! #NOTE: Image passed in should be black and white,
 //##                     probably from DrImageing::BlackAndWhiteFromAlpha()
 //####################################################################################
@@ -248,7 +275,7 @@ std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap) {
     int border_pixel_count = 0;
 
     // Initialize point array, verify image size
-    std::vector<DrPoint> points; points.clear();
+    std::vector<DrPoint> points { };
     if (bitmap.width < 1 || bitmap.height < 1) return std::vector<DrPointF> { };
 
     // ***** Find starting point, and also set processed image bits

@@ -29,14 +29,14 @@ public:
     DrPolygonF(const DrPolygonF &polygon);
 
     // Access
-    const std::vector<DrPointF>& points()   { return m_points; }
+    const std::vector<DrPointF>& points()       { return m_points; }
 
     // Info
-    bool            isEmpty() const        { return (m_points.size() == 0); }
-    long            numberOfPoints() const { return static_cast<long>(m_points.size()); }
+    bool            isEmpty() const             { return (m_points.size() == 0); }
+    long            numberOfPoints() const      { return static_cast<long>(m_points.size()); }
 
     // Manangement
-    void            clear()                { m_points.clear(); }
+    void            clear()                     { m_points.clear(); }
 
     // Polygon / Line Functions
     static bool                 onSegment(DrPointF line_a, DrPointF point, DrPointF line_b);

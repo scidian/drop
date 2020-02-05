@@ -7,7 +7,10 @@
 //
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/polyline_simplification.h"
+#include "core/dr_debug.h"
 #include "core/imaging/imaging.h"
+#include "engine/mesh/engine_mesh.h"
+#include "engine/mesh/engine_vertex_data.h"
 #include "project/properties/property_collision.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
@@ -26,15 +29,14 @@ DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap) {
     Dr::FindObjectsInBitmap(bitmap, bitmaps, rects, 0.9);
 
     // ***** Creates a box polygon for use with complicated / not complicated enough images
-    std::vector<DrPointF> box;
-    box.clear();
+    std::vector<DrPointF> box { };
     box.push_back( DrPointF(0,                0) );
     box.push_back( DrPointF(bitmap.width - 1, 0) );
     box.push_back( DrPointF(bitmap.width - 1, bitmap.height - 1) );
     box.push_back( DrPointF(0,                bitmap.height - 1) );
 
     // ***** Go through each image (object) and Polygon for it
-    if (bitmaps.size() < 50) {
+    ///if (bitmaps.size() < 50) {
         for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
             DrBitmap &image = bitmaps[image_number];
             if (image.width < 1 || image.height < 1) continue;
@@ -75,7 +77,7 @@ DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap) {
             // Add polygon to list of polygons in shape
             shapes.addPolygon( points );
         }
-    }
+    ///}
 
     // If we don't have polygons by this point, just add a simple box
     if (shapes.getPolygons().size() < 1) {
