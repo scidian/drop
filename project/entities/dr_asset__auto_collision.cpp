@@ -50,9 +50,13 @@ DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap) {
                 point.y = point.y * plus_one_pixel_percent_y;
             }
 
-            // Run Polyline Simplification algorithm
-            std::vector<DrPointF> simple_points;
-            simple_points = PolylineSimplification::RamerDouglasPeucker(points, 2.0);
+            // Run Polyline Simplification algorithm, keep running until collision shape polygon has less than 100 points
+            std::vector<DrPointF> simple_points = points;
+            double simple_tolerance = 2.0;
+            do {
+                simple_points = PolylineSimplification::RamerDouglasPeucker(simple_points, simple_tolerance);
+                simple_tolerance = std::pow(simple_tolerance, 2.0);
+            } while (simple_points.size() > 100);
 
             // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
             if ((simple_points.size() < 4)) {

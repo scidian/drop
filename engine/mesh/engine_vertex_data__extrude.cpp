@@ -41,10 +41,10 @@ void DrEngineVertexData::initializeExtrudedBitmap(const DrBitmap &bitmap, bool w
         std::vector<DrPointF> points = Dr::TraceImageOutline(image);
 
         // Smooth point list
-        points = smoothPoints( points, 5, 10.0, 0.5 );
+        points = smoothPoints( points, 5, 5.0, 0.5 );
 
         // Run Polyline Simplification algorithm
-        points = PolylineSimplification::RamerDouglasPeucker(points, 0.15);
+        points = PolylineSimplification::RamerDouglasPeucker(points, 0.1);
 
         // Check winding
         HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
