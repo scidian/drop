@@ -11,6 +11,10 @@
 
 #include <random>
 
+// Forward Declarations
+class DrColor;
+
+
 namespace Dr {
 
 
@@ -18,11 +22,13 @@ namespace Dr {
     //##    Random Functions
     //############################
     /// @brief: Returns a number between lower (inclusive) and upper (exclusive)
-    int     RandomInt(int lower, int upper);
+    int         RandomInt(int lower, int upper);
     /// @brief: Returns a number between lower (inclusive) and upper (inclusive)
-    double  RandomDouble(double lower, double upper);
+    double      RandomDouble(double lower, double upper);
     /// @brief: Returns a random boolean
-    bool    RandomBool();
+    bool        RandomBool();
+    /// @brief: Returns a random DrColor, fully opaque
+    DrColor     RandomColor();                              // Also declared in core/colors/colors.h
 
 
 }   // End namespace Dr

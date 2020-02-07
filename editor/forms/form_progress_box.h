@@ -36,6 +36,7 @@ private:
     QWidget        *m_inner_widget          { nullptr };                // Container widget, allows for a double form border
     QLabel         *m_info_text             { nullptr };                // Working text
     QProgressBar   *m_progress_bar          { nullptr };                // Progress bar...
+    QTimer         *m_color_timer           { nullptr };                // Timer that updates progress bar colors
 
     // Progress Variables
     double          m_show_if_longer_than   { 2.0 };                    // Don't show form if calculated time is less than this many seconds
@@ -54,9 +55,9 @@ public:
 
     // Progress Functions
     void            setInfoText(QString info_text);
-    void            setShowIfWaitIsLongerThan(double seconds)           { m_show_if_longer_than = seconds; }
+    void            setShowIfWaitIsLongerThan(double seconds)       { m_show_if_longer_than = seconds; }
     void            setValue(int new_value);
-    bool            wasCanceled();
+    bool            wasCanceled()                                   { return m_canceled; }
 
 
 public slots:

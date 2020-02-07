@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 
 #include "core/colors/colors.h"
+#include "core/dr_random.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_blank.h"
 #include "editor/forms/form_progress_box.h"
@@ -102,16 +103,19 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     layout->addWidget(m_inner_widget);
 
     // ***** Timer to update progress bar colors
-    QTimer *color_timer = new QTimer(this);
-    connect(color_timer, SIGNAL(timeout()), this, SLOT(updateColors()));
-    color_timer->start(30);
+    m_color_timer = new QTimer();
+    connect(m_color_timer, SIGNAL(timeout()), this, SLOT(updateColors()));
+    m_color_timer->start(30);
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
 
-FormProgressBox::~FormProgressBox() { }
+FormProgressBox::~FormProgressBox() {
+    m_color_timer->stop();
+    m_color_timer->deleteLater();
+}
 
 
 //####################################################################################
@@ -132,8 +136,6 @@ void FormProgressBox::resizeEvent(QResizeEvent *event) {
 // Updates working text
 void FormProgressBox::setInfoText(QString info_text) {
     m_info_text->setText(info_text);
-    update();
-    qApp->processEvents();
 }
 
 // Updates progress bar, shows form if its going to take longer than 2 seconds
@@ -146,21 +148,26 @@ void FormProgressBox::setValue(int new_value) {
         double time_required = seconds_ellapsed * (1.0 / percent);
         if (time_required > m_show_if_longer_than) {
             this->show();
-            qApp->processEvents();
         }
     }
 
     // Also, if longer than desired minimum time, so show this progress box
     if (this->isVisible() == false && seconds_ellapsed > m_show_if_longer_than) {
         this->show();
-        qApp->processEvents();
     }
 
     // Update Progress Bar
-    m_progress_bar->setValue(new_value);
+    if (m_progress_bar->value() != new_value) {
+        m_progress_bar->setValue(new_value);
+    }
 
     // Close If Complete
-    if (m_progress_bar->value() == m_progress_bar->maximum()) this->close();
+    if (m_progress_bar->value() == m_progress_bar->maximum()) {
+        this->close();
+    }
+
+    update();
+    qApp->processEvents();
 }
 
 // SLOT: Updates Progress Bar Colors
@@ -191,12 +198,6 @@ void FormProgressBox::updateColors() {
     qApp->processEvents();
 }
 
-// Checks for cancelation, processes events, updates
-bool FormProgressBox::wasCanceled() {
-    update();
-    qApp->processEvents();
-    return m_canceled;
-}
 
 
 

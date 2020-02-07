@@ -46,10 +46,10 @@ QString CurrentTimeAsString() {
 // Pauses application for millseconds
 void Sleep(int milliseconds) {
     if (milliseconds < 0) return;
-    #ifdef Q_OS_WIN
+    #if defined(Q_OS_WIN)
         Sleep(uint(milliseconds));
-    #else
-        struct timespec ts = { milliseconds / 1000, (milliseconds % 1000) * 1000 * 1000 };
+    #elif defined(Q_OS_UNIX)
+        timespec ts = { milliseconds / 1000, (milliseconds % 1000) * 1000 * 1000 };
         nanosleep(&ts, nullptr);
     #endif
 }

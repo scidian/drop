@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QApplication>
 #include <QButtonGroup>
 #include <QDebug>
 #include <QMenu>
@@ -12,6 +13,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
+#include "core/dr_random.h"
 #include "editor/event_filters.h"
 #include "editor/form_main/form_main.h"
 #include "editor/forms/form_blank.h"
@@ -250,13 +252,20 @@ void FormMain::buildToolBar() {
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
             FormProgressBox *progress_box = new FormProgressBox("Detecting Image Shape...", "Cancel", 0, 1000, this);
+            progress_box->setShowIfWaitIsLongerThan(0.25);
             for (int i = 0; i <= 1000; ++i) {
-                Dr::Sleep(8);
-                if (progress_box->wasCanceled()) break;
-                progress_box->setValue(i);
+                Dr::Sleep(3);
                 if (i % 10 == 0) {
+                    if (Dr::RandomInt(0, 8) == 3) {
+                        for (int j = 0; j < Dr::RandomDouble(100000, 100000000); j++) {
+                            double d = sqrt(j);
+                            d = std::pow(d, 2.0);
+                        }
+                    }
                     progress_box->setInfoText("Detecting Image Shape...  " + QString::number(i / 10) + "% ");
                 }
+                progress_box->setValue(i);
+                if (progress_box->wasCanceled()) break;
             }
             progress_box->close();
         });

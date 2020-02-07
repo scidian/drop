@@ -60,7 +60,7 @@ namespace Dr {
 
     // ***** Color Helper Functions
     bool            IsSameColor(const DrColor &color1, const DrColor &color2, double tolerance);
-    DrColor         RandomColor();
+    DrColor         RandomColor();                              // Also declared in core/dr_random.h
 
     // ***** Style Functions
     std::string     BorderWidth();                              // Project wide border width for Style Sheets, as String
