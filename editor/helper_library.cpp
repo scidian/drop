@@ -14,6 +14,10 @@
 
 #include <cmath>
 
+#ifdef Q_OS_WIN
+#include <windows.h> // for Sleep
+#endif
+
 #include "core/colors/colors.h"
 #include "core/dr_math.h"
 #include "core/types/dr_variant.h"
@@ -39,6 +43,16 @@ QString CurrentTimeAsString() {
     return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
 }
 
+// Pauses application for millseconds
+void Sleep(int milliseconds) {
+    if (milliseconds < 0) return;
+    #ifdef Q_OS_WIN
+        Sleep(uint(milliseconds));
+    #else
+        struct timespec ts = { milliseconds / 1000, (milliseconds % 1000) * 1000 * 1000 };
+        nanosleep(&ts, nullptr);
+    #endif
+}
 
 
 //####################################################################################

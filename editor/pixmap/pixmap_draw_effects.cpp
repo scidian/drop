@@ -11,7 +11,6 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QRgb>
-#include <QTime>
 #include <QVector2D>
 #include <QVector3D>
 

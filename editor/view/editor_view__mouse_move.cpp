@@ -8,7 +8,6 @@
 #include <QtMath>
 #include <QDebug>
 #include <QMouseEvent>
-#include <QTimer>
 
 #include "core/colors/colors.h"
 #include "core/dr_string.h"

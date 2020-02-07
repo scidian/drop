@@ -22,6 +22,7 @@
 FormExpire::FormExpire(QWidget *parent) : QMainWindow(parent) {
 
     // ***** Set up initial window
+    this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
     this->setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     this->setWindowModality(Qt::NonModal);

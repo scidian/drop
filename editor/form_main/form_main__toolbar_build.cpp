@@ -6,6 +6,7 @@
 //
 //
 #include <QButtonGroup>
+#include <QDebug>
 #include <QMenu>
 #include <QRadioButton>
 #include <QToolBar>
@@ -16,6 +17,7 @@
 #include "editor/forms/form_blank.h"
 #include "editor/forms/form_fonts.h"
 #include "editor/forms/form_popup.h"
+#include "editor/forms/form_progress_box.h"
 #include "editor/forms/form_settings.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
@@ -247,13 +249,23 @@ void FormMain::buildToolBar() {
         tool = createToolbarButton(QStringLiteral("buttonImageViewer"), Advisor_Info::Settings_Image_Viewer, c_button_size_w, c_button_size_h, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormBlank *blank_form = new FormBlank(m_project, this);
-            blank_form->show();
+            FormProgressBox *progress_box = new FormProgressBox("Detecting Image Shape...", "Cancel", 0, 1000, this);
+            for (int i = 0; i <= 1000; ++i) {
+                Dr::Sleep(3);
+                if (progress_box->wasCanceled()) break;
+                progress_box->setValue(i);
+                if (i % 10 == 0) {
+                    progress_box->setInfoText("Detecting Image Shape...  " + QString::number(i / 10) + "% ");
+                }
+            }
+            progress_box->close();
         });
 
         tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), Advisor_Info::Settings_Font_Builder, c_button_size_w, c_button_size_h, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
+            ///FormBlank *blank_form = new FormBlank(m_project, this);
+            ///blank_form->show();
             FormFonts *font_editor = new FormFonts(m_project, this);
             font_editor->show();
         });

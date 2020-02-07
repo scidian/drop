@@ -31,6 +31,7 @@ namespace Dr {
 
     // ***** Time Functions
     QString     CurrentTimeAsString();
+    void        Sleep(int milliseconds);
 
 
     // ***** Comparison Functions

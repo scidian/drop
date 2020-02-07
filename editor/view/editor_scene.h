@@ -11,7 +11,6 @@
 #include <QElapsedTimer>
 #include <QGraphicsScene>
 #include <QMutex>
-#include <QTime>
 #include <QTreeWidgetItem>
 #include <QUndoStack>
 

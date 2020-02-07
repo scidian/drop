@@ -27,11 +27,11 @@ FormAbout::FormAbout(DrProject *project, QWidget *parent) : QWidget(parent) {
     m_project = project;
 
     // ***** Set up initial window
-    this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-    this->setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
-    this->setObjectName(QStringLiteral("childForm"));
-    this->setWindowModality(Qt::WindowModality::ApplicationModal);
-    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
+    setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose);
+    setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
+    setObjectName(QStringLiteral("childForm"));
+    setWindowModality(Qt::WindowModality::ApplicationModal);
+    setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Builds FormAbout
     buildForm();

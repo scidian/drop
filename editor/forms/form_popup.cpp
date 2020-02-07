@@ -29,7 +29,6 @@ FormPopup::FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use
 
     // ***** Set up initial window
     this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-
     this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
     this->setWindowFlag(Qt::WindowType::Popup);
     this->setFixedSize(QSize(50, 50));

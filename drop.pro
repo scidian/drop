@@ -150,6 +150,7 @@ SOURCES += \
     editor/forms/form_popup__add_entity.cpp \
     editor/forms/form_popup__grid_snap.cpp \
     editor/forms/form_popup_colors.cpp \
+    editor/forms/form_progress_box.cpp \
     editor/forms/form_settings.cpp \
     editor/helper_library.cpp \
     editor/pixmap/pixmap_draw.cpp \
@@ -946,6 +947,7 @@ HEADERS += \
     editor/forms/form_expire.h \
     editor/forms/form_fonts.h \
     editor/forms/form_popup.h \
+    editor/forms/form_progress_box.h \
     editor/forms/form_settings.h \
     editor/helper_library.h \
     editor/pixmap/pixmap.h \

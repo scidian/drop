@@ -28,6 +28,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     m_project = project;
 
     // ***** Set up initial window
+    setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
 
     setMinimumSize(QSize(200, 200));

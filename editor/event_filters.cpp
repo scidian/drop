@@ -12,7 +12,6 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QMenu>
-#include <QTime>
 
 #include "core/colors/colors.h"
 #include "editor/event_filters.h"

@@ -11,7 +11,6 @@
 #include <QPixmap>
 #include <QRgb>
 #include <QStandardPaths>
-#include <QTime>
 #include <QVector2D>
 
 #include "core/colors/colors.h"
