@@ -13,6 +13,7 @@
 
 #include "editor/event_filters.h"
 #include "editor/forms/form_expire.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 
 

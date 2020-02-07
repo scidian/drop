@@ -104,14 +104,14 @@ void LoadCustomFonts() {
 }
 
 // Returns custom font family
-QString FontFamily() { return (l_font_id >= 0) ? l_font_family : "Arial"; }
+QString FontFamily()    { return (l_font_id >= 0) ? l_font_family : "Arial"; }
 
 // Project wide font size
-int FontSize()  { return 11; }
+int FontSize()          { return 11; }
 
-QFont CustomFont() {
+QFont CustomFont(int add_points) {
     QFont font(FontFamily());
-    font.setPointSize(FontSize());
+    font.setPointSize(FontSize() + add_points);
     return font;
 }
 

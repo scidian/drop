@@ -10,6 +10,7 @@
 
 #include "editor/event_filters.h"
 #include "editor/forms/form_fonts.h"
+#include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "project/dr_project.h"
 

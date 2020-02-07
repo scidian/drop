@@ -45,7 +45,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setWindowModality(Qt::WindowModality::ApplicationModal);
-    setMinimumSize(QSize(300, 180));
+    setMinimumSize(QSize(300, 150));
     setObjectName(QStringLiteral("childForm"));
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
@@ -58,9 +58,13 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     QVBoxLayout *inner_layout = new QVBoxLayout(m_inner_widget);
 
         m_info_text = new QLabel(info_text);
-            m_info_text->setFixedHeight(80);
+            std::string label_style = " QLabel { color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; } ";
+            m_info_text->setStyleSheet(QString::fromStdString(label_style));
+            m_info_text->setFixedHeight(50);
             m_info_text->setAlignment(Qt::AlignmentFlag::AlignCenter);
-            m_info_text->setFont(Dr::CustomFontLarger());
+            QFont label_font = Dr::CustomFont(1);
+                  label_font.setBold(true);
+            m_info_text->setFont(label_font);
         inner_layout->addWidget(m_info_text);
 
         m_progress_bar = new QProgressBar();
@@ -68,19 +72,22 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
             m_progress_bar->setTextVisible(false);
             std::string style;
             style +=    " QProgressBar          { "
-                        "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 16px; border-radius: 4px; "
+                        "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
                         "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; } ";
                         ///"    background-image:url(:/assets/textures/fire_noise.png);  } ";
             style +=    " QProgressBar::chunk { border-radius: 4px; background: transparent; } ";
                         ///"    background:url(:/assets/textures/fire_noise.jpg); } ";
             m_progress_bar->setStyleSheet(QString::fromStdString(style));
+        inner_layout->addStretch();
         inner_layout->addWidget(m_progress_bar);
 
         QWidget *button_holder = new QWidget();
             QHBoxLayout *button_spacer = new QHBoxLayout(button_holder);
             button_spacer->addStretch();
 
-            QPushButton *cancel = new QPushButton("   " + cancel_button_text + "   ");
+            QPushButton *cancel = new QPushButton("  " + cancel_button_text + "  ");
+            ///cancel->setFixedHeight(22);
+            ///cancel->setFont(label_font);
             Dr::ApplyDropShadowByType(cancel, Shadow_Types::Button_Shadow);
             cancel->setObjectName(QStringLiteral("button"));
 
@@ -151,7 +158,7 @@ void FormProgressBox::setValue(int new_value) {
     // Update Style Sheet
     std::string style;
     style +=    " QProgressBar          { "
-                "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 16px; border-radius: 4px; "
+                "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
                 "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; } ";
     style +=    " QProgressBar::chunk { "
                 "       border-radius: 4px; "

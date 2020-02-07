@@ -13,6 +13,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_settings.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"

@@ -40,7 +40,7 @@ namespace Dr {
 
 
     // ***** Custom Font Functions
-    QFont       CustomFont();
+    QFont       CustomFont(int add_points = 0);
     QFont       CustomFontLarger();
     QString     FontFamily();
     int         FontSize();
