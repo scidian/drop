@@ -251,7 +251,7 @@ void FormMain::buildToolBar() {
         connect(tool, &QPushButton::clicked, [this] () {
             FormProgressBox *progress_box = new FormProgressBox("Detecting Image Shape...", "Cancel", 0, 1000, this);
             for (int i = 0; i <= 1000; ++i) {
-                Dr::Sleep(3);
+                Dr::Sleep(8);
                 if (progress_box->wasCanceled()) break;
                 progress_box->setValue(i);
                 if (i % 10 == 0) {

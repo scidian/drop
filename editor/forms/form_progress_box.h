@@ -23,9 +23,12 @@ class DrProject;
 //############################
 class FormProgressBox : public QWidget
 {
+    Q_OBJECT
+
 public:
     // Constructor / Destructor
     FormProgressBox(QString info_text = "Working...", QString cancel_button_text = "Cancel", int min = 0, int max = 100, QWidget *parent = nullptr);
+    virtual ~FormProgressBox() override;
 
 
 private:
@@ -54,6 +57,10 @@ public:
     void            setShowIfWaitIsLongerThan(double seconds)           { m_show_if_longer_than = seconds; }
     void            setValue(int new_value);
     bool            wasCanceled();
+
+
+public slots:
+    void            updateColors();
 
 };
 

@@ -63,6 +63,12 @@ class FormMain : public QMainWindow, public IEditorRelay
 {
     Q_OBJECT
 
+public:
+    // Constructor / Destructor
+    explicit FormMain(QWidget *parent = nullptr, std::string file_to_open = "");
+    virtual ~FormMain() override;
+
+
 private:
     // ***** Local Variables
     DrProject              *m_project = nullptr;                                    // BASE DEFINITION of DrProject!!!!! Holds current open game project
@@ -126,10 +132,6 @@ private:
 
 
 public:
-    // Constructor / Destructor
-    explicit FormMain(QWidget *parent = nullptr, std::string file_to_open = "");
-    virtual ~FormMain() override;
-
     // Misc functions
     void                setLabelText(Label_Names label_name, QString new_text);
 
@@ -220,15 +222,15 @@ private slots:
     void            buttonGroupMouseClicked(int id);
     void            buttonGroupToggleClicked(int id);
 
-    void        buildSceneAfterWaiting(long stage_key);
+    void            buildSceneAfterWaiting(long stage_key);
 
-    void        centerViewTimer(QPointF center_point);
-    void        editMenuAboutToShow();
-    void        editMenuAboutToHide();
+    void            centerViewTimer(QPointF center_point);
+    void            editMenuAboutToShow();
+    void            editMenuAboutToHide();
 
 signals:
     // Undo Stack Signals
-    void        newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
+    void            newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
 
 };
 

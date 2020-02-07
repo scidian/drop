@@ -101,10 +101,17 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
 
     layout->addWidget(m_inner_widget);
 
+    // ***** Timer to update progress bar colors
+    QTimer *color_timer = new QTimer(this);
+    connect(color_timer, SIGNAL(timeout()), this, SLOT(updateColors()));
+    color_timer->start(30);
+
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
+
+FormProgressBox::~FormProgressBox() { }
 
 
 //####################################################################################
@@ -132,11 +139,11 @@ void FormProgressBox::setInfoText(QString info_text) {
 // Updates progress bar, shows form if its going to take longer than 2 seconds
 void FormProgressBox::setValue(int new_value) {
     double percent = static_cast<double>(new_value - m_start_value) / static_cast<double>(m_end_value - m_start_value);
-    double seconds_ellasped = m_start_time.elapsed() / 1000.0;
+    double seconds_ellapsed = m_start_time.elapsed() / 1000.0;
 
     // If we've done 1 percent, see if this is going to take longer than desired minimum time, if so show this progress box
     if (this->isVisible() == false && percent > 0.01) {
-        double time_required = seconds_ellasped * (1.0 / percent);
+        double time_required = seconds_ellapsed * (1.0 / percent);
         if (time_required > m_show_if_longer_than) {
             this->show();
             qApp->processEvents();
@@ -144,7 +151,7 @@ void FormProgressBox::setValue(int new_value) {
     }
 
     // Also, if longer than desired minimum time, so show this progress box
-    if (this->isVisible() == false && seconds_ellasped > m_show_if_longer_than) {
+    if (this->isVisible() == false && seconds_ellapsed > m_show_if_longer_than) {
         this->show();
         qApp->processEvents();
     }
@@ -154,8 +161,18 @@ void FormProgressBox::setValue(int new_value) {
 
     // Close If Complete
     if (m_progress_bar->value() == m_progress_bar->maximum()) this->close();
+}
 
-    // Update Style Sheet
+// SLOT: Updates Progress Bar Colors
+void FormProgressBox::updateColors() {
+    double percent = static_cast<double>(m_progress_bar->value() - m_start_value) / static_cast<double>(m_end_value - m_start_value);
+    double seconds_ellapsed = m_start_time.elapsed() / 1000.0;                                          // Get time passed since progress bar start
+    double hw_ratio = m_progress_bar->geometry().width() / m_progress_bar->geometry().height();         // Get widget width to height ratio
+    double pixel_w =  15.00 / m_progress_bar->geometry().width()  / (percent * 0.5);                    // Set inital pixel width of gradient
+    double pixel_h =  pixel_w/hw_ratio/percent;                                                         // Apply gradient to y axis
+    double offset = -(seconds_ellapsed/8.0) / percent;                                                  // Adjust gradient start by time to animate
+
+    // Update Style Sheet to Animate Progress Bar
     std::string style;
     style +=    " QProgressBar          { "
                 "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
@@ -163,14 +180,13 @@ void FormProgressBox::setValue(int new_value) {
     style +=    " QProgressBar::chunk { "
                 "       border-radius: 4px; "
                 "       background: qlineargradient(spread:reflect, "
-                                        " x1:" + std::to_string( 0.0 ) + ", "
-                                        " y1:" + std::to_string( 0.0 ) +
-                                        " x2:" + std::to_string( 0.018 / (percent / 4.0) ) +
-                                        " y2:" + std::to_string( 0.006 /  percent) + ", "
+                                        " x1:" + std::to_string( offset + 0.0 ) + ", "
+                                        " y1:" + std::to_string( offset + 0.0 ) +
+                                        " x2:" + std::to_string( offset + pixel_w ) +
+                                        " y2:" + std::to_string( offset + pixel_h ) + ", "
                 "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark ).darker( 120).name() + ", "
                 "                   stop:1 " + Dr::GetColor(Window_Colors::Icon_Light).lighter(120).name() + "); } ";
     m_progress_bar->setStyleSheet(QString::fromStdString(style));
-
     update();
     qApp->processEvents();
 }
