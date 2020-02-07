@@ -69,20 +69,20 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Jump) {
-//        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
-//        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
-//        ball1->setDepth(30);
-//        addThing(ball1);
-//        ball1->setCameraPositionXY( DrPointF(0, 50) );
-//        assignPlayerControls(ball1, true, true);
-//        ball1->setJumpCount( 1 );
-//        ball1->setCanAirJump( false );
-//        ball1->setCanWallJump( true );
-//        ball1->setHealth( 80.0 );
-//        ///ball1->setDeathTouch( true );
-//        ball1->setMoveSpeedY( 300 );
-//        ball1->setTouchDrag(true);
-//        ball1->setTouchDragForce(2000.0);
+        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
+        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+        addThing(ball1);
+        assignPlayerControls(ball1, true, true);
+        ball1->comp3D()->setDepth(30);
+        ball1->compCamera()->setCameraPositionXY( DrPointF(0, 50) );
+        ball1->compPlayer()->setJumpCount( 1 );
+        ball1->compPlayer()->setCanAirJump( false );
+        ball1->compPlayer()->setCanWallJump( true );
+        ball1->setHealth( 80.0 );
+        ///ball1->setDeathTouch( true );
+        ball1->compPlayer()->setMoveSpeedY( 300 );
+        ball1->setTouchDrag(true);
+        ball1->setTouchDragForce(2000.0);
 
 //        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
 //        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);

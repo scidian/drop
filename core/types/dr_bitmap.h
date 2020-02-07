@@ -14,6 +14,7 @@
 
 // Forward Declarations
 class DrColor;
+class DrPolygonF;
 class DrRect;
 
 // Local constants
@@ -47,6 +48,7 @@ public:
     // Manipulation
     DrBitmap    copy();
     DrBitmap    copy(DrRect &copy_rect);
+    DrPolygonF  polygon() const;
     DrRect      rect() const;
     DrColor     getPixel(int x, int y) const;
     void        setPixel(int x, int y, DrColor color);

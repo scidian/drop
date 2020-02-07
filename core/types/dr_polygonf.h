@@ -36,6 +36,7 @@ public:
     long            numberOfPoints() const      { return static_cast<long>(m_points.size()); }
 
     // Manangement
+    void            addPoint(DrPointF point);
     void            clear()                     { m_points.clear(); }
 
     // Polygon / Line Functions

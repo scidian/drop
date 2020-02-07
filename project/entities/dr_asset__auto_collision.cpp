@@ -21,71 +21,61 @@
 //##    Determines automatic collision shapes based on image
 //####################################################################################
 DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap) {
-    DrPropertyCollision shapes;
+    DrPropertyCollision     shapes;
 
     // ***** Break pixmap into seperate images for each object in image
-    std::vector<DrBitmap> bitmaps;
-    std::vector<DrRect>   rects;
+    std::vector<DrBitmap>   bitmaps;
+    std::vector<DrRect>     rects;
     Dr::FindObjectsInBitmap(bitmap, bitmaps, rects, 0.9);
 
-    // ***** Creates a box polygon for use with complicated / not complicated enough images
-    std::vector<DrPointF> box { };
-    box.push_back( DrPointF(0,                0) );
-    box.push_back( DrPointF(bitmap.width - 1, 0) );
-    box.push_back( DrPointF(bitmap.width - 1, bitmap.height - 1) );
-    box.push_back( DrPointF(0,                bitmap.height - 1) );
-
     // ***** Go through each image (object) and Polygon for it
-    ///if (bitmaps.size() < 50) {
-        for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
-            DrBitmap &image = bitmaps[image_number];
-            if (image.width < 1 || image.height < 1) continue;
+    for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
+        DrBitmap &image = bitmaps[image_number];
+        if (image.width < 1 || image.height < 1) continue;
 
-            // Trace edge of image
-            std::vector<DrPointF> points = Dr::TraceImageOutline(image);
-            double plus_one_pixel_percent_x = 1.0 + (1.50 / image.width);
-            double plus_one_pixel_percent_y = 1.0 + (1.50 / image.height);
-            for (auto &point : points) {
-                point.x = point.x * plus_one_pixel_percent_x;
-                point.y = point.y * plus_one_pixel_percent_y;
-            }
-
-            // Run Polyline Simplification algorithm, keep running until collision shape polygon has less than 100 points
-            std::vector<DrPointF> simple_points = points;
-            double simple_tolerance = 2.0;
-            do {
-                simple_points = PolylineSimplification::RamerDouglasPeucker(simple_points, simple_tolerance);
-                simple_tolerance = std::pow(simple_tolerance, 2.0);
-            } while (simple_points.size() > 100);
-
-            // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
-            if ((simple_points.size() < 4)) {
-                ///points = HullFinder::FindConcaveHull(points, 5.0);
-                points.clear();
-                points.push_back( DrPointF(rects[image_number].topLeft().x,        rects[image_number].topLeft().y) );
-                points.push_back( DrPointF(rects[image_number].topRight().x,       rects[image_number].topRight().y) );
-                points.push_back( DrPointF(rects[image_number].bottomRight().x,    rects[image_number].bottomRight().y) );
-                points.push_back( DrPointF(rects[image_number].bottomLeft().x,     rects[image_number].bottomLeft().y) );
-                points.push_back( DrPointF(rects[image_number].topLeft().x,        rects[image_number].topLeft().y) );
-            } else {
-                points = simple_points;
-            }
-
-            // Check we still have 3 points, remove duplicate first point
-            if (points.size() < 4) continue;
-            points.pop_back();
-
-            // Check winding
-            HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
-
-            // Add polygon to list of polygons in shape
-            shapes.addPolygon( points );
+        // Trace edge of image
+        std::vector<DrPointF> points = Dr::TraceImageOutline(image);
+        double plus_one_pixel_percent_x = 1.0 + (1.00 / image.width);       // Add 1.0 pixel
+        double plus_one_pixel_percent_y = 1.0 + (1.00 / image.height);      // Add 1.0 pixel
+        for (auto &point : points) {
+            point.x = point.x * plus_one_pixel_percent_x;
+            point.y = point.y * plus_one_pixel_percent_y;
         }
-    ///}
+
+        // Run Polyline Simplification algorithm, keep running until collision shape polygon has less than 100 points
+        std::vector<DrPointF> simple_points = points;
+        double simple_tolerance = 2.0;
+        do {
+            simple_points = PolylineSimplification::RamerDouglasPeucker(simple_points, simple_tolerance);
+            simple_tolerance = std::pow(simple_tolerance, 2.0);
+        } while (simple_points.size() > 100);
+
+        // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
+        if (simple_points.size() < 4) {
+            ///points = HullFinder::FindConcaveHull(points, 5.0);
+            points.clear();
+            points.push_back( DrPointF(rects[image_number].topLeft().x,        rects[image_number].topLeft().y) );
+            points.push_back( DrPointF(rects[image_number].topRight().x,       rects[image_number].topRight().y) );
+            points.push_back( DrPointF(rects[image_number].bottomRight().x,    rects[image_number].bottomRight().y) );
+            points.push_back( DrPointF(rects[image_number].bottomLeft().x,     rects[image_number].bottomLeft().y) );
+            points.push_back( DrPointF(rects[image_number].topLeft().x,        rects[image_number].topLeft().y) );
+        } else {
+            points = simple_points;
+        }
+
+        // Check we still have 3 points, remove duplicate first point
+        points.pop_back();
+
+        // Check winding
+        HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
+
+        // Add polygon to list of polygons in shape
+        shapes.addPolygon( points );
+    }
 
     // If we don't have polygons by this point, just add a simple box
     if (shapes.getPolygons().size() < 1) {
-        shapes.addPolygon( box );
+        shapes.addPolygon( bitmap.polygon().points() );
     }
 
     // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image

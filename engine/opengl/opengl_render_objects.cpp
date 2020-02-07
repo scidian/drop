@@ -628,12 +628,11 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
 
     // Rotate Billboards
     if (comp_3d_billboard) {
-        ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
-        QVector3D obj = QVector3D(x, y, z);
-        QVector3D eye = m_eye / combinedZoomScale();
-        model.setToIdentity();
-        model.lookAt(obj, eye, m_up);
-        model = model.inverted();
+        glm::vec3 obj{x, y, z};
+        glm::vec3 eye = glm::vec3(m_eye.x(), m_eye.y(), m_eye.z()) / combinedZoomScale();
+        glm::mat4 billboard = glm::lookAt(obj, eye, glm::vec3(m_up.x(), m_up.y(), m_up.z()));
+        billboard = glm::inverse(billboard);
+        model = QMatrix4x4(glm::value_ptr(billboard)).transposed();
     }
 
     // Scale

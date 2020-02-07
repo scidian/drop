@@ -180,7 +180,7 @@ DrAsset* DrProject::addAsset(DrAssetType new_asset_type, long source_image_key, 
     long new_asset_key = (key == c_no_key) ? getNextKey() : key;
     m_assets[new_asset_key] = new DrAsset(this, new_asset_key, new_asset_type, source_image_key);
     if (new_asset_key <= 0) {
-        Dr::PrintDebug("DrProject::addAsset() strange number!!! Key: " + std::to_string(new_asset_key) + ", Type: " + Dr::StringFromAssetType(new_asset_type) );
+        Dr::PrintDebug("DrProject::addAsset() invalid key!!! Key: " + std::to_string(new_asset_key) + ", Type: " + Dr::StringFromAssetType(new_asset_type) );
     }
     return m_assets[new_asset_key];
 }

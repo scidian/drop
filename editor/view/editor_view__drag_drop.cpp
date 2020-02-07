@@ -179,7 +179,7 @@ void DrView::dropEvent(QDropEvent *event) {
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
         DrImage *add_image = Dr::AddImage(m_editor_relay->currentProject(), file_path);
-        DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, add_image->getKey() );
+        DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, add_image->getKey());
         m_editor_relay->buildAssetTree();
         m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
 

@@ -11,6 +11,8 @@
 #include "core/dr_debug.h"
 #include "core/types/dr_bitmap.h"
 #include "core/types/dr_color.h"
+#include "core/types/dr_pointf.h"
+#include "core/types/dr_polygonf.h"
 #include "core/types/dr_rect.h"
 
 
@@ -72,10 +74,21 @@ DrBitmap DrBitmap::copy(DrRect &copy_rect) {
     return copy;
 }
 
+// Returns a clockwise polygon representing a box around this image
+DrPolygonF DrBitmap::polygon() const {
+    DrPolygonF box;
+    box.addPoint( DrPointF(0,               0) );                           // Top Left
+    box.addPoint( DrPointF(this->width - 1, 0) );                           // Top Right
+    box.addPoint( DrPointF(this->width - 1, this->height - 1) );            // Bottom Right
+    box.addPoint( DrPointF(0,               this->height - 1) );            // Bottom Left
+    return box;
+}
+
 DrRect DrBitmap::rect() const {
     return DrRect(0, 0, width, height);
 }
 
+// !!!!! #WARNING: No out of bounds checks are done here for speed!!
 DrColor DrBitmap::getPixel(int x, int y) const {
     size_t index = (y * this->width * channels) + (x * channels);
     return DrColor(data[index+2], data[index+1], data[index], data[index+3]);
