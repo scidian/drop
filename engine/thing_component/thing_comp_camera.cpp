@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_random.h"
+#include "engine/engine_camera.h"
 #include "engine/engine_signal.h"
 #include "engine/thing_component/thing_comp_camera.h"
 #include "engine/thing/engine_thing.h"
@@ -50,6 +51,21 @@ void ThingCompCamera::destroy() {
 }
 
 
+//####################################################################################
+//##    Setters
+//####################################################################################v
+void ThingCompCamera::setCameraRotation(glm::vec3 rotation) {
+    m_camera_rotation = rotation;
+    if (hasActiveCamera()) {
+        DrEngineCamera *cam = world()->getCamera(m_active_camera);
+        if (cam != nullptr) {
+            cam->setRotation(rotation);
+        }
+    }
+}
+void ThingCompCamera::setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
+    setCameraRotation(glm::vec3(x_up_down, y_left_right, z_rotate));
+}
 
 
 

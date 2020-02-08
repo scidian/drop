@@ -19,110 +19,38 @@
 #include "core/types/dr_pointf.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_vertex_data.h"
+#include "project/entities/dr_image.h"
 
 
 //####################################################################################
-//##    Builds an Extruded Pixmap Model
+//##    Builds an Extruded DrImage Model
 //####################################################################################
-void DrEngineVertexData::initializeExtrudedBitmap(const DrBitmap &bitmap, bool wireframe) {
+void DrEngineVertexData::initializeExtrudedImage(DrImage *image, bool wireframe) {
     m_data.resize(100 * c_vertex_length);
 
-    std::vector<DrPointF>               points;
-    std::vector<std::vector<DrPointF>>  hole_list;
-
-    // ***** Break pixmap into seperate images for each object in image
-    std::vector<DrBitmap> images;
-    std::vector<DrRect>   rects;
-    Dr::FindObjectsInBitmap(bitmap, images, rects, 0.9);
-
-    // ***** Go through each image (object) and add triangles for it
-    for (int image_number = 0; image_number < static_cast<int>(images.size()); image_number++) {
-        DrBitmap &image = images[image_number];
-        if (image.width < 1 || image.height < 1) continue;
-
-        // ***** Trace edge of image
-        points = Dr::TraceImageOutline(image);
-        double plus_one_pixel_percent_x = 1.0 + (1.00 / image.width);       // Add 1.0 pixel
-        double plus_one_pixel_percent_y = 1.0 + (1.00 / image.height);      // Add 1.0 pixel
-        for (auto &point : points) {
-            point.x = point.x * plus_one_pixel_percent_x;
-            point.y = point.y * plus_one_pixel_percent_y;
-        }
-
-        // Smooth point list
-        points = smoothPoints( points, 5, 20.0, 1.0 );
-
-        // Run Polyline Simplification algorithm
-        points = PolylineSimplification::RamerDouglasPeucker(points, 0.1);
-
-        // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
-        if (points.size() < 4) {
-            ///points = HullFinder::FindConcaveHull(points, 5.0);
-            points.clear();
-            points.push_back( DrPointF(rects[image_number].topLeft().x,        rects[image_number].topLeft().y) );
-            points.push_back( DrPointF(rects[image_number].topRight().x,       rects[image_number].topRight().y) );
-            points.push_back( DrPointF(rects[image_number].bottomRight().x,    rects[image_number].bottomRight().y) );
-            points.push_back( DrPointF(rects[image_number].bottomLeft().x,     rects[image_number].bottomLeft().y) );
-            points.push_back( DrPointF(rects[image_number].topLeft().x,        rects[image_number].topLeft().y) );
-        }
-
-        // Check we still have 3 points, remove duplicate first point
-        points.pop_back();
-
-        // Check winding
-        HullFinder::EnsureWindingOrientation(points, Winding_Orientation::CounterClockwise);
-
-        // Old Way of Simplifying Points on Similar Slopes
-        ///int split = wireframe ? int((((image.width() + image.height()) / 2) * 0.2) / 5) : 1000;      // Splits longest lines of outline into 5 triangles
-        ///points = simplifyPoints(points, 0.030,     5, true );            // First run with averaging points to reduce triangles among similar slopes
-        ///points = simplifyPoints(points, 0.001, split, false);            // Run again with smaller tolerance to reduce triangles along straight lines
-
-        // ***** Copy image and finds holes as seperate outlines
-        DrBitmap holes = image.copy(rects[image_number]);
-        Dr::FillBorder(holes, Dr::white, holes.rect());                     // Ensures only holes are left as black spots
-
-        // Breaks holes into seperate images for each Hole
-        std::vector<DrBitmap> hole_images;
-        std::vector<DrRect>   hole_rects;
-        Dr::FindObjectsInBitmap(holes, hole_images, hole_rects, 0.9, false);
-
-        // Go through each image (Hole) create list for it
-        for (int hole_number = 0; hole_number < static_cast<int>(hole_images.size()); hole_number++) {
-            DrBitmap &hole = hole_images[hole_number];
-            if (hole.width < 1 || hole.height < 1) continue;
-            std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole);
-            // Add in sub image offset to points
-            for (auto &point : one_hole) {
-                point.x += rects[image_number].left();
-                point.y += rects[image_number].top();
-            }
-            one_hole = smoothPoints( one_hole, 5, 20.0, 1.0 );
-            one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);
-            HullFinder::EnsureWindingOrientation(one_hole, Winding_Orientation::Clockwise);
-            hole_list.push_back(one_hole);
-        }
-
+    for (int poly_number = 0; poly_number < static_cast<int>(image->m_poly_list.size()); poly_number++) {
+        if (image->getBitmap().width < 1 || image->getBitmap().height < 1) continue;
 
         // ***** Triangulate Concave Hull
+        std::vector<DrPointF>              &points =    image->m_poly_list[poly_number];
+        std::vector<std::vector<DrPointF>> &hole_list = image->m_hole_list[poly_number];
+        DrBitmap black_white = Dr::BlackAndWhiteFromAlpha(image->getBitmap(), c_alpha_tolerance, false);
         ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Ear_Clipping);
         ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Optimal_Polygon);
         ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Monotone);
-        triangulateFace(points, hole_list, image, wireframe, Trianglulation::Delaunay);
+        triangulateFace(points, hole_list, black_white, wireframe, Trianglulation::Delaunay);
 
         // ***** Add extruded triangles from Hull and Holes
         int slices = wireframe ? 2 : 1;
-        extrudeFacePolygon(points, image.width, image.height, slices);
-        for (auto hole : hole_list) {
-            extrudeFacePolygon(hole, image.width, image.height, slices);
+        extrudeFacePolygon(points, image->getBitmap().width, image->getBitmap().height, slices);
+        for (auto &hole : hole_list) {
+            extrudeFacePolygon(hole, image->getBitmap().width, image->getBitmap().height, slices);
         }
     }
 
     // ***** Smooth Vertices
     ///smoothVertices(1.0f);
 }
-
-
-
 
 
 //####################################################################################

@@ -13,6 +13,10 @@
 // Forward declarations
 class DrProject;
 
+// Local Constants
+#define         vec                     std::vector
+const double    c_alpha_tolerance =     0.8;
+
 
 //####################################################################################
 //##    DrImage
@@ -22,19 +26,27 @@ class DrImage : public DrSettings
 {
 private:
     // Local Variables
-    Asset_Category      m_category = Asset_Category::Image;        // Category for Image in Asset Tree
-    std::string         m_simple_name;                             // Simple name, i.e. "pretty tree 1"
+    Asset_Category      m_category = Asset_Category::Image;         // Category for Image in Asset Tree
+    std::string         m_simple_name;                              // Simple name, i.e. "pretty tree 1"
 
-    DrBitmap            m_bitmap;                                  // Stored image as DrBitmap
+
+public:
+    DrBitmap                    m_bitmap;                           // Stored image as DrBitmap
+    vec<vec<DrPointF>>          m_poly_list;                        // Stores list of image outline points
+    vec<vec<vec<DrPointF>>>     m_hole_list;                        // Stores list of hole  outline points
 
 
 public:
     // Constructors
-    DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image);
+    DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap,
+            Asset_Category category = Asset_Category::Image, bool force_outline = false);
 
     // DrSettings Overrides
     virtual DrType      getType() override  { return DrType::Image; }
     virtual std::string getName() override  { return m_simple_name; }
+
+    // Image Helper Functions
+    void            autoOutlinePoints();
 
     // Getters / Setters
     Asset_Category  getAssetCategory()      { return m_category; }

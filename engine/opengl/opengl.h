@@ -44,6 +44,7 @@ class DrEngineSwirl;
 class DrEngineThing;
 class DrEngineVertexData;
 class DrEngineWater;
+class DrImage;
 class FormEngine;
 
 // Type Definitions
@@ -171,7 +172,7 @@ public:
 
     // Initialization Calls
     void            importTexture(long texture_id, std::string from_asset_string);
-    void            importTexture(long texture_id, QPixmap &pixmap);
+    void            importTexture(long texture_id, DrImage *image);
     void            loadBuiltInModels();
     void            loadBuiltInTextures();
     void            loadFonts();

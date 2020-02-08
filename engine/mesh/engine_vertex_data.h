@@ -12,6 +12,9 @@
 
 #include "engine_mesh.h"
 
+// Forward Declarations
+class DrImage;
+
 // Type Definitions
 typedef std::map<DrVec3, std::vector<Vertex>> NeighborMap;
 
@@ -58,7 +61,7 @@ public:
     int             vertexCount() const {   return m_count / c_vertex_length; }
 
     // Creation Functions
-    void    initializeExtrudedBitmap(const DrBitmap &bitmap, bool wireframe = true);
+    void    initializeExtrudedImage(DrImage *image, bool wireframe = true);
 
     void    initializeTextureCone();
     void    initializeTextureCube();

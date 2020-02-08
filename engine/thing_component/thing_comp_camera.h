@@ -61,9 +61,8 @@ public:
     void                    setCameraPositionZ(double z)                    { m_camera_position.z = static_cast<float>(z); }
 
     glm::vec3&              getCameraRotation()             { return m_camera_rotation; }
-    void                    setCameraRotation(glm::vec3 rotation) { m_camera_rotation = rotation; }
-    void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate) {
-                                                    m_camera_rotation = glm::vec3(x_up_down, y_left_right, z_rotate); }
+    void                    setCameraRotation(glm::vec3 rotation);
+    void                    setCameraRotation(float x_up_down, float y_left_right, float z_rotate);
 
     DrPointF                getCameraLag()                  { return m_camera_lag; }
     void                    setCameraLag(DrPointF lag)      { m_camera_lag.x = (lag.x <= 0) ? 0 : lag.x;

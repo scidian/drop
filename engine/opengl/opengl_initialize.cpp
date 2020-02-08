@@ -67,11 +67,14 @@ void DrOpenGL::initializeGL() {
 //##    Adds texture to Engine and creates 3D Extruded VBO for texture
 //####################################################################################
 void DrOpenGL::importTexture(long texture_id, std::string from_asset_string) {
-    QPixmap pix = QPixmap(QString::fromStdString(from_asset_string));
-    importTexture(texture_id, pix);
+    bool     force_outline = (texture_id > 0 || texture_id < -99);
+    DrBitmap bitmap = Dr::FromQPixmap( QPixmap(QString::fromStdString(from_asset_string)));
+    DrImage  image(m_engine->getProject(), 0, "temp", bitmap, Asset_Category::Image, force_outline);
+    importTexture(texture_id, &image);
 }
 
-void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
+void DrOpenGL::importTexture(long texture_id, DrImage *image) {
+    QPixmap pixmap = Dr::ToQPixmap(image->getBitmap());
     m_engine->addTexture(texture_id, pixmap);
 
     // Dont process Noise / Water / Fire / Built In Textures
@@ -79,9 +82,21 @@ void DrOpenGL::importTexture(long texture_id, QPixmap &pixmap) {
 
     // ***** 3D Extruded Textures
     // Create mesh
+    //      Run with 'false' to reduce number of triangles in scene
+    //      Run with 'true' for better looking models in wireframe
+    bool wireframe = false;
     m_texture_data[texture_id] = new DrEngineVertexData();
-    m_texture_data[texture_id]->initializeExtrudedBitmap( Dr::FromQPixmap(pixmap), false );     // Run with 'false' to reduce number of triangles in scene
-                                                                                                // Run with 'true' for better looking models in wireframe
+
+    // If using built in texture, need to trace outline
+    if (texture_id > c_no_key && texture_id < c_key_starting_number) {
+        DrBitmap bitmap = image->getBitmap();
+        DrImage  image(m_engine->getProject(), texture_id, "temp", bitmap, Asset_Category::Image, true);
+        m_texture_data[texture_id]->initializeExtrudedImage( &image, wireframe );
+
+    // Otherwise already traced, use original DrImage
+    } else {
+        m_texture_data[texture_id]->initializeExtrudedImage( image, wireframe );
+    }
 
     // Allocate mesh into vbo for use with OpenGL (could delete m_texture_data after this)
     m_texture_vbos[texture_id] = new QOpenGLBuffer();
@@ -144,8 +159,7 @@ void DrOpenGL::loadProjectTextures() {
     for (auto &image_key : image_keys_used) {
         DrImage *image = m_engine->getProject()->findImageFromKey(image_key);
         if (image != nullptr) {
-            QPixmap pixmap = Dr::ToQPixmap(image->getBitmap());
-            importTexture(image->getKey(), pixmap);
+            importTexture(image->getKey(), image);
         }
     }
 }

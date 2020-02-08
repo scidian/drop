@@ -39,10 +39,6 @@ DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category
     DrBitmap bitmap = DrBitmap(image.constBits(), static_cast<int>(image.sizeInBytes()), false, image.width(), image.height());
     ///qDebug() << "Bitmap - from size: " << image.sizeInBytes() << ", Width: " << bitmap.width << ", Height: " << bitmap.height;
 
-    DrPropertyCollision image_shapes;
-    ///image_shapes = autoCollisionShapes(bitmap);
-
-
     return project->addImage(simple_name.toStdString(), bitmap, category, key);
 }
 

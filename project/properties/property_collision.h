@@ -57,7 +57,6 @@ public:
     std::vector<DrCircle>&              getCircles()    { return m_circles; }
 
 
-
     // Operator Overloads for file saving
     bool operator==(const DrPropertyCollision &o) {
         return Dr::FuzzyCompare(o.m_direction, this->m_direction);

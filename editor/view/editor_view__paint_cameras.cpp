@@ -25,7 +25,7 @@
 //####################################################################################
 //##    Local Constants
 //####################################################################################
-const float     c_ring_size =       250.f;              // Diameter of Camera Circle
+const float     c_ring_size =       400.f;              // Diameter of Camera Circle
 const int       c_outline_width =   2;                  // Pen width of QPainter
 const double    c_square_radius =   4.0;                // Size of square / circle corner and side handles
 const double    c_edge_radius =     3.0;                // Size of frame edges

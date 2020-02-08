@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QApplication>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QTimer>

@@ -12,6 +12,7 @@
 #include "editor/project/project.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
+#include "editor/view/editor_view.h"
 #include "engine/enums_engine.h"
 #include "engine/opengl/opengl.h"
 #include "project/dr_project.h"
@@ -220,6 +221,12 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
 
         } else if (comp == Comps::Thing_Layering && prop == Props::Thing_Z_Order) {
             item->setZValue( thing->getZOrderWithSub() );
+
+        // Update view when camera zoom changes camera size to be drawn
+        } else if ((comp == Comps::Thing_Settings_Character && prop == Props::Thing_Character_Camera_Zoom) ||
+                   (comp == Comps::Thing_Settings_Camera    && prop == Props::Thing_Camera_Zoom)) {
+            if (m_editor_relay->getStageView() != nullptr)
+                m_editor_relay->getStageView()->update();
 
         } else if ((comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Brightness) ||
                    (comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Contrast) ||

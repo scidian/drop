@@ -257,7 +257,7 @@ void FormMain::buildToolBar() {
                 Dr::Sleep(3);
                 if (i % 10 == 0) {
                     if (Dr::RandomInt(0, 8) == 3) {
-                        for (int j = 0; j < Dr::RandomDouble(100000, 100000000); j++) {
+                        for (int j = 0; j < Dr::RandomDouble(1000000, 1000000000); j++) {
                             double d = sqrt(j);
                             d = std::pow(d, 2.0);
                         }

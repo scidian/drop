@@ -5,6 +5,7 @@
 //      DrAsset Class Definitions
 //
 //
+#include "3rd_party/polyline_simplification.h"
 #include "core/dr_debug.h"
 #include "project/constants_component_info.h"
 #include "project/properties/property_collision.h"
@@ -23,8 +24,37 @@
 #include "project/settings/settings_component_property.h"
 
 
-// Internal Linkage (File Scope) Forward Declarations
-DrPropertyCollision autoCollisionShape(const DrBitmap &bitmap);                 // Defined in "project_asset__auto_collision.cpp"
+//####################################################################################
+//##    Determines automatic collision shapes based on image
+//####################################################################################
+DrPropertyCollision autoCollisionShape(const DrImage *image) {
+    // Go through each polygon and reduce points if necessary
+    DrPropertyCollision     shapes;
+    for (int poly_number = 0; poly_number < static_cast<int>(image->m_poly_list.size()); poly_number++) {
+        // Run Polyline Simplification algorithm, keep running until collision shape polygon has less than 100 points
+        std::vector<DrPointF> simple_points = image->m_poly_list[poly_number];
+        double simple_tolerance = 2.0;
+        while (simple_points.size() > 100) {
+            simple_points = PolylineSimplification::RamerDouglasPeucker(simple_points, simple_tolerance);
+            simple_tolerance = std::pow(simple_tolerance, 2.0);
+        }
+
+        // Add polygon to list of polygons in shape
+        shapes.addPolygon( simple_points );
+    }
+
+    // If we don't have polygons by this point, just add a simple box
+    if (shapes.getPolygons().size() < 1) shapes.addPolygon( image->m_bitmap.polygon().points() );
+
+    // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image
+    for (auto &shape : shapes.getPolygons()) {
+        for (auto &point : shape) {
+            point.x = point.x - (image->m_bitmap.width / 2.0);
+            point.y = (image->m_bitmap.height - point.y) - (image->m_bitmap.height / 2.0);
+        }
+    }
+    return shapes;
+}
 
 
 //####################################################################################
@@ -49,6 +79,11 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
         case DrAssetType::Character:
         case DrAssetType::Object: {
 
+            // Load temp box shape in case we can't pull from DrAnimation
+            shape.addPolygon(my_starting_bitmap.polygon().points());
+            m_width =  my_starting_bitmap.width;
+            m_height = my_starting_bitmap.height;
+
             // Create new Animation in Project from Image Key if passed in an Image Key and not an Animation Key
             DrAnimation *animation = nullptr;
             if (source != nullptr) {
@@ -62,12 +97,14 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
                 }
                 my_starting_bitmap = animation->getFirstFrameImage()->getBitmap();
                 my_starting_name =   animation->getName();
+                m_width =  my_starting_bitmap.width;
+                m_height = my_starting_bitmap.height;
+                shape = autoCollisionShape(animation->getFirstFrameImage());
             } else {
                 m_base_key = c_no_key;
             }
 
             // Load / Initialize Entity Settings
-            shape = autoCollisionShape(my_starting_bitmap);
             if (new_asset_type == DrAssetType::Character)
                 initializeAssetSettingsCharacter(my_starting_name);
             else if (new_asset_type == DrAssetType::Object)
@@ -81,8 +118,7 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
         }
     }
 
-    m_width =  my_starting_bitmap.width;
-    m_height = my_starting_bitmap.height;
+
 }
 
 DrAsset::~DrAsset() { }
@@ -156,13 +192,13 @@ void DrAsset::updateAnimationProperty(std::list<long> image_keys, ComponentPrope
     property->setValue( animation->getKey() );
 
     if (property->getPropertyKey() == Props::Asset_Animation_Idle) {
-        DrBitmap     new_bitmap = animation->getFirstFrameImage()->getBitmap();
-        m_width =    new_bitmap.width;
-        m_height =   new_bitmap.height;
+        DrImage     *new_image = animation->getFirstFrameImage();
+        m_width =    new_image->getBitmap().width;
+        m_height =   new_image->getBitmap().height;
         m_base_key = animation->getKey();
 
         // Calculate new image collision shape
-        DrPropertyCollision shape = autoCollisionShape(new_bitmap);
+        DrPropertyCollision shape = autoCollisionShape(new_image);
         setComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Image_Shape, shape);
     }
 

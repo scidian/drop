@@ -286,13 +286,13 @@ SOURCES += \
     project/entities/dr_animation.cpp \
     project/entities/dr_animation_frame.cpp \
     project/entities/dr_asset.cpp \
-    project/entities/dr_asset__auto_collision.cpp \
     project/entities/dr_asset__settings.cpp \
     project/entities/dr_asset__settings_shared.cpp \
     project/entities/dr_device.cpp \
     project/entities/dr_effect.cpp \
     project/entities/dr_font.cpp \
     project/entities/dr_image.cpp \
+    project/entities/dr_image__outline_image.cpp \
     project/entities/dr_stage.cpp \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \

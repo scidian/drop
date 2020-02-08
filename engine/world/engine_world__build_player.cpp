@@ -84,16 +84,16 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->setTouchDrag(true);
         ball1->setTouchDragForce(2000.0);
 
-//        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
-//        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
-//        ball2->setDepth(30);
-//        addThing(ball2);
-//        ball2->setCameraRotation( -25, -40, 0 );
-//        assignPlayerControls(ball2, false, false);
-//        ball2->setJumpCount( c_unlimited_jump );
-//        ball2->setRotateSpeedZ( 20.0 );
-//        ball2->setTouchDrag(true);
-//        ball2->setTouchDragForce(2000.0);
+        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
+        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
+        addThing(ball2);
+        assignPlayerControls(ball2, false, false);
+        ball2->comp3D()->setDepth(30);
+        ball2->compCamera()->setCameraRotation( -25, -40, 0 );
+        ball2->compPlayer()->setJumpCount( c_unlimited_jump );
+        ball2->setRotateSpeedZ( 20.0 );
+        ball2->setTouchDrag(true);
+        ball2->setTouchDragForce(2000.0);
 
         DrAsset *dragon = m_project->findAssetFromKey(1024);
         if (dragon != nullptr) {
@@ -123,19 +123,6 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy2->compPlayer()->setCanWallJump(false);
                 softy2->setRotateSpeedZ( 7 );
             }
-
-//            DrEngineObject *softy3 = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(-200, 250), 400, 0.8, 0.50, 0.25, false);
-//            if (softy3 != nullptr) {
-//                assignPlayerControls(softy3, false, false);
-//                if (getCamerasFollowThing(softy3->getKey()).size() > 0)
-//                    getCamerasFollowThing(softy3->getKey())[0]->setLag(DrPointF(200, 200));
-//                softy3->compPlayer()->setMoveSpeedX(800);
-//                ///softy3->compPlayer()->setJumpForceY(500);
-//                softy3->compPlayer()->setJumpTimeout(5000);
-//                softy3->compPlayer()->setRotateSpeedZ( 7 );
-//                softy3->compPlayer()->setJumpCount( -1 );
-//                softy3->compPlayer()->setCanWallJump(false);
-//            }
         }
 
     } else if (new_player_type == Demo_Player::Light) {
