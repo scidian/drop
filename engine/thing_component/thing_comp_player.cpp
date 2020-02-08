@@ -53,6 +53,12 @@ void ThingCompPlayer::update(double time_passed, double time_warp) {
                 ", Killed by: " + signalList(Signals::ThingDied).front()->thingNameB();
     }
 
+    for (auto &signal : signalList(Signals::ThingDied)) {
+        if (signal->thingEngineKeyA() == thing()->getKey()) {
+            world()->setBackgroundColor( DrColor(Dr::RandomInt(0, 255), Dr::RandomInt(0, 255), Dr::RandomInt(0, 255)) );
+        }
+    }
+
 }
 
 // Called when component is destroyed

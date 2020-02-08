@@ -30,6 +30,12 @@ double MillisecondsSinceStartOfDay() {
 }
 void ResetTimer(DrTime &timer) { timer = Clock::now(); }
 
+void AdjustTimer(DrTime &timer, int hours, int minutes, int seconds, int milliseconds) {
+    timer += std::chrono::hours(hours);
+    timer += std::chrono::minutes(minutes);
+    timer += std::chrono::seconds(seconds);
+    timer += std::chrono::milliseconds(milliseconds);
+}
 
 
 

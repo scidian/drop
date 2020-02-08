@@ -45,7 +45,8 @@ DrEngineThing::~DrEngineThing() {
 //####################################################################################
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
-
+    // Reset Update Timer
+    Dr::ResetTimer( update_timer );
 }
 
 // Update Function, Called every physics frame

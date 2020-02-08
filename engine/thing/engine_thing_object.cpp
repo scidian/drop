@@ -180,8 +180,13 @@ void DrEngineObject::addToWorld() {
         cpBodySetVelocity( body, forced_velocity );
     }
 
-    // Reset Update Timer
-    Dr::ResetTimer( update_timer );
+    // Reset Damage Clock
+    Dr::ResetTimer(  m_damage_timer );
+    Dr::AdjustTimer( m_damage_timer, 0, 0, 0, -static_cast<int>(m_damage_delay));
+
+    // Reset Animation Timers
+    Dr::ResetTimer( m_death_timer );
+    Dr::ResetTimer( m_fade_timer );
 }
 
 DrPointF DrEngineObject::mapPositionToScreen() {

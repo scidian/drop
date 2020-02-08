@@ -24,7 +24,7 @@ namespace Dr {
     double      MillisecondsElapsed(const DrTime &timer);
     double      MillisecondsSinceStartOfDay();
     void        ResetTimer(DrTime &timer);
-
+    void        AdjustTimer(DrTime &timer, int hours, int minutes, int seconds, int milliseconds);
 
 
 }   // End namespace Dr
