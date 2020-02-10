@@ -51,24 +51,28 @@ void DrOpenGL::cullingOff() {
 void DrOpenGL::drawSpace() {
 
     // ***** Reset Frame Variables
-    m_triangles = 0;                                                    // Reset frame triangle count
-    bool has_rendered_glow_lights = false;                              // Keeps track of if we have rendered the lights yet
+    bool   has_rendered_glow_lights = false;                                            // Keeps track of if we have rendered the lights yet
+    long   thing_count =  0;
+    long  &effect_count = m_engine->getCurrentWorld()->effect_count;
+    effect_count = 0;
+    m_triangles =  0;                                                                   // Reset frame triangle count
+
+    // Used to stop z fighting (a.k.a z-fighting, stitching)
+    double z_divisor = (combinedZoomScale() < 0.001f) ? 0.001 : static_cast<double>(combinedZoomScale());
+    double last_z;
+    m_add_z = 0.0;
 
     // This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
     //      this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
     DrThingType last_thing = DrThingType::None;
 
     // ********** Render 2D Objects
-    long  &effect_count = m_engine->getCurrentWorld()->effect_count;
-           effect_count = 0;
-    long   thing_count = 0;
-    double last_z; m_add_z = 0.0;                                       // Used to stop z fighting (a.k.a z-fighting, stitching)
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
         // ***** Trying to stop z-fighting in perspective mode
         if (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_3D) {
             if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
-            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += 0.025; else m_add_z = 0.0;
+            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += (0.005 / z_divisor); else m_add_z = 0.0;
             last_z = thing->getZOrder();
         }
 
