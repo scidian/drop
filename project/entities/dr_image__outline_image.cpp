@@ -17,10 +17,13 @@
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
+// Local Constants
+const int c_neighbors =             5;                  // Number of neighbors to smooth points with
+
 
 //####################################################################################
 //##    Loads list of points for Image and Image Holes
-//####################################################################################
+//####################################################################################        
 void DrImage::autoOutlinePoints() {
 
     bool cancel = false;
@@ -54,12 +57,14 @@ void DrImage::autoOutlinePoints() {
         ///one_poly = simplifyPoints(one_poly, 0.001, split, false);        // Run again with smaller tolerance to reduce triangles along straight lines
 
         // Remove duplicate first point
-        if (one_poly.size() > 2) one_poly.pop_back();
+        if (one_poly.size() > 3) one_poly.pop_back();
 
         // Optimize point list
-        one_poly = DrEngineVertexData::smoothPoints( one_poly, 5, 20.0, 1.0 );
-        one_poly = PolylineSimplification::RamerDouglasPeucker(one_poly, 0.075);
-        one_poly = DrEngineVertexData::insertPoints(one_poly);
+        if (one_poly.size() > (c_neighbors * 2)) {
+            one_poly = DrEngineVertexData::smoothPoints(one_poly, c_neighbors, 20.0, 1.0);
+            one_poly = PolylineSimplification::RamerDouglasPeucker(one_poly, 0.075);
+            one_poly = DrEngineVertexData::insertPoints(one_poly);
+        }
 
         // If we only have a couple points left, add shape as a box of the original image, otherwise use PolylineSimplification points
         if (one_poly.size() < 4) {
@@ -91,20 +96,30 @@ void DrImage::autoOutlinePoints() {
         for (int hole_number = 0; hole_number < static_cast<int>(hole_images.size()); hole_number++) {
             DrBitmap &hole = hole_images[hole_number];
             if (hole.width < 1 || hole.height < 1) continue;
+
+            // Trace edge of hole
             std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole);
+
             // Add in sub image offset to points
             for (auto &point : one_hole) {
                 point.x += rects[image_number].left();
                 point.y += rects[image_number].top();
             }
 
-            // Optimize point list
-            one_hole = DrEngineVertexData::smoothPoints( one_hole, 5, 50.0, 1.0 );
-            one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);
-            one_hole = DrEngineVertexData::insertPoints(one_hole);
+            // Remove duplicate first point
+            if (one_hole.size() > 3) one_hole.pop_back();
 
-            HullFinder::EnsureWindingOrientation(one_hole, Winding_Orientation::Clockwise);
-            hole_list.push_back(one_hole);
+            // Optimize point list
+            if (one_hole.size() > (c_neighbors * 2)) {
+                one_hole = DrEngineVertexData::smoothPoints(one_hole, c_neighbors, 50.0, 1.0);
+                one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);
+                one_hole = DrEngineVertexData::insertPoints(one_hole);
+            }
+
+            if (one_hole.size() > 3) {
+                HullFinder::EnsureWindingOrientation(one_hole, Winding_Orientation::Clockwise);
+                hole_list.push_back(one_hole);
+            }
         }
         m_hole_list.push_back(hole_list);
     }   // End for each bitmap

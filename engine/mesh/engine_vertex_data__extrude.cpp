@@ -141,7 +141,8 @@ const DrPointF& pointAt(const std::vector<DrPointF> &point_list, int index) {
         return point_list[index];
 }
 
-const double c_smooth_min_size = 50.0;
+const double c_sharp_angle =        110.0;
+const double c_smooth_min_size =     50.0;
 
 // Smooths points, neighbors is in each direction (so 1 is index +/- 1 more point in each direction
 std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight) {
@@ -172,9 +173,7 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
         return outline_points;
     }
 
-    // Go through and smooth the points (simple average), don't smooth angles less than 110 degrees
-    const double c_sharp_angle = 110.0;
-
+    // Go through and smooth the points (simple average), don't smooth angles less than c_sharp_angle degrees
     for (int i = 0; i < static_cast<int>(outline_points.size()); ++i) {
         // Current Point
         DrPointF this_point = outline_points[i];
@@ -260,6 +259,13 @@ std::vector<DrPointF> DrEngineVertexData::insertPoints(const std::vector<DrPoint
 //####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
+// Finds average number of pixels in a small grid that are transparent
+DrColor getRoundedPixel(const DrBitmap &bitmap, const DrPointF &at_point) {
+    int px = Dr::Clamp(static_cast<int>(round(at_point.x)), 0, (bitmap.width -  1));
+    int py = Dr::Clamp(static_cast<int>(round(at_point.y)), 0, (bitmap.height - 1));
+    return bitmap.getPixel(px, py);
+}
+
 // Finds average number of pixels in a small grid that are transparent
 double averageTransparentPixels(const DrBitmap &bitmap, const DrPointF &at_point, const double &alpha_tolerance) {
     int px = Dr::Clamp(static_cast<int>(round(at_point.x)), 0, (bitmap.width -  1));
@@ -401,27 +407,26 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
             double y3 = d.coords[2 * d.triangles[i + 2] + 1];
 
             // Check each triangle to see if mid-points lie outside concave hull by comparing object image
-            DrPoint mid12( (x1 + x2) / 2.0, (y1 + y2) / 2.0 );
-            DrPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
-            DrPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
+            DrPoint mid12((x1 + x2) / 2.0, (y1 + y2) / 2.0);
+            DrPoint mid23((x2 + x3) / 2.0, (y2 + y3) / 2.0);
+            DrPoint mid13((x1 + x3) / 2.0, (y1 + y3) / 2.0);
+            DrPointF centroid((x1 + x2 + x3) / 3.0, (y1 + y2 + y3) / 3.0);
             int transparent_count = 0;
             if (image.getPixel(mid12.x, mid12.y).alphaF() < alpha_tolerance) ++transparent_count;
             if (image.getPixel(mid23.x, mid23.y).alphaF() < alpha_tolerance) ++transparent_count;
             if (image.getPixel(mid13.x, mid13.y).alphaF() < alpha_tolerance) ++transparent_count;
+            double avg_c = averageTransparentPixels(image, centroid, alpha_tolerance);
+            if (avg_c > 0.9999) continue;                                               // #NOTE: 0.9999 is 9 out of 9 pixels are transparent
+            if (avg_c > 0.6666) ++transparent_count;                                    // #NOTE: 0.6666 is 6 out of 9 pixels are transparent
             if (transparent_count > 1) continue;
 
             // Check average of triangle lines and centroid for transparent pixels
-            DrPointF centroid((x1 + x2 + x3) / 3.0, (y1 + y2 + y3) / 3.0);
             double transparent_average = 0;
-            double avg12 = averageTransparentPixels(image, mid12,    alpha_tolerance);
-            double avg23 = averageTransparentPixels(image, mid23,    alpha_tolerance);
-            double avg13 = averageTransparentPixels(image, mid13,    alpha_tolerance);
-            double avg_c = averageTransparentPixels(image, centroid, alpha_tolerance);
-            transparent_average += avg12;
-            transparent_average += avg23;
-            transparent_average += avg13;
-            if (avg_c > 0.9999) continue; else transparent_average += avg_c;            // #NOTE: 0.9999 is 9 out of 9 pixels are transparent
-            if (transparent_average > 1.99) continue;
+            transparent_average += averageTransparentPixels(image, mid12, alpha_tolerance);;
+            transparent_average += averageTransparentPixels(image, mid23, alpha_tolerance);
+            transparent_average += averageTransparentPixels(image, mid13, alpha_tolerance);
+            transparent_average += avg_c;
+            if (transparent_average > 2.49) continue;
 
             // Add triangle
             GLfloat ix1 = static_cast<GLfloat>(         x1 - w2d);
