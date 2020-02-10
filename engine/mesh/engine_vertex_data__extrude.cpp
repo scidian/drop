@@ -34,11 +34,12 @@ void DrEngineVertexData::initializeExtrudedImage(DrImage *image, bool wireframe)
         // ***** Triangulate Concave Hull
         std::vector<DrPointF>              &points =    image->m_poly_list[poly_number];
         std::vector<std::vector<DrPointF>> &hole_list = image->m_hole_list[poly_number];
-        DrBitmap black_white = Dr::BlackAndWhiteFromAlpha(image->getBitmap(), c_alpha_tolerance, false);
-        ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Ear_Clipping);
-        ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Optimal_Polygon);
-        ///triangulateFace(points, hole_list, image, wireframe, Trianglulation::Monotone);
-        triangulateFace(points, hole_list, black_white, wireframe, Trianglulation::Delaunay);
+
+        double alpha_tolerance = (image->m_use_simple_square) ? 0.0 : c_alpha_tolerance;
+        ///triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Ear_Clipping, alpha_tolerance);
+        ///triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Optimal_Polygon, alpha_tolerance);
+        ///triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Monotone, alpha_tolerance);
+        triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Delaunay, alpha_tolerance);
 
         // ***** Add extruded triangles from Hull and Holes
         int slices = wireframe ? 2 : 1;
@@ -131,7 +132,7 @@ std::vector<DrPointF> DrEngineVertexData::simplifyPoints(const std::vector<DrPoi
 //##    Smooth / Curve a collection of points representing a 2D outline
 //####################################################################################
 // Returns a point from a vector with wrap around coverage of vector indices
-DrPointF pointAt(const std::vector<DrPointF> &point_list, int index) {
+const DrPointF& pointAt(const std::vector<DrPointF> &point_list, int index) {
     if (index < 0)
         return point_list[index + point_list.size()];
     else if (index >= static_cast<int>(point_list.size()))
@@ -145,9 +146,9 @@ const double c_smooth_min_size = 50.0;
 // Smooths points, neighbors is in each direction (so 1 is index +/- 1 more point in each direction
 std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight) {
     std::vector<DrPointF> smooth_points { };
-    if (outline_points.size() < 1) return smooth_points;
+    if (outline_points.size() < 1) return outline_points;
 
-    // Check size of polygon, accomodate smoothing for small images
+    // Check size of polygon, accommodate smoothing for small images
     double x_min = outline_points[0].x;
     double x_max = outline_points[0].x;
     double y_min = outline_points[0].y;
@@ -171,10 +172,10 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
         return outline_points;
     }
 
-    // Go through and smooth the points (simple average), don't smooth angles less than 120 degrees
-    const double c_sharp_angle = 120.0;
+    // Go through and smooth the points (simple average), don't smooth angles less than 110 degrees
+    const double c_sharp_angle = 110.0;
 
-    for (int i = 0; i < static_cast<int>(outline_points.size()); i++) {
+    for (int i = 0; i < static_cast<int>(outline_points.size()); ++i) {
         // Current Point
         DrPointF this_point = outline_points[i];
         double total_used = 1.0;
@@ -232,10 +233,35 @@ std::vector<DrPointF> DrEngineVertexData::smoothPoints(const std::vector<DrPoint
 
 
 //####################################################################################
+//##    Inserts extra points in between set of points
+//####################################################################################
+std::vector<DrPointF> DrEngineVertexData::insertPoints(const std::vector<DrPointF> &outline_points) {
+    std::vector<DrPointF> insert_points { };
+
+    // Don't insert extra points for simple shapes
+    if (outline_points.size() <= 10) return outline_points;
+
+    insert_points.push_back(outline_points[0]);
+    for (int i = 1; i < static_cast<int>(outline_points.size()); i++) {
+
+        // Insert extra points for distances greater than 10 pixels
+        if (outline_points[i-1].distance(outline_points[i]) > 10.0) {
+            DrPointF average = (outline_points[i-1] + outline_points[i]) / 2.0;
+            insert_points.push_back(average);
+        }
+        insert_points.push_back(outline_points[i]);
+    }
+
+    return insert_points;
+}
+
+
+
+//####################################################################################
 //##    Triangulate Face and add Triangles to Vertex Data
 //####################################################################################
 // Finds average number of pixels in a small grid that are transparent
-double averageTransparentPixels(const DrBitmap &bitmap, const DrPointF at_point) {
+double averageTransparentPixels(const DrBitmap &bitmap, const DrPointF &at_point, const double &alpha_tolerance) {
     int px = Dr::Clamp(static_cast<int>(round(at_point.x)), 0, (bitmap.width -  1));
     int py = Dr::Clamp(static_cast<int>(round(at_point.y)), 0, (bitmap.height - 1));
     int x_start = (px > 0) ?                 px - 1 : 0;
@@ -246,7 +272,7 @@ double averageTransparentPixels(const DrBitmap &bitmap, const DrPointF at_point)
     double transparent_count = 0;
     for (int x = x_start; x <= x_end; ++x) {
         for (int y = y_start; y <= y_end; ++y) {
-            if (bitmap.getPixel(x, y) == Dr::transparent) transparent_count++;
+            if (bitmap.getPixel(x, y).alphaF() < alpha_tolerance) transparent_count++;
             total_count++;
         }
     }
@@ -254,9 +280,9 @@ double averageTransparentPixels(const DrBitmap &bitmap, const DrPointF at_point)
 }
 
 void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_points, const std::vector<std::vector<DrPointF>> &hole_list,
-                                         const DrBitmap &black_and_white, bool wireframe, Trianglulation type) {
-    int width =  black_and_white.width;
-    int height = black_and_white.height;
+                                         const DrBitmap &image, bool wireframe, Trianglulation type, double alpha_tolerance) {
+    int width =  image.width;
+    int height = image.height;
     double w2d = width  / 2.0;
     double h2d = height / 2.0;
 
@@ -335,7 +361,7 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
             if (y_add < 1) y_add = 1;
             for (int i = (x_add / 2); i < width; i += x_add) {
                 for (int j = (y_add / 2); j < height; j += y_add) {
-                    if (black_and_white.getPixel(i, j) != Dr::transparent) {
+                    if (image.getPixel(i, j).alphaF() >= alpha_tolerance) {
                         coords.push_back( i );
                         coords.push_back( j );
                     }
@@ -379,23 +405,23 @@ void DrEngineVertexData::triangulateFace(const std::vector<DrPointF> &outline_po
             DrPoint mid23( (x2 + x3) / 2.0, (y2 + y3) / 2.0 );
             DrPoint mid13( (x1 + x3) / 2.0, (y1 + y3) / 2.0 );
             int transparent_count = 0;
-            if (black_and_white.getPixel(mid12.x, mid12.y) == Dr::transparent) ++transparent_count;
-            if (black_and_white.getPixel(mid23.x, mid23.y) == Dr::transparent) ++transparent_count;
-            if (black_and_white.getPixel(mid13.x, mid13.y) == Dr::transparent) ++transparent_count;
+            if (image.getPixel(mid12.x, mid12.y).alphaF() < alpha_tolerance) ++transparent_count;
+            if (image.getPixel(mid23.x, mid23.y).alphaF() < alpha_tolerance) ++transparent_count;
+            if (image.getPixel(mid13.x, mid13.y).alphaF() < alpha_tolerance) ++transparent_count;
             if (transparent_count > 1) continue;
 
             // Check average of triangle lines and centroid for transparent pixels
             DrPointF centroid((x1 + x2 + x3) / 3.0, (y1 + y2 + y3) / 3.0);
             double transparent_average = 0;
-            double avg12 = averageTransparentPixels(black_and_white, mid12);
-            double avg23 = averageTransparentPixels(black_and_white, mid23);
-            double avg13 = averageTransparentPixels(black_and_white, mid13);
-            double avg_c = averageTransparentPixels(black_and_white, centroid);
+            double avg12 = averageTransparentPixels(image, mid12,    alpha_tolerance);
+            double avg23 = averageTransparentPixels(image, mid23,    alpha_tolerance);
+            double avg13 = averageTransparentPixels(image, mid13,    alpha_tolerance);
+            double avg_c = averageTransparentPixels(image, centroid, alpha_tolerance);
             transparent_average += avg12;
             transparent_average += avg23;
             transparent_average += avg13;
             if (avg_c > 0.9999) continue; else transparent_average += avg_c;            // #NOTE: 0.9999 is 9 out of 9 pixels are transparent
-            if (transparent_average > 2.00) continue;
+            if (transparent_average > 1.99) continue;
 
             // Add triangle
             GLfloat ix1 = static_cast<GLfloat>(         x1 - w2d);

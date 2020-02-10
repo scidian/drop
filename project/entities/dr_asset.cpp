@@ -44,13 +44,13 @@ DrPropertyCollision autoCollisionShape(const DrImage *image) {
     }
 
     // If we don't have polygons by this point, just add a simple box
-    if (shapes.getPolygons().size() < 1) shapes.addPolygon( image->m_bitmap.polygon().points() );
+    if (shapes.getPolygons().size() < 1) shapes.addPolygon( image->getBitmap().polygon().points() );
 
     // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image
     for (auto &shape : shapes.getPolygons()) {
         for (auto &point : shape) {
-            point.x = point.x - (image->m_bitmap.width / 2.0);
-            point.y = (image->m_bitmap.height - point.y) - (image->m_bitmap.height / 2.0);
+            point.x = point.x - (image->getBitmap().width / 2.0);
+            point.y = (image->getBitmap().height - point.y) - (image->getBitmap().height / 2.0);
         }
     }
     return shapes;

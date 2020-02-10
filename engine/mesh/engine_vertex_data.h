@@ -68,8 +68,9 @@ public:
     void    initializeTextureQuad();
 
     // Helper Functions
+    static  std::vector<DrPointF>   insertPoints(  const std::vector<DrPointF> &outline_points);
     static  std::vector<DrPointF>   simplifyPoints(const std::vector<DrPointF> &outline_points, double tolerance, int test_count, bool average = false);
-    static  std::vector<DrPointF>   smoothPoints(const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight);
+    static  std::vector<DrPointF>   smoothPoints(  const std::vector<DrPointF> &outline_points, int neighbors, double neighbor_distance, double weight);
 
     Mesh                        getMesh(NeighborMap &neighbors);
     Vertex                      getVertex(int vertex_number);
@@ -80,7 +81,7 @@ public:
     // Extrusion Functions
     void    extrudeFacePolygon(const std::vector<DrPointF> &outline_points, int width, int height, int steps);
     void    triangulateFace(const std::vector<DrPointF> &outline_points, const std::vector<std::vector<DrPointF>> &hole_list,
-                            const DrBitmap &black_and_white, bool wireframe, Trianglulation type);
+                            const DrBitmap &image, bool wireframe, Trianglulation type, double alpha_tolerance);
 
     // Building Functions
     void    add(const DrVec3 &vertex, const DrVec3 &normal, const DrVec2 &text_coord, Triangle_Point point_number);

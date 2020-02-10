@@ -15,7 +15,7 @@ class DrProject;
 
 // Local Constants
 #define         vec                     std::vector
-const double    c_alpha_tolerance =     0.8;
+const double    c_alpha_tolerance =     0.875;
 
 
 //####################################################################################
@@ -26,14 +26,15 @@ class DrImage : public DrSettings
 {
 private:
     // Local Variables
-    Asset_Category      m_category = Asset_Category::Image;         // Category for Image in Asset Tree
-    std::string         m_simple_name;                              // Simple name, i.e. "pretty tree 1"
-
+    Asset_Category          m_category                  { Asset_Category::Image };          // Category for Image in Asset Tree
+    std::string             m_simple_name;                                                  // Simple name, i.e. "pretty tree 1"
+    DrBitmap                m_bitmap;                                                       // Stored image as DrBitmap
 
 public:
-    DrBitmap                    m_bitmap;                           // Stored image as DrBitmap
-    vec<vec<DrPointF>>          m_poly_list;                        // Stores list of image outline points
-    vec<vec<vec<DrPointF>>>     m_hole_list;                        // Stores list of hole  outline points
+    vec<vec<DrPointF>>          m_poly_list;                                                // Stores list of image outline points
+    vec<vec<vec<DrPointF>>>     m_hole_list;                                                // Stores list of hole  outline points
+    int                         m_number_of_objects     { 0 };                              // Stores number of objects found in image
+    bool                        m_use_simple_square     { false };                          // When true extrudes in 3D as simple square
 
 
 public:
@@ -52,7 +53,7 @@ public:
     Asset_Category  getAssetCategory()      { return m_category; }
     std::string     getSimplifiedName()     { return m_simple_name; }
 
-    const DrBitmap& getBitmap()             { return m_bitmap; }
+    const DrBitmap& getBitmap() const       { return m_bitmap; }
 
 };
 
