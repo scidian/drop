@@ -267,7 +267,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_bitrate,            object->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,            object->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,            object->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,       0.5f, 0.5f );
+    m_default_shader.setUniformValue( u_default_pixel_offset,       0.0f, 0.0f );
     m_default_shader.setUniformValue( u_default_negative,           object->negative );
     m_default_shader.setUniformValue( u_default_grayscale,          object->grayscale );
     m_default_shader.setUniformValue( u_default_hue,                object->hue );

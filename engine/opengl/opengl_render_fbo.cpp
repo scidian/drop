@@ -33,8 +33,16 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
+    DrPointF center(0, 0);
+    ///center.x = static_cast<double>(m_engine->getCurrentWorld()->pixel_x - fmod(m_engine->getCurrentWorld()->getCameraPosition().x, m_engine->getCurrentWorld()->pixel_x));
+    ///center.y = static_cast<double>(m_engine->getCurrentWorld()->pixel_y - fmod(m_engine->getCurrentWorld()->getCameraPosition().y, m_engine->getCurrentWorld()->pixel_y));
+//    center.x = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().x, m_engine->getCurrentWorld()->pixel_x));
+//    center.y = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().y, m_engine->getCurrentWorld()->pixel_y));
+
     // Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width(), fbo->height()) );
+//    m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width()  - m_engine->getCurrentWorld()->pixel_x*2.0f,
+//                                                                    fbo->height() - m_engine->getCurrentWorld()->pixel_y*2.0f) );
 
     // Set Texture / Barycentric Coordinates for Shader
     m_default_shader.enableAttributeArray( a_default_texture_coord );
@@ -44,8 +52,8 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     // Load vertices for this object
     std::vector<GLfloat> vertices;
-    setQuadVertices(vertices, fbo->width(), fbo->height(), DrPointF(0, 0), 0.0f);
-    m_default_shader.setAttributeArray( a_default_vertex, vertices.data(), 3 );
+    setQuadVertices(vertices, fbo->width(), fbo->height(), center, 0.0f);
+    m_default_shader.setAttributeArray(    a_default_vertex, vertices.data(), 3 );
     m_default_shader.enableAttributeArray( a_default_vertex );
 
     // Set variables for shader

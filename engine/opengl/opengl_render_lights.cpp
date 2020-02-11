@@ -178,11 +178,11 @@ void DrOpenGL::drawShadowMaps() {
             o_scale = static_cast<double>(c_occluder_scale_ortho * combinedZoomScale());
         } else {
             float screen_scale;
-            screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;         // field of view = 52.5 (in use)
-            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.45f;      // field of view = 95
-            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 0.70f;      // field of view = 70
-            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.00f;      // field of view = 52.5
-            ///screen_scale = (m_occluder_fbo->height() / 800.0f) * 1.20f;      // field of view = 45
+            screen_scale = (m_occluder_fbo->height() / (800.0f * devicePixelRatio())) * 1.00f;          // field of view = 52.5 (in use)
+            ///screen_scale = (m_occluder_fbo->height() / (800.0f * devicePixelRatio())) * 0.45f;       // field of view = 95
+            ///screen_scale = (m_occluder_fbo->height() / (800.0f * devicePixelRatio())) * 0.70f;       // field of view = 70
+            ///screen_scale = (m_occluder_fbo->height() / (800.0f * devicePixelRatio())) * 1.00f;       // field of view = 52.5
+            ///screen_scale = (m_occluder_fbo->height() / (800.0f * devicePixelRatio())) * 1.20f;       // field of view = 45
             o_scale = static_cast<double>(c_occluder_scale_proj * combinedZoomScale() * screen_scale);
         }
 

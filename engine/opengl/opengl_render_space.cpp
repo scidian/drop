@@ -69,10 +69,14 @@ void DrOpenGL::drawSpace() {
     // ********** Render 2D Objects
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
-        // ***** Trying to stop z-fighting in perspective mode
+        // ***** Trying to stop z-fighting
         if (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_3D) {
             if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
-            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += (0.005 / z_divisor); else m_add_z = 0.0;
+            if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective) {
+                if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += (0.025 / z_divisor); else m_add_z = 0.0;
+            } else {
+                if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += (0.005 / z_divisor); else m_add_z = 0.0;
+            }
             last_z = thing->getZOrder();
         }
 
