@@ -81,12 +81,14 @@ void DrOpenGL::drawDebug() {
         ///fonsDrawDebug(fs, 300.0, 350.0);                                                     // Draws Font Stash debug texture
     #endif
 
-    ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0;
+
+    ///int max_sample = 0, max_text = 0, max_number_textures = 0, max_layers = 0, depthBits = 0;
     ///glGetIntegerv ( GL_MAX_SAMPLES, &max_sample );                                       // Finds max multi sampling available on system
     ///glGetIntegerv ( GL_MAX_TEXTURE_SIZE, &max_text );                                    // Finds max texture size available on system
     ///glGetIntegerv ( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_number_textures );         // Finds max number of textures can bind at one time
     ///glGetIntegerv ( GL_MAX_ARRAY_TEXTURE_LAYERS, &max_layers );
-    ///fonsDrawText(fs, 20, 80, std::string("Max Texture Size: " +  std::to_string(g_max_texture_size)).c_str(), nullptr );
+    ///glGetIntegerv( GL_DEPTH_BITS, &depthBits);                                           // Finds bit depth of z buffer
+    ///fonsDrawText(fs, 20, 140, std::string("Depth Bits: " +  std::to_string(depthBits)).c_str(), nullptr );
 }
 
 

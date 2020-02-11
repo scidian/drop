@@ -15,8 +15,9 @@
 // Camera Constants
 const       glm::vec3   c_up_vector_y { 0.0, 1.0, 0.0 };
 const       glm::vec3   c_up_vector_z { 0.0, 0.0, 1.0 };
-const       float       c_near_plane =         -10000.0;
-const       float       c_far_plane =           10000.0;
+const       float       c_near_plane =         -10000.0f;
+const       float       c_far_plane =           10000.0f;
+const       float       c_perspective_near =    50.0f;          // By pushing this away from zero it reduces z fighting (a.k.a z-fighting, stitching)
 const       float       c_field_of_view =       52.5f;          // Close to Orthographic size when using standard widescreen ratio
 const       int         c_slop_buffer_size =    5;              // Default number of past object speeds to average together for camera follow
 

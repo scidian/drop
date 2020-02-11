@@ -164,9 +164,9 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
 
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
-    float x =   static_cast<float>(thing->getPosition().x);
-    float y =   static_cast<float>(thing->getPosition().y);
-    float z =   static_cast<float>(thing->getZOrder() + m_add_z);
+    float x =   static_cast<float>(thing->getPosition().x + m_add_z);
+    float y =   static_cast<float>(thing->getPosition().y + m_add_z);
+    float z =   static_cast<float>(thing->getZOrder()     + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
@@ -440,9 +440,9 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     if (!texture->texture()->isBound()) texture->texture()->bind();
 
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
-    float x =   static_cast<float>(thing->getPosition().x);
-    float y =   static_cast<float>(thing->getPosition().y);
-    float z =   static_cast<float>(thing->getZOrder() + m_add_z);
+    float x =   static_cast<float>(thing->getPosition().x + m_add_z);
+    float y =   static_cast<float>(thing->getPosition().y + m_add_z);
+    float z =   static_cast<float>(thing->getZOrder()     + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
@@ -612,9 +612,9 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
 
     // ***** Set Matrix for Shader, calculates current matrix, adds in object location
-    float x =   static_cast<float>(thing->getPosition().x);
-    float y =   static_cast<float>(thing->getPosition().y);
-    float z =   static_cast<float>(thing->getZOrder() + m_add_z);
+    float x =   static_cast<float>(thing->getPosition().x + m_add_z);
+    float y =   static_cast<float>(thing->getPosition().y + m_add_z);
+    float z =   static_cast<float>(thing->getZOrder()     + m_add_z);
     double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
 
     // Translate
