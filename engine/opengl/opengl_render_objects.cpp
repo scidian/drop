@@ -136,8 +136,9 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // Enable shader program
-    if (last_thing != DrThingType::Object)
+    if (last_thing != DrThingType::Object) {
         if (!m_default_shader.bind()) return;
+    }
 
 
     // ***** Blend function
@@ -251,7 +252,8 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
 
     // ***** Set Shader Variables
-    m_default_shader.setUniformValue( u_default_texture, 0 );                               // Use texture unit 0
+    m_default_shader.setUniformValue( u_default_texture,       0 );
+    m_default_shader.setUniformValue( u_default_texture_pixel, 1 );
     m_default_shader.setUniformValue( u_default_alpha,              alpha );
     m_default_shader.setUniformValue( u_default_average_color,
                                         static_cast<float>(texture->averageColor().redF()),

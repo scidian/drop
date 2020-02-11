@@ -143,7 +143,8 @@ void DrOpenGL::getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *t
 //##        Sets shader variables to default normal render
 //####################################################################################
 void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height) {
-    m_default_shader.setUniformValue( u_default_texture,            0 );                                // Use texture unit "0"
+    m_default_shader.setUniformValue( u_default_texture,            0 );
+    m_default_shader.setUniformValue( u_default_texture_pixel,      1 );
     m_default_shader.setUniformValue( u_default_alpha,              1.0f );
     m_default_shader.setUniformValue( u_default_tint,               0.0f, 0.0f, 0.0f );                 // Add 0 to red, green, and blue
     m_default_shader.setUniformValue( u_default_average_color,      0.0f, 0.0f, 0.0f );

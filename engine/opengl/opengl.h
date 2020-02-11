@@ -260,6 +260,7 @@ private:
     int     u_default_matrix_object;
 
     int     u_default_texture;
+    int     u_default_texture_pixel;
     int     u_default_width;                                    // Width of texture
     int     u_default_height;                                   // Height of texture
     int     u_default_time;                                     // Time in seconds

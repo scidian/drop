@@ -33,21 +33,22 @@ enum class Demo_Player {
 enum Asset_Textures {
     Numbers                 =   -1,
 
-    Fire_Noise              =  -50,
-    Fire_Flame_None         =  -51,
-    Fire_Flame_Torch        =  -52,
-    Fire_Flame_Candle       =  -53,
-    Fire_Flame_Square       =  -54,
-    Fire_Flame_Triangle     =  -55,
+    Fire_Noise              =  -30,
+    Fire_Flame_None         =  -31,
+    Fire_Flame_Torch        =  -32,
+    Fire_Flame_Candle       =  -33,
+    Fire_Flame_Square       =  -34,
+    Fire_Flame_Triangle     =  -35,
 
+    Mirror_Noise_1          =  -40,
 
-    Mirror_Noise_1          =  -60,
+    Water_Normal_1          =  -50,
+    Water_Texture_1         =  -51,
+    Water_Texture_2         =  -52,
+    Water_Texture_3         =  -53,
+    Water_Texture_4         =  -54,
 
-    Water_Normal_1          =  -70,
-    Water_Texture_1         =  -81,
-    Water_Texture_2         =  -82,
-    Water_Texture_3         =  -83,
-    Water_Texture_4         =  -84,
+    Pixel_Sitch_1           =  -60,
 
     Ball                    = -100,
     Block                   = -101,

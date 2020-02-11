@@ -17,6 +17,7 @@ varying highp   vec3    vert_bary;                          // Current vertex ba
 
 // ***** Input from Engine
 uniform sampler2D       u_texture;                          // Texture
+uniform sampler2D       u_texture_pixel;                    // Texture for Pixel Shading... Stiches, Tiles, etc
 
 uniform mediump float   u_alpha;                            // Opacity
 uniform mediump vec3    u_average_color;                    // Average color of texture
@@ -294,10 +295,11 @@ void main( void ) {
 
     // ***** PIXELATED
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+        // Pixel Width
         highp float pixel_width =  1.0 / u_width;
         highp float pixel_height = 1.0 / u_height;
 
-        // ***** Calculate Current Color
+        // Calculate Current Color
         highp float x_offset = (1.0 - mod(u_pixel_offset.x * u_zoom, u_pixel_x) - 1.0) * pixel_width;
         highp float y_offset = (      mod(u_pixel_offset.y * u_zoom, u_pixel_y) - 1.0) * pixel_height;
 
@@ -307,21 +309,14 @@ void main( void ) {
         highp float location_y = 1.0 - (y_offset + ((u_pixel_y * floor(real_pixel_y / u_pixel_y) + u_pixel_y) * pixel_height));
 
         // Assign Color
-        texture_color = texture2D(u_texture, vec2(location_x, location_y)).rgba;
+        texture_color =  texture2D(u_texture,       vec2(location_x, location_y)).rgba;
 
-        // Assign by Averaging by Alpha
-        //highp vec4  new_color = vec4(0.0);
-        //highp vec4  pixel =     vec4(0.0);
-        //highp float weight = 0.0;
-        //for (float i = -2.0; i < 3.0; i++) {
-        //    pixel = texture2D(u_texture, vec2(location_x - (pixel_width*i), location_y)).rgba;
-        //    new_color += pixel * pixel.a;
-        //    weight    += pixel.a;
-        //    pixel = texture2D(u_texture, vec2(location_x, location_y - (pixel_height*i))).rgba;
-        //    new_color += pixel * pixel.a;
-        //    weight    += pixel.a;
-        //}
-        //texture_color = new_color / weight;
+
+        // Add in Stitching
+//        float stitch_width =  ((u_width  / 128.0) / 4.0) * u_pixel_x / u_zoom;
+//        float stitch_height = ((u_height / 128.0) / 6.0) * u_pixel_y / u_zoom;
+//        texture_color += texture2D(u_texture_pixel, vec2(coords.x * stitch_width, coords.y * stitch_height)).rgba;
+//        texture_color /= 2.0;
 
         // Assign by Kernel Average
         //vec4 p1 = texture2D(u_texture, vec2(location_x - pixel_width*2.0, location_y)).rgba;
@@ -334,8 +329,6 @@ void main( void ) {
         //vec4 p8 = texture2D(u_texture, vec2(location_x, location_y + pixel_height*1.0)).rgba;
         //vec4 p9 = texture2D(u_texture, vec2(location_x, location_y + pixel_height*2.0)).rgba;
         //texture_color = (p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9) / 9.0;
-
-
     } else {
         texture_color = texture2D(u_texture, coords.st).rgba;                       // If not pixelated, grab initial texture color at the current location
     }

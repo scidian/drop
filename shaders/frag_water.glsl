@@ -150,7 +150,7 @@ void main( void ) {
 
 
     // ***** Calculate some position and scaling values
-    const float shrink_texture = 3.0;                                           // 1.0 = normal size, 4.0 equals 1/4 size
+    const float shrink_texture = 1.5;                                           // 1.0 = normal size, 4.0 equals 1/4 size... 3.0 was good for 512x512 textures
     float player_x = u_position.x*0.00083 * (1.0/u_zoom);
     float player_y = u_position.y*0.00083 * (1.0/u_zoom);
     float diff_w = (u_width  * (1.0/u_zoom)) / 1200.0;

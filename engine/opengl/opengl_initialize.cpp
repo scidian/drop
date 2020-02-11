@@ -129,6 +129,8 @@ void DrOpenGL::loadBuiltInTextures() {
     importTexture(Asset_Textures::Water_Texture_3,      ":/assets/textures/water_texture_3.jpg");
     importTexture(Asset_Textures::Water_Texture_4,      ":/assets/textures/water_texture_4.jpg");
 
+    importTexture(Asset_Textures::Pixel_Sitch_1,        ":/assets/textures/pixel_stitch_1.png");
+
     importTexture(Asset_Textures::Ball,                 ":/assets/test_images/ball_1.png");
     importTexture(Asset_Textures::Block,                ":/assets/test_images/metal_block.png");
     importTexture(Asset_Textures::Plant,                ":/assets/test_images/moon_plant_6.png");
@@ -300,6 +302,8 @@ void DrOpenGL::loadShaders() {
 
     // Fragment Shader Input
     u_default_texture =             m_default_shader.uniformLocation(   "u_texture" );
+    u_default_texture_pixel =       m_default_shader.uniformLocation(   "u_texture_pixel" );
+
     u_default_alpha =               m_default_shader.uniformLocation(   "u_alpha" );
     u_default_average_color =       m_default_shader.uniformLocation(   "u_average_color" );
     u_default_tint =                m_default_shader.uniformLocation(   "u_tint" );

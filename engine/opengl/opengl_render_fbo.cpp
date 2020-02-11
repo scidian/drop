@@ -29,18 +29,32 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     if (!m_default_shader.bind()) return;
     if (!fbo) return;
 
-    // Bind offscreen frame buffer object as a texture
+    // ***** Bind offscreen frame buffer objects as textures
     glEnable(GL_TEXTURE_2D);
+    GLint texture = glGetUniformLocation(m_default_shader.programId(), "u_texture");
+    GLint pixel =   glGetUniformLocation(m_default_shader.programId(), "u_texture_pixel");
+    glUseProgram(m_default_shader.programId());
+    glUniform1i(texture,    0);
+    glUniform1i(pixel,      1);
+
+    // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
+    glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
+    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
+    m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+
+    glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // GL_CLAMP_TO_BORDER  // GL_MIRRORED_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // GL_CLAMP_TO_BORDER  // GL_MIRRORED_REPEAT
 
     // ***** Set Matrix for Shader, apply Orthographic Matrix to fill the viewport
     DrPointF center(0, 0);
     // Adjust center for pixelation
     if (m_engine->getCurrentWorld()->pixel_x > 1.0f || m_engine->getCurrentWorld()->pixel_y > 1.0f) {
-        center.x = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().x, m_engine->getCurrentWorld()->pixel_x));
-        center.y = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().y, m_engine->getCurrentWorld()->pixel_y));
-        m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width()  - m_engine->getCurrentWorld()->pixel_x*2.0f,
-                                                                        fbo->height() - m_engine->getCurrentWorld()->pixel_y*2.0f) );
+        center.x = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().x*combinedZoomScale(), m_engine->getCurrentWorld()->pixel_x));
+        center.y = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().y*combinedZoomScale(), m_engine->getCurrentWorld()->pixel_y));
+        m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width()  - (m_engine->getCurrentWorld()->pixel_x*2.0f),
+                                                                        fbo->height() - (m_engine->getCurrentWorld()->pixel_y*2.0f)) );
     // No pixelation
     } else {
         m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width(), fbo->height()) );
