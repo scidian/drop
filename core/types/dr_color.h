@@ -74,8 +74,7 @@ public:
     std::string     name();
 
     // Color Editing
-    DrHsv           toHsv();
-    static DrColor  fromHsv(DrHsv hsv, int alpha);
+    DrColor         redistributeRgb(double r, double g, double b);
     DrColor         darker(int percent =  200);
     DrColor         lighter(int percent = 150);
 

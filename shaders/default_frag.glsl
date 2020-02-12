@@ -295,27 +295,61 @@ void main( void ) {
 
     // ***** PIXELATED
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
+//        // Pixel Width
+//        highp float pixel_width =  1.0 / u_width;
+//        highp float pixel_height = 1.0 / u_height;
+
+//        // Calculate Current Color
+//        highp float x_offset = (1.0 - mod(u_pixel_offset.x * u_zoom, u_pixel_x) - 1.0) * pixel_width;
+//        highp float y_offset = (      mod(u_pixel_offset.y * u_zoom, u_pixel_y) - 1.0) * pixel_height;
+
+//        highp float real_pixel_x =        (coords.x  * u_width );
+//        highp float real_pixel_y = ((1.0 - coords.y) * u_height);
+//        highp float location_x =       (x_offset + ((u_pixel_x * floor(real_pixel_x / u_pixel_x) + u_pixel_x) * pixel_width));
+//        highp float location_y = 1.0 - (y_offset + ((u_pixel_y * floor(real_pixel_y / u_pixel_y) + u_pixel_y) * pixel_height));
+
+//        // Assign Color
+//        texture_color =  texture2D(u_texture,       vec2(location_x, location_y)).rgba;
+
+
+
+
         // Pixel Width
         highp float pixel_width =  1.0 / u_width;
         highp float pixel_height = 1.0 / u_height;
+        highp float pix_size_x = u_pixel_x * u_zoom;
+        highp float pix_size_y = u_pixel_y * u_zoom;
 
         // Calculate Current Color
-        highp float x_offset = (1.0 - mod(u_pixel_offset.x * u_zoom, u_pixel_x) - 1.0) * pixel_width;
-        highp float y_offset = (      mod(u_pixel_offset.y * u_zoom, u_pixel_y) - 1.0) * pixel_height;
-
+        highp float x_offset = (1.0 - mod(u_pixel_offset.x * u_zoom, pix_size_x) - 1.0) * pixel_width;
+        highp float y_offset = (      mod(u_pixel_offset.y * u_zoom, pix_size_y) - 1.0) * pixel_height;
         highp float real_pixel_x =        (coords.x  * u_width );
         highp float real_pixel_y = ((1.0 - coords.y) * u_height);
-        highp float location_x =       (x_offset + ((u_pixel_x * floor(real_pixel_x / u_pixel_x) + u_pixel_x) * pixel_width));
-        highp float location_y = 1.0 - (y_offset + ((u_pixel_y * floor(real_pixel_y / u_pixel_y) + u_pixel_y) * pixel_height));
+        highp float location_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
+        highp float location_y = 1.0 - (y_offset + ((pix_size_y * floor(real_pixel_y / pix_size_y) + pix_size_y) * pixel_height));
 
         // Assign Color
         texture_color =  texture2D(u_texture,       vec2(location_x, location_y)).rgba;
 
 
+
+
+
         // Add in Stitching
-//        float stitch_width =  ((u_width  / 128.0) / 4.0) * u_pixel_x / u_zoom;
-//        float stitch_height = ((u_height / 128.0) / 6.0) * u_pixel_y / u_zoom;
-//        texture_color += texture2D(u_texture_pixel, vec2(coords.x * stitch_width, coords.y * stitch_height)).rgba;
+        //float stitch_width =  ((u_width  / 128.0) / 4.0) * u_pixel_x / u_zoom;
+        //float stitch_height = ((u_height / 128.0) / 6.0) * u_pixel_y / u_zoom;
+        //float stitch_width =  pixel_width  / (u_width  / 128.0);
+        //float stitch_height = pixel_height / (u_height / 128.0);
+        //texture_color += texture2D(u_texture_pixel, vec2(coords.x * stitch_width, coords.y * stitch_height)).rgba;
+
+//        highp float stitch_width =  (1.0 / 128.0);
+//        highp float stitch_height = (1.0 / 128.0);
+////        x_offset *= (stitch_width  / pixel_width);
+////        y_offset *= (stitch_height / pixel_height);
+//        location_x =       (x_offset + (real_pixel_x * stitch_width));
+//        location_y = 1.0 - (y_offset + (real_pixel_y * stitch_height));
+
+//        texture_color += texture2D(u_texture_pixel, vec2(location_x, location_y)).rgba;
 //        texture_color /= 2.0;
 
         // Assign by Kernel Average

@@ -99,123 +99,37 @@ void DrColor::setAlphaF(double alpha)   { a = Dr::Clamp(static_cast<unsigned cha
 //####################################################################################
 //##    Color Editing
 //####################################################################################
-DrHsv DrColor::toHsv() {
-    DrHsv converted;
-    double rd = static_cast<double>(r) / 255.0;
-    double gd = static_cast<double>(g) / 255.0;
-    double bd = static_cast<double>(b) / 255.0;
+DrColor DrColor::redistributeRgb(double r, double g, double b) {
+    double threshold = 255.0;
+    double m = Dr::Max(Dr::Max(r, g), b);
+    if (m <= threshold) return DrColor(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
 
-    double max = (rd  > gd) ? rd  : gd;
-           max = (max > bd) ? max : bd;
-    double min = (rd  < gd) ? rd  : gd;
-           min = (min < bd) ? min : bd;
-    double delta = max - min;
+    double total = r + g + b;
+    if (total >= 3.0 * threshold) return DrColor(static_cast<int>(threshold), static_cast<int>(threshold), static_cast<int>(threshold));
 
-    converted.value = static_cast<int>(max * 255.0);
-
-    // Grayscale, hue is technically undefined
-    if (Dr::FuzzyCompare(0.0, delta)) {
-        converted.saturation =  0;
-        converted.hue =         0;
-
-    // Color
-    } else {
-        converted.saturation = static_cast<int>((delta / max) * 255.0);
-
-        double hue = 0;
-        if (Dr::FuzzyCompare(rd, max)) {        hue = (0.0 + (gd - bd) / delta);
-        } else if (Dr::FuzzyCompare(gd, max)) { hue = (2.0 + (bd - rd) / delta);
-        } else if (Dr::FuzzyCompare(bd, max)) { hue = (4.0 + (rd - gd) / delta);
-        }
-        hue *= 60.0;
-        if (hue < 0.0) hue += 360.0;
-        converted.hue = static_cast<int>(hue * 100);        // Allows for decimal precision in int value
-    }
-
-    converted.hue =         Dr::Clamp(converted.hue,        0,   36000);
-    converted.saturation =  Dr::Clamp(converted.saturation, 0,   255);
-    converted.value =       Dr::Clamp(converted.value,      0,   255);
-    return converted;
-}
-
-DrColor DrColor::fromHsv(DrHsv hsv, int alpha) {
-    // Grayscale
-    if (hsv.saturation == 0) {
-        return DrColor(hsv.value, hsv.value, hsv.value, alpha);
-    }
-
-    // Color
-    double h = hsv.hue /        6000.0;
-    double s = hsv.saturation /  255.0;
-    double v = hsv.value /       255.0;
-    int i = static_cast<int>(h);
-    if (i == 6) i = 0;
-    double f = h - static_cast<double>(i);
-    double p = v * (1.0 - s);
-
-    DrColor color(0, 0, 0, alpha);
-    if (i & 1) {
-        double q = v * (1.0 - (s * f));
-        switch (i) {
-            case 1:     color.setRedF(q);   color.setGreenF(v);     color.setBlueF(p);  break;
-            case 3:     color.setRedF(p);   color.setGreenF(q);     color.setBlueF(v);  break;
-            case 5:     color.setRedF(v);   color.setGreenF(p);     color.setBlueF(q);  break;
-            default:    Dr::PrintDebug("DrColor::fromHsv() Warning: Hue (i) not handled in switch. Value of i: " + std::to_string(i));
-        }
-
-    } else {
-        double t = v * (1.0 - (s * (1.0 - f)));
-        switch (i) {
-            case 0:     color.setRedF(v);   color.setGreenF(t);     color.setBlueF(p);  break;
-            case 2:     color.setRedF(p);   color.setGreenF(v);     color.setBlueF(t);  break;
-            case 4:     color.setRedF(t);   color.setGreenF(p);     color.setBlueF(v);  break;
-            default:    Dr::PrintDebug("DrColor::fromHsv() Warning: Hue (i) not handled in switch. Value of i: " + std::to_string(i));
-        }
-    }
-    return color;
+    double x = (3.0 * threshold - total) / (3.0 * m - total);
+    double gray = threshold - x * m;
+    return DrColor(static_cast<int>(gray + x * r), static_cast<int>(gray + x * g), static_cast<int>(gray + x * b));
 }
 
 // Darkens color by percent
 DrColor DrColor::darker(int percent) {
     // Can't process negative percent
-    if (percent <= 0) {
-        return *this;
-    // Less than 100 is lighter
-    } else if (percent < 100) {
-        return lighter(10000 / percent);
-    }
+    if (percent <= 0) return *this;
 
-    DrHsv hsv = this->toHsv();
-    hsv.value = (hsv.value * 100) / percent;
-
-    return DrColor::fromHsv(hsv, this->alpha());
+    // Convert to multiplier, multiply rgb values, redistribute overflows
+    double m = 1.0 / (static_cast<double>(percent) / 100.0);
+    return redistributeRgb(m * this->red(), m * this->green(), m * this->blue());
 }
 
 // Lightens color by percent
 DrColor DrColor::lighter(int percent) {
     // Can't process negative percent
-    if (percent <= 0) {
-        return (*this);
-    // Less than 100 is darker
-    } else if (percent < 100) {
-        return darker(10000 / percent);
-    }
+    if (percent <= 0) return (*this);
 
-    DrHsv hsv = this->toHsv();
-    int s = hsv.saturation;
-    int v = hsv.value;
-
-    v = (percent * v) / 100;
-    // Value is maxed out, decrease saturation
-    if (v > 255) {
-        s -= (v - 255);
-        if (s < 0) s = 0;
-        v = 255;
-    }
-
-    hsv.saturation = s;
-    hsv.value =      v;
-    return DrColor::fromHsv(hsv, this->alpha());
+    // Convert to multiplier, multiply rgb values, redistribute overflows
+    double m = static_cast<double>(percent) / 100.0;
+    return redistributeRgb(m * this->red(), m * this->green(), m * this->blue());
 }
 
 
