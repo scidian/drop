@@ -51,8 +51,12 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     DrPointF center(0, 0);
     // Adjust center for pixelation
     if (m_engine->getCurrentWorld()->pixel_x > 1.0f || m_engine->getCurrentWorld()->pixel_y > 1.0f) {
-        center.x = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().x*combinedZoomScale(), m_engine->getCurrentWorld()->pixel_x));
-        center.y = static_cast<double>( -fmod(m_engine->getCurrentWorld()->getCameraPosition().y*combinedZoomScale(), m_engine->getCurrentWorld()->pixel_y));
+        double x_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().x * combinedZoomScale());
+        double y_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().y * combinedZoomScale());
+        if (x_pos < 0)  center.x =  fmod(abs(x_pos), m_engine->getCurrentWorld()->pixel_x) - static_cast<double>(m_engine->getCurrentWorld()->pixel_x);
+        else            center.x = -fmod(    x_pos,  m_engine->getCurrentWorld()->pixel_x);
+        if (y_pos < 0)  center.y =  fmod(abs(y_pos), m_engine->getCurrentWorld()->pixel_y) - static_cast<double>(m_engine->getCurrentWorld()->pixel_y);
+        else            center.y = -fmod(    y_pos,  m_engine->getCurrentWorld()->pixel_y);
         m_default_shader.setUniformValue( u_default_matrix, orthoMatrix(fbo->width()  - (m_engine->getCurrentWorld()->pixel_x*2.0f),
                                                                         fbo->height() - (m_engine->getCurrentWorld()->pixel_y*2.0f)) );
     // No pixelation

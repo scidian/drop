@@ -295,74 +295,64 @@ void main( void ) {
 
     // ***** PIXELATED
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
-//        // Pixel Width
-//        highp float pixel_width =  1.0 / u_width;
-//        highp float pixel_height = 1.0 / u_height;
-
-//        // Calculate Current Color
-//        highp float x_offset = (1.0 - mod(u_pixel_offset.x * u_zoom, u_pixel_x) - 1.0) * pixel_width;
-//        highp float y_offset = (      mod(u_pixel_offset.y * u_zoom, u_pixel_y) - 1.0) * pixel_height;
-
-//        highp float real_pixel_x =        (coords.x  * u_width );
-//        highp float real_pixel_y = ((1.0 - coords.y) * u_height);
-//        highp float location_x =       (x_offset + ((u_pixel_x * floor(real_pixel_x / u_pixel_x) + u_pixel_x) * pixel_width));
-//        highp float location_y = 1.0 - (y_offset + ((u_pixel_y * floor(real_pixel_y / u_pixel_y) + u_pixel_y) * pixel_height));
-
-//        // Assign Color
-//        texture_color =  texture2D(u_texture,       vec2(location_x, location_y)).rgba;
-
-
-
-
         // Pixel Width
         highp float pixel_width =  1.0 / u_width;
         highp float pixel_height = 1.0 / u_height;
-        highp float pix_size_x = u_pixel_x * u_zoom;
-        highp float pix_size_y = u_pixel_y * u_zoom;
+        highp float pix_size_x = u_pixel_x;// * u_zoom;
+        highp float pix_size_y = u_pixel_y;// * u_zoom;
 
         // Calculate Current Color
-        highp float x_offset = (1.0 - mod(u_pixel_offset.x * u_zoom, pix_size_x) - 1.0) * pixel_width;
-        highp float y_offset = (      mod(u_pixel_offset.y * u_zoom, pix_size_y) - 1.0) * pixel_height;
+        highp float x_offset = -mod(u_pixel_offset.x * u_zoom, pix_size_x) * pixel_width;
+        highp float y_offset =  mod(u_pixel_offset.y * u_zoom, pix_size_y) * pixel_height;
+
         highp float real_pixel_x =        (coords.x  * u_width );
         highp float real_pixel_y = ((1.0 - coords.y) * u_height);
-        highp float location_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
-        highp float location_y = 1.0 - (y_offset + ((pix_size_y * floor(real_pixel_y / pix_size_y) + pix_size_y) * pixel_height));
-
-        // Assign Color
-        texture_color =  texture2D(u_texture,       vec2(location_x, location_y)).rgba;
-
-
-
+        highp float pixel_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
+        highp float pixel_y = 1.0 - (y_offset + ((pix_size_y * floor(real_pixel_y / pix_size_y) + pix_size_y) * pixel_height));
 
 
         // Add in Stitching
-        //float stitch_width =  ((u_width  / 128.0) / 4.0) * u_pixel_x / u_zoom;
-        //float stitch_height = ((u_height / 128.0) / 6.0) * u_pixel_y / u_zoom;
-        //float stitch_width =  pixel_width  / (u_width  / 128.0);
-        //float stitch_height = pixel_height / (u_height / 128.0);
-        //texture_color += texture2D(u_texture_pixel, vec2(coords.x * stitch_width, coords.y * stitch_height)).rgba;
+        highp float stitch_x = coords.x * ((128.0 / 4.0) * (u_width  / 128.0) / pix_size_x);
+        highp float stitch_y = coords.y * ((128.0 / 6.0) * (u_height / 128.0) / pix_size_y);
 
-//        highp float stitch_width =  (1.0 / 128.0);
-//        highp float stitch_height = (1.0 / 128.0);
-////        x_offset *= (stitch_width  / pixel_width);
-////        y_offset *= (stitch_height / pixel_height);
-//        location_x =       (x_offset + (real_pixel_x * stitch_width));
-//        location_y = 1.0 - (y_offset + (real_pixel_y * stitch_height));
 
-//        texture_color += texture2D(u_texture_pixel, vec2(location_x, location_y)).rgba;
-//        texture_color /= 2.0;
 
-        // Assign by Kernel Average
-        //vec4 p1 = texture2D(u_texture, vec2(location_x - pixel_width*2.0, location_y)).rgba;
-        //vec4 p2 = texture2D(u_texture, vec2(location_x - pixel_width*1.0, location_y)).rgba;
-        //vec4 p3 = texture2D(u_texture, vec2(location_x                  , location_y)).rgba;
-        //vec4 p4 = texture2D(u_texture, vec2(location_x + pixel_width*1.0, location_y)).rgba;
-        //vec4 p5 = texture2D(u_texture, vec2(location_x + pixel_width*2.0, location_y)).rgba;
-        //vec4 p6 = texture2D(u_texture, vec2(location_x, location_y - pixel_height*2.0)).rgba;
-        //vec4 p7 = texture2D(u_texture, vec2(location_x, location_y - pixel_height*1.0)).rgba;
-        //vec4 p8 = texture2D(u_texture, vec2(location_x, location_y + pixel_height*1.0)).rgba;
-        //vec4 p9 = texture2D(u_texture, vec2(location_x, location_y + pixel_height*2.0)).rgba;
+        // Assign Pixel Color
+        texture_color = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
+
+        // Assign Pixel Color by Kernel Average
+        //vec4 p1 = texture2D(u_texture, vec2(pixel_x - pixel_width*2.0, pixel_y)).rgba;
+        //vec4 p2 = texture2D(u_texture, vec2(pixel_x - pixel_width*1.0, pixel_y)).rgba;
+        //vec4 p3 = texture2D(u_texture, vec2(pixel_x                  , pixel_y)).rgba;
+        //vec4 p4 = texture2D(u_texture, vec2(pixel_x + pixel_width*1.0, pixel_y)).rgba;
+        //vec4 p5 = texture2D(u_texture, vec2(pixel_x + pixel_width*2.0, pixel_y)).rgba;
+        //vec4 p6 = texture2D(u_texture, vec2(pixel_x, pixel_y - pixel_height*2.0)).rgba;
+        //vec4 p7 = texture2D(u_texture, vec2(pixel_x, pixel_y - pixel_height*1.0)).rgba;
+        //vec4 p8 = texture2D(u_texture, vec2(pixel_x, pixel_y + pixel_height*1.0)).rgba;
+        //vec4 p9 = texture2D(u_texture, vec2(pixel_x, pixel_y + pixel_height*2.0)).rgba;
         //texture_color = (p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9) / 9.0;
+
+        // Assign Pixel Color by Alpha
+        //texture_color = vec4(0.0);
+        //highp float total = 0.0;
+        //for (float i = -4.0; i < 5.0; i += 2.0) {
+        //    vec4 tx = texture2D(u_texture, vec2(pixel_x + (i * pixel_width), pixel_y)).rgba;
+        //    vec4 ty = texture2D(u_texture, vec2(pixel_x, pixel_y + (i * pixel_height))).rgba;
+        //    texture_color += tx;
+        //    texture_color += ty;
+        //    total += tx.a;
+        //    total += ty.a;
+        //}
+        //texture_color /= total;
+
+        // Add Stitch Color
+        vec4 stitch_color = texture2D(u_texture_pixel, vec2(stitch_x, stitch_y)).rgba;
+        texture_color = mix(vec4(0.0), texture_color, stitch_color.r);
+
+        // Tint Stitch Design Into Image
+        //texture_color += (stitch_color * 0.10);
+        //texture_color /= 1.10;
+
     } else {
         texture_color = texture2D(u_texture, coords.st).rgba;                       // If not pixelated, grab initial texture color at the current location
     }

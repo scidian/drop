@@ -109,7 +109,6 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
         }
     }
 
-
     // ***** Set Look At and Scale
     m_view.lookAt(m_eye, m_look_at, m_up);
     m_view.scale(combinedZoomScale());

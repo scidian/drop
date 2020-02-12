@@ -99,17 +99,26 @@ void DrColor::setAlphaF(double alpha)   { a = Dr::Clamp(static_cast<unsigned cha
 //####################################################################################
 //##    Color Editing
 //####################################################################################
+// Values are 0 to 255+ range, redistributes overflow of highest value to other values (i.e. DrColor(260r, 0g, 0b) becomes DrColor(255r, 2.5b, 2.5g)
 DrColor DrColor::redistributeRgb(double r, double g, double b) {
-    double threshold = 255.0;
-    double m = Dr::Max(Dr::Max(r, g), b);
-    if (m <= threshold) return DrColor(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
-
-    double total = r + g + b;
-    if (total >= 3.0 * threshold) return DrColor(static_cast<int>(threshold), static_cast<int>(threshold), static_cast<int>(threshold));
-
-    double x = (3.0 * threshold - total) / (3.0 * m - total);
-    double gray = threshold - x * m;
-    return DrColor(static_cast<int>(gray + x * r), static_cast<int>(gray + x * g), static_cast<int>(gray + x * b));
+    double extra = 0.0;
+    if (r > 255.0) {
+        extra = r - 255.0;
+        b += extra * (b / (b + g));
+        g += extra * (g / (b + g));
+    } else if (g > 255.0) {
+        extra = g - 255.0;
+        r += extra * (r / (r + b));
+        b += extra * (b / (r + b));
+    } else if (b > 255.0) {
+        extra = b - 255.0;
+        r += extra * (r / (r + g));
+        g += extra * (g / (r + g));
+    }
+    int ir = Dr::Clamp(static_cast<int>(r), 0, 255);
+    int ig = Dr::Clamp(static_cast<int>(g), 0, 255);
+    int ib = Dr::Clamp(static_cast<int>(b), 0, 255);
+    return DrColor(ir, ig, ib);
 }
 
 // Darkens color by percent

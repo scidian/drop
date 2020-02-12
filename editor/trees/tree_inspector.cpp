@@ -140,13 +140,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
 
     // ********** If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !force_rebuild) {
-        DrThing *thing1 = dynamic_cast<DrThing*>(getParentProject()->findSettingsFromKey(m_selected_key));
-        DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
-        if (thing1->getThingType() == thing2->getThingType()) {
-            m_selected_key = new_key;
-            updateInspectorPropertyBoxes( { thing2 }, { } );
-            updateLockedSettings();
-            return;
+        DrSettings *settings1 = getParentProject()->findSettingsFromKey(m_selected_key);
+        if (settings1 != nullptr) {
+            DrThing *thing1 = dynamic_cast<DrThing*>(settings1);
+            DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
+            if (thing1 && thing2) {
+                if (thing1->getThingType() == thing2->getThingType()) {
+                    m_selected_key = new_key;
+                    updateInspectorPropertyBoxes( { thing2 }, { } );
+                    updateLockedSettings();
+                    return;
+                }
+            }
         }
     }
     m_selected_key =  new_key;

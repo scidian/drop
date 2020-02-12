@@ -9,6 +9,8 @@
 #ifndef DR_MATH_H
 #define DR_MATH_H
 
+#include <cmath>
+
 // Forward Declarations
 #include "3rd_party/glm/fwd.hpp"
 class DrPoint;
@@ -94,6 +96,14 @@ namespace Dr {
         }
         return new_value;
     }
+
+    // Rounds to nearest decimal place
+    template<class T> T     RoundDecimalPlace(T value, int decimal_places) {
+        double places = std::pow(10.0, decimal_places);
+        T rounded = static_cast<int>(value * places + .5);
+        return static_cast<T>(rounded / places);
+    }
+
 
     //####################################################################################
     //##    Angle Functions

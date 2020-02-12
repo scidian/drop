@@ -39,7 +39,11 @@ void DrView::updateGrid() {
     m_grid_size =       Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Size).toPointF());
     m_grid_scale =      Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Scale).toPointF());
     m_grid_rotate =     stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Rotation).toDouble();
-    m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
+    if (Dr::GetColorScheme() == Color_Scheme::Light) {
+        m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+    } else {
+        m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark));
+    }
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
     m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Comps::World_Settings, Props::World_Background_Color).toUInt());
     m_back_color_use =  world->getComponentPropertyValue(Comps::World_Settings, Props::World_Use_Background_Color).toVector()[0].toBool();

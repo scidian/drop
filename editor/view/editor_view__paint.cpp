@@ -241,7 +241,12 @@ void DrView::paintGrid(QPainter &painter) {
 //####################################################################################
 void DrView::paintGameFrame(QPainter &painter) {
     painter.setBrush(Qt::NoBrush);
-    QColor frame_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+    QColor frame_color;
+    if (Dr::GetColorScheme() == Color_Scheme::Light) {
+        frame_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
+    } else {
+        frame_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+    }
     frame_color.setAlpha(128);
 
     QPen frame_pen_outline = QPen(frame_color, 4);
