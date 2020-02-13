@@ -33,6 +33,7 @@ uniform         bool    u_premultiplied;                    // True if the textu
 uniform highp   float   u_pixel_x;// = 1.0;                 // Pixel Width X    1.0 Normal, 4.0 is nice pixelation
 uniform highp   float   u_pixel_y;// = 1.0;                 // Pixel Width Y    1.0 Normal, 4.0 is nice pixelation
 uniform highp   vec2    u_pixel_offset;                     // Used to offset pixelation to reduce pixel flicker
+uniform highp   float   u_pixel_type;                       // Which pixelation texture to use, 0 = none, 1 = kintted, 2 = woven
 uniform         bool    u_negative;// = false;              // Negative         True / False
 uniform         bool    u_grayscale;// = false;             // Grayscale        True / False
 uniform mediump float   u_hue;// = 0.0;                     // Hue              Editor:    0 to 360     Shader:  0.0 to 1.0
@@ -302,22 +303,29 @@ void main( void ) {
         highp float pixel_height =  1.0 / u_height;
 
         // Texture Spanning (For textures that require more than 1 "pixel" to show texture)
-        float spread = 1.0;
-        if (u_grayscale) spread = 2.0;                      // Woven
+        highp float spread =    1.0;
+        highp float x_offset =  0.0;
+        highp float y_offset =  0.0;
+        highp float pattern_x = 0.0;
+        highp float pattern_y = 0.0;
+        if (u_pixel_type == 2.0) spread = 2.0;              // Woven
+        if (u_pixel_type == 3.0) spread = 5.0;              // Wood
 
         // Calculate Current Color
-        highp float x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x*spread) - (pix_size_x*spread/2.0) ) * pixel_width;
-        highp float y_offset = ( mod(u_pixel_offset.y * u_zoom, pix_size_y*spread) - (pix_size_y*spread/2.0) ) * pixel_height;
+        if (spread > 1.0) {
+            x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x*spread) - (pix_size_x*u_zoom/spread) ) * pixel_width;
+            y_offset = ( mod(u_pixel_offset.y * u_zoom, pix_size_y*spread) - (pix_size_y*u_zoom/spread) ) * pixel_height;
+        } else {
+            x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x) - (pix_size_x/2.0) ) * pixel_width;
+            y_offset = ( mod(u_pixel_offset.y * u_zoom, pix_size_y) - (pix_size_y/2.0) ) * pixel_height;
+        }
         highp float real_pixel_x =        (coords.x  * u_width );
         highp float real_pixel_y = ((1.0 - coords.y) * u_height);
         highp float pixel_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
         highp float pixel_y = 1.0 - (y_offset + ((pix_size_y * floor(real_pixel_y / pix_size_y) + pix_size_y) * pixel_height));
 
-        highp float pattern_x = 0.0;
-        highp float pattern_y = 0.0;
-
         // ***** Stitching
-        if (u_negative) {
+        if (u_pixel_type == 1.0) {
             // Adjust 1 "pixel" to between 0.0 to 1.0
             highp float relative_x = mod(coords.x * u_width, pix_size_x) / pix_size_x;
             highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y))) / pix_size_y;
@@ -349,12 +357,11 @@ void main( void ) {
                 }
             }
 
-
         // ***** Woven
-        } else if (u_grayscale) {
+        } else if (u_pixel_type == 2.0) {
             // Adjust 2 "pixels" to between 0.0 to 1.0
-            highp float relative_x = mod(coords.x * u_width, pix_size_x*2.0) / (pix_size_x*2.0);
-            highp float relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*2.0))) / (pix_size_y*2.0);
+            highp float relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
+            highp float relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
             pattern_x = (relative_x) / 1.0;                 // 1.0 == 2 stitches spread across two pixels across
             pattern_y = (relative_y) / 1.0;                 // 1.0 == 2 stitches spread across two pixels up and down
 
@@ -379,8 +386,15 @@ void main( void ) {
                     if (relative_y < 0.030) pixel_y -= (pix_size_y * pixel_height);
                 }
             }
-        }
 
+        // ***** Wood
+        } else if (u_pixel_type == 3.0) {
+            // Adjust 4 "pixels" to between 0.0 to 1.0
+            highp float relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
+            highp float relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
+            pattern_x = (relative_x) / 1.0;                 // 1.0 == 5 pieces of wood spread across four pixels across
+            pattern_y = (relative_y) / 1.0;                 // 1.0 == 5 pieces of wood spread across four pixels up and down
+        }
 
         // Pixelation Color
         vec4 p1 = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
@@ -390,20 +404,14 @@ void main( void ) {
         vec4 p5 = texture2D(u_texture, vec2(pixel_x, pixel_y - pixel_height)).rgba;
         texture_color = (p1 + p2 + p3 + p4 + p5) / 5.0;
 
-
-        // Stitch Color
-        if (u_negative) {
-            vec4 stitch_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
-            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, stitch_color.r);
+        // Pattern Color (Stitch, Woven, Wood, etc)
+        if (u_pixel_type > 0.0) {
+            vec4 pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
+            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, pattern_color.r);
             // Tint Stitch Design Into Image
             //texture_color += (stitch_color * 0.10);
             //texture_color /= 1.10;
-        // Woven Color
-        } else if (u_grayscale) {
-            vec4 woven_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
-            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, woven_color.r);
         }
-
 
     // If not pixelated, grab initial texture color at the current location
     } else {
@@ -435,13 +443,13 @@ void main( void ) {
 
     // ***** NEGATIVE
     if (u_negative) {
-//        frag_rgb = 1.0 - frag_rgb;
+        frag_rgb = 1.0 - frag_rgb;
     }
 
     // ***** GRAYSCALE
     if (u_grayscale) {
-//        highp float average = 0.2126 * frag_rgb.r + 0.7152 * frag_rgb.g + 0.0722 * frag_rgb.b;
-//        frag_rgb = vec3(average, average, average);
+        highp float average = 0.2126 * frag_rgb.r + 0.7152 * frag_rgb.g + 0.0722 * frag_rgb.b;
+        frag_rgb = vec3(average, average, average);
     }
 
     // ***** HUE / SATURATION ADJUSTMENT

@@ -159,7 +159,33 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return;
-    if (!texture->texture()->isBound()) texture->texture()->bind();
+
+    if (object->pixel_texture != Pixel_Texture::None) {
+        glEnable(GL_TEXTURE_2D);
+        GLint texture_object = glGetUniformLocation(m_default_shader.programId(), "u_texture");
+        GLint texture_pixel =  glGetUniformLocation(m_default_shader.programId(), "u_texture_pixel");
+        glUseProgram(m_default_shader.programId());
+        glUniform1i(texture_object,    0);
+        glUniform1i(texture_pixel,     1);
+        // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
+        glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
+        if (object->pixel_texture == Pixel_Texture::Knitted) {
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+        } else if (object->pixel_texture == Pixel_Texture::Woven) {
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+        } else if (object->pixel_texture == Pixel_Texture::Wood) {
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Wood_1)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Pixel_Wood_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+        }
+        glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
+        glBindTexture(GL_TEXTURE_2D, texture->texture()->textureId());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // GL_CLAMP_TO_BORDER  // GL_MIRRORED_REPEAT
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // GL_CLAMP_TO_BORDER  // GL_MIRRORED_REPEAT
+    } else if (!texture->texture()->isBound()) {
+        texture->texture()->bind();
+    }
     float texture_width =  texture->width();
     float texture_height = texture->height();
 
@@ -270,6 +296,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_pixel_x,            object->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,            object->pixel_y );
     m_default_shader.setUniformValue( u_default_pixel_offset,       0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_pixel_type,         static_cast<float>(object->pixel_texture) );
     m_default_shader.setUniformValue( u_default_negative,           object->negative );
     m_default_shader.setUniformValue( u_default_grayscale,          object->grayscale );
     m_default_shader.setUniformValue( u_default_hue,                object->hue );

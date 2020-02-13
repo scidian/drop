@@ -340,6 +340,7 @@ namespace Props {
     // Appearance
     const std::string World_Filter_Bitrate                  = "WoFiBitrate";                // ranged int, 0 to 256
     const std::string World_Filter_Pixelation               = "WoFiPixelation";             // positive size
+    const std::string World_Filter_PixelType                = "WoFiPixelType";              // list, enum class Pixel_Texture (Pixel, Knit, Woven, etc)
     const std::string World_Filter_Brightness               = "WoFiBrightness";             // slider
     const std::string World_Filter_Contrast                 = "WoFiContrast";               // slider
     const std::string World_Filter_Saturation               = "WoFiSaturation";             // slider
@@ -407,6 +408,7 @@ namespace Props {
     // Appearance
     const std::string Thing_Filter_Bitrate                  = "ThFiBitrate";                // ranged int, 0 to 256
     const std::string Thing_Filter_Pixelation               = "ThFiPixelation";             // positive size
+    const std::string Thing_Filter_PixelType                = "ThFiPixelType";              // list, enum class Pixel_Texture (Pixel, Knit, Woven, etc)
     const std::string Thing_Filter_Brightness               = "ThFiBrightness";             // slider
     const std::string Thing_Filter_Contrast                 = "ThFiContrast";               // slider
     const std::string Thing_Filter_Saturation               = "ThFiSaturation";             // slider

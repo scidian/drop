@@ -116,6 +116,8 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     DrPointF pixelation =   world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Pixelation).toPointF();
     pixel_x =               static_cast<float>(pixelation.x);
     pixel_y =               static_cast<float>(pixelation.y);
+    int pixel_type =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_PixelType).toInt();
+    pixel_texture =         static_cast<Pixel_Texture>(pixel_type);
     brightness =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Brightness).toVector()[0].toInt() / 255.f;
     contrast =          world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Contrast).toVector()[0].toInt() / 255.f;
     saturation =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Saturation).toVector()[0].toInt() / 255.f;

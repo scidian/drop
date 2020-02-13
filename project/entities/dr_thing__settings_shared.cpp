@@ -191,12 +191,15 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_comp
     addComponent(Comps::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Purple_Royal, show_component);
     getComponent(Comps::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
+    bool hidden = bitrate_and_pixel_only;
+
+    addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_PixelType, Property_Type::List, static_cast<int>(Pixel_Texture::None),
+                           "Pixel Texture", "Design of pixelation. For plain blocky pixels leave as \"None\".", hidden);
+    addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation, Property_Type::OneSizeF, DrPointF(1.0, 1.0),
+                           "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
     addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate, Property_Type::Slider, std::vector<DrVariant>({256, 0, 256, 8, ""}),
                            "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
-    addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation, Property_Type::OneSizeF, DrPointF(1.0, 1.0),
-                           "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
-    bool hidden = bitrate_and_pixel_only;
     addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_Brightness, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
                            "Brightness", "How light / dark this item should appear. \nDefault: \t0 \nRange: \t-255 to 255", hidden);
     addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_Contrast, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),

@@ -131,6 +131,7 @@ void DrOpenGL::loadBuiltInTextures() {
 
     importTexture(Asset_Textures::Pixel_Sitch_1,        ":/assets/textures/pixel_stitch_1.png");
     importTexture(Asset_Textures::Pixel_Woven_1,        ":/assets/textures/pixel_woven_1.png");
+    importTexture(Asset_Textures::Pixel_Wood_1,         ":/assets/textures/pixel_wood_1.jpg");
 
     importTexture(Asset_Textures::Ball,                 ":/assets/test_images/ball_1.png");
     importTexture(Asset_Textures::Block,                ":/assets/test_images/metal_block.png");
@@ -318,6 +319,7 @@ void DrOpenGL::loadShaders() {
     u_default_pixel_x =             m_default_shader.uniformLocation(   "u_pixel_x" );
     u_default_pixel_y =             m_default_shader.uniformLocation(   "u_pixel_y" );
     u_default_pixel_offset =        m_default_shader.uniformLocation(   "u_pixel_offset" );
+    u_default_pixel_type =          m_default_shader.uniformLocation(   "u_pixel_type" );
     u_default_negative =            m_default_shader.uniformLocation(   "u_negative" );
     u_default_grayscale =           m_default_shader.uniformLocation(   "u_grayscale" );
     u_default_hue =                 m_default_shader.uniformLocation(   "u_hue" );

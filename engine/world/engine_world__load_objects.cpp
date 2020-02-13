@@ -60,6 +60,7 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     bool        cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
     int         bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
+    int         pixel_type =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_PixelType).toInt();
     float       brightness =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt() / 255.f;
     float       contrast =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt() / 255.f;
     float       saturation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Saturation).toVector()[0].toInt() / 255.f;
@@ -77,6 +78,7 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     object->bitrate =           bit_rate;
     object->pixel_x =           static_cast<float>(pixelation.x);
     object->pixel_y =           static_cast<float>(pixelation.y);
+    object->pixel_texture =     static_cast<Pixel_Texture>(pixel_type);
     object->brightness =        brightness;
     object->contrast =          contrast;
     object->saturation =        saturation;

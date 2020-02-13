@@ -107,6 +107,11 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     } else if   (property_key == Props::World_Camera_Zoom_In_Or_Out) {
         options << tr("Zoom Out")
                 << tr("Zoom In");
+    } else if   (property_key == Props::World_Filter_PixelType || property_key == Props::Thing_Filter_PixelType) {
+        options << tr("None")
+                << tr("Knitted Stitch")
+                << tr("Woven Cloth")
+                << tr("Wood Grain");
     } else {
         options << tr("Unknown List");
     }

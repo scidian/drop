@@ -36,18 +36,18 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     glUseProgram(m_default_shader.programId());
     glUniform1i(texture,    0);
     glUniform1i(pixel,      1);
-
     // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
     glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
-
-    if (m_engine->getCurrentWorld()->negative) {
+    if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Knitted) {
         glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
         m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
-    } else if (m_engine->getCurrentWorld()->grayscale) {
+    } else if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Woven) {
         glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->textureId());
         m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+    } else if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Wood) {
+        glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Wood_1)->texture()->textureId());
+        m_engine->getTexture(Asset_Textures::Pixel_Wood_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
     }
-
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // GL_CLAMP_TO_BORDER  // GL_MIRRORED_REPEAT
@@ -57,10 +57,10 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     DrPointF center(0, 0);
     // Adjust center for pixelation
     if (m_engine->getCurrentWorld()->pixel_x > 1.0f || m_engine->getCurrentWorld()->pixel_y > 1.0f) {
+        // Woven cloth uses 1 texture spread across 2 pixels, etc
         float spread = 1.0f;
-
-        // Woven cloth uses 1 texture for 2 pixels
-        if (m_engine->getCurrentWorld()->grayscale) spread = 2.0f;
+        if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Woven) spread = 2.0f;
+        if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Wood)  spread = 5.0f;
 
         double x_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().x * combinedZoomScale());
         double y_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().y * combinedZoomScale());
@@ -96,6 +96,7 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_pixel_y,            m_engine->getCurrentWorld()->pixel_y );
     m_default_shader.setUniformValue( u_default_pixel_offset,       m_engine->getCurrentWorld()->getCameraPosition().x,
                                                                     m_engine->getCurrentWorld()->getCameraPosition().y );
+    m_default_shader.setUniformValue( u_default_pixel_type,         static_cast<float>(m_engine->getCurrentWorld()->pixel_texture) );
 
     // Set more Appearance Variables for Shader
     m_default_shader.setUniformValue( u_default_negative,           m_engine->getCurrentWorld()->negative );

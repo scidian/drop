@@ -34,53 +34,54 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld      *m_world             { nullptr };        // Points to current parent DrEngineWorld
+    DrEngineWorld      *m_world             { nullptr };            // Points to current parent DrEngineWorld
 
     // Engine Info
-    long        m_key                       { c_no_key };       // Unique key for this item
-    long        m_original_project_key      { c_no_key };       // Key of item when it was in Project Data Model
+    long        m_key                       { c_no_key };           // Unique key for this item
+    long        m_original_project_key      { c_no_key };           // Key of item when it was in Project Data Model
 
     // Containers
-    EngineSpawners      m_spawners;                             // Holds all Spawners that have been attached to this Thing
-    EngineComponents    m_components;                           // Container of all components this Thing owns
+    EngineSpawners      m_spawners;                                 // Holds all Spawners that have been attached to this Thing
+    EngineComponents    m_components;                               // Container of all components this Thing owns
 
     // Built In Components
-    ThingComp3D        *m_comp_3d           { nullptr };        // Component that handles 3D rendering
-    ThingCompCamera    *m_comp_camera       { nullptr };        // Component that handles a following camera
-    ThingCompPlayer    *m_comp_player       { nullptr };        // Component that handles using Thing as a Player (character)
-    ThingCompSoftBody  *m_comp_soft_body    { nullptr };        // Component that handles giving Thing a soft body
+    ThingComp3D        *m_comp_3d           { nullptr };            // Component that handles 3D rendering
+    ThingCompCamera    *m_comp_camera       { nullptr };            // Component that handles a following camera
+    ThingCompPlayer    *m_comp_player       { nullptr };            // Component that handles using Thing as a Player (character)
+    ThingCompSoftBody  *m_comp_soft_body    { nullptr };            // Component that handles giving Thing a soft body
 
 
     // Basic Thing Properties
-    double      m_angle_z           { 0.0 };                    // Current rotation angle (on Z axis), (for DrEngineObject this is updated every frame by update())
-    float       m_opacity           { 1.0f };                   // Transparency of Thing (0.0 invisible, 1.0 opaque)
-    DrPointF    m_position          { 0.0, 0.0 };               // Current center posiiton
-    double      m_z_order           { 0.0 };                    // Used for layering, used for distance sorting
-    float       m_scale_x           { 1.0f };                   // Scale of Thing in world
-    float       m_scale_y           { 1.0f };                   // Scale of Thing in world
-    DrPointF    m_size              { 1.0, 1.0 };               // Original size of Thing
-    double      m_velocity_x        { 0.0 };                    // Current velocity
-    double      m_velocity_y        { 0.0 };                    // Current velocity
+    double          m_angle_z               { 0.0 };                // Current rotation angle (on Z axis), (for DrEngineObject this is updated every frame by update())
+    float           m_opacity               { 1.0f };               // Transparency of Thing (0.0 invisible, 1.0 opaque)
+    DrPointF        m_position              { 0.0, 0.0 };           // Current center posiiton
+    double          m_z_order               { 0.0 };                // Used for layering, used for distance sorting
+    float           m_scale_x               { 1.0f };               // Scale of Thing in world
+    float           m_scale_y               { 1.0f };               // Scale of Thing in world
+    DrPointF        m_size                  { 1.0, 1.0 };           // Original size of Thing
+    double          m_velocity_x            { 0.0 };                // Current velocity
+    double          m_velocity_y            { 0.0 };                // Current velocity
 
 public:
     // ***** Image Post Processing Attributes
-    bool        extrude_3d          { false };                  // Auto convert to 3D   True / False
-    bool        wireframe           { false };                  // Wireframe            True / False
-    float       wireframe_width     { 1.0f };                   // Wireframe Width
-    bool        cartoon             { false };                  // Cartoon              True / False
-    float       cartoon_width       { 5.0f };                   // Cartoon Width
-    bool        cross_hatch         { false };                  // Cross Hatch          True / False
-    float       cross_hatch_width   { 5.0f };                   // Cross Hatch Width
+    bool            extrude_3d          { false };                  // Auto convert to 3D   True / False
+    bool            wireframe           { false };                  // Wireframe            True / False
+    float           wireframe_width     { 1.0f };                   // Wireframe Width
+    bool            cartoon             { false };                  // Cartoon              True / False
+    float           cartoon_width       { 5.0f };                   // Cartoon Width
+    bool            cross_hatch         { false };                  // Cross Hatch          True / False
+    float           cross_hatch_width   { 5.0f };                   // Cross Hatch Width
 
-    float       bitrate             { 256.0f };                 // Bitrate              1 to 256
-    float       pixel_x             { 1.0f };                   // Pixelation X         1.0+
-    float       pixel_y             { 1.0f };                   // Pixelation Y         1.0+
-    bool        negative            { false };                  // Negative             True / False
-    bool        grayscale           { false };                  // Grayscale            True / False
-    float       hue                 { 0.0f };                   // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
-    float       saturation          { 0.0f };                   // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
-    float       contrast            { 0.0f };                   // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
-    float       brightness          { 0.0f };                   // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           bitrate             { 256.0f };                 // Bitrate              1 to 256
+    float           pixel_x             { 1.0f };                   // Pixelation X         1.0+
+    float           pixel_y             { 1.0f };                   // Pixelation Y         1.0+
+    Pixel_Texture   pixel_texture       { Pixel_Texture::None };    // Pixel Texture        None, Knit, Woven, Wood, etc
+    bool            negative            { false };                  // Negative             True / False
+    bool            grayscale           { false };                  // Grayscale            True / False
+    float           hue                 { 0.0f };                   // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
+    float           saturation          { 0.0f };                   // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           contrast            { 0.0f };                   // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           brightness          { 0.0f };                   // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
 
     // ********** Local Variables Updated by Engine

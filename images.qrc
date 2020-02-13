@@ -431,5 +431,6 @@
         <file>assets/toolbar_icons/toolbar_camera.png</file>
         <file>assets/textures/pixel_stitch_1.png</file>
         <file>assets/textures/pixel_woven_1.png</file>
+        <file>assets/textures/pixel_wood_1.jpg</file>
     </qresource>
 </RCC>

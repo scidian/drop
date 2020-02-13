@@ -273,6 +273,7 @@ private:
     int     u_default_pixel_x;                                  // Pixelation X value
     int     u_default_pixel_y;                                  // Pixelation Y value
     int     u_default_pixel_offset;                             // Offset for pixelation
+    int     u_default_pixel_type;                               // Pixelation texture
     int     u_default_negative;                                 // Negative?
     int     u_default_grayscale;                                // Grayscale?
     int     u_default_hue;                                      // Hue, 0.0 to 1.0

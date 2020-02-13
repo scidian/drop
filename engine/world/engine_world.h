@@ -157,6 +157,7 @@ public:
     float           bitrate                 { 256.0f };                     // Bitrate              1 to 256
     float           pixel_x                 { 1.0f };                       // Pixelation X         1.0+
     float           pixel_y                 { 1.0f };                       // Pixelation Y         1.0+
+    Pixel_Texture   pixel_texture           { Pixel_Texture::None };        // Pixel Texture        None, Kintted, Woven, Etc
     bool            negative                { false };                      // Negative             True / False
     bool            grayscale               { false };                      // Grayscale            True / False
     float           hue                     { 0.0f };                       // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
