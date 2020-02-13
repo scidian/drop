@@ -226,7 +226,7 @@ void main( void ) {
 
     // ***** WAVY
     if (u_wavy) {
-        //time = 100.0;                           // !!! Disables imported time (turns off animation)
+        //time = 100.0;                                         // !!! Disables imported time (turns off animation)
         vec2  tc =  coords.xy;
         vec2  p =   -1.0 + 2.0 * tc;
         float len = length(p);
@@ -284,8 +284,8 @@ void main( void ) {
 
     // ***** GRID
 //    if (u_wavy) {
-//        float multiplicationFactor = 32.0;          // Scales the number of stripes
-//        float threshold = 0.5;                      // Defines the with of the lines (1.0 equals full square)
+//        float multiplicationFactor = 32.0;                // Scales the number of stripes
+//        float threshold = 0.5;                            // Defines the with of the lines (1.0 equals full square)
 //        vec2 t = coords * multiplicationFactor;
 //        if (fract(t.s * (u_width / u_height)) > threshold && fract(t.t) > threshold ) {
 //            discard;
@@ -301,9 +301,13 @@ void main( void ) {
         highp float pixel_width =   1.0 / u_width;
         highp float pixel_height =  1.0 / u_height;
 
+        // Texture Spanning (For textures that require more than 1 "pixel" to show texture)
+        float spread = 1.0;
+        if (u_grayscale) spread = 2.0;                      // Woven
+
         // Calculate Current Color
-        highp float x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x) - (pix_size_x/2.0) ) * pixel_width;
-        highp float y_offset = ( mod(u_pixel_offset.y * u_zoom, pix_size_y) - (pix_size_y/2.0) ) * pixel_height;
+        highp float x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x*spread) - (pix_size_x*spread/2.0) ) * pixel_width;
+        highp float y_offset = ( mod(u_pixel_offset.y * u_zoom, pix_size_y*spread) - (pix_size_y*spread/2.0) ) * pixel_height;
         highp float real_pixel_x =        (coords.x  * u_width );
         highp float real_pixel_y = ((1.0 - coords.y) * u_height);
         highp float pixel_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
@@ -314,14 +318,11 @@ void main( void ) {
 
         // ***** Stitching
         if (u_negative) {
-            highp float  adjust_x = coords.x;
-            highp float  adjust_y = coords.y - ((mod(u_height, pix_size_y) + pix_size_y*0.62) * pixel_height);
-            pattern_x = (adjust_x * ((128.0 / 4.0) * (u_width  / 128.0)) / pix_size_x);
-            pattern_y = (adjust_y * ((128.0 / 6.0) * (u_height / 128.0)) / pix_size_y);
-
-            // Adjust between 0.0 to 1.0
+            // Adjust 1 "pixel" to between 0.0 to 1.0
             highp float relative_x = mod(coords.x * u_width, pix_size_x) / pix_size_x;
             highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y))) / pix_size_y;
+            pattern_x = (relative_x)         / 2.0;         // 2.0 == 2 stitches across
+            pattern_y = (relative_y - 0.625) / 3.0;         // 3.0 == 3 stitches up and down
 
             // Left Half
             if (relative_x < 0.5) {
@@ -351,17 +352,33 @@ void main( void ) {
 
         // ***** Woven
         } else if (u_grayscale) {
-            // ***** Add in Stitching
-            highp float  adjust_x = coords.x + (pix_size_x*pixel_width/2.0);
-            highp float  adjust_y = coords.y - ((mod(u_height, pix_size_y) + pix_size_y*0.50) * pixel_height);
-            pattern_x = (adjust_x * ((128.0 / 4.0) * (u_width  / 128.0)) / pix_size_x);
-            pattern_y = (adjust_y * ((128.0 / 4.0) * (u_height / 128.0)) / pix_size_y);
+            // Adjust 2 "pixels" to between 0.0 to 1.0
+            highp float relative_x = mod(coords.x * u_width, pix_size_x*2.0) / (pix_size_x*2.0);
+            highp float relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*2.0))) / (pix_size_y*2.0);
+            pattern_x = (relative_x) / 1.0;                 // 1.0 == 2 stitches spread across two pixels across
+            pattern_y = (relative_y) / 1.0;                 // 1.0 == 2 stitches spread across two pixels up and down
 
-            // Adjust between 0.0 to 1.0
-            highp float relative_x = mod(coords.x * u_width, pix_size_x) / pix_size_x;
-            highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y))) / pix_size_y;
-
-
+            if (relative_y > 0.5) {
+                // Upper Left Stitch
+                if (relative_x < 0.5) {
+                    if (relative_x < 0.043) pixel_x -= (pix_size_x * pixel_width);
+                    if (relative_x > 0.475) pixel_x += (pix_size_x * pixel_width);
+                // Upper Right Stich
+                } else {
+                    if (relative_y > 0.955) pixel_y += (pix_size_y * pixel_height);
+                    if (relative_y < 0.530) pixel_y -= (pix_size_y * pixel_height);
+                }
+            } else {
+                // Lower Right Stitch
+                if (relative_x > 0.5) {
+                    if (relative_x < 0.530) pixel_x -= (pix_size_x * pixel_width);
+                    if (relative_x > 0.965) pixel_x += (pix_size_x * pixel_width);
+                // Lower Left Stich
+                } else {
+                    if (relative_y > 0.470) pixel_y += (pix_size_y * pixel_height);
+                    if (relative_y < 0.030) pixel_y -= (pix_size_y * pixel_height);
+                }
+            }
         }
 
 
@@ -373,10 +390,6 @@ void main( void ) {
         vec4 p5 = texture2D(u_texture, vec2(pixel_x, pixel_y - pixel_height)).rgba;
         texture_color = (p1 + p2 + p3 + p4 + p5) / 5.0;
 
-
-        //if (mod(floor(pattern_x * 4.0), 1.0) <= 0.0) {
-        //    texture_color = vec4(1.0, 0.0, 0.0, 1.0);
-        //}
 
         // Stitch Color
         if (u_negative) {
