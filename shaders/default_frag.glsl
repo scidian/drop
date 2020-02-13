@@ -296,10 +296,10 @@ void main( void ) {
     // ***** PIXELATED    
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
         // Pixelation Variables
-        highp float pix_size_x = u_pixel_x;// * u_zoom;
-        highp float pix_size_y = u_pixel_y;// * u_zoom;
-        highp float pixel_width =  1.0 / u_width;
-        highp float pixel_height = 1.0 / u_height;
+        highp float pix_size_x =    u_pixel_x;// * u_zoom;
+        highp float pix_size_y =    u_pixel_y;// * u_zoom;
+        highp float pixel_width =   1.0 / u_width;
+        highp float pixel_height =  1.0 / u_height;
 
         // Calculate Current Color
         highp float x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x) - (pix_size_x/2.0) ) * pixel_width;
@@ -309,12 +309,15 @@ void main( void ) {
         highp float pixel_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
         highp float pixel_y = 1.0 - (y_offset + ((pix_size_y * floor(real_pixel_y / pix_size_y) + pix_size_y) * pixel_height));
 
+        highp float pattern_x = 0.0;
+        highp float pattern_y = 0.0;
+
         // ***** Stitching
         if (u_negative) {
-            // ***** Add in Stitching
-            highp float stitch_x = (coords.x * ((128.0 / 4.0) * (u_width  / 128.0)) / pix_size_x);
-            highp float adjust_y = coords.y - ((mod(u_height, pix_size_y) + pix_size_y*0.62) * pixel_height);
-            highp float stitch_y = (adjust_y * ((128.0 / 6.0) * (u_height / 128.0)) / pix_size_y);
+            highp float  adjust_x = coords.x;
+            highp float  adjust_y = coords.y - ((mod(u_height, pix_size_y) + pix_size_y*0.62) * pixel_height);
+            pattern_x = (adjust_x * ((128.0 / 4.0) * (u_width  / 128.0)) / pix_size_x);
+            pattern_y = (adjust_y * ((128.0 / 6.0) * (u_height / 128.0)) / pix_size_y);
 
             // Adjust between 0.0 to 1.0
             highp float relative_x = mod(coords.x * u_width, pix_size_x) / pix_size_x;
@@ -345,22 +348,53 @@ void main( void ) {
                 }
             }
 
-            // ***** Stitch Color
-            texture_color = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
-            vec4 stitch_color = texture2D(u_texture_pixel, vec2(stitch_x, stitch_y)).rgba;
-            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, stitch_color.r);
 
+        // ***** Woven
+        } else if (u_grayscale) {
+            // ***** Add in Stitching
+            highp float  adjust_x = coords.x + (pix_size_x*pixel_width/2.0);
+            highp float  adjust_y = coords.y - ((mod(u_height, pix_size_y) + pix_size_y*0.50) * pixel_height);
+            pattern_x = (adjust_x * ((128.0 / 4.0) * (u_width  / 128.0)) / pix_size_x);
+            pattern_y = (adjust_y * ((128.0 / 4.0) * (u_height / 128.0)) / pix_size_y);
+
+            // Adjust between 0.0 to 1.0
+            highp float relative_x = mod(coords.x * u_width, pix_size_x) / pix_size_x;
+            highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y))) / pix_size_y;
+
+
+        }
+
+
+        // Pixelation Color
+        vec4 p1 = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
+        vec4 p2 = texture2D(u_texture, vec2(pixel_x + pixel_width, pixel_y)).rgba;
+        vec4 p3 = texture2D(u_texture, vec2(pixel_x - pixel_width, pixel_y)).rgba;
+        vec4 p4 = texture2D(u_texture, vec2(pixel_x, pixel_y + pixel_height)).rgba;
+        vec4 p5 = texture2D(u_texture, vec2(pixel_x, pixel_y - pixel_height)).rgba;
+        texture_color = (p1 + p2 + p3 + p4 + p5) / 5.0;
+
+
+        //if (mod(floor(pattern_x * 4.0), 1.0) <= 0.0) {
+        //    texture_color = vec4(1.0, 0.0, 0.0, 1.0);
+        //}
+
+        // Stitch Color
+        if (u_negative) {
+            vec4 stitch_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
+            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, stitch_color.r);
             // Tint Stitch Design Into Image
             //texture_color += (stitch_color * 0.10);
             //texture_color /= 1.10;
-
-        // Pixelation Color
-        } else {
-            texture_color = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
+        // Woven Color
+        } else if (u_grayscale) {
+            vec4 woven_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
+            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, woven_color.r);
         }
 
+
+    // If not pixelated, grab initial texture color at the current location
     } else {
-        texture_color = texture2D(u_texture, coords.st).rgba;                       // If not pixelated, grab initial texture color at the current location
+        texture_color = texture2D(u_texture, coords.st).rgba;
     }
 
 
@@ -393,8 +427,8 @@ void main( void ) {
 
     // ***** GRAYSCALE
     if (u_grayscale) {
-        highp float average = 0.2126 * frag_rgb.r + 0.7152 * frag_rgb.g + 0.0722 * frag_rgb.b;
-        frag_rgb = vec3(average, average, average);
+//        highp float average = 0.2126 * frag_rgb.r + 0.7152 * frag_rgb.g + 0.0722 * frag_rgb.b;
+//        frag_rgb = vec3(average, average, average);
     }
 
     // ***** HUE / SATURATION ADJUSTMENT

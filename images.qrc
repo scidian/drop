@@ -430,5 +430,6 @@
         <file>assets/toolbar_icons/toolbar_reset_center.png</file>
         <file>assets/toolbar_icons/toolbar_camera.png</file>
         <file>assets/textures/pixel_stitch_1.png</file>
+        <file>assets/textures/pixel_woven_1.png</file>
     </qresource>
 </RCC>

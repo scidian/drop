@@ -39,8 +39,14 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
 
     // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
     glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
-    glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
-    m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+
+    if (m_engine->getCurrentWorld()->negative) {
+        glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
+        m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+    } else if (m_engine->getCurrentWorld()->grayscale) {
+        glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->textureId());
+        m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+    }
 
     glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
     glBindTexture(GL_TEXTURE_2D, fbo->texture());

@@ -49,6 +49,7 @@ enum Asset_Textures {
     Water_Texture_4         =  -54,
 
     Pixel_Sitch_1           =  -60,
+    Pixel_Woven_1           =  -61,
 
     Ball                    = -100,
     Block                   = -101,

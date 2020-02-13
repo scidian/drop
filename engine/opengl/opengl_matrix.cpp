@@ -109,15 +109,15 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
         }
     }
 
-
-    m_eye.setX( Dr::RoundToMultiple(m_eye.x(), 1) );
-    m_eye.setY( Dr::RoundToMultiple(m_eye.y(), 1) );
-    m_eye.setZ( Dr::RoundToMultiple(m_eye.z(), 1) );
-
-    m_look_at.setX( Dr::RoundToMultiple(m_look_at.x(), 1) );
-    m_look_at.setY( Dr::RoundToMultiple(m_look_at.y(), 1) );
-    m_look_at.setZ( Dr::RoundToMultiple(m_look_at.z(), 1) );
-
+    // Round camera during pixelation
+    if (m_engine->getCurrentWorld()->pixel_x > 1.0f || m_engine->getCurrentWorld()->pixel_y > 1.0f) {
+        m_eye.setX(     Dr::RoundToMultiple(m_eye.x(),      1) );
+        m_eye.setY(     Dr::RoundToMultiple(m_eye.y(),      1) );
+        m_eye.setZ(     Dr::RoundToMultiple(m_eye.z(),      1) );
+        m_look_at.setX( Dr::RoundToMultiple(m_look_at.x(),  1) );
+        m_look_at.setY( Dr::RoundToMultiple(m_look_at.y(),  1) );
+        m_look_at.setZ( Dr::RoundToMultiple(m_look_at.z(),  1) );
+    }
 
     // ***** Set Look At and Scale
     m_view.lookAt(m_eye, m_look_at, m_up);
