@@ -104,6 +104,12 @@ namespace Dr {
         return static_cast<T>(rounded / places);
     }
 
+    // Rounds to nearest multiple (m), so like if m == 5, rounds to the nearest multiple of 5
+    template<class T> T     RoundToMultiple(T value, double m) {
+        double rounded = std::round(static_cast<double>(value) / m) * m;
+        return static_cast<T>(rounded);
+    }
+
 
     //####################################################################################
     //##    Angle Functions

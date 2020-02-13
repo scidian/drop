@@ -42,7 +42,7 @@ void DrView::updateGrid() {
     if (Dr::GetColorScheme() == Color_Scheme::Light) {
         m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
     } else {
-        m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark));
+        m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
     }
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
     m_back_color =      QColor::fromRgba(world->getComponentPropertyValue(Comps::World_Settings, Props::World_Background_Color).toUInt());
