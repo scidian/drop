@@ -59,6 +59,14 @@ const   highp   float   PI =  3.14159;                      // Pi
 const   highp   float   RAD = 6.2831853;                    // 2.0 * PI is 360 degrees in radians
 const   highp   float   PI180 = PI / 180.0;                 // To convert Degrees to Radians
 
+// Pixel Textures
+const           float   TextureNone     = 0.0;
+const           float   TextureTile     = 1.0;
+const           float   TextureCross    = 2.0;
+const           float   TextureKnitted  = 3.0;
+const           float   TextureWoven    = 4.0;
+const           float   TextureWood     = 5.0;
+
 
 //####################################################################################
 //##    Fast Rgb / Hsv Conversion Functions
@@ -308,8 +316,8 @@ void main( void ) {
         highp float y_offset =  0.0;
         highp float pattern_x = 0.0;
         highp float pattern_y = 0.0;
-        if (u_pixel_type == 2.0) spread = 2.0;              // Woven
-        if (u_pixel_type == 3.0) spread = 5.0;              // Wood
+        if (u_pixel_type == TextureWoven) spread = 2.0;
+        if (u_pixel_type == TextureWood)  spread = 5.0;
 
         // Calculate Current Color
         if (spread > 1.0) {
@@ -324,11 +332,17 @@ void main( void ) {
         highp float pixel_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
         highp float pixel_y = 1.0 - (y_offset + ((pix_size_y * floor(real_pixel_y / pix_size_y) + pix_size_y) * pixel_height));
 
+        // Adjust Pattern spread "pixels" to between 0.0 to 1.0
+        highp float relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
+        highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
+
+        // ***** Tile, Cross Stitch, Wood
+        if (u_pixel_type == TextureTile || u_pixel_type == TextureCross || u_pixel_type == TextureWood) {
+            pattern_x = (relative_x) / 1.0;
+            pattern_y = (relative_y) / 1.0;
+
         // ***** Stitching
-        if (u_pixel_type == 1.0) {
-            // Adjust 1 "pixel" to between 0.0 to 1.0
-            highp float relative_x = mod(coords.x * u_width, pix_size_x) / pix_size_x;
-            highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y))) / pix_size_y;
+        } else if (u_pixel_type == TextureKnitted) {
             pattern_x = (relative_x)         / 2.0;         // 2.0 == 2 stitches across
             pattern_y = (relative_y - 0.625) / 3.0;         // 3.0 == 3 stitches up and down
 
@@ -358,10 +372,11 @@ void main( void ) {
             }
 
         // ***** Woven
-        } else if (u_pixel_type == 2.0) {
+        } else if (u_pixel_type == TextureWoven) {
             // Adjust 2 "pixels" to between 0.0 to 1.0
-            highp float relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
-            highp float relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
+            relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
+            relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
+
             pattern_x = (relative_x) / 1.0;                 // 1.0 == 2 stitches spread across two pixels across
             pattern_y = (relative_y) / 1.0;                 // 1.0 == 2 stitches spread across two pixels up and down
 
@@ -386,14 +401,6 @@ void main( void ) {
                     if (relative_y < 0.030) pixel_y -= (pix_size_y * pixel_height);
                 }
             }
-
-        // ***** Wood
-        } else if (u_pixel_type == 3.0) {
-            // Adjust 4 "pixels" to between 0.0 to 1.0
-            highp float relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
-            highp float relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
-            pattern_x = (relative_x) / 1.0;                 // 1.0 == 5 pieces of wood spread across four pixels across
-            pattern_y = (relative_y) / 1.0;                 // 1.0 == 5 pieces of wood spread across four pixels up and down
         }
 
         // Pixelation Color
@@ -405,7 +412,7 @@ void main( void ) {
         texture_color = (p1 + p2 + p3 + p4 + p5) / 5.0;
 
         // Pattern Color (Stitch, Woven, Wood, etc)
-        if (u_pixel_type > 0.0) {
+        if (u_pixel_type != TextureNone) {
             vec4 pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
             texture_color.rgb = mix(vec3(0.0), texture_color.rgb, pattern_color.r);
             // Tint Stitch Design Into Image

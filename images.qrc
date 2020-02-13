@@ -432,5 +432,7 @@
         <file>assets/textures/pixel_stitch_1.png</file>
         <file>assets/textures/pixel_woven_1.png</file>
         <file>assets/textures/pixel_wood_1.jpg</file>
+        <file>assets/textures/pixel_tile_1.png</file>
+        <file>assets/textures/pixel_cross_1.png</file>
     </qresource>
 </RCC>

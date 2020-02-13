@@ -192,7 +192,6 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_comp
     getComponent(Comps::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
     bool hidden = bitrate_and_pixel_only;
-
     addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_PixelType, Property_Type::List, static_cast<int>(Pixel_Texture::None),
                            "Pixel Texture", "Design of pixelation. For plain blocky pixels leave as \"None\".", hidden);
     addPropertyToComponent(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation, Property_Type::OneSizeF, DrPointF(1.0, 1.0),

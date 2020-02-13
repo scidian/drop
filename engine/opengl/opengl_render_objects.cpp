@@ -169,7 +169,13 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         glUniform1i(texture_pixel,     1);
         // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
         glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
-        if (object->pixel_texture == Pixel_Texture::Knitted) {
+        if (object->pixel_texture == Pixel_Texture::Tile) {
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Tile_1)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Pixel_Tile_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+        } else if (object->pixel_texture == Pixel_Texture::Cross) {
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Cross_1)->texture()->textureId());
+            m_engine->getTexture(Asset_Textures::Pixel_Cross_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+        } else if (object->pixel_texture == Pixel_Texture::Knitted) {
             glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
             m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
         } else if (object->pixel_texture == Pixel_Texture::Woven) {

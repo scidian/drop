@@ -48,9 +48,11 @@ enum Asset_Textures {
     Water_Texture_3         =  -53,
     Water_Texture_4         =  -54,
 
-    Pixel_Sitch_1           =  -60,
-    Pixel_Woven_1           =  -61,
-    Pixel_Wood_1            =  -62,
+    Pixel_Tile_1            =  -60,
+    Pixel_Cross_1           =  -61,
+    Pixel_Sitch_1           =  -62,
+    Pixel_Woven_1           =  -63,
+    Pixel_Wood_1            =  -64,
 
     Ball                    = -100,
     Block                   = -101,
@@ -74,9 +76,11 @@ enum class Blend_Mode {
 
 enum class Pixel_Texture {
     None                    = 0,
-    Knitted                 = 1,
-    Woven                   = 2,
-    Wood                    = 3,
+    Tile                    = 1,
+    Cross                   = 2,
+    Knitted                 = 3,
+    Woven                   = 4,
+    Wood                    = 5,
 };
 
 enum class Water_Texture {
