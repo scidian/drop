@@ -418,30 +418,7 @@ void main( void ) {
             relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
             pattern_x = (relative_x) / 1.0;
             pattern_y = (relative_y) / 1.0;
-
-
-        // ***** Ascii
-        } else if (u_pixel_type == TextureAscii) {
-            // Font texture is 256x256
-            // 8 characters wide == 32 pixels width  per character (256 pixels total)
-            // 6 characters tall == 40 pixels height per character (240 pixels total)
-
-            float cx_offset = (-mod(u_pixel_offset.x*u_zoom, pix_size_x));
-            float cy_offset = ( mod(u_pixel_offset.y*u_zoom, pix_size_y));
-            float nx = floor((real_pixel_x + u_pixel_offset.x*u_zoom + cx_offset) / (pix_size_x));      // X Coordinate for Character
-            float ny = floor((real_pixel_y - u_pixel_offset.y*u_zoom + cy_offset) / (pix_size_y));      // Y Coordinate for Character
-            float r1 = random(vec2( (ny*ny) - nx, (ny*nx) - nx ));
-            float r2 = random(vec2( (nx*nx) - ny, (ny*ny) + ny ));
-            float rx = (floor(r1 * 8.0));
-            float ry = (floor(r2 * 6.0));
-
-            float char_pixel =  (1.0 / 256.0);
-            float char_width  = char_pixel * 32.0;
-            float char_height = char_pixel * 40.0;
-            pattern_x = (char_width  * rx) + (relative_x * char_width);
-            pattern_y = (char_height * ry) + (relative_y * char_height);// + (char_pixel * 16.0);
         }
-
 
         // Pixelation Color
         vec4 p1 = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;
@@ -450,6 +427,55 @@ void main( void ) {
         vec4 p4 = texture2D(u_texture, vec2(pixel_x, pixel_y + pixel_height)).rgba;
         vec4 p5 = texture2D(u_texture, vec2(pixel_x, pixel_y - pixel_height)).rgba;
         texture_color = (p1 + p2 + p3 + p4 + p5) / 5.0;
+
+        // ***** Ascii
+        if (u_pixel_type == TextureAscii) {
+            // Font texture is 256x256
+            // Original 8 x 6 Characters
+            /**
+            // 8 characters wide == 32 pixels width  per character (256 pixels total)
+            // 6 characters tall == 40 pixels height per character (240 pixels total)
+            float cx_offset = (-mod(u_pixel_offset.x*u_zoom, pix_size_x));
+            float cy_offset = ( mod(u_pixel_offset.y*u_zoom, pix_size_y));
+            float nx = floor((real_pixel_x + u_pixel_offset.x*u_zoom + cx_offset) / (pix_size_x));      // X Coordinate for Character
+            float ny = floor((real_pixel_y - u_pixel_offset.y*u_zoom + cy_offset) / (pix_size_y));      // Y Coordinate for Character
+            float r1 = random(vec2( (ny*ny) - nx, (ny*nx) - nx ));
+            float r2 = random(vec2( (nx*nx) - ny, (ny*ny) + ny ));
+            float rx = (floor(r1 * 8.0));
+            float ry = (floor(r2 * 6.0));
+            float char_pixel =  (1.0 / 256.0);
+            float char_width  = char_pixel * 32.0;
+            float char_height = char_pixel * 40.0;
+            pattern_x = (char_width  * rx) + (relative_x * char_width);
+            pattern_y = (char_height * ry) + (relative_y * char_height);// + (char_pixel * 16.0);
+            */
+
+            // Font texture is 256x256
+            // Newer 16 x 12 Characters
+            // 16 characters wide == 16 pixels width  per character (256 pixels total)
+            // 12 characters tall == 20 pixels height per character (240 pixels total)
+            float lumens = (0.40*texture_color.r + 0.70*texture_color.g + 0.25*texture_color.b);        // Luminosity formula
+                  lumens = clamp(lumens, 0.0, 1.0);
+            //float lumens =    max(max(texture_color.r, texture_color.g), texture_color.b);            // Luminosity by max red / green / blue value
+            //float lumens =    rgbToHsv(texture_color.rgb).b;                                          // Luminosity by hsv value
+            float row_start = floor(lumens * 8.999);                                                    // Split characters up by 12 (1 to 8 + 4) sections of luminosity
+
+            float cx_offset = (-mod(u_pixel_offset.x*u_zoom, pix_size_x));
+            float cy_offset = ( mod(u_pixel_offset.y*u_zoom, pix_size_y));
+            float nx = floor((real_pixel_x + u_pixel_offset.x*u_zoom + cx_offset) / (pix_size_x));      // X Coordinate for Character
+            float ny = floor((real_pixel_y - u_pixel_offset.y*u_zoom + cy_offset) / (pix_size_y));      // Y Coordinate for Character
+            float r1 = random(vec2( (ny*ny) - nx, (ny*nx) - nx ));
+            float r2 = random(vec2( (nx*nx) - ny, (ny*ny) + ny ));
+            float rx = (floor(r1 * 16.0));                                                              // 16 columns
+            float ry = (floor(r2 *  4.0));                                                              // Was 12 (12 rows), but now 4 (4 rows for each luminosity)
+
+            float char_pixel =  (1.0 / 256.0);
+            float char_width  = char_pixel * 16.0;
+            float char_height = char_pixel * 20.0;
+            pattern_x = (char_width  * rx) + (relative_x * char_width);
+            pattern_y = (char_height * ry) + (char_height * row_start) + (relative_y * char_height);
+        }
+
 
         // Pattern Color (Stitch, Woven, Wood, etc)
         if (u_pixel_type != TextureNone) {
