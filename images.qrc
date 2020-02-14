@@ -434,5 +434,7 @@
         <file>assets/textures/pixel_wood_1.jpg</file>
         <file>assets/textures/pixel_tile_1.png</file>
         <file>assets/textures/pixel_cross_1.png</file>
+        <file>assets/textures/pixel_brick_1.png</file>
+        <file>assets/textures/pixel_ascii_1.png</file>
     </qresource>
 </RCC>

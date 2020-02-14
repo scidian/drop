@@ -129,6 +129,8 @@ void DrOpenGL::loadBuiltInTextures() {
     importTexture(Asset_Textures::Water_Texture_3,      ":/assets/textures/water_texture_3.jpg");
     importTexture(Asset_Textures::Water_Texture_4,      ":/assets/textures/water_texture_4.jpg");
 
+    importTexture(Asset_Textures::Pixel_Ascii_1,        ":/assets/textures/pixel_ascii_1.png");
+    importTexture(Asset_Textures::Pixel_Brick_1,        ":/assets/textures/pixel_brick_1.png");
     importTexture(Asset_Textures::Pixel_Tile_1,         ":/assets/textures/pixel_tile_1.png");
     importTexture(Asset_Textures::Pixel_Cross_1,        ":/assets/textures/pixel_cross_1.png");
     importTexture(Asset_Textures::Pixel_Sitch_1,        ":/assets/textures/pixel_stitch_1.png");

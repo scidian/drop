@@ -61,11 +61,13 @@ const   highp   float   PI180 = PI / 180.0;                 // To convert Degree
 
 // Pixel Textures
 const           float   TextureNone     = 0.0;
-const           float   TextureTile     = 1.0;
-const           float   TextureCross    = 2.0;
-const           float   TextureKnitted  = 3.0;
-const           float   TextureWoven    = 4.0;
-const           float   TextureWood     = 5.0;
+const           float   TextureAscii    = 1.0;
+const           float   TextureBrick    = 2.0;
+const           float   TextureTile     = 3.0;
+const           float   TextureCross    = 4.0;
+const           float   TextureKnitted  = 5.0;
+const           float   TextureWoven    = 6.0;
+const           float   TextureWood     = 7.0;
 
 
 //####################################################################################
@@ -73,9 +75,9 @@ const           float   TextureWood     = 5.0;
 //####################################################################################
 // ***** Convert red/green/blue to hue/saturation/vibrance
 vec3 rgbToHsv(vec3 c) {
-    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
-    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+    vec4  K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4  p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4  q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
     float d = q.x - min(q.w, q.y);
     float e = 1.0e-10;
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
@@ -83,8 +85,8 @@ vec3 rgbToHsv(vec3 c) {
 
 // ***** Convert hue/saturation/vibrance to red/green/blue
 vec3 hsvToRgb(vec3 c) {
-    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    vec4  K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3  p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
@@ -93,8 +95,8 @@ vec3 hsvToRgb(vec3 c) {
 //##    Calculates how close point is to edge of triangle (used for wirefame)
 //####################################################################################
 float edgeFactor(float width) {
-    vec3 d =  fwidth(vert_bary);
-    vec3 a3 = smoothstep(vec3(0.0), d * width * sqrt(u_zoom), vert_bary);
+    vec3  d =  fwidth(vert_bary);
+    vec3  a3 = smoothstep(vec3(0.0), d * width * sqrt(u_zoom), vert_bary);
     return min(min(a3.x, a3.y), a3.z);
 }
 
@@ -195,6 +197,14 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
 
 
 //####################################################################################
+//##    Pseudo-random number, that is between 0.0 and 0.999999 inclusive
+//####################################################################################
+float random (vec2 xy) {
+    return fract(sin(dot(xy, vec2(11.2345, 81.456))) * 42758.12);
+}
+
+
+//####################################################################################
 //##    2D Rotation / Translation
 //####################################################################################
 vec2 translate(vec2 v, float x, float y) {
@@ -230,8 +240,8 @@ void main( void ) {
     highp vec4 final_color;
 
     // Move coordinates into a vec2 that is not read-only
-    highp vec2 coords = coordinates.st;
-    highp float time = u_time;
+    highp vec2  coords = coordinates.st;
+    highp float time   = u_time;
 
     // ***** WAVY
     if (u_wavy) {
@@ -316,8 +326,9 @@ void main( void ) {
         highp float y_offset =  0.0;
         highp float pattern_x = 0.0;
         highp float pattern_y = 0.0;
-        if (u_pixel_type == TextureWoven) spread = 2.0;
-        if (u_pixel_type == TextureWood)  spread = 5.0;
+        if      (u_pixel_type == TextureBrick) spread = 2.0;
+        else if (u_pixel_type == TextureWoven) spread = 2.0;
+        else if (u_pixel_type == TextureWood)  spread = 5.0;
 
         // Calculate Current Color
         if (spread > 1.0) {
@@ -336,13 +347,12 @@ void main( void ) {
         highp float relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
         highp float relative_y = (pix_size_y - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
 
-        // ***** Tile, Cross Stitch, Wood
-        if (u_pixel_type == TextureTile || u_pixel_type == TextureCross || u_pixel_type == TextureWood) {
-            pattern_x = (relative_x) / 1.0;
-            pattern_y = (relative_y) / 1.0;
+        // ***** Ceramic Tile, Cross Stitch, Wood Blocks
+        pattern_x = (relative_x);// / 1.0;
+        pattern_y = (relative_y);// / 1.0;
 
         // ***** Stitching
-        } else if (u_pixel_type == TextureKnitted) {
+        if (u_pixel_type == TextureKnitted) {
             pattern_x = (relative_x)         / 2.0;         // 2.0 == 2 stitches across
             pattern_y = (relative_y - 0.625) / 3.0;         // 3.0 == 3 stitches up and down
 
@@ -376,7 +386,6 @@ void main( void ) {
             // Adjust 2 "pixels" to between 0.0 to 1.0
             relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
             relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
-
             pattern_x = (relative_x) / 1.0;                 // 1.0 == 2 stitches spread across two pixels across
             pattern_y = (relative_y) / 1.0;                 // 1.0 == 2 stitches spread across two pixels up and down
 
@@ -401,7 +410,38 @@ void main( void ) {
                     if (relative_y < 0.030) pixel_y -= (pix_size_y * pixel_height);
                 }
             }
+
+        // ***** Brick
+        } else if (u_pixel_type == TextureBrick) {
+            // Adjust 2 "pixels" to between 0.0 to 1.0
+            relative_x = mod(coords.x * u_width, pix_size_x*spread) / (pix_size_x*spread);
+            relative_y = (pix_size_y*2.0 - (mod((1.0 - coords.y) * u_height, pix_size_y*spread))) / (pix_size_y*spread);
+            pattern_x = (relative_x) / 1.0;
+            pattern_y = (relative_y) / 1.0;
+
+
+        // ***** Ascii
+        } else if (u_pixel_type == TextureAscii) {
+            // Font texture is 256x256
+            // 8 characters wide == 32 pixels width  per character (256 pixels total)
+            // 6 characters tall == 40 pixels height per character (240 pixels total)
+
+            float cx_offset = (-mod(u_pixel_offset.x*u_zoom, pix_size_x));
+            float cy_offset = ( mod(u_pixel_offset.y*u_zoom, pix_size_y));
+            float nx = floor((real_pixel_x + u_pixel_offset.x*u_zoom + cx_offset) / (pix_size_x));      // X Coordinate for Character
+            float ny = floor((real_pixel_y - u_pixel_offset.y*u_zoom + cy_offset) / (pix_size_y));      // Y Coordinate for Character
+            float r1 = random(vec2( (ny*ny) - nx, (ny*nx) - nx ));
+            float r2 = random(vec2( (nx*nx) - ny, (ny*ny) + ny ));
+            float rx = (floor(r1 * 8.0));
+            float ry = (floor(r2 * 6.0));
+
+            float char_pixel =  (1.0 / 256.0);
+            float char_width  = char_pixel * 32.0;
+            float char_height = char_pixel * 40.0;
+            pattern_x = (char_width  * rx) + (relative_x * char_width);
+            pattern_y = (char_height * ry) + (relative_y * char_height);// + (char_pixel * 16.0);
         }
+
 
         // Pixelation Color
         vec4 p1 = texture2D(u_texture, vec2(pixel_x, pixel_y)).rgba;

@@ -169,21 +169,17 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         glUniform1i(texture_pixel,     1);
         // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
         glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
-        if (object->pixel_texture == Pixel_Texture::Tile) {
-            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Tile_1)->texture()->textureId());
-            m_engine->getTexture(Asset_Textures::Pixel_Tile_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
-        } else if (object->pixel_texture == Pixel_Texture::Cross) {
-            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Cross_1)->texture()->textureId());
-            m_engine->getTexture(Asset_Textures::Pixel_Cross_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
-        } else if (object->pixel_texture == Pixel_Texture::Knitted) {
-            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->textureId());
-            m_engine->getTexture(Asset_Textures::Pixel_Sitch_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
-        } else if (object->pixel_texture == Pixel_Texture::Woven) {
-            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->textureId());
-            m_engine->getTexture(Asset_Textures::Pixel_Woven_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
-        } else if (object->pixel_texture == Pixel_Texture::Wood) {
-            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(Asset_Textures::Pixel_Wood_1)->texture()->textureId());
-            m_engine->getTexture(Asset_Textures::Pixel_Wood_1)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
+        long texture_number = 0;
+        if      (object->pixel_texture == Pixel_Texture::Ascii_Text)    texture_number = Asset_Textures::Pixel_Ascii_1;
+        else if (object->pixel_texture == Pixel_Texture::Brick_Wall)    texture_number = Asset_Textures::Pixel_Brick_1;
+        else if (object->pixel_texture == Pixel_Texture::Ceramic_Tile)  texture_number = Asset_Textures::Pixel_Tile_1;
+        else if (object->pixel_texture == Pixel_Texture::Cross_Stitch)  texture_number = Asset_Textures::Pixel_Cross_1;
+        else if (object->pixel_texture == Pixel_Texture::Knit_Stitch)   texture_number = Asset_Textures::Pixel_Sitch_1;
+        else if (object->pixel_texture == Pixel_Texture::Woven_Cloth)   texture_number = Asset_Textures::Pixel_Woven_1;
+        else if (object->pixel_texture == Pixel_Texture::Wood_Blocks)   texture_number = Asset_Textures::Pixel_Wood_1;
+        if (texture_number != 0) {
+            glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(texture_number)->texture()->textureId());
+            m_engine->getTexture(texture_number)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
         }
         glActiveTexture(GL_TEXTURE0);                           // Texture unit 0
         glBindTexture(GL_TEXTURE_2D, texture->texture()->textureId());

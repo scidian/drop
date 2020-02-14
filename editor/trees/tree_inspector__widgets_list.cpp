@@ -109,11 +109,13 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Zoom In");
     } else if   (property_key == Props::World_Filter_PixelType || property_key == Props::Thing_Filter_PixelType) {
         options << tr("None")
+                << tr("Ascii Text")
+                << tr("Brick Wall")
                 << tr("Ceramic Tile")
                 << tr("Cross Stitch")
                 << tr("Knitted Stitch")
                 << tr("Woven Cloth")
-                << tr("Wood Grain");
+                << tr("Wood Blocks");
     } else {
         options << tr("Unknown List");
     }
