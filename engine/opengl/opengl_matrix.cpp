@@ -78,10 +78,13 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationY()) + c_not_zero, 0.0f, 1.0f, 0.0f);
     rotate_eye.rotate(static_cast<float>(world->getCameraRotationX()) + c_not_zero, 1.0f, 0.0f, 0.0f);
     rotate_eye.translate(-m_look_at);
-    m_eye = rotate_eye * m_eye;
+    m_eye =     rotate_eye * m_eye;
+
+    // Origin Point, used to calculate relative camera position for pixelation and such
+    QVector3D  origin = rotate_eye * QVector3D(0.0, 0.0, 0.0);
 
     //          Find up vector (from a max as distance of square root of 2)
-    float sqrt_2 = 1.4142135623f; ///static_cast<float>(sqrt(2.0));
+    float sqrt_2 = 1.4142135623f; ///same as sqrt(2.0);
     float dist_y = glm::distance(c_up_vector_y, world->getCameraUpVector());
     float dist_z = glm::distance(c_up_vector_z, world->getCameraUpVector());
 
@@ -105,11 +108,13 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
             rotate_eye.translate( m_look_at);
             rotate_eye.rotate(static_cast<float>(world->getCameraFollowingRotation()) * ((sqrt_2 - dist_z) / sqrt_2) + c_not_zero, 0.0f, 0.0, 1.0f);
             rotate_eye.translate(-m_look_at);
-            m_eye = rotate_eye * m_eye;
+            m_eye =  rotate_eye * m_eye;
+            origin = rotate_eye * origin;
         }
     }
 
     // Round camera during pixelation
+    m_origin = QVector3D(m_eye.x() - origin.x(), m_eye.y() - origin.y(), m_eye.z() - origin.z());
     if (m_engine->getCurrentWorld()->pixel_x > 1.0f || m_engine->getCurrentWorld()->pixel_y > 1.0f) {
         m_eye.setX(     Dr::RoundToMultiple(m_eye.x(),      1) );
         m_eye.setY(     Dr::RoundToMultiple(m_eye.y(),      1) );

@@ -59,14 +59,16 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     DrPointF center(0, 0);
     // Adjust center for pixelation
     if (m_engine->getCurrentWorld()->pixel_x > 1.0f || m_engine->getCurrentWorld()->pixel_y > 1.0f) {
-        // Woven cloth uses 1 texture spread across 2 pixels, etc
+        // Spread Variable, for example: Woven cloth uses 1 texture spread across 2 pixels
         float spread = 1.0f;
         if      (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Brick_Wall)  spread = 2.0f;
         else if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Woven_Cloth) spread = 2.0f;
         else if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Wood_Blocks) spread = 5.0f;
 
-        double x_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().x * combinedZoomScale());
-        double y_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().y * combinedZoomScale());
+        ///double x_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().x * combinedZoomScale());
+        ///double y_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().y * combinedZoomScale());
+        double x_pos = static_cast<double>(m_origin.x() * combinedZoomScale());
+        double y_pos = static_cast<double>(m_origin.y() * combinedZoomScale());
         if (x_pos < 0)  center.x =  fmod(abs(x_pos), m_engine->getCurrentWorld()->pixel_x*spread) - static_cast<double>(m_engine->getCurrentWorld()->pixel_x*spread);
         else            center.x = -fmod(    x_pos,  m_engine->getCurrentWorld()->pixel_x*spread);
         if (y_pos < 0)  center.y =  fmod(abs(y_pos), m_engine->getCurrentWorld()->pixel_y*spread) - static_cast<double>(m_engine->getCurrentWorld()->pixel_y*spread);
@@ -97,8 +99,9 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_bitrate,            m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,            m_engine->getCurrentWorld()->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,            m_engine->getCurrentWorld()->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,       m_engine->getCurrentWorld()->getCameraPosition().x,
-                                                                    m_engine->getCurrentWorld()->getCameraPosition().y );
+    m_default_shader.setUniformValue( u_default_pixel_offset,       static_cast<float>(m_origin.x()), static_cast<float>(m_origin.y()) );
+    ///g_info = "Rounded Eye X: " + std::to_string(m_origin.x()) + ", Y: " + std::to_string(m_origin.y()) + ", Z: " + std::to_string(m_origin.z());
+    ///m_default_shader.setUniformValue( u_default_pixel_offset,       m_engine->getCurrentWorld()->getCameraPosition().x, m_engine->getCurrentWorld()->getCameraPosition().y );
     m_default_shader.setUniformValue( u_default_pixel_type,         static_cast<float>(m_engine->getCurrentWorld()->pixel_texture) );
 
     // Set more Appearance Variables for Shader

@@ -137,7 +137,7 @@ float isEdge(in vec2 coords) {
     return clamp(edge_thres2 * delta, 0.0, 1.0);
 }
 
-vec3 cartoonRgbToHsvV(float r, float g, float b) {
+vec3 cartoonRgbToHsv(float r, float g, float b) {
     float minv, maxv, delta;
     vec3 res;
 
@@ -146,17 +146,17 @@ vec3 cartoonRgbToHsvV(float r, float g, float b) {
     res.z = maxv;                                           // v
     delta = maxv - minv;
 
-    if( maxv != 0.0 )
+    if (maxv != 0.0)
         res.y = delta / maxv;                               // s
     else {
         // r = g = b = 0                                    // s = 0, v is undefined
-        res.y = 0.0;
+        res.y =  0.0;
         res.x = -1.0;
         return res;
     }
 
-    if ( r == maxv )     res.x = (g - b) / delta;           // between yellow & magenta
-    else if( g == maxv ) res.x = 2.0 + (b - r) / delta;     // between cyan & yellow
+    if      (r == maxv)  res.x =       (g - b) / delta;     // between yellow & magenta
+    else if (g == maxv)  res.x = 2.0 + (b - r) / delta;     // between cyan & yellow
     else                 res.x = 4.0 + (r - g) / delta;     // between magenta & cyan
 
     res.x = res.x * 60.0;                                   // degrees
@@ -170,7 +170,7 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
     float f, p, q, t;
     vec3 res;
 
-    if( s == 0.0 ) {
+    if (s == 0.0) {
         // achromatic (grey)
         res.x = v;
         res.y = v;
@@ -185,7 +185,7 @@ vec3 cartoonHsvToRgb(float h, float s, float v ) {
     q = v * ( 1.0 - s * f );
     t = v * ( 1.0 - s * ( 1.0 - f ) );
 
-    if (i == 0) {       res.x = v;  res.y = t;  res.z = p;  }
+    if      (i == 0) {  res.x = v;  res.y = t;  res.z = p;  }
     else if (i == 1) {  res.x = q;  res.y = v;  res.z = p;  }
     else if (i == 2) {  res.x = p;  res.y = v;  res.z = t;  }
     else if (i == 3) {  res.x = p;  res.y = q;  res.z = v;  }
@@ -236,8 +236,8 @@ vec2 rotate(vec2 v, vec2 center_point, float angle) {
 void main( void ) {
 
     // Keeps colors through this shader
-    highp vec4 texture_color;
-    highp vec4 final_color;
+    highp vec4  texture_color;
+    highp vec4  final_color;
 
     // Move coordinates into a vec2 that is not read-only
     highp vec2  coords = coordinates.st;
@@ -454,7 +454,7 @@ void main( void ) {
             // Newer 16 x 12 Characters
             // 16 characters wide == 16 pixels width  per character (256 pixels total)
             // 12 characters tall == 20 pixels height per character (240 pixels total)
-            float lumens = (0.40*texture_color.r + 0.70*texture_color.g + 0.25*texture_color.b);        // Luminosity formula
+            float lumens = (0.35*texture_color.r + 0.65*texture_color.g + 0.25*texture_color.b);        // Luminosity formula
                   lumens = clamp(lumens, 0.0, 1.0);
             //float lumens =    max(max(texture_color.r, texture_color.g), texture_color.b);            // Luminosity by max red / green / blue value
             //float lumens =    rgbToHsv(texture_color.rgb).b;                                          // Luminosity by hsv value
@@ -562,7 +562,7 @@ void main( void ) {
     // ***** CARTOON
     if (u_cartoon) {
         vec3 original_color = frag_rgb;
-        vec3 v_hsv = cartoonRgbToHsvV(original_color.r, original_color.g, original_color.b);
+        vec3 v_hsv = cartoonRgbToHsv(original_color.r, original_color.g, original_color.b);
         v_hsv.x = 30.0 * (floor(v_hsv.x / 30.0) + 1.0);
         v_hsv.y =  0.1 * (floor(v_hsv.y /  0.1) + 1.0);
         v_hsv.z =  0.1 * (floor(v_hsv.z /  0.1) + 1.0);

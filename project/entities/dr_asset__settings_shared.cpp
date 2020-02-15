@@ -158,6 +158,9 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     addComponent(Comps::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::Brown_Sugar, true);
     getComponent(Comps::Asset_Controls)->setIcon(Component_Icons::Controls);
 
+    addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,
+                           "Motor Speed", "Speed at which this " + type + " rotates when Motor Buttons are pressed.");
+
     // BoolDouble std::vector<DrVariant> of 6 values: bool, double value, min, max, double step size, string spinText
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Controls_Touch_Damage,
                            Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, -1000000000, 1000000000, 1, "Damage: "}),
@@ -196,9 +199,6 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            "Tail Offset", "Distance to start rendering Slingshot Tail away from this " + type );
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Slingshot_Tail_Scale, Property_Type::PositiveScaleF, DrPointF(1.0, 1.0),
                            "Tail Scale", "Scale used to render Slingshot Tail.");
-
-    addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,
-                           "Motor Speed", "Speed at which this " + type + " rotates when Motor Buttons are pressed.");
 
 }
 

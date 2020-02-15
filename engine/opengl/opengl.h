@@ -98,6 +98,8 @@ private:
     QVector3D       m_look_at;
     QVector3D       m_up;
 
+    QVector3D       m_origin;                                   // Used to calculate relative camera position, for pixelation and other things
+
     int             m_zoom =  250;                              // Zoom level, 200 is 50% - 250 is 100%
     double          m_zoom_scale = 1.0;                         // Zoom level represented as magification multiplier
 
