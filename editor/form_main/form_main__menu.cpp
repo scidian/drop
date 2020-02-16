@@ -40,7 +40,7 @@ void FormMain::menuNew(bool test_project) {
 
     // Set up new Project
     setFormMainMode( Form_Main_Mode::Clear );
-    Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, 800, 1600, test_project);
+    Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, c_project_width, c_project_height, test_project);
     treeAssetEditor->clear();
     treeProjectEditor->clear();
     setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself

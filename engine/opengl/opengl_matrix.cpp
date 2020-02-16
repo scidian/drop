@@ -43,31 +43,36 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type) {
     m_view.setToIdentity();
     m_projection.setToIdentity();
 
-    // ***** Camera position
+    // ***** Camera View Type
     DrEngineWorld *world = m_engine->getCurrentWorld();
     if (world == nullptr) return;
     float cam_x = world->getCameraPosition().x * combinedZoomScale();
     float cam_y = world->getCameraPosition().y * combinedZoomScale();
     float cam_z = world->getCameraPosition().z;
-    m_eye =     QVector3D( cam_x, cam_y, cam_z );
-    m_look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * combinedZoomScale() );
-    m_up =      QVector3D( world->getCameraUpVector().x, world->getCameraUpVector().y, world->getCameraUpVector().z );
 
     float plane_scale = combinedZoomScale();
     if (plane_scale < 1.0f) plane_scale = 1.0f;
 
     // Orthographic
     if (render_type == Render_Type::Orthographic) {
-        float left =   -(width()  * devicePixelRatio() / 2.0f);
-        float right =  +(width()  * devicePixelRatio() / 2.0f);
-        float top =    +(height() * devicePixelRatio() / 2.0f);
-        float bottom = -(height() * devicePixelRatio() / 2.0f);
+        float height_difference = static_cast<float>(height() * devicePixelRatio()) / 800.0f;
+        float left =   ((width()  * devicePixelRatio() / 2.0f) / -height_difference);
+        float right =  ((width()  * devicePixelRatio() / 2.0f) / +height_difference);
+        float top =    ((height() * devicePixelRatio() / 2.0f) / +height_difference);
+        float bottom = ((height() * devicePixelRatio() / 2.0f) / -height_difference);
         m_projection.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
 
     // Perspective
     } else {
         m_projection.perspective( c_field_of_view, aspect_ratio, c_perspective_near, (c_far_plane - c_near_plane) * plane_scale );
     }
+
+
+    // ***** Camera Position
+    m_eye =     QVector3D( cam_x, cam_y, cam_z );
+    m_look_at = QVector3D( cam_x, cam_y, world->getCameraFollowingZ() * combinedZoomScale() );
+    m_up =      QVector3D( world->getCameraUpVector().x, world->getCameraUpVector().y, world->getCameraUpVector().z );
+
 
 
     // ***** Camera Rotation
@@ -153,16 +158,17 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
     // Smooth position
     cam_x = (static_cast<int>(cam_x) / 5) * 5;
     cam_y = (static_cast<int>(cam_y) / 5) * 5;
+    cam_z = (static_cast<int>(cam_z) / 5) * 5;
 
     float plane_scale = scale;
     if (plane_scale < 1.0f) plane_scale = 1.0f;
 
     // Orthographic
     if (render_type == Render_Type::Orthographic) {
-        float left =   -(m_occluder_fbo->width() /  2.0f);
-        float right =  +(m_occluder_fbo->width() /  2.0f);
-        float top =    +(m_occluder_fbo->height() / 2.0f);
-        float bottom = -(m_occluder_fbo->height() / 2.0f);
+        float left =   -(m_occluder_fbo->width()  * devicePixelRatio() / 2.0f);
+        float right =  +(m_occluder_fbo->width()  * devicePixelRatio() / 2.0f);
+        float top =    +(m_occluder_fbo->height() * devicePixelRatio() / 2.0f);
+        float bottom = -(m_occluder_fbo->height() * devicePixelRatio() / 2.0f);
         proj_matrix.ortho( left, right, bottom, top, c_near_plane * plane_scale, c_far_plane * plane_scale);
 
     // Perspective

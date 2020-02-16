@@ -23,6 +23,7 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################
@@ -31,12 +32,19 @@
 FormEngine::FormEngine(DrProject *project, long stage_key, QWidget *parent) : QMainWindow(parent), m_project(project) {
 
     // ***** Set up initial window
-    this->setAttribute( Qt::WA_DeleteOnClose, true );               // Make sure this form is deleted when it closes
-    this->setAttribute( Qt::WA_QuitOnClose, false );                // We don't want Drop to stay open when FormMain is closed and this is still open
+    this->setAttribute( Qt::WA_DeleteOnClose, true );                   // Make sure this form is deleted when it closes
+    this->setAttribute( Qt::WA_QuitOnClose, false );                    // We don't want Drop to stay open when FormMain is closed and this is still open
     this->setObjectName("Drop Player");
     this->setWindowIcon(QIcon(":/assets/icon/icon256_play.png"));
 
-    this->resize(1200, 900);                                        // !!!!! FIX: Change to Project size options
+    Orientation orientation = static_cast<Orientation>(project->getOption(Project_Options::Orientation).toInt());
+    if (orientation == Orientation::Portrait) {
+        this->resize(c_project_width, c_project_height);
+    } else {
+        this->resize(c_project_height, c_project_width);
+    }
+    this->resize(1200, 900);                                            // !!!!! #TEMP: Window Size
+
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
     Dr::CenterFormOnScreen(parent, this);
 

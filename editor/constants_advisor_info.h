@@ -28,7 +28,7 @@ namespace Advisor_Info {
     const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about physics properties." };
     const HeaderBodyList Settings_Image_Viewer  { "Image Viewer",       "View / manage Images used in this Project." };
     const HeaderBodyList Settings_Font_Builder  { "Font Builder",       "Create and edit fonts used for Text Boxes." };
-    const HeaderBodyList Settings_Manager       { "Settings Manager",   "View and edit Project settings." };
+    const HeaderBodyList Settings_Manager       { "Project Settings",   "View and edit Project settings." };
 
     const HeaderBodyList Send_to_Back           { "Send to Back",  "Send selected item(s) to the back." };
     const HeaderBodyList Send_to_Front          { "Send to Font",  "Send selected item(s) to the front." };

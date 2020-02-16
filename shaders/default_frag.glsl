@@ -458,7 +458,8 @@ void main( void ) {
                   lumens = clamp(lumens, 0.0, 1.0);
             //float lumens =    max(max(texture_color.r, texture_color.g), texture_color.b);            // Luminosity by max red / green / blue value
             //float lumens =    rgbToHsv(texture_color.rgb).b;                                          // Luminosity by hsv value
-            float row_start = floor(lumens * 8.999);                                                    // Split characters up by 12 (1 to 8 + 4) sections of luminosity
+            float row_start = floor(lumens * 10.999) - 2.0;                                             // Split characters up by 8 starts by luminosity,
+                  row_start = clamp(row_start, 0.0, 8.0);                                               // Each row can use characters from next 4 higher rows
 
             float cx_offset = (-mod(u_pixel_offset.x*u_zoom, pix_size_x));
             float cy_offset = ( mod(u_pixel_offset.y*u_zoom, pix_size_y));

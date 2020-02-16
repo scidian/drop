@@ -50,7 +50,11 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
         Dr::AddBuiltInImages(m_project);
         init_new = (Dr::OpenProjectFromFile(m_project, file_to_open) == false);
     }
-    if (init_new) Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, 800, 1600, Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
+    if (init_new) {
+        Dr::InitializeNewProject(m_project, "New Project",
+                                 Orientation::Portrait, c_project_width, c_project_height,
+                                 Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
+    }
 
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );

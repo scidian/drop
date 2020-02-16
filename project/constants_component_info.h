@@ -15,8 +15,8 @@
 //##    Local Error Codes
 //############################
 namespace Error_Code {
-    const std::string NoComponent          { "S001" };
-    const std::string NoProperty           { "S002" };
+    const std::string   NoComponent         { "S001" };
+    const std::string   NoProperty          { "S002" };
 
 }
 

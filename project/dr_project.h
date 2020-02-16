@@ -11,6 +11,12 @@
 #include "project/constants_entity_keys.h"
 #include "project/settings/settings.h"
 
+
+// Project Constants
+const int   c_project_width =       800;            // Default Width  for Game
+const int   c_project_height =     1600;            // Default Height for Game
+
+
 enum class Project_Options {
     Name,                   // string,  Name of Current Project
     File_Name_Path,         // string,  Full Path and File Name of Project, will save to this unless choose Save As
