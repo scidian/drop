@@ -197,12 +197,14 @@ void FillBorder(DrBitmap &bitmap, DrColor fill_color, DrRect rect) {
 //####################################################################################
 #define INVERTED_COLORS     true
 
-int FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, std::vector<DrRect> &rects, double alpha_tolerance, bool convert) {
+bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, std::vector<DrRect> &rects,
+                        double alpha_tolerance, bool convert, bool updateFunction(int)) {
     DrBitmap     black_white;
     if (convert) black_white = BlackAndWhiteFromAlpha(bitmap, alpha_tolerance, INVERTED_COLORS);
     else         black_white = bitmap;
 
     DrColor compare(Dr::transparent);
+    bool    cancel = false;
 
     // If convert is true, all object pixels will be transparent pixels. If all pixels are transparent we don't need to fill, we can
     // just return a solid square later on and not have to run expensive flood fill routine
@@ -223,6 +225,7 @@ int FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, 
     if (pixels || convert == false) {
         // Loop through every pixel in image, if we find a spot that has an object,
         // flood fill that spot and add the resulting image shape to the array of object images
+        double percent = 0.0;
         for (int x = 0; x < black_white.width; ++x) {
             for (int y = 0; y < black_white.height; ++y) {
                 if (black_white.getPixel(x, y) == compare) {
@@ -235,6 +238,12 @@ int FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, 
                         bitmaps.push_back( flood_fill );
                     }
                 }
+            }
+            // Call to Update Progress Bar Function
+            percent = static_cast<double>(x) / static_cast<double>(black_white.width - 1) * 100.0;
+            if (updateFunction != nullptr) {
+                cancel = updateFunction(static_cast<int>(percent));
+                if (cancel) return true;
             }
         }
 
@@ -251,7 +260,7 @@ int FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps, 
         }
     }
 
-    return static_cast<int>(bitmaps.size());
+    return false;
 }
 
 

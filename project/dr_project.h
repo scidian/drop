@@ -154,7 +154,8 @@ public:
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
-    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image, long key = c_no_key);
+    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image,
+                             long key = c_no_key, bool updateFunction(int) = nullptr);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);

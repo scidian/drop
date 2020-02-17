@@ -139,7 +139,8 @@ void FormProgressBox::setInfoText(QString info_text) {
 }
 
 // Updates progress bar, shows form if its going to take longer than 2 seconds
-void FormProgressBox::setValue(int new_value) {
+//      RETURNS: True if "cancel" button has been pressed
+bool FormProgressBox::setValue(int new_value) {
     double percent = static_cast<double>(new_value - m_start_value) / static_cast<double>(m_end_value - m_start_value);
     double seconds_ellapsed = m_start_time.elapsed() / 1000.0;
 
@@ -168,6 +169,7 @@ void FormProgressBox::setValue(int new_value) {
 
     update();
     qApp->processEvents();
+    return m_canceled;
 }
 
 // SLOT: Updates Progress Bar Colors

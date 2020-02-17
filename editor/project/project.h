@@ -21,7 +21,8 @@ namespace Dr {
 
 
     // ***** Project Building
-    DrImage*    AddImage(DrProject *project, QString filename, long key = c_no_key, Asset_Category category = Asset_Category::Image);
+    DrImage*    AddImage(DrProject *project, QString filename,
+                         long key = c_no_key, Asset_Category category = Asset_Category::Image, bool updateFunction(int) = nullptr);
     void        AddBuiltInImages(DrProject *project);
     void        InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test = false);
 

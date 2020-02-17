@@ -56,8 +56,7 @@ public:
     // Progress Functions
     void            setInfoText(QString info_text);
     void            setShowIfWaitIsLongerThan(double seconds)       { m_show_if_longer_than = seconds; }
-    void            setValue(int new_value);
-    bool            wasCanceled()                                   { return m_canceled; }
+    bool            setValue(int new_value);
 
 
 public slots:

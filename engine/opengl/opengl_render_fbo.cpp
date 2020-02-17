@@ -99,10 +99,9 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_pixel_y,            m_engine->getCurrentWorld()->pixel_y );
     m_default_shader.setUniformValue( u_default_pixel_type,         static_cast<float>(m_engine->getCurrentWorld()->pixel_texture) );
 
-    // For Pixelation using shrunken fbo's:
-    ///m_default_shader.setUniformValue( u_default_pixel_offset,    0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_pixel_offset,       static_cast<float>(m_origin.x() * m_fbo_scale_x),
-                                                                    static_cast<float>(m_origin.y() * m_fbo_scale_y));
+    float x_position = static_cast<float>(m_origin.x() * m_fbo_scale_x);
+    float y_position = static_cast<float>(m_origin.y() * m_fbo_scale_y);
+    m_default_shader.setUniformValue( u_default_pixel_offset,       x_position, y_position );
     ///g_info = "Rounded Eye X: " + std::to_string(m_origin.x()) + ", Y: " + std::to_string(m_origin.y()) + ", Z: " + std::to_string(m_origin.z());
 
 

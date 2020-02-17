@@ -24,16 +24,26 @@ const int c_neighbors =             5;                  // Number of neighbors t
 //####################################################################################
 //##    Loads list of points for Image and Image Holes
 //####################################################################################        
-void DrImage::autoOutlinePoints() {
-
-    bool cancel = false;
+void DrImage::autoOutlinePoints(bool updateFunction(int)) {
 
     // ***** Break pixmap into seperate images for each object in image
     std::vector<DrBitmap>   bitmaps;
     std::vector<DrRect>     rects;
-    Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance);
+    bool cancel = Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance, true, updateFunction);
     m_number_of_objects = static_cast<int>(bitmaps.size());
 
+    // ***** If FindObjectsInBitmap never finished, just add simple box shape
+    if (cancel) {
+        std::vector<DrPointF> one_poly = m_bitmap.polygon().points();
+        std::vector<std::vector<DrPointF>> hole_list {{ }};
+        HullFinder::EnsureWindingOrientation(one_poly, Winding_Orientation::CounterClockwise);
+        m_poly_list.clear();
+        m_hole_list.clear();
+        m_poly_list.push_back(one_poly);
+        m_hole_list.push_back(hole_list);
+        m_use_simple_square = true;
+        return;
+    }
 
     // ******************** Go through each image (object) and Polygon for it
     for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
@@ -123,19 +133,6 @@ void DrImage::autoOutlinePoints() {
         }
         m_hole_list.push_back(hole_list);
     }   // End for each bitmap
-
-
-    // ***** If outline image functions never finished, just add simple box shape
-    if (cancel) {
-        std::vector<DrPointF> one_poly = m_bitmap.polygon().points();
-        std::vector<std::vector<DrPointF>> hole_list {{ }};
-        HullFinder::EnsureWindingOrientation(one_poly, Winding_Orientation::CounterClockwise);
-        m_poly_list.clear();
-        m_hole_list.clear();
-        m_poly_list.push_back(one_poly);
-        m_hole_list.push_back(hole_list);
-        m_use_simple_square = true;
-    }
 }
 
 

@@ -203,9 +203,9 @@ long DrProject::addFont(std::string font_name, DrBitmap font_bitmap, std::string
     return new_font_key;
 }
 
-DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category, long key) {
+DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category, long key, bool updateFunction(int)) {
     long new_image_key = (key == c_no_key) ? getNextKey() : key;
-    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, category);
+    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, category, false, updateFunction);
     return m_images[new_image_key];
 }
 

@@ -264,8 +264,8 @@ void FormMain::buildToolBar() {
                     }
                     progress_box->setInfoText("Detecting Image Shape...  " + QString::number(i / 10) + "% ");
                 }
-                progress_box->setValue(i);
-                if (progress_box->wasCanceled()) break;
+                bool was_canceled = progress_box->setValue(i);
+                if (was_canceled) break;
             }
             progress_box->close();
         });

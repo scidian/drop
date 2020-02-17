@@ -467,8 +467,8 @@ void main( void ) {
 
             float cx_offset = (-mod(u_pixel_offset.x*u_zoom, pix_size_x));
             float cy_offset = ( mod(u_pixel_offset.y*u_zoom, pix_size_y));
-            float nx = floor((real_pixel_x + u_pixel_offset.x*u_zoom + cx_offset) / (pix_size_x));      // X Coordinate for Character
-            float ny = floor((real_pixel_y - u_pixel_offset.y*u_zoom + cy_offset) / (pix_size_y));      // Y Coordinate for Character
+            float nx = floor((real_pixel_x + u_pixel_offset.x + cx_offset) / (pix_size_x));      // X Coordinate for Character
+            float ny = floor((real_pixel_y - u_pixel_offset.y + cy_offset) / (pix_size_y));      // Y Coordinate for Character
             float r1 = random(vec2( (ny*ny) - nx, (ny*nx) - nx ));
             float r2 = random(vec2( (nx*nx) - ny, (ny*ny) + ny ));
             float rx = (floor(r1 * 16.0));                                                              // 16 columns
