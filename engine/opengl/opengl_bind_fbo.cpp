@@ -18,9 +18,11 @@
 //####################################################################################
 void DrOpenGL::bindOffscreenBuffer(bool clear) {
     // Check that off screen buffers are initialized
+    if ((Dr::RealInteger(m_desired_fbo_width)  == false) || m_desired_fbo_width  <= 0) m_desired_fbo_width =  1;
+    if ((Dr::RealInteger(m_desired_fbo_height) == false) || m_desired_fbo_height <= 0) m_desired_fbo_height = 1;
     if (!m_render_fbo || !m_texture_fbo ||
-         m_render_fbo->width()  != width()*devicePixelRatio() ||
-         m_render_fbo->height() != height()*devicePixelRatio()) {
+         m_render_fbo->width()  != m_desired_fbo_width ||
+         m_render_fbo->height() != m_desired_fbo_height) {
         delete m_render_fbo;
         delete m_texture_fbo;
         QOpenGLFramebufferObjectFormat format;
@@ -29,13 +31,16 @@ void DrOpenGL::bindOffscreenBuffer(bool clear) {
         ///format.setTextureTarget(GL_TEXTURE_2D);                      // This is set automatically, cannot be gl_texture_2d if multisampling is enabled
         ///format.setInternalTextureFormat(GL_RGBA32F_ARB);             // This is set automatically depending on the system
         ///format.setMipmap(true);                                      // Don't need
-        m_render_fbo =  new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format);
+        m_render_fbo =  new QOpenGLFramebufferObject(m_desired_fbo_width, m_desired_fbo_height, format);
 
         QOpenGLFramebufferObjectFormat format2;
         format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
-        m_texture_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
+        m_texture_fbo = new QOpenGLFramebufferObject(m_desired_fbo_width, m_desired_fbo_height, format2);
     }
+
+    // Bind buffer
     m_render_fbo->bind();
+    glViewport(0, 0, m_render_fbo->width(), m_render_fbo->height());
 
     // Clear the buffers
     if (clear) {
@@ -78,7 +83,10 @@ void DrOpenGL::bindGlowLightsBuffer(float ambient_light) {
         format2.setAttachment(QOpenGLFramebufferObject::Attachment::NoAttachment);
         m_glow_fbo = new QOpenGLFramebufferObject(width() * devicePixelRatio(), height() * devicePixelRatio(), format2);
     }
+
+    // Bind buffer
     m_glow_fbo->bind();
+    glViewport(0, 0, m_glow_fbo->width(), m_glow_fbo->height());
 
     // Clear the buffer
     glClearColor(ambient_light, ambient_light, ambient_light, 1.0f);    // !!!!! #WARNING: Do not change opacity from 1.0f !!!!!
@@ -108,7 +116,10 @@ void DrOpenGL::bindOccluderMapBuffer() {
         delete m_occluder_fbo;
         m_occluder_fbo =  new QOpenGLFramebufferObject(desired_x, desired_y);
     }
+
+    // Bind buffer
     m_occluder_fbo->bind();
+    glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
 
     // Clear the buffers
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -136,8 +147,11 @@ void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
         m_occluders[light->getKey()] = new QOpenGLFramebufferObject(light->getLightDiameterFitted(), light->getLightDiameterFitted());
     }
 
-    // Bind and clear buffer
+    // Bind buffer
     m_occluders[light->getKey()]->bind();
+    glViewport(0, 0, m_occluders[light->getKey()]->width(), m_occluders[light->getKey()]->height());
+
+    // Clear the buffer
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
@@ -166,8 +180,11 @@ void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
         m_shadows[light->getKey()] = new QOpenGLFramebufferObject(shadow_size, 1);
     }
 
-    // Bind and clear buffer
+    // Bind buffer
     m_shadows[light->getKey()]->bind();
+    glViewport(0, 0, m_shadows[light->getKey()]->width(), m_shadows[light->getKey()]->height());
+
+    // Clear the buffer
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }

@@ -65,8 +65,6 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
         else if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Woven_Cloth) spread = 2.0f;
         else if (m_engine->getCurrentWorld()->pixel_texture == Pixel_Texture::Wood_Blocks) spread = 5.0f;
 
-        ///double x_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().x * combinedZoomScale());
-        ///double y_pos = static_cast<double>(m_engine->getCurrentWorld()->getCameraPosition().y * combinedZoomScale());
         double x_pos = static_cast<double>(m_origin.x() * combinedZoomScale());
         double y_pos = static_cast<double>(m_origin.y() * combinedZoomScale());
         if (x_pos < 0)  center.x =  fmod(abs(x_pos), m_engine->getCurrentWorld()->pixel_x*spread) - static_cast<double>(m_engine->getCurrentWorld()->pixel_x*spread);
@@ -99,10 +97,14 @@ void DrOpenGL::drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo) 
     m_default_shader.setUniformValue( u_default_bitrate,            m_engine->getCurrentWorld()->bitrate );
     m_default_shader.setUniformValue( u_default_pixel_x,            m_engine->getCurrentWorld()->pixel_x );
     m_default_shader.setUniformValue( u_default_pixel_y,            m_engine->getCurrentWorld()->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,       static_cast<float>(m_origin.x()), static_cast<float>(m_origin.y()) );
-    ///g_info = "Rounded Eye X: " + std::to_string(m_origin.x()) + ", Y: " + std::to_string(m_origin.y()) + ", Z: " + std::to_string(m_origin.z());
-    ///m_default_shader.setUniformValue( u_default_pixel_offset,       m_engine->getCurrentWorld()->getCameraPosition().x, m_engine->getCurrentWorld()->getCameraPosition().y );
     m_default_shader.setUniformValue( u_default_pixel_type,         static_cast<float>(m_engine->getCurrentWorld()->pixel_texture) );
+
+    // For Pixelation using shrunken fbo's:
+    ///m_default_shader.setUniformValue( u_default_pixel_offset,    0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_pixel_offset,       static_cast<float>(m_origin.x() * m_fbo_scale_x),
+                                                                    static_cast<float>(m_origin.y() * m_fbo_scale_y));
+    ///g_info = "Rounded Eye X: " + std::to_string(m_origin.x()) + ", Y: " + std::to_string(m_origin.y()) + ", Z: " + std::to_string(m_origin.z());
+
 
     // Set more Appearance Variables for Shader
     m_default_shader.setUniformValue( u_default_negative,           m_engine->getCurrentWorld()->negative );

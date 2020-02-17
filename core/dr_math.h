@@ -97,14 +97,7 @@ namespace Dr {
         return new_value;
     }
 
-    // Rounds to nearest decimal place
-    template<class T> T     RoundDecimalPlace(T value, int decimal_places) {
-        double places = std::pow(10.0, decimal_places);
-        T rounded = static_cast<int>(value * places + .5);
-        return static_cast<T>(rounded / places);
-    }
-
-    // Rounds to nearest multiple (m), so like if m == 5, rounds to the nearest multiple of 5
+    /// @brief:     Rounds to nearest multiple of m, so m == 5 rounds to nearest multiple of 5, m == 0.1 rounds to nearst first decimal place
     template<class T> T     RoundToMultiple(T value, double m) {
         double rounded = std::round(static_cast<double>(value) / m) * m;
         return static_cast<T>(rounded);

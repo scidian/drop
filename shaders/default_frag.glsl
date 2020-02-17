@@ -313,6 +313,8 @@ void main( void ) {
 
 
     // ***** PIXELATED    
+    highp float pattern_x = 0.0;
+    highp float pattern_y = 0.0;
     if (u_pixel_x > 1.0 || u_pixel_y > 1.0) {
         // Pixelation Variables
         highp float pix_size_x =    u_pixel_x;// * u_zoom;
@@ -324,8 +326,6 @@ void main( void ) {
         highp float spread =    1.0;
         highp float x_offset =  0.0;
         highp float y_offset =  0.0;
-        highp float pattern_x = 0.0;
-        highp float pattern_y = 0.0;
         if      (u_pixel_type == TextureBrick) spread = 2.0;
         else if (u_pixel_type == TextureWoven) spread = 2.0;
         else if (u_pixel_type == TextureWood)  spread = 5.0;
@@ -338,6 +338,10 @@ void main( void ) {
             x_offset = (-mod(u_pixel_offset.x * u_zoom, pix_size_x) - (pix_size_x/2.0) ) * pixel_width;
             y_offset = ( mod(u_pixel_offset.y * u_zoom, pix_size_y) - (pix_size_y/2.0) ) * pixel_height;
         }
+        // For pixelation using shrunken fbo's:
+        //x_offset = 0.0;
+        //y_offset = 0.0;
+
         highp float real_pixel_x =        (coords.x  * u_width );
         highp float real_pixel_y = ((1.0 - coords.y) * u_height);
         highp float pixel_x =       (x_offset + ((pix_size_x * floor(real_pixel_x / pix_size_x) + pix_size_x) * pixel_width));
@@ -477,16 +481,6 @@ void main( void ) {
             pattern_y = (char_height * ry) + (char_height * row_start) + (relative_y * char_height);
         }
 
-
-        // Pattern Color (Stitch, Woven, Wood, etc)
-        if (u_pixel_type != TextureNone) {
-            vec4 pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
-            texture_color.rgb = mix(vec3(0.0), texture_color.rgb, pattern_color.r);
-            // Tint Stitch Design Into Image
-            //texture_color += (stitch_color * 0.10);
-            //texture_color /= 1.10;
-        }
-
     // If not pixelated, grab initial texture color at the current location
     } else {
         texture_color = texture2D(u_texture, coords.st).rgba;
@@ -494,7 +488,7 @@ void main( void ) {
 
 
 
-    // ********** Set some variables for use later
+    // ********** INITIALIZE COLOR VARIABLES
     highp vec4 alpha_in = vec4(u_alpha, u_alpha, u_alpha, u_alpha);                 // For adding in existing opacity of object
     highp vec3 frag_rgb = texture_color.rgb;                                        // Save rgb as a vec3 for working with
 
@@ -628,6 +622,16 @@ void main( void ) {
             // Or gone completely
             //discard;
         }
+    }
+
+
+    // ***** PATTERN COLOR (Ascii, Stitch, Woven, Wood, etc)
+    if (u_pixel_type != TextureNone) {
+        vec4 pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
+        final_color.rgb = mix(vec3(0.0), final_color.rgb, pattern_color.r);
+        // Tint Stitch Design Into Image
+        //final_color += (stitch_color * 0.10);
+        //final_color /= 1.10;
     }
 
 

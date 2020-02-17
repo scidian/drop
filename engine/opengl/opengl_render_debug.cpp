@@ -52,7 +52,6 @@ void DrOpenGL::drawDebug() {
     }
 
     // ***** Debug Text
-    glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
     #if !defined (Q_OS_IOS)
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();

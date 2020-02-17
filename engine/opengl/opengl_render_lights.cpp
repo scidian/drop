@@ -24,18 +24,14 @@ void DrOpenGL::process2DLights() {
 
     // ***** Check for lights, update buffers
     if (m_engine->getCurrentWorld()->light_count > 0) {
-        // Clear list of which lights exist
-        checkLightBuffers();
-
-        // Check for lights with shadows, if there are none we don't need to draw occluder map
-        m_engine->getCurrentWorld()->light_count = findNeededShadowMaps();
+        checkLightBuffers();                                                    // Clear list of which lights exist
+        m_engine->getCurrentWorld()->light_count = findNeededShadowMaps();      // Check for lights with shadows, if none we don't need to draw occluder map
     }
 
-    // ***** Process shadow casting lights
+    // ***** Process shadow casting lights if there are some
     if (m_shadow_lights.size() > 0) {
-        // Render all Space Objects to an off-screen Frame Buffer Object Occluder Map
+        // Render all Space Objects to a singular off-screen Frame Buffer Object Occluder Map
         bindOccluderMapBuffer();
-        glViewport(0, 0, m_occluder_fbo->width(), m_occluder_fbo->height());
         bool shader_initialized = false;
         for (auto thing : m_engine->getCurrentWorld()->getThings()) {
             if (!shader_initialized) {
@@ -45,7 +41,6 @@ void DrOpenGL::process2DLights() {
             }
         }
         m_occluder_fbo->release();
-        glViewport(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
 
         // Code to have the Occluder Map fbo pop up so we can take a look
         /**
@@ -167,8 +162,8 @@ void DrOpenGL::drawShadowMaps() {
         // Calculate light position on Occluder Map
         QMatrix4x4 view_matrix, proj_matrix;
         occluderMatrix(m_engine->getCurrentWorld()->render_type, view_matrix, proj_matrix);
-        light->setScreenPos( mapToFBO( glm::vec3(static_cast<float>(light->getPosition().x), static_cast<float>(light->getPosition().y), static_cast<float>(light->getZOrder())),
-                                       m_occluder_fbo, view_matrix, proj_matrix) );
+        glm::vec3 light_position = glm::vec3(static_cast<float>(light->getPosition().x), static_cast<float>(light->getPosition().y), static_cast<float>(light->getZOrder()));
+        light->setScreenPos( mapToFBO( light_position, m_occluder_fbo, view_matrix, proj_matrix) );
         double middle = m_texture_fbo->height() / 2.0;
         double y_diff = middle - light->getScreenPos().y;
 
@@ -238,6 +233,7 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
 
     // ***** Give the shader our Ray Count and Scaled Light Radius
     float screen_scale = width()*devicePixelRatio() / abs(light->light_size);
+    if (screen_scale > 1.0f) screen_scale = 1.0f;
     m_shadow_shader.setUniformValue( u_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale);
     m_shadow_shader.setUniformValue( u_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
     m_shadow_shader.setUniformValue( u_shadow_depth,      static_cast<float>(light->getZOrder()) );

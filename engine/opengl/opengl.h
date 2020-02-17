@@ -83,8 +83,8 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    FormEngine     *m_form_engine;                              // Pointer to parent FormEngine
-    DrEngine       *m_engine;                                   // Pointer to Engine instance that will run in this OpenGLWidget
+    FormEngine     *m_form_engine;                                  // Pointer to parent FormEngine
+    DrEngine       *m_engine;                                       // Pointer to Engine instance that will run in this OpenGLWidget
 
     // Fontstash
     FONScontext    *fs = nullptr;
@@ -98,39 +98,44 @@ private:
     QVector3D       m_look_at;
     QVector3D       m_up;
 
-    QVector3D       m_origin;                                   // Used to calculate relative camera position, for pixelation and other things
+    QVector3D       m_origin;                                       // Used to calculate relative camera position, for pixelation and other things
 
-    int             m_zoom =  250;                              // Zoom level, 200 is 50% - 250 is 100%
-    double          m_zoom_scale = 1.0;                         // Zoom level represented as magification multiplier
+    int             m_zoom =  250;                                  // Zoom level, 200 is 50% - 250 is 100%
+    double          m_zoom_scale = 1.0;                             // Zoom level represented as magification multiplier
 
     float           m_background_red = 0;
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
-    double          m_fps_count_render = 0.0;                   // Tracks frames per second
-    long            m_triangles = 0;                            // Tracks how many triangles are drawn every frame, including occluder map draws
-    double          m_add_z;                                    // Used to stop z fighting
+    double          m_fps_count_render = 0.0;                       // Tracks frames per second
+    long            m_triangles = 0;                                // Tracks how many triangles are drawn every frame, including occluder map draws
+    double          m_add_z;                                        // Used to stop z fighting
 
-    std::vector<float>      m_quad_vertices;                    // Used to keep standard 2D textured quad coordinates
-    std::vector<float>      m_quad_texture_coordinates;         // Used to keep the coordinates of rendering an entire texture as a quad
-    std::vector<float>      m_quad_barycentric;                 // Used to keep standard 2D textured quad barycentric coords
+    std::vector<float>      m_quad_vertices;                        // Used to keep standard 2D textured quad coordinates
+    std::vector<float>      m_quad_texture_coordinates;             // Used to keep the coordinates of rendering an entire texture as a quad
+    std::vector<float>      m_quad_barycentric;                     // Used to keep standard 2D textured quad barycentric coords
 
     // VBO's
-    std::map<long, QOpenGLBuffer*>      m_texture_vbos;         // Stores extruded texture vbo's
-    std::map<long, DrEngineVertexData*> m_texture_data;         // Stores extruded texture vertex data
-    QOpenGLBuffer                      *m_cone_vbo;             // Stores cone vbo, to use to turn a texture into a cone
-    QOpenGLBuffer                      *m_cube_vbo;             // Stores cube vbo, to use to turn a texture into a cube
-    QOpenGLBuffer                      *m_quad_vbo;             // Stores quad vbo, to use to render 2d quads
+    std::map<long, QOpenGLBuffer*>      m_texture_vbos;             // Stores extruded texture vbo's
+    std::map<long, DrEngineVertexData*> m_texture_data;             // Stores extruded texture vertex data
+    QOpenGLBuffer                      *m_cone_vbo;                 // Stores cone vbo, to use to turn a texture into a cone
+    QOpenGLBuffer                      *m_cube_vbo;                 // Stores cube vbo, to use to turn a texture into a cube
+    QOpenGLBuffer                      *m_quad_vbo;                 // Stores quad vbo, to use to render 2d quads
 
     // Frame Buffers
-    QOpenGLFramebufferObject *m_render_fbo = nullptr;           // Used for offscreen rendering
-    QOpenGLFramebufferObject *m_texture_fbo = nullptr;          // m_render_fbo must be copied to a non-multisampled fbo before being used as a texture
-    QOpenGLFramebufferObject *m_glow_fbo = nullptr;             // Used for rendering Glow Lights onto scene all at once
-    QOpenGLFramebufferObject *m_occluder_fbo = nullptr;         // Used for rendering an occlusion map for use with lights
+    QOpenGLFramebufferObject *m_render_fbo =            nullptr;    // Used for offscreen rendering
+    QOpenGLFramebufferObject *m_texture_fbo =           nullptr;    // m_render_fbo must be copied to a non-multisampled fbo before being used as a texture
+    QOpenGLFramebufferObject *m_glow_fbo =              nullptr;    // Used for rendering Glow Lights onto scene all at once
+    QOpenGLFramebufferObject *m_occluder_fbo =          nullptr;    // Used for rendering an occlusion map for use with lights
+
+    int                       m_desired_fbo_width =     1;          // Desired width  of off screen render target
+    int                       m_desired_fbo_height =    1;          // Desired height of off screen render target
+    float                     m_fbo_scale_x =           1.0f;       // Scale between off screen fbo and screen size
+    float                     m_fbo_scale_y =           1.0f;       // Scale between off screen fbo and screen size
 
     // Frame Buffer Objects for use during Render
-    std::map<long, QOpenGLFramebufferObject*> m_occluders;      // Off screen Frame Buffer Objects for Light Occluder Maps
-    std::map<long, QOpenGLFramebufferObject*> m_shadows;        // Off screen Frame Buffer Objects for Light 1D Shadow Maps
+    std::map<long, QOpenGLFramebufferObject*> m_occluders;          // Off screen Frame Buffer Objects for Light Occluder Maps
+    std::map<long, QOpenGLFramebufferObject*> m_shadows;            // Off screen Frame Buffer Objects for Light 1D Shadow Maps
 
     // Vectors to keep track of lights
     std::vector<DrEngineLight*> m_shadow_lights;
@@ -219,7 +224,7 @@ public:
     static DrColor  objectDebugColor(Collision_Type collision_type, bool sleeping = false);
     void            occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, QMatrix4x4 &proj_matrix);
     QMatrix4x4      orthoMatrix(float width, float height);
-    void            updateViewMatrix(Render_Type render_type);
+    void            updateViewMatrix(Render_Type render_type, float width, float height);
     void            releaseOffscreenBuffer();
     void            releaseDefaultAttributeBuffer();
     void            setDefaultAttributeBuffer(QOpenGLBuffer *buffer);

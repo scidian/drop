@@ -270,50 +270,50 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // ***** Set Model Shader Values
     QMatrix4x4 mvp = m_projection * m_view * model;
-    m_default_shader.setUniformValue( u_default_matrix,         mvp );
-    m_default_shader.setUniformValue( u_default_matrix_object,  model );
+    m_default_shader.setUniformValue( u_default_matrix,                 mvp );
+    m_default_shader.setUniformValue( u_default_matrix_object,          model );
 
-    // *****Remove scaling from camera position for shading calculations
+    // ***** Remove scaling from camera position for shading calculations
     QMatrix4x4 matrix_eye;
     matrix_eye.scale(1.f / combinedZoomScale());
     QVector3D eye_move = matrix_eye * m_eye;
 
 
     // ***** Set Shader Variables
-    m_default_shader.setUniformValue( u_default_texture,       0 );
-    m_default_shader.setUniformValue( u_default_texture_pixel, 1 );
-    m_default_shader.setUniformValue( u_default_alpha,              alpha );
+    m_default_shader.setUniformValue( u_default_texture,                0 );
+    m_default_shader.setUniformValue( u_default_texture_pixel,          1 );
+    m_default_shader.setUniformValue( u_default_alpha,                  alpha );
     m_default_shader.setUniformValue( u_default_average_color,
                                         static_cast<float>(texture->averageColor().redF()),
                                         static_cast<float>(texture->averageColor().greenF()),
                                         static_cast<float>(texture->averageColor().blueF()) );
-    m_default_shader.setUniformValue( u_default_tint,               0.0f, 0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_zoom,               combinedZoomScale() );
-    m_default_shader.setUniformValue( u_default_width,              texture_width );
-    m_default_shader.setUniformValue( u_default_height,             texture_height );
-    m_default_shader.setUniformValue( u_default_time,               static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
-    m_default_shader.setUniformValue( u_default_pre,                true );
+    m_default_shader.setUniformValue( u_default_tint,                   0.0f, 0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_zoom,                   combinedZoomScale() );
+    m_default_shader.setUniformValue( u_default_width,                  texture_width );
+    m_default_shader.setUniformValue( u_default_height,                 texture_height );
+    m_default_shader.setUniformValue( u_default_time,                   static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
+    m_default_shader.setUniformValue( u_default_pre,                    true );
 
-    m_default_shader.setUniformValue( u_default_bitrate,            object->bitrate );
-    m_default_shader.setUniformValue( u_default_pixel_x,            object->pixel_x );
-    m_default_shader.setUniformValue( u_default_pixel_y,            object->pixel_y );
-    m_default_shader.setUniformValue( u_default_pixel_offset,       0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_pixel_type,         static_cast<float>(object->pixel_texture) );
-    m_default_shader.setUniformValue( u_default_negative,           object->negative );
-    m_default_shader.setUniformValue( u_default_grayscale,          object->grayscale );
-    m_default_shader.setUniformValue( u_default_hue,                object->hue );
-    m_default_shader.setUniformValue( u_default_saturation,         object->saturation );
-    m_default_shader.setUniformValue( u_default_contrast,           object->contrast );
-    m_default_shader.setUniformValue( u_default_brightness,         object->brightness );
+    m_default_shader.setUniformValue( u_default_bitrate,                object->bitrate );
+    m_default_shader.setUniformValue( u_default_pixel_x,                object->pixel_x );
+    m_default_shader.setUniformValue( u_default_pixel_y,                object->pixel_y );
+    m_default_shader.setUniformValue( u_default_pixel_offset,           0.0f, 0.0f );
+    m_default_shader.setUniformValue( u_default_pixel_type,             static_cast<float>(object->pixel_texture) );
+    m_default_shader.setUniformValue( u_default_negative,               object->negative );
+    m_default_shader.setUniformValue( u_default_grayscale,              object->grayscale );
+    m_default_shader.setUniformValue( u_default_hue,                    object->hue );
+    m_default_shader.setUniformValue( u_default_saturation,             object->saturation );
+    m_default_shader.setUniformValue( u_default_contrast,               object->contrast );
+    m_default_shader.setUniformValue( u_default_brightness,             object->brightness );
 
-    m_default_shader.setUniformValue( u_default_shade_away,         !draw2D );
-    m_default_shader.setUniformValue( u_default_camera_pos,         eye_move.x(), eye_move.y(), eye_move.z() );
+    m_default_shader.setUniformValue( u_default_shade_away,             !draw2D );
+    m_default_shader.setUniformValue( u_default_camera_pos,             eye_move.x(), eye_move.y(), eye_move.z() );
 
-    m_default_shader.setUniformValue( u_default_cartoon,            object->cartoon );
-    m_default_shader.setUniformValue( u_default_cartoon_width,      object->cartoon_width );
-    m_default_shader.setUniformValue( u_default_cross_hatch,        object->cross_hatch );
-    m_default_shader.setUniformValue( u_default_cross_hatch_width,  object->cross_hatch_width );
-    m_default_shader.setUniformValue( u_default_wavy,               false );
+    m_default_shader.setUniformValue( u_default_cartoon,                object->cartoon );
+    m_default_shader.setUniformValue( u_default_cartoon_width,          object->cartoon_width );
+    m_default_shader.setUniformValue( u_default_cross_hatch,            object->cross_hatch );
+    m_default_shader.setUniformValue( u_default_cross_hatch_width,      object->cross_hatch_width );
+    m_default_shader.setUniformValue( u_default_wavy,                   false );
     if (m_engine->getCurrentWorld()->wireframe || object->wireframe) {
         m_default_shader.setUniformValue( u_default_wireframe,          true );
         if (object->wireframe)  m_default_shader.setUniformValue( u_default_wireframe_width,    object->wireframe_width );
@@ -570,7 +570,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     double texture_height = texture->height();
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
-    float alpha = object->getOpacity();                                                 // Start with object alpha
+    float alpha = object->getOpacity();                                                     // Start with object alpha
     float animation_scale = 1.0;
     if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
         float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
@@ -590,11 +590,11 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 
     // ***** Set Shader Variables
-    m_occluder_shader.setUniformValue( u_occluder_texture, 0 );             // Texture unit 0
-    m_occluder_shader.setUniformValue( u_occluder_alpha,      alpha );
-    m_occluder_shader.setUniformValue( u_occluder_depth,      static_cast<float>(object->getZOrder()) );
-    m_occluder_shader.setUniformValue( u_occluder_near_plane, c_near_plane );
-    m_occluder_shader.setUniformValue( u_occluder_far_plane,  c_far_plane );
+    m_occluder_shader.setUniformValue( u_occluder_texture,      0 );                        // Texture unit 0
+    m_occluder_shader.setUniformValue( u_occluder_alpha,        alpha );
+    m_occluder_shader.setUniformValue( u_occluder_depth,        static_cast<float>(object->getZOrder()) );
+    m_occluder_shader.setUniformValue( u_occluder_near_plane,   c_near_plane );
+    m_occluder_shader.setUniformValue( u_occluder_far_plane,    c_far_plane );
 
     // ***** Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

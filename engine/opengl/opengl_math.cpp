@@ -49,26 +49,27 @@ DrPointF DrOpenGL::mapToScreen(glm::vec3 point3D) {
     z_pos = point3D.z;
 
     // Old Qt Way
-    ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    ///QRect viewport = QRect(0, 0, m_desired_fbo_width, m_desired_fbo_height);
     ///QVector3D vec = QVector3D(x_pos, y_pos, z_pos).project( m_view, m_projection, viewport );
 
     // Better Glm Way - No Qt
-    glm::vec4 view(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    glm::vec4 view(0, 0, m_desired_fbo_width, m_desired_fbo_height);
     glm::vec3 object(x_pos, y_pos, z_pos);
     glm::mat4 model(glm::make_mat4(m_view.data()) );
     glm::mat4 proj( glm::make_mat4(m_projection.data()) );
     glm::vec3 v = glm::project(object, model, proj, view);
 
-    return DrPointF( static_cast<double>(v.x),  static_cast<double>((height() * devicePixelRatio()) - v.y) );
+    return DrPointF( static_cast<double>(v.x) / static_cast<double>(m_fbo_scale_x),
+                     static_cast<double>((m_desired_fbo_height) - v.y) / static_cast<double>(m_fbo_scale_y));
 }
 
 glm::vec3 DrOpenGL::mapFromScreen(double x, double y) { return mapFromScreen( DrPointF(x, y)); }
 glm::vec3 DrOpenGL::mapFromScreen(float x, float y)   { return mapFromScreen( DrPointF(static_cast<double>(x), static_cast<double>(y)) ); }
 glm::vec3 DrOpenGL::mapFromScreen(DrPointF point) {
-    ///QRect viewport = QRect(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    ///QRect viewport = QRect(0, 0, m_desired_fbo_width, m_desired_fbo_height);
 
-    float x_pos = static_cast<float>(             point.x  * devicePixelRatio() );
-    float y_pos = static_cast<float>( (height() - point.y) * devicePixelRatio() );
+    float x_pos = static_cast<float>(                         point.x * devicePixelRatio() * static_cast<double>(m_fbo_scale_x));
+    float y_pos = static_cast<float>( m_desired_fbo_height - (point.y * devicePixelRatio() * static_cast<double>(m_fbo_scale_y)));
 
     // Old way of unprojecting in Orthographic before we 3D Ortho View was working
     ///QVector3D vec;
@@ -106,7 +107,7 @@ glm::vec3 DrOpenGL::mapFromScreen(DrPointF point) {
     ///far_plane =  QVector3D( x_pos, y_pos, 1.0f ).unproject( m_view, m_projection, viewport);
 
     // Better Glm Way - No Qt
-    glm::vec4 view(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    glm::vec4 view(0, 0, m_desired_fbo_width, m_desired_fbo_height);
     glm::vec3 window_near(x_pos, y_pos, 0.0f);
     glm::vec3 window_far( x_pos, y_pos, 1.0f);
     glm::mat4 model(glm::make_mat4(m_view.data()) );

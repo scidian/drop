@@ -29,14 +29,21 @@ void DrOpenGL::paintGL() {
     ///auto ver = glGetString(GL_VERSION);
     ///g_info = std::string(reinterpret_cast<const char*>(ver));
 
-    // ***** Update Camera / View Matrix
-    updateViewMatrix(m_engine->getCurrentWorld()->render_type);
-
     // ***** Make sure Things vector is sorted by depth
     EngineThings &things = m_engine->getCurrentWorld()->getThings();
     std::sort(things.begin(), things.end(), [] (DrEngineThing *a, DrEngineThing *b) {
         return a->getZOrder() < b->getZOrder();
     });
+
+    // ***** Update Camera / View Matrix
+    m_desired_fbo_width =  width()  * devicePixelRatio();
+    m_desired_fbo_height = height() * devicePixelRatio();
+    // For Pixelation using shrunken fbo's:
+    ///m_desired_fbo_width =  static_cast<int>(static_cast<float>(width()  * devicePixelRatio()) / m_engine->getCurrentWorld()->pixel_x);
+    ///m_desired_fbo_height = static_cast<int>(static_cast<float>(height() * devicePixelRatio()) / m_engine->getCurrentWorld()->pixel_y);
+    m_fbo_scale_x =        static_cast<float>(m_desired_fbo_width)  / static_cast<float>(width()  * devicePixelRatio());
+    m_fbo_scale_y =        static_cast<float>(m_desired_fbo_height) / static_cast<float>(height() * devicePixelRatio());
+    updateViewMatrix(m_engine->getCurrentWorld()->render_type, m_desired_fbo_width, m_desired_fbo_height);
 
     // ***** If there are Lights, Render Occluder Map, Calculate Shadow Maps, Draw Glow Lights
     process2DLights();
@@ -54,15 +61,14 @@ void DrOpenGL::paintGL() {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_texture_fbo->handle());
     glBlitFramebuffer(0, 0, m_render_fbo->width(), m_render_fbo->height(), 0, 0, m_render_fbo->width(), m_render_fbo->height(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
-
     // ***** Bind default Qt FrameBuffer, Clear and Render FBO to screen buffer as a textured quad, with post processing available
     QOpenGLFramebufferObject::bindDefault();
+    glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glDisable(GL_BLEND);
     drawFrameBufferUsingDefaultShader(m_texture_fbo);
     drawDebug();
-
 
     // ***** Update FPS
     ++m_fps_count_render;
@@ -117,14 +123,18 @@ void DrOpenGL::getThingVertices(std::vector<GLfloat> &vertices, DrEngineThing *t
     half_height = static_cast<float>(height) * thing->getScaleY() * extra_scale_y / 2.0f;
 
     // ***** Create rotation matrix, apply rotation to object
-    float now = static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 10.0);
+    double now = Dr::MillisecondsSinceStartOfDay() / 10.0;
     glm::mat4 matrix = Dr::IdentityMatrix();
     float rotate_x {0}, rotate_y {0}, rotate_z {0};
     if (thing->comp3D() != nullptr) {
-        rotate_x = Dr::DegreesToRadians(now * static_cast<float>(thing->comp3D()->getAngleX()));
-        rotate_y = Dr::DegreesToRadians(now * static_cast<float>(thing->comp3D()->getAngleY()));
+        double comp_3d_angle_x =        thing->comp3D()->getAngleX();
+        double comp_3d_angle_y =        thing->comp3D()->getAngleY();
+        double comp_3d_rotate_x_speed = thing->comp3D()->getRotateSpeedX();
+        double comp_3d_rotate_y_speed = thing->comp3D()->getRotateSpeedY();
+        rotate_x = Dr::DegreesToRadians(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)));
+        rotate_y = Dr::DegreesToRadians(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)));
     }
-    rotate_z = Dr::DegreesToRadians(now * static_cast<float>(thing->getAngle()));
+    rotate_z = Dr::DegreesToRadians(static_cast<float>(thing->getAngle()));
     matrix = glm::rotate(matrix, rotate_x, glm::vec3(1.0, 0.0, 0.0));
     matrix = glm::rotate(matrix, rotate_y, glm::vec3(0.0, 1.0, 0.0));
     matrix = glm::rotate(matrix, rotate_z, glm::vec3(0.0, 0.0, 1.0));
