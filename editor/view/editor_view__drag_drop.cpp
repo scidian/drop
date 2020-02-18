@@ -179,7 +179,8 @@ void DrView::dropEvent(QDropEvent *event) {
         QPixmap pixmap = QPixmap::fromImage(image.convertToFormat( QImage::Format_ARGB32 ));
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
-        FormProgressBox *progress = new FormProgressBox("Importing Image...", "Cancel", 2, this->parentWidget());
+        FormProgressBox *progress = new FormProgressBox("...", "Cancel", 2, this->parentWidget());
+        progress->setPrefix(" Importing Images: \n");
         DrImage *add_image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, Asset_Category::Image, progress);
         progress->stopProgress();
 

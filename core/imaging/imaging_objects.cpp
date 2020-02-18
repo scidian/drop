@@ -205,13 +205,6 @@ bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps,
     else         black_white = bitmap;
 
     DrColor compare(Dr::transparent);
-    bool    cancel = false;
-
-    // Initialize Progress Bar
-    if (progress != nullptr) {
-        progress->moveToNextItem();
-        progress->setDisplayText("Finding image objects...");
-    }
 
     // If convert is true, all object pixels will be transparent pixels. If all pixels are transparent we don't need to fill, we can
     // just return a solid square later on and not have to run expensive flood fill routine
@@ -250,8 +243,8 @@ bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps,
             // Call to Update Progress Bar Function
             if (progress != nullptr) {
                 double percent = static_cast<double>(x) / static_cast<double>(black_white.width - 1) * 100.0;
-                cancel = progress->updateValue(static_cast<int>(percent));
-                if (cancel) return true;
+                progress->updateValue(percent);
+                if (progress->isCanceled()) return true;
             }
         }
 
@@ -294,12 +287,6 @@ std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap, IProgressBar *pr
     // Initialize point array, verify image size
     std::vector<DrPoint> points { };
     if (bitmap.width < 1 || bitmap.height < 1) return std::vector<DrPointF> { };
-
-    // Initialize Progress Bar
-    if (progress != nullptr) {
-        progress->moveToNextItem();
-        progress->setDisplayText("Tracing Image Outline...");
-    }
 
     // ***** Find starting point, and also set processed image bits
     //       !!!!! #NOTE: Important that y loop is on top, we need to come at pixel from the left
@@ -413,7 +400,7 @@ std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap, IProgressBar *pr
         // Call to Update Progress Bar Function
         if ((progress != nullptr) && (trace_count % 100 == 0)) {
             double percent = static_cast<double>(trace_count) / static_cast<double>(total_pixels) * 100.0;
-            progress->updateValue(static_cast<int>(percent));
+            progress->updateValue(percent);
         }
     } while ((surround.size() > 0) && !back_at_start);
 

@@ -246,7 +246,8 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             DrAsset *asset = dynamic_cast<DrAsset*>(settings);
 
             // Add Images, Update Animation
-            FormProgressBox *progress = new FormProgressBox("Importing Images...", "Cancel", file_paths.size() * 2, frame->parentWidget());
+            FormProgressBox *progress = new FormProgressBox("...", "Cancel", file_paths.size() * 2, frame->parentWidget());
+            progress->setPrefix(" Importing Images: \n");
             std::list<long> image_keys;
             for (auto file_path : file_paths) {
                 DrImage *image = Dr::AddImage(project, file_path, c_no_key, Asset_Category::Image, progress);

@@ -42,11 +42,16 @@ void DrImage::setSimpleBox() {
 //####################################################################################        
 void DrImage::autoOutlinePoints(IProgressBar *progress) {
 
-    // Set Image Number on progress bar
+    // ***** Initialize Progress Bar
     if (progress != nullptr) {
         int image_count =   progress->getItemCount()   / 2;
         int image_number = (progress->getCurrentItem() / 2) + 1;
+        progress->unlockProgress();
+        progress->setAddIn(0.0);
+        progress->setMultiplier(1.0);
         progress->setSuffix("Image " + std::to_string(image_number) + " of " + std::to_string(image_count));
+        progress->moveToNextItem();
+        progress->setDisplayText("Finding image objects...");
     }
 
     // ***** Break pixmap into seperate images for each object in image
@@ -62,23 +67,15 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
     if (progress != nullptr) {
         progress->moveToNextItem();
         progress->setDisplayText("Tracing image outlines...");
+        progress->setMultiplier(1.0 / static_cast<double>(bitmaps.size()));
+        progress->lockProgress();
     }
 
     // ******************** Go through each image (object) and Polygon for it
     for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
-        // Update progress bar
-        if (progress != nullptr) {
-            double percent = static_cast<double>(image_number) / static_cast<double>(bitmaps.size()) * 100.0;
-            cancel = progress->updateValue(static_cast<int>(percent));
-            if (cancel) { setSimpleBox(); return; }
-        }
-
         // Grab next image, check if its valid
         DrBitmap &image = bitmaps[image_number];
         if (image.width < 1 || image.height < 1) continue;
-
-        // Lock Progress Bar for Remaining sub function
-        if (progress != nullptr) progress->lockProgress();
 
         // Trace edge of image
         std::vector<DrPointF> one_poly = Dr::TraceImageOutline(image, progress);
@@ -102,7 +99,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         // Optimize point list
         if (one_poly.size() > (c_neighbors * 2)) {
             one_poly = DrEngineVertexData::smoothPoints(one_poly, c_neighbors, 20.0, 1.0);
-            one_poly = PolylineSimplification::RamerDouglasPeucker(one_poly, 0.075);
+            one_poly = PolylineSimplification::RamerDouglasPeucker(one_poly, 0.075, progress);
             one_poly = DrEngineVertexData::insertPoints(one_poly);
         }
 
@@ -126,10 +123,20 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         DrBitmap holes = image.copy(rects[image_number]);
         Dr::FillBorder(holes, Dr::white, holes.rect());                     // Ensures only holes are left as black spots
 
+        // Update progress bar
+        if (progress != nullptr) {
+            progress->setAddIn(static_cast<double>(image_number) / static_cast<double>(bitmaps.size()) * 100.0);
+            progress->unlockProgress();
+            if (progress->isCanceled()) { setSimpleBox(); return; }
+        }
+
         // Breaks holes into seperate images for each Hole
         std::vector<DrBitmap> hole_images;
-        std::vector<DrRect>   hole_rects;
+        std::vector<DrRect>   hole_rects;        
         Dr::FindObjectsInBitmap(holes, hole_images, hole_rects, c_alpha_tolerance, false, progress);
+
+        // Lock   Progress Bar for Remaining sub function
+        if (progress != nullptr) progress->lockProgress();
 
         // Go through each image (Hole) create list for it
         std::vector<std::vector<DrPointF>> hole_list;
@@ -152,7 +159,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
             // Optimize point list
             if (one_hole.size() > (c_neighbors * 2)) {
                 one_hole = DrEngineVertexData::smoothPoints(one_hole, c_neighbors, 50.0, 1.0);
-                one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1);
+                one_hole = PolylineSimplification::RamerDouglasPeucker(one_hole, 0.1, progress);
                 one_hole = DrEngineVertexData::insertPoints(one_hole);
             }
 
@@ -162,9 +169,6 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
             }
         }
         m_hole_list.push_back(hole_list);
-
-        // Unlock Progress Bar for next iteration / exit
-        if (progress != nullptr) progress->unlockProgress();
     }   // End for each bitmap
 
 }

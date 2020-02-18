@@ -48,7 +48,7 @@ double PerpendicularDistance(const DrPointF &pt, const DrPointF &line_start, con
 }
 
 
-std::vector<DrPointF> PolylineSimplification::RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon) {
+std::vector<DrPointF> PolylineSimplification::RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon, IProgressBar *progress) {
     std::vector<DrPointF> simplified;
 
     if (point_list.size() < 2) {
@@ -67,6 +67,11 @@ std::vector<DrPointF> PolylineSimplification::RamerDouglasPeucker(const std::vec
             index = i;
             dmax = d;
         }
+    }
+
+    // Allow progressbar to update
+    if (progress != nullptr) {
+        progress->updateValue(-1);
     }
 
     // If max distance is greater than epsilon, recursively simplify

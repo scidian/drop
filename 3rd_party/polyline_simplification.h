@@ -18,6 +18,7 @@
 
 // Forward Declarations
 class DrPointF;
+class IProgressBar;
 
 
 //####################################################################################
@@ -31,7 +32,7 @@ class PolylineSimplification
 public:
     PolylineSimplification();
 
-    static std::vector<DrPointF> RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon);
+    static std::vector<DrPointF> RamerDouglasPeucker(const std::vector<DrPointF> &point_list, double epsilon, IProgressBar *progress = nullptr);
 };
 
 

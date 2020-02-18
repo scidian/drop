@@ -253,6 +253,7 @@ void FormMain::buildToolBar() {
         connect(tool, &QPushButton::clicked, [this] () {
             FormProgressBox *progress_box = new FormProgressBox("Detecting Image Shape...", "Cancel", 1, this);
             progress_box->setShowIfWaitIsLongerThan(0.25);
+            progress_box->moveToNextItem();
             for (int i = 0; i <= 1000; ++i) {
                 Dr::Sleep(3);
                 if (i % 10 == 0) {
@@ -264,8 +265,8 @@ void FormMain::buildToolBar() {
                     }
                     progress_box->setDisplayText("Detecting Image Shape...  " + std::to_string(i / 10) + "% ");
                 }
-                bool was_canceled = progress_box->updateValue(i / 10);
-                if (was_canceled) break;
+                progress_box->updateValue(i / 10);
+                if (progress_box->isCanceled()) break;
             }
             progress_box->stopProgress();
         });
