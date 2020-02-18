@@ -251,7 +251,7 @@ void FormMain::buildToolBar() {
         tool = createToolbarButton(QStringLiteral("buttonImageViewer"), Advisor_Info::Settings_Image_Viewer, c_button_size_w, c_button_size_h, false);
         toolbarLayoutSettings->addWidget(tool);
         connect(tool, &QPushButton::clicked, [this] () {
-            FormProgressBox *progress_box = new FormProgressBox("Detecting Image Shape...", "Cancel", 0, 1000, this);
+            FormProgressBox *progress_box = new FormProgressBox("Detecting Image Shape...", "Cancel", 1, this);
             progress_box->setShowIfWaitIsLongerThan(0.25);
             for (int i = 0; i <= 1000; ++i) {
                 Dr::Sleep(3);
@@ -262,12 +262,12 @@ void FormMain::buildToolBar() {
                             d = std::pow(d, 2.0);
                         }
                     }
-                    progress_box->setInfoText("Detecting Image Shape...  " + QString::number(i / 10) + "% ");
+                    progress_box->setDisplayText("Detecting Image Shape...  " + std::to_string(i / 10) + "% ");
                 }
-                bool was_canceled = progress_box->setValue(i);
+                bool was_canceled = progress_box->setValue(i / 10);
                 if (was_canceled) break;
             }
-            progress_box->close();
+            progress_box->stopProgress();
         });
 
         tool = createToolbarButton(QStringLiteral("buttonFontBuilder"), Advisor_Info::Settings_Font_Builder, c_button_size_w, c_button_size_h, false);

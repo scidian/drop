@@ -14,7 +14,7 @@
 //##    Constructors
 //####################################################################################
 DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap,
-                 Asset_Category category, bool force_outline, bool updateFunction(int)) : DrSettings(parent_project) {
+                 Asset_Category category, bool force_outline, IProgressBar *progress) : DrSettings(parent_project) {
     this->setKey(key);
     m_category = category;
 
@@ -22,7 +22,7 @@ DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, Dr
     m_bitmap = bitmap;
 
     if (key > c_key_starting_number || force_outline) {
-        autoOutlinePoints(updateFunction);
+        autoOutlinePoints(progress);
     } else {
         m_poly_list.push_back( bitmap.polygon().points() );
         m_hole_list.push_back( { } );

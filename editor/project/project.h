@@ -13,6 +13,9 @@
 
 #include "project/dr_project.h"
 
+// Forward Declarations
+class IProgressBar;
+
 
 //####################################################################################
 //##    Project handling from Editor, can use Qt
@@ -22,7 +25,7 @@ namespace Dr {
 
     // ***** Project Building
     DrImage*    AddImage(DrProject *project, QString filename,
-                         long key = c_no_key, Asset_Category category = Asset_Category::Image, bool updateFunction(int) = nullptr);
+                         long key = c_no_key, Asset_Category category = Asset_Category::Image, IProgressBar *progress = nullptr);
     void        AddBuiltInImages(DrProject *project);
     void        InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test = false);
 

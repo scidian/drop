@@ -71,20 +71,6 @@ void DrView::dragMoveEvent(QDragMoveEvent *event) {
 //####################################################################################
 //##    Drop Handling - Accept an asset fropped from the Asset Tree
 //####################################################################################
-static FormProgressBox *l_progress =            nullptr;
-static int              l_number_of_items =     1;
-static int              l_current_item =        1;
-void initiateProgressBox(QWidget *parent, QString text, int number_of_items) {
-    l_number_of_items = number_of_items;
-    l_current_item =    1;
-    l_progress = new FormProgressBox(text, "Cancel", 0, 100 * number_of_items, parent);
-    l_progress->setShowIfWaitIsLongerThan(0.25);
-}
-void setItemProgressBox(int item_number) {  l_current_item = item_number; }
-bool updateProgressBox(int i) {             return l_progress->setValue(((l_current_item - 1) * 100) + i); }
-void closeProgressBox() {                   l_progress->close(); }
-
-
 void DrView::dropEvent(QDropEvent *event) {
     // ***** Stop drawing crosshairs under item drop
     m_drop_might_happen = false;
@@ -190,12 +176,12 @@ void DrView::dropEvent(QDropEvent *event) {
             event->ignore();
             return;
         }
-        QPixmap pixmap = QPixmap::fromImage( image.convertToFormat( QImage::Format_ARGB32 ));
+        QPixmap pixmap = QPixmap::fromImage(image.convertToFormat( QImage::Format_ARGB32 ));
 
         // If it was an image, add the Image and Asset to the project and add the Thing to the scene
-        initiateProgressBox(this->parentWidget(), "Detecting Image Shape...", 1);
-        DrImage *add_image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, Asset_Category::Image, updateProgressBox);
-        closeProgressBox();
+        FormProgressBox *progress = new FormProgressBox("Importing Image...", "Cancel", 2, this->parentWidget());
+        DrImage *add_image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, Asset_Category::Image, progress);
+        progress->stopProgress();
 
         DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, add_image->getKey());
         m_editor_relay->buildAssetTree();

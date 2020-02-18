@@ -14,20 +14,29 @@
 #include <QTimer>
 #include <QWidget>
 
+#include <deque>
+
+#include "core/interface/dr_progress.h"
+
 // Forward declarations
 class DrProject;
+
 
 //####################################################################################
 //##    FormProgressBox
 //##        A popup progress box to be used during intense calculations
+//##
+//##        After initial creation, updateValue is called for each item from 0 to 100, and then
+//##        moveToNextItem() is called and them updateValue from 0 to 100 agfain and so on
+//##
 //############################
-class FormProgressBox : public QWidget
+class FormProgressBox : public QWidget, public IProgressBar
 {
     Q_OBJECT
 
 public:
     // Constructor / Destructor
-    FormProgressBox(QString info_text = "Working...", QString cancel_button_text = "Cancel", int min = 0, int max = 100, QWidget *parent = nullptr);
+    FormProgressBox(QString info_text = "Working...", QString cancel_button_text = "Cancel", int items = 1, QWidget *parent = nullptr);
     virtual ~FormProgressBox() override;
 
 
@@ -39,24 +48,35 @@ private:
     QTimer         *m_color_timer           { nullptr };                // Timer that updates progress bar colors
 
     // Progress Variables
-    double          m_show_if_longer_than   { 2.0 };                    // Don't show form if calculated time is less than this many seconds
-
     int             m_start_value           {   0 };                    // Progress bar start value
     int             m_end_value             { 100 };                    // Progress bar end value
     int             m_current_value         {   0 };                    // Current value of progress bar
 
-    QElapsedTimer   m_start_time;
     bool            m_canceled              { false };                  // Becomes true if user cancels event
+
+    // Timer Variables
+    QElapsedTimer       m_start_time;
+    bool                m_time_set          { false };                  // Becomes true after first call to setValue()
+    std::deque<double>  m_estimated_times   { };                        // Stores last 5 estimated times for averaging
+
+
 
 
 public:
     // Event Overrides
     virtual void    resizeEvent(QResizeEvent *event) override;
 
+    // Virtual Progress Bar Features
+    virtual void    setDisplayText(std::string text) override;
+    virtual void    stopProgress() override;
+    virtual bool    updateValue(int i) override;
+
     // Progress Functions
-    void            setInfoText(QString info_text);
-    void            setShowIfWaitIsLongerThan(double seconds)       { m_show_if_longer_than = seconds; }
     bool            setValue(int new_value);
+
+    // Getters / Setters
+    int             getStartValue() { return m_start_value; }
+    int             getEndValue()   { return m_end_value; }
 
 
 public slots:

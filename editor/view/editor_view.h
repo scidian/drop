@@ -171,9 +171,9 @@ private:
     bool                            m_cam_reversed = false;             // Stores is x rotation is reversed when camera move starts
 
     // Debug Camera Mode Variables
-    DrThing                             *m_cam_mouse_over = nullptr;    // Stores which camera mouse is over, if none == nullptr
-    DrThing                             *m_cam_selected = nullptr;      // Stores which camera is selected, if none == nullptr
-    std::map<DrThing*, Camera_Data>      m_cam_data;                    // Stores view bounding coordinates of all cameras within view
+    DrThing                        *m_cam_mouse_over = nullptr;         // Stores which camera mouse is over, if none == nullptr
+    DrThing                        *m_cam_selected = nullptr;           // Stores which camera is selected, if none == nullptr
+    std::map<DrThing*, Camera_Data> m_cam_data;                         // Stores view bounding coordinates of all cameras within view
 
 
     // !!!!! #DEBUG: Debugging Variables

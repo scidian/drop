@@ -111,6 +111,7 @@ SOURCES += \
     core/dr_time.cpp \
     core/imaging/imaging_filters.cpp \
     core/imaging/imaging_objects.cpp \
+    core/interface/dr_progress.cpp \
     core/types/dr_bitmap.cpp \
     core/types/dr_color.cpp \
     core/types/dr_point.cpp \
@@ -925,6 +926,7 @@ HEADERS += \
     core/dr_string.h \
     core/dr_time.h \
     core/imaging/imaging.h \
+    core/interface/dr_progress.h \
     core/types/dr_bitmap.h \
     core/types/dr_color.h \
     core/types/dr_point.h \

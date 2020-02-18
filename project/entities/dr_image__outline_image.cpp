@@ -9,6 +9,7 @@
 #include "3rd_party/polyline_simplification.h"
 #include "core/dr_debug.h"
 #include "core/imaging/imaging.h"
+#include "core/interface/dr_progress.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/mesh/engine_vertex_data.h"
 #include "project/constants_component_info.h"
@@ -22,31 +23,50 @@ const int c_neighbors =             5;                  // Number of neighbors t
 
 
 //####################################################################################
+//##    Sets Image Shape as simple box
+//####################################################################################
+void DrImage::setSimpleBox() {
+    std::vector<DrPointF> one_poly = m_bitmap.polygon().points();
+    std::vector<std::vector<DrPointF>> hole_list {{ }};
+    HullFinder::EnsureWindingOrientation(one_poly, Winding_Orientation::CounterClockwise);
+    m_poly_list.clear();
+    m_hole_list.clear();
+    m_poly_list.push_back(one_poly);
+    m_hole_list.push_back(hole_list);
+    m_use_simple_square = true;
+}
+
+
+//####################################################################################
 //##    Loads list of points for Image and Image Holes
 //####################################################################################        
-void DrImage::autoOutlinePoints(bool updateFunction(int)) {
+void DrImage::autoOutlinePoints(IProgressBar *progress) {
 
     // ***** Break pixmap into seperate images for each object in image
     std::vector<DrBitmap>   bitmaps;
     std::vector<DrRect>     rects;
-    bool cancel = Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance, true, updateFunction);
+    bool cancel = Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance, true, progress);
     m_number_of_objects = static_cast<int>(bitmaps.size());
 
     // ***** If FindObjectsInBitmap never finished, just add simple box shape
-    if (cancel) {
-        std::vector<DrPointF> one_poly = m_bitmap.polygon().points();
-        std::vector<std::vector<DrPointF>> hole_list {{ }};
-        HullFinder::EnsureWindingOrientation(one_poly, Winding_Orientation::CounterClockwise);
-        m_poly_list.clear();
-        m_hole_list.clear();
-        m_poly_list.push_back(one_poly);
-        m_hole_list.push_back(hole_list);
-        m_use_simple_square = true;
-        return;
+    if (cancel) { setSimpleBox(); return; }
+
+    // ***** Increment Progress Bar Task
+    if (progress != nullptr) {
+        progress->moveToNextItem();
+        progress->setDisplayText("Tracing image outlines...");
     }
 
     // ******************** Go through each image (object) and Polygon for it
     for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
+        // Update progress bar
+        if (progress != nullptr) {
+            double percent = static_cast<double>(image_number) / static_cast<double>(bitmaps.size()) * 100.0;
+            cancel = progress->updateValue(static_cast<int>(percent));
+            if (cancel) { setSimpleBox(); return; }
+        }
+
+        // Grab next image, check if its valid
         DrBitmap &image = bitmaps[image_number];
         if (image.width < 1 || image.height < 1) continue;
 

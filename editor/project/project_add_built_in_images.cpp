@@ -11,6 +11,7 @@
 #include <QPixmap>
 
 #include "core/dr_debug.h"
+#include "core/interface/dr_progress.h"
 #include "editor/project/project.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -26,7 +27,7 @@ namespace Dr {
 //####################################################################################
 //##    Adds Singular Image to Project
 //####################################################################################
-DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category category, bool updateFunction(int)) {
+DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category category, IProgressBar *progress) {
 
     QFileInfo file_info(filename);
         QString full_path =     file_info.path();
@@ -40,7 +41,7 @@ DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category
     DrBitmap bitmap = DrBitmap(image.constBits(), static_cast<int>(image.sizeInBytes()), false, image.width(), image.height());
     ///qDebug() << "Bitmap - from size: " << image.sizeInBytes() << ", Width: " << bitmap.width << ", Height: " << bitmap.height;
 
-    DrImage *dr_image = project->addImage(simple_name.toStdString(), bitmap, category, key, updateFunction);
+    DrImage *dr_image = project->addImage(simple_name.toStdString(), bitmap, category, key, progress);
     return dr_image;
 }
 

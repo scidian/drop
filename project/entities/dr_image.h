@@ -12,6 +12,7 @@
 
 // Forward declarations
 class DrProject;
+class IProgressBar;
 
 // Local Constants
 #define         vec                     std::vector
@@ -40,14 +41,15 @@ public:
 public:
     // Constructors
     DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap,
-            Asset_Category category = Asset_Category::Image, bool force_outline = false, bool updateFunction(int) = nullptr);
+            Asset_Category category = Asset_Category::Image, bool force_outline = false, IProgressBar *progress = nullptr);
 
     // DrSettings Overrides
     virtual DrType      getType() override  { return DrType::Image; }
     virtual std::string getName() override  { return m_simple_name; }
 
     // Image Helper Functions
-    void            autoOutlinePoints(bool updateFunction(int) = nullptr);
+    void            autoOutlinePoints(IProgressBar *progress = nullptr);
+    void            setSimpleBox();
 
     // Getters / Setters
     Asset_Category  getAssetCategory()      { return m_category; }

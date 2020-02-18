@@ -15,6 +15,7 @@
 #include "editor/event_filters.h"
 #include "editor/forms/form_animation.h"
 #include "editor/forms/form_popup.h"
+#include "editor/forms/form_progress_box.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
@@ -245,11 +246,13 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             DrAsset *asset = dynamic_cast<DrAsset*>(settings);
 
             // Add Images, Update Animation
+            FormProgressBox *progress = new FormProgressBox("Importing Images...", "Cancel", file_paths.size() * 2, frame->parentWidget());
             std::list<long> image_keys;
             for (auto file_path : file_paths) {
-                DrImage *image = Dr::AddImage(project, file_path);
+                DrImage *image = Dr::AddImage(project, file_path, c_no_key, Asset_Category::Image, progress);
                 image_keys.push_back(image->getKey());
             }
+            progress->stopProgress();
             asset->updateAnimationProperty( image_keys, property->getCompPropPair() );
 
             // Update all Things, Thing_Size that use Asset

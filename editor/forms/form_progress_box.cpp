@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -23,7 +24,8 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, int min, int max, QWidget *parent) : QWidget(parent) {
+FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, int items, QWidget *parent)
+    : QWidget(parent), IProgressBar(items) {
 
     // Qt Progress Dialog Example
     /**
@@ -38,9 +40,8 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     */
 
     // ***** Initialize member variables
-    m_start_value = min;
-    m_end_value =   max;
-    m_start_time.restart();
+    m_start_value = 0;
+    m_end_value =   100 * items;
 
     // ***** Set up initial window
     setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
@@ -69,7 +70,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
         inner_layout->addWidget(m_info_text);
 
         m_progress_bar = new QProgressBar();
-            m_progress_bar->setRange(min, max);
+            m_progress_bar->setRange(m_start_value, m_end_value);
             m_progress_bar->setTextVisible(false);
             std::string style;
             style +=    " QProgressBar          { "
@@ -92,7 +93,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
             Dr::ApplyDropShadowByType(cancel, Shadow_Types::Button_Shadow);
             cancel->setObjectName(QStringLiteral("button"));
 
-            // Connect a lambda function to the "exit" button to close the form
+            // Connect a lambda function to the "exit" button to cancel the Progress Box
             connect(cancel, &QPushButton::clicked, [this] () {
                 m_canceled = true;
             });
@@ -101,6 +102,13 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
         inner_layout->addWidget(button_holder);
 
     layout->addWidget(m_inner_widget);
+
+    // ***** Start time count
+    if (m_time_set == false) {
+        m_start_time.restart();
+        m_estimated_times.resize(20, 0.0);
+        m_time_set = true;
+    }
 
     // ***** Timer to update progress bar colors
     m_color_timer = new QTimer();
@@ -113,7 +121,6 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
 }
 
 FormProgressBox::~FormProgressBox() {
-    m_color_timer->stop();
     m_color_timer->deleteLater();
 }
 
@@ -123,8 +130,32 @@ FormProgressBox::~FormProgressBox() {
 //####################################################################################
 void FormProgressBox::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
-
     Dr::ApplyRoundedCornerMask(this, 8, 8);
+}
+
+
+//####################################################################################
+//##
+//##    Virtual IProgressBar Functions
+//##
+//####################################################################################
+// Updates working text
+void FormProgressBox::setDisplayText(std::string info_text) {
+    m_info_text->setText(QString::fromStdString(info_text));
+}
+
+void FormProgressBox::stopProgress() {
+    m_color_timer->stop();
+    qApp->processEvents();
+    this->close();
+}
+
+// Updates value
+bool FormProgressBox::updateValue(int i) {
+    int new_value = ((this->getCurrentItem() - 1) * 100) + i;
+    if (new_value < m_start_value) new_value = m_start_value;
+    if (new_value > m_end_value)   new_value = m_end_value;
+    return this->setValue(new_value);
 }
 
 
@@ -133,28 +164,22 @@ void FormProgressBox::resizeEvent(QResizeEvent *event) {
 //##    Progress Functions
 //##
 //####################################################################################
-// Updates working text
-void FormProgressBox::setInfoText(QString info_text) {
-    m_info_text->setText(info_text);
-}
-
 // Updates progress bar, shows form if its going to take longer than 2 seconds
 //      RETURNS: True if "cancel" button has been pressed
 bool FormProgressBox::setValue(int new_value) {
+    // Calculate percentage
     double percent = static_cast<double>(new_value - m_start_value) / static_cast<double>(m_end_value - m_start_value);
     double seconds_ellapsed = m_start_time.elapsed() / 1000.0;
 
     // If we've done 1 percent, see if this is going to take longer than desired minimum time, if so show this progress box
     if (this->isVisible() == false && percent > 0.01) {
         double time_required = seconds_ellapsed * (1.0 / percent);
-        if (time_required > m_show_if_longer_than) {
+        m_estimated_times.push_back(time_required);
+        if (m_estimated_times.size() > 20) m_estimated_times.pop_front();
+        time_required = std::accumulate(m_estimated_times.begin(), m_estimated_times.end(), 0.0) / static_cast<double>(m_estimated_times.size());
+        if (time_required > getShowIfWaitIsLongetThan()) {
             this->show();
         }
-    }
-
-    // Also, if longer than desired minimum time, so show this progress box
-    if (this->isVisible() == false && seconds_ellapsed > m_show_if_longer_than) {
-        this->show();
     }
 
     // Update Progress Bar
@@ -163,9 +188,9 @@ bool FormProgressBox::setValue(int new_value) {
     }
 
     // Close If Complete
-    if (m_progress_bar->value() == m_progress_bar->maximum()) {
-        this->close();
-    }
+//    if (m_progress_bar->value() == m_progress_bar->maximum()) {
+//        this->stopProgress();
+//    }
 
     update();
     qApp->processEvents();
@@ -180,6 +205,11 @@ void FormProgressBox::updateColors() {
     double pixel_w =  15.00 / m_progress_bar->geometry().width()  / (percent * 0.5);                    // Set inital pixel width of gradient
     double pixel_h =  pixel_w/hw_ratio/percent;                                                         // Apply gradient to y axis
     double offset = -(seconds_ellapsed/8.0) / percent;                                                  // Adjust gradient start by time to animate
+
+    // If longer than desired minimum time, show this progress box
+    if (this->isVisible() == false && seconds_ellapsed > getShowIfWaitIsLongetThan()) {
+        this->show();
+    }
 
     // Update Style Sheet to Animate Progress Bar
     std::string style;
