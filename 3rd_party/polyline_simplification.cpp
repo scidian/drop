@@ -15,6 +15,7 @@
 
 #include "3rd_party/polyline_simplification.h"
 #include "core/dr_debug.h"
+#include "core/interface/dr_progress.h"
 #include "core/types/dr_pointf.h"
 
 

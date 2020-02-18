@@ -11,6 +11,7 @@
 #include <QElapsedTimer>
 #include <QLabel>
 #include <QProgressBar>
+#include <QThread>
 #include <QTimer>
 #include <QWidget>
 
@@ -56,7 +57,6 @@ private:
 
     // Timer Variables
     QElapsedTimer       m_start_time;
-    bool                m_time_set          { false };                  // Becomes true after first call to setValue()
     std::deque<double>  m_estimated_times   { };                        // Stores last 5 estimated times for averaging
 
 
@@ -72,7 +72,7 @@ public:
     virtual bool    updateValue(int i) override;
 
     // Progress Functions
-    bool            setValue(int new_value);
+    bool            applyValue(int new_value);
 
     // Getters / Setters
     int             getStartValue() { return m_start_value; }
@@ -83,6 +83,25 @@ public slots:
     void            updateColors();
 
 };
+
+
+
+class TThread : public QThread
+{
+    Q_OBJECT
+
+    void run();
+
+public:
+    explicit TThread(QObject *parent = nullptr);
+
+signals:
+
+private slots:
+    void timerOut();
+};
+
+
 
 
 #endif // FORM_PROGRESS_BOX_H

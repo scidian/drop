@@ -27,9 +27,9 @@ class DrImage : public DrSettings
 {
 private:
     // Local Variables
-    Asset_Category          m_category                  { Asset_Category::Image };          // Category for Image in Asset Tree
-    std::string             m_simple_name;                                                  // Simple name, i.e. "pretty tree 1"
-    DrBitmap                m_bitmap;                                                       // Stored image as DrBitmap
+    Asset_Category              m_category              { Asset_Category::Image };          // Category for Image in Asset Tree
+    std::string                 m_simple_name;                                              // Simple name, i.e. "pretty tree 1"
+    DrBitmap                    m_bitmap;                                                   // Stored image as DrBitmap
 
 public:
     vec<vec<DrPointF>>          m_poly_list;                                                // Stores list of image outline points

@@ -22,6 +22,10 @@ private:
     int             m_current_item          { 0 };                      // Item currently being processed
 
     double          m_show_if_longer_than   { 1.25 };                   // Don't show if calculated time is less than this many seconds
+    bool            m_progress_locked       { false };
+
+    std::string     m_prefix                { "" };
+    std::string     m_suffix                { "" };
 
 public:
     // Constructor / Destructor
@@ -35,10 +39,23 @@ public:
     virtual bool    updateValue(int i) = 0;                             // Sends updated value to progress bar
 
 
+    // Progress Locking
+    bool            isProgressLocked()  { return m_progress_locked; }   // These functions are to be used before passing to a sub function, keeps animation
+    void            lockProgress()      { m_progress_locked = true; }   //      going while sub function is running, but not increase progress bar since the
+    void            unlockProgress()    { m_progress_locked = false; }  //      sub routine was not included in original item count
+
+
+    // Display Text Prefix / Suffix
+    std::string     getPrefix() { return m_prefix; }
+    std::string     getSuffix() { return m_suffix; }
+    void            setPrefix(std::string prefix) { m_prefix = prefix; }
+    void            setSuffix(std::string suffix) { m_suffix = suffix; }
+
+
     // Getters / Setters
     int             getCurrentItem()    { return m_current_item; }
     int             getItemCount()      { return m_item_count; }
-    void            moveToNextItem()    { m_current_item++; }
+    void            moveToNextItem()    { if (m_progress_locked == false) m_current_item++; }
 
     double          getShowIfWaitIsLongetThan() { return m_show_if_longer_than; }
     void            setShowIfWaitIsLongerThan(double seconds) { m_show_if_longer_than = seconds; }

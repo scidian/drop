@@ -264,7 +264,7 @@ void FormMain::buildToolBar() {
                     }
                     progress_box->setDisplayText("Detecting Image Shape...  " + std::to_string(i / 10) + "% ");
                 }
-                bool was_canceled = progress_box->setValue(i / 10);
+                bool was_canceled = progress_box->updateValue(i / 10);
                 if (was_canceled) break;
             }
             progress_box->stopProgress();

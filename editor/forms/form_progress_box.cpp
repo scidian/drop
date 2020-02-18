@@ -27,18 +27,6 @@
 FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, int items, QWidget *parent)
     : QWidget(parent), IProgressBar(items) {
 
-    // Qt Progress Dialog Example
-    /**
-    QProgressDialog progress("Copying files...", "Abort Copy", 0, 10000000, this);
-    progress.setWindowModality(Qt::WindowModal);
-    for (int i = 0; i < 10000000; i++) {
-        progress.setValue(i);
-        if (progress.wasCanceled()) break;
-        for (int j = 0; j < 1000000; j++) { double d = sqrt(j); }
-    }
-    progress.setValue(1000000);
-    */
-
     // ***** Initialize member variables
     m_start_value = 0;
     m_end_value =   100 * items;
@@ -103,26 +91,26 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
 
     layout->addWidget(m_inner_widget);
 
-    // ***** Start time count
-    if (m_time_set == false) {
-        m_start_time.restart();
-        m_estimated_times.resize(20, 0.0);
-        m_time_set = true;
-    }
-
-    // ***** Timer to update progress bar colors
-    m_color_timer = new QTimer();
-    connect(m_color_timer, SIGNAL(timeout()), this, SLOT(updateColors()));
-    m_color_timer->start(30);
+    // ***** Start time count, zero average time buffer
+    m_start_time.restart();
+    m_estimated_times.clear();
+    for (int i = 0; i < 20; ++i) m_estimated_times.push_back(0.0);
 
     // ***** Center window on screen and install dragging event filter
     Dr::CenterFormOnScreen(parent, this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
+
+    // ***** Timer to update progress bar colors
+    m_color_timer = new QTimer();
+    connect(m_color_timer, SIGNAL(timeout()), this, SLOT(updateColors()));
+
+    m_color_timer->setInterval(30);
+    m_color_timer->setTimerType(Qt::PreciseTimer);
+    m_color_timer->start();
+    ///QTimer::singleShot( 100, this, [this] { m_color_timer->start(20); } );           // Start timer after finished loading
 }
 
-FormProgressBox::~FormProgressBox() {
-    m_color_timer->deleteLater();
-}
+FormProgressBox::~FormProgressBox() { }
 
 
 //####################################################################################
@@ -141,21 +129,31 @@ void FormProgressBox::resizeEvent(QResizeEvent *event) {
 //####################################################################################
 // Updates working text
 void FormProgressBox::setDisplayText(std::string info_text) {
-    m_info_text->setText(QString::fromStdString(info_text));
+    if (isProgressLocked() == false) {
+        if (m_info_text) m_info_text->setText(QString::fromStdString(getPrefix() + info_text + getSuffix()));
+        update();
+        qApp->processEvents();
+    }
 }
 
 void FormProgressBox::stopProgress() {
     m_color_timer->stop();
+    m_color_timer->deleteLater();
     qApp->processEvents();
     this->close();
 }
 
 // Updates value
 bool FormProgressBox::updateValue(int i) {
-    int new_value = ((this->getCurrentItem() - 1) * 100) + i;
-    if (new_value < m_start_value) new_value = m_start_value;
-    if (new_value > m_end_value)   new_value = m_end_value;
-    return this->setValue(new_value);
+    if (isProgressLocked() == false) {
+        int new_value = ((this->getCurrentItem() - 1) * 100) + i;
+        if (new_value < m_start_value)      new_value = m_start_value;
+        if (new_value > m_end_value)        new_value = m_end_value;
+        this->applyValue(new_value);
+    }
+    update();
+    qApp->processEvents();
+    return m_canceled;
 }
 
 
@@ -166,7 +164,7 @@ bool FormProgressBox::updateValue(int i) {
 //####################################################################################
 // Updates progress bar, shows form if its going to take longer than 2 seconds
 //      RETURNS: True if "cancel" button has been pressed
-bool FormProgressBox::setValue(int new_value) {
+bool FormProgressBox::applyValue(int new_value) {
     // Calculate percentage
     double percent = static_cast<double>(new_value - m_start_value) / static_cast<double>(m_end_value - m_start_value);
     double seconds_ellapsed = m_start_time.elapsed() / 1000.0;
@@ -183,57 +181,73 @@ bool FormProgressBox::setValue(int new_value) {
     }
 
     // Update Progress Bar
-    if (m_progress_bar->value() != new_value) {
+    if (this->isVisible() && (m_progress_bar->value() != new_value)) {
         m_progress_bar->setValue(new_value);
     }
 
     // Close If Complete
-//    if (m_progress_bar->value() == m_progress_bar->maximum()) {
-//        this->stopProgress();
-//    }
+    ///if (m_progress_bar->value() == m_progress_bar->maximum()) this->stopProgress();
 
-    update();
-    qApp->processEvents();
     return m_canceled;
 }
 
 // SLOT: Updates Progress Bar Colors
 void FormProgressBox::updateColors() {
-    double percent = static_cast<double>(m_progress_bar->value() - m_start_value) / static_cast<double>(m_end_value - m_start_value);
-    double seconds_ellapsed = m_start_time.elapsed() / 1000.0;                                          // Get time passed since progress bar start
-    double hw_ratio = m_progress_bar->geometry().width() / m_progress_bar->geometry().height();         // Get widget width to height ratio
-    double pixel_w =  15.00 / m_progress_bar->geometry().width()  / (percent * 0.5);                    // Set inital pixel width of gradient
-    double pixel_h =  pixel_w/hw_ratio/percent;                                                         // Apply gradient to y axis
-    double offset = -(seconds_ellapsed/8.0) / percent;                                                  // Adjust gradient start by time to animate
+    // Get time passed since progress bar start
+    double seconds_ellapsed = m_start_time.elapsed() / 1000.0;
 
     // If longer than desired minimum time, show this progress box
-    if (this->isVisible() == false && seconds_ellapsed > getShowIfWaitIsLongetThan()) {
+    if ((this->isVisible() == false) && (seconds_ellapsed > getShowIfWaitIsLongetThan())) {
         this->show();
-    }
+        update();
+        qApp->processEvents();
 
-    // Update Style Sheet to Animate Progress Bar
-    std::string style;
-    style +=    " QProgressBar          { "
-                "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
-                "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; } ";
-    style +=    " QProgressBar::chunk { "
-                "       border-radius: 4px; "
-                "       background: qlineargradient(spread:reflect, "
-                                        " x1:" + std::to_string( offset + 0.0 ) + ", "
-                                        " y1:" + std::to_string( offset + 0.0 ) +
-                                        " x2:" + std::to_string( offset + pixel_w ) +
-                                        " y2:" + std::to_string( offset + pixel_h ) + ", "
-                "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark ).darker( 120).name() + ", "
-                "                   stop:1 " + Dr::GetColor(Window_Colors::Icon_Light).lighter(120).name() + "); } ";
-    m_progress_bar->setStyleSheet(QString::fromStdString(style));
-    update();
-    qApp->processEvents();
+    } else if (this->isVisible()) {
+
+        double percent = static_cast<double>(m_progress_bar->value() - m_start_value) / static_cast<double>(m_end_value - m_start_value);
+        double hw_ratio = m_progress_bar->geometry().width() / m_progress_bar->geometry().height();         // Get widget width to height ratio
+        double pixel_w =  15.00 / m_progress_bar->geometry().width()  / (percent * 0.5);                    // Set inital pixel width of gradient
+        double pixel_h =  pixel_w/hw_ratio/percent;                                                         // Apply gradient to y axis
+        double offset = -(seconds_ellapsed/8.0) / percent;                                                  // Adjust gradient start by time to animate
+
+        // Update Style Sheet to Animate Progress Bar
+        std::string style;
+        style +=    " QProgressBar          { "
+                    "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
+                    "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; } ";
+        style +=    " QProgressBar::chunk { "
+                    "       border-radius: 4px; "
+                    "       background: qlineargradient(spread:reflect, "
+                                            " x1:" + std::to_string( offset + 0.0 ) + ", "
+                                            " y1:" + std::to_string( offset + 0.0 ) +
+                                            " x2:" + std::to_string( offset + pixel_w ) +
+                                            " y2:" + std::to_string( offset + pixel_h ) + ", "
+                    "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Dark ).darker( 120).name() + ", "
+                    "                   stop:1 " + Dr::GetColor(Window_Colors::Icon_Light).lighter(120).name() + "); } ";
+        m_progress_bar->setStyleSheet(QString::fromStdString(style));
+        update();
+        qApp->processEvents();
+    }
 }
 
 
 
 
+TThread::TThread(QObject *parent) : QThread(parent) {
 
+}
+
+void TThread::run() {
+    QTimer timer;
+    connect(&timer, SIGNAL(timeout()), this, SLOT(timerOut()), Qt::DirectConnection);
+    timer.start(30);
+    timer.moveToThread(this);
+    exec();
+}
+
+void TThread::timerOut() {
+
+}
 
 
 

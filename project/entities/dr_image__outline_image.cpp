@@ -42,6 +42,13 @@ void DrImage::setSimpleBox() {
 //####################################################################################        
 void DrImage::autoOutlinePoints(IProgressBar *progress) {
 
+    // Set Image Number on progress bar
+    if (progress != nullptr) {
+        int image_count =   progress->getItemCount()   / 2;
+        int image_number = (progress->getCurrentItem() / 2) + 1;
+        progress->setSuffix("Image " + std::to_string(image_number) + " of " + std::to_string(image_count));
+    }
+
     // ***** Break pixmap into seperate images for each object in image
     std::vector<DrBitmap>   bitmaps;
     std::vector<DrRect>     rects;
@@ -70,8 +77,11 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         DrBitmap &image = bitmaps[image_number];
         if (image.width < 1 || image.height < 1) continue;
 
+        // Lock Progress Bar for Remaining sub function
+        if (progress != nullptr) progress->lockProgress();
+
         // Trace edge of image
-        std::vector<DrPointF> one_poly = Dr::TraceImageOutline(image);
+        std::vector<DrPointF> one_poly = Dr::TraceImageOutline(image, progress);
 
         // Add 1.00 pixels buffer around image
         double plus_one_pixel_percent_x = 1.0 + (1.00 / image.width);
@@ -119,7 +129,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         // Breaks holes into seperate images for each Hole
         std::vector<DrBitmap> hole_images;
         std::vector<DrRect>   hole_rects;
-        Dr::FindObjectsInBitmap(holes, hole_images, hole_rects, c_alpha_tolerance, false);
+        Dr::FindObjectsInBitmap(holes, hole_images, hole_rects, c_alpha_tolerance, false, progress);
 
         // Go through each image (Hole) create list for it
         std::vector<std::vector<DrPointF>> hole_list;
@@ -128,7 +138,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
             if (hole.width < 1 || hole.height < 1) continue;
 
             // Trace edge of hole
-            std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole);
+            std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole, progress);
 
             // Add in sub image offset to points
             for (auto &point : one_hole) {
@@ -152,7 +162,11 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
             }
         }
         m_hole_list.push_back(hole_list);
+
+        // Unlock Progress Bar for next iteration / exit
+        if (progress != nullptr) progress->unlockProgress();
     }   // End for each bitmap
+
 }
 
 

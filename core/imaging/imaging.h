@@ -36,7 +36,7 @@ namespace Dr {
 
     // ***** Outlining
     std::vector<DrPointF>       OutlinePointList(const DrBitmap &bitmap);
-    std::vector<DrPointF>       TraceImageOutline(const DrBitmap &bitmap);
+    std::vector<DrPointF>       TraceImageOutline(const DrBitmap &bitmap, IProgressBar *progress = nullptr);
 
 
 }

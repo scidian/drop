@@ -113,6 +113,8 @@ QImage ApplyEffectToImage(QImage src, QGraphicsEffect *effect, int extent) {
 //####################################################################################
 // Radius is absolute size
 void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int method) {
+    if (widget == nullptr) return;
+
     QPixmap pixmap(widget->rect().width(), widget->rect().height());
     pixmap.fill(Qt::green);
     QPainter paint(&pixmap);

@@ -206,9 +206,11 @@ bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps,
 
     DrColor compare(Dr::transparent);
     bool    cancel = false;
+
+    // Initialize Progress Bar
     if (progress != nullptr) {
         progress->moveToNextItem();
-        progress->setDisplayText("Finding objects in image...");
+        progress->setDisplayText("Finding image objects...");
     }
 
     // If convert is true, all object pixels will be transparent pixels. If all pixels are transparent we don't need to fill, we can
@@ -284,7 +286,7 @@ bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps,
 #define TRACE_PROCESSED_ONCE        3           // Pixels that added to the border once
 #define TRACE_PROCESSED_TWICE       4           // Pixels that added to the border twice        (after a there and back again trace)
 
-std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap) {
+std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap, IProgressBar *progress) {
     // Initialize images
     DrBitmap processed = bitmap;
     int border_pixel_count = 0;
@@ -292,6 +294,12 @@ std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap) {
     // Initialize point array, verify image size
     std::vector<DrPoint> points { };
     if (bitmap.width < 1 || bitmap.height < 1) return std::vector<DrPointF> { };
+
+    // Initialize Progress Bar
+    if (progress != nullptr) {
+        progress->moveToNextItem();
+        progress->setDisplayText("Tracing Image Outline...");
+    }
 
     // ***** Find starting point, and also set processed image bits
     //       !!!!! #NOTE: Important that y loop is on top, we need to come at pixel from the left
@@ -341,6 +349,8 @@ std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap) {
     // ***** Find outline points
     std::vector<DrPoint> surround;
     bool back_at_start;
+    long trace_count = 0;
+    long total_pixels = bitmap.width * bitmap.height;
     do {
         // Collect list of points around current point
         surround.clear();
@@ -398,7 +408,13 @@ std::vector<DrPointF> TraceImageOutline(const DrBitmap &bitmap) {
 
         // Check if we're back at start and no more options
         back_at_start = (processed.getPixel(points.back().x, points.back().y) == TRACE_START_PIXEL);
+        ++trace_count;
 
+        // Call to Update Progress Bar Function
+        if ((progress != nullptr) && (trace_count % 100 == 0)) {
+            double percent = static_cast<double>(trace_count) / static_cast<double>(total_pixels) * 100.0;
+            progress->updateValue(static_cast<int>(percent));
+        }
     } while ((surround.size() > 0) && !back_at_start);
 
     // ***** Convert to DrPointF array and return
