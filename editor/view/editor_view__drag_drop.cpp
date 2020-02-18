@@ -169,32 +169,41 @@ void DrView::dropEvent(QDropEvent *event) {
         for (auto url : url_list)
             path_list.append( url.toLocalFile() );
 
-        // Try to load the first image, if it doesnt load, exit. If it does, make sure it is #AARRGGBB and convert to pixmap
-        QString file_path = path_list[0];
-        QImage image(file_path);
-        if (image.isNull()) {
+        // Check if images are valid, if no valid images, exit.
+        QList<QString> file_paths;
+        for (auto path : path_list) {
+            QImage image(path);
+            if (image.isNull() == false) file_paths.append(path);
+        }
+        if (file_paths.isEmpty()) {
             event->ignore();
             return;
         }
-        QPixmap pixmap = QPixmap::fromImage(image.convertToFormat( QImage::Format_ARGB32 ));
 
-        // If it was an image, add the Image and Asset to the project and add the Thing to the scene
-        FormProgressBox *progress = new FormProgressBox("...", "Cancel", 2, this->parentWidget());
+        // Add the Images and Asset to the project and add the Thing to the scene
+        FormProgressBox *progress = new FormProgressBox("...", "Cancel", file_paths.size() * 2, this->parentWidget());
         progress->setPrefix(" Importing Images: \n");
-        DrImage *add_image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, Asset_Category::Image, progress);
+        std::vector<DrAsset*> assets;
+        for (auto file_path : file_paths) {
+            DrImage *image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, Asset_Category::Image, progress);
+            assets.push_back(m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image->getKey()));
+        }
         progress->stopProgress();
 
-        DrAsset *asset = m_editor_relay->currentProject()->addAsset(DrAssetType::Object, add_image->getKey());
+        // Rebuild Asset Tree
         m_editor_relay->buildAssetTree();
-        m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
+        m_editor_relay->getAssetTree()->setSelectedKey(assets.front()->getKey());
 
-        // Add Object Thing at mouse position
-        QPointF  position =  mapToScene(event->pos());
-        thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(), 0);
-        my_scene->addItemToSceneFromThing( thing );
-        if (thing_count > 0) {
-            thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
-            my_scene->updateItemZValues();
+        // Add Thing Objects at mouse position
+        QPointF position = mapToScene(event->pos());
+        for (auto asset : assets) {
+            thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(), 0);
+            my_scene->addItemToSceneFromThing( thing );
+            if (thing_count > 0) {
+                thing->setZOrderWithSub(z_order, Z_Insert::At_Position, sub_order);
+                my_scene->updateItemZValues();
+            }
+            thing_count++;
         }
 
         // Mark event as accepted

@@ -39,9 +39,12 @@ void DrView::updateGrid() {
     m_grid_size =       Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Size).toPointF());
     m_grid_scale =      Dr::ToQPointF(stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Scale).toPointF());
     m_grid_rotate =     stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Rotation).toDouble();
+    QColor scheme_bg_color;
     if (Dr::GetColorScheme() == Color_Scheme::Light) {
-        m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+        scheme_bg_color =   Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
+        m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
     } else {
+        scheme_bg_color =   Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
         m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
     }
     ///m_grid_color =   QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
@@ -54,7 +57,7 @@ void DrView::updateGrid() {
     m_grid_resize_snap =  Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
     m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
-    QColor background = (m_back_color_use) ? m_back_color : Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
+    QColor background = (m_back_color_use) ? m_back_color : scheme_bg_color;
     this->setStyleSheet(" QFrame { background-color: " + background.name() + "; } ");
 
     recalculateGrid();
