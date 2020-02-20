@@ -267,16 +267,16 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
         // ***** Original Color Image
         ///QPixmap pix = QPixmap(icon_string + ".png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         ///        pix = QPixmap::fromImage( Dr::ColorizeImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))) );
+        // Colorize Effect
         ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
-        // Colorize
         ///colorize->setStrength(1.0);
         ///colorize->setColor( Dr::ToQColor( Dr::GetColor(Window_Colors::Icon_Dark) ));
         ///pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 2) );
-        // Top Image Icon
+        // Overlay Top Image Icon
         ///QPixmap top = QPixmap(icon_string + "_top.png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         ///double  top_scale = 1.0;
         ///pix = QPixmap::fromImage( Dr::OverlayImage(pix.toImage(), top.toImage(), top_scale) );
-        // Add Glow
+        // Glow Effect
         ///pix = QPixmap::fromImage( Dr::ApplyBorderToImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)), 2, 3) );
         // Set Image
         ///msg_box.setIconPixmap(pix);
@@ -284,12 +284,14 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
         // ***** Top Icon Only
         QPixmap top = QPixmap(icon_string + "_top.png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
+        // Drop Shadow Effect
         QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
         drop_shadow->setOffset(-2, 2);
         drop_shadow->setBlurRadius(2);
         drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)) );
         top = QPixmap::fromImage( Dr::ApplyEffectToImage(top.toImage(), drop_shadow, 4) );
 
+        // Set Image
         msg_box.setIconPixmap(top);
     }
 
