@@ -40,7 +40,7 @@ FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent) {
 
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
-        exit->setObjectName(QStringLiteral("button"));
+        exit->setObjectName(QStringLiteral("buttonDefault"));
         inner_layout->addWidget(exit);
 
         // Connect a lambda function to the "exit" button to close the form

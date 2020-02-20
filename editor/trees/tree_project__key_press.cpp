@@ -143,7 +143,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                 if (!are_start_stages) {
                     QMessageBox::StandardButton proceed;
                     proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected Stage(s)?", QMessageBox::Icon::Question,
-                                                 "Delete Stage(s)?", this, QMessageBox::Button::Yes | QMessageBox::Button::No);
+                                                 this, QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
                     if (proceed == QMessageBox::StandardButton::No) return;
 
                     // Select Stage from Tree above the first selected Stage
@@ -181,7 +181,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
 
                 } else {
-                    Dr::ShowMessageBox("Start Stages cannot be deleted.", QMessageBox::Icon::Information, "Cannot Delete", this);
+                    Dr::ShowMessageBox("Start Stages cannot be deleted.", QMessageBox::Icon::Information, this);
                 }
 
             // ***** Delete selected Worlds
@@ -189,7 +189,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                 if ((getParentProject()->getWorldMap().size() > 1) && (static_cast<int>(getParentProject()->getWorldMap().size()) > selectedItems().count())) {
                     QMessageBox::StandardButton proceed;
                     proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected World(s)?", QMessageBox::Icon::Question,
-                                                 "Delete World(s)?", this, QMessageBox::Button::Yes | QMessageBox::Button::No);
+                                                 this, QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
                     if (proceed == QMessageBox::StandardButton::No) return;
 
                     // Build list of selected keys
@@ -238,7 +238,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
                 } else {
                     Dr::ShowMessageBox("Cannot delete World(s)! <br><br> Project must have at least one World.",
-                                       QMessageBox::Icon::Information, "Cannot Delete", this);
+                                       QMessageBox::Icon::Information, this);
                 }
             }
             return;

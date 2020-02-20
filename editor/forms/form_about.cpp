@@ -135,7 +135,7 @@ void FormAbout::buildForm() {
 
         QPushButton *exit = new QPushButton("  Okay  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
-        exit->setObjectName(QStringLiteral("button"));
+        exit->setObjectName(QStringLiteral("buttonDefault"));
         //exit->setMaximumWidth(250);
         connect(exit, &QPushButton::clicked, [this] () { this->close(); });
         inner_layout->addWidget(exit);

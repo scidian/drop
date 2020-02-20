@@ -87,7 +87,7 @@ void ApplyDropShadow(QWidget *target_widget, qreal blur_radius, qreal offset_x, 
 void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type) {
     switch (shadow_type) {
         case Shadow_Types::Button_Shadow:
-            ApplyDropShadow(target_widget, 6,  0,  3, Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
+            ApplyDropShadow(target_widget, 4,  0,  2, Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
         break;
         case Shadow_Types::Button_Shadow_Thin:
             ApplyDropShadow(target_widget, 0,  0,  1, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150) );

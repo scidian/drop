@@ -23,6 +23,7 @@
 #include "core/colors/colors.h"
 #include "core/dr_math.h"
 #include "core/types/dr_variant.h"
+#include "editor/forms/form_message_box.h"
 #include "editor/helper_library.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
@@ -235,23 +236,24 @@ bool SameQColor(QColor color1, QColor color2, double tolerance) {
 // Shows a modal Error Message
 void ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent) {
     std::string error = "Error from " + function_name + "(): " + error_message;
-    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", QString::fromStdString(error), QMessageBox::Button::Ok, parent);
+    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", QString::fromStdString(error), QMessageBox::StandardButton::Ok, parent);
     msg_box.exec();
 }
 
 // Show a Modal Message Box with Icon or Pixmap
-QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title, QWidget *parent,
-                                           QMessageBox::StandardButtons buttons) {
-    QMessageBox msg_box(QMessageBox::Icon::NoIcon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
-    msg_box.setIconPixmap(pixmap);
-    return static_cast<QMessageBox::StandardButton>(msg_box.exec());
+QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, QWidget *parent, QMessageBox::StandardButtons buttons) {
+    ///QMessageBox msg_box(QMessageBox::Icon::NoIcon, "", QString::fromStdString(message), buttons, parent);
+    ///msg_box.setIconPixmap(pixmap);
+    ///QMessageBox::StandardButton result = static_cast<QMessageBox::StandardButton>(msg_box.exec());v
+
+    FormMessageBox msg_box(message, pixmap, parent, buttons);
+    QMessageBox::StandardButton result = msg_box.execute();
+
+    // Return Button Pressed from msg_box
+    return result;
 }
 
-QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon, std::string title, QWidget *parent,
-                                           QMessageBox::StandardButtons buttons) {
-    ///QMessageBox msg_box(icon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
-    QMessageBox msg_box(QMessageBox::Icon::NoIcon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
-
+QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon, QWidget *parent, QMessageBox::StandardButtons buttons) {
     // Select Appropriate Icon
     QString icon_string = "";
     switch (icon) {
@@ -263,10 +265,10 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
     }
 
     // Style Icon
+    QPixmap pix;
     if (icon_string != "") {
-        // ***** Original Color Image
-        ///QPixmap pix = QPixmap(icon_string + ".png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        ///        pix = QPixmap::fromImage( Dr::ColorizeImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))) );
+        // Replace All Colors Effect
+        ///pix = QPixmap::fromImage( Dr::ColorizeImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))) );
         // Colorize Effect
         ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
         ///colorize->setStrength(1.0);
@@ -274,29 +276,31 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
         ///pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 2) );
         // Overlay Top Image Icon
         ///QPixmap top = QPixmap(icon_string + "_top.png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        ///double  top_scale = 1.0;
-        ///pix = QPixmap::fromImage( Dr::OverlayImage(pix.toImage(), top.toImage(), top_scale) );
-        // Glow Effect
+        ///pix = QPixmap::fromImage( Dr::OverlayImage(pix.toImage(), top.toImage(), 1.0) );
+        // Outer Glow Effect
         ///pix = QPixmap::fromImage( Dr::ApplyBorderToImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)), 2, 3) );
-        // Set Image
-        ///msg_box.setIconPixmap(pix);
 
-        // ***** Top Icon Only
-        QPixmap top = QPixmap(icon_string + "_top.png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        // Simple Icon
+        pix = QPixmap(icon_string + ".png").scaled(54, 54, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         // Drop Shadow Effect
         QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
         drop_shadow->setOffset(-2, 2);
         drop_shadow->setBlurRadius(2);
         drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)) );
-        top = QPixmap::fromImage( Dr::ApplyEffectToImage(top.toImage(), drop_shadow, 4) );
-
-        // Set Image
-        msg_box.setIconPixmap(top);
+        pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), drop_shadow, 3) );
     }
 
+    ///QMessageBox msg_box(icon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
+    ///QMessageBox msg_box(QMessageBox::Icon::NoIcon, "", QString::fromStdString(message), buttons, parent);
+    ///msg_box.setIconPixmap(pix);
+    ///QMessageBox::StandardButton result = static_cast<QMessageBox::StandardButton>(msg_box.exec());
+
+    FormMessageBox msg_box(message, pix, parent, buttons);
+    QMessageBox::StandardButton result = msg_box.execute();
+
     // Return Button Pressed from msg_box
-    return static_cast<QMessageBox::StandardButton>(msg_box.exec());
+    return result;
 }
 
 

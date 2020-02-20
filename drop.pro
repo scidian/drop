@@ -147,6 +147,7 @@ SOURCES += \
     editor/forms/form_color_magnifier.cpp \
     editor/forms/form_expire.cpp \
     editor/forms/form_fonts.cpp \
+    editor/forms/form_message_box.cpp \
     editor/forms/form_popup.cpp \
     editor/forms/form_popup__add_entity.cpp \
     editor/forms/form_popup__grid_snap.cpp \
@@ -949,6 +950,7 @@ HEADERS += \
     editor/forms/form_color_magnifier.h \
     editor/forms/form_expire.h \
     editor/forms/form_fonts.h \
+    editor/forms/form_message_box.h \
     editor/forms/form_popup.h \
     editor/forms/form_progress_box.h \
     editor/forms/form_settings.h \

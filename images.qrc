@@ -440,9 +440,5 @@
         <file>assets/gui_misc/msg_info.png</file>
         <file>assets/gui_misc/msg_question.png</file>
         <file>assets/gui_misc/msg_warning.png</file>
-        <file>assets/gui_misc/msg_critical_top.png</file>
-        <file>assets/gui_misc/msg_info_top.png</file>
-        <file>assets/gui_misc/msg_question_top.png</file>
-        <file>assets/gui_misc/msg_warning_top.png</file>
     </qresource>
 </RCC>

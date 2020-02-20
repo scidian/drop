@@ -136,7 +136,7 @@ void FormMain::buildViewToolBar(QWidget *parent) {
 
             // Reset to Center
             QPushButton *move_to_center = new QPushButton();
-            move_to_center->setObjectName(QStringLiteral("button"));
+            move_to_center->setObjectName(QStringLiteral("buttonDefault"));
             move_to_center->setToolTip("Center View to Zero");
             move_to_center->setFixedSize(25, 22);
             move_to_center->setObjectName("buttonImageMiniButton");
@@ -233,7 +233,7 @@ void FormMain::buildViewToolBar(QWidget *parent) {
 
             // Fit to View Button
             QPushButton *fit_to_view = new QPushButton();
-            fit_to_view->setObjectName(QStringLiteral("button"));
+            fit_to_view->setObjectName(QStringLiteral("buttonDefault"));
             fit_to_view->setToolTip("Fit to View");
             fit_to_view->setFixedSize(25, 22);
             fit_to_view->setObjectName("buttonImageMiniButton");

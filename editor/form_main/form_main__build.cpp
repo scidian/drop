@@ -92,7 +92,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
                 widgetCentral = takeCentralWidget();
                 break;
 
-            default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known", QMessageBox::Icon::Warning, "Warning!", this);
+            default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known", QMessageBox::Icon::Warning, this);
         }
     }
     setToolbar(new_mode);           // Sets toolbar widgets for the new mode selected
@@ -117,7 +117,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
                 this->setCentralWidget( widgetCentral );
             break;
 
-        default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known", QMessageBox::Icon::Warning, "Warning!", this);
+        default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known", QMessageBox::Icon::Warning, this);
     }
 
     QApplication::processEvents();

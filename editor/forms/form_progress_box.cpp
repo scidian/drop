@@ -76,10 +76,10 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
             button_spacer->addStretch();
 
             QPushButton *cancel = new QPushButton("  " + cancel_button_text + "  ");
-            ///cancel->setFixedHeight(22);
+            cancel->setFixedHeight(26);
             ///cancel->setFont(label_font);
             Dr::ApplyDropShadowByType(cancel, Shadow_Types::Button_Shadow);
-            cancel->setObjectName(QStringLiteral("button"));
+            cancel->setObjectName(QStringLiteral("buttonDefault"));
 
             // Connect a lambda function to the "exit" button to cancel the Progress Box
             connect(cancel, &QPushButton::clicked, [this] () {

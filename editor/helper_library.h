@@ -75,9 +75,9 @@ namespace Dr {
 
     // ***** User Interaction
     void                        ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent = nullptr);
-    QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, std::string title = "", QWidget *parent = nullptr,
+    QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, QWidget *parent = nullptr,
                                                QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
-    QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, std::string title = "", QWidget *parent = nullptr,
+    QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon = QMessageBox::Icon::NoIcon, QWidget *parent = nullptr,
                                                QMessageBox::StandardButtons buttons = QMessageBox::StandardButton::Ok);
 
 

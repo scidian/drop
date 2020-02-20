@@ -82,8 +82,10 @@ bool FormMain::askShouldSave(QString before_what) {
     if (m_project == nullptr) return true;
     if (m_project->hasSaved() == false && m_project->isTestOnly() == false) {
         QMessageBox::StandardButton ask = Dr::ShowMessageBox("Project has changed, would you like to save the changes before " + before_what.toStdString() + "?",
-                                                             QMessageBox::Icon::Warning, "Save Changes?", this,
-                                                             QMessageBox::Button::Cancel | QMessageBox::Button::No | QMessageBox::Button::Yes);
+                                                             QMessageBox::Icon::Warning, this,
+                                                             QMessageBox::StandardButton::Cancel |
+                                                             QMessageBox::StandardButton::No |
+                                                             QMessageBox::StandardButton::Yes);
         if (ask == QMessageBox::StandardButton::Cancel) return false;
         if (ask == QMessageBox::StandardButton::Yes) menuSave();
     }
