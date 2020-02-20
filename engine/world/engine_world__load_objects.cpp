@@ -57,6 +57,7 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
 //##    Loads Appearance Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
 void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object) {
+    int         blend_type =        thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Blend_Object).toInt();
     bool        cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
     int         bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
@@ -74,6 +75,7 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     float       cartoon_width =     thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[1].toFloat();
     bool        cross_hatch =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
     float       cross_width =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[1].toFloat();
+    object->blend_type =        static_cast<Blend_Object>(blend_type);
     object->cast_shadows =      cast_shadows;
     object->bitrate =           bit_rate;
     object->pixel_x =           static_cast<float>(pixelation.x);

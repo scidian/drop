@@ -179,6 +179,8 @@ void DrThing::addComponentLighting() {
     addComponent(Comps::Thing_Lighting, "Lighting", "Lighting settings for this item.", Component_Colors::Mustard_Yellow, true);
     getComponent(Comps::Thing_Lighting)->setIcon(Component_Icons::Light);
 
+    addPropertyToComponent(Comps::Thing_Lighting, Props::Thing_Lighting_Blend_Object, Property_Type::List, static_cast<int>(Blend_Object::Standard),
+                           "Blend Mode", "Blend mode for rendering this item.");
     addPropertyToComponent(Comps::Thing_Lighting, Props::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
                            "Cast Shadows?", "This item will cast shadows when appearing higher on the z axis than a Light.");
 }

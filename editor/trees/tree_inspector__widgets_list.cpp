@@ -116,6 +116,10 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Knitted Stitch")
                 << tr("Woven Cloth")
                 << tr("Wood Blocks");
+    } else if   (property_key == Props::Thing_Lighting_Blend_Object) {
+        options << tr("Standard")
+                << tr("Additive")
+                << tr("Subtractive");
     } else {
         options << tr("Unknown List");
     }

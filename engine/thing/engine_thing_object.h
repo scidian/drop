@@ -118,20 +118,21 @@ private:
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
-    bool        m_dying                     { false };          // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
-    bool        m_alive                     { true };           // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
+    bool            m_dying                     { false };                  // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
+    bool            m_alive                     { true };                   // After item has been dying for death_delay time, alive becomes false, then fades for fade_delay time
 
-    DrTime      m_damage_timer              { Clock::now() };   // Used to track last time this object was damaged to implement m_damage_delay
-    DrTime      m_death_timer               { Clock::now() };   // Used to incorporate death_delay for object dying
-    DrTime      m_fade_timer                { Clock::now() };   // Used to incorporate fade_delay for object fade / removal
+    DrTime          m_damage_timer              { Clock::now() };           // Used to track last time this object was damaged to implement m_damage_delay
+    DrTime          m_death_timer               { Clock::now() };           // Used to incorporate death_delay for object dying
+    DrTime          m_fade_timer                { Clock::now() };           // Used to incorporate fade_delay for object fade / removal
 
-    DrVec3      m_previous_position         { 0, 0, 0 };        // Previous frame position, updated every frame by update()
-    bool        m_flipped_x                 { false };          // True when image is flipped (going left) over the x axis
-    bool        m_flipped_y                 { false };          // True when image is flipped (going down) over the y axis
+    DrVec3          m_previous_position         { 0, 0, 0 };                // Previous frame position, updated every frame by update()
+    bool            m_flipped_x                 { false };                  // True when image is flipped (going left) over the x axis
+    bool            m_flipped_y                 { false };                  // True when image is flipped (going down) over the y axis
 
 public:
     // ***** Image Post Processing Attributes
-    bool        cast_shadows                { true };           // Will cast shadows when in front of a Light
+    Blend_Object    blend_type                  { Blend_Object::Standard }; // Blend mode for current object
+    bool            cast_shadows                { true };                   // Will cast shadows when in front of a Light
 
 
     // #################### FUNCTIONS ####################

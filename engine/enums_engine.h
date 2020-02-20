@@ -76,6 +76,12 @@ enum class Blend_Mode {
     Hard_Light              = 3,
 };
 
+enum class Blend_Object {
+    Standard                = 0,
+    Additive                = 1,
+    Subtractive             = 2,
+};
+
 enum class Pixel_Texture {
     None                    = 0,
     Ascii_Text              = 1,

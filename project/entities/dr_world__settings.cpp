@@ -95,7 +95,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
     addPropertyToComponent(Comps::World_Lighting, Props::World_Light_Layer, Property_Type::Double, 50.0,
                            "Light Layer", "Location along the z axis (Z-Order) to draw Glow Lights. Should be between " +
-                                          std::to_string(double(c_near_plane)) + " and " + std::to_string(double(c_far_plane)) + " to be visible.");
+                                          Dr::RoundToDecimalPlace(c_near_plane, 1) + " and " + Dr::RoundToDecimalPlace(c_far_plane, 1) + " to be visible.");
     addPropertyToComponent(Comps::World_Lighting, Props::World_Light_Blend, Property_Type::List, static_cast<int>(Blend_Mode::Standard),
                            "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
                                          "oversaturation or be better for dark scenes.");

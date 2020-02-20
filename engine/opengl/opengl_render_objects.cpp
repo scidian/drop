@@ -103,7 +103,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
     if (object == nullptr) return;
 
-    // Load possible 3D Info
+    // ***** Load possible 3D Info
     ThingComp3D *comp_3d = object->comp3D();
     Convert_3D_Type comp_3d_type = Convert_3D_Type::None;           // Type of 3D extrusion
     double comp_3d_angle_x { 0.0 };                                 // X axis rotation
@@ -124,7 +124,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         draw2D = true;
     }
 
-    // Don't draw Segments (lines)
+    // ***** Don't draw Segments (lines)
     ///bool skip_object = false;
     ///for (auto shape : object->shapes) {
     ///    if (object->shape_type[shape] == Shape_Type::Segment)
@@ -135,20 +135,10 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
     }
 
-    // Enable shader program
+    // ***** Enable shader program
     if (last_thing != DrThingType::Object) {
         if (!m_default_shader.bind()) return;
     }
-
-
-    // ***** Blend function
-    glEnable(GL_BLEND);
-    ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);           // Standard non-premultiplied alpha blend
-    ///glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);                     // Additive blending
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
-
-    // Fancy Seperate RGB/Alpha Blend Functions
-    ///glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);        // Premultiplied alpha blend
 
 
     // ***** Get texture to render with, set texture coordinates
@@ -160,6 +150,27 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return;
 
+
+    // ***** Blend function
+    glEnable(GL_BLEND);
+    switch (object->blend_type) {
+        case Blend_Object::Standard:
+            ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);       // Standard non-premultiplied alpha blend
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                // Premultiplied alpha blend
+            break;
+        case Blend_Object::Additive:
+            glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+            break;
+        case Blend_Object::Subtractive:
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+            break;
+    }
+    // More Specific Method of Specifying Functions (Seperate RGB/Alpha Blend Functions):
+    ///glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);        // Premultiplied alpha blend
+
+
+    // ***** Pixelation
     if (object->pixel_texture != Pixel_Texture::None) {
         glEnable(GL_TEXTURE_2D);
         GLint texture_object = glGetUniformLocation(m_default_shader.programId(), "u_texture");
@@ -386,6 +397,10 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
         addTriangles( m_texture_data[texture_number]->triangleCount() );
     }
 
+    // Reset BlendEquation
+    glBlendEquation(GL_FUNC_ADD);
+
+    // Set Last Thing Type
     ///m_default_shader.release();
     last_thing = DrThingType::Object;
 }

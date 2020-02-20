@@ -240,8 +240,8 @@ namespace Props {
     const std::string Asset_Font_Size                       = "AsFontSize";
 
     // Asset_Collision
-    const std::string Asset_Collision_Shape                 = "AsCoShape";                  // list, enum class Collision_Shape (image shape, circle, square, triangle)
-    const std::string Asset_Collision_One_Way_Type          = "AsCoOneWayType";             // list, enum class One_Way (none, pass_through, weak_spot)
+    const std::string Asset_Collision_Shape                 = "AsCoShape";                  // list, enum class Collision_Shape (Image_Shape, Circle, Square, Triangle)
+    const std::string Asset_Collision_One_Way_Type          = "AsCoOneWayType";             // list, enum class One_Way (None, Pass_Through, Weak_Spot)
     const std::string Asset_Collision_One_Way_Direction     = "AsCoOneWayDirection";        // point
     const std::string Asset_Collision_Gravity_Multiplier    = "AsCoGravityMultiplier";      // double
     const std::string Asset_Collision_Image_Shape           = "AsCoImageShape";             // DrPropertyCollision (polygons)
@@ -277,7 +277,7 @@ namespace Props {
     const std::string Asset_Health_Auto_Damage              = "AsHeAutoDamage";             // double
     const std::string Asset_Health_Death_Delay              = "AsHeDeathDelay";             // int
     const std::string Asset_Health_Fade_On_Death            = "AsHeFadeOnDeath";            // bool
-    const std::string Asset_Health_Death_Animation          = "AsHeDeathAnimation";         // list, enum class Death_Animation (none, fade, shrink)
+    const std::string Asset_Health_Death_Animation          = "AsHeDeathAnimation";         // list, enum class Death_Animation (None, Fade, Shrink)
     const std::string Asset_Health_Death_Duration           = "AsHeDeathDuration";          // int (used to be called Asset_Health_Fade_Delay)
     const std::string Asset_Health_Damage_Recoil            = "AsHeDamageRecoil";           // double
     const std::string Asset_Health_Invincible               = "AsHeInvincible";             // bool
@@ -365,7 +365,7 @@ namespace Props {
     const std::string Stage_Cooldown                        = "StCooldown";                 // positive
 
     // Grid
-    const std::string Stage_Grid_Style                      = "StGrStyle";                  // list, enum class Grid_Style (Lines,  Dots)
+    const std::string Stage_Grid_Style                      = "StGrStyle";                  // list, enum class Grid_Style (Lines, Dots)
     const std::string Stage_Grid_Origin_Point               = "StGrOriginPoint";            // pointf
     const std::string Stage_Grid_Size                       = "StGrSize";                   // sizef
     const std::string Stage_Grid_Scale                      = "StGrScale";                  // scale
@@ -403,6 +403,7 @@ namespace Props {
     const std::string Thing_Spawn_Chance                    = "ThSpChance";                 // percent
 
     // Lighting
+    const std::string Thing_Lighting_Blend_Object           = "ThLiBlendObject";            // list, enum class Blend_Object (Standard, Add, Sub)
     const std::string Thing_Lighting_Cast_Shadows           = "ThLiCastShadows";            // bool
 
     // Appearance
@@ -423,7 +424,7 @@ namespace Props {
     const std::string Thing_Filter_Cross_Hatch              = "ThFiCrossHatch";             // bool double combo
 
     // 3D Variables
-    const std::string Thing_3D_Type                         = "Th3DType";                   // list, enum class Convert_3D_Type (extrusion, cube, cone, none)
+    const std::string Thing_3D_Type                         = "Th3DType";                   // list, enum class Convert_3D_Type (None, Extrusion, Cube, Cone)
     const std::string Thing_3D_Depth                        = "Th3DDepth";                  // positive double
     const std::string Thing_3D_X_Axis_Rotation              = "Th3DXAxisRotation";          // variable
     const std::string Thing_3D_Y_Axis_Rotation              = "Th3DYAxisRotation";          // variable
@@ -455,8 +456,8 @@ namespace Props {
     // Object Settings
     const std::string Thing_Object_Physics_Type             = "ThObPhysicsType";            // list, enum class Body_Type (Static, Kinematic, Dynamic)
     const std::string Thing_Object_Collide                  = "ThObCollide";                // bool
-    const std::string Thing_Object_Collision_Group          = "ThObColliisonGroup";         // list, enum class Collision_Group (none, all, active players, players, enemies)
-    const std::string Thing_Object_Damage                   = "ThObDamage";                 // list, enum class Collision_Type (none, player, enemy, all)
+    const std::string Thing_Object_Collision_Group          = "ThObColliisonGroup";         // list, enum class Collision_Group (None, All, Active_Players, Players, Enemies)
+    const std::string Thing_Object_Damage                   = "ThObDamage";                 // list, enum class Collision_Type (None, Player, Enemy, All)
 
     // Text Settings
     const std::string Thing_Text_User_Text                  = "ThTextUserText";              // string

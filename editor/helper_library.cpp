@@ -269,11 +269,6 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
     if (icon_string != "") {
         // Replace All Colors Effect
         ///pix = QPixmap::fromImage( Dr::ColorizeImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))) );
-        // Colorize Effect
-        ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
-        ///colorize->setStrength(1.0);
-        ///colorize->setColor( Dr::ToQColor( Dr::GetColor(Window_Colors::Icon_Dark) ));
-        ///pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 2) );
         // Overlay Top Image Icon
         ///QPixmap top = QPixmap(icon_string + "_top.png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         ///pix = QPixmap::fromImage( Dr::OverlayImage(pix.toImage(), top.toImage(), 1.0) );
@@ -283,11 +278,23 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
         // Simple Icon
         pix = QPixmap(icon_string + ".png").scaled(54, 54, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
+        // Colorize Effect
+        if (icon == QMessageBox::Icon::Information) {
+            QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
+            colorize->setStrength(1.0);
+            colorize->setColor( Dr::ToQColor( Dr::GetColor(Window_Colors::Icon_Dark) ));
+            pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 0) );
+        }
+
         // Drop Shadow Effect
         QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
-        drop_shadow->setOffset(-2, 2);
-        drop_shadow->setBlurRadius(2);
-        drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)) );
+        drop_shadow->setOffset(-1, 2);
+        drop_shadow->setBlurRadius(3);
+        if (Dr::GetColorScheme() == Color_Scheme::Light) {
+            drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Text)) );
+        } else {
+            drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)) );
+        }
         pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), drop_shadow, 3) );
     }
 
