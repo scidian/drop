@@ -110,7 +110,7 @@ void FormAbout::buildForm() {
         inner_layout->addWidget(scidian);
 
         QLabel *about_2 = new QLabel("<center><font size=-1>"
-                                     "Copyright © 2018-2019 Scidian™ Software<br>"
+                                     "Copyright © 2018-2020 Scidian™ Software<br>"
                                      "Drop™, Scidian™ and the Scidian Blob™ are trademarks of Scidian™ Software<br>"
                                      "All Rights Reserved"
                                      "</font></center>");
@@ -149,41 +149,50 @@ void FormAbout::buildForm() {
 //####################################################################################
 QString FormAbout::licenseText() {
 
+            // QT
     return  "This software dynamically links to unmodified code from the Qt framework licensed under the LPGLv3. Qt libraries and sources can be "
             "downloaded from https://www.qt.io/download/"
             "<br><br>"
-            "The Qt framework is Copyright (C) 2019 The Qt Company. For more info visit https://www.qt.io/contact-us/"
+            "The Qt framework is Copyright (C) 2017 The Qt Company. For more info visit https://www.qt.io/contact-us/"
             "<br><br>"
 
-            "This software uses Boost Libraries distributed under the Boost Software License. "
+            // 3rd_party Directories
+            "This software uses portions of the Boost Libraries distributed under the Boost Software License. "
             "Copyright (c) Beman Dawes, David Abrahams, 1998-2005. "
             "Copyright (c) Rene Rivera 2004-2007. "
             "<br><br>"
 
-            "This software uses Chipmunk Physics Library written by Scott Lembcke and distributed under the MIT License. "
+            "This software uses the Chipmunk Physics Library written by Scott Lembcke and distributed under the MIT License. "
             "Copyright (c) 2007-2015 Scott Lembcke and Howling Moon Software."
             "<br><br>"
 
-            "This software uses Delaunay Triangulation writted by Volodymyr Bilonenko and distributed under the MIT License. "
-            "Copyright (c) 2018 Volodymyr Bilonenko."
+            "This software uses Font Stash written by Mikko Mononen and distributed under the zlib License. "
+            "Copyright (c) 2013 Mikko Mononen memon@inside.org"
             "<br><br>"
 
             "This software uses OpenGL Mathematics (glm) written by G-Truc Creation and distributed under the MIT License. "
             "Copyright (c) 2005-2014 by G-Truc Creation."
             "<br><br>"
 
-            "This software uses Poly Partition written by Ivan Fratric and distributed under the MIT License. "
-            "Copyright (c) 2011 by Ivan Fratric."
-            "<br><br>"
-
-            "This software uses Simplex Noise (3D) written by Iam McEwan and distributed under the MIT License. "
-            "Copyright (c) 2011 by Ashima Arts."
-            "<br><br>"
-
             "This software uses STB Single File Libraries written by Sean Barrett and distributed under the MIT License. "
             "Copyright (c) 2017 Sean Barrett."
             "<br><br>"
 
+            // 3rd_party Files
+            "This software uses Delaunator writted by Volodymyr Bilonenko and distributed under the MIT License. "
+            "Copyright (c) 2018 Volodymyr Bilonenko."
+            "<br><br>"            
+
+            "This software uses Poly Partition written by Ivan Fratric and distributed under the MIT License. "
+            "Copyright (c) 2011 by Ivan Fratric."
+            "<br><br>"
+
+            // Shaders
+            "This software uses Simplex Noise (3D) written by Iam McEwan and distributed under the MIT License. "
+            "Copyright (c) 2011 by Ashima Arts."
+            "<br><br>"
+
+            // Assets
             "This software features the font, 'Aileron', designed by Sora Sagano and released under CC0 1.0. "
             "<br><br>"
             ;

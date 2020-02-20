@@ -5,10 +5,9 @@
 //
 //
 //
+#include <QDebug>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsEffect>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
 #include <QGuiApplication>
 #include <QScreen>
 #include <QStyle>
@@ -16,6 +15,7 @@
 
 #include "core/colors/colors.h"
 #include "editor/helper_library.h"
+#include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
 
 namespace Dr {
@@ -49,7 +49,7 @@ void CenterFormOnScreen(QWidget *parent_to_find_screen_from, QWidget *form_to_ce
         if (new_height > 1200) new_height = 1200;
         new_size.setHeight( new_height );
     }
-    form_to_center->setGeometry(QStyle::alignedRect( Qt::LeftToRight, Qt::AlignCenter, new_size, screen_geometry ));
+    form_to_center->setGeometry( QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, new_size, screen_geometry) );
 }
 
 QScreen* FindScreenFromWidget(QWidget *widget) {
@@ -57,6 +57,18 @@ QScreen* FindScreenFromWidget(QWidget *widget) {
     if (widget->window() == nullptr)                    return nullptr;
     if (widget->window()->windowHandle() == nullptr)    return nullptr;
     return widget->window()->windowHandle()->screen();
+}
+
+
+//####################################################################################
+//##    Centers form_to_center on Parent Widget
+//####################################################################################
+void CenterFormOnParent(QWidget *parent_form, QWidget *form_to_center) {
+    if (parent_form == nullptr) return;
+
+    QRect parent_geometry = parent_form->geometry();
+    QSize new_size = form_to_center->size();
+    form_to_center->setGeometry( QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, new_size, parent_geometry) );
 }
 
 
@@ -85,27 +97,6 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type) {
         break;
     }
 }
-
-
-//####################################################################################
-//##    Applies QGraphicsEffect to QImage
-//####################################################################################
-QImage ApplyEffectToImage(QImage src, QGraphicsEffect *effect, int extent) {
-    if (src.isNull()) return QImage();
-    if (!effect) return src;
-
-    QGraphicsScene scene;
-    QGraphicsPixmapItem item;
-        item.setPixmap(QPixmap::fromImage(src));
-        item.setGraphicsEffect(effect);
-    scene.addItem(&item);
-    QImage image(src.size() + QSize(extent * 2, extent * 2), QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
-    QPainter painter(&image);
-    scene.render(&painter, QRectF(), QRectF(-extent, -extent, src.width() + extent*2, src.height() + extent*2));
-    return image;
-}
-
 
 
 //####################################################################################

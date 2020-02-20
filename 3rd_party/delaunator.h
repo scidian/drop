@@ -1,5 +1,5 @@
 //
-// Description:     Delaunay Triangulation of 2D Points
+// Description:     Delaunator - Delaunay Triangulation of 2D Points
 // Author:          Volodymyr Bilonenko
 // License:         Distributed under the MIT License
 // Source(s):       https://github.com/delfrrr/delaunator-cpp

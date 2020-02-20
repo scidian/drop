@@ -142,8 +142,8 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                 // If not trying to delete a StartStage, continue deletion
                 if (!are_start_stages) {
                     QMessageBox::StandardButton proceed;
-                    proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected Stage(s)?", QMessageBox::Question,
-                                                 "Delete Stage(s)?", this, QMessageBox::Yes | QMessageBox::No);
+                    proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected Stage(s)?", QMessageBox::Icon::Question,
+                                                 "Delete Stage(s)?", this, QMessageBox::Button::Yes | QMessageBox::Button::No);
                     if (proceed == QMessageBox::StandardButton::No) return;
 
                     // Select Stage from Tree above the first selected Stage
@@ -188,8 +188,8 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             } else if (type == DrType::World) {
                 if ((getParentProject()->getWorldMap().size() > 1) && (static_cast<int>(getParentProject()->getWorldMap().size()) > selectedItems().count())) {
                     QMessageBox::StandardButton proceed;
-                    proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected World(s)?", QMessageBox::Question,
-                                                 "Delete World(s)?", this, QMessageBox::Yes | QMessageBox::No);
+                    proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected World(s)?", QMessageBox::Icon::Question,
+                                                 "Delete World(s)?", this, QMessageBox::Button::Yes | QMessageBox::Button::No);
                     if (proceed == QMessageBox::StandardButton::No) return;
 
                     // Build list of selected keys

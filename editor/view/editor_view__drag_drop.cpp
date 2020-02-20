@@ -181,7 +181,7 @@ void DrView::dropEvent(QDropEvent *event) {
         }
 
         // Add the Images and Asset to the project and add the Thing to the scene
-        FormProgressBox *progress = new FormProgressBox("...", "Cancel", file_paths.size() * 2, this->parentWidget());
+        FormProgressBox *progress = new FormProgressBox("...", "Cancel", file_paths.size() * 2, this->window());
         progress->setPrefix(" Importing Images: \n");
         std::vector<DrAsset*> assets;
         for (auto file_path : file_paths) {

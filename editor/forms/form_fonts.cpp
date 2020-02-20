@@ -50,8 +50,8 @@ FormFonts::FormFonts(DrProject *project, QWidget *parent) : QWidget(parent) {
 
     layout->addWidget(m_inner_widget);
 
-    // ***** Center window on screen and install dragging event filter
-    Dr::CenterFormOnScreen(parent, this);
+    // ***** Center window on Parent Form and install dragging event filter
+    Dr::CenterFormOnParent(parent->window(), this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
 

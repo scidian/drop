@@ -8,6 +8,7 @@
 #ifndef PIXMAP_H
 #define PIXMAP_H
 
+#include <QGraphicsEffect>
 #include <QPixmap>
 
 #include "core/types/dr_color.h"
@@ -63,6 +64,12 @@ namespace Dr {
     QPixmap DrawMirror(QColor top_color, QColor bottom_color);
     QPixmap DrawSwirl(QColor top_color, double angle);
     QPixmap DrawWater(QColor top_color, QColor bottom_color);
+
+
+    // ***** Image Effects
+    QImage  ApplyBorderToImage(QImage src, QColor border_color, int border_width, int extend);
+    QImage  ApplyEffectToImage(QImage src, QGraphicsEffect *effect, int extend);
+    QImage  OverlayImage(QImage src, QImage add_image, double add_image_scale = 1.0);
 
 
     // ***** Filters

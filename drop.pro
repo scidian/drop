@@ -157,6 +157,7 @@ SOURCES += \
     editor/pixmap/pixmap_draw.cpp \
     editor/pixmap/pixmap_draw_devices.cpp \
     editor/pixmap/pixmap_draw_effects.cpp \
+    editor/pixmap/pixmap_effects.cpp \
     editor/pixmap/pixmap_filters.cpp \
     editor/pixmap/pixmap_mask.cpp \
     editor/preferences.cpp \

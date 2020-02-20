@@ -1,5 +1,5 @@
 //
-// Description:     Concave Hull Finder from a collection of Points
+// Description:     Concave Hull Finder, returned from a collection of points
 // Author:          Sam Hocevar
 // License:         Licensed under WTFPL 2.0
 // Source(s):       http://sam.zoy.org

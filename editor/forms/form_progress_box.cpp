@@ -101,7 +101,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     m_color_seconds = 0.0;
 
     // ***** Center window on screen and install dragging event filter
-    Dr::CenterFormOnScreen(parent, this);
+    Dr::CenterFormOnParent(parent, this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 
     // ***** Timer to update progress bar colors

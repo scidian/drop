@@ -7,6 +7,8 @@
 //
 #include <QApplication>
 #include <QFontDatabase>
+#include <QGraphicsColorizeEffect>
+#include <QGraphicsDropShadowEffect>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QSpacerItem>
@@ -22,6 +24,8 @@
 #include "core/dr_math.h"
 #include "core/types/dr_variant.h"
 #include "editor/helper_library.h"
+#include "editor/pixmap/pixmap.h"
+#include "editor/style/style.h"
 
 namespace Dr {
 
@@ -231,7 +235,7 @@ bool SameQColor(QColor color1, QColor color2, double tolerance) {
 // Shows a modal Error Message
 void ShowErrorMessage(std::string function_name, std::string error_message, QWidget *parent) {
     std::string error = "Error from " + function_name + "(): " + error_message;
-    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", QString::fromStdString(error), QMessageBox::Ok, parent);
+    QMessageBox msg_box(QMessageBox::Icon::Critical, "Error!", QString::fromStdString(error), QMessageBox::Button::Ok, parent);
     msg_box.exec();
 }
 
@@ -245,7 +249,41 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QPixmap pixmap, 
 
 QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Icon icon, std::string title, QWidget *parent,
                                            QMessageBox::StandardButtons buttons) {
-    QMessageBox msg_box(icon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
+    ///QMessageBox msg_box(icon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
+    QMessageBox msg_box(QMessageBox::Icon::NoIcon, QString::fromStdString(title), QString::fromStdString(message), buttons, parent);
+
+    // Select Appropriate Icon
+    QString icon_string = "";
+    switch (icon) {
+        case QMessageBox::Icon::NoIcon:         break;
+        case QMessageBox::Icon::Warning:        icon_string = ":/assets/gui_misc/msg_warning";      break;
+        case QMessageBox::Icon::Critical:       icon_string = ":/assets/gui_misc/msg_critical";     break;
+        case QMessageBox::Icon::Question:       icon_string = ":/assets/gui_misc/msg_question";     break;
+        case QMessageBox::Icon::Information:    icon_string = ":/assets/gui_misc/msg_info";         break;
+    }
+
+    // Style Icon
+    if (icon_string != "") {
+        QPixmap pix = QPixmap(icon_string + ".png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                pix = QPixmap::fromImage( Dr::ColorizeImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))) );
+
+        // Color Image
+        ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
+        ///colorize->setStrength(1.0);
+        ///colorize->setColor( Dr::ToQColor( Dr::GetColor(Window_Colors::Icon_Dark) ));
+        ///pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 2) );
+
+        // Add In Nice Icon Top
+        QPixmap top = QPixmap(icon_string + "_top.png").scaled(52, 52, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        double  top_scale = 1.0;
+        pix = QPixmap::fromImage( Dr::OverlayImage(pix.toImage(), top.toImage(), top_scale) );
+
+        // Add Glow
+        pix = QPixmap::fromImage( Dr::ApplyBorderToImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)), 2, 3) );
+        msg_box.setIconPixmap(pix);
+    }
+
+    // Return Button Pressed from msg_box
     return static_cast<QMessageBox::StandardButton>(msg_box.exec());
 }
 
