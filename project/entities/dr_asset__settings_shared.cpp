@@ -34,7 +34,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
         type = "Object";
     }
 
-    addComponent(Comps::Asset_Collision, "Collision", "Collision settings for this " + type + ".", Component_Colors::Green_SeaGrass, true);
+    addComponent(Comps::Asset_Collision, "Collision", "Collision settings for this " + type + ".", Component_Colors::RGB_19_Silver, true);
     getComponent(Comps::Asset_Collision)->setIcon(Component_Icons::Collide);
 
     addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Shape, Property_Type::List, static_cast<int>(start_shape_type),
@@ -67,7 +67,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
 void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key) {
     std::string type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Comps::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::Blue_Yonder, true);
+    addComponent(Comps::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::RGB_12_Olive, true);
     getComponent(Comps::Asset_Animation)->setIcon(Component_Icons::Animation);
 
     addPropertyToComponent(Comps::Asset_Animation, Props::Asset_Animation_Idle, Property_Type::Image, idle_animation_key,
@@ -81,6 +81,34 @@ void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle
 
 
 //####################################################################################
+//##    Physics Components
+//####################################################################################
+void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
+    std::string type = Dr::StringFromAssetType(asset_type);
+
+    addComponent(Comps::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::RGB_15_Sunset, true);
+    getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
+
+    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale, Property_Type::PointF, DrPointF(1.0, 1.0),
+                           "Gravity Scale", "Changes how gravity affects this " + type + ". Set to (0, 0) to "
+                                            "ignore gravity comepletely. Also great for making balloons.");
+    // BoolDouble std::vector<DrVariant> of 6 values: bool, double value, min, max, double step size, string spinText
+    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction,
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
+                           "Custom Friction?", "All Things default to World Friction unless specified otherwise here. Friction usually ranges from "
+                                                "0.0 to 2.0 or higher.");
+    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce,
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
+                           "Custom Bounce?", "All Things default to World Bounce unless specified otherwise here. Bounce usually ranges from "
+                                              "0.0 to 2.0 or higher.");
+    bool default_can_rotate = (asset_type == DrAssetType::Character) ? false : true;
+    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate, Property_Type::Bool, default_can_rotate,
+                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed. Rotation can still be altered by Motor Buttons.");
+}
+
+
+
+//####################################################################################
 //##    Health Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_points) {
@@ -88,7 +116,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
     if (asset_type == DrAssetType::Character)   type = "Character";
     if (asset_type == DrAssetType::Object)      type = "Object";
 
-    addComponent(Comps::Asset_Health, "Health / Damage", "Health and Damage settings for this " + type + ".", Component_Colors::Red_Faded, true);
+    addComponent(Comps::Asset_Health, "Health / Damage", "Health and Damage settings for this " + type + ".", Component_Colors::RGB_02_Pink, true);
     getComponent(Comps::Asset_Health)->setIcon(Component_Icons::Health);
 
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Max_Health,       Property_Type::Double,  10.0,
@@ -123,39 +151,12 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
 
 
 //####################################################################################
-//##    Physics Components
-//####################################################################################
-void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
-    std::string type = Dr::StringFromAssetType(asset_type);
-
-    addComponent(Comps::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::Orange_Pastel, true);
-    getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
-
-    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale, Property_Type::PointF, DrPointF(1.0, 1.0),
-                           "Gravity Scale", "Changes how gravity affects this " + type + ". Set to (0, 0) to "
-                                            "ignore gravity comepletely. Also great for making balloons.");
-    // BoolDouble std::vector<DrVariant> of 6 values: bool, double value, min, max, double step size, string spinText
-    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction,
-                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
-                           "Custom Friction?", "All Things default to World Friction unless specified otherwise here. Friction usually ranges from "
-                                                "0.0 to 2.0 or higher.");
-    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce,
-                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 10000, 0.1, " "}),
-                           "Custom Bounce?", "All Things default to World Bounce unless specified otherwise here. Bounce usually ranges from "
-                                              "0.0 to 2.0 or higher.");
-    bool default_can_rotate = (asset_type == DrAssetType::Character) ? false : true;
-    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate, Property_Type::Bool, default_can_rotate,
-                           "Can Rotate?", "Can this character rotate (on z axis)? If not, rotation will be fixed. Rotation can still be altered by Motor Buttons.");
-}
-
-
-//####################################################################################
 //##    Controls Components
 //####################################################################################
 void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     std::string type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Comps::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::Brown_Sugar, true);
+    addComponent(Comps::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::RGB_04_Purple, true);
     getComponent(Comps::Asset_Controls)->setIcon(Component_Icons::Controls);
 
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,

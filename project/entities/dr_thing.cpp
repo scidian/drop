@@ -67,8 +67,8 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
-            addComponentSpawn();
             addComponentLighting();
+            addComponentSpawn();
             addComponent3D();
             addComponentAppearance();
             addComponentSpecialEffects();

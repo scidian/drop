@@ -26,7 +26,7 @@ void DrThing::addComponentSettingsFire() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fire");
 
-    addComponent(Comps::Thing_Settings_Fire, "Fire Settings", "Settings for this Fire.", Component_Colors::Red_Faded, true);
+    addComponent(Comps::Thing_Settings_Fire, "Fire Settings", "Settings for this Fire.", Component_Colors::RGB_16_Orange, true);
     getComponent(Comps::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
 
     addPropertyToComponent(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape, Property_Type::List, static_cast<int>(Fire_Mask::Torch),
@@ -57,7 +57,7 @@ void DrThing::addComponentSettingsFisheye() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fisheye");
 
-    addComponent(Comps::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::Orange_Pastel, true);
+    addComponent(Comps::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::RGB_02_Pink, true);
     getComponent(Comps::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
 
     addPropertyToComponent(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color, Property_Type::Color, DrColor(128, 128, 128, 255).rgba(),
@@ -77,7 +77,7 @@ void DrThing::addComponentSettingsLight(DrColor color) {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Light");
 
-    addComponent(Comps::Thing_Settings_Light, "Light Settings", "Settings for this Light.", Component_Colors::Mellow_Yellow, true);
+    addComponent(Comps::Thing_Settings_Light, "Light Settings", "Settings for this Light.", Component_Colors::RGB_13_Yellow, true);
     getComponent(Comps::Thing_Settings_Light)->setIcon(Component_Icons::Light);
 
     addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Type, Property_Type::List, static_cast<int>(Light_Type::Opaque),
@@ -114,7 +114,7 @@ void DrThing::addComponentSettingsMirror() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Mirror");
 
-    addComponent(Comps::Thing_Settings_Mirror, "Mirror Settings", "Settings for this Mirror.", Component_Colors::Silver_Snow, true);
+    addComponent(Comps::Thing_Settings_Mirror, "Mirror Settings", "Settings for this Mirror.", Component_Colors::RGB_18_Gray, true);
     getComponent(Comps::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
 
     addPropertyToComponent(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),
@@ -141,7 +141,7 @@ void DrThing::addComponentSettingsSwirl() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Swirl");
 
-    addComponent(Comps::Thing_Settings_Swirl, "Swirl Settings", "Settings for this Swirl.", Component_Colors::Purple_Pastel, true);
+    addComponent(Comps::Thing_Settings_Swirl, "Swirl Settings", "Settings for this Swirl.", Component_Colors::RGB_03_Violet, true);
     getComponent(Comps::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
 
     addPropertyToComponent(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),

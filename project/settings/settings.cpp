@@ -39,7 +39,7 @@ DrSettings::~DrSettings() {
 //##    Initial Properties of all DrSettings
 //####################################################################################
 void DrSettings::addComponentEntitySettings() {
-    addComponent(Comps::Entity_Settings, "Name", "Name of selected item.", Component_Colors::Red_Tuscan, true);
+    addComponent(Comps::Entity_Settings, "Name", "Name of selected item.", Component_Colors::RGB_20_Tan, true);
     getComponent(Comps::Entity_Settings)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Name, Property_Type::String, "",
                            "Name", "Name of the current item.");
@@ -48,7 +48,7 @@ void DrSettings::addComponentEntitySettings() {
 }
 
 void DrSettings::addComponentHiddenSettings() {
-    addComponent(Comps::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::Purple_Royal, true);
+    addComponent(Comps::Hidden_Settings, "Hidden Settings", "Custom hidden entity properties for Droplets.", Component_Colors::RGB_05_Royal, true);
     getComponent(Comps::Hidden_Settings)->setIcon(Component_Icons::Hidden);
     addPropertyToComponent(Comps::Hidden_Settings, Props::Hidden_Advisor_Description, Property_Type::Textbox, "",
                            "Description", "Custom Advisor Description for this item.");

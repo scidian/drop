@@ -26,7 +26,7 @@ void DrStage::initializeStageSettings(std::string new_name) {
     property_name->setDescription("Name of this Stage.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Stage_Settings, "Stage Settings", "Settings for this Stage.", Component_Colors::White_Snow, true);
+    addComponent(Comps::Stage_Settings, "Stage Settings", "Settings for this Stage.", Component_Colors::RGB_18_Gray, true);
     getComponent(Comps::Stage_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Enabled, Property_Type::Bool, true,
                            "Enabled?", "Should this Stage be able to be shown?");
@@ -43,7 +43,7 @@ void DrStage::initializeStageSettings(std::string new_name) {
 
     addComponent(Comps::Stage_Grid, "Grid", "Settings for the alignment grid within the editor. For an Isometric Grid: set \"Grid Rotation\" "
                                                  "to 45 degrees, and set \"Grid Scale\" X value twice the size \"Grid Scale\" Y value (i.e. X: 2, Y: 1).",
-                                                 Component_Colors::Pink_Pearl, true);
+                                                 Component_Colors::RGB_19_Silver, true);
     getComponent(Comps::Stage_Grid)->setIcon(Component_Icons::Transform);
     addPropertyToComponent(Comps::Stage_Grid, Props::Stage_Grid_Style, Property_Type::List, static_cast<int>(0),
                            "Grid Style", "Visual style of alignment grid.");

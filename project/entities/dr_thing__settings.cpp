@@ -27,7 +27,7 @@ void DrThing::addComponentSettingsCamera(std::string new_name) {
     property_name->setDescription("Name of this Camera.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::Beige_Apricot, true);
+    addComponent(Comps::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::RGB_08_SeaFoam, true);
     getComponent(Comps::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
 
 //    Thing_Camera_Set_As_Active          = 178,      // bool
@@ -63,7 +63,7 @@ void DrThing::addComponentSettingsCharacter(std::string new_name) {
     property_name->setDescription("Name of this Character.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::White_Snow, true);
+    addComponent(Comps::Thing_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::RGB_20_Tan, true);
     getComponent(Comps::Thing_Settings_Character)->setIcon(Component_Icons::Character);
 
     addPropertyToComponent(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Position, Property_Type::PointF, DrPointF(0, 0),
@@ -110,7 +110,7 @@ void DrThing::addComponentSettingsObject(std::string new_name, bool should_colli
     property_name->setDescription("Name of this Object.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Thing_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::White_Snow, true);
+    addComponent(Comps::Thing_Settings_Object, "Object Settings", "Settings for this Object.", Component_Colors::RGB_18_Gray, true);
     getComponent(Comps::Thing_Settings_Object)->setIcon(Component_Icons::Object);
 
     addPropertyToComponent(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, Property_Type::List, static_cast<int>(Body_Type::Static),
@@ -137,7 +137,7 @@ void DrThing::addComponentSettingsText(std::string new_name) {
     property_name->setDescription("Name of this Text Box.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Thing_Settings_Text, "Text Settings", "Settings for this Text Box.", Component_Colors::Orange_Pastel, true);
+    addComponent(Comps::Thing_Settings_Text, "Text Settings", "Settings for this Text Box.", Component_Colors::RGB_17_Brown, true);
     getComponent(Comps::Thing_Settings_Text)->setIcon(Component_Icons::Font);
 
     addPropertyToComponent(Comps::Thing_Settings_Text, Props::Thing_Text_User_Text, Property_Type::String, "Text",

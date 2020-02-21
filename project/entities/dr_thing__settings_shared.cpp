@@ -24,7 +24,7 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
     std::string type_string = Dr::StringFromThingType(type);
 
     addComponent(Comps::Thing_Transform, "Transform", "Sets the physical size and angle of the " + type_string + " "
-                                                           "in the Stage.", Component_Colors::Green_SeaGrass, true);
+                                                           "in the Stage.", Component_Colors::RGB_19_Silver, true);
     getComponent(Comps::Thing_Transform)->setIcon(Component_Icons::Transform);
 
     std::string position_text = "Location of the " + type_string + " within the current Stage.";
@@ -63,7 +63,7 @@ void DrThing::addComponentTransform(double width, double height, double x, doubl
 //####################################################################################
 void DrThing::addComponentLayering(double z, double opacity, bool show_component) {
     addComponent(Comps::Thing_Layering, "Layering", "Controls the order items are drawn onto the screen. For \"Z-Order\", lower numbers are "
-                                                         "towards the back, higher towards the front.", Component_Colors::Blue_Yonder, show_component);
+                                                         "towards the back, higher towards the front.", Component_Colors::RGB_07_LightBlue, show_component);
     getComponent(Comps::Thing_Layering)->setIcon(Component_Icons::Layering);
 
     addPropertyToComponent(Comps::Thing_Layering, Props::Thing_Z_Order, Property_Type::Double, 0.0,
@@ -84,7 +84,7 @@ void DrThing::addComponentLayering(double z, double opacity, bool show_component
 void DrThing::addComponentMovement() {
     addComponent(Comps::Thing_Movement, "Movement", "Initial starting velocities of Object in Stage. <br><br> "
                                                           "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!",
-                                                          Component_Colors::Red_Faded, true);
+                                                          Component_Colors::RGB_10_Green, true);
     getComponent(Comps::Thing_Movement)->setIcon(Component_Icons::Movement);
 
     addPropertyToComponent(Comps::Thing_Movement, Props::Thing_Velocity_X, Property_Type::Variable, DrPointF(0, 0),
@@ -107,13 +107,28 @@ void DrThing::addComponentMovement() {
 }
 
 
+
+//####################################################################################
+//##    Lighting Components
+//####################################################################################
+void DrThing::addComponentLighting() {
+    addComponent(Comps::Thing_Lighting, "Lighting", "Lighting settings for this item.", Component_Colors::RGB_13_Yellow, true);
+    getComponent(Comps::Thing_Lighting)->setIcon(Component_Icons::Light);
+
+    addPropertyToComponent(Comps::Thing_Lighting, Props::Thing_Lighting_Blend_Object, Property_Type::List, static_cast<int>(Blend_Object::Standard),
+                           "Blend Mode", "Blend mode for rendering this item.");
+    addPropertyToComponent(Comps::Thing_Lighting, Props::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
+                           "Cast Shadows?", "This item will cast shadows when appearing higher on the z axis than a Light.");
+}
+
+
 //####################################################################################
 //##    Spawn Components
 //####################################################################################
 void DrThing::addComponentSpawn() {
     addComponent(Comps::Thing_Spawn, "Spawning", "Initial starting velocities of Object in stage. <br><br> "
                                                       "<b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use these settings!",
-                                                      Component_Colors::Orange_Pastel, true);
+                                                      Component_Colors::RGB_15_Sunset, true);
     getComponent(Comps::Thing_Spawn)->setIcon(Component_Icons::Spawn);
 
     addPropertyToComponent(Comps::Thing_Spawn, Props::Thing_Spawn_Count, Property_Type::Int, 1,
@@ -151,7 +166,7 @@ void DrThing::addComponent3D() {
     addComponent(Comps::Thing_3D, "3D Properties", "Turns 2D Objects in 3D, rotates 3D Objects. Extrusion works best for images "
                                                         "whose pixels are mostly opaque. The World Setting \"Instant 3D\" setting under "
                                                         "the \"Appearance\" category must be checked to see 3D.",
-                                                        Component_Colors::Brown_Sugar, true);
+                                                        Component_Colors::RGB_17_Brown, true);
     getComponent(Comps::Thing_3D)->setIcon(Component_Icons::Object);
 
     addPropertyToComponent(Comps::Thing_3D, Props::Thing_3D_Type, Property_Type::List, static_cast<int>(Convert_3D_Type::Extrusion),
@@ -173,24 +188,10 @@ void DrThing::addComponent3D() {
 
 
 //####################################################################################
-//##    Lighting Components
-//####################################################################################
-void DrThing::addComponentLighting() {
-    addComponent(Comps::Thing_Lighting, "Lighting", "Lighting settings for this item.", Component_Colors::Mustard_Yellow, true);
-    getComponent(Comps::Thing_Lighting)->setIcon(Component_Icons::Light);
-
-    addPropertyToComponent(Comps::Thing_Lighting, Props::Thing_Lighting_Blend_Object, Property_Type::List, static_cast<int>(Blend_Object::Standard),
-                           "Blend Mode", "Blend mode for rendering this item.");
-    addPropertyToComponent(Comps::Thing_Lighting, Props::Thing_Lighting_Cast_Shadows, Property_Type::Bool, true,
-                           "Cast Shadows?", "This item will cast shadows when appearing higher on the z axis than a Light.");
-}
-
-
-//####################################################################################
 //##    Appearance Components
 //####################################################################################
 void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_component) {
-    addComponent(Comps::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::Purple_Royal, show_component);
+    addComponent(Comps::Thing_Appearance, "Appearance", "Filters for items as they appear in the Stage.", Component_Colors::RGB_01_Red, show_component);
     getComponent(Comps::Thing_Appearance)->setIcon(Component_Icons::Appearance);
 
     bool hidden = bitrate_and_pixel_only;
@@ -220,7 +221,7 @@ void DrThing::addComponentAppearance(bool bitrate_and_pixel_only, bool show_comp
 //##    Special Effects Components
 //####################################################################################
 void DrThing::addComponentSpecialEffects() {
-    addComponent(Comps::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::Blue_Royal, true);
+    addComponent(Comps::Thing_Special_Effects, "Special Effects", "Special effects that affect this item.", Component_Colors::RGB_03_Violet, true);
     getComponent(Comps::Thing_Special_Effects)->setIcon(Component_Icons::Effects);
 
     addPropertyToComponent(Comps::Thing_Special_Effects, Props::Thing_Filter_Convert_3D, Property_Type::Bool, false,

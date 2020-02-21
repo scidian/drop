@@ -47,7 +47,7 @@ DrFont::DrFont(DrProject *parent_project, long key,
     property_name->setDescription("Name of this Font Asset.");
     property_name->setValue(m_name);
 
-    addComponent(Comps::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::Orange_Pastel, true);
+    addComponent(Comps::Asset_Settings_Font, "Font Settings", "Font settings for this Text Asset.", Component_Colors::RGB_17_Brown, true);
     getComponent(Comps::Asset_Settings_Font)->setIcon(Component_Icons::Font);
 
     addPropertyToComponent(Comps::Asset_Settings_Font, Props::Asset_Font_Family, Property_Type::String, getPropertyFontFamily(),

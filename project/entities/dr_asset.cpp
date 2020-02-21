@@ -111,8 +111,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
                 initializeAssetSettingsObject(my_starting_name);
             initializeAssetSettingsCollision(getAssetType(), shape);
             initializeAssetSettingsAnimation(getAssetType(), m_base_key );
-            initializeAssetSettingsHealth(getAssetType());
             initializeAssetSettingsPhysics(getAssetType());
+            initializeAssetSettingsHealth(getAssetType());
             initializeAssetSettingsControls(getAssetType());
             break;
         }

@@ -24,35 +24,33 @@ namespace Error_Code {
 //##    Possible background colors for Component Categories
 //############################
 namespace Component_Colors {
-    const DrColor White_Snow        { DrColor(255, 252, 249, 255) };
-    const DrColor Silver_Snow       { DrColor(192, 188, 183, 255) };
-    const DrColor Darkness          { DrColor( 40,  33,  33, 255) };
-
-    const DrColor Orange_Pastel     { DrColor(250, 146,   0, 255) };
-
-    const DrColor Pink_Pearl        { DrColor(228, 180, 194, 255) };
-    const DrColor Red_Faded         { DrColor(255, 105, 120, 255) };
-
-    const DrColor Red_Tuscan        { DrColor(104,  71,  86, 255) };
-    const DrColor Purple_Pastel     { DrColor(176, 161, 186, 255) };
-    const DrColor Purple_Royal      { DrColor(126,  87, 194, 255) };
-    const DrColor Blue_Yonder       { DrColor(165, 181, 191, 255) };
-    const DrColor Blue_Royal        { DrColor( 57, 120, 237, 255) };
-
-    const DrColor Green_SeaGrass    { DrColor(154, 225, 157, 255) };
-    const DrColor Green_Sickness    { DrColor(203, 240,  19, 255) };
-
-    const DrColor Mustard_Yellow    { DrColor(255, 200,  87, 255) };
-    const DrColor Mellow_Yellow     { DrColor(250, 223, 127, 255) };
-
-    const DrColor Brown_Sugar       { DrColor(165, 117,  72, 255) };
-    const DrColor Beige_Apricot     { DrColor(252, 215, 173, 255) };
-
     const DrColor Blue_Drop_1       { DrColor(  0, 150, 145, 255) };
     const DrColor Blue_Drop_2       { DrColor(  0, 180, 175, 255) };
     const DrColor Blue_Drop_3       { DrColor(  0, 225, 219, 255) };
     const DrColor Blue_Drop_4       { DrColor( 96, 255, 248, 255) };
     const DrColor Blue_Drop_5       { DrColor(192, 255, 248, 255) };
+
+    // Material Palette Row 4
+    const DrColor RGB_01_Red        { DrColor(239,  83,  80, 255) };
+    const DrColor RGB_02_Pink       { DrColor(236,  64, 122, 255) };
+    const DrColor RGB_03_Violet     { DrColor(171,  71, 188, 255) };
+    const DrColor RGB_04_Purple     { DrColor(149, 117, 205, 255) };    // *Row 3
+    const DrColor RGB_05_Royal      { DrColor(121, 134, 203, 255) };    // *Row 3
+    const DrColor RGB_06_Blue       { DrColor( 66, 165, 245, 255) };
+    const DrColor RGB_07_LightBlue  { DrColor( 42, 182, 246, 255) };
+    const DrColor RGB_08_SeaFoam    { DrColor( 38, 198, 218, 255) };    // *Close to Drop Blue
+    const DrColor RGB_09_Forest     { DrColor( 38, 166, 154, 255) };
+    const DrColor RGB_10_Green      { DrColor(102, 187, 106, 255) };
+    const DrColor RGB_11_Lime       { DrColor(157, 204, 102, 255) };
+    const DrColor RGB_12_Olive      { DrColor(212, 225,  87, 255) };
+    const DrColor RGB_13_Yellow     { DrColor(255, 238,  89, 255) };
+    const DrColor RGB_14_SchoolBus  { DrColor(255, 202,  40, 255) };
+    const DrColor RGB_15_Sunset     { DrColor(255, 167,  39, 255) };
+    const DrColor RGB_16_Orange     { DrColor(255, 112,  67, 255) };
+    const DrColor RGB_17_Brown      { DrColor(141, 110,  99, 255) };
+    const DrColor RGB_18_Gray       { DrColor(224, 224, 224, 255) };    // *Row 3
+    const DrColor RGB_19_Silver     { DrColor(144, 164, 174, 255) };    // *Row 3
+    const DrColor RGB_20_Tan        { DrColor(233, 216, 202, 255) };
 };
 
 

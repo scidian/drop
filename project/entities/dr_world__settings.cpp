@@ -26,7 +26,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     property_name->setValue(new_name);
 
 
-    addComponent(Comps::World_Settings, "World Settings", "Settings for this World.", Component_Colors::White_Snow, true);
+    addComponent(Comps::World_Settings, "World Settings", "Settings for this World.", Component_Colors::RGB_18_Gray, true);
     getComponent(Comps::World_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Comps::World_Settings, Props::World_Game_Direction, Property_Type::Angle, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - down, 180 - left, 270 - up, etc.");
@@ -46,7 +46,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                                                  "running smoothly.");
 
 
-    addComponent(Comps::World_Camera, "Camera", "Camera settings for this World.", Component_Colors::Pink_Pearl, true);
+    addComponent(Comps::World_Camera, "Camera", "Camera settings for this World.", Component_Colors::RGB_08_SeaFoam, true);
     getComponent(Comps::World_Camera)->setIcon(Component_Icons::Camera);
     addPropertyToComponent(Comps::World_Camera, Props::World_Camera_Type, Property_Type::List, static_cast<int>(Render_Type::Orthographic),
                            "Projection Type", "Sets the projection type of Camera's for this World. ");
@@ -68,8 +68,9 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Comps::World_Camera, Props::World_Camera_Zoom_Damping, Property_Type::RangedDouble, std::vector<DrVariant>({5.0, 1.0, 10.0, 0.1}),
                            "Zoom Damping", "The higher this number, the slower the camera performs Auto Zoom. Range: 1.0 (fastest) to 10.0 (slowest)");
 
+
     addComponent(Comps::World_Physics, "Physics", "Starting physics settings for this world, this affects all Objects that have \"Physics?\" "
-                                                       "enabled.", Component_Colors::Orange_Pastel, true);
+                                                       "enabled.", Component_Colors::RGB_15_Sunset, true);
     getComponent(Comps::World_Physics)->setIcon(Component_Icons::Physics);
     addPropertyToComponent(Comps::World_Physics, Props::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
                            "Time Warp", "Physics update time multiplier, affects the speed the world changes. Default value of 1.0 is Normal speed. A value of 0.5 "
@@ -89,7 +90,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                                      "overriden on a per item basis.");
 
 
-    addComponent(Comps::World_Lighting, "Lighting", "Lighting settings for this World.", Component_Colors::Mustard_Yellow, true);
+    addComponent(Comps::World_Lighting, "Lighting", "Lighting settings for this World.", Component_Colors::RGB_13_Yellow, true);
     getComponent(Comps::World_Lighting)->setIcon(Component_Icons::Light);
     addPropertyToComponent(Comps::World_Lighting, Props::World_Light_Ambient, Property_Type::Percent, 50,
                            "Ambient Light", "Used to darken World, mostly for the purpose of lighting it with Glow Lights.");
@@ -101,8 +102,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                                          "oversaturation or be better for dark scenes.");
 
 
-    addComponent(Comps::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.",
-                                               Component_Colors::Purple_Royal, true);
+    addComponent(Comps::World_Appearance, "Appearance", "These filters affect the entire world after it has been rendered.", Component_Colors::RGB_01_Red, true);
     getComponent(Comps::World_Appearance)->setIcon(Component_Icons::Appearance);
     addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_PixelType, Property_Type::List, static_cast<int>(Pixel_Texture::None),
                            "Pixel Texture", "Design of pixelation. For plain blocky pixels leave as \"None\".");
@@ -125,7 +125,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Negative", "Should this world's colors be inverted?");
 
 
-    addComponent(Comps::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::Blue_Royal, true);
+    addComponent(Comps::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::RGB_03_Violet, true);
     getComponent(Comps::World_Special_Effects)->setIcon(Component_Icons::Effects);
     addPropertyToComponent(Comps::World_Special_Effects, Props::World_Filter_Convert_3D, Property_Type::Bool, false,
                            "Instant 3D", "Auto convert all 2D graphics into 3D. Depth of each item is customizable utilizing each "
