@@ -135,7 +135,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         }
 
         // ***** Calculate max speed over last xxx seconds
-        double max_average_wait_time =  200.0;                                              // 200 milliseconds * 20 == 4 second average
+        double max_average_wait_time =  200.0;                                              // xxx is 200 milliseconds * 20 == 4 second average
         size_t max_average_elements =   20;
         m_max_speed_clock += milliseconds;
         while (m_max_speed_clock > max_average_wait_time) {
@@ -153,7 +153,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 
         // ***** Figure out percentage of current speed vs max speed, apply percentage to multiplier for target zoom
         double speed_adjust = Dr::Clamp(m_last_speed / m_max_speed_average, 0.0, 1.0);
-        double multiplier = this->getEngineWorld()->zoom_multiplier;;
+        double multiplier = this->getEngineWorld()->zoom_multiplier;
         if (this->getEngineWorld()->zoom_type == Auto_Zoom::Zoom_Out) multiplier = 1.0 / multiplier;
         multiplier = Dr::Lerp(1.0, multiplier, speed_adjust);
         double target_zoom = m_zoom * multiplier;
