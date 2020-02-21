@@ -155,15 +155,15 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     glEnable(GL_BLEND);
     switch (object->blend_type) {
         case Blend_Object::Standard:
-            ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);       // Standard non-premultiplied alpha blend
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                // Premultiplied alpha blend
+            ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                   // Standard non-premultiplied alpha blend
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                            // Premultiplied alpha blend
             break;
         case Blend_Object::Additive:
             glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
             break;
         case Blend_Object::Subtractive:
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-            glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+            glBlendFuncSeparate(GL_SRC_COLOR, GL_DST_COLOR, GL_ZERO, GL_ONE);       // Subtract color only, not alpha
+            glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);                              // Reverse Subtract is Dest - Source = new Color
             break;
     }
     // More Specific Method of Specifying Functions (Seperate RGB/Alpha Blend Functions):
