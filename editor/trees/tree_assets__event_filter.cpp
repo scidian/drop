@@ -82,7 +82,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
             QPoint distance = mouse_event->pos() - asset_frame->property(User_Property::Mouse_Down_Pos).toPoint();
             if (distance.manhattanLength() > 2) {
-                startDragAndDrop(label_pixmap, asset_key);
+                startDrag(label_pixmap, asset_key);
             }
         }
 

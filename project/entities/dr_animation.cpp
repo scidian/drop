@@ -32,14 +32,15 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, std:
         if (first_image == nullptr) {
             Dr::PrintDebug("Eror in DrAnimation constructor! Could not load first image with key: " + std::to_string(image_keys.front()) );
 
-        // Remove trailing numbers and spaces from name
+        // Remove trailing Spaces and Numbers from Name
         } else {
             new_animation_name = first_image->getSimplifiedName();
-            bool is_number = Dr::IsInteger( Dr::Right(new_animation_name, 1) );
-            while (new_animation_name.length() > 1 && is_number) {
+            bool is_number = false;///Dr::IsInteger( Dr::Right(new_animation_name, 1) );
+            bool is_space =  Dr::Right(new_animation_name, 1) == std::string(" ");
+            while (new_animation_name.length() > 1 && (is_space || is_number)) {
                 new_animation_name = Dr::Left(new_animation_name, (new_animation_name.length() - 1));
-                is_number = Dr::IsInteger( Dr::Right(new_animation_name, 1) );
-                if (Dr::Right(new_animation_name, 1) == std::string(" ")) is_number = true;
+                ///is_number = Dr::IsInteger( Dr::Right(new_animation_name, 1) );
+                is_space =  Dr::Right(new_animation_name, 1) == std::string(" ");
             }
         }
     }

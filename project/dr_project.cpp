@@ -7,6 +7,8 @@
 //
 #include "core/dr_debug.h"
 #include "core/dr_containers.h"
+#include "core/imaging/imaging.h"
+#include "core/interface/dr_progress.h"
 #include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
@@ -76,9 +78,9 @@ void DrProject::addDefaultAssets() {
 //##        Functions to Delete different item types into project
 //####################################################################################
 // Removes an Animation from the Project if not used by another Asset
-void DrProject::deleteAnimation(long animation_key, long ignore_asset_key) {
-    if (animation_key < c_key_starting_number) return;
-    DrAnimation *animation = findAnimationFromKey(animation_key);
+void DrProject::deleteAnimation(long animation_key_to_delete, long ignore_asset_key) {
+    if (animation_key_to_delete < c_key_starting_number) return;
+    DrAnimation *animation = findAnimationFromKey(animation_key_to_delete);
     if (animation == nullptr) return;
 
     // See if Animations are used by any other Asset
@@ -88,7 +90,7 @@ void DrProject::deleteAnimation(long animation_key, long ignore_asset_key) {
 
         // If key is used by another Asset, don't delete
         for (auto &check_key : asset_pair.second->animationsUsedByAsset()) {
-            if (check_key == animation_key) return;
+            if (check_key == animation_key_to_delete) return;
         }
     }
 
@@ -98,25 +100,28 @@ void DrProject::deleteAnimation(long animation_key, long ignore_asset_key) {
         if  (image_key < c_key_starting_number) continue;
 
         // See if Image is used by any other Animaiton
+        bool another_is_using_image = false;
         for (auto &animation_pair : getAnimationMap()) {
-            if (animation_pair.first != animation_key) {
-                bool another_is_using_image = false;
-
+            if (animation_pair.first != animation_key_to_delete) {
                 for (auto check_frame : animation_pair.second->getFrames()) {
                     if (check_frame->getKey() == image_key) {
                         another_is_using_image = true;
                         break;
                     }
                 }
-                if (another_is_using_image) break;
             }
+            if (another_is_using_image) break;
+        }
 
+        // If no other Animation is using Image, delete it
+        if (another_is_using_image == false) {
+            ///Dr::PrintDebug("Deleting image key: " + std::to_string(image_key));
             deleteImage( image_key );
         }
     }
 
     // Delete Animation
-    m_animations.erase(animation_key);
+    m_animations.erase(animation_key_to_delete);
     delete animation;
 }
 
@@ -204,6 +209,22 @@ long DrProject::addFont(std::string font_name, DrBitmap font_bitmap, std::string
 }
 
 DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category, long key, IProgressBar *progress) {
+    // Check if copy of this Bitmap already exists in DrImage map, if so return that DrImage
+    for (auto &image_pair : getImageMap()) {
+        DrImage *dr_image = image_pair.second;
+        if (dr_image->getSimplifiedName() == image_name) {
+            if (Dr::CompareBitmaps(bitmap, dr_image->getBitmap())) {
+                if (progress != nullptr) {
+                    progress->unlockProgress();
+                    progress->moveToNextItem(); progress->updateValue(100.0);
+                    progress->moveToNextItem(); progress->updateValue(100.0);
+                }
+                return dr_image;
+            }
+        }
+    }
+
+    // Create new DrImage with Bitmap and add to Project
     long new_image_key = (key == c_no_key) ? getNextKey() : key;
     m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, category, false, progress);
     return m_images[new_image_key];

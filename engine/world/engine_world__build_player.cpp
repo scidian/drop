@@ -186,7 +186,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         rover->setComponentCamera(new ThingCompCamera(this, rover));
         ///rover->setCameraRotation( -15, 15, 0 );
         rover->compCamera()->setCameraRotation( -15,  -25, 0 );
-        rover->compCamera()->setCameraPositionXY( DrPointF(0, 200) );
+        rover->compCamera()->setCameraPositionXY( DrPointF(0, 50) );
         setActiveCamera( addCamera(rover->getKey())->getKey() );
 
 

@@ -135,7 +135,7 @@ public:
 
     // Functions
     void            handleScroll(QLabel *label, bool first_time);
-    void            startDragAndDrop(QLabel *label_pixmap, long asset_key);
+    void            startDrag(QLabel *label_pixmap, long asset_key);
 
 public slots:
     void            startScroll();

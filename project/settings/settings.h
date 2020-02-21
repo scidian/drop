@@ -38,9 +38,6 @@ private:
     long         m_is_locked = false;                           // Should this Entity be locked from editing?
 
 
-protected:       // so derived classes can access
-    void         setKey (long new_key) { setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Key, DrVariant(new_key)); }
-
 public:
     // Constructor / Destructor
     DrSettings(DrProject *parent_project);
@@ -52,6 +49,7 @@ public:
     // Getters / Setters
     DrProject*          getParentProject()      { return m_parent_project; }
     long                getKey()                { return getComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Key).toLong(); }
+    void                setKey (long new_key)   { setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Key, DrVariant(new_key)); }
 
     virtual std::string getName();                              // Returns Name from shared "Entity_Name" component
     virtual bool        setName(std::string new_name);          // Returns true if successful

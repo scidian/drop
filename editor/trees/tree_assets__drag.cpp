@@ -32,7 +32,7 @@
 //####################################################################################
 //##    Drag and Drop start for Asset
 //####################################################################################
-void DrFilterAssetMouseHandler::startDragAndDrop(QLabel *label_pixmap, long asset_key) {
+void DrFilterAssetMouseHandler::startDrag(QLabel *label_pixmap, long asset_key) {
     // Get asset from project
     DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
     if (entity == nullptr) return;

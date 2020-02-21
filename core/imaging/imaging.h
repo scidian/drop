@@ -25,6 +25,8 @@ enum class Flood_Fill_Type {
 //############################
 namespace Dr {
 
+    // ***** Comparison
+    bool        CompareBitmaps(const DrBitmap &bitmap1, const DrBitmap &bitmap2);
 
     // ***** Object Counting / Fill (a la Ravens Project)
     DrBitmap    BlackAndWhiteFromAlpha(const DrBitmap &bitmap, double alpha_tolerance, bool inverse);

@@ -20,6 +20,21 @@ namespace Dr
 
 
 //####################################################################################
+//##    Returns True if bitmaps are identical, false if not
+//####################################################################################
+bool CompareBitmaps(const DrBitmap &bitmap1, const DrBitmap &bitmap2) {
+    if (bitmap1.width  != bitmap2.width ) return false;
+    if (bitmap1.height != bitmap2.height) return false;
+    for (int x = 0; x < bitmap1.width; ++x) {
+        for (int y = 0; y < bitmap1.height; ++y) {
+            if (bitmap1.getPixel(x, y) != bitmap2.getPixel(x, y)) return false;
+        }
+    }
+    return true;
+}
+
+
+//####################################################################################
 //##    Returns black / white image
 //##        alpha_tolerance is from 0.0 to 1.0
 //##        NORMAL  (inverse == false): transparent areas are black, objects are white

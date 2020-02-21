@@ -26,13 +26,17 @@ namespace Dr {
 
 //####################################################################################
 //##    Adds Singular Image to Project
+//##        During project->addImage, if exact image is already found within
+//##        project, that existing image is returned
 //####################################################################################
 DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category category, IProgressBar *progress) {
 
     QFileInfo file_info(filename);
         QString full_path =     file_info.path();
         QString file_name =     file_info.fileName();
-        QString simple_name =   file_info.baseName().replace("_", " ");
+        QString simple_name =   file_info.baseName();
+                simple_name =   simple_name.replace("_", " ");      // Replace underscores with spaces
+                simple_name =   simple_name.replace("-", " ");      // Replace hyphens with spaces
 
     QImage image = QImage(filename).convertToFormat(QImage::Format::Format_ARGB32);
     if (image.isNull()) {

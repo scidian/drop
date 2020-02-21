@@ -5,8 +5,10 @@
 //
 //
 //
+#include "core/imaging/imaging.h"
 #include "project/constants_entity_keys.h"
 #include "project/entities/dr_image.h"
+#include "project/dr_project.h"
 #include "project/settings/settings_component_property.h"
 
 
@@ -14,14 +16,16 @@
 //##    Constructors
 //####################################################################################
 DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap,
-                 Asset_Category category, bool force_outline, IProgressBar *progress) : DrSettings(parent_project) {
+                 Asset_Category category, bool force_outline, IProgressBar *progress)
+    : DrSettings(parent_project) {
+
     this->setKey(key);
     m_category = category;
 
     m_simple_name = image_name;
     m_bitmap = bitmap;
 
-    if (key > c_key_starting_number || force_outline) {
+    if (key == c_no_key || key > c_key_starting_number || force_outline) {
         autoOutlinePoints(progress);
     } else {
         m_poly_list.push_back( bitmap.polygon().points() );

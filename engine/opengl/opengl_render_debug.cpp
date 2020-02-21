@@ -121,10 +121,6 @@ void DrOpenGL::drawDebugJoints() {
     joint_list.clear();
     cpSpaceEachConstraint(m_engine->getCurrentWorld()->getSpace(), cpSpaceConstraintIteratorFunc(GetSpaceJointList), &joint_list);
 
-    // Joint dot fill color
-    DrColor fill_color = Dr::white;
-    fill_color.setAlphaF(0.4);
-
     // ***** Build mesh of joints
     DebugVertex vertexes;
     for (auto joint : joint_list) {
@@ -173,10 +169,18 @@ void DrOpenGL::drawDebugJoints() {
             point_b = body_pos_b;
         }
 
+        // Joint dot colors
+        DrColor color_a = Dr::white;
+        DrColor color_b = Dr::red;
+        DrColor color_p = Dr::orange;
+        color_a.setAlphaF(0.5);
+        color_b.setAlphaF(0.5);
+        color_p.setAlphaF(0.75);
+
         addDebugLine(vertexes, point_a, point_b, 1.5f/combinedZoomScale(), Dr::white, Dr::white);
-        addDebugCircle(vertexes, DrPointF(point_a.x, point_a.y), 3.f, 0.f, fill_color, Dr::white, false);
-        addDebugCircle(vertexes, DrPointF(point_b.x, point_b.y), 3.f, 0.f, fill_color, Dr::white, false);
-        if (has_pivot) addDebugCircle(vertexes, DrPointF(pivot_point.x, pivot_point.y), 3.f, 0.f, fill_color, Dr::orange, false);
+        addDebugCircle(vertexes, DrPointF(point_a.x, point_a.y), 5.0f, 0.f, color_a, Dr::white, false);
+        addDebugCircle(vertexes, DrPointF(point_b.x, point_b.y), 5.0f, 0.f, color_b, Dr::red,   false);
+        if (has_pivot) addDebugCircle(vertexes, DrPointF(pivot_point.x, pivot_point.y), 3.0f, 0.f, color_p, Dr::orange, false);
     }
 
     // ***** Draw joint triangles

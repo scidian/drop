@@ -173,7 +173,7 @@ SOURCES += \
     editor/trees/tree_advisor.cpp \
     editor/trees/tree_assets.cpp \
     editor/trees/tree_assets__category_button.cpp \
-    editor/trees/tree_assets__drag_drop.cpp \
+    editor/trees/tree_assets__drag.cpp \
     editor/trees/tree_assets__event_filter.cpp \
     editor/trees/tree_assets__key_press.cpp \
     editor/trees/tree_assets__layout.cpp \
@@ -188,7 +188,7 @@ SOURCES += \
     editor/trees/tree_inspector__widgets_list.cpp \
     editor/trees/tree_inspector__widgets_spinbox.cpp \
     editor/trees/tree_project.cpp \
-    editor/trees/tree_project__drag_drop.cpp \
+    editor/trees/tree_project__drag.cpp \
     editor/trees/tree_project__key_press.cpp \
     editor/trees/tree_project__lock_box.cpp \
     editor/trees/tree_project__selection.cpp \
@@ -202,7 +202,7 @@ SOURCES += \
     editor/view/editor_scene__update.cpp \
     editor/view/editor_scene_undo_commands.cpp \
     editor/view/editor_view.cpp \
-    editor/view/editor_view__drag_drop.cpp \
+    editor/view/editor_view__drop.cpp \
     editor/view/editor_view__grid.cpp \
     editor/view/editor_view__key_press.cpp \
     editor/view/editor_view__mouse_move.cpp \
