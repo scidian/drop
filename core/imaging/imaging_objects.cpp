@@ -248,9 +248,14 @@ bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps,
                     int         flood_pixel_count;
                     DrBitmap    flood_fill = FloodFill(black_white, x, y, Dr::red, 0.001, Flood_Fill_Type::Compare_4, flood_pixel_count, rect);
 
-                    if (flood_pixel_count > 1) {
+                    // Add buffer around rect, create image of rect only
+                    rect.adjust(-1, -1, 1, 1);
+                    DrBitmap    fill_only = flood_fill.copy(rect);
+
+                    // If adequate image, add to list of floods
+                    if (fill_only.width >= 1 && fill_only.height >= 1 && flood_pixel_count > 1) {
                         rects.push_back( rect );
-                        bitmaps.push_back( flood_fill );
+                        bitmaps.push_back( fill_only );
                     }
                 }
             }

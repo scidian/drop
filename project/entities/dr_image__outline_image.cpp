@@ -60,19 +60,19 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
     bool cancel = Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance, true, progress);
     m_number_of_objects = static_cast<int>(bitmaps.size());
 
-    // ***** If FindObjectsInBitmap never finished, just add simple box shape
+    // ***** If Find Objects In Bitmap never finished, just add simple box shape
     if (cancel) { setSimpleBox(); return; }
 
     // ***** Increment Progress Bar Task
     if (progress != nullptr) {
         progress->moveToNextItem();
         progress->setDisplayText("Tracing image outlines...");
-        progress->setMultiplier(1.0 / static_cast<double>(bitmaps.size()));
+        progress->setMultiplier(1.0 / static_cast<double>(m_number_of_objects));
         progress->lockProgress();
     }
 
     // ******************** Go through each image (object) and Polygon for it
-    for (int image_number = 0; image_number < static_cast<int>(bitmaps.size()); image_number++) {
+    for (int image_number = 0; image_number < m_number_of_objects; image_number++) {
         // Grab next image, check if its valid
         DrBitmap &image = bitmaps[image_number];
         if (image.width < 1 || image.height < 1) continue;
@@ -80,10 +80,12 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         // Trace edge of image
         std::vector<DrPointF> one_poly = Dr::TraceImageOutline(image, progress);
 
-        // Add 1.00 pixels buffer around image
-        double plus_one_pixel_percent_x = 1.0 + (1.00 / image.width);
-        double plus_one_pixel_percent_y = 1.0 + (1.00 / image.height);
+        // Add rect offset, and add 1.00 pixels buffer around image
+        double plus_one_pixel_percent_x = 1.0 + (1.00 / m_bitmap.width);
+        double plus_one_pixel_percent_y = 1.0 + (1.00 / m_bitmap.height);
         for (auto &point : one_poly) {
+            point.x += rects[image_number].left();
+            point.y += rects[image_number].top();
             point.x = point.x * plus_one_pixel_percent_x;
             point.y = point.y * plus_one_pixel_percent_y;
         }
@@ -119,13 +121,14 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         // Add polygon to list of polygons in shape
         m_poly_list.push_back(one_poly);
 
+
         // ******************** Copy image and finds holes as seperate outlines
-        DrBitmap holes = image.copy(rects[image_number]);
+        DrBitmap holes = image.copy();
         Dr::FillBorder(holes, Dr::white, holes.rect());                     // Ensures only holes are left as black spots
 
         // Update progress bar
         if (progress != nullptr) {
-            progress->setAddIn(static_cast<double>(image_number) / static_cast<double>(bitmaps.size()) * 100.0);
+            progress->setAddIn(static_cast<double>(image_number) / static_cast<double>(m_number_of_objects) * 100.0);
             progress->unlockProgress();
             if (progress->isCanceled()) { setSimpleBox(); return; }
         }
@@ -147,10 +150,10 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
             // Trace edge of hole
             std::vector<DrPointF> one_hole = Dr::TraceImageOutline(hole, progress);
 
-            // Add in sub image offset to points
+            // Add in sub image offset to points and hole rects
             for (auto &point : one_hole) {
-                point.x += rects[image_number].left();
-                point.y += rects[image_number].top();
+                point.x += rects[image_number].left() + hole_rects[hole_number].left();
+                point.y += rects[image_number].top()  + hole_rects[hole_number].top();
             }
 
             // Remove duplicate first point
@@ -169,9 +172,9 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
             }
         }
         m_hole_list.push_back(hole_list);
-    }   // End for each bitmap
 
-}
+    }   // End for each bitmap
+}   // End autoOutlinePoints()
 
 
 

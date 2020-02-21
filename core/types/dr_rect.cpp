@@ -73,6 +73,14 @@ bool DrRect::contains(const DrPoint point) {
     return false;
 }
 
+// Adjusts bounds of Rect
+void DrRect::adjust(int adjust_left, int adjust_top, int adjust_right, int adjust_bottom) {
+    x += adjust_left;   width  += (adjust_left * -1);
+    y += adjust_top;    height += (adjust_top  * -1);
+    width  += adjust_right;
+    height += adjust_bottom;
+}
+
 
 //####################################################################################
 //##    Getters

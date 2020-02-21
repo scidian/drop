@@ -55,8 +55,20 @@ DrBitmap DrBitmap::copy() { return (*this); }
 
 DrBitmap DrBitmap::copy(DrRect &copy_rect) {
     // Bounds checking
-    if (copy_rect.right() > width - 1)   copy_rect.width =  width - copy_rect.left() - 1;
-    if (copy_rect.bottom() > height - 1) copy_rect.height = height - copy_rect.top() - 1;
+    int check_left = copy_rect.left();
+    int check_top  = copy_rect.top();
+    if (check_left < 0) {
+        copy_rect.width -= abs(check_left);
+        copy_rect.x     += abs(check_left);
+    }
+    if (check_top < 0) {
+        copy_rect.height -= abs(check_top);
+        copy_rect.y      += abs(check_top);
+    }
+    if (copy_rect.width <= 0 || copy_rect.height <= 0) return DrBitmap(0, 0);
+    if (copy_rect.right() > this->width - 1)   copy_rect.width =  width - copy_rect.left();
+    if (copy_rect.bottom() > this->height - 1) copy_rect.height = height - copy_rect.top();
+    if (copy_rect.width <= 0 || copy_rect.height <= 0) return DrBitmap(0, 0);
 
     // Create empty DrBitmap
     DrBitmap copy(copy_rect.width, copy_rect.height);

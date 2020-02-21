@@ -46,6 +46,7 @@ public:
     // Helper Functions
     bool            contains(const DrPoint);
     bool            contains(const DrPointF);
+    void            adjust(int adjust_left, int adjust_top, int adjust_right, int adjust_bottom);
 
     // Getters
     int             left();
