@@ -5,6 +5,8 @@
 //      Handles item selection in the GraphicsScene
 //
 //
+#include <QDebug>
+
 #include "core/dr_math.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
@@ -38,9 +40,9 @@ void DrScene::selectionChanged() {
     resetSelectionGroup();
 
     // Pass on selection changes
-    if (m_editor_relay) {
+    if (m_editor_relay != nullptr) {
         QList<long> item_keys { };
-        for (auto item : selectedItems()) {
+        for (auto &item : selectedItems()) {
             item_keys.append(item->data(User_Roles::Key).toLongLong());
         }
 

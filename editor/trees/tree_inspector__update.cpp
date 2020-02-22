@@ -32,14 +32,15 @@
 //##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
 void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(std::list<ComponentProperty> property_keys_to_update) {
-    updateInspectorPropertyBoxes( { getParentProject()->findSettingsFromKey(m_selected_key) }, property_keys_to_update);
+    updateInspectorPropertyBoxes( { getParentProject()->findSettingsFromKey(m_selected_keys[0]) }, property_keys_to_update);
 }
 
 // !!!!! #NOTE: If property_keys_to_update is empty, all boxes are updated!!!!!
 void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys_to_update) {
+    // ***** No entities passed in, exit now
     if (changed_items.empty()) return;
     // ***** #NOTE: Don't do the following!
-    // *****        This function is designed so that all properties update if empty list is passed in!
+    // *****        This function is designed so that all properties update if empty list of properties is passed in!
     ///if (property_keys_to_update.isEmpty()) return;
 
     // ***** Store current scroll bar position
@@ -49,6 +50,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
     // !!!!! #TEMP: Need to be more than just one item represented in Inspector
     DrSettings* thing = changed_items.front();
     if (thing == nullptr) return;
+    if (thing->getKey() != m_selected_keys[0])  return;
     // !!!!!
 
     std::list<std::string> component_list;
@@ -57,9 +59,6 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
         component_list.push_back(component_property_pair.first);
         property_list.push_back(component_property_pair.second);
     }
-
-    if (thing->getKey() != m_selected_key) return;
-    if (m_selected_type != DrType::Thing)  return;
 
     // Go through list of property widgets in inspector
     for (auto widget : m_widgets) {
@@ -220,14 +219,20 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
 //##        in the Inspector after a new value has been accepted
 //####################################################################################
 void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_property_pair, DrVariant new_value, long sub_order) {
-    if (m_selected_key == c_no_key) return;
-    DrSettings *settings = getParentProject()->findSettingsFromKey( m_selected_key );
+    if (m_selected_keys.contains(c_no_key)) return;
 
-    DrPointF temp_pointf;
+    std::list<DrSettings*> settings_list;
 
-    if (settings != nullptr) {
+    // ***** Go through all selected items and change values
+    for (auto &key : m_selected_keys) {
+        // Get next entity, check if it has proerty, add to list of entities changed
+        DrSettings *settings = getParentProject()->findSettingsFromKey( key );
+        if (settings == nullptr) continue;
         DrProperty *property = settings->getComponentProperty(component_property_pair);
+        if (property == nullptr) continue;
+        settings_list.push_back(settings);
 
+        // Update property
         switch (property->getPropertyType()) {
             case Property_Type::BoolEnabled: {
                 std::vector<DrVariant> enabled_list = property->getValue().toVector();
@@ -282,8 +287,8 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
             case Property_Type::OneSizeF:                               // Floating pair x and y, both floats are >= 1.0
             case Property_Type::GridF:                                  // Floating pair x and y, minimum value c_minimum_grid_size
             case Property_Type::GridScaleF:                             // Floating pair x and y, minimum value c_minimum_grid_scale
-            case Property_Type::Variable:                               // floating point pair, number followed by a +/- number
-                temp_pointf = property->getValue().toPointF();
+            case Property_Type::Variable: {                              // floating point pair, number followed by a +/- number
+                DrPointF temp_pointf = property->getValue().toPointF();
                 if (sub_order == 0)
                     temp_pointf.x = new_value.toDouble();
                 else {
@@ -294,6 +299,7 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
                 }
                 property->setValue(temp_pointf);
                 break;
+            }
 
             case Property_Type::Point3D: {
                 DrVec3 point3D = property->getValue().toVec3();
@@ -323,9 +329,10 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
 
                 break;
         }
+    }   // End for each key
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, { settings }, { component_property_pair } );
-    }
+    // ***** Update changed entities in other Widgets
+    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Inspector_Tree, settings_list, { component_property_pair } );
 }
 
 

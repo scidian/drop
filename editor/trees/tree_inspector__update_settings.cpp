@@ -40,7 +40,7 @@ void TreeInspector::updateLockedSettings() {
     for (auto widget : m_widgets) {
         std::string component_key = widget->property(User_Property::CompKey).toString().toStdString();
         std::string property_key =  widget->property(User_Property::PropKey).toString().toStdString();
-        DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->getComponentProperty(component_key, property_key);
+        DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_keys[0] )->getComponentProperty(component_key, property_key);
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked
@@ -95,7 +95,7 @@ void TreeInspector::updateSubProperties(bool called_from_build) {
             std::string component_key = row->property(User_Property::CompKey).toString().toStdString();
             std::string property_key =  row->property(User_Property::PropKey).toString().toStdString();
 
-            DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_key )->getComponentProperty(component_key, property_key);
+            DrProperty *prop = getParentProject()->findSettingsFromKey( m_selected_keys[0] )->getComponentProperty(component_key, property_key);
             if (prop == nullptr) continue;
 
             // We found a property that has sub properties, enabled / disable sub properties based on if on or off

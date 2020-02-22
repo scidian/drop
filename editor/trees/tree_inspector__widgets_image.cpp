@@ -98,11 +98,11 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
 
         connect(delete_button, &QPushButton::clicked, [this, property, animation] () {
             property->setValue(c_no_key);
-            long current_selected = getEditorRelay()->getInspector()->getSelectedKey();
+            QList<long> current_selected = getEditorRelay()->getInspector()->getSelectedKeys();
             this->getParentProject()->deleteAnimation(animation->getKey(), property->getParentSettings()->getKey());
             getEditorRelay()->buildScene( c_same_key );
             getEditorRelay()->buildAssetTree();
-            getEditorRelay()->buildInspector( { current_selected }, true );
+            getEditorRelay()->buildInspector( current_selected, true );
         });
 
         // ***** Edit Button
@@ -152,7 +152,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     // ***** Grab properties from Image Frame
     DrImageHolder *frame = dynamic_cast<DrImageHolder*>(object);
     if (frame == nullptr) return QObject::eventFilter(object, event);
-    long settings_key = getEditorRelay()->getInspector()->getSelectedKey();
+    long settings_key = getEditorRelay()->getInspector()->getSelectedKeys()[0];
     std::string component_key = frame->property(User_Property::CompKey).toString().toStdString();
     std::string property_key =  frame->property(User_Property::PropKey).toString().toStdString();
 

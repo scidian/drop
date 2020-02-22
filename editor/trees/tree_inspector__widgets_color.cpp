@@ -127,9 +127,9 @@ void TreeInspector::updateColorButton(QPushButton *button, QColor color) {
     button->setText( color.name().toUpper() );
 
     // Update advisor info with new color
-    if (m_selected_key != c_no_key) {
-        DrSettings *settings = getParentProject()->findSettingsFromKey(m_selected_key);
-        if (settings) {
+    if (m_selected_keys.contains(c_no_key) == false) {
+        DrSettings *settings = getParentProject()->findSettingsFromKey(m_selected_keys[0]);
+        if (settings != nullptr) {
             std::string component_key = button->property(User_Property::CompKey).toString().toStdString();
             std::string property_key =  button->property(User_Property::PropKey).toString().toStdString();
             DrProperty *property = settings->getComponentProperty(component_key, property_key);

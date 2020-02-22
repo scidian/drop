@@ -85,16 +85,16 @@ private:
     QList<QWidget*>      toolbarWidgets { };
     QList<QLayoutItem*>  toolbarSpacers { };
 
-    QToolBar    *toolbar;
-    QWidget     *widgetToolbar;             QHBoxLayout     *widgetToolbarLayout;
+    QToolBar       *toolbar;
+    QWidget        *widgetToolbar;              QHBoxLayout     *widgetToolbarLayout;
 
-    QWidget     *widgetGroupMode;           QButtonGroup    *buttonsGroupMode;
-    QWidget     *widgetGroupEdit;           QButtonGroup    *buttonsGroupEdit;              QToolButton *buttonAdd;
-    QWidget     *widgetGroupLayering;       QButtonGroup    *buttonsGroupLayering;
-    QWidget     *widgetGroupTransform;      QButtonGroup    *buttonsGroupTransform;
-    QWidget     *widgetGroupGrid;           QButtonGroup    *buttonsGroupGrid;
-    QWidget     *widgetGroupPlay;           QButtonGroup    *buttonsGroupPlay;
-    QWidget     *widgetGroupSettings;
+    QWidget        *widgetGroupMode;            QButtonGroup    *buttonsGroupMode;
+    QWidget        *widgetGroupEdit;            QButtonGroup    *buttonsGroupEdit;              QToolButton *buttonAdd;
+    QWidget        *widgetGroupLayering;        QButtonGroup    *buttonsGroupLayering;
+    QWidget        *widgetGroupTransform;       QButtonGroup    *buttonsGroupTransform;
+    QWidget        *widgetGroupGrid;            QButtonGroup    *buttonsGroupGrid;
+    QWidget        *widgetGroupPlay;            QButtonGroup    *buttonsGroupPlay;
+    QWidget        *widgetGroupSettings;
 
 
     // ***** Shared FormMain Widgets

@@ -246,7 +246,7 @@ QGraphicsItem* DrView::setInspectorClearSelection(DrThing *thing) {
         if (dr_item->getThing() == thing) {
             found_item = dr_item;
             if (my_scene->selectedItems().count() > 0) my_scene->clearSelection();
-            if (m_editor_relay->getInspector()->getSelectedKey() != thing->getKey()) {
+            if (m_editor_relay->getInspector()->getSelectedKeys().contains(thing->getKey()) == false) {
                 m_editor_relay->buildInspector( { thing->getKey() } );
                 m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
             }

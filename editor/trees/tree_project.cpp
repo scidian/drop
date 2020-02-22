@@ -48,10 +48,14 @@ void TreeProject::enterEvent(QEvent *event) {
 // Sets this as the Active Editor widget
 void TreeProject::focusInEvent(QFocusEvent *event) {
     m_editor_relay->setActiveWidget(Editor_Widgets::Project_Tree);
+
     if (selectedItems().count() > 0) {
-        long selected_key = selectedItems().first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-        if (selected_key > 0) m_editor_relay->buildInspector(QList<long> { selected_key });
+        QList<long> key_list { };
+        for (auto check_item : selectedItems())
+            key_list.push_back( check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+        m_editor_relay->buildInspector( key_list );
     }
+
     QTreeWidget::focusInEvent(event);
 }
 

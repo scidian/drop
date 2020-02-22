@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QDebug>
+
 #include "editor/interface_editor_relay.h"
 #include "editor/trees/tree_project.h"
 #include "project/dr_project.h"
@@ -28,25 +30,25 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
 
     // ***** If size of list is zero, clear selected_key and exit function
     QList<QTreeWidgetItem*> item_list = this->selectedItems();
+
     if (item_list.size() == 0) {
         this->setSelectedKey(c_no_key);
-        m_editor_relay->buildInspector(QList<long> { });
+        m_editor_relay->buildInspector( { } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree);
         return;
-    }
 
     // ***** If size is one, reset first selected item
-    if (item_list.size() == 1) {
+    } else if (item_list.size() == 1) {
         long selected_key = item_list.first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();       // grab stored key from QTreeWidgetItem user data
         this->setSelectedKey(selected_key);
 
         //******************************************************
-
+        // NEED MORE WORK ON UNDO STACK
         // Call to undo command to change scene to newly selected Stage or newly selected thing's parent Stage
-        DrSettings *selected_entity = getParentProject()->findSettingsFromKey(selected_key, true, "Randomitastic");
+        DrSettings *selected_entity = getParentProject()->findSettingsFromKey(selected_key, true, "...Inside TreeProject::selectionChanged()...");
         if (selected_entity != nullptr) {
             DrType selected_type = selected_entity->getType();
-            long change_to_key = c_no_key;
+            long   change_to_key = c_no_key;
             if (selected_type == DrType::World) {
                 DrWorld *world = dynamic_cast<DrWorld*>(selected_entity);
                 change_to_key = world->getLastStageShownKey();
@@ -64,28 +66,41 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
                 m_editor_relay->buildScene( change_to_key );
             }
         }
+        //******************************************************
 
         // Calls to outside update functions to rebuild Inspector
-        m_editor_relay->buildInspector(QList<long> { selected_key });
+        m_editor_relay->buildInspector( { selected_key } );
 
-        //******************************************************
 
     // ***** Size is more than 1, prevent items of different types being selected at same time
     } else {
         DrType selected_type = getParentProject()->findChildTypeFromKey( this->getSelectedKey() );
 
         // Check if newly selected items are same type, if not, do not allow select
-        for (auto check_item: item_list) {
+        QList<long> key_list { };
+        for (auto &check_item : item_list) {
             // Get key from each item so we can compare it to first selected item
-            long    check_key = check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+            long    check_key =  check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
             DrType  check_type = getParentProject()->findChildTypeFromKey(check_key);
 
             // If we are over item that was first selected, skip to next
-            if (check_key == this->getSelectedKey()) { continue; }
-
-            if (check_type != selected_type)
+            if (check_key == this->getSelectedKey()) {
+                key_list.push_back(check_key);
+                continue;
+            // Or if types dont match, skip key
+            } else if (check_type != selected_type) {
+                bool signals_blocked = this->signalsBlocked();
+                this->blockSignals(true);
                 check_item->setSelected(false);
+                this->blockSignals(signals_blocked);
+            // Else add to list of selected keys
+            } else {
+                key_list.push_back(check_key);
+            }
         }
+
+        // Calls to outside update functions to rebuild Inspector
+        m_editor_relay->buildInspector( key_list );
     }
 
     // Call to outside update functions to update selection in scene view

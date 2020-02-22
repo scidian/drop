@@ -50,7 +50,10 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
         if (m_view_mode == View_Mode::Selecting) {
             m_view_mode = View_Mode::None;
             if (my_scene->getSelectionCount() > 0) {
-                m_editor_relay->buildInspector( { static_cast<long>(my_scene->getSelectionItems().first()->data(User_Roles::Key).toLongLong()) } );
+                QList<long> item_keys { };
+                for (auto &item : my_scene->getSelectionItems())
+                    item_keys.append(item->data(User_Roles::Key).toLongLong());
+                m_editor_relay->buildInspector( item_keys );
                 m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
             } else {
                 if (itemAt(event->pos()) == nullptr) {

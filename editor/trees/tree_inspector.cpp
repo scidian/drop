@@ -52,6 +52,10 @@ TreeInspector::TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *
     // Connect to Expand / Collapse slots
     connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem *)), this, SLOT(handleCollapsed(QTreeWidgetItem *)));
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem *)),  this, SLOT(handleExpanded(QTreeWidgetItem *)));
+
+    temp_selected_label = new QLabel();
+    temp_selected_label->setWordWrap(true);
+    parent->layout()->addWidget(temp_selected_label);
 }
 
 DrFilterHoverHandler* TreeInspector::getHoverHandler() {
@@ -75,26 +79,52 @@ void TreeInspector::focusInEvent(QFocusEvent *) {
 //####################################################################################
 void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebuild) {  
 
+QString selected_label = "Selected (" + QString::number(key_list.size()) + ") items: ";
+for (auto &long_key : key_list) {
+    selected_label += QString::number(long_key) + ", ";
+}
+temp_selected_label->setText(selected_label);
+
+qDebug() << selected_label;
+
     // ***** Store current scroll bar position
     if (m_selected_type != DrType::NotFound) {
         m_last_scroll_position = this->verticalScrollBar()->value();
     }
 
     // ***** If no keys were passed in, clear Inspector and exit
-    if (key_list.count() == 0) {
-        m_selected_key = c_no_key;
+    if (key_list.size() == 0) {
+        m_selected_keys.clear();
+        m_selected_keys.push_back(c_no_key);
         m_selected_type = DrType::NotFound;
         this->clear();
         m_widgets.clear();
         return;
     }
 
-    // ***** Retrieve unique key of item clicked in list, exit if no key
-    long new_key = key_list[0];
-    if (new_key == c_no_key) {              m_selected_type = DrType::NotFound;     return; }
-    DrSettings *new_settings =  getParentProject()->findSettingsFromKey( new_key );
-            if (new_settings == nullptr) {  m_selected_type = DrType::NotFound;     return; }
-    DrType      new_type =      new_settings->getType();
+    // ***** If Inspector already contains these items exit now
+    QList<long> compare_1 = key_list;
+    QList<long> compare_2 = m_selected_keys;
+    std::sort(compare_1.begin(), compare_1.end());
+    std::sort(compare_2.begin(), compare_2.end());
+    if (compare_1 == compare_2 && !force_rebuild) return;
+
+    // ***** Retrieve DrSettings* of items clicked in list, exit if not found or list contains more than one DrType
+    if (key_list.contains(c_no_key)) { m_selected_type = DrType::NotFound; return; }
+    QList<DrSettings*> settings_list { };
+    DrType new_type = DrType::NotFound;
+    bool first = true;
+    for (auto &key : key_list) {
+        DrSettings *dr_settings = getParentProject()->findSettingsFromKey( key );
+                if (dr_settings == nullptr) { m_selected_type = DrType::NotFound; return; }
+        if (first) {
+            new_type = dr_settings->getType();
+            first = false;
+        } else if (dr_settings->getType() != new_type) {
+            m_selected_type = DrType::NotFound; return;
+        }
+        settings_list.push_back(dr_settings);
+    }
 
 
     // ********** Change Advisor text after new item selection
@@ -103,14 +133,18 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
         case DrType::World:        m_editor_relay->setAdvisorInfo(Advisor_Info::World_Description);     break;
         case DrType::Stage:        m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_Description);     break;
         case DrType::Thing: {
-            DrThing *thing = dynamic_cast<DrThing*>(new_settings);
-            if (thing != nullptr) {
-                m_editor_relay->setAdvisorInfo(QString::fromStdString(new_settings->getName()), "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
-                                               QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
-            } else {
-                m_editor_relay->setAdvisorInfo(QString::fromStdString(new_settings->getName()),
-                                               QString::fromStdString(Dr::StringFromThingType(dynamic_cast<DrThing*>(new_settings)->getThingType())) );
-            }
+                if (settings_list.size() == 1) {
+                    DrThing *thing = dynamic_cast<DrThing*>(settings_list[0]);
+                    QString asset_header = QString::fromStdString(settings_list[0]->getName());
+                    QString asset_body = "Error converting to DrThing in buildInspectorFromKeys()...";
+                    if (thing != nullptr) {
+                        asset_body = "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
+                                     QString::fromStdString(Dr::StringFromThingType(thing->getThingType()));
+                    }
+                    m_editor_relay->setAdvisorInfo(asset_header, asset_body);
+                } else {
+                    m_editor_relay->setAdvisorInfo(Advisor_Info::Things_Description);
+                }
             break;
         }
         case DrType::Device:    m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Device);             break;
@@ -120,16 +154,13 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
             m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
     }
 
-    // ***** If Inspector already contains this item exit now
-    if (new_key == m_selected_key && !force_rebuild) return;
-
 
     // !!!!! #DEBUG:    Show selected item key and info
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Inspector_Build)) {
         std::string type_string = Dr::StringFromType(new_type);
-        Dr::SetLabelText(Label_Names::Label_Object_1, QString::fromStdString("KEY: " + std::to_string( new_key ) + ", TYPE: " + type_string));
+        Dr::SetLabelText(Label_Names::Label_Object_1, QString::fromStdString("KEY: " + std::to_string( key_list[0] ) + ", TYPE: " + type_string));
         if (new_type == DrType::Thing) {
-            DrThing* thing = getParentProject()->findThingFromKey(new_key);
+            DrThing* thing = getParentProject()->findThingFromKey(key_list[0]);
             QString asset_name = QString::fromStdString(getParentProject()->findSettingsFromKey(thing->getAssetKey())->getName());
             Dr::SetLabelText(Label_Names::Label_Object_2, "ASSET KEY:  " + QString::number(thing->getAssetKey()) +
                                                               ", NAME: " + asset_name);
@@ -139,29 +170,35 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     }
     // !!!!! END
 
-    // ********** If old selection and new selection are both Object Things, we don't need to completely rebuild Inspector, just change values
+
+    // ********** If old selection and new selection are same, we don't need to completely rebuild Inspector, just update values
     if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !force_rebuild) {
-        DrSettings *settings1 = getParentProject()->findSettingsFromKey(m_selected_key);
+        DrSettings *settings1 = getParentProject()->findSettingsFromKey(m_selected_keys[0]);
         if (settings1 != nullptr) {
             DrThing *thing1 = dynamic_cast<DrThing*>(settings1);
-            DrThing *thing2 = dynamic_cast<DrThing*>(new_settings);
-            if (thing1 && thing2) {
+            DrThing *thing2 = dynamic_cast<DrThing*>(settings_list[0]);
+            if ((thing1 != nullptr) && (thing2 != nullptr)) {
                 if (thing1->getThingType() == thing2->getThingType()) {
-                    m_selected_key = new_key;
+                    m_selected_keys = key_list;
                     updateInspectorPropertyBoxes( { thing2 }, { } );
                     updateLockedSettings();
                     return;
                 }
             }
         }
+    } else if (m_selected_type == new_type && !force_rebuild) {
+        m_selected_keys = key_list;
+        updateInspectorPropertyBoxes( { settings_list[0] }, { } );
+        updateLockedSettings();
+        return;
     }
-    m_selected_key =  new_key;
+    m_selected_keys = key_list;
     m_selected_type = new_type;
 
 
     // ***** Get component map, sort by listOrder
     std::vector<DrComponent*> components { };
-    for (auto component_pair: new_settings->getComponentMap())
+    for (auto component_pair: settings_list[0]->getComponentMap())
         components.push_back(component_pair.second);
     std::sort(components.begin(), components.end(), [](DrComponent *a, DrComponent *b) {
         return a->getListOrder() < b->getListOrder();
@@ -171,6 +208,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> key_list, bool force_rebu
     // ********** Loop through each component and add it to the Inspector list
     this->clear();
     m_widgets.clear();
+
+qDebug() << "Rebuilding inspector from scratch!";
 
     for (auto component: components) {
         if (component->isTurnedOn() == false) {

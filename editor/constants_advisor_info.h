@@ -97,6 +97,7 @@ namespace Advisor_Info {
     const HeaderBodyList Camera_Thing           { "Camera", "This is a Camera. This will decide what the player sees." };
     const HeaderBodyList Character_Thing        { "Character", "This is a Character." };
     const HeaderBodyList Thing_Description      { "Thing", "This is a Thing in a Stage. Things are anything in a Stage (i.e. Character, Object, etc)." };
+    const HeaderBodyList Things_Description     { "Things", "Thess are Things in a Stage. Things are anything in a Stage (i.e. Character, Object, etc)." };
 
     // Asset Types
     const HeaderBodyList Asset_Character        { "Character Asset", "This is a player character." };

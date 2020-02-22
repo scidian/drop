@@ -117,7 +117,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
     if (m_current_mode == Form_Main_Mode::World_Editor) {
         buildAssetTree();
         treeProjectEditor->buildProjectTree(true);
-        buildInspector( { treeInspector->getSelectedKey() }, true );
+        buildInspector( treeInspector->getSelectedKeys(), true );
         viewEditor->updateGrid();
     }
 }

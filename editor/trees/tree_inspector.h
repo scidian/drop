@@ -10,6 +10,7 @@
 
 #include <QCheckBox>
 #include <QDoubleSpinBox>
+#include <QLabel>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTreeWidget>
@@ -48,18 +49,21 @@ class TreeInspector: public QTreeWidget
 
 private:
     // External Borrowed Pointers
-    DrProject              *m_project;                          // Pointer to currently loaded project
-    IEditorRelay           *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
+    DrProject              *m_project               { nullptr };            // Pointer to currently loaded project
+    IEditorRelay           *m_editor_relay          { nullptr };            // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    DrFilterHoverHandler   *m_filter_hover = nullptr;           // Pointer to an event filter hover handler
+    DrFilterHoverHandler   *m_filter_hover          { nullptr };            // Pointer to an event filter hover handler
 
-    QList<QWidget*>         m_widgets;                          // List of the widgets we built the last time we selected a new item
+    QList<QWidget*>         m_widgets               { };                    // List of the widgets we built the last time we selected a new item
 
-    long                    m_selected_key = c_no_key;          // Unique project key of currently selected item
-    DrType                  m_selected_type;                    // Stores object type of currently selected item
+    QList<long>             m_selected_keys         { };                    // Unique project key of currently selected item
+    DrType                  m_selected_type         { DrType::NotFound };   // Stores object type of currently selected item
 
-    int                     m_last_scroll_position = 0;         // Stores last known scroll position, keeps Inspector focused at similar position
+    int                     m_last_scroll_position  { 0 };                  // Stores last known scroll position, keeps Inspector focused at similar position
+
+public:
+    QLabel *temp_selected_label;
 
 public:
     explicit                TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
@@ -81,7 +85,7 @@ public:
     // Getters and Setters
     DrProject*              getParentProject()  { return m_project; }
     IEditorRelay*           getEditorRelay()    { return m_editor_relay; }
-    long                    getSelectedKey()    { return m_selected_key; }
+    QList<long>&            getSelectedKeys()   { return m_selected_keys; }
 
     DrFilterHoverHandler*   getHoverHandler();
     void                    setHoverHandler(DrFilterHoverHandler *hover_handler) { m_filter_hover = hover_handler; }
