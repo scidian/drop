@@ -5,9 +5,12 @@
 //      Object Inspector Spin Boxes
 //
 //
+#include <QDebug>
 #include <QDoubleSpinBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
+#include <QMenu>
 #include <QSpinBox>
 #include <QVector3D>
 
@@ -31,11 +34,16 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
     else
         property_value = property->getValue().toInt();
 
-    QSpinBox *spin = new QSpinBox();
+    DrQSpinSlot *spin = new DrQSpinSlot();
     spin->setFixedHeight(22);
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
+    if (property->getPropertyKey() == Props::Entity_Key || property->getPropertyKey() == Props::Entity_Asset_Key) {
+        spin->setShowMenuStep(false);
+    }
+
     switch (spin_type) {
         case Property_Type::Int:            spin->setRange(-100000000, 100000000);      spin->setSingleStep(  5 );      break;
         case Property_Type::Positive:       spin->setRange(0, 100000000);               spin->setSingleStep(  5 );      break;

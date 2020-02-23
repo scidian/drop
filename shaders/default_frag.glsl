@@ -104,7 +104,7 @@ float edgeFactor(float width) {
 //####################################################################################
 //##    Cartoon Filter Functions
 //####################################################################################
-float edge_thres  = 0.2;
+float edge_thres  = 0.15;
 float edge_thres2 = u_cartoon_width;//5.0;
 
 // Averaged pixel intensity from 3 color channels
@@ -129,70 +129,8 @@ float isEdge(in vec2 coords) {
     }
 
     // Average color differences around neighboring pixels
-    delta = (abs(pix[1] - pix[7]) +
-             abs(pix[5] - pix[3]) +
-             abs(pix[0] - pix[8]) +
-             abs(pix[2] - pix[6]) ) / 4.0;
-
+    delta = (abs(pix[1] - pix[7]) + abs(pix[5] - pix[3]) + abs(pix[0] - pix[8]) + abs(pix[2] - pix[6]) ) / 4.0;
     return clamp(edge_thres2 * delta, 0.0, 1.0);
-}
-
-vec3 cartoonRgbToHsv(float r, float g, float b) {
-    float minv, maxv, delta;
-    vec3 res;
-
-    minv = min(min(r, g), b);
-    maxv = max(max(r, g), b);
-    res.z = maxv;                                           // v
-    delta = maxv - minv;
-
-    if (maxv != 0.0)
-        res.y = delta / maxv;                               // s
-    else {
-        // r = g = b = 0                                    // s = 0, v is undefined
-        res.y =  0.0;
-        res.x = -1.0;
-        return res;
-    }
-
-    if      (r == maxv)  res.x =       (g - b) / delta;     // between yellow & magenta
-    else if (g == maxv)  res.x = 2.0 + (b - r) / delta;     // between cyan & yellow
-    else                 res.x = 4.0 + (r - g) / delta;     // between magenta & cyan
-
-    res.x = res.x * 60.0;                                   // degrees
-    if (res.x < 0.0) res.x = res.x + 360.0;
-
-    return res;
-}
-
-vec3 cartoonHsvToRgb(float h, float s, float v ) {
-    int i;
-    float f, p, q, t;
-    vec3 res;
-
-    if (s == 0.0) {
-        // achromatic (grey)
-        res.x = v;
-        res.y = v;
-        res.z = v;
-        return res;
-    }
-
-    h /= 60.0;                      // sector 0 to 5
-    i = int(floor( h ));
-    f = h - float(i);               // factorial part of h
-    p = v * ( 1.0 - s );
-    q = v * ( 1.0 - s * f );
-    t = v * ( 1.0 - s * ( 1.0 - f ) );
-
-    if      (i == 0) {  res.x = v;  res.y = t;  res.z = p;  }
-    else if (i == 1) {  res.x = q;  res.y = v;  res.z = p;  }
-    else if (i == 2) {  res.x = p;  res.y = v;  res.z = t;  }
-    else if (i == 3) {  res.x = p;  res.y = q;  res.z = v;  }
-    else if (i == 4) {  res.x = t;  res.y = p;  res.z = v;  }
-    else {              res.x = v;  res.y = p;  res.z = q;  }
-
-    return res;
 }
 
 
@@ -557,12 +495,12 @@ void main( void ) {
     // ***** CARTOON
     if (u_cartoon) {
         vec3 original_color = frag_rgb;
-        vec3 v_hsv = cartoonRgbToHsv(original_color.r, original_color.g, original_color.b);
-        v_hsv.x = 30.0 * (floor(v_hsv.x / 30.0) + 1.0);
-        v_hsv.y =  0.1 * (floor(v_hsv.y /  0.1) + 1.0);
-        v_hsv.z =  0.1 * (floor(v_hsv.z /  0.1) + 1.0);
+        vec3 v_hsv = rgbToHsv(original_color.rgb);
+        v_hsv.x = clamp(0.05 * (floor(v_hsv.x /  0.05) + 1.0), 0.0, 1.0);
+        v_hsv.y = clamp(0.05 * (floor(v_hsv.y /  0.05) + 1.0), 0.0, 1.0);
+        v_hsv.z = clamp(0.05 * (floor(v_hsv.z /  0.05) + 2.0), 0.0, 1.0);
         float edg = isEdge(coords.xy);
-        vec3 v_rgb = (edg >= edge_thres) ? vec3(0.0, 0.0, 0.0) : cartoonHsvToRgb(v_hsv.x, v_hsv.y, v_hsv.z);
+        vec3 v_rgb = (edg >= edge_thres) ? vec3(0.0) : hsvToRgb(v_hsv.xyz);
         frag_rgb = vec3(v_rgb.x, v_rgb.y, v_rgb.z);
     }
 

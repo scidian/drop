@@ -23,20 +23,20 @@ class DrQCheckBox : public QCheckBox
 {
     Q_OBJECT
 private:
-    int     m_draw_left = 5;
-    int     m_draw_top =  1;
+    int             m_draw_left = 5;
+    int             m_draw_top =  1;
 
 public:
     DrQCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) { }
     virtual ~DrQCheckBox() override { }
 
-    int         getDrawLeft() { return m_draw_left; }
-    int         getDrawTop() { return m_draw_top; }
-    void        setDrawLeft(int left) { m_draw_left = left; }
-    void        setDrawTop(int top) { m_draw_top = top; }
+    int             getDrawLeft() { return m_draw_left; }
+    int             getDrawTop() { return m_draw_top; }
+    void            setDrawLeft(int left) { m_draw_left = left; }
+    void            setDrawTop(int top) { m_draw_top = top; }
 
 protected:
-    virtual void paintEvent(QPaintEvent *) override;
+    virtual void    paintEvent(QPaintEvent *) override;
 };
 
 
@@ -53,7 +53,7 @@ public:
     virtual ~DrQComboBoxDropDown() override { }
 
 protected:
-    virtual void showPopup() override;
+    virtual void    showPopup() override;
 };
 
 
@@ -78,7 +78,7 @@ public:
     void            setTickColor(QColor color) {    m_tick_color =  color; }
 
 public slots:
-    void    updateValue(int value);
+    void            updateValue(int value);
 };
 
 
@@ -107,13 +107,22 @@ protected:
 class DrQSpinSlot : public QSpinBox
 {
     Q_OBJECT
+private:
+    bool            m_show_menu_step        { true };
 
 public:
     DrQSpinSlot(QWidget *parent = nullptr) : QSpinBox(parent) { }
     virtual ~DrQSpinSlot() override { }
 
+    // Event Overrides
+    virtual void    contextMenuEvent(QContextMenuEvent *event) override;
+
+    // Getters / Setters
+    QLineEdit      *getLineEdit() { return this->lineEdit(); }
+    void            setShowMenuStep(bool show) { m_show_menu_step = show; }
+
 public slots:
-    void        updateValue(int value);
+    void            updateValue(int value);
 };
 
 
@@ -125,17 +134,17 @@ class DrQDoubleSpinSlot : public QDoubleSpinBox
 {
     Q_OBJECT
 private:
-    double      m_update_tolerance = 0.0;
+    double          m_update_tolerance = 0.0;
 
 public:
     DrQDoubleSpinSlot(QWidget *parent = nullptr) : QDoubleSpinBox(parent) { }
     virtual ~DrQDoubleSpinSlot() override { }
 
     // Getters / Setters
-    void        setUpdateTolerance(double tolerance) { m_update_tolerance = tolerance; }
+    void            setUpdateTolerance(double tolerance) { m_update_tolerance = tolerance; }
 
 public slots:
-    void        updateValue(double value);
+    void            updateValue(double value);
 };
 
 

@@ -7,6 +7,7 @@
 //
 #include <QApplication>
 #include <QCheckBox>
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QMenu>
