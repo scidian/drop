@@ -65,9 +65,10 @@ const           float   TextureAscii    = 1.0;
 const           float   TextureBrick    = 2.0;
 const           float   TextureTile     = 3.0;
 const           float   TextureCross    = 4.0;
-const           float   TextureKnitted  = 5.0;
-const           float   TextureWoven    = 6.0;
-const           float   TextureWood     = 7.0;
+const           float   TextureGrid     = 5.0;
+const           float   TextureKnitted  = 6.0;
+const           float   TextureWoven    = 7.0;
+const           float   TextureWood     = 8.0;
 
 
 //####################################################################################
@@ -181,6 +182,7 @@ void main( void ) {
     highp vec2  coords = coordinates.st;
     highp float time   = u_time;
 
+
     // ***** WAVY
     if (u_wavy) {
         //time = 100.0;                                         // !!! Disables imported time (turns off animation)
@@ -189,32 +191,6 @@ void main( void ) {
         float len = length(p);
         coords = tc + (p / len) * cos(len*12.0 - time*4.0) * 0.03;
     }
-
-    // ***** SWIRL
-//    if (u_swirl) {
-//        float radius = 200.0;
-//        float angle = 1.2;      // 5.0 is about as high as youd want to go?
-//        vec2  center = vec2(u_width / 2.0, u_height / 2.0);
-//        vec2 tex_size = vec2(u_width, u_height);
-//        vec2 tc = coords * tex_size;
-//        tc -= center;
-//        float dist = length(tc);
-//        if (dist < radius) {
-//            float percent = (radius - dist) / radius;
-//            float theta = percent * percent * angle * 8.0;
-//            float s = sin(theta);
-//            float c = cos(theta);
-//            tc = vec2(dot(tc, vec2(c, -s)), dot(tc, vec2(s, c)));
-//            tc += center;
-//            tc /= tex_size;
-//            vec3 color = texture2D(u_texture, tc).rgb;
-//            gl_FragColor = vec4(color, 1.0);
-//            return;
-//        } else {
-//            gl_FragColor = texture2D(u_texture, coordinates);
-//            return;
-//        }
-//    }
 
 
     // ***** 2D SHOCKWAVE
@@ -236,17 +212,6 @@ void main( void ) {
 //        }
 //        gl_FragColor = texture2D(u_texture, tex_coord);
 //        return;
-//    }
-
-
-    // ***** GRID
-//    if (u_wavy) {
-//        float multiplicationFactor = 32.0;                // Scales the number of stripes
-//        float threshold = 0.5;                            // Defines the with of the lines (1.0 equals full square)
-//        vec2 t = coords * multiplicationFactor;
-//        if (fract(t.s * (u_width / u_height)) > threshold && fract(t.t) > threshold ) {
-//            discard;
-//        }
 //    }
 
 
@@ -492,6 +457,7 @@ void main( void ) {
         //frag_rgb = c;
     }
 
+
     // ***** CARTOON
     if (u_cartoon) {
         vec3 original_color = frag_rgb;
@@ -503,6 +469,7 @@ void main( void ) {
         vec3 v_rgb = (edg >= edge_thres) ? vec3(0.0) : hsvToRgb(v_hsv.xyz);
         frag_rgb = vec3(v_rgb.x, v_rgb.y, v_rgb.z);
     }
+
 
     // ***** CROSS HATCH
     if (u_cross_hatch) {
@@ -565,8 +532,22 @@ void main( void ) {
 
     // ***** PATTERN COLOR (Ascii, Stitch, Woven, Wood, etc)
     if (u_pixel_type != TextureNone) {
-        vec4 pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
-        final_color.rgb = mix(vec3(0.0), final_color.rgb, pattern_color.r);
+        vec4 pattern_color;
+        if (u_pixel_type == TextureGrid) {
+            // Round off pattern_x/_y for smoothness
+            pattern_x = floor(pattern_x * 100.0) / 100.0;
+            pattern_y = floor(pattern_y * 100.0) / 100.0;
+            // Check that pixel is inside grid or not
+            float x_min = step(0.15,       pattern_x);
+            float x_max = step(0.15, 1.0 - pattern_x);
+            float y_min = step(0.15,       pattern_y);;
+            float y_max = step(0.15, 1.0 - pattern_y);;
+            pattern_color = vec4(floor((x_min + x_max + y_min + y_max) / 4.0));
+            final_color.rgba = mix(vec4(0.0), final_color.rgba, pattern_color.r);
+        } else {
+            pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;
+            final_color.rgb  = mix(vec3(0.0), final_color.rgb,  pattern_color.r);
+        }
         // Tint Stitch Design Into Image
         //final_color += (stitch_color * 0.10);
         //final_color /= 1.10;

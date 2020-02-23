@@ -88,9 +88,10 @@ enum class Pixel_Texture {
     Brick_Wall              = 2,
     Ceramic_Tile            = 3,
     Cross_Stitch            = 4,
-    Knit_Stitch             = 5,
-    Woven_Cloth             = 6,
-    Wood_Blocks             = 7,
+    Grid                    = 5,
+    Knit_Stitch             = 6,
+    Woven_Cloth             = 7,
+    Wood_Blocks             = 8,
 };
 
 enum class Water_Texture {
