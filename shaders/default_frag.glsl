@@ -60,15 +60,16 @@ const   highp   float   RAD = 6.2831853;                    // 2.0 * PI is 360 d
 const   highp   float   PI180 = PI / 180.0;                 // To convert Degrees to Radians
 
 // Pixel Textures
-const           float   TextureNone     = 0.0;
-const           float   TextureAscii    = 1.0;
-const           float   TextureBrick    = 2.0;
-const           float   TextureTile     = 3.0;
-const           float   TextureCross    = 4.0;
-const           float   TextureGrid     = 5.0;
-const           float   TextureKnitted  = 6.0;
-const           float   TextureWoven    = 7.0;
-const           float   TextureWood     = 8.0;
+const           float   TextureNone         = 0.0;
+const           float   TextureAscii        = 1.0;
+const           float   TextureBrick        = 2.0;
+const           float   TextureTile         = 3.0;
+const           float   TextureCross        = 4.0;
+const           float   TextureGridBlocks   = 5.0;
+const           float   TextureGridLines    = 6.0;
+const           float   TextureKnitted      = 7.0;
+const           float   TextureWoven        = 8.0;
+const           float   TextureWood         = 9.0;
 
 
 //####################################################################################
@@ -533,16 +534,17 @@ void main( void ) {
     // ***** PATTERN COLOR (Ascii, Stitch, Woven, Wood, etc)
     if (u_pixel_type != TextureNone) {
         vec4 pattern_color;
-        if (u_pixel_type == TextureGrid) {
+        if (u_pixel_type == TextureGridBlocks || u_pixel_type == TextureGridLines) {
             // Round off pattern_x/_y for smoothness
-            pattern_x = floor(pattern_x * 100.0) / 100.0;
-            pattern_y = floor(pattern_y * 100.0) / 100.0;
+            pattern_x = clamp(floor((pattern_x * 100.0) + 0.5) / 100.0, 0.0, 1.0);
+            pattern_y = clamp(floor((pattern_y * 100.0) + 0.5) / 100.0, 0.0, 1.0);
             // Check that pixel is inside grid or not
-            float x_min = step(0.15,       pattern_x);
-            float x_max = step(0.15, 1.0 - pattern_x);
-            float y_min = step(0.15,       pattern_y);;
-            float y_max = step(0.15, 1.0 - pattern_y);;
+            float x_min = step(0.10,       pattern_x);
+            float x_max = step(0.10, 1.0 - pattern_x);
+            float y_min = step(0.10,       pattern_y);
+            float y_max = step(0.10, 1.0 - pattern_y);
             pattern_color = vec4(floor((x_min + x_max + y_min + y_max) / 4.0));
+            if (u_pixel_type == TextureGridLines) pattern_color = 1.0 - pattern_color;
             final_color.rgba = mix(vec4(0.0), final_color.rgba, pattern_color.r);
         } else {
             pattern_color = texture2D(u_texture_pixel, vec2(pattern_x, pattern_y)).rgba;

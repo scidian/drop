@@ -113,6 +113,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Brick Wall")
                 << tr("Ceramic Tile")
                 << tr("Cross Stitch")
+                << tr("Grid Blocks")
                 << tr("Grid Lines")
                 << tr("Knitted Stitch")
                 << tr("Woven Cloth")
