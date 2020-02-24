@@ -304,7 +304,7 @@ void DrOpenGL::loadShaders() {
     a_default_texture_coord =       m_default_shader.attributeLocation( "texture_coordinates" );
     a_default_barycentric =         m_default_shader.attributeLocation( "barycentric" );
     u_default_matrix =              m_default_shader.uniformLocation(   "u_matrix" );
-    u_default_matrix_object =       m_default_shader.uniformLocation(   "u_matrix_object" );
+    u_default_matrix_model =        m_default_shader.uniformLocation(   "u_matrix_model" );
 
     // Fragment Shader Input
     u_default_texture =             m_default_shader.uniformLocation(   "u_texture" );
@@ -331,8 +331,10 @@ void DrOpenGL::loadShaders() {
     u_default_contrast =            m_default_shader.uniformLocation(   "u_contrast" );
     u_default_brightness =          m_default_shader.uniformLocation(   "u_brightness" );
 
+    u_default_camera_type =         m_default_shader.uniformLocation(   "u_camera_type" );
     u_default_shade_away =          m_default_shader.uniformLocation(   "u_shade_away" );
     u_default_camera_pos =          m_default_shader.uniformLocation(   "u_camera_pos" );
+    u_default_look_at_pos =         m_default_shader.uniformLocation(   "u_look_at_pos" );
 
     u_default_bitrate =             m_default_shader.uniformLocation(   "u_bitrate" );
     u_default_cartoon =             m_default_shader.uniformLocation(   "u_cartoon" );

@@ -113,6 +113,7 @@ enum class Fire_Mask {
 
 //####################################################################################
 //##    Render Enumerations
+//##        !!!!! #NOTE: Order is important for enums that have set values
 //############################
 enum class Render_Type {
     Perspective             = 0,

@@ -218,24 +218,28 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
     model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
+    // Remove scaling from camera position and look at position for shading calculations
+    glm::vec3 eye =     glm::vec3(m_eye.x(), m_eye.y(), m_eye.z()) / combinedZoomScale();
+    glm::vec3 look_at = glm::vec3(m_look_at.x(), m_look_at.y(), m_look_at.z()) / combinedZoomScale();
+
     // Rotate Billboards
     if (comp_3d_billboard) {
         // Kinda works
         ///model = billboardSphericalBegin( m_eye, QVector3D(x * combinedZoomScale(), y * combinedZoomScale(), z), m_up, m_look_at, model, false);
 
-        // Works for look at
-        // #NO_QT:  As original Qt calls
-        ///QVector3D obj = QVector3D(x, y, z);
-        ///QVector3D eye = m_eye / combinedZoomScale();
-        ///model.setToIdentity();
-        ///model.lookAt(obj, eye, m_up);
-        ///model = model.inverted();
-        //          No Qt Calls
-        glm::vec3 obj{x, y, z};
-        glm::vec3 eye = glm::vec3(m_eye.x(), m_eye.y(), m_eye.z()) / combinedZoomScale();
-        glm::mat4 billboard = glm::lookAt(obj, eye, glm::vec3(m_up.x(), m_up.y(), m_up.z()));
+        // Using "Look At" Method
+        glm::vec3 obj {x, y, z};
+        glm::vec3 billboard_eye { 0.0 };
+        // Adjust eye in orthographic mode to have direction point towards camera plane, not camera itself
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+            billboard_eye = glm::vec3(x, y, z) + (eye - look_at);
+        } else {
+            billboard_eye = look_at + (eye - look_at);
+        }
+        glm::mat4 billboard = glm::lookAt(obj, billboard_eye, glm::vec3(m_up.x(), m_up.y(), m_up.z()));
         billboard = glm::inverse(billboard);
         model = QMatrix4x4(glm::value_ptr(billboard)).transposed();
+        model.rotate(180.0, 0.f, 1.f, 0.f);
     }
 
     // Scale
@@ -282,13 +286,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     // ***** Set Model Shader Values
     QMatrix4x4 mvp = m_projection * m_view * model;
     m_default_shader.setUniformValue( u_default_matrix,                 mvp );
-    m_default_shader.setUniformValue( u_default_matrix_object,          model );
-
-    // ***** Remove scaling from camera position for shading calculations
-    QMatrix4x4 matrix_eye;
-    matrix_eye.scale(1.f / combinedZoomScale());
-    QVector3D eye_move = matrix_eye * m_eye;
-
+    m_default_shader.setUniformValue( u_default_matrix_model,           model );
 
     // ***** Set Shader Variables
     m_default_shader.setUniformValue( u_default_texture,                0 );
@@ -317,8 +315,10 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     m_default_shader.setUniformValue( u_default_contrast,               object->contrast );
     m_default_shader.setUniformValue( u_default_brightness,             object->brightness );
 
+    m_default_shader.setUniformValue( u_default_camera_type,            static_cast<float>(m_engine->getCurrentWorld()->render_type));
     m_default_shader.setUniformValue( u_default_shade_away,             !draw2D );
-    m_default_shader.setUniformValue( u_default_camera_pos,             eye_move.x(), eye_move.y(), eye_move.z() );
+    m_default_shader.setUniformValue( u_default_camera_pos,             eye.x, eye.y, eye.z );
+    m_default_shader.setUniformValue( u_default_look_at_pos,            look_at.x, look_at.y, look_at.z );
 
     m_default_shader.setUniformValue( u_default_cartoon,                object->cartoon );
     m_default_shader.setUniformValue( u_default_cartoon_width,          object->cartoon_width );
@@ -672,13 +672,25 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
     model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
+    // Remove scaling from camera position and look at position for shading calculations
+    glm::vec3 eye =     glm::vec3(m_eye.x(), m_eye.y(), m_eye.z()) / combinedZoomScale();
+    glm::vec3 look_at = glm::vec3(m_look_at.x(), m_look_at.y(), m_look_at.z()) / combinedZoomScale();
+
     // Rotate Billboards
     if (comp_3d_billboard) {
-        glm::vec3 obj{x, y, z};
-        glm::vec3 eye = glm::vec3(m_eye.x(), m_eye.y(), m_eye.z()) / combinedZoomScale();
-        glm::mat4 billboard = glm::lookAt(obj, eye, glm::vec3(m_up.x(), m_up.y(), m_up.z()));
+        // Using "Look At" Method
+        glm::vec3 obj {x, y, z};
+        glm::vec3 billboard_eye { 0.0 };
+        // Adjust eye in orthographic mode to have direction point towards camera plane, not camera itself
+        if (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) {
+            billboard_eye = glm::vec3(x, y, z) + (eye - look_at);
+        } else {
+            billboard_eye = look_at + (eye - look_at);
+        }
+        glm::mat4 billboard = glm::lookAt(obj, billboard_eye, glm::vec3(m_up.x(), m_up.y(), m_up.z()));
         billboard = glm::inverse(billboard);
         model = QMatrix4x4(glm::value_ptr(billboard)).transposed();
+        model.rotate(180.0, 0.f, 1.f, 0.f);
     }
 
     // Scale

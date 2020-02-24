@@ -41,8 +41,10 @@ uniform mediump float   u_saturation;// = 0.0;              // Saturation       
 uniform mediump float   u_contrast;// = 0.0;                // Contrast         Editor: -255 to 255     Shader: -1.0 to 1.0
 uniform mediump float   u_brightness;// = 0.0;              // Brightness       Editor: -255 to 255     Shader: -1.0 to 1.0
 
-uniform         bool    u_shade_away;
-uniform highp   vec3    u_camera_pos;
+uniform         float   u_camera_type;                      // Perspective == 0.0 or Orthographic == 1.0, from (enum class Render_Type)
+uniform         bool    u_shade_away;                       // Shade triangles facing away from camera?
+uniform highp   vec3    u_camera_pos;                       // m_eye
+uniform highp   vec3    u_look_at_pos;                      // m_look_at
 
 uniform mediump float   u_bitrate;// = 256;                 // Bitrate              Editor:    0 to  256
 uniform         bool    u_cartoon;// = false;               // Cartoon              True / False
@@ -502,18 +504,22 @@ void main( void ) {
     if (u_premultiplied) frag_rgb *= texture_color.a;
 
 
-    // ***** If triangle is facing away from camera, darken it, and don't use transparent pixels for the extruded object
+    // ***** SHADE AWAY: If triangle is facing away from camera, darken it
     if (u_shade_away) {
-        highp float dp = dot(normalize(vert_normal), normalize(vert - u_camera_pos)) + 0.15;
+        vec3 eye =     u_camera_pos;
+        vec3 look_at = u_look_at_pos;
+
+        // Move camera position relative to vertex for orthographic shading
+        if (u_camera_type == 1.0) {
+            eye = (vert + (eye - look_at));
+        }
+
+        // Calculate angle between camera vector and vertex normal for triangle shading
+        highp float dp = dot(normalize(vert_normal), normalize(vert - eye)) + 0.15;
                     dp = clamp(dp, 0.0, 1.0);
         frag_rgb = mix(vec3(0.0), frag_rgb, dp);
-        //final_color = vec4(frag_rgb, 1.0) * alpha_in;
-        final_color = vec4(frag_rgb, texture_color.a) * alpha_in;
-
-    // ***** Otherwise we're drawing image in 2D and we do want transparent borders
-    } else {
-        final_color = vec4(frag_rgb, texture_color.a) * alpha_in;
     }
+    final_color = vec4(frag_rgb, texture_color.a) * alpha_in;
 
 
     // ***** WIREFRAME

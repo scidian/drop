@@ -264,7 +264,7 @@ private:
     int     a_default_texture_coord;
     int     a_default_barycentric;
     int     u_default_matrix;
-    int     u_default_matrix_object;
+    int     u_default_matrix_model;
 
     int     u_default_texture;
     int     u_default_texture_pixel;
@@ -288,8 +288,10 @@ private:
     int     u_default_contrast;                                 // Contrast,   -1.0 to 1.0
     int     u_default_brightness;                               // Brightness, -1.0 to 1.0
 
+    int     u_default_camera_type;                              // Float, Perspective == 0.0, Orthographic == 1.0
     int     u_default_shade_away;                               // Should fade triangles facing away from camera?
-    int     u_default_camera_pos;                               // Current camera position
+    int     u_default_camera_pos;                               // Current camera position (m_eye)
+    int     u_default_look_at_pos;                              // Current target look at position (m_look_at)
 
     int     u_default_bitrate;                                  // Bitrate
     int     u_default_cartoon;                                  // Cartoon? (Comic Book)

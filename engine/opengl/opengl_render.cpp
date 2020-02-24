@@ -174,6 +174,7 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_saturation,         0.0f );
     m_default_shader.setUniformValue( u_default_contrast,           0.0f );
     m_default_shader.setUniformValue( u_default_brightness,         0.0f );
+    m_default_shader.setUniformValue( u_default_camera_type,        static_cast<float>(m_engine->getCurrentWorld()->render_type) );
     m_default_shader.setUniformValue( u_default_shade_away,         false );
     m_default_shader.setUniformValue( u_default_cartoon,            false );
     m_default_shader.setUniformValue( u_default_cartoon_width,      5.0f );
