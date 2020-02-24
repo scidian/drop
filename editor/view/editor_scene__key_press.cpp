@@ -185,10 +185,42 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
         QRectF source_rect =  totalSelectionSceneRect();
         QList<QGraphicsItem*> list_old_items = getSelectionItems();
         QList<QGraphicsItem*> list_new_items { };
+        QList<DrThing*>       list_old_things { };
 
+        // ***** Process Delete, Convert to DrThings
         for (auto item : list_old_items) {
             DrItem   *dritem   = dynamic_cast<DrItem*>(item);   if (dritem == nullptr)  continue;
             DrThing  *drthing =  dritem->getThing();            if (drthing == nullptr) continue;
+            DrStage  *drstage  = drthing->getParentStage();
+
+             // Delete selected items
+            switch (key_pressed) {
+                case Qt::Key::Key_Delete:
+                case Qt::Key::Key_Backspace:
+                    blockSignals(true);
+                    drstage->deleteThing(drthing);
+                    list_old_items.removeOne(item);
+                    removeItem( item );
+                    delete item;
+                    update_widgets_when_done = true;
+                    blockSignals(false);
+                    continue;
+                default: ;
+            }
+
+            // Add to list of DrThings to be processed
+            list_old_things.push_back(drthing);
+        }
+
+        // Sort list to be added by Z Order
+        if (list_old_things.size() > 1) {
+            std::sort(list_old_things.begin(), list_old_things.end(), [] (DrThing *a, DrThing *b) {
+                return a->getZOrderWithSub() > b->getZOrderWithSub();
+            });
+        }
+
+        // ***** Process Clone
+        for (auto drthing : list_old_things) {
             DrStage  *drstage  = drthing->getParentStage();
             DrThing  *new_object;
 
@@ -196,7 +228,6 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
             int     sub_z;
 
             switch (key_pressed) {
-                // ***** Clone selected items
                 case Qt::Key::Key_W:
                 case Qt::Key::Key_A:
                 case Qt::Key::Key_S:
@@ -205,6 +236,20 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
                     new_y = drthing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF().y;
                     new_z = drthing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Z_Order).toDouble();
                     sub_z = drthing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Sub_Z_Order).toInt();
+
+                    // Check for another selected item with higher sub order
+                    if (list_old_things.size() > 1) {
+                        for (auto check_thing : list_old_things) {
+                            if (check_thing == drthing) continue;
+                            double check_z = check_thing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Z_Order).toDouble();
+                            int  check_sub = check_thing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Sub_Z_Order).toInt();
+                            if (Dr::FuzzyCompare(check_z, new_z) == true) {
+                                if (check_sub >= sub_z) {
+                                    sub_z = check_sub;
+                                }
+                            }
+                        }
+                    }
 
                     if (key_pressed == Qt::Key::Key_W) new_y = new_y - source_rect.height();
                     if (key_pressed == Qt::Key::Key_A) new_x = new_x - source_rect.width();
@@ -219,32 +264,21 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
                     list_new_items.append( this->addItemToSceneFromThing(new_object) );
                     break;
-
-                // ***** Delete selected items
-                case Qt::Key::Key_Delete:
-                case Qt::Key::Key_Backspace:
-                    blockSignals(true);
-                    drstage->deleteThing(drthing);
-                    list_old_items.removeOne(item);
-                    removeItem( item );
-                    delete item;
-                    update_widgets_when_done = true;
-                    blockSignals(false);
-                    break;
                 default: ;
             }
         }
 
         // ***** If we added (copied) new items to scene, select those items
         if (list_new_items.count() > 0 || list_old_items.count() == 0) {
+            bool signals_blocked = signalsBlocked();
             blockSignals(true);
             this->clearSelection();
             for (auto item : list_new_items) {
                 item->setSelected(true);
             }
             update_widgets_when_done = true;
-            blockSignals(false);
-            selectionChanged();
+            blockSignals(signals_blocked);
+            this->selectionChanged();
         }
 
         // ***** Unlock Scene Mutex
