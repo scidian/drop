@@ -257,7 +257,8 @@ qDebug() << "Rebuilding inspector from scratch!";
             QPixmap cat_icon(QString::fromStdString(component->getIcon()));
             QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
             drop_shadow->setColor( Dr::ToQColor(component->getColor()).darker(200) );
-            drop_shadow->setOffset( -4, 4 );
+            drop_shadow->setBlurRadius( 2.0 );
+            drop_shadow->setOffset( -3, 3 );
             cat_icon = QPixmap::fromImage( Dr::ApplyEffectToImage(cat_icon.toImage(), drop_shadow, 0) );
             category_button->setIcon(QIcon(cat_icon));
             category_button->setStyleSheet(QString::fromStdString(button_style));
@@ -302,17 +303,24 @@ qDebug() << "Rebuilding inspector from scratch!";
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(4,2,4,2);
 
-            QLabel *property_name = new QLabel(QString::fromStdString(property->getDisplayName()));
             QFont fp = Dr::CustomFont();
+
+            QLabel *property_name = new QLabel(QString::fromStdString(property->getDisplayName()));
             property_name->setFont(fp);
-                QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                sp_left.setHorizontalStretch(c_inspector_size_left);
+                QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);    sp_left.setHorizontalStretch(c_inspector_size_left);
+                QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);   sp_right.setHorizontalStretch(c_inspector_size_right);
+                property_name->setSizePolicy(sp_left);
+                getHoverHandler()->attachToHoverHandler(property_name, property);
 
-                QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
-                sp_right.setHorizontalStretch(c_inspector_size_right);
+                if (property->getPropertyKey() == Props::Thing_Filter_Convert_3D ||
+                    property->getPropertyKey() == Props::World_Filter_Convert_3D) {
+                    QGraphicsDropShadowEffect *text_effect_3d_b = new QGraphicsDropShadowEffect();
+                    text_effect_3d_b->setBlurRadius(3.0);
+                    text_effect_3d_b->setOffset(-3, 3);
+                    text_effect_3d_b->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
+                    property_name->setGraphicsEffect(text_effect_3d_b);
+                }
 
-            property_name->setSizePolicy(sp_left);
-            getHoverHandler()->attachToHoverHandler(property_name, property);
             horizontal_split->addWidget(property_name);
 
             QWidget    *new_widget = nullptr;
