@@ -147,7 +147,12 @@ void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
         }
     }
 
-    ensureSelectionVisible();
+    ensureSelectionVisible();    
+
+    // Make sure top selected item has keyboard focus, good for after item duplication
+    if (selectedItems().count() > 0) {
+        selectionModel()->setCurrentIndex(indexFromItem(selectedItems().first(), 0), QItemSelectionModel::NoUpdate);
+    }
 
     update();
     setAllowSelectionEvent(true);

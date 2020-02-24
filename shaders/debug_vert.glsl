@@ -15,11 +15,11 @@ attribute           float   a_radius;
 attribute           vec4    a_color_fill;
 attribute           vec4    a_color_border;
 
-uniform     highp   mat4    u_matrix;
+uniform     highp   mat4    u_matrix;               // mvp
 
 
 // ***** Output to Fragment Shader
-varying             vec2    coordinates;    //uv;
+varying             vec2    coordinates;            // uv;
 varying             vec4    color_fill;
 varying             vec4    color_border;
 
