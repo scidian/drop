@@ -12,6 +12,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "project/dr_project.h"
 #include "project/entities/dr_thing.h"
 
 
@@ -38,6 +39,9 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
 void DrView::mouseReleaseEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
+
+    // Store starting View_Mode in case we need it later
+    View_Mode mode_at_start_of_function = m_view_mode;
 
     // Process left mouse button released
     if (event->button() & Qt::LeftButton) {
@@ -98,8 +102,14 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
     }
 
 
-    // Pass on event, update
-    QGraphicsView::mouseReleaseEvent(event);
+    // ***** Pass event to base class
+    if (mode_at_start_of_function == View_Mode::Translating && (QPoint(m_origin - m_last_mouse_pos).manhattanLength() < 6)) {
+        // Do nothing, this will stop QGraphicsView from deselecting group from a mouse release that hasnt moved much
+    } else {
+        QGraphicsView::mouseReleaseEvent(event);
+    }
+
+    // ***** Update
     this->viewport()->repaint(this->viewport()->rect());
     update();
 }

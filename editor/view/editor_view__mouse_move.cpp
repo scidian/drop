@@ -346,7 +346,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     // ***** Unlock scene mutex
     my_scene->scene_mutex.unlock();
 
-    // ***** If we're hand dragging make sure selection box is updating, must be called AFTER mutex is unlocked
+    // ***** If we're hand dragging make sure selection box is updating, must be called !!!!! AFTER !!!!! mutex is unlocked
     if (m_view_mode == View_Mode::Dragging) updateSelectionBoundingBox(4);
 }
 

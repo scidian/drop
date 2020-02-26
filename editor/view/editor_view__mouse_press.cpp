@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QDebug>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QTimer>
@@ -46,7 +47,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
     m_origin_in_scene = mapToScene(m_origin);
 
     // Get top most unlocked item
-    long        origin_item_key = 0;
+    long        origin_item_key = c_no_key;
     DrSettings *origin_item_settings = nullptr;
     bool        origin_locked = false;
     m_origin_item =  itemAt(event->pos());
