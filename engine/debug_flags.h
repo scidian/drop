@@ -23,7 +23,7 @@ enum class Debug_Flags {
 
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Show_Undo_View,                     // Shows a window with all undo / redo commands from current DrScene
-    Show_Bottom_Debug_Labels,           // Shows Scene View Debug labels
+    Show_Bottom_Debug_Labels,           // Shows QGraphicsScene Stage View Debug labels
     Show_Hidden_Component,              // Shows hidden custom Entity Advisor component / properties
 
     Turn_On_Antialiasing_in_Editor,     // Turns on antialiasing in the World Editor GraphicsView
@@ -33,6 +33,7 @@ enum class Debug_Flags {
     Label_Mouse_Coordinates,            // Show mouse position coordinates while moving over DrView
     Label_Top_Item_RGBA,                // Show red, green, blue, alpha of pixel on item at top of mouse position
 
+    Label_Inspector_Items,              // Shows which items are selected at top of Object Inspector
     Label_Inspector_Build,              // Show info about item sent to Inspector Tree
     Label_Stage_Tree_Drag,              // Show info about dragging event of Stage Tree
 

@@ -47,6 +47,7 @@ void LoadDebugFlags() {
     SetDebugFlag( Debug_Flags::Label_Mouse_Coordinates );
     //SetDebugFlag( Debug_Flags::Label_Top_Item_RGBA);
 
+    //SetDebugFlag( Debug_Flags::Label_Inspector_Items );
     SetDebugFlag( Debug_Flags::Label_Inspector_Build );
     SetDebugFlag( Debug_Flags::Label_Stage_Tree_Drag );
 

@@ -57,13 +57,14 @@ private:
 
     QList<QWidget*>         m_widgets               { };                    // List of the widgets we built the last time we selected a new item
 
-    QList<long>             m_selected_keys         { };                    // Unique project key of currently selected item
-    DrType                  m_selected_type         { DrType::NotFound };   // Stores object type of currently selected item
+    long                    m_key_shown             { c_no_key };           // Key of Entity whose info is actually displayed in Inspector
+    QList<long>             m_selected_keys         { };                    // Unique project keys of currently selected Entities
+    DrType                  m_selected_type         { DrType::NotFound };   // Stores object type of currently selected Entities
 
     int                     m_last_scroll_position  { 0 };                  // Stores last known scroll position, keeps Inspector focused at similar position
 
 public:
-    QLabel *temp_selected_label;
+    QLabel      *temp_selected_label = nullptr;
 
 public:
     explicit                TreeInspector(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
@@ -86,6 +87,7 @@ public:
     DrProject*              getParentProject()  { return m_project; }
     IEditorRelay*           getEditorRelay()    { return m_editor_relay; }
     QList<long>&            getSelectedKeys()   { return m_selected_keys; }
+    long                    getShownKey()       { return m_key_shown; }
 
     DrFilterHoverHandler*   getHoverHandler();
     void                    setHoverHandler(DrFilterHoverHandler *hover_handler) { m_filter_hover = hover_handler; }

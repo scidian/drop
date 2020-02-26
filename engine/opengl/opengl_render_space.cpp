@@ -66,15 +66,23 @@ void DrOpenGL::drawSpace() {
     //      this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
     DrThingType last_thing = DrThingType::None;
 
-    // ********** Render 2D Objects
-    for (auto thing : m_engine->getCurrentWorld()->getThings()) {
 
-        // ***** Trying to stop z-fighting
-        if (m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_3D) {
-            if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
-            if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += (0.0025 / z_divisor); else m_add_z = 0.0;
-            last_z = thing->getZOrder();
-        }
+    // ***** Get Things
+    EngineThings &things = m_engine->getCurrentWorld()->getThings();
+    // Sort by camera distance
+    /**
+    std::sort(things.begin(), things.end(), [this] (DrEngineThing *a, DrEngineThing *b) {
+        glm::vec3 cam_position =     glm::vec3(this->m_eye.x(), this->m_eye.y(), this->m_eye.z());
+        glm::vec3 thing_position_a = glm::vec3(a->getPosition().x, a->getPosition().y, a->getZOrder());
+        glm::vec3 thing_position_b = glm::vec3(b->getPosition().x, b->getPosition().y, b->getZOrder());
+        double cam_distance_a = abs( static_cast<double>(glm::distance(thing_position_a, cam_position)) );
+        double cam_distance_b = abs( static_cast<double>(glm::distance(thing_position_b, cam_position)) );
+        return cam_distance_b < cam_distance_a;
+    }); */
+
+
+    // ********** Render 2D Objects
+    for (auto thing : things) {
 
         // ***** When we have gone past glow z_order, draw the lights to the scene
         if (!has_rendered_glow_lights && (thing->getZOrder() > m_engine->getCurrentWorld()->getGlowZOrder())) {
@@ -90,7 +98,7 @@ void DrOpenGL::drawSpace() {
                 if (object == nullptr) continue;
                 if (object->isPhysicsChild()) continue;
 
-                // If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
+                // ***** If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
                 bool draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
                 if (thing->comp3D() == nullptr)
                     draw2D = true;
@@ -99,7 +107,7 @@ void DrOpenGL::drawSpace() {
                 else if (thing->extrude_3d)
                     draw2D = false;
 
-                // Handle Soft Body
+                // ***** Handle Soft Body
                 if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
                     if (object->compSoftBody() == nullptr) continue;
                     if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Radial) == false) continue;
@@ -112,7 +120,22 @@ void DrOpenGL::drawSpace() {
                     draw2D = true;
                 }
 
-                // Draw Object / Character
+                // ***** Trying to stop z-fighting, move objects apart with same z_order
+                //       ...The further away the more they have to move since the precision of the z buffer is scaled away from the camera
+                if (draw2D == false) {
+                    // Calculate distance from thing to camera
+                    glm::vec3 thing_position = glm::vec3(thing->getPosition().x, thing->getPosition().y, thing->getZOrder());
+                    glm::vec3 cam_position =   glm::vec3(m_eye.x(), m_eye.y(), m_eye.z());
+                    double cam_distance = 1.0 + (static_cast<double>(glm::distance(thing_position, cam_position)) / 400.0);
+
+                    // Adjust offset we're going to add onto things location to stop z-fighting
+                    double z_spacing = (0.0005 / z_divisor) * cam_distance;
+                    if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
+                    if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += z_spacing; else m_add_z = 0.0;
+                    last_z = thing->getZOrder();
+                }
+
+                // ***** Draw Object / Character
                 if (draw2D) {
                     // Standard Shader
                     drawObject(thing, last_thing, draw2D);

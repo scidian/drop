@@ -77,14 +77,16 @@ bool DrSettings::hasComponent(std::string component_key) {
     return (m_components.find(component_key) != m_components.end());
 }
 
-DrComponent* DrSettings::getComponent(std::string component_key) {
+DrComponent* DrSettings::getComponent(std::string component_key, bool show_error) {
     auto it = m_components.find(component_key);
     if (it == m_components.end()) {
-        Dr::PrintDebug("Error Code: " + Error_Code::NoComponent + "\n\n"
-                       "Component not found in current object \n\n"
-                       "Component ID: \t" + component_key + "\n"
-                       "Object Name: \t" + this->getName() + ". \n"
-                       "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+        if (show_error) {
+            Dr::PrintDebug("Error Code: " + Error_Code::NoComponent + "\n\n"
+                           "Component not found in current object \n\n"
+                           "Component ID: \t" + component_key + "\n"
+                           "Object Name: \t" + this->getName() + ". \n"
+                           "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+        }
         return nullptr;
     }
     return (*it).second;

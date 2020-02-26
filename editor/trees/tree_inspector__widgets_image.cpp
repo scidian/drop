@@ -152,7 +152,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     // ***** Grab properties from Image Frame
     DrImageHolder *frame = dynamic_cast<DrImageHolder*>(object);
     if (frame == nullptr) return QObject::eventFilter(object, event);
-    long settings_key = getEditorRelay()->getInspector()->getSelectedKeys()[0];
+    long settings_key = getEditorRelay()->getInspector()->getShownKey();
     std::string component_key = frame->property(User_Property::CompKey).toString().toStdString();
     std::string property_key =  frame->property(User_Property::PropKey).toString().toStdString();
 

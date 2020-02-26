@@ -65,7 +65,9 @@ void DrOpenGL::updateViewMatrix(Render_Type render_type, float target_width, flo
 
     //      Perspective
     } else {
-        m_projection.perspective( c_field_of_view, aspect_ratio, c_perspective_near, (c_far_plane - c_near_plane) * plane_scale );
+        float near_scale = c_perspective_near;
+        if (combinedZoomScale() > 1.0f) near_scale /= combinedZoomScale();
+        m_projection.perspective( c_field_of_view, aspect_ratio, near_scale, (c_far_plane - c_near_plane) * plane_scale );
     }
 
 
@@ -172,7 +174,9 @@ void DrOpenGL::occluderMatrix(Render_Type render_type, QMatrix4x4 &view_matrix, 
 
     // Perspective
     } else {
-        proj_matrix.perspective( c_field_of_view, aspect_ratio, c_perspective_near, (c_far_plane - c_near_plane) * plane_scale );
+        float near_scale = c_perspective_near;
+        if (scale > 1.0f) near_scale /= scale;
+        proj_matrix.perspective( c_field_of_view, aspect_ratio, near_scale, (c_far_plane - c_near_plane) * plane_scale );
     }
 
     // ***** Set Look At and Scale, Don't need extra rotation

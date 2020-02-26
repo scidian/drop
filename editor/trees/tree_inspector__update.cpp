@@ -32,7 +32,14 @@
 //##    Inspector Widget SIGNALS are blocked to prevent recursive updating
 //####################################################################################
 void TreeInspector::updateInspectorPropertyBoxesOfSelectedItem(std::list<ComponentProperty> property_keys_to_update) {
-    updateInspectorPropertyBoxes( { getParentProject()->findSettingsFromKey(m_selected_keys[0]) }, property_keys_to_update);
+    std::list<DrSettings*> settings_list { };
+    for (auto key : m_selected_keys) {
+        DrSettings *dr_settings = getParentProject()->findSettingsFromKey(key);
+        if (dr_settings != nullptr) {
+            settings_list.push_back(dr_settings);
+        }
+    }
+    updateInspectorPropertyBoxes( settings_list, property_keys_to_update);
 }
 
 // !!!!! #NOTE: If property_keys_to_update is empty, all boxes are updated!!!!!
@@ -47,18 +54,26 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
     int scroll_position = this->verticalScrollBar()->value();
 
 
-    // !!!!! #TEMP: Need to be more than just one item represented in Inspector
-    DrSettings* thing = changed_items.front();
-    if (thing == nullptr) return;
-    if (thing->getKey() != m_selected_keys[0])  return;
-    // !!!!!
+    // ***** Find DrSettings of Entity currently displayed in Inspector,
+    DrSettings* entity = nullptr;
+    for (auto dr_settings : changed_items) {
+        if (dr_settings != nullptr) {
+            if (dr_settings->getKey() == m_key_shown) entity = dr_settings;
+        }
+    }
+    if (entity == nullptr) {
+        return;
+    }
 
+
+    // Get list of Components and Properties for selected Entity
     std::list<std::string> component_list;
     std::list<std::string> property_list;
     for (auto component_property_pair : property_keys_to_update) {
         component_list.push_back(component_property_pair.first);
         property_list.push_back(component_property_pair.second);
     }
+
 
     // Go through list of property widgets in inspector
     for (auto widget : m_widgets) {
@@ -68,7 +83,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
         if (Dr::ListContains(component_list, component_key) == false && property_keys_to_update.size() != 0) continue;
         if (Dr::ListContains(property_list,  property_key)  == false && property_keys_to_update.size() != 0) continue;
 
-        DrProperty *prop = thing->getComponentProperty(component_key, property_key);
+        DrProperty *prop = entity->getComponentProperty(component_key, property_key);
         if (prop == nullptr) continue;
 
         // ***** Must turn off signals while updating or we will cause recursive function calling as changes to the
@@ -228,7 +243,9 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
         // Get next entity, check if it has proerty, add to list of entities changed
         DrSettings *settings = getParentProject()->findSettingsFromKey( key );
         if (settings == nullptr) continue;
-        DrProperty *property = settings->getComponentProperty(component_property_pair);
+        DrComponent *component = settings->getComponent(component_property_pair.first, false);
+        if (component == nullptr) continue;
+        DrProperty *property = component->getProperty(component_property_pair.second);
         if (property == nullptr) continue;
         settings_list.push_back(settings);
 
