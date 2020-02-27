@@ -53,6 +53,7 @@
 #include "editor/preferences.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
+#include "editor/view/editor_view.h"
 #include "engine/debug_flags.h"
 #include "project/enums_entity_types.h"
 #include "project/entities/dr_stage.h"
@@ -76,12 +77,14 @@ QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
 
     // ********** Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
-
+        // If not coming from an interactive view mode, return event position
         QPointF new_pos = value.toPointF();
         if (m_editor_relay->currentViewMode() != View_Mode::Translating &&
             m_editor_relay->currentViewMode() != View_Mode::Holding_Keys) {
             return new_pos;
         }
+
+        // Not snapping to grid? Go ahead and return event position
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
         // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos

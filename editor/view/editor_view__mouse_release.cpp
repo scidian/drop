@@ -8,6 +8,7 @@
 #include <QGraphicsItemGroup>
 #include <QMouseEvent>
 
+#include "core/dr_math.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
@@ -103,7 +104,9 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
 
 
     // ***** Pass event to base class
-    if (mode_at_start_of_function == View_Mode::Translating && (QPoint(m_origin - m_last_mouse_pos).manhattanLength() < 6)) {
+    if (mode_at_start_of_function == View_Mode::Translating &&
+            Dr::IsCloseTo(m_origin_item->pos().x(), m_origin_item_start_pos.x(), 0.001) &&
+            Dr::IsCloseTo(m_origin_item->pos().y(), m_origin_item_start_pos.y(), 0.001)) {
         // Do nothing, this will stop QGraphicsView from deselecting group from a mouse release that hasnt moved much
     } else {
         QGraphicsView::mouseReleaseEvent(event);

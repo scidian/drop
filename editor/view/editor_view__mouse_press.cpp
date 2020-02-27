@@ -170,6 +170,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 
                             m_hide_bounding = true;
                             m_view_mode = View_Mode::Translating;
+                            m_origin_item_start_pos = m_origin_item->pos();
 
                             for (auto item : my_scene->getSelectionItems()) {
                                 item->moveBy(0, 0);

@@ -148,6 +148,7 @@ private:
     QElapsedTimer                   m_origin_timer;                     // Tracks time since mouse down to help buffer movement while selecting
     bool                            m_allow_movement = false;           // Used along with m_origin_timer to help buffer movement while selecting
     bool                            m_hide_bounding = false;            // True when moving items to stop bounding box from updating and painting
+    QPointF                         m_origin_item_start_pos { 0, 0 };   // Tracks starting position of origin item when View_Mode::Translating started
 
     // View_Mode::Resizing Variables
     QRectF                          m_start_resize_rect;                // Stores starting rect of selection before resize starts
