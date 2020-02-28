@@ -99,7 +99,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         if (dragon != nullptr) {
             DrEngineObject *softy = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(0, 100), 150, 0.8, 0.50, 0.25, false);
             if (softy != nullptr) {
-                assignPlayerControls(softy, true, true);
+                assignPlayerControls(softy, false, false);
                 if (getCamerasFollowThing(softy->getKey()).size() > 0)
                     getCamerasFollowThing(softy->getKey())[0]->setLag(DrPointF(200, 200));
                 softy->compPlayer()->setMoveSpeedX(800);

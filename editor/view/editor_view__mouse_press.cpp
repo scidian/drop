@@ -73,10 +73,11 @@ void DrView::mousePressEvent(QMouseEvent *event) {
     // ******************* Process Magnify Mouse Mode
     if (m_mouse_mode == Mouse_Mode::Magnify) {
         if (dragMode() == QGraphicsView::DragMode::NoDrag) {
+            bool control_down = event->modifiers() & Qt::KeyboardModifier::ControlModifier;
             if (event->button() & Qt::LeftButton) {
-                zoomInOut(50);
+                zoomInOut(control_down ? -50 :  50);
             } else if (event->button() & Qt::RightButton) {
-                zoomInOut(-50);
+                zoomInOut(control_down ?  50 : -50);
             }
 
         } else {

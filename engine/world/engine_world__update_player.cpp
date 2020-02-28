@@ -93,11 +93,9 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // ********** Grab object from User Data
     DrEngineObject  *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
+    if (object == nullptr) {        cpBodyUpdateVelocity(body, gravity, damping, dt);   return; }
     ThingCompPlayer *comp_player = object->compPlayer();
-    if (comp_player == nullptr) {
-        cpBodyUpdateVelocity(body, gravity, damping, dt);
-        return;
-    }
+    if (comp_player == nullptr) {   cpBodyUpdateVelocity(body, gravity, damping, dt);   return; }
 
     // Adjust object gravity
     gravity.x *= object->getGravityScale().x;

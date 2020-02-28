@@ -61,7 +61,10 @@ enum Asset_Textures {
     Plant                   = -102,
     Rover                   = -103,
     Wheel                   = -104,
-    Spare                   = -105
+    Spare                   = -105,
+    Leaf                    = -106,
+    Leaf_2                  = -107,
+    Flower                  = -108,
 };
 
 enum class Light_Type {

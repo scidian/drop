@@ -78,8 +78,13 @@ void JoinCenterBodyMesh(cpSpace *space, cpBody *center_body, cpBody *body2, cpVe
 //####################################################################################
 DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, DrPointF point, double diameter,
                                                  double stiffness, double friction, double bounce, bool can_rotate) {
-
-
+    (void) texture;
+    (void) point;
+    (void) diameter;
+    (void) stiffness;
+    (void) friction;
+    (void) bounce;
+    (void) can_rotate;
     return nullptr;
 }
 

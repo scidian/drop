@@ -68,9 +68,10 @@ void DrOpenGL::initializeGL() {
 //####################################################################################
 void DrOpenGL::importTexture(long texture_id, std::string from_asset_string) {
     bool     force_outline = (texture_id > 0 || texture_id < -99);
-    DrBitmap bitmap = Dr::FromQPixmap( QPixmap(QString::fromStdString(from_asset_string)));
-    DrImage  image(m_engine->getProject(), 0, "temp", bitmap, Asset_Category::Image, force_outline);
-    importTexture(texture_id, &image);
+    QImage   image = QImage(QString::fromStdString(from_asset_string)).convertToFormat(QImage::Format::Format_ARGB32);
+    DrBitmap bitmap = DrBitmap(image.constBits(), static_cast<int>(image.sizeInBytes()), false, image.width(), image.height());
+    DrImage  dr_image(m_engine->getProject(), 0, "temp", bitmap, Asset_Category::Image, force_outline);
+    importTexture(texture_id, &dr_image);
 }
 
 void DrOpenGL::importTexture(long texture_id, DrImage *image) {
@@ -143,6 +144,9 @@ void DrOpenGL::loadBuiltInTextures() {
     importTexture(Asset_Textures::Rover,                ":/assets/test_images/rover_body.png");
     importTexture(Asset_Textures::Wheel,                ":/assets/test_images/rover_wheel.png");
     importTexture(Asset_Textures::Spare,                ":/assets/test_images/spare_wheel.png");
+    importTexture(Asset_Textures::Leaf,                 ":/assets/test_images/leaf.png");
+    importTexture(Asset_Textures::Leaf_2,               ":/assets/test_images/leaf_2.png");
+    importTexture(Asset_Textures::Flower,               ":/assets/test_images/flower.png");
 
 }
 

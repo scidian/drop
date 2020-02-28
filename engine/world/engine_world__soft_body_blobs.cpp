@@ -23,9 +23,9 @@ DrEngineObject* DrEngineWorld::addBall(DrEngineWorld *world, long texture, Soft_
     ball->setComponentSoftBody(new ThingCompSoftBody(world, ball));
     ball->setTouchDrag(true);
     ball->setTouchDragForce(5000.0);
-    if      (shape == Soft_Body_Shape::Circle) ball->addShapeCircleFromTexture(texture, radius_multiplier.x);
-    else if (shape == Soft_Body_Shape::Square) ball->addShapeBoxFromTexture(   texture, radius_multiplier);
-    else if (shape == Soft_Body_Shape::Mesh)   ball->addShapeCircleFromTexture(texture, 1.0, radius_multiplier);
+    if      (shape == Soft_Body_Shape::Circle)  ball->addShapeCircleFromTexture(texture, radius_multiplier.x);
+    else if (shape == Soft_Body_Shape::Square)  ball->addShapeBoxFromTexture(   texture, radius_multiplier);
+    else if (shape == Soft_Body_Shape::Mesh)    ball->addShapeCircleFromTexture(texture, 1.0, radius_multiplier);
     world->addThing(ball);
     return ball;
 }

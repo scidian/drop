@@ -135,9 +135,10 @@ void DrOpenGL::drawDebugJoints() {
         if (body_a != m_engine->mouse_body && body_b != m_engine->mouse_body) {
             DrEngineObject *object_a = static_cast<DrEngineObject*>(cpBodyGetUserData(body_a));
             DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
-            if (object_a == nullptr || object_b == nullptr) continue;
-            if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
-                if (object_a->isPhysicsChild() || object_b->isPhysicsChild()) continue;
+            if (object_a != nullptr && object_b != nullptr) {
+                if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
+                    if (object_a->isPhysicsChild() || object_b->isPhysicsChild()) continue;
+                }
             }
         }
 
@@ -171,7 +172,7 @@ void DrOpenGL::drawDebugJoints() {
 
         // Joint dot colors
         DrColor color_a = Dr::white;
-        DrColor color_b = Dr::red;
+        DrColor color_b = Dr::brown;
         DrColor color_p = Dr::orange;
         color_a.setAlphaF(0.5);
         color_b.setAlphaF(0.5);
@@ -179,7 +180,7 @@ void DrOpenGL::drawDebugJoints() {
 
         addDebugLine(vertexes, point_a, point_b, 1.5f/combinedZoomScale(), Dr::white, Dr::white);
         addDebugCircle(vertexes, DrPointF(point_a.x, point_a.y), 5.0f, 0.f, color_a, Dr::white, false);
-        addDebugCircle(vertexes, DrPointF(point_b.x, point_b.y), 5.0f, 0.f, color_b, Dr::red,   false);
+        addDebugCircle(vertexes, DrPointF(point_b.x, point_b.y), 5.0f, 0.f, color_b, Dr::brown, false);
         if (has_pivot) addDebugCircle(vertexes, DrPointF(pivot_point.x, pivot_point.y), 3.0f, 0.f, color_p, Dr::orange, false);
     }
 

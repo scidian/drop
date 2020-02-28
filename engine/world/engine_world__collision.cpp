@@ -76,12 +76,20 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a == nullptr || object_b == nullptr) return cpTrue;
     if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
     if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
-    if (object_a == nullptr || object_b == nullptr) return cpTrue;
-
     if (object_a->shouldCollide(object_b) == false) return cpArbiterIgnore(arb);
     if (object_b->shouldCollide(object_a) == false) return cpArbiterIgnore(arb);
+
+    // Interactive foliage
+    if (object_a->compFoliage() != nullptr) {
+        if (object_b->body_type == Body_Type::Dynamic) {
+            cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), 2.0);
+            cpBodyApplyImpulseAtLocalPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
+        }
+        return cpArbiterIgnore(arb);
+    }
 
     // Temp cancel gravity on another object if colliding and should cancel it
     if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
@@ -108,9 +116,9 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a == nullptr || object_b == nullptr) return cpTrue;
     if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
     if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
-    if (object_a == nullptr || object_b == nullptr) return cpTrue;
 
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
@@ -167,11 +175,12 @@ extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
 
     // We can react to collision force here, good place to work with for Interactive Foliage
     if (cpArbiterIsFirstContact(arb)) {
-        // Divide the impulse by the timestep to get the collision force.
+        // Divide the impulse by the timestep to get the collision force
         double impact = cpvlength(cpArbiterTotalImpulse(arb)) / cpSpaceGetCurrentTimeStep(space);
 
-        if (impact > 1.0) {
-
+        if (object_a->compFoliage() != nullptr && impact > 100.0) {
+            ///g_info = "Impact: " + std::to_string(impact);
+            ///cpArbiterIgnore(arb);
         }
     }
 }
@@ -181,9 +190,10 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
+    if (object_a == nullptr || object_b == nullptr) return;
     if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
     if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
-    if (object_a == nullptr || object_b == nullptr) return;
+
 
     // Stop canceling gravity when seperates
     if (object_a->compPlayer() != nullptr) {
@@ -243,6 +253,7 @@ extern cpBool WaterPreSolve(cpArbiter *arb, cpSpace *space, void *) {
 
     // Get DrEngineObject from shape user data, check body type and shape type
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(collider));
+    if (object_b == nullptr) return cpTrue;
     if (object_b->body_type != Body_Type::Dynamic) return cpTrue;                                   // Only process dynamic bodies
     if (object_b->shape_type[collider] == Shape_Type::Segment) return cpTrue;                       // Don't precess segments
 

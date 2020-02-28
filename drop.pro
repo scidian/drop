@@ -265,6 +265,7 @@ SOURCES += \
     engine/thing/engine_thing_water.cpp \
     engine/thing_component/thing_comp_3d.cpp \
     engine/thing_component/thing_comp_camera.cpp \
+    engine/thing_component/thing_comp_foliage.cpp \
     engine/thing_component/thing_comp_player.cpp \
     engine/thing_component/thing_comp_soft_body.cpp \
     engine/world/engine_world.cpp \
@@ -279,7 +280,6 @@ SOURCES += \
     engine/world/engine_world__load_stage.cpp \
     engine/world/engine_world__soft_body_blobs.cpp \
     engine/world/engine_world__soft_body_mesh.cpp \
-    engine/world/engine_world__test_foliage.cpp \
     engine/world/engine_world__update.cpp \
     engine/world/engine_world__update_player.cpp \
     engine/world/engine_world__update_velocity.cpp \
@@ -994,6 +994,7 @@ HEADERS += \
     engine/thing/engine_thing_water.h \
     engine/thing_component/thing_comp_3d.h \
     engine/thing_component/thing_comp_camera.h \
+    engine/thing_component/thing_comp_foliage.h \
     engine/thing_component/thing_comp_player.h \
     engine/thing_component/thing_comp_soft_body.h \
     engine/world/engine_world.h \

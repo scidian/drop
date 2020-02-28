@@ -33,6 +33,7 @@ namespace Dr {
 
         orange =            0xFFFFA500,
         purple =            0xFF800080,
+        brown =             0xFF5D4037,
     };
 }
 

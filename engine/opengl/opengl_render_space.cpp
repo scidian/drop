@@ -108,14 +108,14 @@ void DrOpenGL::drawSpace() {
                     draw2D = false;
 
                 // ***** Handle Soft Body
-                if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
-                    if (object->compSoftBody() == nullptr) continue;
-                    if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Radial) == false) continue;
-                } else if (object->body_style == Body_Style::Mesh_Blob) {
-                    if (object->compSoftBody() == nullptr) continue;
-                    if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
-                }
                 if (object->body_style != Body_Style::Rigid_Body) {
+                    if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
+                        if (object->compSoftBody() == nullptr) continue;
+                        if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Radial) == false) continue;
+                    } else if (object->body_style == Body_Style::Mesh_Blob) {
+                        if (object->compSoftBody() == nullptr) continue;
+                        if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
+                    }
                     cullingOn(false);
                     draw2D = true;
                 }
