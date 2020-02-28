@@ -103,11 +103,18 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
     }
 
 
-    // ***** Pass event to base class
+    // ***** Don't pass event to base class
     if (mode_at_start_of_function == View_Mode::Translating &&
             Dr::IsCloseTo(m_origin_item->pos().x(), m_origin_item_start_pos.x(), 0.001) &&
-            Dr::IsCloseTo(m_origin_item->pos().y(), m_origin_item_start_pos.y(), 0.001)) {
-        // Do nothing, this will stop QGraphicsView from deselecting group from a mouse release that hasnt moved much
+            Dr::IsCloseTo(m_origin_item->pos().y(), m_origin_item_start_pos.y(), 0.001) &&
+            m_origin_timer.elapsed() > 450) {
+        // Do nothing...
+        // This is when multiple items are selected and the user starts to click on one of the items selected to select it by itself, but then
+        // realizes they want to keep the multi selection they have. Standard practice dictates if you continue to hold the mouse button for a
+        // longer time (in this case over 450 milliseconds) before letting go, you get to keep the multi selction. This case is handled here by
+        // not calling the base class event that clears the selection.
+
+    // ***** Pass event to base class
     } else {
         QGraphicsView::mouseReleaseEvent(event);
     }
