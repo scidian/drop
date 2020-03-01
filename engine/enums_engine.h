@@ -63,7 +63,7 @@ enum Asset_Textures {
     Wheel                   = -104,
     Spare                   = -105,
     Leaf                    = -106,
-    Leaf_2                  = -107,
+    Grass                   = -107,
     Flower                  = -108,
 };
 
@@ -197,6 +197,7 @@ enum class Body_Style {
     Circular_Blob           = 1,
     Square_Blob             = 2,
     Mesh_Blob               = 3,
+    Foliage                 = 4,
 };
 
 enum class Soft_Body_Shape {

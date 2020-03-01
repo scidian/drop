@@ -40,25 +40,37 @@
 //####################################################################################
 //##    Image Frame
 //####################################################################################
-QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy) {
+QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy, DrImageHolder *use_this_holder) {
 
     int frame_height = 100;
     int frame_width =  100;
+    bool rebuilding = false;
 
-    // ***** Store current asset key in widget
-    DrImageHolder *image_frame = new DrImageHolder(m_editor_relay);
-    image_frame->setAcceptDrops(true);
-    image_frame->setSizePolicy(size_policy);
-    image_frame->setMinimumHeight(frame_height);
-    image_frame->setObjectName("inspectorImageFrame");
+    // Create new Image Frame
+    DrImageHolder *image_frame;
+    if (use_this_holder == nullptr) {
+        image_frame = new DrImageHolder(m_editor_relay);
+        image_frame->setAcceptDrops(true);
+        image_frame->setSizePolicy(size_policy);
+        image_frame->setMinimumHeight(frame_height);
+        image_frame->setObjectName("inspectorImageFrame");
+        getHoverHandler()->attachToHoverHandler(image_frame, property);
+
+    // Rebuild existing Image Frame
+    } else {
+        rebuilding = true;
+        image_frame = use_this_holder;
+        Dr::ClearWidget(image_frame);
+        image_frame->setProperty(User_Property::Header,  QString::fromStdString(property->getDisplayName()));
+        image_frame->setProperty(User_Property::Body,    QString::fromStdString(property->getDescription()));
+    }
 
     std::string property_key = property->getPropertyKey();
     image_frame->setProperty(User_Property::Mouse_Over, false);                             // Initialize mouse user data, event filter updates this info
     image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                       // Used to track when the mouse
     image_frame->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
     image_frame->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
-    getHoverHandler()->attachToHoverHandler(image_frame, property);
-    addToWidgetList(image_frame);
+    if (rebuilding == false) addToWidgetList(image_frame);
 
     // ***** Create the label that will display the image
     QBoxLayout *vertical_split = new QVBoxLayout(image_frame);
@@ -83,48 +95,52 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         asset_pix->setPixmap(pixmap);
         vertical_split->addWidget( asset_pix );
 
-    if (animation != nullptr) {
-        // ***** Delete Button
-        QPushButton *delete_button = new QPushButton(image_frame);
-        Dr::ApplyDropShadowByType(delete_button, Shadow_Types::Button_Shadow_Thin);
-        delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
-        delete_button->setObjectName("buttonImageMiniButton");
-            QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
-            delete_icon = QPixmap::fromImage( Dr::ColorizeImage(delete_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
-            delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-        delete_button->setFixedSize(19, 17);
-        delete_button->setVisible(false);
-        image_frame->setDeleteButton(delete_button);
+        if (animation != nullptr) {
+            // ***** Delete Button
+            QPushButton *delete_button = new QPushButton(image_frame);
+            Dr::ApplyDropShadowByType(delete_button, Shadow_Types::Button_Shadow_Thin);
+            delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+            delete_button->setObjectName("buttonImageMiniButton");
+                QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
+                delete_icon = QPixmap::fromImage( Dr::ColorizeImage(delete_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
+                delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
+            delete_button->setFixedSize(19, 17);
+            delete_button->setVisible(false);
+            image_frame->setDeleteButton(delete_button);
 
-        connect(delete_button, &QPushButton::clicked, [this, property, animation] () {
-            property->setValue(c_no_key);
-            QList<long> current_selected = getEditorRelay()->getInspector()->getSelectedKeys();
-            this->getParentProject()->deleteAnimation(animation->getKey(), property->getParentSettings()->getKey());
-            getEditorRelay()->buildScene( c_same_key );
-            getEditorRelay()->buildAssetTree();
-            getEditorRelay()->buildInspector( current_selected, true );
-        });
+            connect(delete_button, &QPushButton::clicked, [this, property, animation] () {
+                property->setValue(c_no_key);
+                QList<long> current_selected = getEditorRelay()->getInspector()->getSelectedKeys();
+                this->getParentProject()->deleteAnimation(animation->getKey(), property->getParentSettings()->getKey());
+                getEditorRelay()->buildScene( c_same_key );
+                getEditorRelay()->buildAssetTree();
+                getEditorRelay()->buildInspector( current_selected, true );
+            });
 
-        // ***** Edit Button
-        QPushButton *edit_button = new QPushButton(image_frame);
-        Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);
-        edit_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
-        edit_button->setObjectName("buttonImageMiniButton");
-            QPixmap edit_icon(":/assets/gui_misc/image_edit.png");
-            edit_icon = QPixmap::fromImage( Dr::ColorizeImage(edit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
-            edit_button->setIcon( QIcon(edit_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-        edit_button->setFixedSize(19, 17);
-        edit_button->setVisible(false);
-        image_frame->setEditButton(edit_button);
+            // ***** Edit Button
+            QPushButton *edit_button = new QPushButton(image_frame);
+            Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);
+            edit_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+            edit_button->setObjectName("buttonImageMiniButton");
+                QPixmap edit_icon(":/assets/gui_misc/image_edit.png");
+                edit_icon = QPixmap::fromImage( Dr::ColorizeImage(edit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
+                edit_button->setIcon( QIcon(edit_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
+            edit_button->setFixedSize(19, 17);
+            edit_button->setVisible(false);
+            image_frame->setEditButton(edit_button);
 
-        connect(edit_button, &QPushButton::clicked, [this, property, animation] () {
+            connect(edit_button, &QPushButton::clicked, [this, property, animation] () {
 
-            FormAnimation *animation_editor = new FormAnimation(this->getParentProject(), animation->getKey(), nullptr );
-            animation_editor->show();
+                FormAnimation *animation_editor = new FormAnimation(this->getParentProject(), animation->getKey(), nullptr );
+                animation_editor->show();
 
-        });
-    }
+            });
+        }
 
+    // If we just rebuilt image frame, force "Resize" event to place children widgets during eventFilter below
+    if (rebuilding == false) image_frame->resize(image_frame->size());
+
+    // Return DrImageHolder
     return image_frame;
 }
 

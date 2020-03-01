@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_time.h"
 #include "engine/engine.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
@@ -173,14 +174,13 @@ extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return;
 
-    // We can react to collision force here, good place to work with for Interactive Foliage
+    // We can react to collision force here, such as show an explosion based on impact force
     if (cpArbiterIsFirstContact(arb)) {
         // Divide the impulse by the timestep to get the collision force
         double impact = cpvlength(cpArbiterTotalImpulse(arb)) / cpSpaceGetCurrentTimeStep(space);
 
-        if (object_a->compFoliage() != nullptr && impact > 100.0) {
-            ///g_info = "Impact: " + std::to_string(impact);
-            ///cpArbiterIgnore(arb);
+        if (impact > 100.0) {
+
         }
     }
 }

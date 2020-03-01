@@ -49,7 +49,7 @@ void FormMain::buildAssetTree() {
 }
 
 // Sends new list to Inspector
-void FormMain::buildInspector(QList<long> entity_key_list, bool rebuild_only) {
+void FormMain::buildInspector(QList<long> entity_key_list, bool force_rebuild) {
     // If passed the no key constant, remove it to make an empty list
     entity_key_list.removeOne(c_no_key);
 
@@ -60,7 +60,7 @@ void FormMain::buildInspector(QList<long> entity_key_list, bool rebuild_only) {
     // If we're doing anything at all in viewEditor (i.e. View_Mode != None), let's wait to clear the Inspector.
     if (currentViewMode() != View_Mode::None && entity_key_list.count() == 0) return;
 
-    treeInspector->buildInspectorFromKeys(entity_key_list, rebuild_only);
+    treeInspector->buildInspectorFromKeys(entity_key_list, force_rebuild);
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long build_count = 0;

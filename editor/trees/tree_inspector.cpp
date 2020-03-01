@@ -159,7 +159,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
     // ***** Selection list contains Entity already shown in Inspector, exit now
     long        new_key_to_show = 0;
     DrSettings *new_settings_to_show = nullptr;
-    if (new_key_list.contains(m_key_shown)) {
+    if (new_key_list.contains(m_key_shown) && !force_rebuild) {
         m_selected_keys = new_key_list;
         if (c_update_reason) qDebug() << "Inspector::buildInspectorFromKeys() exiting early... New list contained m_key_shown...";
         return;
@@ -216,19 +216,24 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
 
     // ********** Check if old selection and new selection are types are same
     bool same_type = false;
-    if (m_selected_type == DrType::Thing && new_type == DrType::Thing && !force_rebuild) {
-        DrSettings *settings_shown = getParentProject()->findSettingsFromKey(m_key_shown);
-        if (settings_shown != nullptr) {
+    DrSettings *settings_shown = nullptr;
+    if (m_key_shown != c_no_key) getParentProject()->findSettingsFromKey(m_key_shown);
+    if (settings_shown != nullptr && !force_rebuild) {
+        if (m_selected_type == DrType::Thing && new_type == DrType::Thing) {
             DrThing *thing1 = dynamic_cast<DrThing*>(settings_shown);
             DrThing *thing2 = dynamic_cast<DrThing*>(new_settings_to_show);
             if ((thing1 != nullptr) && (thing2 != nullptr)) {
-                if (thing1->getThingType() == thing2->getThingType()) {
-                    same_type = true;
-                }
+                if (thing1->getThingType() == thing2->getThingType()) same_type = true;
             }
+        } else if (m_selected_type == DrType::Asset && new_type == DrType::Asset) {
+            DrAsset *asset1 = dynamic_cast<DrAsset*>(settings_shown);
+            DrAsset *asset2 = dynamic_cast<DrAsset*>(new_settings_to_show);
+            if ((asset1 != nullptr) && (asset2 != nullptr)) {
+                if (asset1->getAssetType() == asset2->getAssetType()) same_type = true;
+            }
+        } else if (m_selected_type == new_type) {
+            same_type = true;
         }
-    } else if (m_selected_type == new_type && !force_rebuild) {
-        same_type = true;
     }
 
     // ***** Update selected / shown member variables

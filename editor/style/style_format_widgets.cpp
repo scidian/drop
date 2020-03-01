@@ -9,6 +9,8 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsEffect>
 #include <QGuiApplication>
+#include <QLayout>
+#include <QLayoutItem>
 #include <QScreen>
 #include <QStyle>
 #include <QWindow>
@@ -19,6 +21,28 @@
 #include "editor/style/style.h"
 
 namespace Dr {
+
+
+//####################################################################################
+//##    Clears all widgets and layouts from a QWidget
+//####################################################################################
+void ClearWidget(QWidget *widget) {
+    DeleteLayout(widget->layout());
+    while (QWidget *child = widget->findChild<QWidget*>())
+        delete child;
+}
+
+void DeleteLayout(QLayout *layout) {
+    QLayoutItem *item;
+    QLayout *sublayout;
+    QWidget *widget;
+    while ((item = layout->takeAt(0))) {
+        if ((sublayout = item->layout()) != nullptr) { DeleteLayout(sublayout); }
+        else if ((widget = item->widget()) != nullptr) { widget->hide(); delete widget; }
+        else { delete item; }
+    }
+    delete layout;
+}
 
 
 //####################################################################################

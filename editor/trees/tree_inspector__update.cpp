@@ -15,6 +15,7 @@
 
 #include "core/colors/colors.h"
 #include "core/dr_containers.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_inspector.h"
@@ -194,8 +195,19 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
                 break;
             }
 
+            case Property_Type::Image: {
+                DrImageHolder *image_frame = dynamic_cast<DrImageHolder*>(widget);
+                if (image_frame != nullptr) {
+                    QFont fp = Dr::CustomFont();
+                    QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
+                                sp_right.setHorizontalStretch(c_inspector_size_right);
+                    createImageFrame(prop, fp, sp_right, image_frame);
+                }
+                break;
+            }
+
+
             case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
-            case Property_Type::Image:                                  // Project Key to DrAnimation
             case Property_Type::Icon:
 
                 //################ !!!!!!!!!!!!!!!!!!!!!!!

@@ -89,6 +89,8 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     addComponent(Comps::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::RGB_15_Sunset, true);
     getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
 
+    addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, Property_Type::List, static_cast<int>(Body_Style::Rigid_Body),
+                           "Body Style", "Body style for Dynamic objects.");
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale, Property_Type::PointF, DrPointF(1.0, 1.0),
                            "Gravity Scale", "Changes how gravity affects this " + type + ". Set to (0, 0) to "
                                             "ignore gravity comepletely. Also great for making balloons.");

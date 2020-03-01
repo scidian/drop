@@ -47,6 +47,7 @@ private:
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
+//    virtual void            collide(cpArbiter *arb);
     virtual void            init();                                                                 // Called when component is first created
     virtual void            update(double time_passed, double time_warp);                           // Called during DrEngineWorld->updateWorld() step
     virtual void            destroy();                                                              // Called when component is destroyed

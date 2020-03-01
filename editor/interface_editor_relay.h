@@ -50,7 +50,7 @@ public:
 
     // Editor Functions
     virtual void        buildAssetTree() = 0;
-    virtual void        buildInspector(QList<long> entity_key_list, bool rebuild_only = false) = 0;
+    virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) = 0;
     virtual void        buildProjectTree() = 0;
     virtual void        buildScene(long stage_key) = 0;
 

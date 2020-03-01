@@ -116,8 +116,10 @@ void DrOpenGL::drawSpace() {
                         if (object->compSoftBody() == nullptr) continue;
                         if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
                     }
-                    cullingOn(false);
-                    draw2D = true;
+                    if (object->body_style != Body_Style::Foliage) {
+                        cullingOn(false);
+                        draw2D = true;
+                    }
                 }
 
                 // ***** Trying to stop z-fighting, move objects apart with same z_order

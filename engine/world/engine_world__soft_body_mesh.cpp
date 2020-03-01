@@ -76,10 +76,12 @@ void JoinCenterBodyMesh(cpSpace *space, cpBody *center_body, cpBody *body2, cpVe
 //##        RETURNS: Central body of soft body
 //##
 //####################################################################################
-DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, DrPointF point, double diameter,
+DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, double pos_x, double pos_y, double pos_z, double diameter,
                                                  double stiffness, double friction, double bounce, bool can_rotate) {
     (void) texture;
-    (void) point;
+    (void) pos_x;
+    (void) pos_y;
+    (void) pos_z;
     (void) diameter;
     (void) stiffness;
     (void) friction;
@@ -95,7 +97,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, DrPointF point, d
 //##    Creates Square Soft Body Mesh - ORIGINAL
 //##      This implementation creates a grid of soft bodies for a truly full soft body
 //####################################################################################
-DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrPointF scale,
+DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, double pos_y, double pos_z, DrPointF scale,
                                                double stiffness, double friction, double bounce, bool can_rotate) {
     long   min_balls =      10;
     double render_scale =   1.01;
@@ -161,11 +163,11 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, DrPointF point, DrP
             // Add soft ball to world
             DrEngineObject *soft_ball;
             if (x == (x_balls/2) && y == (y_balls/2)) {
-                soft_ball = addBall(this, center_texture, Soft_Body_Shape::Mesh, ball_at.x + point.x, ball_at.y + point.y,
+                soft_ball = addBall(this, c_no_key, center_texture, Soft_Body_Shape::Mesh, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
                                     scale, radius_multiplier, friction, bounce, true, can_rotate);
                 central =   soft_ball;
             } else {
-                soft_ball = addBall(this, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + point.x, ball_at.y + point.y,
+                soft_ball = addBall(this, c_no_key, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
                                     DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
             }
             balls.push_back(soft_ball);

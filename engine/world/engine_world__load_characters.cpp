@@ -74,19 +74,38 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     bool     flip_image_y =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_Y).toBool();
     bool     mouse_rotate =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Mouse_Rotate).toBool();
 
-    DrPointF gravity_scale =            asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
+
+    int         physics_body_style =    asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style).toInt();
+    DrPointF    gravity_scale =         asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
     std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction).toVector();
     std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce).toVector();
-    bool     can_rotate =               asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate).toBool();
-    double   use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
-    double   use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
+    bool        can_rotate =            asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate).toBool();
+    Body_Style  body_style =    static_cast<Body_Style>(physics_body_style);
+    double      use_friction =  (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
+    double      use_bounce =    (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
     // ***** Add the player to the cpSpace
-    DrEngineObject *player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset->getKey(),
-                                                info.position.x, -info.position.y, info.z_order,
-                                                info.scale, use_friction, use_bounce,
-                                                c_collide_true, can_rotate, info.angle, info.opacity);
-    loadThingCollisionShape(asset, player);                                                                 // Load collision shape(s)
+    DrEngineObject *player = nullptr;
+
+    switch (body_style) {
+        case Body_Style::Rigid_Body:
+            player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset->getKey(),
+                                        info.position.x, -info.position.y, info.z_order, info.scale, use_friction, use_bounce,
+                                        c_collide_true, can_rotate, info.angle, info.opacity);
+            loadThingCollisionShape(asset, player);
+            addThing(player);
+            break;
+        case Body_Style::Circular_Blob:
+            player = addSoftBodyCircle( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
+                                        info.size.x * info.scale.x, 0.8, use_friction, use_bounce, can_rotate);
+            break;
+        case Body_Style::Square_Blob:
+            break;
+        case Body_Style::Mesh_Blob:
+            break;
+        case Body_Style::Foliage:
+            break;
+    }
 
     player->setComponentCamera(new ThingCompCamera(this, player));
     player->setComponentPlayer(new ThingCompPlayer(this, player));
@@ -143,10 +162,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     // ***** Controls Settings
     loadThingControlsSettings(asset, player);
 
-    // ********** Add to world
-    addThing(player);
-
-    // Check if there are any active characters, if not, give controls
+    // ***** Check if there are any active characters, if not, give controls
     bool should_we_give_control = (countCharacters() == 0);
     bool give_camera = should_we_give_control && (this->getActiveCamera() <= 0);
     assignPlayerControls(player, should_we_give_control, give_camera);

@@ -222,12 +222,18 @@ public:
 
 
     // Soft Bodies
-    DrEngineObject*     addBall(DrEngineWorld *world, long texture, Soft_Body_Shape shape,
-                                double pos_x, double pos_y, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce, bool collides, bool can_rotate);
-    DrEngineObject*     addSoftBodyCircle(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject*     addSoftBodyDouble(long texture, DrPointF point, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject*     addSoftBodySquare(long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject*     addSoftBodyMesh(  long texture, DrPointF point, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject*     addBall(DrEngineWorld *world, long original_key, long asset_key, Soft_Body_Shape shape,
+                                double pos_x, double pos_y, double pos_z, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce, bool collides, bool can_rotate);
+
+    DrEngineObject*     addSoftBodyCircle(long original_key, long asset_key,
+                                          double pos_x, double pos_y, double pos_z, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
+
+    DrEngineObject*     addSoftBodyDouble(long texture,
+                                          double pos_x, double pos_y, double pos_z, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject*     addSoftBodySquare(long texture,
+                                          double pos_x, double pos_y, double pos_z, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject*     addSoftBodyMesh(  long texture,
+                                          double pos_x, double pos_y, double pos_z, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
 
 
     // Physics

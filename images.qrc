@@ -440,8 +440,8 @@
         <file>assets/gui_misc/msg_info.png</file>
         <file>assets/gui_misc/msg_question.png</file>
         <file>assets/gui_misc/msg_warning.png</file>
-        <file>assets/test_images/leaf_2.png</file>
         <file>assets/test_images/leaf.png</file>
         <file>assets/test_images/flower.png</file>
+        <file>assets/test_images/grass.png</file>
     </qresource>
 </RCC>

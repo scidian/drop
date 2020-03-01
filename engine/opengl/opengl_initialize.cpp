@@ -145,7 +145,7 @@ void DrOpenGL::loadBuiltInTextures() {
     importTexture(Asset_Textures::Wheel,                ":/assets/test_images/rover_wheel.png");
     importTexture(Asset_Textures::Spare,                ":/assets/test_images/spare_wheel.png");
     importTexture(Asset_Textures::Leaf,                 ":/assets/test_images/leaf.png");
-    importTexture(Asset_Textures::Leaf_2,               ":/assets/test_images/leaf_2.png");
+    importTexture(Asset_Textures::Grass,                ":/assets/test_images/grass.png");
     importTexture(Asset_Textures::Flower,               ":/assets/test_images/flower.png");
 
 }

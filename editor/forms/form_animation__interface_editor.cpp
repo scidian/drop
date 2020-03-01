@@ -31,7 +31,7 @@ void FormAnimation::buildAssetTree() {
 
 
 
-void FormAnimation::buildInspector(QList<long> entity_key_list, bool rebuild_only) { };
+void FormAnimation::buildInspector(QList<long> entity_key_list, bool force_rebuild) { };
 void FormAnimation::buildProjectTree() { };
 void FormAnimation::buildScene(long stage_key) { };
 

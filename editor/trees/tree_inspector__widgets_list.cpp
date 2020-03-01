@@ -122,6 +122,12 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         options << tr("Standard")
                 << tr("Additive")
                 << tr("Subtractive");
+    } else if   (property_key == Props::Asset_Physics_Body_Style) {
+        options << tr("Rigid Body")
+                << tr("Circular Blob")
+                << tr("Square Blob")
+                << tr("Mesh Blob")
+                << tr("Foliage");
     } else {
         options << tr("Unknown List");
     }

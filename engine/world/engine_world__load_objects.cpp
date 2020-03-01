@@ -141,6 +141,19 @@ void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *ob
     object->setTouchDragForce(    touch_drag_force);
     object->setTouchDamage(       touch_damage);
     object->setTouchDamagePoints( touch_damage_pts);
+
+    // Apply settings to physics children
+    if (object->compSoftBody() != nullptr) {
+        for (size_t i = 0; i < object->compSoftBody()->soft_balls.size(); ++i) {
+            DrEngineObject *next_ball = findObjectByKey(object->compSoftBody()->soft_balls[i]);
+            if (next_ball == nullptr) continue;
+            next_ball->setRotateSpeedZ(      rotate_speed);
+            next_ball->setTouchDrag(         touch_drag);
+            next_ball->setTouchDragForce(    touch_drag_force);
+            next_ball->setTouchDamage(       touch_damage);
+            next_ball->setTouchDamagePoints( touch_damage_pts);
+        }
+    }
 }
 
 
@@ -244,7 +257,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double deg_angular = rotation_vel.x + (Dr::RandomDouble(0.0, rotation_vel.y * 2.0) - rotation_vel.y);
     double rad_angular = Dr::DegreesToRadians( deg_angular );
 
-    // Attach KinematicUpdateVelocity callback function
+    // Attached to KinematicUpdateVelocity callback function in DrEngineObject Contructor
     if (body_type == Body_Type::Kinematic) {
         block->setOriginalVelocityX( velocity.x + x_velocity );
         block->setOriginalVelocityY( velocity.y + y_velocity );

@@ -97,7 +97,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
         DrAsset *dragon = m_project->findAssetFromKey(1024);
         if (dragon != nullptr) {
-            DrEngineObject *softy = addSoftBodyCircle(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(0, 100), 150, 0.8, 0.50, 0.25, false);
+            DrEngineObject *softy = addSoftBodyCircle(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 0, 100, 0, 150, 0.8, 0.50, 0.25, false);
             if (softy != nullptr) {
                 assignPlayerControls(softy, false, false);
                 if (getCamerasFollowThing(softy->getKey()).size() > 0)
@@ -111,7 +111,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy->setRotateSpeedZ( 7 );
             }
 
-            DrEngineObject *softy2 = addSoftBodyMesh(dragon->getIdleAnimationFirstFrameImageKey(), DrPointF(200, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
+            DrEngineObject *softy2 = addSoftBodyMesh(dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0, c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy2 != nullptr) {
                 assignPlayerControls(softy2, false, false);
                 if (getCamerasFollowThing(softy2->getKey()).size() > 0)

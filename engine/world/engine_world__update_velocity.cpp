@@ -37,6 +37,7 @@ extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
+
 //####################################################################################
 //##    Updates Kinematic Angular Velocity
 //####################################################################################

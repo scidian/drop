@@ -27,6 +27,7 @@ class DrSettings;
 class DrProperty;
 
 class IEditorRelay;
+class DrImageHolder;
 class DrQTripleSpinBox;
 class DrFilterHoverHandler;
 
@@ -98,7 +99,7 @@ public:
     QFrame*                 createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QFrame*                 createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*                createColorBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    QFrame*                 createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy);
+    QFrame*                 createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy, DrImageHolder *use_this_holder = nullptr);
     QPushButton*            createListBox(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QDoubleSpinBox*         createDoubleSpinBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QFrame*                 createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);

@@ -32,6 +32,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     m_ambient_light =       50;
     m_max_game_distance =   0.0;
 
+
     // ***** Create Physics World
     m_space = cpSpaceNew();                             // Creates an empty space
     ///cpSpaceUseSpatialHash(m_space, 8, 10000);        // Spatial Hash is better than default Bounding Box Tree for lots of uniform particles
@@ -45,6 +46,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     m_damping = 1;                                      // Kind of like air drag
     cpSpaceSetGravity(m_space, m_gravity);
     cpSpaceSetDamping(m_space, m_damping);
+
 
     // ***** Add Mouse Body that is used to join to objects to move them around with the mouse
     m_engine->mouse_body = cpBodyNewKinematic();
@@ -68,6 +70,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     // ***** Find current world, load Start Stage of that world
     DrWorld *world = m_project->findWorldFromKey(world_id_to_build);
     DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
+
 
     // ***** World Settings
     m_game_direction =      world->getComponentPropertyValue(Comps::World_Settings, Props::World_Game_Direction).toDouble();

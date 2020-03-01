@@ -145,78 +145,93 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
         } else if (event->button() & Qt::RightButton) {
             if (m_form_engine->demo_player == Demo_Player::Jump) {
 
-                // ###########################################
+
+                //###########################################
+                //##
+                //##    Soft Body Demo
+                //##
+                //###########################################
+                DrEngineObject *soft_body = nullptr;
+                long   asset_texture;
+                double friction = 0.25;
+                double bounce =   0.5;
+
+                if (Dr::RandomBool()) {
+                    double scale_x = Dr::RandomDouble(0.8, 3.0);
+                    double scale_y = Dr::RandomDouble(0.8, 3.0);
+                    if (Dr::RandomBool()) {
+                        soft_body = world->addSoftBodySquare(Asset_Textures::Block, x, y, 0, DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    } else {
+                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
+                        soft_body = world->addSoftBodyCircle(c_no_key, asset_texture, x, y, 0, int(scale_x * 100.0), g_double, friction, bounce, true);
+                    }
+                } else {
+                    double scale_x = Dr::RandomDouble(0.4, 0.6);
+                    double scale_y = Dr::RandomDouble(0.4, 0.6);
+
+                    if (world->getProject()->findAssetFromKey(1092) != nullptr) {
+                        asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
+                        soft_body = world->addSoftBodyMesh(asset_texture, x, y, 0, DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    } else {
+                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
+                        soft_body = world->addSoftBodyCircle(c_no_key, asset_texture, x, y, 0, Dr::RandomInt(60, 250), g_double, friction, bounce, true);
+                    }
+                }
+                soft_body->saturation = 255.0;
+                soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
+                soft_body->setDamageRecoil(1000.0);
+
+                ///world->assignPlayerControls(soft_body, false, false);
+                ///softy->setMoveSpeedX(800);
+                ///soft_body->setRotateSpeedZ( 20 );
+                ///soft_body->setJumpCount( 1 );
+                ///soft_body->setCanWallJump(false);
+
+            } else {
+
+                //###########################################
                 //##
                 //##    Foliage Demo
                 //##
-                // ###########################################
-                long leaf = (Dr::RandomInt(0, 4) == 1) ? Asset_Textures::Flower : Asset_Textures::Leaf;
-                DrEngineObject *grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, leaf, x, y, z, DrPointF(0.65, 1.0));
-                grass->addShapeBoxFromTexture(leaf);
+                //###########################################
+                long foliage = 0;
+                DrEngineObject *grass = nullptr;
+                if (Dr::RandomInt(0, 4) == 1) {
+                    double scale_x = Dr::RandomDouble(0.5, 1.0);
+                    double scale_y = Dr::RandomDouble(0.8, 1.5);
+                    foliage = Asset_Textures::Flower;
+                    grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
+                } else {
+                    double scale_x = Dr::RandomDouble(0.8, 1.5);
+                    double scale_y = Dr::RandomDouble(0.4, 1.0);
+                    foliage = Asset_Textures::Grass;
+                    grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
+                }
+                grass->addShapeBoxFromTexture(foliage);
                 grass->setComponentFoliage(new ThingCompFoliage(world, grass));
                 world->addThing(grass);
 
 
-
-                // ###########################################
+                //###########################################
                 //##
-                //##    Soft Body Demo
+                //##    Color Blocks
                 //##
-                // ###########################################
-//                DrEngineObject *soft_body = nullptr;
-//                long   asset_texture;
-//                double friction = 0.25;
-//                double bounce =   0.5;
+                //###########################################
+//                for (int i = 0; i < 25; i++ ) {
+//                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
+//                    block->addShapeBoxFromTexture(Asset_Textures::Block);
+//                    block->comp3D()->set3DType(Convert_3D_Type::Cube);
+//                    block->comp3D()->setDepth(61);
+//                    block->setTouchDrag(true);
+//                    block->setTouchDragForce(5000.0);
+//                    world->addThing(block);
 
-//                if (Dr::RandomBool()) {
-//                    double scale_x = Dr::RandomDouble(0.8, 3.0);
-//                    double scale_y = Dr::RandomDouble(0.8, 3.0);
-//                    if (Dr::RandomBool()) {
-//                        soft_body = world->addSoftBodySquare(Asset_Textures::Block, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
-//                    } else {
-//                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-//                        soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), int(scale_x * 100.0), g_double, friction, bounce, true);
-//                    }
-//                } else {
-//                    double scale_x = Dr::RandomDouble(0.4, 0.6);
-//                    double scale_y = Dr::RandomDouble(0.4, 0.6);
+//                    double hue = Dr::RandomDouble(0.0, 1.0);
+//                    block->hue = static_cast<float>(hue);
 
-//                    if (world->getProject()->findAssetFromKey(1092) != nullptr) {
-//                        asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
-//                        soft_body = world->addSoftBodyMesh(asset_texture, DrPointF(x, y), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
-//                    } else {
-//                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-//                        soft_body = world->addSoftBodyCircle(asset_texture, DrPointF(x, y), Dr::RandomInt(60, 250), g_double, friction, bounce, true);
-//                    }
+//                    ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
+//                    ///block->saturation = static_cast<float>(saturation);
 //                }
-//                soft_body->saturation = 255.0;
-//                soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
-//                soft_body->setDamageRecoil(1000.0);
-
-//                ///world->assignPlayerControls(soft_body, false, false);
-//                ///softy->setMoveSpeedX(800);
-//                ///soft_body->setRotateSpeedZ( 20 );
-//                ///soft_body->setJumpCount( 1 );
-//                ///soft_body->setCanWallJump(false);
-
-            } else {
-
-                // Color Blocks
-                for (int i = 0; i < 25; i++ ) {
-                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
-                    block->addShapeBoxFromTexture(Asset_Textures::Block);
-                    block->comp3D()->set3DType(Convert_3D_Type::Cube);
-                    block->comp3D()->setDepth(61);
-                    block->setTouchDrag(true);
-                    block->setTouchDragForce(5000.0);
-                    world->addThing(block);
-
-                    double hue = Dr::RandomDouble(0.0, 1.0);
-                    block->hue = static_cast<float>(hue);
-
-                    ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
-                    ///block->saturation = static_cast<float>(saturation);
-                }
             }
         }
     }
