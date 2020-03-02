@@ -19,8 +19,10 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_inspector.h"
-#include "project/enums_entity_types.h"
+#include "engine/enums_engine.h"
 #include "project/dr_project.h"
+#include "project/enums_entity_types.h"
+#include "project/entities/dr_asset.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -359,6 +361,17 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
 
                 break;
         }
+
+        // ***** Special Cases
+        if (property->getPropertyKey() == Props::Asset_Physics_Body_Style) {
+            bool rigid = (static_cast<Body_Style>(property->getValue().toInt()) == Body_Style::Rigid_Body);
+            DrAsset *asset = dynamic_cast<DrAsset*>(settings);
+            if (asset != nullptr) {
+                asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setEditable(!rigid);
+                updateLockedSettings();
+            }
+        }
+
     }   // End for each key
 
     // ***** Update changed entities in other Widgets

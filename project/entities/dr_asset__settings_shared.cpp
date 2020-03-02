@@ -93,7 +93,7 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
                            "Body Style", "Body style for Object when used as a Dynamic object. Using Blob or 2D Cloth physics will override collision "
                                          "shape of Object. Blob and 2D Cloth physics bodies are currently only able to be rendered in 2D.");
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness, Property_Type::Percent, 100.0,
-                           "Body Rigidness", "When using soft bodies, how rigid will this body be?");
+                           "Body Rigidness", "When using soft bodies, how rigid will this body be?", false, false);
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale, Property_Type::PointF, DrPointF(1.0, 1.0),
                            "Gravity Scale", "Changes how gravity affects this " + type + ". Set to (0, 0) to "
                                             "ignore gravity comepletely. Also great for making balloons.");

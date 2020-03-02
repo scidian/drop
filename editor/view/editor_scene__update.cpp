@@ -129,6 +129,7 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
             m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
                             { std::make_pair(comp, Props::Hidden_Hide_From_Trees) });
 
+
         } else if (comp == Comps::Thing_Settings_Object && prop == Props::Thing_Object_Physics_Type) {
             bool pretest = thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Velocity_X)->isEditable();
             Body_Type type = static_cast<Body_Type>(thing->getComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type).toInt());
@@ -155,6 +156,7 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
                 m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
                                 { std::make_pair(Comps::Thing_Movement, Props::Thing_Angle_Player) });
             }
+
 
         } else if (comp == Comps::Thing_Transform && prop == Props::Thing_Position) {
             setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);

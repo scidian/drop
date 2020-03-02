@@ -36,11 +36,14 @@ QList<QTreeWidgetItem*> TreeInspector::getListOfTopLevelItems() {
 //##    Disable / Enable property widgets based on property status
 //####################################################################################
 void TreeInspector::updateLockedSettings() {
+    DrSettings *entity = getParentProject()->findSettingsFromKey(m_key_shown);
+    if (entity == nullptr) return;
+
     // Go through each widget in Object Inspector property widget list
     for (auto widget : m_widgets) {
         std::string component_key = widget->property(User_Property::CompKey).toString().toStdString();
         std::string property_key =  widget->property(User_Property::PropKey).toString().toStdString();
-        DrProperty *prop = getParentProject()->findSettingsFromKey(m_key_shown)->getComponentProperty(component_key, property_key);
+        DrProperty *prop = entity->getComponentProperty(component_key, property_key);
         if (prop == nullptr) continue;
 
         // Make sure Hidden Component Properties stay enabled, otherwise disable if Property is not editable or Thing is locked

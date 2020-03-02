@@ -75,7 +75,7 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
         double body_r = cpBodyGetAngularVelocity( object->body );
         if (initial_jump) {
             cpBodySetVelocity( object->body, player_vel );
-            cpBodySetAngularVelocity(object->body, body_r * 10.0);
+            cpBodySetAngularVelocity(object->body, body_r * 2.5);
         } else {
             cpBodyApplyForceAtWorldPoint( object->body, jump_vel * cpBodyGetMass(object->body) * 50.0, cpBodyGetPosition(object->body) );
         }
@@ -84,8 +84,11 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
         for (auto ball_number : object->compSoftBody()->soft_balls) {
             DrEngineObject *soft_ball = object->world()->findObjectByKey(ball_number);
             if (soft_ball == nullptr) return;
-            if (initial_jump) cpBodySetVelocity( soft_ball->body, player_vel );
-            else cpBodyApplyForceAtWorldPoint( soft_ball->body, jump_vel * cpBodyGetMass(soft_ball->body) * 50.0, cpBodyGetPosition(soft_ball->body) );
+            if (initial_jump) {
+                cpBodySetVelocity( soft_ball->body, player_vel );
+            } else {
+                cpBodyApplyForceAtWorldPoint( soft_ball->body, jump_vel * cpBodyGetMass(soft_ball->body) * 50.0, cpBodyGetPosition(soft_ball->body) );
+            }
         }
 
     // Normal Body Jump
