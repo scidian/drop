@@ -200,19 +200,26 @@ double DrEngineObject::getAngle() const {
 }
 
 void DrEngineObject::setAngle(double new_angle) {
+    if (this->body == nullptr) return;
+
+    // Get current angle, set new angle
     double current_angle = Dr::RadiansToDegrees( cpBodyGetAngle(this->body) );
     cpBodySetAngle( this->body, Dr::DegreesToRadians(new_angle) );
 
-    if (this->compSoftBody() != nullptr) {
+    // Set angle of all soft body physics children
+    if (this->compSoftBody() != nullptr && this->isPhysicsChild() == false) {
         for (size_t i = 0; i < this->compSoftBody()->soft_balls.size(); ++i) {
             DrEngineObject *next_ball = world()->findObjectByKey(this->compSoftBody()->soft_balls[i]);
+            if (next_ball == this) continue;
             if (next_ball == nullptr) continue;
+            if (next_ball->body == nullptr) continue;
             DrPointF new_position = Dr::RotatePointAroundOrigin(next_ball->getPosition(), this->getPosition(), new_angle - current_angle);
             cpBodySetPosition(next_ball->body, cpv(new_position.x, new_position.y));
             next_ball->setAngle(new_angle);
         }
     }
 
+    // Call base class function
     DrEngineThing::setAngle(new_angle);
 };
 

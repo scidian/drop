@@ -111,7 +111,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy->setRotateSpeedZ( 7 );
             }
 
-            DrEngineObject *softy2 = addSoftBodyMesh(dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0, c_scale1x1, 0.8, 0.50, 0.25, false);
+            DrEngineObject *softy2 = addSoftBodyMesh(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0, DrPointF(100, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy2 != nullptr) {
                 assignPlayerControls(softy2, false, false);
                 if (getCamerasFollowThing(softy2->getKey()).size() > 0)

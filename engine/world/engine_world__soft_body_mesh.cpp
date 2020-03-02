@@ -73,7 +73,8 @@ void JoinCenterBodyMesh(cpSpace *space, cpBody *center_body, cpBody *body2, cpVe
 //##    Creates Square Soft Body Mesh - ORIGINAL
 //##      This implementation creates a grid of soft bodies for a truly full soft body
 //####################################################################################
-DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, double pos_y, double pos_z, DrPointF scale,
+DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key,
+                                               double pos_x, double pos_y, double pos_z, DrPointF size, DrPointF scale,
                                                double stiffness, double friction, double bounce, bool can_rotate) {
     long   min_balls =      10;
     double render_scale =   1.01;
@@ -82,9 +83,8 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, doubl
     stiffness = Dr::RangeConvert(Dr::Clamp(stiffness, 0.0, 1.0), 0.0, 1.0, 0.2, 1.0);       // Percentage of 0.0 == gooey, 1.0 == stiff
 
     // Figure out actual diameter of texture / scaling
-    long   center_texture =     texture;
-    double center_width =       static_cast<double>(getTexture(center_texture)->width()) *  scale.x;
-    double center_height =      static_cast<double>(getTexture(center_texture)->height()) * scale.y;
+    double center_width =       (size.x);
+    double center_height =      (size.y);
     double height_width_ratio = center_height / center_width;
 
     // Calculate size and location of soft balls
@@ -92,12 +92,12 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, doubl
     double  target_diameter;
     long    x_balls = min_balls;
     long    y_balls = min_balls;
-    if (center_width < center_height) {
+    if (abs(center_width) < abs(center_height)) {
         target_diameter = (center_width / min_balls);
-        y_balls = static_cast<int>(center_height / target_diameter);
+        y_balls = abs(static_cast<int>(center_height / target_diameter));
     } else {
         target_diameter = (center_height / min_balls);
-        x_balls = static_cast<int>(center_width  / target_diameter);
+        x_balls = abs(static_cast<int>(center_width  / target_diameter));
     }
     x_balls = Dr::Min(x_balls, static_cast<long>(15));
     y_balls = Dr::Min(y_balls, static_cast<long>(15));
@@ -109,7 +109,11 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, doubl
     double inside_radius = target_diameter/2.0;
 
     // Inner Block Sizing
-    DrPointF radius_multiplier(target_diameter / center_width, target_diameter / center_height);
+    DrPointF radius_multiplier(abs(target_diameter / center_width), abs(target_diameter / center_height));
+
+    // Figure out which ball will be center soft ball
+    long center_ball_x = (x_balls / 2);
+    long center_ball_y = (y_balls / 2);
 
     // Add Soft Ball Grid
     std::vector<DrEngineObject*>    balls;
@@ -130,7 +134,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, doubl
             starting_positions.push_back(ball_at);
 
             // Store Starting Position, and also Converted Texture Coordinates
-            DrPointF uv_coord = DrPointF((outside_at.x + center_width/2.0)/center_width, (outside_at.y + center_height/2.0)/center_height);
+            DrPointF uv_coord = DrPointF((outside_at.x + center_width/2.0) / center_width, (outside_at.y + center_height/2.0) / center_height);
             uv_coordinates.push_back(uv_coord);
 
             // Store starting angle of first child
@@ -138,8 +142,8 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, doubl
 
             // Add soft ball to world
             DrEngineObject *soft_ball;
-            if (x == (x_balls/2) && y == (y_balls/2)) {
-                soft_ball = addBall(this, c_no_key, center_texture, Soft_Body_Shape::Mesh, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
+            if (x == center_ball_x && y == center_ball_y) {
+                soft_ball = addBall(this, original_key, asset_key, Soft_Body_Shape::Mesh, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
                                     scale, radius_multiplier, friction, bounce, true, can_rotate);
                 central =   soft_ball;
             } else {
@@ -220,7 +224,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long texture, double pos_x, doubl
     central->compSoftBody()->height_width_ratio =   height_width_ratio;
     central->compSoftBody()->soft_size =            DrPointF(center_width, center_height);
     central->compSoftBody()->soft_grid_size =       DrPoint(x_balls, y_balls);
-    central->compSoftBody()->soft_scale.x =         ((center_width/2.0) /  ((center_width  - target_diameter)/2.0)) * render_scale;
+    central->compSoftBody()->soft_scale.x =         ((center_width/2.0)  / ((center_width  - target_diameter)/2.0)) * render_scale;
     central->compSoftBody()->soft_scale.y =         ((center_height/2.0) / ((center_height - target_diameter)/2.0)) * render_scale;
     central->compSoftBody()->soft_start_angle =     first_ball_angle;
 

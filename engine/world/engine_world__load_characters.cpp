@@ -98,17 +98,21 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
         case Body_Style::Circular_Blob:
             player = addSoftBodyCircle( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
                                         info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
-            player->setOpacity(info.opacity);
-            player->setAngle(-info.angle);
             break;
         case Body_Style::Square_Blob:
             player = addSoftBodySquare( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
                                         info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
-            player->setOpacity(info.opacity);
-            player->setAngle(-info.angle);
             break;
         case Body_Style::Mesh_Blob:
+            player = addSoftBodyMesh(   thing->getKey(), asset->getKey(),  info.position.x, -info.position.y, info.z_order,
+                                         info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
             break;
+    }
+
+    // Soft Body constructors dont set angle or opacity, do it now
+    if (body_style != Body_Style::Rigid_Body) {
+        player->setOpacity(info.opacity);
+        player->setAngle(-info.angle);
     }
 
     player->setComponentCamera(new ThingCompCamera(this, player));

@@ -162,7 +162,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                     if (Dr::RandomBool() && world->getProject()->findAssetFromKey(1092) != nullptr) {
                         asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
-                        soft_body = world->addSoftBodyMesh(asset_texture, x, y, 0, DrPointF(scale_x / 5.0, scale_y / 5.0), g_double, friction, bounce, true);
+                        soft_body = world->addSoftBodyMesh(c_no_key, asset_texture, x, y, 0, DrPointF(200, 200), DrPointF(scale_x / 5.0, scale_y / 5.0), g_double, friction, bounce, true);
                     } else {
                         soft_body = world->addSoftBodySquare(c_no_key, Asset_Textures::Block, x, y, 0, DrPointF(61, 61), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
                     }
