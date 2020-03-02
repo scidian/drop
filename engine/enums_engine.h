@@ -197,7 +197,6 @@ enum class Body_Style {
     Circular_Blob           = 1,
     Square_Blob             = 2,
     Mesh_Blob               = 3,
-    Foliage                 = 4,
 };
 
 enum class Soft_Body_Shape {

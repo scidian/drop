@@ -230,10 +230,10 @@ public:
                                           double pos_x, double pos_y, double pos_z, DrPointF  size, DrPointF scale,
                                           double stiffness, double friction, double bounce, bool can_rotate = true);
 
-    DrEngineObject*     addSoftBodyDouble(long texture,
-                                          double pos_x, double pos_y, double pos_z, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject*     addSoftBodySquare(long texture,
-                                          double pos_x, double pos_y, double pos_z, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
+    DrEngineObject*     addSoftBodySquare(long original_key, long asset_key,
+                                          double pos_x, double pos_y, double pos_z, DrPointF  size, DrPointF scale,
+                                          double stiffness, double friction, double bounce, bool can_rotate = true);
+
     DrEngineObject*     addSoftBodyMesh(  long texture,
                                           double pos_x, double pos_y, double pos_z, DrPointF scale,  double stiffness, double friction, double bounce, bool can_rotate = true);
 

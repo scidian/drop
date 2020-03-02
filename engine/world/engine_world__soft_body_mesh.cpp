@@ -69,30 +69,6 @@ void JoinCenterBodyMesh(cpSpace *space, cpBody *center_body, cpBody *body2, cpVe
 }
 
 
-
-//####################################################################################
-//##
-//##    SOFT CIRCLE DOUBLE JOINTED
-//##        RETURNS: Central body of soft body
-//##
-//####################################################################################
-DrEngineObject* DrEngineWorld::addSoftBodyDouble(long texture, double pos_x, double pos_y, double pos_z, double diameter,
-                                                 double stiffness, double friction, double bounce, bool can_rotate) {
-    (void) texture;
-    (void) pos_x;
-    (void) pos_y;
-    (void) pos_z;
-    (void) diameter;
-    (void) stiffness;
-    (void) friction;
-    (void) bounce;
-    (void) can_rotate;
-    return nullptr;
-}
-
-
-
-
 //####################################################################################
 //##    Creates Square Soft Body Mesh - ORIGINAL
 //##      This implementation creates a grid of soft bodies for a truly full soft body

@@ -159,24 +159,26 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 if (Dr::RandomBool()) {
                     double scale_x = Dr::RandomDouble(0.8, 3.0);
                     double scale_y = Dr::RandomDouble(0.8, 3.0);
-                    if (Dr::RandomBool()) {
-                        soft_body = world->addSoftBodySquare(Asset_Textures::Block, x, y, 0, DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
-                    } else {
-                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-                        double size = int(scale_x * 100.0);
-                        soft_body = world->addSoftBodyCircle(c_no_key, asset_texture, x, y, 0, DrPointF(size, size), c_scale1x1, g_double, friction, bounce, true);
-                    }
-                } else {
-                    double scale_x = Dr::RandomDouble(0.4, 0.6);
-                    double scale_y = Dr::RandomDouble(0.4, 0.6);
 
-                    if (world->getProject()->findAssetFromKey(1092) != nullptr) {
+                    if (Dr::RandomBool() && world->getProject()->findAssetFromKey(1092) != nullptr) {
                         asset_texture = world->getProject()->findAssetFromKey(1092)->getIdleAnimationFirstFrameImageKey();
-                        soft_body = world->addSoftBodyMesh(asset_texture, x, y, 0, DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                        soft_body = world->addSoftBodyMesh(asset_texture, x, y, 0, DrPointF(scale_x / 5.0, scale_y / 5.0), g_double, friction, bounce, true);
                     } else {
-                        asset_texture = (Dr::RandomInt(0, 10) == 1) ? Asset_Textures::Plant : Asset_Textures::Ball;
-                        double size = Dr::RandomInt(60, 250);
-                        soft_body = world->addSoftBodyCircle(c_no_key, asset_texture, x, y, 0, DrPointF(size, size), c_scale1x1, g_double, friction, bounce, true);
+                        soft_body = world->addSoftBodySquare(c_no_key, Asset_Textures::Block, x, y, 0, DrPointF(61, 61), DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    }
+
+                } else {
+                    double scale_x = Dr::RandomDouble(1.0, 4.0);
+                    double scale_y = Dr::RandomDouble(1.0, 4.0);
+
+                    if (Dr::RandomInt(0, 10) == 1) {
+                        asset_texture = Asset_Textures::Plant;
+                        DrPointF size(91.0 * scale_x, 112.0 * scale_y);
+                        soft_body = world->addSoftBodyCircle(c_no_key, asset_texture, x, y, 0, size, DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
+                    } else {
+                        asset_texture = Asset_Textures::Ball;
+                        DrPointF size(46.0 * scale_x, 45.0 * scale_y);
+                        soft_body = world->addSoftBodyCircle(c_no_key, asset_texture, x, y, 0, size, DrPointF(scale_x, scale_y), g_double, friction, bounce, true);
                     }
                 }
                 soft_body->saturation = 255.0;

@@ -31,8 +31,8 @@ PointList DrEngineObject::createEllipseFromCircle(const DrPointF &center, const 
 //##    Add Shapes to Object
 //####################################################################################
 void DrEngineObject::addShapeBox(double width, double height) {
-    width =  width *  static_cast<double>(this->getScaleX());
-    height = height * static_cast<double>(this->getScaleY());
+    width =  width *  abs(static_cast<double>(this->getScaleX()));
+    height = height * abs(static_cast<double>(this->getScaleY()));
     cpShape *shape = cpBoxShapeNew(this->body, width, height, c_extra_radius);
     double   area = (width * height);
     applyShapeSettings(shape, area, Shape_Type::Box);
@@ -43,8 +43,8 @@ void DrEngineObject::addShapeBox(cpBB box) {
     applyShapeSettings(shape, area, Shape_Type::Box);
 }
 void DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
-    double width =  world()->getTexture(texture_number)->width() *  extra_scale.x;
-    double height = world()->getTexture(texture_number)->height() * extra_scale.y;
+    double width =  world()->getTexture(texture_number)->width() *  abs(extra_scale.x);
+    double height = world()->getTexture(texture_number)->height() * abs(extra_scale.y);
     addShapeBox(width, height);
 }
 
@@ -62,8 +62,8 @@ void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset)
     }
 }
 void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
-    double width =  world()->getTexture(texture_number)->width() *  extra_scale.x;
-    double height = world()->getTexture(texture_number)->height() * extra_scale.y;
+    double width =  world()->getTexture(texture_number)->width() *  abs(extra_scale.x);
+    double height = world()->getTexture(texture_number)->height() * abs(extra_scale.y);
     double radius = (width / 2.0) * radius_multiplier;
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -99,13 +99,15 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
             player = addSoftBodyCircle( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
                                         info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
             player->setOpacity(info.opacity);
-            player->setAngle((info.scale.x < 0 || info.scale.y < 0) ? -info.angle : info.angle);
+            player->setAngle(-info.angle);
             break;
         case Body_Style::Square_Blob:
+            player = addSoftBodySquare( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
+                                        info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+            player->setOpacity(info.opacity);
+            player->setAngle(-info.angle);
             break;
         case Body_Style::Mesh_Blob:
-            break;
-        case Body_Style::Foliage:
             break;
     }
 

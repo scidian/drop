@@ -126,7 +126,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
         options << tr("Rigid Body")
                 << tr("Circular Blob")
                 << tr("Square Blob")
-                << tr("2D Cloth");
+                << tr("2D Mesh Cloth");
     } else {
         options << tr("Unknown List");
     }
