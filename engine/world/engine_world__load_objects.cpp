@@ -215,12 +215,14 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     double y_offset = spawn_rotate.y;
 
     // ***** Load Physics Properties
-    DrPointF gravity_scale =            asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
-    std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction).toVector();
-    std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce).toVector();
-    bool    can_rotate =                asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate).toBool();
-    double  use_friction = (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
-    double  use_bounce =   (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;  
+    int         physics_body_style =        asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style).toInt();
+    DrPointF    gravity_scale =             asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
+    std::vector<DrVariant> friction =       asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction).toVector();
+    std::vector<DrVariant> bounce =         asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce).toVector();
+    bool        can_rotate =                asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Can_Rotate).toBool();
+    Body_Style  body_style =        static_cast<Body_Style>(physics_body_style);
+    double      use_friction =      (friction[0].toBool()) ? friction[1].toDouble() : c_friction;
+    double      use_bounce =        (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
     // ***** Set Chipmunk Body Type
     Body_Type body_type = Body_Type::Static;
@@ -232,15 +234,40 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
 
     // ***** Add the block to the cpSpace
-    DrEngineObject *block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset->getKey(),
-                                               x + x_offset, y + y_offset, info.z_order, info.scale,
-                                               use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
-    loadThingCollisionShape(asset, block);
-    block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
+    DrEngineObject *block = nullptr;
+    if (body_type != Body_Type::Dynamic || (body_type == Body_Type::Dynamic && body_style == Body_Style::Rigid_Body)) {
+        block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset->getKey(),
+                                   x + x_offset, y + y_offset, info.z_order, info.scale,
+                                   use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
+        loadThingCollisionShape(asset, block);
+        addThing(block);
+    } else {
+        switch (body_style) {
+            case Body_Style::Rigid_Body:
+                break;
+            case Body_Style::Circular_Blob:
+                block = addSoftBodyCircle( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                           info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+                break;
+            case Body_Style::Square_Blob:
+                block = addSoftBodySquare( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                           info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+                break;
+            case Body_Style::Mesh_Blob:
+                block = addSoftBodyMesh(   thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                           info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+                break;
+        }
+
+        // Soft Body constructors dont set angle or opacity, do it now
+        block->setOpacity(info.opacity);
+        block->setAngle(-info.angle);
+    }
 
 
     // ***** Set collision type
     long     damage_type =      thing->getComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Damage).toInt();
+    block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
     block->setCollisionType(static_cast<Collision_Type>(damage_type));
     block->setGravityScale( DrPointF(gravity_scale.x, gravity_scale.y) );
 
@@ -293,10 +320,6 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
     // ***** Controls Settings
     loadThingControlsSettings(asset, block);
-
-
-    // ********** Add to world
-    addThing(block);
 
     // ***** Add Velocity, HAVE TO WAIT until is in world!!
     if (body_type != Body_Type::Static) {

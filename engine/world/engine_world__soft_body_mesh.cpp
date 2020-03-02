@@ -151,6 +151,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
                                     DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
             }
             balls.push_back(soft_ball);
+            soft_ball->body_style = Body_Style::Mesh_Blob;
 
             // Toward the left
             if (x > 0) {
@@ -220,7 +221,6 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
 
     // Update Central Ball properties
     central->setPhysicsParent(nullptr);
-    central->body_style = Body_Style::Mesh_Blob;
     central->compSoftBody()->height_width_ratio =   height_width_ratio;
     central->compSoftBody()->soft_size =            DrPointF(center_width, center_height);
     central->compSoftBody()->soft_grid_size =       DrPoint(x_balls, y_balls);

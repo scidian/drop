@@ -131,6 +131,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                             double max_force = 10000;
                             double body_mass = cpBodyGetMass(touch->body);
                             if (Dr::RealDouble(body_mass)) max_force *= body_mass * (touch->getTouchDragForce() / 100.0);
+                            if (touch->body_style == Body_Style::Mesh_Blob) max_force *= 20.0;
                             cpConstraintSetMaxForce(m_engine->mouse_joint, max_force);
                             cpSpaceAddConstraint(world->getSpace(), m_engine->mouse_joint);
                             should_jump = false;

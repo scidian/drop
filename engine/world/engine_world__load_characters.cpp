@@ -86,7 +86,6 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
     // ***** Add the player to the cpSpace
     DrEngineObject *player = nullptr;
-
     switch (body_style) {
         case Body_Style::Rigid_Body:
             player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset->getKey(),
@@ -104,7 +103,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
                                         info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
             break;
         case Body_Style::Mesh_Blob:
-            player = addSoftBodyMesh(   thing->getKey(), asset->getKey(),  info.position.x, -info.position.y, info.z_order,
+            player = addSoftBodyMesh(   thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
                                          info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
             break;
     }
