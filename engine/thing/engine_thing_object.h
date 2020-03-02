@@ -154,6 +154,10 @@ public:
     void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
     PointList           createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
 
+    // Thing Basic Properties Overrides
+    virtual double      getAngle() const override;
+    virtual void        setAngle(double new_angle) override;
+
 
     // Object Basic Settings
     const bool&         doesCollide()           { return m_does_collide; }

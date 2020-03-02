@@ -65,7 +65,6 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
                     animation_idle_keys.push_back(frame->getKey());
                 }
             }
-
         }
     }
 
@@ -92,7 +91,6 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
         case Body_Type::Kinematic:  this->body = cpBodyNewKinematic();                              break;
     }
     cpBodySetPosition( this->body, cpv(x, y));
-    cpBodySetAngle(    this->body, Dr::DegreesToRadians(-angle) );
     setAngle( -angle );
     cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineObject* for use later
 
@@ -192,6 +190,19 @@ void DrEngineObject::addToWorld() {
 DrPointF DrEngineObject::mapPositionToScreen() {
     return world()->getEngine()->getOpenGL()->mapToScreen( getPosition().x, getPosition().y, getZOrder() );
 }
+
+
+//####################################################################################
+//##    Thing Properies Override
+//####################################################################################
+double DrEngineObject::getAngle() const {
+    return Dr::RadiansToDegrees( cpBodyGetAngle(body) );
+}
+
+void DrEngineObject::setAngle(double new_angle) {
+    cpBodySetAngle( this->body, Dr::DegreesToRadians(new_angle) );
+    DrEngineThing::setAngle(new_angle);
+};
 
 
 //####################################################################################

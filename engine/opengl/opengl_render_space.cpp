@@ -108,19 +108,16 @@ void DrOpenGL::drawSpace() {
                     draw2D = false;
 
                 // ***** Handle Soft Body
-                if (object->body_style != Body_Style::Rigid_Body) {
-                    if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
-                        if (object->compSoftBody() == nullptr) continue;
-                        if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Radial) == false) continue;
-                    } else if (object->body_style == Body_Style::Mesh_Blob) {
-                        if (object->compSoftBody() == nullptr) continue;
-                        if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
-                    }
-                    if (object->body_style != Body_Style::Foliage) {
-                        cullingOn(false);
-                        draw2D = true;
-                    }
+                if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
+                    if (object->compSoftBody() == nullptr) continue;
+                    if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Radial) == false) continue;
+                    draw2D = true;
+                } else if (object->body_style == Body_Style::Mesh_Blob) {
+                    if (object->compSoftBody() == nullptr) continue;
+                    if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
+                    draw2D = true;
                 }
+
 
                 // ***** Trying to stop z-fighting, move objects apart with same z_order
                 //       ...The further away the more they have to move since the precision of the z buffer is scaled away from the camera
@@ -135,24 +132,25 @@ void DrOpenGL::drawSpace() {
                     if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
                     if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += z_spacing; else m_add_z = 0.0;
                     last_z = thing->getZOrder();
-                }
 
-                // ***** Draw Object / Character
-                if (draw2D) {
-                    // Standard Shader
-                    drawObject(thing, last_thing, draw2D);
-                    // Simple Shader
-                    ///glEnable(GL_DEPTH_TEST);
-                    ///drawObjectSimple(thing);
-                    ///glDisable(GL_DEPTH_TEST);
-                } else {
+                    // ***** Draw 3D Object / Character
                     cullingOn(false);
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
                     drawObject(thing, last_thing, draw2D);
                     glDepthMask(GL_TRUE);
                     glDisable(GL_DEPTH_TEST);
+
+                } else {
+                    // ***** Draw 2D Object / Character
+                    // Standard Shader
+                    drawObject(thing, last_thing, draw2D);
+                    // Simple Shader
+                    ///glEnable(GL_DEPTH_TEST);
+                    ///drawObjectSimple(thing);
+                    ///glDisable(GL_DEPTH_TEST);
                 }
+
                 cullingOff();
                 break;
             }

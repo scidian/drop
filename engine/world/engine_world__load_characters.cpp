@@ -97,7 +97,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
             break;
         case Body_Style::Circular_Blob:
             player = addSoftBodyCircle( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
-                                        info.size.x * info.scale.x, 0.8, use_friction, use_bounce, can_rotate);
+                                        info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+            player->setOpacity(info.opacity);
+            player->setAngle((info.scale.x < 0 || info.scale.y < 0) ? -info.angle : info.angle);
             break;
         case Body_Style::Square_Blob:
             break;

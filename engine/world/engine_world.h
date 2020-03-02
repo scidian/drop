@@ -223,10 +223,12 @@ public:
 
     // Soft Bodies
     DrEngineObject*     addBall(DrEngineWorld *world, long original_key, long asset_key, Soft_Body_Shape shape,
-                                double pos_x, double pos_y, double pos_z, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce, bool collides, bool can_rotate);
+                                double pos_x, double pos_y, double pos_z, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce,
+                                bool collides, bool can_rotate);
 
     DrEngineObject*     addSoftBodyCircle(long original_key, long asset_key,
-                                          double pos_x, double pos_y, double pos_z, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);
+                                          double pos_x, double pos_y, double pos_z, DrPointF  size, DrPointF scale,
+                                          double stiffness, double friction, double bounce, bool can_rotate = true);
 
     DrEngineObject*     addSoftBodyDouble(long texture,
                                           double pos_x, double pos_y, double pos_z, double diameter, double stiffness, double friction, double bounce, bool can_rotate = true);

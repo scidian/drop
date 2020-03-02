@@ -90,7 +90,8 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
 
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, Property_Type::List, static_cast<int>(Body_Style::Rigid_Body),
-                           "Body Style", "Body style for Dynamic objects.");
+                           "Body Style", "Body style for Object when used as a Dynamic object. Using Blob or 2D Cloth physics will override collision "
+                                         "shape of Object. Blob and 2D Cloth physics bodies are currently only able to be rendered in 2D.");
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale, Property_Type::PointF, DrPointF(1.0, 1.0),
                            "Gravity Scale", "Changes how gravity affects this " + type + ". Set to (0, 0) to "
                                             "ignore gravity comepletely. Also great for making balloons.");
@@ -170,7 +171,7 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
                            "Touch Damage", "Should this " + type + " take damage when touched / tapped / clicked with the mouse? "
                                            "If so, how much damage? Can be negative (i.e. healing).");
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Controls_Touch_Drag,
-                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 100.0, -1000000000, 1000000000, 10, "Force: "}),
+                           Property_Type::BoolDouble, std::vector<DrVariant>({false, 1000.0, -1000000000, 1000000000, 10, "Force: "}),
                            "Touch Drag", "Should this " + type + " be able to be dragged by mouse / touch? If so, how much force "
                                          "to apply? <br><br> <b>NOTE:</b> Object Type must be <b>Kinematic</b> or <b>Dynamic</b> to use this setting!");
 

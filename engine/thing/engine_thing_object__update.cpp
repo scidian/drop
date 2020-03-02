@@ -31,7 +31,6 @@ bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area)
     cpVect new_position = cpBodyGetPosition( body );
     cpVect new_velocity = cpBodyGetVelocity( body );
     updateBodyPosition( DrPointF( new_position.x, new_position.y ));
-    setAngle( Dr::RadiansToDegrees( cpBodyGetAngle( body )) );
     setVelocityX( new_velocity.x );
     setVelocityY( new_velocity.y );
 
