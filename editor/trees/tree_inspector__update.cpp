@@ -202,6 +202,7 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
                     QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);
                                 sp_right.setHorizontalStretch(c_inspector_size_right);
                     createImageFrame(prop, fp, sp_right, image_frame);
+                    image_frame->setChildrenGeometry();
                 }
                 break;
             }

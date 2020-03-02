@@ -16,6 +16,7 @@
 #include <QWindow>
 
 #include "core/colors/colors.h"
+#include "core/dr_debug.h"
 #include "editor/helper_library.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
@@ -28,8 +29,10 @@ namespace Dr {
 //####################################################################################
 void ClearWidget(QWidget *widget) {
     DeleteLayout(widget->layout());
-    while (QWidget *child = widget->findChild<QWidget*>())
+    while (QWidget *child = widget->findChild<QWidget*>()) {
+        ///Dr::PrintDebug("Deleting QWidget: " + child->objectName().toStdString());
         delete child;
+    }
 }
 
 void DeleteLayout(QLayout *layout) {
@@ -37,9 +40,16 @@ void DeleteLayout(QLayout *layout) {
     QLayout *sublayout;
     QWidget *widget;
     while ((item = layout->takeAt(0))) {
-        if ((sublayout = item->layout()) != nullptr) { DeleteLayout(sublayout); }
-        else if ((widget = item->widget()) != nullptr) { widget->hide(); delete widget; }
-        else { delete item; }
+        if ((sublayout = item->layout()) != nullptr) {
+            DeleteLayout(sublayout);
+        } else if ((widget = item->widget()) != nullptr) {
+            widget->hide();
+            ///Dr::PrintDebug("Deleting QWidget: " + widget->objectName().toStdString());
+            delete widget;
+        } else {
+            ///Dr::PrintDebug("Deleting Item...");
+            delete item;
+        }
     }
     delete layout;
 }

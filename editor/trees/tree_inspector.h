@@ -143,6 +143,9 @@ private:
 public:
     explicit        DrImageHolder(IEditorRelay *editor_relay, QWidget *parent = nullptr);
 
+    // Setup Functions
+    void            setChildrenGeometry();
+
     // Getters / Setters
     QPushButton*        getDeleteButton()       { return m_delete_button; }
     QPushButton*        getEditButton()         { return m_edit_button; }

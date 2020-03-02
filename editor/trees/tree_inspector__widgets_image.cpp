@@ -137,9 +137,6 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
             });
         }
 
-    // If we just rebuilt image frame, force "Resize" event to place children widgets during eventFilter below
-    if (rebuilding == false) image_frame->resize(image_frame->size());
-
     // Return DrImageHolder
     return image_frame;
 }
@@ -154,6 +151,11 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
 DrImageHolder::DrImageHolder(IEditorRelay *editor_relay, QWidget *parent) : QFrame(parent) {
     m_editor_relay = editor_relay;
 };
+
+void DrImageHolder::setChildrenGeometry() {
+    if (this->getDeleteButton() != nullptr) this->getDeleteButton()->setGeometry( this->width() - 26, 10, 19, 17);
+    if (this->getEditButton()   != nullptr) this->getEditButton()->setGeometry(   this->width() - 26, 31, 19, 17);
+}
 
 
 //####################################################################################
@@ -177,8 +179,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     DrSettings *settings =  project->findSettingsFromKey(settings_key);     if (settings == nullptr) return QObject::eventFilter(object, event);
 
     if (event->type() == QEvent::Resize) {
-        if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setGeometry( frame->width() - 26, 10, 19, 17);
-        if (frame->getEditButton() !=   nullptr) frame->getEditButton()->setGeometry(   frame->width() - 26, 31, 19, 17);
+        frame->setChildrenGeometry();
 
     } else if (event->type() == QEvent::HoverMove || event->type() == QEvent::HoverEnter) {
         if (frame->getDeleteButton() != nullptr) frame->getDeleteButton()->setVisible(true);

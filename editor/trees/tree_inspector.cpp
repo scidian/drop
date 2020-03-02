@@ -37,7 +37,7 @@
 #include "project/settings/settings_component_property.h"
 
 // Local Constants
-const bool c_update_reason = false;         // When set to true, prints reason function left early without completing
+const bool c_update_reason = false;             // When set to true, prints reason function left early without completing
 
 
 //####################################################################################
@@ -108,6 +108,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         m_selected_type = DrType::NotFound;
         this->clear();
         m_widgets.clear();
+        if (c_update_reason) qDebug() << "Inspector::buildInspectorFromKeys() exiting early... Inspector cleared...";
         return;
     }
 
@@ -217,7 +218,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
     // ********** Check if old selection and new selection are types are same
     bool same_type = false;
     DrSettings *settings_shown = nullptr;
-    if (m_key_shown != c_no_key) getParentProject()->findSettingsFromKey(m_key_shown);
+    if (m_key_shown != c_no_key) settings_shown = getParentProject()->findSettingsFromKey(m_key_shown);
     if (settings_shown != nullptr && !force_rebuild) {
         if (m_selected_type == DrType::Thing && new_type == DrType::Thing) {
             DrThing *thing1 = dynamic_cast<DrThing*>(settings_shown);
@@ -261,6 +262,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
 
 
     // ********** Loop through each component and add it to the Inspector list
+    if (c_update_reason) qDebug() << "Rebuilding object Inspector... Key: " << QString::number(new_settings_to_show->getKey())
+                                  << ", Name: " << QString::fromStdString(new_settings_to_show->getName());
     this->clear();
     m_widgets.clear();
 
