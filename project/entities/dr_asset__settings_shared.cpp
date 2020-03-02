@@ -90,8 +90,8 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
 
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, Property_Type::List, static_cast<int>(Body_Style::Rigid_Body),
-                           "Body Style", "Body style for Object when used as a Dynamic object. Using Blob or 2D Cloth physics will override collision "
-                                         "shape of Object. Blob and 2D Cloth physics bodies are currently only able to be rendered in 2D.");
+                           "Body Style", "Body style for Object when used as a Dynamic object. Using Blob or Cloth bodies will override collision "
+                                         "shape of Object. Blob and Cloth bodies are currently only rendered in 2D.");
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness, Property_Type::Percent, 100.0,
                            "Body Rigidness", "When using soft bodies, how rigid will this body be?", false, false);
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale, Property_Type::PointF, DrPointF(1.0, 1.0),

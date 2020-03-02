@@ -380,9 +380,6 @@ DrEngineObject* DrEngineWorld::addSoftBodySquare(long original_key, long asset_k
     // Set collision groups so that soft bodies do not collide with each other, but do other things
     applyCategoryMask(central, central->getKey());
 
-    Dr::PrintDebug("Finished soft square");
-
-
     // Return central soft body DrEngineObject*
     return central;
 }
