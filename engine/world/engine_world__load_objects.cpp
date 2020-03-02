@@ -141,19 +141,6 @@ void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *ob
     object->setTouchDragForce(    touch_drag_force);
     object->setTouchDamage(       touch_damage);
     object->setTouchDamagePoints( touch_damage_pts);
-
-    // Apply settings to physics children
-    if (object->compSoftBody() != nullptr) {
-        for (size_t i = 0; i < object->compSoftBody()->soft_balls.size(); ++i) {
-            DrEngineObject *next_ball = findObjectByKey(object->compSoftBody()->soft_balls[i]);
-            if (next_ball == nullptr) continue;
-            next_ball->setRotateSpeedZ(      rotate_speed);
-            next_ball->setTouchDrag(         touch_drag);
-            next_ball->setTouchDragForce(    touch_drag_force);
-            next_ball->setTouchDamage(       touch_damage);
-            next_ball->setTouchDamagePoints( touch_damage_pts);
-        }
-    }
 }
 
 

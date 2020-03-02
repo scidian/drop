@@ -82,7 +82,6 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ///ball1->setDeathTouch( true );
         ball1->compPlayer()->setMoveSpeedY( 300 );
         ball1->setTouchDrag(true);
-        ball1->setTouchDragForce(2000.0);
 
         DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
         ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
@@ -93,11 +92,11 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball2->compPlayer()->setJumpCount( c_unlimited_jump );
         ball2->setRotateSpeedZ( 20.0 );
         ball2->setTouchDrag(true);
-        ball2->setTouchDragForce(2000.0);
 
         DrAsset *dragon = m_project->findAssetFromKey(1024);
         if (dragon != nullptr) {
-            DrEngineObject *softy = addSoftBodyCircle(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 0, 100, 0, DrPointF(150, 150), c_scale1x1, 0.8, 0.50, 0.25, false);
+            DrEngineObject *softy = addSoftBodyCircle(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 0, 100, 0,
+                                                      DrPointF(dragon->getWidth(), dragon->getHeight()), c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy != nullptr) {
                 assignPlayerControls(softy, false, false);
                 if (getCamerasFollowThing(softy->getKey()).size() > 0)
@@ -109,9 +108,11 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy->compPlayer()->setCanWallJump(true);
                 softy->compPlayer()->setCanWallJump(false);
                 softy->setRotateSpeedZ( 7 );
+                softy->setTouchDrag(true);
             }
 
-            DrEngineObject *softy2 = addSoftBodyMesh(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0, DrPointF(100, 100), c_scale1x1, 0.8, 0.50, 0.25, false);
+            DrEngineObject *softy2 = addSoftBodyMesh(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0,
+                                                     DrPointF(dragon->getWidth(), dragon->getHeight()), c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy2 != nullptr) {
                 assignPlayerControls(softy2, false, false);
                 if (getCamerasFollowThing(softy2->getKey()).size() > 0)
@@ -122,6 +123,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy2->compPlayer()->setJumpCount( -1 );
                 softy2->compPlayer()->setCanWallJump(false);
                 softy2->setRotateSpeedZ( 7 );
+                softy2->setTouchDrag(true);
             }
         }
 

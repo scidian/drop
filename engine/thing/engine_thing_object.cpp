@@ -333,9 +333,43 @@ void DrEngineObject::setHealth(double new_health, long damaged_by_key) {
 }
 
 
+//####################################################################################
+//##
+//##    Control Setters, Make sure we also pass to soft body Physics Children
+//##
+//####################################################################################
+void DrEngineObject::setTouchDrag(bool touch_drag) {
+    m_touch_drag = touch_drag;
+    updatePhysicsChildren();
+}
+void DrEngineObject::setTouchDragForce(double drag_force) {
+    m_touch_drag_force = drag_force;
+    updatePhysicsChildren();
+}
+void DrEngineObject::setTouchDamage(bool touch_damage) {
+    m_touch_damage = touch_damage;
+    updatePhysicsChildren();
+}
+void DrEngineObject::setTouchDamagePoints(double damage) {
+    m_touch_damage_points = damage;
+    updatePhysicsChildren();
+}
 
-
-
+// Apply settings to physics children
+void DrEngineObject::updatePhysicsChildren() {
+    if (this->compSoftBody() != nullptr) {
+        for (size_t i = 0; i < this->compSoftBody()->soft_balls.size(); ++i) {
+            DrEngineObject *next_ball = world()->findObjectByKey(this->compSoftBody()->soft_balls[i]);
+            if (next_ball == this) continue;
+            if (next_ball == nullptr) continue;
+            next_ball->setRotateSpeedZ(      m_rotate_speed);
+            next_ball->setTouchDrag(         m_touch_drag);
+            next_ball->setTouchDragForce(    m_touch_drag_force);
+            next_ball->setTouchDamage(       m_touch_damage);
+            next_ball->setTouchDamagePoints( m_touch_damage_points);
+        }
+    }
+}
 
 
 

@@ -106,7 +106,7 @@ private:
 
     // Object Controls
     bool                m_touch_drag            { false };                  // Should this object be able to be dragged by touch / mouse?
-    double              m_touch_drag_force      { 100.0 };                  // Max force the constraint holding this object to the mouse_body can apply (as a percentange)
+    double              m_touch_drag_force      { 1000.0 };                 // Max force the constraint holding this object to the mouse_body can apply (as a percentange)
     bool                m_touch_damage          { false };                  // Should this object receive damage when tapped / clicked?
     double              m_touch_damage_points   { 1.0 };                    // Amount of damage to receive when tapped / clicked
 
@@ -174,6 +174,7 @@ public:
     const bool&         isPhysicsChild()        { return m_is_physics_child; }
     DrEngineObject*     getPhysicsParent()      { return m_physics_parent; }
     void                setPhysicsParent(DrEngineObject *parent) { m_physics_parent = parent; m_is_physics_child = (parent != nullptr); }
+    void                updatePhysicsChildren();
 
     // Object Properties - Bounce / Friction
     const double&   getCustomFriction()         { return m_custom_friction; }
@@ -257,10 +258,10 @@ public:
     const bool&     hasTouchDamage()            { return m_touch_damage; }
     const double&   getTouchDamagePoints()      { return m_touch_damage_points; }
 
-    void            setTouchDrag(bool touch_drag)           { m_touch_drag = touch_drag; }
-    void            setTouchDragForce(double drag_force)    { m_touch_drag_force = drag_force; }
-    void            setTouchDamage(bool touch_damage)       { m_touch_damage = touch_damage; }
-    void            setTouchDamagePoints(double damage)     { m_touch_damage_points = damage; }
+    void            setTouchDrag(bool touch_drag);
+    void            setTouchDragForce(double drag_force);
+    void            setTouchDamage(bool touch_damage);
+    void            setTouchDamagePoints(double damage);
 
 
     // #################### FUNCTIONS UPDATED BY ENGINE ####################
