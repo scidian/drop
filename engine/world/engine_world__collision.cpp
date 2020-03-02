@@ -78,14 +78,16 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
-    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
-    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
+    bool a_was_physics_child = object_a->isPhysicsChild();
+    bool b_was_physics_child = object_b->isPhysicsChild();
+    if (a_was_physics_child) { object_a = object_a->getPhysicsParent(); }
+    if (b_was_physics_child) { object_b = object_b->getPhysicsParent(); }
     if (object_a->shouldCollide(object_b) == false) return cpArbiterIgnore(arb);
     if (object_b->shouldCollide(object_a) == false) return cpArbiterIgnore(arb);
 
     // Interactive foliage
     if (object_a->compFoliage() != nullptr) {
-        if (object_b->body_type == Body_Type::Dynamic) {
+        if (object_b->body_type == Body_Type::Dynamic && b_was_physics_child == false) {
             cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), 2.0);
             cpBodyApplyImpulseAtLocalPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
         }

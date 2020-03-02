@@ -76,6 +76,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
 
 
     int         physics_body_style =    asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style).toInt();
+    double      body_rigidness =        asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness).toDouble() / 100.0;
     DrPointF    gravity_scale =         asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Gravity_Scale).toPointF();
     std::vector<DrVariant> friction =   asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Friction).toVector();
     std::vector<DrVariant> bounce =     asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Custom_Bounce).toVector();
@@ -96,15 +97,15 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
             break;
         case Body_Style::Circular_Blob:
             player = addSoftBodyCircle( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
-                                        info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+                                        info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
             break;
         case Body_Style::Square_Blob:
             player = addSoftBodySquare( thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
-                                        info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+                                        info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
             break;
         case Body_Style::Mesh_Blob:
             player = addSoftBodyMesh(   thing->getKey(), asset->getKey(), info.position.x, -info.position.y, info.z_order,
-                                         info.size, info.scale, 0.8, use_friction, use_bounce, can_rotate);
+                                        info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
             break;
     }
 

@@ -40,7 +40,12 @@ struct Ground_Data {
     double dot_product;
 };
 
-static void SelectPlayerGroundNormal(cpBody *, cpArbiter *arb, Ground_Data *ground) {
+static void SelectPlayerGroundNormal(cpBody *body, cpArbiter *arb, Ground_Data *ground) {
+    CP_ARBITER_GET_BODIES(arb, a, b)
+
+    // Don't allow self to count as touching ground
+    if (body == b) return;
+
     // Get normal vector of collision
     cpVect n = cpvneg( cpArbiterGetNormal(arb) );
 
@@ -67,8 +72,13 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
         player_vel = player_vel * 0.85;
 
         // Apply force to Parent Object
-        if (initial_jump) cpBodySetVelocity( object->body, player_vel );
-        else cpBodyApplyForceAtWorldPoint( object->body, jump_vel * cpBodyGetMass(object->body) * 50.0, cpBodyGetPosition(object->body) );
+        double body_r = cpBodyGetAngularVelocity( object->body );
+        if (initial_jump) {
+            cpBodySetVelocity( object->body, player_vel );
+            cpBodySetAngularVelocity(object->body, body_r * 10.0);
+        } else {
+            cpBodyApplyForceAtWorldPoint( object->body, jump_vel * cpBodyGetMass(object->body) * 50.0, cpBodyGetPosition(object->body) );
+        }
 
         // Apply force to Children Soft Ball Objects
         for (auto ball_number : object->compSoftBody()->soft_balls) {
@@ -136,6 +146,15 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     Ground_Data ground;
     ground.dot_product = 2.0;                                                               // 2.0 is an impossible test number, dot products will always be between -1.0 to 1.0
     cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
+
+    // Ground Check for physics children of soft bodies
+    if (object->compSoftBody() != nullptr) {
+        for (size_t i = 0; i < object->compSoftBody()->soft_balls.size(); ++i) {
+            DrEngineObject *next_ball = object->world()->findObjectByKey(object->compSoftBody()->soft_balls[i]);
+            if (next_ball == nullptr) continue;
+            cpBodyEachArbiter(next_ball->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
+        }
+    }
 
     // Figure out if any collision points count as ground or as wall
     comp_player->setOnWall( ground.dot_product <= 0.50 && comp_player->canWallJump() );     //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
@@ -403,28 +422,18 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
 
     // ********** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    if (object->body_style != Body_Style::Rigid_Body) {
-        // Apply force to Children Soft Ball Objects
-        double velocity_ratio_x = cpBodyGetVelocity(object->body).x / velocity.x;
-        double velocity_ratio_y = cpBodyGetVelocity(object->body).y / velocity.y;
+    cpBodySetVelocity( object->body, velocity );
 
-        // Apply force to Parent Soft Body Object
-        cpBodySetVelocity( object->body, velocity );
-
-//        g_info = "Velocity X: " + std::to_string(cpBodyGetVelocity(object->body).x) + ", RatioX: " + std::to_string(velocity_ratio_x);
-
-//        for (auto ball_number : object->soft_balls) {
-//            DrEngineObject *soft_ball = object->getWorld()->findObjectByKey(ball_number);
-//            if (soft_ball == nullptr) return;
-//            cpVect soft_ball_velocity = cpBodyGetVelocity(soft_ball->body);
-//            if (Dr::RealDouble(velocity_ratio_x)) soft_ball_velocity.x *= velocity_ratio_x;
-//            if (Dr::RealDouble(velocity_ratio_y)) soft_ball_velocity.y *= velocity_ratio_y;
-//            ///cpBodySetVelocity( soft_ball->body, soft_ball_velocity );
-//        }
-
-    // Normal Body Jump
-    } else {
-        cpBodySetVelocity( object->body, velocity );
+    // Apply movement force evenly to Mesh Cloth players
+    if (object->body_style == Body_Style::Mesh_Blob && (has_key_x || has_key_y)) {
+        for (auto ball_number : object->compSoftBody()->soft_balls) {
+            DrEngineObject *soft_ball = object->world()->findObjectByKey(ball_number);
+            if (soft_ball == nullptr) return;
+            cpVect soft_ball_velocity = cpBodyGetVelocity(soft_ball->body);
+            double x_vel = cpflerp(soft_ball_velocity.x, velocity.x, 0.25);
+            double y_vel = cpflerp(soft_ball_velocity.y, velocity.y, 0.25);
+            cpBodySetVelocity( soft_ball->body, cpv(x_vel, y_vel));
+        }
     }
 
     cpBodyUpdateVelocity(body, cpv(actual_gravity_x, actual_gravity_y), damping, dt);

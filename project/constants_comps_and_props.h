@@ -285,6 +285,7 @@ namespace Props {
 
     // Asset_Physics
     const std::string Asset_Physics_Body_Style              = "AsPhBodyStyle";              // list, enum class Body_Style (Rigid, Blob, Foliage, etc)
+    const std::string Asset_Physics_Body_Rigidness          = "AsPhBodyRigidness";          // percent, 0 == gooey, 1 == rigid
     const std::string Asset_Physics_Gravity_Scale           = "AsPhGravityScale";           // bool
     const std::string Asset_Physics_Custom_Friction         = "AsPhFrictionCustom";         // bool double combo
     const std::string Asset_Physics_Custom_Bounce           = "AsPhBounceCustom";           // bool double combo
