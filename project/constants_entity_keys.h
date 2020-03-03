@@ -32,7 +32,7 @@ constexpr long c_key_device_camera =                100;        // Camera Device
 
 
 //####################################################################################
-//##    Effects                         200-299
+//##    Effects                         200-249
 //############################
 constexpr long c_key_effect_light =                 200;        // Light Effect
 constexpr long c_key_effect_water =                 201;        // Water Effect
@@ -40,6 +40,13 @@ constexpr long c_key_effect_fire =                  202;        // Fire Effect
 constexpr long c_key_effect_mirror =                203;        // Mirror Effect
 constexpr long c_key_effect_fisheye =               204;        // Fisheye Effect
 constexpr long c_key_effect_swirl =                 205;        // Swirl Effect
+
+
+//####################################################################################
+//##    Items                           250-299
+//############################
+constexpr long c_key_item_foliage =                 250;        // Foliage Special Item
+
 
 
 //####################################################################################

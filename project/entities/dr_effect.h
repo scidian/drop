@@ -12,7 +12,6 @@
 
 // Forward Declarations
 class DrProject;
-enum class DrEffectType;
 
 
 //####################################################################################
@@ -39,6 +38,17 @@ public:
 
 
 #endif // DREFFECT_H
+
+
+
+
+
+
+
+
+
+
+
 
 
 

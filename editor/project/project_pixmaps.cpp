@@ -32,17 +32,27 @@ QPixmap GetAssetPixmapDevice(DrDeviceType device_type) {
 //####################################################################################
 QPixmap GetAssetPixmapEffect(DrEffectType effect_type) {
     switch (effect_type) {
-        case DrEffectType::Light:   return QPixmap(":/assets/asset_types/light.png");
-        case DrEffectType::Water:   return QPixmap(":/assets/asset_types/water.png");
-        case DrEffectType::Fire:    return QPixmap(":/assets/asset_types/fire.png");
-        case DrEffectType::Mirror:  return QPixmap(":/assets/asset_types/mirror.png");
-        case DrEffectType::Fisheye: return QPixmap(":/assets/asset_types/fisheye.png");
-        case DrEffectType::Swirl:   return QPixmap(":/assets/asset_types/swirl.png");
-        case DrEffectType::Flag:    return QPixmap(":/assets/asset_types/flag.png");
-        case DrEffectType::Rain:    return QPixmap(":/assets/asset_types/rain.png");
-        case DrEffectType::Snow:    return QPixmap(":/assets/asset_types/snow.png");
-        case DrEffectType::Clouds:  return QPixmap(":/assets/asset_types/clouds.png");
-        case DrEffectType::Fog:     return QPixmap(":/assets/asset_types/fog.png");
+        case DrEffectType::Light:       return QPixmap(":/assets/asset_types/light.png");
+        case DrEffectType::Water:       return QPixmap(":/assets/asset_types/water.png");
+        case DrEffectType::Fire:        return QPixmap(":/assets/asset_types/fire.png");
+        case DrEffectType::Mirror:      return QPixmap(":/assets/asset_types/mirror.png");
+        case DrEffectType::Fisheye:     return QPixmap(":/assets/asset_types/fisheye.png");
+        case DrEffectType::Swirl:       return QPixmap(":/assets/asset_types/swirl.png");
+        //case DrEffectType::Flag:        return QPixmap(":/assets/asset_types/flag.png");
+        //case DrEffectType::Rain:        return QPixmap(":/assets/asset_types/rain.png");
+        //case DrEffectType::Snow:        return QPixmap(":/assets/asset_types/snow.png");
+        //case DrEffectType::Clouds:      return QPixmap(":/assets/asset_types/clouds.png");
+        //case DrEffectType::Fog:         return QPixmap(":/assets/asset_types/fog.png");
+    }
+}
+
+
+//####################################################################################
+//##    Returns Asset Tree Item Pixmap
+//####################################################################################
+QPixmap GetAssetPixmapItem(DrItemType item_type) {
+    switch (item_type) {
+        case DrItemType::Foliage:       return QPixmap(":/assets/asset_types/foliage.png");
     }
 }
 

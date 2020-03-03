@@ -87,7 +87,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 
     // Interactive foliage
     if (object_a->compFoliage() != nullptr) {
-        if (object_b->body_type == Body_Type::Dynamic && b_was_physics_child == false) {
+        if (object_b->body_type != Body_Type::Static && b_was_physics_child == false) {
             cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), 2.0);
             cpBodyApplyImpulseAtLocalPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
         }

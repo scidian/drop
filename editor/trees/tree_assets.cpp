@@ -31,6 +31,7 @@
 #include "project/entities/dr_effect.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_item.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -124,6 +125,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     EffectMap   &list_effects = getParentProject()->getEffectMap();
     FontMap     &list_fonts =   getParentProject()->getFontMap();
     ImageMap    &list_images =  getParentProject()->getImageMap();
+    ItemMap     &list_items =   getParentProject()->getItemMap();
     int rowCount = 0;
     this->clear();
     m_asset_frames.clear();
@@ -141,21 +143,24 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Asset))  {
         widget_items[Asset_Category::Character] =   new QTreeWidgetItem();
         widget_items[Asset_Category::Object] =      new QTreeWidgetItem();
-        asset_categories.push_back( std::make_pair(Asset_Category::Character,      widget_items[Asset_Category::Character]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Object,         widget_items[Asset_Category::Object]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Character,       widget_items[Asset_Category::Character]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Object,          widget_items[Asset_Category::Object]) );
     }
     if (show_types.contains(DrType::Device)) {
         widget_items[Asset_Category::Device] =      new QTreeWidgetItem();
-        asset_categories.push_back( std::make_pair(Asset_Category::Device,         widget_items[Asset_Category::Device]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Device,          widget_items[Asset_Category::Device]) );
     }
-
     if (show_types.contains(DrType::Effect)) {
         widget_items[Asset_Category::Effect] =      new QTreeWidgetItem();
-        asset_categories.push_back( std::make_pair(Asset_Category::Effect,         widget_items[Asset_Category::Effect]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Effect,          widget_items[Asset_Category::Effect]) );
+    }
+    if (show_types.contains(DrType::Item)) {
+        widget_items[Asset_Category::Item] =        new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Item,            widget_items[Asset_Category::Item]) );
     }
     if (show_types.contains(DrType::Font)) {
         widget_items[Asset_Category::Text] =        new QTreeWidgetItem();
-        asset_categories.push_back( std::make_pair(Asset_Category::Text,           widget_items[Asset_Category::Text]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Text,            widget_items[Asset_Category::Text]) );
     }
     if (show_types.contains(DrType::Image)) {
         widget_items[Asset_Category::Image] =       new QTreeWidgetItem();
@@ -207,6 +212,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Effect)) { for (auto effect_pair : list_effects) { if (effect_pair.first > c_no_key) entities.push_back(effect_pair.second); } }
     if (show_types.contains(DrType::Font))   { for (auto font_pair :   list_fonts)   { if (font_pair.first > c_no_key)   entities.push_back(font_pair.second); } }
     if (show_types.contains(DrType::Image))  { for (auto image_pair :  list_images)  { if (image_pair.first > c_no_key)  entities.push_back(image_pair.second); } }
+    if (show_types.contains(DrType::Item))   { for (auto item_pair :   list_items)   { if (item_pair.first > c_no_key)   entities.push_back(item_pair.second); } }
 
     std::sort(entities.begin(), entities.end(), [](DrSettings *a, DrSettings *b) {
         return QString::fromStdString(a->getName()).toLower() < QString::fromStdString(b->getName()).toLower();
@@ -304,6 +310,12 @@ void TreeAssets::buildAssetTree(QString search_text) {
                 } else {
                     description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image[1];
                 }
+
+            } else if (entity->getType() == DrType::Item) {
+                DrItem *item = dynamic_cast<DrItem*>(entity);
+                pix = Dr::GetAssetPixmapItem( item->getItemType() );
+                description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Item[1];
+
             }
             description += "<br>" + QString::fromStdString(hidden_txt);
             getHoverHandler()->attachToHoverHandler(single_asset, entity_name, description);
@@ -329,12 +341,12 @@ void TreeAssets::buildAssetTree(QString search_text) {
             DrAsset *asset = dynamic_cast<DrAsset*>(entity);
             if (asset->getAssetType() == DrAssetType::Object)           asset_type = Asset_Category::Object;
             else if (asset->getAssetType() == DrAssetType::Character)   asset_type = Asset_Category::Character;
-        } else if (entity->getType() == DrType::Image) {
-            DrImage *image = dynamic_cast<DrImage*>(entity);
-            asset_type = image->getAssetCategory();
         } else if (entity->getType() == DrType::Device) {               asset_type = Asset_Category::Device;
         } else if (entity->getType() == DrType::Effect) {               asset_type = Asset_Category::Effect;
         } else if (entity->getType() == DrType::Font) {                 asset_type = Asset_Category::Text;
+        } else if (entity->getType() == DrType::Image) {
+            DrImage *image = dynamic_cast<DrImage*>(entity);            asset_type = image->getAssetCategory();
+        } else if (entity->getType() == DrType::Item) {                 asset_type = Asset_Category::Item;
         } else { continue; }
 
         m_grid_layouts[asset_type]->addWidget(single_asset);            // Category now has at least one Asset, setEnabled so it will be displayed
@@ -406,6 +418,7 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
         case Asset_Category::Object:        name = "  Objects";     icon = "comp_object.png";       info = Advisor_Info::Asset_Object;          break;
         case Asset_Category::Device:        name = "  Devices";     icon = "comp_camera.png";       info = Advisor_Info::Asset_Device;          break;
         case Asset_Category::Effect:        name = "  Effects";     icon = "comp_effects.png";      info = Advisor_Info::Asset_Effect;          break;
+        case Asset_Category::Item:          name = "  Items";       icon = "comp_items.png";        info = Advisor_Info::Asset_Item;            break;
         case Asset_Category::Text:          name = "  Text";        icon = "comp_font.png";         info = Advisor_Info::Asset_Text;            break;
 
         case Asset_Category::Image:         name = "  Images";      icon = "comp_images.png";               info = Advisor_Info::Asset_Image;           break;

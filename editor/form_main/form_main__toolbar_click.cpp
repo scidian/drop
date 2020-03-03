@@ -113,9 +113,9 @@ void FormMain::buttonGroupTransformClicked(int id) {
                                                   std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) };
 
         for (auto item : sceneEditor->getSelectionItems()) {
-            DrItem   *dritem = dynamic_cast<DrItem*>(item);
-            if (dritem == nullptr) continue;
-            DrThing  *thing = dritem->getThing();
+            DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(item);
+            if (graphics_item == nullptr) continue;
+            DrThing *thing = graphics_item->getThing();
             if (thing == nullptr) continue;
 
             settings.push_back(thing);

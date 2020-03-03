@@ -62,21 +62,21 @@ void DrScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::li
 //####################################################################################
 void DrScene::updateItemZValues() {
     for (auto &item : items()) {
-        DrItem *dritem = dynamic_cast<DrItem*>(item);
-        if (dritem == nullptr) continue;
-        if (dritem->isTempOnly()) continue;
+        DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(item);
+        if (graphics_item == nullptr) continue;
+        if (graphics_item->isTempOnly()) continue;
 
-        DrThing *thing = dritem->getThing();
+        DrThing *thing = graphics_item->getThing();
         if (thing == nullptr) continue;
 
         // ***** Turn off itemChange() signals to stop recursive calling
-        bool flags_enabled_before = dritem->itemChangeFlagsEnabled();
-        dritem->disableItemChangeFlags();
+        bool flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
+        graphics_item->disableItemChangeFlags();
 
-        dritem->setZValue( thing->getZOrderWithSub() );
+        graphics_item->setZValue( thing->getZOrderWithSub() );
 
         // ***** Turn back on itemChange() signals
-        if (flags_enabled_before) dritem->enableItemChangeFlags();
+        if (flags_enabled_before) graphics_item->enableItemChangeFlags();
     }
 }
 
@@ -86,8 +86,8 @@ void DrScene::updateItemZValues() {
 void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentProperty> component_property_pairs) {
     DrThing *thing = dynamic_cast<DrThing*>(changed_item);
     if (thing == nullptr) return;
-    DrItem  *item =  thing->getDrItem();
-    if (item == nullptr)  return;
+    DrGraphicsItem *graphics_item = thing->getDrGraphicsItem();
+    if (graphics_item == nullptr)  return;
 
     // ***** Make sure this object is currently being shown in the DrScene before we try to update it
     if (thing->getParentStage()->getKey() != m_current_stage_key) return;
@@ -98,12 +98,12 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
     DrPointF scale     = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
     DrPointF size      = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size).toPointF();
     double   angle     = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
-    double   pre_angle = item->data(User_Roles::Rotation).toDouble();
+    double   pre_angle = graphics_item->data(User_Roles::Rotation).toDouble();
     double   transform_scale_x, transform_scale_y;
 
     // ***** Turn off itemChange() signals to stop recursive calling
-    bool flags_enabled_before = item->itemChangeFlagsEnabled();
-    item->disableItemChangeFlags();
+    bool flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
+    graphics_item->disableItemChangeFlags();
 
     // ***** Go through each property that we have been notified has changed and update as appropriately
     for (auto one_component_property_pair : component_property_pairs) {
@@ -159,7 +159,7 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
 
 
         } else if (comp == Comps::Thing_Transform && prop == Props::Thing_Position) {
-            setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
+            setPositionByOrigin(graphics_item, Position_Flags::Center, position.x, position.y);
 
         } else if ((comp == Comps::Thing_Transform && prop == Props::Thing_Size) ||
                    (comp == Comps::Thing_Transform && prop == Props::Thing_Scale) ||
@@ -178,39 +178,39 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
                     if (has_max_y && size.y > thing->maxSize().y) size.y = thing->maxSize().y;
                     if (has_min_y && size.y < thing->minSize().y) size.y = thing->minSize().y;
                     if (keep_square) {
-                        if (Dr::IsCloseTo(scale.y, size.y / item->getAssetHeight(), 0.001)) size.y = size.x;
-                        else                                                                size.x = size.y;
+                        if (Dr::IsCloseTo(scale.y, size.y / graphics_item->getAssetHeight(), 0.001)) size.y = size.x;
+                        else                                                                         size.x = size.y;
                     }
                     pretest = true;
                 } else if (prop == Props::Thing_Scale) {
-                    if (has_max_x && scale.x * item->getAssetWidth() >  thing->maxSize().x) scale.x = thing->maxSize().x / item->getAssetWidth();
-                    if (has_min_x && scale.x * item->getAssetWidth() <  thing->minSize().x) scale.x = thing->minSize().x / item->getAssetWidth();
-                    if (has_max_y && scale.y * item->getAssetHeight() > thing->maxSize().y) scale.y = thing->maxSize().y / item->getAssetHeight();
-                    if (has_min_y && scale.y * item->getAssetHeight() < thing->minSize().y) scale.y = thing->minSize().y / item->getAssetHeight();
+                    if (has_max_x && scale.x * graphics_item->getAssetWidth() >  thing->maxSize().x) scale.x = thing->maxSize().x / graphics_item->getAssetWidth();
+                    if (has_min_x && scale.x * graphics_item->getAssetWidth() <  thing->minSize().x) scale.x = thing->minSize().x / graphics_item->getAssetWidth();
+                    if (has_max_y && scale.y * graphics_item->getAssetHeight() > thing->maxSize().y) scale.y = thing->maxSize().y / graphics_item->getAssetHeight();
+                    if (has_min_y && scale.y * graphics_item->getAssetHeight() < thing->minSize().y) scale.y = thing->minSize().y / graphics_item->getAssetHeight();
                     if (keep_square) {
-                        if (Dr::IsCloseTo(size.y, scale.y * item->getAssetHeight(), 0.001)) scale.y = scale.x;
-                        else                                                                scale.x = scale.y;
+                        if (Dr::IsCloseTo(size.y, scale.y * graphics_item->getAssetHeight(), 0.001)) scale.y = scale.x;
+                        else                                                                         scale.x = scale.y;
                     }
                     pretest = true;
                 }
             }
             // ***** If property that changed was size, calculate the proper scale based on size
             if (prop == Props::Thing_Size) {
-                scale.x = size.x / item->getAssetWidth();
-                scale.y = size.y / item->getAssetHeight();
+                scale.x = size.x / graphics_item->getAssetWidth();
+                scale.y = size.y / graphics_item->getAssetHeight();
             // Otherwise calculate the size based on the scale
             } else {
-                size.x = scale.x * item->getAssetWidth();
-                size.y = scale.y * item->getAssetHeight();
+                size.x = scale.x * graphics_item->getAssetWidth();
+                size.y = scale.y * graphics_item->getAssetHeight();
             }
             // ***** Store the item transform data, one of which will have been new. Then recalculate the transform and move the object
-            item->setData(User_Roles::Scale, QPointF(scale.x, scale.y) );
-            item->setData(User_Roles::Rotation, angle );
+            graphics_item->setData(User_Roles::Scale, QPointF(scale.x, scale.y) );
+            graphics_item->setData(User_Roles::Rotation, angle );
             transform_scale_x = Dr::CheckScaleNotZero(scale.x);
             transform_scale_y = Dr::CheckScaleNotZero(scale.y);
             transform = QTransform().rotate(angle).scale(transform_scale_x, transform_scale_y);
-            item->setTransform(transform);
-            setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
+            graphics_item->setTransform(transform);
+            setPositionByOrigin(graphics_item, Position_Flags::Center, position.x, position.y);
             // ***** If size or scale was changed, update the other and update the widgets in the Inspector
             if (prop == Props::Thing_Size || pretest) {
                 thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale, scale);
@@ -222,7 +222,7 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
             }
 
         } else if (comp == Comps::Thing_Layering && prop == Props::Thing_Z_Order) {
-            item->setZValue( thing->getZOrderWithSub() );
+            graphics_item->setZValue( thing->getZOrderWithSub() );
 
         // Update view when camera zoom changes camera size to be drawn
         } else if ((comp == Comps::Thing_Settings_Character && prop == Props::Thing_Character_Camera_Zoom) ||
@@ -238,81 +238,81 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
                    (comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Negative) ||
                    (comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Pixelation) ||
                    (comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Bitrate)) {
-            item->applyFilters();
+            graphics_item->applyFilters();
 
         } else if ((comp == Comps::Thing_Settings_Fire && prop == Props::Thing_Fire_Color_1) ||
                    (comp == Comps::Thing_Settings_Fire && prop == Props::Thing_Fire_Color_2) ||
                    (comp == Comps::Thing_Settings_Fire && prop == Props::Thing_Fire_Color_Smoke) ||
                    (comp == Comps::Thing_Settings_Fire && prop == Props::Thing_Fire_Shape)) {
-            QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_1).toUInt());
-            QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_2).toUInt());
-            QColor sm = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_Smoke).toUInt());
-            int  mask = item->getThing()->getComponentProperty(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape)->getValue().toInt();
-            item->setPixmap( Dr::DrawFire(cs, ce, sm, static_cast<Fire_Mask>(mask)) );
-            item->setBasePixmap(  item->pixmap() );
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
-            item->applyFilters();
+            QColor cs = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_1).toUInt());
+            QColor ce = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_2).toUInt());
+            QColor sm = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Color_Smoke).toUInt());
+            int  mask = graphics_item->getThing()->getComponentProperty(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape)->getValue().toInt();
+            graphics_item->setPixmap( Dr::DrawFire(cs, ce, sm, static_cast<Fire_Mask>(mask)) );
+            graphics_item->setBasePixmap(  graphics_item->pixmap() );
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
+            graphics_item->applyFilters();
 
         } else if (comp == Comps::Thing_Settings_Fisheye && prop == Props::Thing_Fisheye_Color) {
-            uint color =        item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color).toUInt();
-            item->setPixmap( Dr::DrawFisheye( QColor::fromRgba(color) ) );
-            item->setBasePixmap(  item->pixmap() );
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
-            item->applyFilters();
+            uint color = graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color).toUInt();
+            graphics_item->setPixmap( Dr::DrawFisheye( QColor::fromRgba(color) ) );
+            graphics_item->setBasePixmap(  graphics_item->pixmap() );
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
+            graphics_item->applyFilters();
 
         } else if ((comp == Comps::Thing_Settings_Light && prop == Props::Thing_Light_Color) ||
                    (comp == Comps::Thing_Settings_Light && prop == Props::Thing_Light_Cone_Start) ||
                    (comp == Comps::Thing_Settings_Light && prop == Props::Thing_Light_Cone_End) ||
                    (comp == Comps::Thing_Settings_Light && prop == Props::Thing_Light_Intensity) ||
                    (comp == Comps::Thing_Settings_Light && prop == Props::Thing_Light_Blur)) {
-            QColor light_color = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Color).toUInt());
-            float  cone_start =  item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start).toVector()[0].toFloat();
-            float  cone_end =    item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End).toVector()[0].toFloat();
-            float  intensity =   item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Intensity).toFloat();
-            float  blur =        item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Blur).toFloat();
-            item->setPixmap( Dr::DrawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
+            QColor light_color = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Color).toUInt());
+            float  cone_start =  graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start).toVector()[0].toFloat();
+            float  cone_end =    graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End).toVector()[0].toFloat();
+            float  intensity =   graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Intensity).toFloat();
+            float  blur =        graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Light, Props::Thing_Light_Blur).toFloat();
+            graphics_item->setPixmap( Dr::DrawLight(light_color, c_image_size, cone_start, cone_end, intensity, blur) );
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
 
         } else if ((comp == Comps::Thing_Settings_Mirror && prop == Props::Thing_Mirror_Start_Color) ||
                    (comp == Comps::Thing_Settings_Mirror && prop == Props::Thing_Mirror_End_Color)) {
-            QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color).toUInt());
-            QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_End_Color).toUInt());
-            item->setPixmap( Dr::DrawMirror(cs, ce) );
-            item->setBasePixmap(  item->pixmap() );
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
-            item->applyFilters();
+            QColor cs = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color).toUInt());
+            QColor ce = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_End_Color).toUInt());
+            graphics_item->setPixmap( Dr::DrawMirror(cs, ce) );
+            graphics_item->setBasePixmap(  graphics_item->pixmap() );
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
+            graphics_item->applyFilters();
 
         } else if ((comp == Comps::Thing_Settings_Swirl && prop == Props::Thing_Swirl_Start_Color) ||
                    (comp == Comps::Thing_Settings_Swirl && prop == Props::Thing_Swirl_Angle)) {
-            QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color).toUInt());
-            float  a =                   item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Angle).toFloat();
-            item->setPixmap( Dr::DrawSwirl(cs, static_cast<double>(a)) );
-            item->setBasePixmap(  item->pixmap() );
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
-            item->applyFilters();
+            QColor cs = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color).toUInt());
+            float  a =                   graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Angle).toFloat();
+            graphics_item->setPixmap( Dr::DrawSwirl(cs, static_cast<double>(a)) );
+            graphics_item->setBasePixmap(  graphics_item->pixmap() );
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
+            graphics_item->applyFilters();
 
         } else if ((comp == Comps::Thing_Settings_Water && prop == Props::Thing_Water_Start_Color) ||
                    (comp == Comps::Thing_Settings_Water && prop == Props::Thing_Water_End_Color)) {
-            QColor cs = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Start_Color).toUInt());
-            QColor ce = QColor::fromRgba(item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_End_Color).toUInt());
-            item->setPixmap( Dr::DrawWater(cs, ce) );
-            item->setBasePixmap(  item->pixmap() );
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
-            item->applyFilters();
+            QColor cs = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_Start_Color).toUInt());
+            QColor ce = QColor::fromRgba(graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Water, Props::Thing_Water_End_Color).toUInt());
+            graphics_item->setPixmap( Dr::DrawWater(cs, ce) );
+            graphics_item->setBasePixmap(  graphics_item->pixmap() );
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
+            graphics_item->applyFilters();
 
         } else if (comp == Comps::Thing_Settings_Text && prop == Props::Thing_Text_User_Text) {
-            std::string text = item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Text, Props::Thing_Text_User_Text).toString();
+            std::string text = graphics_item->getThing()->getComponentPropertyValue(Comps::Thing_Settings_Text, Props::Thing_Text_User_Text).toString();
             if (text == "") text = " ";
-            item->setPixmap( Dr::CreateText(m_editor_relay->currentProject()->findFontFromKey( item->getAsset()->getKey() ), text ));
-            item->setAssetWidth(  item->pixmap().width() );
-            item->setAssetHeight( item->pixmap().height() );
-            setPositionByOrigin(item, Position_Flags::Center, position.x, position.y);
+            graphics_item->setPixmap( Dr::CreateText(m_editor_relay->currentProject()->findFontFromKey( graphics_item->getAsset()->getKey() ), text ));
+            graphics_item->setAssetWidth(  graphics_item->pixmap().width() );
+            graphics_item->setAssetHeight( graphics_item->pixmap().height() );
+            setPositionByOrigin(graphics_item, Position_Flags::Center, position.x, position.y);
         }
     }
 
@@ -325,7 +325,7 @@ void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentPro
     }
 
     // ***** Turn back on itemChange() signals
-    if (flags_enabled_before) item->enableItemChangeFlags();
+    if (flags_enabled_before) graphics_item->enableItemChangeFlags();
 }
 
 

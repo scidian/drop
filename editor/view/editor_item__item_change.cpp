@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 3/9/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles ItemChange event of custom DrItem QGraphicsPixmapItem
+//      Handles ItemChange event of custom DrGraphicsItem QGraphicsPixmapItem
 //
 //
 
@@ -63,7 +63,7 @@
 //####################################################################################
 //##    Item Change Event - Allows for auto updating on property changes
 //####################################################################################
-QVariant DrItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+QVariant DrGraphicsItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     // If this is a temporary item, or not attached to a scene, do not process change
     if (m_temp_only || !m_editor_relay)         return QGraphicsPixmapItem::itemChange(change, value);
 

@@ -37,6 +37,8 @@ void DrEngineComponent::init() {
 
 // Called during DrEngineWorld->updateWorld() step
 void DrEngineComponent::update(double time_passed, double time_warp) {
+    (void) time_passed;
+    (void) time_warp;
 
 }
 

@@ -145,6 +145,7 @@ std::string DrSettings::getName() {
         case DrType::Effect:
         case DrType::Font:
         case DrType::Image:
+        case DrType::Item:
         case DrType::Stage:
         case DrType::Thing:
         case DrType::World:

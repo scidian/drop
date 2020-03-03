@@ -12,7 +12,6 @@
 
 // Forward Declarations
 class DrProject;
-enum class DrEffectType;
 
 
 //####################################################################################

@@ -19,13 +19,13 @@
 
 //####################################################################################
 //##    Extracts a list of DrSettings pointers from a list of
-//##    DrItems (QGraphicsItems) representing DrThings in a QGraphicsScene
+//##    DrGraphicsItems (QGraphicsItems) representing DrThings in a QGraphicsScene
 //####################################################################################
 QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
     QList<DrSettings*> new_list;
     for (auto item : list) {
-        DrItem* as_item = dynamic_cast<DrItem*>(item);
-        DrThing* as_thing = as_item->getThing();
+        DrGraphicsItem *as_item = dynamic_cast<DrGraphicsItem*>(item);
+        DrThing *as_thing = as_item->getThing();
         new_list.append(as_thing);
     }
     return new_list;

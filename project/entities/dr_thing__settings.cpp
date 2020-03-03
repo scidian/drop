@@ -121,7 +121,7 @@ void DrThing::addComponentSettingsObject(std::string new_name, bool should_colli
                            "Physics Collide?", "Should this Object collide with Dynamic Objects? Objects not marked to collide "
                                                "still provide damage and sound reponses when coming into contact with other Objects.");
     addPropertyToComponent(Comps::Thing_Settings_Object, Props::Thing_Object_Collision_Group, Property_Type::List, static_cast<int>(Collision_Groups::All),
-                           "Collide With", "What types of other items should this Object collide with. Objects types not selected will not provide "
+                           "Collide With", "What types of other Things should this Object collide with. Objects types not selected will not provide "
                                            "physics or damage collision responses.");
     addPropertyToComponent(Comps::Thing_Settings_Object, Props::Thing_Object_Damage, Property_Type::List, static_cast<int>(Collision_Type::Damage_None),
                            "Damage Type", "Choose the type of Object this will damage when coming into contact. By choosing \"Damage Player\" this "

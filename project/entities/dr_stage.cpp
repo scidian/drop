@@ -92,7 +92,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     return m_things[new_thing_key];
 }
 
-// Removes an object from the project
+// Removes a Thing from the project
 void DrStage::deleteThing(DrThing *&thing) {
     m_things.erase(thing->getKey());
     delete thing;
@@ -146,7 +146,7 @@ std::vector<DrThing*> DrStage::thingsSortedByZOrder(Sort_Order sort_order, bool 
 //####################################################################################
 void DrStage::removeGraphicsItemReferences() {
     for (auto thing_pair : getThingMap()) {
-        thing_pair.second->setDrItem(nullptr);
+        thing_pair.second->setDrGraphicsItem(nullptr);
     }
 }
 

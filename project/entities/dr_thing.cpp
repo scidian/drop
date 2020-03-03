@@ -39,7 +39,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->setEditable(false);
     getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(true);
     addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Asset_Key, Property_Type::Int, from_asset_key,
-                           "Asset ID Key", "ID Key of Asset this item represents.", false, false);
+                           "Asset ID Key", "ID Key of Asset this Thing represents.", false, false);
 
     DrSettings *entity = getParentProject()->findSettingsFromKey(from_asset_key);
 

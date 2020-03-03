@@ -135,11 +135,11 @@ void DrView::dropEvent(QDropEvent *event) {
                 case DrEffectType::Mirror:  thing = stage->addThing(DrThingType::Mirror,    entity_key, position.x(), -position.y(),  10);  break;
                 case DrEffectType::Swirl:   thing = stage->addThing(DrThingType::Swirl,     entity_key, position.x(), -position.y(),  10);  break;
                 case DrEffectType::Water:   thing = stage->addThing(DrThingType::Water,     entity_key, position.x(), -position.y(),  10);  break;
-                case DrEffectType::Flag:    break;
-                case DrEffectType::Rain:    break;
-                case DrEffectType::Snow:    break;
-                case DrEffectType::Clouds:  break;
-                case DrEffectType::Fog:     break;
+                //case DrEffectType::Flag:    break;
+                //case DrEffectType::Rain:    break;
+                //case DrEffectType::Snow:    break;
+                //case DrEffectType::Clouds:  break;
+                //case DrEffectType::Fog:     break;
             }
 
         } else if (entity->getType() == DrType::Device) {

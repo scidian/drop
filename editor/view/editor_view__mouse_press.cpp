@@ -149,11 +149,11 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                         // ***** Process press event for item movement (Translation)
                         if (origin_item_settings->isLocked() == false) {
                             // Disable item changes before messing with Z-Order
-                            DrItem *dr_item = dynamic_cast<DrItem*>(m_origin_item);
+                            DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(m_origin_item);
                             bool flags_enabled_before = false;
-                            if (dr_item) {
-                                flags_enabled_before = dr_item->itemChangeFlagsEnabled();
-                                dr_item->disableItemChangeFlags();
+                            if (graphics_item) {
+                                flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
+                                graphics_item->disableItemChangeFlags();
                             }
 
                             // Make sure item is on top before firing QGraphicsView event so we start translating properly
@@ -163,7 +163,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                             m_origin_item->setZValue(original_z);
 
                             // Restore item changes
-                            if (dr_item && flags_enabled_before) dr_item->enableItemChangeFlags();
+                            if (graphics_item && flags_enabled_before) graphics_item->enableItemChangeFlags();
 
                             // Prep Translating start
                             viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
@@ -244,10 +244,10 @@ void DrView::checkTranslateToolTipStarted() {
 QGraphicsItem* DrView::setInspectorClearSelection(DrThing *thing) {
     QGraphicsItem *found_item = nullptr;
     for (auto &item : items()) {
-        DrItem *dr_item = dynamic_cast<DrItem*>(item);
-        if (dr_item == nullptr) continue;
-        if (dr_item->getThing() == thing) {
-            found_item = dr_item;
+        DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(item);
+        if (graphics_item == nullptr) continue;
+        if (graphics_item->getThing() == thing) {
+            found_item = graphics_item;
             if (my_scene->selectedItems().count() > 0) my_scene->clearSelection();
             if (m_editor_relay->getInspector()->getSelectedKeys().contains(thing->getKey()) == false) {
                 m_editor_relay->buildInspector( { thing->getKey() } );

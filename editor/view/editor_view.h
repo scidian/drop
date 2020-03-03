@@ -22,7 +22,7 @@
 class DrProject;
 class DrStage;
 class DrThing;
-class DrItem;
+class DrGraphicsItem;
 class SelectionGroup;
 class IEditorRelay;
 class DrScene;

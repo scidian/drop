@@ -53,7 +53,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
                                "One Way Angle", "Direction that affects <b>One Way Type</b>. 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Surface_Velocity, Property_Type::PointF, DrPointF(0.0, 0.0),
-                               "Surface Velocity", "Speed given to other Things when touching. Useful for objects like conveyor belts. Works better with "
+                               "Surface Velocity", "Speed given to other Things when touching. Useful for making stuff like conveyor belts. Works better with "
                                                    "higher friction.");
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
@@ -90,7 +90,7 @@ void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
 
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, Property_Type::List, static_cast<int>(Body_Style::Rigid_Body),
-                           "Body Style", "Body style for Object when used as a Dynamic object. Using Blob or Cloth bodies will override collision "
+                           "Body Style", "Body style for Thing when used as a Dynamic Object. Using Blob or Cloth bodies will override collision "
                                          "shape of Object. Blob and Cloth bodies are currently only rendered in 2D.");
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness, Property_Type::Percent, 100.0,
                            "Body Rigidness", "When using soft bodies, how rigid will this body be?", false, false);
@@ -135,7 +135,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
                            "Damage Delay",  "Minimum time (in milliseconds) that must pass before this " + type + " can receive damage again after "
                                             "receiving damage the previous time.");
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Auto_Damage,      Property_Type::Double, 0.0,
-                           "Auto Damage",   "Take (x) damage per second (can be negative, i.e. adds Health). Useful for having an object dissapear "
+                           "Auto Damage",   "Take (x) damage per second (can be negative, i.e. adds Health). Useful for having an Thing dissapear "
                                             "from the World after a few seconds.");
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Death_Delay,      Property_Type::Int, 100,
                            "Death Delay",   "Time it takes (in milliseconds) for this " + type + " to die after Health becomes zero. " + type + " no "
@@ -148,7 +148,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Damage_Recoil,    Property_Type::Double, 200.0,
                            "Damage Recoil", "How much opposite force to bounce back when receiving damage from another Thing.");
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Invincible,       Property_Type::Bool, false,
-                           "Invincible?",   "When true, this object takes no damage nor Damage Recoil force and cannot be killed.");
+                           "Invincible?",   "When true, this Thing takes no damage nor Damage Recoil force and cannot be killed.");
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Death_Touch,      Property_Type::Bool, false,
                            "Death Touch?",  "When true, kills everything on contact, even Things with unlimited Health...but not invincible Things.");
 
@@ -192,7 +192,7 @@ void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Slingshot_Force_Multiplier, Property_Type::Double, 1.0,
                            "Force Multiplier", "Force multiplier can be used to increase or decrease power of slingshot.");
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Slingshot_Max_Distance, Property_Type::PositiveDouble, 500.0,
-                           "Pull Back Distance", "Maximum distance slingshot can be pulled away from item.");
+                           "Pull Back Distance", "Maximum distance slingshot can be pulled away from Thing.");
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Slingshot_Arrow_Image, Property_Type::Image, c_no_key,
                            "Slingshot Arrow", "Image used to show direction of slingshot.");
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Slingshot_Arrow_Offset, Property_Type::PositiveDouble, 100.0,

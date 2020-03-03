@@ -25,6 +25,7 @@
 #include "project/entities/dr_effect.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_item.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component_property.h"
 
@@ -60,6 +61,9 @@ void DrFilterAssetMouseHandler::startDrag(QLabel *label_pixmap, long asset_key) 
 
     } else if (entity->getType() == DrType::Effect) {
         pixmap = Dr::GetAssetPixmapEffect( m_editor_relay->currentProject()->findEffectFromKey( entity->getKey() )->getEffectType() );
+
+    } else if (entity->getType() == DrType::Item) {
+        pixmap = Dr::GetAssetPixmapItem( m_editor_relay->currentProject()->findItemFromKey( entity->getKey() )->getItemType() );
 
     } else if (entity->getType() == DrType::Font) {
         //text =   asset->getComponentPropertyValue(Components::Thing_Settings_Text, Properties::Thing_Text_User_Text).toString();

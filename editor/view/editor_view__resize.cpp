@@ -40,13 +40,13 @@ void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip) {
     m_group = my_scene->createEmptyItemGroup(angle, m_pre_resize_scale);
     for (auto child : my_scene->getSelectionItems()) {
         child->setData(User_Roles::Pre_Resize_Scale, (child->data(User_Roles::Scale).toPointF()) );
-        DrItem *child_as_item = dynamic_cast<DrItem*>(child);
-        DrItem *dritem = new DrItem(m_project, child_as_item->getEditorRelay(), child_as_item->getThing(), true);
-        dritem->setVisible(false);
-        dritem->setEnabled(false);
-        dritem->setPos(child_as_item->pos());
-        dritem->setTransform(child_as_item->transform());
-        m_group->addToGroup(dritem);
+        DrGraphicsItem *child_as_item = dynamic_cast<DrGraphicsItem*>(child);
+        DrGraphicsItem *graphics_item = new DrGraphicsItem(m_project, child_as_item->getEditorRelay(), child_as_item->getThing(), true);
+        graphics_item->setVisible(false);
+        graphics_item->setEnabled(false);
+        graphics_item->setPos(child_as_item->pos());
+        graphics_item->setTransform(child_as_item->transform());
+        m_group->addToGroup(graphics_item);
     }
     m_group->setEnabled(false);
     m_group->setVisible(false);
@@ -295,10 +295,10 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
 void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
     // Figure out which item in invisible cloned resize group to base transform off of
-    DrItem *original = dynamic_cast<DrItem*>(item);
-    DrItem *clone = nullptr;
+    DrGraphicsItem *original = dynamic_cast<DrGraphicsItem*>(item);
+    DrGraphicsItem *clone = nullptr;
     for (auto child : m_group->childItems()) {
-        DrItem *child_as_item = dynamic_cast<DrItem*>(child);
+        DrGraphicsItem *child_as_item = dynamic_cast<DrGraphicsItem*>(child);
         if (child_as_item->getThingKey() == original->getThingKey()) {
             clone = child_as_item;
             break;
@@ -399,7 +399,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 //##    Checks if any of these Items should have to remain Square shaped
 //####################################################################################
 bool DrView::containsSquareItem(QGraphicsItem *item) {
-    DrItem *original = dynamic_cast<DrItem*>(item);
+    DrGraphicsItem *original = dynamic_cast<DrGraphicsItem*>(item);
     if (original == nullptr) return false;
 
     DrThing *thing = original->getThing();

@@ -443,5 +443,7 @@
         <file>assets/test_images/leaf.png</file>
         <file>assets/test_images/flower.png</file>
         <file>assets/test_images/grass.png</file>
+        <file>assets/asset_types/foliage.png</file>
+        <file>assets/inspector_icons/comp_items.png</file>
     </qresource>
 </RCC>

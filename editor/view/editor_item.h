@@ -2,12 +2,12 @@
 //      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrItem - Class to hold one Graphics Item within a QGraphicsScene
+//      DrGraphicsItem - Class to hold one Graphics Item within a QGraphicsScene
 //
 //
 
-#ifndef DRITEM_H
-#define DRITEM_H
+#ifndef DR_GRAPHICS_ITEM_H
+#define DR_GRAPHICS_ITEM_H
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
@@ -19,10 +19,10 @@ class DrThing;
 class IEditorRelay;
 
 //####################################################################################
-//##    DrItem
+//##    DrGraphicsItem
 //##        A QGraphicsItem for use with our custom QGraphicsScene
 //############################
-class DrItem : public QGraphicsPixmapItem
+class DrGraphicsItem : public QGraphicsPixmapItem
 {
 
 private:
@@ -52,7 +52,7 @@ private:
 
 public:
     // Constructor
-    DrItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only = false);
+    DrGraphicsItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only = false);
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;
@@ -99,7 +99,7 @@ public:
 
 };
 
-#endif // DRITEM_H
+#endif // DR_GRAPHICS_ITEM_H
 
 
 

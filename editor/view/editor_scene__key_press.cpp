@@ -189,9 +189,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Process Delete, Convert to DrThings
         for (auto item : list_old_items) {
-            DrItem   *dritem   = dynamic_cast<DrItem*>(item);   if (dritem == nullptr)  continue;
-            DrThing  *drthing =  dritem->getThing();            if (drthing == nullptr) continue;
-            DrStage  *drstage  = drthing->getParentStage();
+            DrGraphicsItem  *graphics_item  =   dynamic_cast<DrGraphicsItem*>(item);    if (graphics_item == nullptr) continue;
+            DrThing         *drthing =          graphics_item->getThing();              if (drthing == nullptr) continue;
+            DrStage         *drstage =          drthing->getParentStage();
 
              // Delete selected items
             switch (key_pressed) {

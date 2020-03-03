@@ -42,7 +42,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addPropertyToComponent(Comps::World_Settings, Props::World_Background_Color, Property_Type::Color, DrColor(16, 16, 16, 255).rgba(),
                            "Color", "This is the base Background Color for this world.");
     addPropertyToComponent(Comps::World_Settings, Props::World_Deletion_Threshold, Property_Type::Positive, 10000,
-                           "Deletion Threshold", "Distance (in World units) away from active camera that objects are removed from the World. Keeps game "
+                           "Deletion Threshold", "Distance (in World units) away from active camera that Things are removed from the World. Keeps game "
                                                  "running smoothly.");
 
 
@@ -69,25 +69,25 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Zoom Damping", "The higher this number, the slower the camera performs Auto Zoom. Range: 1.0 (fastest) to 10.0 (slowest)");
 
 
-    addComponent(Comps::World_Physics, "Physics", "Starting physics settings for this world, this affects all Objects that have \"Physics?\" "
-                                                       "enabled.", Component_Colors::RGB_15_Sunset, true);
+    addComponent(Comps::World_Physics, "Physics", "Starting physics settings for this world, this affects all Things that have \"Physics?\" "
+                                                  "enabled.", Component_Colors::RGB_15_Sunset, true);
     getComponent(Comps::World_Physics)->setIcon(Component_Icons::Physics);
     addPropertyToComponent(Comps::World_Physics, Props::World_Time_Warp, Property_Type::PositiveDouble, 1.0,
                            "Time Warp", "Physics update time multiplier, affects the speed the world changes. Default value of 1.0 is Normal speed. A value of 0.5 "
                                         "will halve the speed, a value of 2.0 will double it. Generally keep this less than 10.");
     addPropertyToComponent(Comps::World_Physics, Props::World_Gravity, Property_Type::PointF, DrPointF(0.0, -1000.0),
-                           "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and Objects will "
-                                      "fall down; a value of 1000 for Y and Objects will fall up.");
+                           "Gravity", "Amount of gravity in X and Y directions, can be negative or positive. For example, a value of -1000 for Y and Things will "
+                                      "fall down; a value of 1000 for Y and Things will fall up.");
     addPropertyToComponent(Comps::World_Physics, Props::World_Drag, Property_Type::PositiveDouble, 0.9,
-                           "Damping", "Defauly value of 0.9 means objects will lose 10% of their velocity per second. Value of 1.0 means objects will not lose "
-                                      "velocity, can be greater than 1.0 (objects will gain velocity). A value of 0.0 causes objects to lose all "
+                           "Damping", "Defauly value of 0.9 means Things will lose 10% of their velocity per second. Value of 1.0 means Things will not lose "
+                                      "velocity, can be greater than 1.0 (Things will gain velocity). A value of 0.0 will cause Things to lose all "
                                       "velocity immediately.");
     addPropertyToComponent(Comps::World_Physics, Props::World_Friction, Property_Type::PositiveDouble, 0.5,
                            "Friction", "Global surface friction setting, greater than or equal to 0.0 (no limit, but generally less than 10.0). Friction can be "
-                                       "overriden on a per item basis.");
+                                       "overriden on a per Thing basis.");
     addPropertyToComponent(Comps::World_Physics, Props::World_Bounce, Property_Type::PositiveDouble, 0.1,
                            "Bounce", "Global bounce setting, greater than or equal to 0.0 (no limit, but generally less than or equal to 1.0). Bounce can be "
-                                     "overriden on a per item basis.");
+                                     "overriden on a per Thing basis.");
 
 
     addComponent(Comps::World_Lighting, "Lighting", "Lighting settings for this World.", Component_Colors::RGB_13_Yellow, true);
@@ -98,7 +98,7 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
                            "Light Layer", "Location along the z axis (Z-Order) to draw Glow Lights. Should be between " +
                                           Dr::RoundToDecimalPlace(c_near_plane, 1) + " and " + Dr::RoundToDecimalPlace(c_far_plane, 1) + " to be visible.");
     addPropertyToComponent(Comps::World_Lighting, Props::World_Light_Blend, Property_Type::List, static_cast<int>(Blend_Mode::Standard),
-                           "Blend Mode", "This is the blend mode used to add Glow Lights and Object Emitted Light to the Stage. Different blend modes can effect "
+                           "Blend Mode", "This is the blend mode used to add Glow Lights and Thing Emitted Light to the Stage. Different blend modes can effect "
                                          "oversaturation or be better for dark scenes.");
 
 
@@ -128,11 +128,11 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
     addComponent(Comps::World_Special_Effects, "Special Effects", "Special effects that affect the entire world.", Component_Colors::RGB_03_Violet, true);
     getComponent(Comps::World_Special_Effects)->setIcon(Component_Icons::Effects);
     addPropertyToComponent(Comps::World_Special_Effects, Props::World_Filter_Convert_3D, Property_Type::Bool, false,
-                           "Instant 3D", "Auto convert all 2D graphics into 3D. Depth of each item is customizable utilizing each "
-                                         "item's \"3D Properties - Depth\" property.");
+                           "Instant 3D", "Auto convert all 2D Things into 3D. Depth of each Thing is customizable utilizing each "
+                                         "Thing's \"3D Properties - Depth\" property.");
     addPropertyToComponent(Comps::World_Special_Effects, Props::World_Filter_Wireframe,
                            Property_Type::BoolDouble, std::vector<DrVariant>({false, 1.0, 0.0, 1000.0, 1.0, "Edge Width: "}),
-                           "Wireframe", "Renders all the world's objects as outlines.");
+                           "Wireframe", "Renders all the World's Things as outlines.");
     addPropertyToComponent(Comps::World_Special_Effects, Props::World_Filter_Cartoon,
                            Property_Type::BoolDouble, std::vector<DrVariant>({false, 5.0, 0.0, 10.0, 1.0,  "Edge Width: "}),
                            "Cartoon", "Gives the world a comic book look.");

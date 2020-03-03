@@ -18,7 +18,7 @@
 #include "project/enums_entity_types.h"
 
 // Forward declarations
-class DrItem;
+class DrGraphicsItem;
 class DrProject;
 class DrStage;
 class IEditorRelay;
@@ -73,7 +73,7 @@ public:
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
     // Scene Functions
-    DrItem*         addItemToSceneFromThing(DrThing *thing);
+    DrGraphicsItem* addItemToSceneFromThing(DrThing *thing);
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 

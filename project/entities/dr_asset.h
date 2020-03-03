@@ -11,7 +11,6 @@
 #include "project/settings/settings.h"
 
 // Forward Declarations
-class DrFont;
 class DrProject;
 class DrPropertyCollision;
 

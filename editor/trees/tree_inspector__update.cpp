@@ -209,9 +209,9 @@ void TreeInspector::updateInspectorPropertyBoxes(std::list<DrSettings*> changed_
                 break;
             }
 
-
             case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
             case Property_Type::Icon:
+            case Property_Type::Array:
 
                 //################ !!!!!!!!!!!!!!!!!!!!!!!
                 //
@@ -355,9 +355,10 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
             //      CASES NOT ACCOUNTED FOR
             //
             //################ !!!!!!!!!!!!!!!!!!!!!!!
-            case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
             case Property_Type::Image:                                  // Project Key to DrAnimation
+            case Property_Type::Collision:                              // DrPropertyCollision for Collision Shapes
             case Property_Type::Icon:
+            case Property_Type::Array:
 
                 break;
         }

@@ -23,8 +23,8 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 
 //####################################################################################
 //##
-//##    Main Types of entities possible in Project
-//##        - All entities inherit DrSettings to use DrComponents which contain DrProperties compatible with the Inspector
+//##    Main Types of Entities possible in Project
+//##        - All Entities inherit DrSettings to use DrComponents which contain DrProperties compatible with the Inspector
 //##
 //############################
 enum class DrType {
@@ -35,6 +35,7 @@ enum class DrType {
     Effect,
     Font,
     Image,
+    Item,
     World,
         Stage,
             Thing,
@@ -71,20 +72,29 @@ enum class DrEffectType {
     Mirror,
     Fisheye,
     Swirl,
-    Flag,
-    Rain,
-    Snow,
-    Clouds,
-    Fog,
+    // Flag,
+    // Rain,
+    // Snow,
+    // Clouds,
+    // Fog,
+};
+
+enum class DrItemType {
+    Foliage,
 };
 
 enum class DrThingType {
     None,
 
+    // Pure Things
     Character,
     Object,
     Text,
 
+    // Device Things
+    Camera,
+
+    // Effect Things
     Fire,
     Fisheye,
     Light,
@@ -92,11 +102,12 @@ enum class DrThingType {
     Swirl,
     Water,
 
-    Camera,
+    // Item Things
+    Foliage,
 
-    //Action,
-    //Logic,
-    //Particle,
+    // Action,
+    // Logic,
+    // Particle,
 };
 
 
@@ -108,6 +119,7 @@ enum class Asset_Category {
     Object,
     Device,
     Effect,
+    Item,
     Text,
     Image,
 
@@ -139,6 +151,7 @@ namespace Dr {
     std::string         StringFromAssetType(DrAssetType type);
     std::string         StringFromDeviceType(DrDeviceType type);
     std::string         StringFromEffectType(DrEffectType type);
+    std::string         StringFromItemType(DrItemType type);
     std::string         StringFromThingType(DrThingType type);
 }
 

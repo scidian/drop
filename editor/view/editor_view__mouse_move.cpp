@@ -105,7 +105,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     // !!!!! #DEBUG: Shows red, green, blue and alpha of pixel under mouse
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
-        QColor pixel_color = dynamic_cast<DrItem*>(item_under_mouse)->getColorAtPoint(m_last_mouse_pos, this);
+        QColor pixel_color = dynamic_cast<DrGraphicsItem*>(item_under_mouse)->getColorAtPoint(m_last_mouse_pos, this);
         Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
                                                "G: " + QString::number(pixel_color.green()) +
                                                "B: " + QString::number(pixel_color.blue()) );
@@ -323,7 +323,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
             my_scene->setHasCalculatedAdjustment(false);
             QGraphicsView::mouseMoveEvent(event);
 
-            // Update selection box location, disable DrItem->itemChange before we update selection box by setting View_Mode to Disable_Update
+            // Update selection box location, disable DrGraphicsItem->itemChange before we update selection box by setting View_Mode to Disable_Update
             m_view_mode = View_Mode::Disable_Update;
             my_scene->updateSelectionBox();
             m_view_mode = View_Mode::Translating;

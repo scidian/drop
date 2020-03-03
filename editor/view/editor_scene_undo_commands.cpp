@@ -139,30 +139,30 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     else            return "Undo Select Stage " + QString::fromStdString(new_stage->getName());
 }
 
-DrItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
+DrGraphicsItem* DrScene::addItemToSceneFromThing(DrThing *thing) {
     // Create new item representing this Thing
-    DrItem *item = new DrItem(m_project, this->getEditorRelay(), thing);
+    DrGraphicsItem *graphics_item = new DrGraphicsItem(m_project, this->getEditorRelay(), thing);
 
     // Temporarily disable geometry signal itemChange updates
-    bool flags_enabled_before = item->itemChangeFlagsEnabled();
-    item->disableItemChangeFlags();
+    bool flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
+    graphics_item->disableItemChangeFlags();
 
     // Add item to scene, set starting position
-    this->addItem(item);
-    this->setPositionByOrigin(item, Position_Flags::Center, item->startX(), item->startY());
+    this->addItem(graphics_item);
+    this->setPositionByOrigin(graphics_item, Position_Flags::Center, graphics_item->startX(), graphics_item->startY());
 
     // Create a temporary group and destroy it, this causes some unknown but importatnt changes to the items
     // sceneTransform that we really seem to need before we try to move a scaled item with View_Mode::Translating
-    QGraphicsItemGroup *group = this->createItemGroup({ item });
+    QGraphicsItemGroup *group = this->createItemGroup({ graphics_item });
     this->destroyItemGroup(group);
 
     // Re enable geometry signal itemChange() updates
-    if (flags_enabled_before) item->enableItemChangeFlags();
+    if (flags_enabled_before) graphics_item->enableItemChangeFlags();
 
     // Assign this QGraphicsItem we just made to the Thing in the project so it can reference it later
-    thing->setDrItem(item);
+    thing->setDrGraphicsItem(graphics_item);
 
-    return item;
+    return graphics_item;
 }
 
 
@@ -178,7 +178,7 @@ UndoCommandMove::UndoCommandMove(DrScene *scene, const QPointF &old_pos, QUndoCo
 
 void UndoCommandMove::undo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_old_pos.x(), m_old_pos.y());
-//    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
+//    //DELETED: changes now happen through DrGraphicsItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
 //    emit m_scene->updateViews();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
@@ -191,7 +191,7 @@ void UndoCommandMove::undo() {
 
 void UndoCommandMove::redo() {
 //    m_scene->setPositionByOrigin(m_scene->getSelectionGroup(), Position_Flags::Center, m_new_pos.x(), m_new_pos.y());
-//    //DELETED: changes now happen through DrItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
+//    //DELETED: changes now happen through DrGraphicsItem::itemChange() --- m_scene->updateSelectedItemsPositionData();
 //    emit m_scene->updateViews();
 //    QString item_text = "Items";
 //    if (m_scene->getSelectionGroup()->childItems().count() == 1)
@@ -219,14 +219,14 @@ UndoCommandNewSelection::UndoCommandNewSelection(DrScene *scene,
 void UndoCommandNewSelection::undo() {
 //    m_scene->emptySelectionGroup();
 
-//    for (auto thing : m_old_list) m_scene->addItemToSelectionGroup(thing->getDrItem());
+//    for (auto thing : m_old_list) m_scene->addItemToSelectionGroup(thing->getDrGraphicsItem());
 
 //    m_scene->updateStageTreeSelection();
 //    emit m_scene->updateViews();
 //    if (m_new_list.count() > 1)
 //        setText("Redo Change Selection");
 //    else if (m_new_list.count() == 1)
-//        setText("Redo New Item Selected: " + m_new_list.first()->getDrItem()->data(User_Roles::Name).toString() );
+//        setText("Redo New Item Selected: " + m_new_list.first()->getDrGraphicsItem()->data(User_Roles::Name).toString() );
 //    else
 //        setText("Redo Select None");
 }
@@ -234,14 +234,14 @@ void UndoCommandNewSelection::undo() {
 void UndoCommandNewSelection::redo() {
 //    m_scene->emptySelectionGroup();
 
-//    for (auto thing : m_new_list) m_scene->addItemToSelectionGroup(thing->getDrItem());
+//    for (auto thing : m_new_list) m_scene->addItemToSelectionGroup(thing->getDrGraphicsItem());
 
 //    m_scene->updateStageTreeSelection();
 //    emit m_scene->updateViews();
 //    if (m_new_list.count() > 1)
 //        setText("Undo Change Selection");
 //    else if (m_new_list.count() == 1)
-//        setText("Undo New Item Selected: " + m_new_list.first()->getDrItem()->data(User_Roles::Name).toString() );
+//        setText("Undo New Item Selected: " + m_new_list.first()->getDrGraphicsItem()->data(User_Roles::Name).toString() );
 //    else
 //        setText("Undo Select None");
 }

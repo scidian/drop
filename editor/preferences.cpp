@@ -146,9 +146,10 @@ void LoadPreferences() {
 
     // List of Asset Categories Being Expanded
     Dr::SetAssetExpanded(Asset_Category::Character,     true);
+    Dr::SetAssetExpanded(Asset_Category::Object,        true);
     Dr::SetAssetExpanded(Asset_Category::Device,        true);
     Dr::SetAssetExpanded(Asset_Category::Effect,        true);
-    Dr::SetAssetExpanded(Asset_Category::Object,        true);
+    Dr::SetAssetExpanded(Asset_Category::Item,          true);
     Dr::SetAssetExpanded(Asset_Category::Text,          true);
 
     Dr::SetAssetExpanded(Asset_Category::Image,         true);

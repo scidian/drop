@@ -139,8 +139,8 @@ QTransform DrScene::getSelectionTransform() {
 QList<DrThing*> DrScene::getSelectionItemsAsThings() {
     QList<DrThing*> selected_things { };
     for (auto item : getSelectionItems()) {
-        DrItem   *dritem = dynamic_cast<DrItem*>(item);     if (dritem == nullptr) continue;
-        DrThing  *thing = dritem->getThing();               if (thing == nullptr)  continue;
+        DrGraphicsItem  *graphics_item =    dynamic_cast<DrGraphicsItem*>(item);    if (graphics_item == nullptr) continue;
+        DrThing         *thing =            graphics_item->getThing();              if (thing == nullptr) continue;
         selected_things.append(thing);
     }
     return selected_things;

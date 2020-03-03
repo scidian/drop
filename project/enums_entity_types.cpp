@@ -23,6 +23,7 @@ std::string StringFromType(DrType type) {
         case DrType::Font:          return "Font";
         case DrType::Frame:         return "Frame";
         case DrType::Image:         return "Image";
+        case DrType::Item:          return "Item";
         case DrType::Stage:         return "Stage";
         case DrType::Thing:         return "Thing";
         case DrType::World:         return "World";
@@ -49,6 +50,8 @@ std::string StringFromThingType(DrThingType type) {
         case DrThingType::Object:       return "Object";
         case DrThingType::Camera:       return "Camera";
         case DrThingType::Text:         return "Text";
+
+        case DrThingType::Foliage:      return "Foliage";
 
         case DrThingType::Fire:         return "Fire";
         case DrThingType::Fisheye:      return "Fisheye";
@@ -78,20 +81,32 @@ std::string StringFromEffectType(DrEffectType type) {
         case DrEffectType::Mirror:      return "Mirror";
         case DrEffectType::Fisheye:     return "Fisheye";
         case DrEffectType::Swirl:       return "Swirl";
-        case DrEffectType::Flag:        return "Flag";
-        case DrEffectType::Rain:        return "Rain";
-        case DrEffectType::Snow:        return "Snow";
-        case DrEffectType::Clouds:      return "Clouds";
-        case DrEffectType::Fog:         return "Fog";
+        //case DrEffectType::Flag:        return "Flag";
+        //case DrEffectType::Rain:        return "Rain";
+        //case DrEffectType::Snow:        return "Snow";
+        //case DrEffectType::Clouds:      return "Clouds";
+        //case DrEffectType::Fog:         return "Fog";
+    }
+}
+
+std::string StringFromItemType(DrItemType type) {
+    switch (type) {
+        case DrItemType::Foliage:       return "Foliage";
     }
 }
 
 
 
-
-
-
 }   // namespace Dr
+
+
+
+
+
+
+
+
+
 
 
 

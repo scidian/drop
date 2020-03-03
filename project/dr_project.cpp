@@ -17,6 +17,7 @@
 #include "project/entities/dr_effect.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_item.h"
 #include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
@@ -42,6 +43,7 @@ void DrProject::clearProject(bool add_built_in_items) {
     for (auto it = m_effects.begin();       it != m_effects.end(); )    {   delete it->second; it = m_effects.erase(it);    }
     for (auto it = m_fonts.begin();         it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
     for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
+    for (auto it = m_items.begin();         it != m_items.end(); )      {   delete it->second; it = m_items.erase(it);      }
     for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
     // Add these Images to every project for use with New Assets
@@ -70,6 +72,9 @@ void DrProject::addDefaultAssets() {
 
     // ***** Add Devices
     if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
+
+    // ***** Add Specialzed Items
+    if (findItemFromType(DrItemType::Foliage) == nullptr)       this->addItem(DrItemType::Foliage,      c_key_item_foliage);
 }
 
 
@@ -230,6 +235,12 @@ DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Cat
     return m_images[new_image_key];
 }
 
+long DrProject::addItem(DrItemType item_type, long key) {
+    long new_item_key = (key == c_no_key) ? getNextKey() : key;
+    m_items[new_item_key] = new DrItem(this, new_item_key, item_type);
+    return new_item_key;
+}
+
 // Adds a World to the map container, finds next available "World xxx" name to assign to World
 DrWorld* DrProject::addWorld() {
     int test_num = static_cast<int>(m_worlds.size());
@@ -295,6 +306,9 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
 
     EffectMap::iterator effect_iter = m_effects.find(check_key);
     if (effect_iter != m_effects.end())         return effect_iter->second;
+
+    ItemMap::iterator item_iter = m_items.find(check_key);
+    if (item_iter != m_items.end())             return item_iter->second;
 
     FontMap::iterator font_iter = m_fonts.find(check_key);
     if (font_iter != m_fonts.end())             return font_iter->second;
@@ -399,6 +413,23 @@ DrImage* DrProject::findImageFromKey(long check_key) {
         return image_iter->second;
     else
         return nullptr;
+}
+
+DrItem* DrProject::findItemFromKey(long check_key) {
+    ItemMap::iterator item_iter = m_items.find(check_key);
+    if (item_iter != m_items.end())
+        return item_iter->second;
+    else
+        return nullptr;
+}
+
+DrItem* DrProject::findItemFromType(DrItemType type) {
+    for (auto item_pair : m_items) {
+        if (item_pair.second->getItemType() == type) {
+            return item_pair.second;
+        }
+    }
+    return nullptr;
 }
 
 DrStage* DrProject::findStageFromKey(long check_key) {

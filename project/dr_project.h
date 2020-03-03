@@ -41,6 +41,7 @@ class DrDevice;
 class DrEffect;
 class DrFont;
 class DrImage;
+class DrItem;
 class DrStage;
 class DrThing;
 class DrWorld;
@@ -53,6 +54,7 @@ typedef std::map<long, DrDevice*>       DeviceMap;
 typedef std::map<long, DrEffect*>       EffectMap;
 typedef std::map<long, DrFont*>         FontMap;
 typedef std::map<long, DrImage*>        ImageMap;
+typedef std::map<long, DrItem*>         ItemMap;
 typedef std::map<long, DrWorld*>        WorldMap;
 
 typedef std::map<Project_Options, DrVariant> OptionMap;
@@ -70,7 +72,7 @@ private:
     bool        m_test_only = false;                            // For debugging purposes, stops Drop from asking to save when exiting
 
     // Project Variables
-    long        m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children items
+    long        m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children entities
     OptionMap   m_options;                                      // Map holding DrProject Wide options
 
 
@@ -85,6 +87,7 @@ private:
     EffectMap       m_effects;                                      // Holds effects        for the project
     FontMap         m_fonts;                                        // Holds custom fonts   for the project
     ImageMap        m_images;                                       // Holds images         for the project
+    ItemMap         m_items;                                        // Holds items          for the project
     WorldMap        m_worlds;                                       // Holds worlds         for the project
 
 
@@ -120,6 +123,7 @@ public:
     EffectMap&      getEffectMap()          { return m_effects; }
     FontMap&        getFontMap()            { return m_fonts; }
     ImageMap&       getImageMap()           { return m_images; }
+    ItemMap&        getItemMap()            { return m_items; }
     WorldMap&       getWorldMap()           { return m_worlds; }
 
     long            getNumberOfAnimations() { return static_cast<long>(m_animations.size()); }
@@ -128,6 +132,7 @@ public:
     long            getNumberOfEffects()    { return static_cast<long>(m_effects.size()); }
     long            getNumberOfFonts()      { return static_cast<long>(m_fonts.size()); }
     long            getNumberOfImages()     { return static_cast<long>(m_images.size()); }
+    long            getNumberOfItems()      { return static_cast<long>(m_items.size()); }
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
     DrType          findChildTypeFromKey(long check_key);
@@ -140,6 +145,8 @@ public:
     DrEffect*       findEffectFromType(DrEffectType type);
     DrFont*         findFontFromKey(long check_key);
     DrImage*        findImageFromKey(long check_key);
+    DrItem*         findItemFromKey(long check_key);
+    DrItem*         findItemFromType(DrItemType type);
     DrStage*        findStageFromKey(long check_key);
     DrThing*        findThingFromKey(long check_key);
     DrWorld*        findWorldFromKey(long check_key);
@@ -157,6 +164,7 @@ public:
     long            addFont(std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
     DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image,
                              long key = c_no_key, IProgressBar *progress = nullptr);
+    long            addItem(DrItemType item_type, long key = c_no_key);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);

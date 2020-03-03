@@ -214,7 +214,7 @@ void DrThing::addComponentSettingsWater() {
     addPropertyToComponent(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
                            "Reflection", "How much refraction to apply to the Reflection shown on the Water surface.");
     addPropertyToComponent(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Underwater, Property_Type::Percent, 20.0,
-                           "Underwater", "How much refraction to apply to the objects under the Water.");
+                           "Underwater", "How much refraction to apply to the Things under the Water.");
     addPropertyToComponent(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Texture, Property_Type::Percent, 20.0,
                            "Texture", "How much refraction to apply to the Water Texture.");
     addPropertyToComponent(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Foam, Property_Type::Percent, 20.0,

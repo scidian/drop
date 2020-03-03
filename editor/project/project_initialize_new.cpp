@@ -22,7 +22,7 @@ namespace Dr {
 void InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test) {
 
     // ***** Important! Clear Project / Reset Key Generator
-    project->clearProject();                                            // Also adds Devices / Effects
+    project->clearProject();                                            // #NOTE: Also adds Devices / Effects / Items
     Dr::AddBuiltInImages(project);                                      // Adds Embedded Images
 
     // Set if Project is debugging test file or not (test files dont ask to be saved when closed)

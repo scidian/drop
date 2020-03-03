@@ -59,10 +59,11 @@ void FormMain::initializeFormMain() {
     buildCentralWidgetMain();
     buildCentralWidgetEditor();
 
-    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);                                           // Build Advisor Dock
+    // Build Docks
+    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);
     dockAssetsEditor =  Dr::BuildDockAssets(   m_project, this, treeAssetEditor, "Assets",
-                                             { DrType::Asset, DrType::Device, DrType::Effect, DrType::Font });          // Build Assets Dock
-    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);                                         // Build Inspector Dock
+                                             { DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Font });
+    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);
     Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 }
 
