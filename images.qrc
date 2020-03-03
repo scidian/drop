@@ -445,5 +445,6 @@
         <file>assets/test_images/grass.png</file>
         <file>assets/asset_types/foliage.png</file>
         <file>assets/inspector_icons/comp_items.png</file>
+        <file>assets/tree_icons/tree_foliage.png</file>
     </qresource>
 </RCC>

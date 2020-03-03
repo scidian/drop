@@ -93,6 +93,7 @@ public:
     // Thing Specific Components
     void    addComponentSettingsCamera(std::string new_name);
     void    addComponentSettingsCharacter(std::string new_name);
+    void    addComponentSettingsFoliage(std::string new_name);
     void    addComponentSettingsObject(std::string new_name, bool should_collide = true);
     void    addComponentSettingsText(std::string new_name);
 

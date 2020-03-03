@@ -115,10 +115,10 @@ void        SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
 //####################################################################################
 void LoadPreferences() {
 
-    // Program Color Scheme
+    // ***** Program Color Scheme
     Dr::SetColorScheme(Color_Scheme::Dark);
 
-    // World Editor Options
+    // ***** World Editor Options
     Dr::SetPreference(Preferences::World_Editor_Show_Camera_Boxes,      false);
     Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes,  false);
 
@@ -134,7 +134,7 @@ void LoadPreferences() {
     Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
 
 
-    // Stored Color History
+    // ***** Stored Color History
     ///DrVariant colors = std::vector<DrVariant>({ qRgba(255, 0, 0, 255), qRgba(0, 0, 255, 255) });
     ///Dr::SetPreference(Preferences::Color_Popup_History, colors);
     Dr::AddToColorHistory( Dr::red   );
@@ -144,7 +144,7 @@ void LoadPreferences() {
     Dr::SetPreference(Preferences::Color_Popup_Tab, 0);                 // int - 0 = Palette, 1 = History
 
 
-    // List of Asset Categories Being Expanded
+    // ***** List of Asset Categories Being Expanded
     Dr::SetAssetExpanded(Asset_Category::Character,     true);
     Dr::SetAssetExpanded(Asset_Category::Object,        true);
     Dr::SetAssetExpanded(Asset_Category::Device,        true);
@@ -163,7 +163,7 @@ void LoadPreferences() {
     Dr::SetAssetExpanded(Asset_Category::Isometric,     true);
 
 
-    // List of Inspector Component Categories Being Expanded
+    // ***** List of Inspector Component Categories Being Expanded
     Dr::SetInspectorExpanded(Comps::Entity_Settings,           true);
     Dr::SetInspectorExpanded(Comps::Hidden_Settings,           true);
     Dr::SetInspectorExpanded(Comps::Size_Settings,             true);
@@ -183,11 +183,15 @@ void LoadPreferences() {
     Dr::SetInspectorExpanded(Comps::Thing_Transform,           true);
     Dr::SetInspectorExpanded(Comps::Thing_Movement,            true);
 
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Camera,     true);
+    // Pure Things
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Character,  true);
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Object,     true);
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Text,       true);
 
+    // Device Things
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Camera,     true);
+
+    // Effect Things
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Fire,       true);
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Fisheye,    true);
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Light,      true);
@@ -195,6 +199,8 @@ void LoadPreferences() {
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Swirl,      true);
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Water,      true);
 
+    // Item Things
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Foliage,    true);
 }
 
 

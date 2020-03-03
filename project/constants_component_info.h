@@ -76,10 +76,12 @@ namespace Component_Icons {
     const std::string Controls      { std::string(":/assets/inspector_icons/comp_controls.png") };
 
     // Thing Components
-    const std::string Camera        { std::string(":/assets/inspector_icons/comp_camera.png") };
     const std::string Character     { std::string(":/assets/inspector_icons/comp_character.png") };
     const std::string Font          { std::string(":/assets/inspector_icons/comp_font.png") };
     const std::string Object        { std::string(":/assets/inspector_icons/comp_object.png") };
+
+    // Device Components
+    const std::string Camera        { std::string(":/assets/inspector_icons/comp_camera.png") };
 
     // Effect Components
     const std::string Fire          { std::string(":/assets/inspector_icons/comp_fire.png") };
@@ -92,6 +94,9 @@ namespace Component_Icons {
     const std::string Water_Wave    { std::string(":/assets/inspector_icons/comp_water_wave.png") };
     const std::string Water_Refract { std::string(":/assets/inspector_icons/comp_water_refract.png") };
     const std::string Water_Foam    { std::string(":/assets/inspector_icons/comp_water_foam.png") };
+
+    // Item Components
+    const std::string Foliage       { std::string(":/assets/inspector_icons/comp_items.png") };
 };
 
 

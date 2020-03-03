@@ -150,16 +150,25 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                     last_added = thing_item;
                     switch (thing->getThingType()) {
                         case DrThingType::None:      icon_image = QImage();                                                             break;
+
+                        // Pure Things
                         case DrThingType::Character: icon_image = QPixmap(":/assets/tree_icons/tree_character.png").toImage();          break;
                         case DrThingType::Object:    icon_image = QPixmap(":/assets/tree_icons/tree_object.png").toImage();             break;
-                        case DrThingType::Camera:    icon_image = QPixmap(":/assets/tree_icons/tree_camera.png").toImage();             break;
                         case DrThingType::Text:      icon_image = QPixmap(":/assets/tree_icons/tree_text.png").toImage();               break;
+
+                        // Device Things
+                        case DrThingType::Camera:    icon_image = QPixmap(":/assets/tree_icons/tree_camera.png").toImage();             break;
+
+                        // Effect Things
                         case DrThingType::Fire:      icon_image = QPixmap(":/assets/tree_icons/tree_fire.png").toImage();               break;
                         case DrThingType::Fisheye:   icon_image = QPixmap(":/assets/tree_icons/tree_fisheye.png").toImage();            break;
                         case DrThingType::Light:     icon_image = QPixmap(":/assets/tree_icons/tree_light.png").toImage();              break;
                         case DrThingType::Mirror:    icon_image = QPixmap(":/assets/tree_icons/tree_mirror.png").toImage();             break;
                         case DrThingType::Swirl:     icon_image = QPixmap(":/assets/tree_icons/tree_swirl.png").toImage();              break;
                         case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();              break;
+
+                        // Item Things
+                        case DrThingType::Foliage:   icon_image = QPixmap(":/assets/tree_icons/tree_foliage.png").toImage();            break;
                     }
                     thing_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(Dr::ColorizeImage(icon_image, icon_color))));
                     thing_item->setText(COLUMN_TITLE, QString::fromStdString(thing->getName()));

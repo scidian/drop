@@ -145,11 +145,15 @@ namespace Comps {
     const std::string Thing_Player                      = "Player";
     const std::string Thing_Soft_Body                   = "SoftBody";
 
-    const std::string Thing_Settings_Camera             = "Camera";
+    // Pure Things
     const std::string Thing_Settings_Character          = "Character";
     const std::string Thing_Settings_Object             = "Object";
     const std::string Thing_Settings_Text               = "Text";
 
+    // Devices
+    const std::string Thing_Settings_Camera             = "Camera";
+
+    // Effects
     const std::string Thing_Settings_Fire               = "Fire";
     const std::string Thing_Settings_Fisheye            = "Fisheye";
     const std::string Thing_Settings_Light              = "Light";
@@ -160,6 +164,9 @@ namespace Comps {
     const std::string Thing_Settings_Water_Wave         = "WaterWave";
     const std::string Thing_Settings_Water_Refract      = "WaterRefract";
     const std::string Thing_Settings_Water_Foam         = "WaterFoam";
+
+    // Items
+    const std::string Thing_Settings_Foliage            = "Foliage";
 };
 
 
@@ -436,14 +443,6 @@ namespace Props {
 
 
     // ********** Thing Specific
-    // Camera Settings
-    const std::string Thing_Camera_Set_As_Active            = "ThCamSetAsActive";           // bool
-    const std::string Thing_Camera_Speed                    = "ThCamSpeed";                 // pointf
-    const std::string Thing_Camera_Rotation                 = "ThCamRotation";              // pointf
-    const std::string Thing_Camera_Up_Vector                = "ThCamUpVector";              // list, enum class Up_Vector
-    const std::string Thing_Camera_Distance                 = "ThCamDistance";              // double
-    const std::string Thing_Camera_Zoom                     = "ThCamZoom";                  // double
-
     // Character Settings
     const std::string Thing_Character_Camera_Position       = "ThChCamPosition";            // pointf
     const std::string Thing_Character_Camera_Rotation       = "ThChCamRotation";            // pointf
@@ -464,6 +463,14 @@ namespace Props {
     // Text Settings
     const std::string Thing_Text_User_Text                  = "ThTextUserText";              // string
 
+    // ********** Device Specific
+    // Camera Settings
+    const std::string Thing_Camera_Set_As_Active            = "ThCamSetAsActive";           // bool
+    const std::string Thing_Camera_Speed                    = "ThCamSpeed";                 // pointf
+    const std::string Thing_Camera_Rotation                 = "ThCamRotation";              // pointf
+    const std::string Thing_Camera_Up_Vector                = "ThCamUpVector";              // list, enum class Up_Vector
+    const std::string Thing_Camera_Distance                 = "ThCamDistance";              // double
+    const std::string Thing_Camera_Zoom                     = "ThCamZoom";                  // double
 
     // ********** Effect Specific
     // Fire Settings
@@ -532,6 +539,10 @@ namespace Props {
     const std::string Thing_Water_Surface_Tint              = "ThWaSurTint";                // percent
     const std::string Thing_Water_Surface_Height            = "ThWaSurHeight";              // double
     const std::string Thing_Water_Surface_Is_Flat           = "ThWaSurIsFlat";              // bool
+
+    // ********** Item Specific
+    // Foliage Settings
+    const std::string Thing_Foliage_Springiness             = "ThFolSpring";                // percent
 
 };
 

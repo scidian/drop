@@ -44,7 +44,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
     DrSettings *entity = getParentProject()->findSettingsFromKey(from_asset_key);
 
 
-    // Call to load in all the components / properties for this Stage thing
+    // ********** Call to load in all the Components / Properties for this Thing
     switch (new_thing_type) {
         case DrThingType::Character: {
             DrAsset *asset = dynamic_cast<DrAsset*>(entity);
@@ -74,16 +74,6 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSpecialEffects();
             break;
         }
-
-        case DrThingType::Camera:
-            addComponentSettingsCamera("Camera");
-            addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Camera);
-            addComponentLayering(z, 100.0, false);
-            addComponentAppearance(true, false);
-            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Max_Size, DrPointF(100, 100));
-            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Min_Size, DrPointF(100, 100));
-            break;
-
         case DrThingType::Text: {
             DrFont *font = dynamic_cast<DrFont*>(entity);
             DrRect rect = font->getCharRect('A');
@@ -93,7 +83,19 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
         }
 
-        // ***** DrEffectType DrThing's
+
+        // ***** Device Things
+        case DrThingType::Camera:
+            addComponentSettingsCamera("Camera");
+            addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Camera);
+            addComponentLayering(z, 100.0, false);
+            addComponentAppearance(true, false);
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Max_Size, DrPointF(100, 100));
+            setComponentPropertyValue(Comps::Size_Settings, Props::Size_Min_Size, DrPointF(100, 100));
+            break;            
+
+
+        // ***** Effect Things
         case DrThingType::Fire:
             addComponentSettingsFire();
             addComponentTransform(static_cast<int>(c_image_size * 0.625), c_image_size, x, -y, DrThingType::Fire);
@@ -134,6 +136,15 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsWater();
             addComponentTransform(c_image_size, c_image_size, x, -y, DrThingType::Water);
             addComponentLayering(z, 75.0);
+            addComponentAppearance(true);
+            break;
+
+
+        // ***** Item Things
+        case DrThingType::Foliage:
+            addComponentSettingsFoliage("Foliage");
+            addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Foliage);
+            addComponentLayering(z, 100.0);
             addComponentAppearance(true);
             break;
 

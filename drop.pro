@@ -301,7 +301,9 @@ SOURCES += \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \
     project/entities/dr_thing__settings.cpp \
+    project/entities/dr_thing__settings_devices.cpp \
     project/entities/dr_thing__settings_effects.cpp \
+    project/entities/dr_thing__settings_items.cpp \
     project/entities/dr_thing__settings_shared.cpp \
     project/entities/dr_thing__z_order.cpp \
     project/entities/dr_world.cpp \

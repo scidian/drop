@@ -23,6 +23,7 @@
 #include "project/entities/dr_device.h"
 #include "project/entities/dr_effect.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_item.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -126,6 +127,12 @@ void DrView::dropEvent(QDropEvent *event) {
         } else if (entity->getType() == DrType::Font) {
             thing = stage->addThing(DrThingType::Text, entity_key, position.x(), -position.y(),   0);
 
+        } else if (entity->getType() == DrType::Device) {
+            DrDevice *device = m_project->findDeviceFromKey( entity_key );
+            switch (device->getDeviceType()) {
+                case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    entity_key, position.x(), -position.y(),  10);  break;
+            }
+
         } else if (entity->getType() == DrType::Effect) {
             DrEffect *effect = m_project->findEffectFromKey( entity_key );
             switch (effect->getEffectType()) {
@@ -142,10 +149,10 @@ void DrView::dropEvent(QDropEvent *event) {
                 //case DrEffectType::Fog:     break;
             }
 
-        } else if (entity->getType() == DrType::Device) {
-            DrDevice *device = m_project->findDeviceFromKey( entity_key );
-            switch (device->getDeviceType()) {
-                case DrDeviceType::Camera:  thing = stage->addThing(DrThingType::Camera,    entity_key, position.x(), -position.y(),  10);  break;
+        } else if (entity->getType() == DrType::Item) {
+            DrItem *dr_item = m_project->findItemFromKey( entity_key );
+            switch (dr_item->getItemType()) {
+                case DrItemType::Foliage:   thing = stage->addThing(DrThingType::Foliage,   entity_key, position.x(), -position.y(),  0);   break;
             }
 
         } else {

@@ -64,8 +64,10 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         // Thing Types
         case DrThingType::Character:
         case DrThingType::Object:
-        case DrThingType::Camera:
         case DrThingType::Text:
+
+        // Device Types
+        case DrThingType::Camera:
 
         // Effect Types
         case DrThingType::Fisheye:
@@ -74,6 +76,9 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::Mirror:
         case DrThingType::Swirl:
         case DrThingType::Water:
+
+        // Item Types
+        case DrThingType::Foliage:
             new_name = asset->getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->getValue().toString();
             break;
 
