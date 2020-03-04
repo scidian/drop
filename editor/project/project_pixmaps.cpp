@@ -52,7 +52,17 @@ QPixmap GetAssetPixmapEffect(DrEffectType effect_type) {
 //####################################################################################
 QPixmap GetAssetPixmapItem(DrItemType item_type) {
     switch (item_type) {
-        case DrItemType::Foliage:       return QPixmap(":/assets/asset_types/foliage.png");
+        case DrItemType::Tile:          return QPixmap(":/assets/asset_types/tile.png");
+    }
+}
+
+
+//####################################################################################
+//##    Returns Asset Tree Prefab Pixmap
+//####################################################################################
+QPixmap GetAssetPixmapPrefab(DrPrefabType prefab_type) {
+    switch (prefab_type) {
+        case DrPrefabType::Foliage:     return QPixmap(":/assets/asset_types/foliage.png");
     }
 }
 

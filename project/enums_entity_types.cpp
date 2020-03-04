@@ -24,6 +24,7 @@ std::string StringFromType(DrType type) {
         case DrType::Frame:         return "Frame";
         case DrType::Image:         return "Image";
         case DrType::Item:          return "Item";
+        case DrType::Prefab:        return "Prefab";
         case DrType::Stage:         return "Stage";
         case DrType::Thing:         return "Thing";
         case DrType::World:         return "World";
@@ -46,19 +47,25 @@ std::string StringFromAssetType(DrAssetType type) {
 std::string StringFromThingType(DrThingType type) {
     switch (type) {
         case DrThingType::None:         return "None";
+
+        // Pure Things
         case DrThingType::Character:    return "Character";
         case DrThingType::Object:       return "Object";
-        case DrThingType::Camera:       return "Camera";
         case DrThingType::Text:         return "Text";
 
-        case DrThingType::Foliage:      return "Foliage";
+        // Device Things
+        case DrThingType::Camera:       return "Camera";
 
+        // Effect Things
         case DrThingType::Fire:         return "Fire";
         case DrThingType::Fisheye:      return "Fisheye";
         case DrThingType::Light:        return "Light";
         case DrThingType::Mirror:       return "Mirror";
         case DrThingType::Swirl:        return "Swirl";
         case DrThingType::Water:        return "Water";
+
+        // Item Things
+        case DrThingType::Tile:         return "Tile";
 
         ///case DrThingType::Action:       return "Action";
         ///case DrThingType::Camera:       return "Camera";
@@ -91,10 +98,15 @@ std::string StringFromEffectType(DrEffectType type) {
 
 std::string StringFromItemType(DrItemType type) {
     switch (type) {
-        case DrItemType::Foliage:       return "Foliage";
+        case DrItemType::Tile:          return "Tile";
     }
 }
 
+std::string StringFromPrefabType(DrPrefabType type) {
+    switch (type) {
+        case DrPrefabType::Foliage:     return "Foliage";
+    }
+}
 
 
 }   // namespace Dr

@@ -34,6 +34,7 @@ namespace Dr {
     QPixmap     GetAssetPixmapDevice(DrDeviceType device_type);
     QPixmap     GetAssetPixmapEffect(DrEffectType effect_type);
     QPixmap     GetAssetPixmapItem(DrItemType item_type);
+    QPixmap     GetAssetPixmapPrefab(DrPrefabType prefab_type);
 
 
     // !!!!! #TEMP: Basic Font Drawing

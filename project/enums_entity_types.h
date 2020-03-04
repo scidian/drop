@@ -28,17 +28,18 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //##
 //############################
 enum class DrType {
-    Animation,
-        Frame,
-    Asset,
-    Device,
-    Effect,
-    Font,
-    Image,
-    Item,
-    World,
-        Stage,
-            Thing,
+    Animation,                  // Entities contained within DrProject::m_animations
+        Frame,                  // Entities contained within DrProject::DrAnimation::m_frames
+    Asset,                      // Entities contained within DrProject::m_assets
+    Device,                     // Entities contained within DrProject::m_devices
+    Effect,                     // Entities contained within DrProject::m_effects
+    Font,                       // Entities contained within DrProject::m_fonts
+    Image,                      // Entities contained within DrProject::m_images
+    Item,                       // Entities contained within DrProject::m_items
+    Prefab,                     // Entities contained within DrProject::m_prefabs
+    World,                      // Entities contained within DrProject::m_worlds
+        Stage,                  // Entities contained within DrProject::DrWorld::m_stages
+            Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
 
     //        Background,
     //        Foreground,
@@ -55,16 +56,20 @@ enum class DrType {
 };
 
 // ################## Sub Types ####################
+// ***** Assets,    Entities contained within DrProject::m_assets
 enum class DrAssetType {
     Character,
     Object,
     // Action
 };
 
+
+// ***** Devices,   Entities contained within DrProject::m_devices
 enum class DrDeviceType {
     Camera,
 };
 
+// ***** Effects,   Entities contained within DrProject::m_effects
 enum class DrEffectType {
     Light,
     Water,
@@ -79,10 +84,17 @@ enum class DrEffectType {
     // Fog,
 };
 
+// ***** Items,     Entities contained within DrProject::m_items
 enum class DrItemType {
+    Tile,
+};
+
+// ***** Prefabs,   Entities contained within DrProject::m_prefabs
+enum class DrPrefabType {
     Foliage,
 };
 
+// ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
 enum class DrThingType {
     None,
 
@@ -103,8 +115,10 @@ enum class DrThingType {
     Water,
 
     // Item Things
-    Foliage,
+    Tile,
 
+
+    // ***** Future Things...
     // Action,
     // Logic,
     // Particle,
@@ -120,6 +134,7 @@ enum class Asset_Category {
     Device,
     Effect,
     Item,
+    Prefab,
     Text,
     Image,
 
@@ -152,6 +167,7 @@ namespace Dr {
     std::string         StringFromDeviceType(DrDeviceType type);
     std::string         StringFromEffectType(DrEffectType type);
     std::string         StringFromItemType(DrItemType type);
+    std::string         StringFromPrefabType(DrPrefabType type);
     std::string         StringFromThingType(DrThingType type);
 }
 

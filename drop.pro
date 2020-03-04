@@ -297,6 +297,7 @@ SOURCES += \
     project/entities/dr_image.cpp \
     project/entities/dr_image__outline_image.cpp \
     project/entities/dr_item.cpp \
+    project/entities/dr_prefab.cpp \
     project/entities/dr_stage.cpp \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \
@@ -1013,6 +1014,7 @@ HEADERS += \
     project/entities/dr_font.h \
     project/entities/dr_image.h \
     project/entities/dr_item.h \
+    project/entities/dr_prefab.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
     project/entities/dr_world.h \

@@ -40,13 +40,13 @@ class DrThing : public DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrWorld        *m_parent_world;                     // Holds reference to parent World class
-    DrStage        *m_parent_stage;                     // Holds reference to parent Stage class
+    DrWorld            *m_parent_world;                     // Holds reference to parent World class
+    DrStage            *m_parent_stage;                     // Holds reference to parent Stage class
 
     // Local Variables
-    DrThingType     m_thing_type;                       // Holds type of current Thing
-    long            m_asset_key;                        // Holds the associated asset (Asset, Effect, etc) key, this way we know what image to grab for GraphicsView
-    DrGraphicsItem *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
+    DrThingType         m_thing_type;                       // Holds type of current Thing
+    long                m_asset_key;                        // Holds the associated asset (Asset, Effect, etc) key, this way we know what image to grab for GraphicsView
+    DrGraphicsItem     *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
 
 public:
     // Constructor / Destructor
@@ -93,9 +93,9 @@ public:
     // Thing Specific Components
     void    addComponentSettingsCamera(std::string new_name);
     void    addComponentSettingsCharacter(std::string new_name);
-    void    addComponentSettingsFoliage(std::string new_name);
     void    addComponentSettingsObject(std::string new_name, bool should_collide = true);
     void    addComponentSettingsText(std::string new_name);
+    void    addComponentSettingsTile(std::string new_name);
 
     // Effect Specific Components
     void    addComponentSettingsFire();

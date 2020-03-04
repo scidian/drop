@@ -152,7 +152,7 @@ void DrView::dropEvent(QDropEvent *event) {
         } else if (entity->getType() == DrType::Item) {
             DrItem *dr_item = m_project->findItemFromKey( entity_key );
             switch (dr_item->getItemType()) {
-                case DrItemType::Foliage:   thing = stage->addThing(DrThingType::Foliage,   entity_key, position.x(), -position.y(),  0);   break;
+                case DrItemType::Tile:      thing = stage->addThing(DrThingType::Tile,      entity_key, position.x(), -position.y(),  0);   break;
             }
 
         } else {

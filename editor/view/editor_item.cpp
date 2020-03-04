@@ -152,8 +152,8 @@ DrGraphicsItem::DrGraphicsItem(DrProject *project, IEditorRelay *editor_relay, D
         case DrType::Item: {
             DrItem *dr_item = dynamic_cast<DrItem*>(m_asset);
             switch (dr_item->getItemType()) {
-                case DrItemType::Foliage: {
-                    m_pixmap = Dr::DrawCamera();
+                case DrItemType::Tile: {
+                    m_pixmap = QPixmap(":/assets/asset_types/tile.png");
                     setPixmap(m_pixmap);
                     applyFilters();
                     break;

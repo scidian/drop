@@ -20,19 +20,19 @@
 
 
 //####################################################################################
-//##    Foliage Components
+//##    Tile Components
 //####################################################################################
-void DrThing::addComponentSettingsFoliage(std::string new_name) {
+void DrThing::addComponentSettingsTile(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setDisplayName("Item Name");
     property_name->setDescription("Name of this Item.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Thing_Settings_Foliage, "Foliage Settings", "Settings for this Foliage.", Component_Colors::RGB_10_Green, true);
-    getComponent(Comps::Thing_Settings_Foliage)->setIcon(Component_Icons::Foliage);
+    addComponent(Comps::Thing_Settings_Tile, "Tile Settings", "Settings for this Foliage.", Component_Colors::RGB_10_Green, true);
+    getComponent(Comps::Thing_Settings_Tile)->setIcon(Component_Icons::Tile);
 
-    addPropertyToComponent(Comps::Thing_Settings_Foliage, Props::Thing_Foliage_Springiness, Property_Type::Percent, 100.0,
-                           "Springiness", "How springy this Foliage will be, from 0 (not springy) to 100 (most springy).");
+    addPropertyToComponent(Comps::Thing_Settings_Tile, Props::Thing_Tile_Scroll, Property_Type::Percent, 100.0,
+                           "Scroll", "Future...");
 
 
 }

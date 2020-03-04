@@ -150,6 +150,7 @@ void LoadPreferences() {
     Dr::SetAssetExpanded(Asset_Category::Device,        true);
     Dr::SetAssetExpanded(Asset_Category::Effect,        true);
     Dr::SetAssetExpanded(Asset_Category::Item,          true);
+    Dr::SetAssetExpanded(Asset_Category::Prefab,        true);
     Dr::SetAssetExpanded(Asset_Category::Text,          true);
 
     Dr::SetAssetExpanded(Asset_Category::Image,         true);
@@ -200,7 +201,7 @@ void LoadPreferences() {
     Dr::SetInspectorExpanded(Comps::Thing_Settings_Water,      true);
 
     // Item Things
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Foliage,    true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Tile,       true);
 }
 
 

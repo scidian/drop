@@ -444,7 +444,12 @@
         <file>assets/test_images/flower.png</file>
         <file>assets/test_images/grass.png</file>
         <file>assets/asset_types/foliage.png</file>
-        <file>assets/inspector_icons/comp_items.png</file>
         <file>assets/tree_icons/tree_foliage.png</file>
+        <file>assets/inspector_icons/comp_prefab.png</file>
+        <file>assets/asset_types/tile.png</file>
+        <file>assets/inspector_icons/comp_tile.png</file>
+        <file>assets/tree_icons/tree_tile.png</file>
+        <file>assets/inspector_icons/comp_foliage.png</file>
+        <file>assets/inspector_icons/comp_item.png</file>
     </qresource>
 </RCC>

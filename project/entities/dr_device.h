@@ -22,17 +22,17 @@ class DrDevice : public DrSettings
 {
 private:
     // Local Variables
-    DrDeviceType     m_device_type;                     // Device Type as DrDeviceType
+    DrDeviceType        m_device_type;                     // Device Type as DrDeviceType
 
 public:
     // Constructor
     DrDevice(DrProject *parent_project, long key, DrDeviceType device_type);
 
     // DrSettings Overrides
-    virtual DrType  getType() override      { return DrType::Device; }
+    virtual DrType      getType() override      { return DrType::Device; }
 
     // Getters / Setters
-    DrDeviceType    getDeviceType() { return m_device_type; }
+    DrDeviceType        getDeviceType() { return m_device_type; }
 
 };
 

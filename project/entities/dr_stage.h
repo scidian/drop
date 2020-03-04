@@ -29,16 +29,16 @@ class DrStage : public DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrWorld    *m_parent_world;                             // Holds reference to parent World class
+    DrWorld        *m_parent_world;                             // Holds reference to parent World class
 
     // Local variables
-    ThingMap    m_things;                                   // Map of pointers to DrThing classes (holds the things for current stage)
+    ThingMap        m_things;                                   // Map of pointers to DrThing classes (holds the things for current stage)
 
-    bool        m_is_start_stage;                           // True if this is the first stage in a world
+    bool            m_is_start_stage;                           // True if this is the first stage in a world
 
-    bool        m_expanded = true;                          // Wether or not this is expanded in the Project Tree
-    DrPointF    m_center_view_point;                        // Holds center point the View was on last time this Stage was shown
-    double      m_zoom_level = 0.5;                         // Holds zoom level   the View was on last time this Stage was shown
+    bool            m_expanded = true;                          // Wether or not this is expanded in the Project Tree
+    DrPointF        m_center_view_point;                        // Holds center point the View was on last time this Stage was shown
+    double          m_zoom_level = 0.5;                         // Holds zoom level   the View was on last time this Stage was shown
 
 
 public:

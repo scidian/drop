@@ -18,6 +18,7 @@
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_item.h"
+#include "project/entities/dr_prefab.h"
 #include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
@@ -44,6 +45,7 @@ void DrProject::clearProject(bool add_built_in_items) {
     for (auto it = m_fonts.begin();         it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
     for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_items.begin();         it != m_items.end(); )      {   delete it->second; it = m_items.erase(it);      }
+    for (auto it = m_prefabs.begin();       it != m_prefabs.end(); )    {   delete it->second; it = m_prefabs.erase(it);    }
     for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
     // Add these Images to every project for use with New Assets
@@ -73,8 +75,11 @@ void DrProject::addDefaultAssets() {
     // ***** Add Devices
     if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
 
-    // ***** Add Specialzed Items
-    if (findItemFromType(DrItemType::Foliage) == nullptr)       this->addItem(DrItemType::Foliage,      c_key_item_foliage);
+    // ***** Add Items
+    if (findItemFromType(DrItemType::Tile) == nullptr)          this->addItem(DrItemType::Tile,         c_key_item_tile);
+
+    // ***** Add Prefabs
+    if (findPrefabFromType(DrPrefabType::Foliage) == nullptr)   this->addPrefab(DrPrefabType::Foliage,  c_key_prefab_foliage);
 }
 
 
@@ -241,6 +246,12 @@ long DrProject::addItem(DrItemType item_type, long key) {
     return new_item_key;
 }
 
+long DrProject::addPrefab(DrPrefabType prefab_type, long key) {
+    long new_prefab_key = (key == c_no_key) ? getNextKey() : key;
+    m_prefabs[new_prefab_key] = new DrPrefab(this, new_prefab_key, prefab_type);
+    return new_prefab_key;
+}
+
 // Adds a World to the map container, finds next available "World xxx" name to assign to World
 DrWorld* DrProject::addWorld() {
     int test_num = static_cast<int>(m_worlds.size());
@@ -307,11 +318,14 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
     EffectMap::iterator effect_iter = m_effects.find(check_key);
     if (effect_iter != m_effects.end())         return effect_iter->second;
 
+    FontMap::iterator font_iter = m_fonts.find(check_key);
+    if (font_iter != m_fonts.end())             return font_iter->second;
+
     ItemMap::iterator item_iter = m_items.find(check_key);
     if (item_iter != m_items.end())             return item_iter->second;
 
-    FontMap::iterator font_iter = m_fonts.find(check_key);
-    if (font_iter != m_fonts.end())             return font_iter->second;
+    PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
+    if (prefab_iter != m_prefabs.end())         return prefab_iter->second;
 
     WorldMap &worlds = m_worlds;
     WorldMap::iterator world_iter = worlds.find(check_key);
@@ -427,6 +441,23 @@ DrItem* DrProject::findItemFromType(DrItemType type) {
     for (auto item_pair : m_items) {
         if (item_pair.second->getItemType() == type) {
             return item_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrPrefab* DrProject::findPrefabFromKey(long check_key) {
+    PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
+    if (prefab_iter != m_prefabs.end())
+        return prefab_iter->second;
+    else
+        return nullptr;
+}
+
+DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
+    for (auto prefab_pair : m_prefabs) {
+        if (prefab_pair.second->getPrefabType() == type) {
+            return prefab_pair.second;
         }
     }
     return nullptr;

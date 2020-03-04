@@ -168,7 +168,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                         case DrThingType::Water:     icon_image = QPixmap(":/assets/tree_icons/tree_water.png").toImage();              break;
 
                         // Item Things
-                        case DrThingType::Foliage:   icon_image = QPixmap(":/assets/tree_icons/tree_foliage.png").toImage();            break;
+                        case DrThingType::Tile:      icon_image = QPixmap(":/assets/tree_icons/tree_tile.png").toImage();               break;
                     }
                     thing_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(Dr::ColorizeImage(icon_image, icon_color))));
                     thing_item->setText(COLUMN_TITLE, QString::fromStdString(thing->getName()));

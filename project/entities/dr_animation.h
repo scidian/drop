@@ -27,8 +27,8 @@ class DrAnimation : public DrSettings
 {
 private:
     // Local Variables
-    Frames      m_frames;                               // Holds frames of this animation
-                                                        // !!!!! #NOTE: Frame numbers start at 1 !!!!!
+    Frames          m_frames;                               // Holds frames of this animation
+                                                            // !!!!! #NOTE: Frame numbers start at 1 !!!!!
 
 public:
     // Constructor / Destructor

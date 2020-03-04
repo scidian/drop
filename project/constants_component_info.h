@@ -96,7 +96,10 @@ namespace Component_Icons {
     const std::string Water_Foam    { std::string(":/assets/inspector_icons/comp_water_foam.png") };
 
     // Item Components
-    const std::string Foliage       { std::string(":/assets/inspector_icons/comp_items.png") };
+    const std::string Tile          { std::string(":/assets/inspector_icons/comp_tile.png") };
+
+    // Prefab Components
+    const std::string Prefab        { std::string(":/assets/inspector_icons/comp_prefab.png") };
 };
 
 

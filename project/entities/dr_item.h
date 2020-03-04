@@ -22,17 +22,17 @@ class DrItem : public DrSettings
 {
 private:
     // Local Variables
-    DrItemType      m_item_type;                     // Item Type as DrItemType
+    DrItemType          m_item_type;                     // Item Type as DrItemType
 
 public:
     // Constructor
-    DrItem(DrProject *parent_project, long key, DrItemType effect_type);
+    DrItem(DrProject *parent_project, long key, DrItemType item_type);
 
     // DrSettings Overrides
-    virtual DrType  getType() override      { return DrType::Item; }
+    virtual DrType      getType() override      { return DrType::Item; }
 
     // Getters / Setters
-    DrItemType      getItemType()           { return m_item_type; }
+    DrItemType          getItemType()           { return m_item_type; }
 
 };
 

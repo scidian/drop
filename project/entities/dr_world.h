@@ -26,11 +26,11 @@ class DrWorld : public DrSettings
 {
 private:
     // Local variables
-    StageMap    m_stages;                               // Map of pointers to DrStage classes       (holds the stages for current world)
+    StageMap        m_stages;                               // Map of pointers to DrStage classes       (holds the stages for current world)
 
-    long        m_start_stage_key;                      // Stores key of StartStage for this World
-    long        m_last_stage_shown_in_editor;           // Last Stage shown in editor when this World was selected, set to StartStage on creation
-    bool        m_expanded = true;                      // Wether or not this is expanded in the Project Tree
+    long            m_start_stage_key;                      // Stores key of StartStage for this World
+    long            m_last_stage_shown_in_editor;           // Last Stage shown in editor when this World was selected, set to StartStage on creation
+    bool            m_expanded = true;                      // Wether or not this is expanded in the Project Tree
 
 public:
     // Constructor / Destructor

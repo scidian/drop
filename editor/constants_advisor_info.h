@@ -108,6 +108,8 @@ namespace Advisor_Info {
     const HeaderBodyList Asset_Image            { "Image Asset", "This is an Image for use in your game." };
     const HeaderBodyList Asset_Image_Built_In   { "Buil In Image Asset", "This is a simple, easy to use built-in Image for use in your game." };
     const HeaderBodyList Asset_Item             { "Item Asset", "Specialized Items that serve to add depth and functionality to your game." };
+    const HeaderBodyList Asset_Prefab           { "Prefab Asset", "These are Physics Objects whose settings are already set to commmon settings for specific "
+                                                                  "types of game objects." };
     const HeaderBodyList Asset_Text             { "Text Asset", "Use Text Assets to show text boxes in your game. You can use them as titles or for showing "
                                                                 "values like hit points, coins or distance." };
 

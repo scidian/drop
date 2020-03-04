@@ -166,7 +166,7 @@ namespace Comps {
     const std::string Thing_Settings_Water_Foam         = "WaterFoam";
 
     // Items
-    const std::string Thing_Settings_Foliage            = "Foliage";
+    const std::string Thing_Settings_Tile               = "Tile";
 };
 
 
@@ -541,8 +541,8 @@ namespace Props {
     const std::string Thing_Water_Surface_Is_Flat           = "ThWaSurIsFlat";              // bool
 
     // ********** Item Specific
-    // Foliage Settings
-    const std::string Thing_Foliage_Springiness             = "ThFolSpring";                // percent
+    // Tile Settings
+    const std::string Thing_Tile_Scroll                     = "ThTilScroll";                // percent
 
 };
 

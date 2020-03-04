@@ -26,27 +26,32 @@ constexpr long c_key_image_object =                 3;          // 256 x 256    
 
 
 //####################################################################################
-//##    Devices                         100-199
+//##    Devices                         100-149
 //############################
 constexpr long c_key_device_camera =                100;        // Camera Device
 
 
 //####################################################################################
-//##    Effects                         200-249
+//##    Effects                         150-199
 //############################
-constexpr long c_key_effect_light =                 200;        // Light Effect
-constexpr long c_key_effect_water =                 201;        // Water Effect
-constexpr long c_key_effect_fire =                  202;        // Fire Effect
-constexpr long c_key_effect_mirror =                203;        // Mirror Effect
-constexpr long c_key_effect_fisheye =               204;        // Fisheye Effect
-constexpr long c_key_effect_swirl =                 205;        // Swirl Effect
+constexpr long c_key_effect_light =                 150;        // Light Effect
+constexpr long c_key_effect_water =                 151;        // Water Effect
+constexpr long c_key_effect_fire =                  152;        // Fire Effect
+constexpr long c_key_effect_mirror =                153;        // Mirror Effect
+constexpr long c_key_effect_fisheye =               154;        // Fisheye Effect
+constexpr long c_key_effect_swirl =                 155;        // Swirl Effect
 
 
 //####################################################################################
-//##    Items                           250-299
+//##    Items                           200-249
 //############################
-constexpr long c_key_item_foliage =                 250;        // Foliage Special Item
+constexpr long c_key_item_tile =                    200;        // Tile Item
 
+
+//####################################################################################
+//##    Prefabs                         250-299
+//############################
+constexpr long c_key_prefab_foliage =               250;        // Foliage Prefab
 
 
 //####################################################################################

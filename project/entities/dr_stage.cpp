@@ -78,7 +78,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
         case DrThingType::Water:
 
         // Item Types
-        case DrThingType::Foliage:
+        case DrThingType::Tile:
             new_name = asset->getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->getValue().toString();
             break;
 
