@@ -451,5 +451,6 @@
         <file>assets/tree_icons/tree_tile.png</file>
         <file>assets/inspector_icons/comp_foliage.png</file>
         <file>assets/inspector_icons/comp_item.png</file>
+        <file>assets/asset_types/blob.png</file>
     </qresource>
 </RCC>

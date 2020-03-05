@@ -79,6 +79,7 @@ void DrProject::addDefaultAssets() {
     if (findItemFromType(DrItemType::Tile) == nullptr)          this->addItem(DrItemType::Tile,         c_key_item_tile);
 
     // ***** Add Prefabs
+    if (findPrefabFromType(DrPrefabType::Blob) == nullptr)      this->addPrefab(DrPrefabType::Blob,     c_key_prefab_blob);
     if (findPrefabFromType(DrPrefabType::Foliage) == nullptr)   this->addPrefab(DrPrefabType::Foliage,  c_key_prefab_foliage);
 }
 

@@ -62,6 +62,7 @@ QPixmap GetAssetPixmapItem(DrItemType item_type) {
 //####################################################################################
 QPixmap GetAssetPixmapPrefab(DrPrefabType prefab_type) {
     switch (prefab_type) {
+        case DrPrefabType::Blob:        return QPixmap(":/assets/asset_types/blob.png");
         case DrPrefabType::Foliage:     return QPixmap(":/assets/asset_types/foliage.png");
     }
 }

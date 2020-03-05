@@ -51,7 +51,8 @@ constexpr long c_key_item_tile =                    200;        // Tile Item
 //####################################################################################
 //##    Prefabs                         250-299
 //############################
-constexpr long c_key_prefab_foliage =               250;        // Foliage Prefab
+constexpr long c_key_prefab_blob =                  250;        // Blob Prefab
+constexpr long c_key_prefab_foliage =               251;        // Foliage Prefab
 
 
 //####################################################################################
