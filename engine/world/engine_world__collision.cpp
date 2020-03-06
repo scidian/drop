@@ -88,10 +88,14 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     // Interactive foliage
     if (object_a->compFoliage() != nullptr) {
         if (object_b->body_type != Body_Type::Static && b_was_physics_child == false) {
-            cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), 2.0);
-            cpBodyApplyImpulseAtLocalPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
+            double mass =  cpBodyGetMass(object_a->body) * 2.0;
+            double force = mass * object_a->compFoliage()->getSpringiness();
+            cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), force);
+                   v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
+                   v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
+            cpBodyApplyImpulseAtWorldPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
         }
-        return cpArbiterIgnore(arb);
+        ///return cpArbiterIgnore(arb);
     }
 
     // Temp cancel gravity on another object if colliding and should cancel it
@@ -120,8 +124,10 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
-    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
-    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
+    bool a_was_physics_child = object_a->isPhysicsChild();
+    bool b_was_physics_child = object_b->isPhysicsChild();
+    if (a_was_physics_child) { object_a = object_a->getPhysicsParent(); }
+    if (b_was_physics_child) { object_b = object_b->getPhysicsParent(); }
 
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
@@ -167,7 +173,15 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
                 BodyAddRecoil(cpBodyGetSpace(object_b->body), arb, object_b);
         }
     }
-    return cpTrue;
+
+    // Interactive foliage
+    if (object_a->compFoliage() != nullptr) {
+        return cpFalse;
+
+    // Normal Collision
+    } else {
+        return cpTrue;
+    }
 }
 
 extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {

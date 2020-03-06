@@ -63,7 +63,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             DrAsset *asset = dynamic_cast<DrAsset*>(entity);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(false);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setDisplayName("Object ID Key");
-            addComponentSettingsObject(new_thing_name, should_collide);
+            addComponentSettingsObject(new_thing_name, should_collide);            
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
@@ -72,6 +72,12 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponent3D();
             addComponentAppearance();
             addComponentSpecialEffects();
+
+            // If Asset Body_Style is not standard Rigid Body (i.e. Blob, Foliage, etc), add Thing to Stage as Dynamic Object Body_Type
+            int         physics_body_style =    asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style).toInt();
+            Body_Style  body_style =    static_cast<Body_Style>(physics_body_style);
+            if (body_style != Body_Style::Rigid_Body)
+                setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, static_cast<int>(Body_Type::Dynamic));
             break;
         }
         case DrThingType::Text: {

@@ -213,7 +213,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                     grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
                 }
                 grass->addShapeBoxFromTexture(foliage);
-                grass->setComponentFoliage(new ThingCompFoliage(world, grass));
+                grass->setComponentFoliage(new ThingCompFoliage(world, grass, 1.0));
                 world->addThing(grass);
 
 

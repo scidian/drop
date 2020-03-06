@@ -35,6 +35,10 @@ static void ChipmunkFreeSpaceChildren(cpSpace *space) {
     cpSpaceEachBody(space, cpSpaceBodyIteratorFunc(PostBodyFree), space);
 }
 
+// Iterators to get a list of all constraints, shapes, etc attached to a body
+static void GetBodyJointList(cpBody *, cpConstraint *constraint, std::vector<cpConstraint*> *joint_list)    { joint_list->push_back(constraint); }
+static void GetBodyShapeList(cpBody *, cpShape *shape, std::vector<cpShape*> *shape_list)                   { shape_list->push_back(shape); }
+
 
 //####################################################################################
 //##    Wake All Sleeping Bodies
@@ -88,7 +92,47 @@ void DrEngineWorld::clearWorld() {
 }
 
 
+//####################################################################################
+//##    Removes a physics body and all joints attached to it from this World
+//####################################################################################
+cpBody* DrEngineWorld::removeBody(cpBody *body) {
+    // If body is already null, return
+    if (body == nullptr) return nullptr;
 
+    // If body was never added to space, delete and return null
+    cpSpace *space = cpBodyGetSpace(body);
+    if (space == nullptr) {
+        cpBodyFree(body);
+        return nullptr;
+    }
+
+    // Remove all shapes attached to body
+    std::vector<cpShape*> shape_list;
+    cpBodyEachShape(body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
+    for (auto shape : shape_list) {
+        cpSpaceRemoveShape(space, shape);
+        cpShapeFree(shape);
+    }
+
+    // Remove all joints attached to body
+    std::vector<cpConstraint*> joint_list;
+    cpBodyEachConstraint(body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
+    for (auto joint : joint_list) {
+        // Check if constraint to remove is mouse joint (drag joint)
+        if (getEngine() != nullptr) {
+            if (joint == getEngine()->mouse_joint) {
+                getEngine()->mouse_joint = nullptr;
+            }
+        }
+        cpSpaceRemoveConstraint(space, joint);
+        cpConstraintFree(joint);
+    }
+
+    // Remove body
+    cpSpaceRemoveBody(space, body);
+    cpBodyFree(body);
+    return nullptr;
+}
 
 
 

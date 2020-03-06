@@ -273,6 +273,7 @@ public:
     void                updateSpawners(double time_passed, double time_warp, DrRectF &area);
     void                updateThings(double time_passed, double time_warp, DrRectF &area);
     void                updateWorld(double time_passed);
+    cpBody*             removeBody(cpBody *body);
     void                wakeAllBodies();
 
 

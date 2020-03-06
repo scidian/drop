@@ -29,16 +29,28 @@ static void GetBodyContactNormals(cpBody *, cpArbiter *arb, std::vector<cpVect> 
     cpVect normal = cpArbiterGetNormal( arb );
     normal_list->push_back( normal );
 }
+// Used for body iterator to get a list of all Bodies in cpSpace
+static void GetSpaceBodyList(cpBody *body, std::vector<cpBody*> *body_list) {
+    body_list->push_back(body);
+}
 // Used for constraint iterator to get a list of all Constraints (joints) in cpSpace
 static void GetSpaceJointList(cpConstraint *constraint, std::vector<cpConstraint*> *joint_list) {
     joint_list->push_back(constraint);
 }
 
-
 //####################################################################################
 //##    Main Debug / Text Rendering Function
 //####################################################################################
 void DrOpenGL::drawDebug() {
+
+    // ***** Display number of bodies in world
+    if (m_engine->getCurrentWorld()->getSpace()) {
+        ///std::vector<cpBody*> body_list;
+        ///body_list.clear();
+        ///cpSpaceEachBody(m_engine->getCurrentWorld()->getSpace(), cpSpaceBodyIteratorFunc(GetSpaceBodyList), &body_list);
+        ///g_info = "Body Count: " + std::to_string(body_list.size());
+    }
+
 
     // ***** Debug Shapes
     if (m_form_engine->debug_shapes) {

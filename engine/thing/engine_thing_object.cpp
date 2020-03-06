@@ -18,14 +18,6 @@
 
 
 //####################################################################################
-//##    Chipmunk Callbacks
-//####################################################################################
-// Iterators to get a list of all constraints, shapes, etc attached to a body
-static void GetBodyJointList(cpBody *, cpConstraint *constraint, std::vector<cpConstraint*> *joint_list) { joint_list->push_back(constraint); }
-static void GetBodyShapeList(cpBody *, cpShape *shape, std::vector<cpShape*> *shape_list) { shape_list->push_back(shape); }
-
-
-//####################################################################################
 //##    Object Constructor
 //##        Pass -1 for friction and/or bounce to use default world friction and bounce settings
 //####################################################################################
@@ -130,31 +122,7 @@ DrEngineObject::~DrEngineObject() {
     }
 
     // ***** Delete cpBody and all cpShapes / cpConstraints (joints) associated with it
-    if (this->body != nullptr) {
-        cpSpace *space = cpBodyGetSpace(body);
-
-        std::vector<cpShape*> shape_list;
-        cpBodyEachShape(body, cpBodyShapeIteratorFunc(GetBodyShapeList), &shape_list);
-        for (auto shape : shape_list) {
-            cpSpaceRemoveShape(space, shape);
-            cpShapeFree(shape);
-        }
-        std::vector<cpConstraint*> joint_list;
-        cpBodyEachConstraint(body, cpBodyConstraintIteratorFunc(GetBodyJointList), &joint_list);
-        for (auto joint : joint_list) {
-            // Check if constraint to remove is mouse joint (drag joint)
-            if (world() && world()->getEngine()) {
-                if (joint == world()->getEngine()->mouse_joint) {
-                    world()->getEngine()->mouse_joint = nullptr;
-                }
-            }     
-            cpSpaceRemoveConstraint(space, joint);
-            cpConstraintFree(joint);
-        }
-        cpSpaceRemoveBody(space, body);
-        cpBodyFree(body);
-        body = nullptr;
-    }
+    this->body = world()->removeBody(this->body);
 }
 
 

@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine.h"
 #include "engine/thing/engine_thing_object.h"
@@ -223,34 +224,37 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
     // ***** Add the block to the cpSpace
     DrEngineObject *block = nullptr;
-    if (body_type != Body_Type::Dynamic || (body_type == Body_Type::Dynamic && body_style == Body_Style::Rigid_Body)) {
-        block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset->getKey(),
-                                   x + x_offset, y + y_offset, info.z_order, info.scale,
-                                   use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
-        loadThingCollisionShape(asset, block);
-        addThing(block);
-    } else {
-        switch (body_style) {
-            case Body_Style::Rigid_Body:
-                break;
-            case Body_Style::Circular_Blob:
-                block = addSoftBodyCircle( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
-                                           info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
-                break;
-            case Body_Style::Square_Blob:
-                block = addSoftBodySquare( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
-                                           info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
-                break;
-            case Body_Style::Mesh_Blob:
-                block = addSoftBodyMesh(   thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
-                                           info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
-                break;
-        }
+    if (body_type != Body_Type::Dynamic && body_style != Body_Style::Rigid_Body) body_style = Body_Style::Rigid_Body;
 
-        // Soft Body constructors dont set angle or opacity, do it now
-        block->setOpacity(info.opacity);
-        block->setAngle(-info.angle);
+    switch (body_style) {
+        case Body_Style::Rigid_Body:
+        case Body_Style::Foliage:
+            block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset->getKey(),
+                                       x + x_offset, y + y_offset, info.z_order, info.scale,
+                                       use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
+            loadThingCollisionShape(asset, block);
+            addThing(block);
+
+            if (body_style == Body_Style::Foliage) block->setComponentFoliage(new ThingCompFoliage(this, block, body_rigidness));
+
+            break;
+        case Body_Style::Circular_Blob:
+            block = addSoftBodyCircle( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                       info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
+            break;
+        case Body_Style::Square_Blob:
+            block = addSoftBodySquare( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                       info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
+            break;
+        case Body_Style::Mesh_Blob:
+            block = addSoftBodyMesh(   thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                       info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
+            break;
     }
+
+    // Soft Body constructors dont set angle or opacity, do it now
+    block->setOpacity(info.opacity);
+    block->setAngle(-info.angle);
 
 
     // ***** Set collision type

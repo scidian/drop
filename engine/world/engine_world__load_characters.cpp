@@ -89,6 +89,7 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     DrEngineObject *player = nullptr;
     switch (body_style) {
         case Body_Style::Rigid_Body:
+        case Body_Style::Foliage:
             player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset->getKey(),
                                         info.position.x, -info.position.y, info.z_order, info.scale, use_friction, use_bounce,
                                         c_collide_true, can_rotate, info.angle, info.opacity);
