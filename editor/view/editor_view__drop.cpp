@@ -24,6 +24,7 @@
 #include "project/entities/dr_effect.h"
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_item.h"
+#include "project/entities/dr_prefab.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -124,9 +125,6 @@ void DrView::dropEvent(QDropEvent *event) {
                 case DrAssetType::Object:    thing = stage->addThing(DrThingType::Object,    entity_key, position.x(), -position.y(),   0); break;
             }
 
-        } else if (entity->getType() == DrType::Font) {
-            thing = stage->addThing(DrThingType::Text, entity_key, position.x(), -position.y(),   0);
-
         } else if (entity->getType() == DrType::Device) {
             DrDevice *device = m_project->findDeviceFromKey( entity_key );
             switch (device->getDeviceType()) {
@@ -149,15 +147,24 @@ void DrView::dropEvent(QDropEvent *event) {
                 //case DrEffectType::Fog:     break;
             }
 
+        } else if (entity->getType() == DrType::Font) {
+            thing = stage->addThing(DrThingType::Text, entity_key, position.x(), -position.y(),   0);
+
         } else if (entity->getType() == DrType::Item) {
             DrItem *dr_item = m_project->findItemFromKey( entity_key );
             switch (dr_item->getItemType()) {
                 case DrItemType::Tile:      thing = stage->addThing(DrThingType::Tile,      entity_key, position.x(), -position.y(),  0);   break;
             }
 
+        } else if (entity->getType() == DrType::Prefab) {
+            DrPrefab *prefab = m_project->findPrefabFromKey( entity_key );
+            DrAsset *asset = Dr::AddPrefab(m_project, prefab->getPrefabType());
+            thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(),   0);
+
         } else {
             return;
         }
+
 
         my_scene->addItemToSceneFromThing( thing );
         m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Asset_Tree, { thing }, { std::make_pair(Comps::Thing_Transform, Props::Thing_Size) } );
@@ -232,7 +239,6 @@ void DrView::dropEvent(QDropEvent *event) {
         m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
     }
-
 }
 
 

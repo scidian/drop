@@ -452,5 +452,8 @@
         <file>assets/inspector_icons/comp_foliage.png</file>
         <file>assets/inspector_icons/comp_item.png</file>
         <file>assets/asset_types/blob.png</file>
+        <file>assets/dr_images/blob.png</file>
+        <file>assets/dr_images/foliage.png</file>
+        <file>assets/dr_images/triangle.png</file>
     </qresource>
 </RCC>

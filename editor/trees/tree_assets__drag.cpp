@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include <QDrag>
 #include <QGuiApplication>
 #include <QMimeData>
@@ -108,12 +109,21 @@ void DrFilterAssetMouseHandler::startDrag(QLabel *label_pixmap, long asset_key) 
     drag->setPixmap(pixmap);
     drag->setHotSpot(hot_spot);
 
-    // Execute drag command
+    // ***** Execute drag command
     QPixmap temp_pixmap = Dr::ApplySinglePixelFilter(Image_Filter_Type::Opacity, pre_pixmap, -128);
     label_pixmap->setPixmap(temp_pixmap);
-    drag->exec(Qt::CopyAction, Qt::CopyAction);
+    Qt::DropAction result = drag->exec(Qt::CopyAction, Qt::CopyAction);
     label_pixmap->setPixmap(pre_pixmap);
 
+    // If Prefab was successfully dropped an Asset was added so we need to rebuild this TreeAssets
+    if (result == Qt::DropAction::CopyAction) {
+        if (entity->getType() == DrType::Prefab) {
+            // After Drop Event is over, rebuild AssetTree
+            QTimer::singleShot(0, this, [this] {
+                m_editor_relay->buildAssetTree();
+            } );
+        }
+    }
 }
 
 

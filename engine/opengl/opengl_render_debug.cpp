@@ -43,14 +43,13 @@ static void GetSpaceJointList(cpConstraint *constraint, std::vector<cpConstraint
 //####################################################################################
 void DrOpenGL::drawDebug() {
 
-    // ***** Display number of bodies in world
+    // ***** Display number of cpBodies in world
     if (m_engine->getCurrentWorld()->getSpace()) {
         ///std::vector<cpBody*> body_list;
         ///body_list.clear();
         ///cpSpaceEachBody(m_engine->getCurrentWorld()->getSpace(), cpSpaceBodyIteratorFunc(GetSpaceBodyList), &body_list);
         ///g_info = "Body Count: " + std::to_string(body_list.size());
     }
-
 
     // ***** Debug Shapes
     if (m_form_engine->debug_shapes) {

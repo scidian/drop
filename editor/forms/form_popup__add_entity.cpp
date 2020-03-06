@@ -13,6 +13,7 @@
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
+#include "editor/project/project.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
@@ -133,49 +134,14 @@ void FormPopup::buildPopupAddEntity() {
 
 
 //####################################################################################
-//##    Checks that an Asset name is not already in the Project
-//####################################################################################
-QString findEmptyAssetName(AssetMap &asset_map, DrAssetType type, int count) {
-    QString new_name = "";
-    bool    already_exists;
-    do {
-        already_exists = false;
-        new_name = "";
-        if (type == DrAssetType::Character) new_name = "Character " + QString::number(count);
-        if (type == DrAssetType::Object)    new_name = "Object "    + QString::number(count);
-
-        for (auto asset_pair : asset_map) {
-            if (asset_pair.second->getAssetType() == type) {
-                if (asset_pair.second->getName() == new_name.toStdString()) {
-                    already_exists = true;
-                }
-            }
-        }
-        count++;
-    } while (already_exists);
-    return new_name;
-}
-
-
-//####################################################################################
 //##    Adds Asset to Project
 //####################################################################################
 void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
     IEditorRelay *editor = Dr::GetActiveEditorRelay();
-    if (editor == nullptr) return;
-    editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
+    if (editor == nullptr) { this->close(); return; }
+    editor->buildInspector( { } );                                          // Clear inspector to stop Inspector signals
 
-    DrAsset *asset = m_project->addAsset(asset_type, source_key);
-
-    // Count number of DrAssetTypes in AssetMap, use that number to find a new name for Asset
-    int asset_count = 0;
-    for (auto asset_pair : m_project->getAssetMap()) {
-        if (asset_pair.second->getAssetType() == asset_type) {
-            asset_count++;
-        }
-    }
-    QString new_name = findEmptyAssetName(m_project->getAssetMap(), asset_type, asset_count);
-    asset->setName( new_name.toStdString() );
+    DrAsset *asset = Dr::AddAsset(m_project, asset_type, source_key);
 
     // Update EditorRelay widgets
     editor->buildAssetTree();

@@ -36,8 +36,8 @@ std::string StringFromType(DrType type) {
 
 std::string StringFromAssetType(DrAssetType type) {
     switch (type) {
-        case DrAssetType::Object:       return "Object Asset";
-        case DrAssetType::Character:    return "Character Asset";
+        case DrAssetType::Object:       return "Object";
+        case DrAssetType::Character:    return "Character";
 
         ///case DrAssetType::Action:       return "Action Asset";
     }

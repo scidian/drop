@@ -194,27 +194,28 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
             } else {
 
+
                 //###########################################
                 //##
                 //##    Foliage Demo
                 //##
                 //###########################################
-                long foliage = 0;
-                DrEngineObject *grass = nullptr;
-                if (Dr::RandomInt(0, 4) == 1) {
-                    double scale_x = Dr::RandomDouble(0.5, 1.0);
-                    double scale_y = Dr::RandomDouble(0.8, 1.5);
-                    foliage = Asset_Textures::Flower;
-                    grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
-                } else {
-                    double scale_x = Dr::RandomDouble(0.8, 1.5);
-                    double scale_y = Dr::RandomDouble(0.4, 1.0);
-                    foliage = Asset_Textures::Grass;
-                    grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
-                }
-                grass->addShapeBoxFromTexture(foliage);
-                grass->setComponentFoliage(new ThingCompFoliage(world, grass, 1.0));
-                world->addThing(grass);
+//                long foliage = 0;
+//                DrEngineObject *grass = nullptr;
+//                if (Dr::RandomInt(0, 4) == 1) {
+//                    double scale_x = Dr::RandomDouble(0.5, 1.0);
+//                    double scale_y = Dr::RandomDouble(0.8, 1.5);
+//                    foliage = Asset_Textures::Flower;
+//                    grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
+//                } else {
+//                    double scale_x = Dr::RandomDouble(0.8, 1.5);
+//                    double scale_y = Dr::RandomDouble(0.4, 1.0);
+//                    foliage = Asset_Textures::Grass;
+//                    grass = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, foliage, x, y, z, DrPointF(scale_x, scale_y));
+//                }
+//                grass->addShapeBoxFromTexture(foliage);
+//                grass->setComponentFoliage(new ThingCompFoliage(world, grass, 1.0));
+//                world->addThing(grass);
 
 
                 //###########################################
@@ -222,21 +223,20 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 //##    Color Blocks
                 //##
                 //###########################################
-//                for (int i = 0; i < 25; i++ ) {
-//                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
-//                    block->addShapeBoxFromTexture(Asset_Textures::Block);
-//                    block->comp3D()->set3DType(Convert_3D_Type::Cube);
-//                    block->comp3D()->setDepth(61);
-//                    block->setTouchDrag(true);
-//                    block->setTouchDragForce(5000.0);
-//                    world->addThing(block);
+                for (int i = 0; i < 25; i++ ) {
+                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
+                    block->addShapeBoxFromTexture(Asset_Textures::Block);
+                    block->comp3D()->set3DType(Convert_3D_Type::Cube);
+                    block->comp3D()->setDepth(61);
+                    block->setTouchDrag(true);
+                    block->setTouchDragForce(5000.0);
+                    world->addThing(block);
 
-//                    double hue = Dr::RandomDouble(0.0, 1.0);
-//                    block->hue = static_cast<float>(hue);
-
-//                    ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
-//                    ///block->saturation = static_cast<float>(saturation);
-//                }
+                    double hue = Dr::RandomDouble(0.0, 1.0);
+                    block->hue = static_cast<float>(hue);
+                    ///double saturation = Dr::RandomDouble(0.0, 0.5) - 0.125;
+                    ///block->saturation = static_cast<float>(saturation);
+                }
             }
         }
     }

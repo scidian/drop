@@ -59,6 +59,11 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/circle.png",                          c_key_image_character,              Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/box.png",                             c_key_image_object,                 Asset_Category::Image);
 
+    AddImage(project, ":/assets/dr_images/blob.png" ,                           c_key_image_blob,                   Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/foliage.png",                         c_key_image_foliage,                Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/triangle.png",                        c_key_image_triangle,               Asset_Category::Image);
+
+
     //##    Built In Images - Basic         300-399
     AddImage(project, ":/assets/dr_images/basic/square_1.png",                  c_key_image_square_1,               Asset_Category::Basic);
     AddImage(project, ":/assets/dr_images/basic/square_2.png",                  c_key_image_square_2,               Asset_Category::Basic);
@@ -303,6 +308,19 @@ void AddBuiltInImages(DrProject *project) {
 }   // End AddBuiltInImages()
 
 
-
-
 }   // End namespace Dr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

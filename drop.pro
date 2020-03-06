@@ -162,6 +162,7 @@ SOURCES += \
     editor/pixmap/pixmap_filters.cpp \
     editor/pixmap/pixmap_mask.cpp \
     editor/preferences.cpp \
+    editor/project/project_add_asset.cpp \
     editor/project/project_add_built_in_images.cpp \
     editor/project/project_file_open.cpp \
     editor/project/project_file_save.cpp \

@@ -108,11 +108,16 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
             Dr::IsCloseTo(m_origin_item->pos().x(), m_origin_item_start_pos.x(), 0.001) &&
             Dr::IsCloseTo(m_origin_item->pos().y(), m_origin_item_start_pos.y(), 0.001) &&
             m_origin_timer.elapsed() > 500) {
-        // Do nothing...
         // This is when multiple items are selected and the user starts to click on one of the items selected to select it by itself, but then
         // realizes they want to keep the multi selection they have. Standard practice dictates if you continue to hold the mouse button for a
         // longer time (in this case over 500 milliseconds) before letting go, you get to keep the multi selction. This case is handled here by
         // not calling the base class event that clears the selection.
+
+        QList<long> item_keys { };
+        for (auto &item : my_scene->getSelectionItems())
+            item_keys.append(item->data(User_Roles::Key).toLongLong());
+        m_editor_relay->buildInspector( item_keys );
+        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
 
     // ***** Pass event to base class
     } else {
