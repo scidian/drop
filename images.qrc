@@ -454,6 +454,7 @@
         <file>assets/asset_types/blob.png</file>
         <file>assets/dr_images/blob.png</file>
         <file>assets/dr_images/foliage.png</file>
-        <file>assets/dr_images/triangle.png</file>
+        <file>assets/dr_images/spike.png</file>
+        <file>assets/asset_types/spike.png</file>
     </qresource>
 </RCC>

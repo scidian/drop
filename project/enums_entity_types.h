@@ -93,6 +93,7 @@ enum class DrItemType {
 enum class DrPrefabType {
     Blob,
     Foliage,
+    Spike,
 };
 
 // ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things

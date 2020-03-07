@@ -76,16 +76,21 @@ DrAsset* AddPrefab(DrProject *project, DrPrefabType prefab_type) {
     switch (prefab_type) {
         case DrPrefabType::Blob:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_blob, "Blob");
-            asset->setComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, static_cast<int>(Body_Style::Circular_Blob));
-            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Style)->setEditable(true);
-            asset->setComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness, 50.0);
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Style)->setValue(static_cast<int>(Body_Style::Circular_Blob));
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setValue(50.0);
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setEditable(true);
             break;
         case DrPrefabType::Foliage:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_foliage, "Foliage");
-            asset->setComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, static_cast<int>(Body_Style::Foliage));
-            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Style)->setEditable(true);
-            asset->setComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness, 25.0);
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Style)->setValue(static_cast<int>(Body_Style::Foliage));
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setValue(20.0);
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setEditable(true);
             break;
+        case DrPrefabType::Spike:
+            asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_spike, "Spike");
+            asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Shape)->setValue(static_cast<int>(Collision_Shape::Triangle));
+            asset->getComponentProperty(Comps::Asset_Health, Props::Asset_Health_Health)->setValue(100.0);
+        break;
     }
     return asset;
 }

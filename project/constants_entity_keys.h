@@ -21,12 +21,12 @@ constexpr long c_key_starting_number =              1001;       // First 1001 ke
 //##    Basic Images                    001-099
 //############################
 constexpr long c_key_image_empty =                  1;          //  32 x  32    Empty Square
-constexpr long c_key_image_character =              2;          // 128 x 128    Gray Circle
-constexpr long c_key_image_object =                 3;          // 256 x 256    Gray Box
+constexpr long c_key_image_character =              2;          // 128 x 128    Yellow Circle
+constexpr long c_key_image_object =                 3;          // 256 x 256    Brown Box
 
 constexpr long c_key_image_blob =                   4;          // 128 x 128    Green Circle
-constexpr long c_key_image_foliage =                5;          // 128 x 128    Green Rectangle
-constexpr long c_key_image_triangle =               6;          // 128 x 128    Red Triangle
+constexpr long c_key_image_foliage =                5;          //  32 x 128    Green / Brown Flower
+constexpr long c_key_image_spike =                  6;          // 128 x 128    Red Spike Triangle
 
 
 //####################################################################################
@@ -57,6 +57,7 @@ constexpr long c_key_item_tile =                    200;        // Tile Item
 //############################
 constexpr long c_key_prefab_blob =                  250;        // Blob Prefab
 constexpr long c_key_prefab_foliage =               251;        // Foliage Prefab
+constexpr long c_key_prefab_spike =                 252;        // Spike Prefab
 
 
 //####################################################################################

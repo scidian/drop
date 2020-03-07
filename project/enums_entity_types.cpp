@@ -106,6 +106,7 @@ std::string StringFromPrefabType(DrPrefabType type) {
     switch (type) {
         case DrPrefabType::Blob:        return "Blob";
         case DrPrefabType::Foliage:     return "Foliage";
+        case DrPrefabType::Spike:       return "Spike";
     }
 }
 
