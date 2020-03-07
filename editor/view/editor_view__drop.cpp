@@ -18,6 +18,7 @@
 #include "editor/trees/tree_assets.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "engine/enums_engine.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_device.h"
@@ -160,6 +161,16 @@ void DrView::dropEvent(QDropEvent *event) {
             DrPrefab *prefab = m_project->findPrefabFromKey( entity_key );
             DrAsset *asset = Dr::AddPrefab(m_project, prefab->getPrefabType());
             thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(),   0);
+
+            switch (prefab->getPrefabType()) {
+                case DrPrefabType::Blob:
+                case DrPrefabType::Foliage:
+                    thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, static_cast<int>(Body_Type::Dynamic));
+                    break;
+                case DrPrefabType::Spike:
+                    thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Damage, static_cast<int>(Collision_Type::Damage_Player));
+                    break;
+            }
 
         } else {
             return;
