@@ -222,8 +222,8 @@ void DrOpenGL::drawDebugCollisions() {
         cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
 
         for (int i = 0; i < static_cast<int>(point_list.size()); i++) {
-            DrPointF point_1(point_list[i].x, point_list[i].y + 2.5);
-            DrPointF point_2(point_list[i].x, point_list[i].y - 2.5);
+            DrPointF point_1(point_list[i].x + 2.5, point_list[i].y);/// + 2.5);
+            DrPointF point_2(point_list[i].x - 2.5, point_list[i].y);/// - 2.5);
 
             double angle_in_radians = std::atan2(normal_list[i].y, normal_list[i].x);
 

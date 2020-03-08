@@ -40,7 +40,7 @@ public:
     Body_Style              body_style          { Body_Style::Rigid_Body }; // Rigid_Body or Soft Body (Circular_Blob, Square Blob, Mesh, etc)
 
     std::vector<cpShape*>   shapes;                                         // Collision Shapes of object
-    ShapeMap                shape_type;                                     // Shape Types of Shapes of Object
+    ShapeMap                shape_type;                                     // Shape Types of Collision Shapes of Object
     PolygonList             polygons;                                       // List of concave polygon Shapes (for debug drawing)
 
     // Animation
@@ -143,15 +143,15 @@ public:
     virtual bool        update(double time_passed, double time_warp, DrRectF &area) override;
 
     // Shape Creation
-    void                addShapeBox(double width, double height);
-    void                addShapeBox(cpBB box);
-    void                addShapeBoxFromTexture(long texture_number, DrPointF extra_scale = DrPointF(1.0, 1.0));
-    void                addShapeCircle(double circle_radius, DrPointF shape_offset);
-    void                addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0, DrPointF extra_scale = DrPointF(1.0, 1.0));
-    void                addShapeTriangleFromTexture(long texture_number);
-    void                addShapePolygon(const std::vector<DrPointF> &points);
-    void                addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
-    void                applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
+    cpShape*            addShapeBox(double width, double height);
+    cpShape*            addShapeBox(cpBB box);
+    cpShape*            addShapeBoxFromTexture(long texture_number, DrPointF extra_scale = DrPointF(1.0, 1.0));
+    cpShape*            addShapeCircle(double circle_radius, DrPointF shape_offset);
+    cpShape*            addShapeCircleFromTexture(long texture_number, double radius_multiplier = 1.0, DrPointF extra_scale = DrPointF(1.0, 1.0));
+    cpShape*            addShapeTriangleFromTexture(long texture_number);
+    cpShape*            addShapePolygon(const std::vector<DrPointF> &points);
+    cpShape*            addShapeSegment(DrPointF p1, DrPointF p2, double padding = 2.0);
+    cpShape*            applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type);
     PointList           createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count);
 
     // Thing Basic Properties Overrides

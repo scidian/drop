@@ -260,7 +260,7 @@ SOURCES += \
     engine/thing/engine_thing_light.cpp \
     engine/thing/engine_thing_mirror.cpp \
     engine/thing/engine_thing_object.cpp \
-    engine/thing/engine_thing_object__create.cpp \
+    engine/thing/engine_thing_object__shapes.cpp \
     engine/thing/engine_thing_object__update.cpp \
     engine/thing/engine_thing_swirl.cpp \
     engine/thing/engine_thing_water.cpp \

@@ -98,9 +98,17 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         ///return cpArbiterIgnore(arb);
     }
 
-    // Temp cancel gravity on another object if colliding and should cancel it
-    if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
-        if (object_a->compPlayer() != nullptr) {
+    // Some special Player collsion processing
+    if (object_a->compPlayer() != nullptr) {
+        // Ledge Grabbing
+        if (Dr::VectorContains(object_a->compPlayer()->getLedgeGrabbers(), a)) {
+            cpVect n = cpvneg( cpArbiterGetNormal(arb) );           // Get normal vector of collision
+            double dot = cpvdot( n, g_gravity_normal );             // Compare angle of gravity to angle of normal
+            if (dot > -0.50) return cpArbiterIgnore(arb);           // Cancel collision if not in direction of gravity
+        }
+
+        // Temp cancel gravity on another object if colliding and should cancel it
+        if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
             object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
         }
     }

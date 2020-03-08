@@ -30,38 +30,38 @@ PointList DrEngineObject::createEllipseFromCircle(const DrPointF &center, const 
 //####################################################################################
 //##    Add Shapes to Object
 //####################################################################################
-void DrEngineObject::addShapeBox(double width, double height) {
+cpShape* DrEngineObject::addShapeBox(double width, double height) {
     width =  width *  abs(static_cast<double>(this->getScaleX()));
     height = height * abs(static_cast<double>(this->getScaleY()));
     cpShape *shape = cpBoxShapeNew(this->body, width, height, c_extra_radius);
     double   area = (width * height);
-    applyShapeSettings(shape, area, Shape_Type::Box);
+    return applyShapeSettings(shape, area, Shape_Type::Box);
 }
-void DrEngineObject::addShapeBox(cpBB box) {
-    cpShape *shape = cpBoxShapeNew2(this->body, box, 14);//c_extra_radius);
+cpShape* DrEngineObject::addShapeBox(cpBB box) {
+    cpShape *shape = cpBoxShapeNew2(this->body, box, c_extra_radius);
     double   area = ((box.r - box.l) * (box.t - box.b));
-    applyShapeSettings(shape, area, Shape_Type::Box);
+    return applyShapeSettings(shape, area, Shape_Type::Box);
 }
-void DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
+cpShape* DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
     double width =  world()->getTexture(texture_number)->width() *  abs(extra_scale.x);
     double height = world()->getTexture(texture_number)->height() * abs(extra_scale.y);
-    addShapeBox(width, height);
+    return addShapeBox(width, height);
 }
 
-void DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset) {
+cpShape* DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
     if (Dr::FuzzyCompare(abs(this->getScaleX()), abs(this->getScaleY())) == false) {
         std::vector<DrPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
-        addShapePolygon(points);
+        return addShapePolygon(points);
     } else {
         double  radius = circle_radius * static_cast<double>(abs(this->getScaleX()));
         cpVect  offset = cpv(shape_offset.x, shape_offset.y);                                       // Offset of collision shape
         cpShape *shape = cpCircleShapeNew(this->body, radius, offset);
         double    area = cpAreaForCircle( 0, circle_radius );
-        applyShapeSettings(shape, area, Shape_Type::Circle);
+        return applyShapeSettings(shape, area, Shape_Type::Circle);
     }
 }
-void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
+cpShape* DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
     double width =  world()->getTexture(texture_number)->width() *  abs(extra_scale.x);
     double height = world()->getTexture(texture_number)->height() * abs(extra_scale.y);
     double radius = (width / 2.0) * radius_multiplier;
@@ -76,35 +76,34 @@ void DrEngineObject::addShapeCircleFromTexture(long texture_number, double radiu
     double ratio =  height / (width + 0.0001);
     // Is Square, can be a nice circle
     if (Dr::IsCloseTo(width, height, 0.001)) {
-        addShapeCircle(radius, DrPointF(0, 0));
+        return addShapeCircle(radius, DrPointF(0, 0));
     // Image is Rectangular, needs ellipse
     } else {
         std::vector<DrPointF> points = createEllipseFromCircle(DrPointF(0, 0), radius, 18);
         for (auto &point : points) {
             point.y *= ratio;
         }
-        addShapePolygon(points);
+        return addShapePolygon(points);
     }
 }
 
-void DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
+cpShape* DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
     double width =  world()->getTexture(texture_number)->width();
     double height = world()->getTexture(texture_number)->height();
     std::vector<DrPointF> points;
     points.push_back(DrPointF(       0.0, +height/2.0));
     points.push_back(DrPointF(-width/2.0, -height/2.0));
     points.push_back(DrPointF( width/2.0, -height/2.0));
-    addShapePolygon(points);
+    return addShapePolygon(points);
 }
 
-void DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
+cpShape* DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
     cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     double   area =  cpAreaForSegment(cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
-    applyShapeSettings(shape, area, Shape_Type::Segment);
+    return applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
-void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
-
+cpShape* DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
     // Apply scale to points, verify Winding
     int old_point_count = static_cast<int>(points.size());
     double scale_x = static_cast<double>(this->getScaleX());
@@ -145,7 +144,7 @@ void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
     if ((new_point_count == old_point_count || (new_point_count == 0))) {
         cpShape *shape = cpPolyShapeNew( this->body, old_point_count, verts.data(), cpTransformIdentity, c_extra_radius );
         double   area =  cpAreaForPoly(old_point_count, verts.data(), c_extra_radius );
-        applyShapeSettings(shape, area, Shape_Type::Polygon);
+        return applyShapeSettings(shape, area, Shape_Type::Polygon);
 
     // Shape is concave
     } else {
@@ -168,13 +167,14 @@ void DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
             applyShapeSettings(shape, area, Shape_Type::Polygon);
         }
     }
+    return nullptr;
 }
 
 
 //####################################################################################
 //##    Applies Object Settings to Shape
 //####################################################################################
-void DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type) {
+cpShape* DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type) {
     // Figrue out friction and bounce to use for this object
     double friction = (this->getCustomFriction() < 0) ? world()->getFriction() : this->getCustomFriction();
     double bounce =   (this->getCustomBounce() < 0)   ? world()->getBounce()   : this->getCustomBounce();
@@ -191,6 +191,8 @@ void DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_Type 
     // Add shape to the list of shapes for this body
     this->shapes.push_back( shape );
     this->shape_type[shape] = shape_type;
+
+    return shape;
 }
 
 

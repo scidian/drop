@@ -132,8 +132,9 @@ DrEngineObject::~DrEngineObject() {
 void DrEngineObject::addToWorld() {
     // Add Body and Shapes to Space
     cpSpaceAddBody(world()->getSpace(), this->body);
-    for (auto shape : shapes)
+    for (auto shape : shapes) {
         cpSpaceAddShape( world()->getSpace(), shape );
+    }
 
     // If we don't want the body to rotate, overwrite the precalculated moment of inertia with infinity
     if (this->canRotate() == false) {

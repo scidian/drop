@@ -83,7 +83,7 @@ DrAsset* AddPrefab(DrProject *project, DrPrefabType prefab_type) {
         case DrPrefabType::Foliage:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_foliage, "Foliage");
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Style)->setValue(static_cast<int>(Body_Style::Foliage));
-            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setValue(20.0);
+            asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setValue(25.0);
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setEditable(true);
             break;
         case DrPrefabType::Spike:

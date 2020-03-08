@@ -32,14 +32,19 @@ ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineObject *
              size.x *= scale_x;
              size.y *= scale_y;
 
-    // Create foliage anchor point bodies and add to space
+    // Create foliage anchor point bodies and add them to space
     DrPointF bottom_pos(position.x, position.y - (size.y / 2.0));
              bottom_pos = Dr::RotatePointAroundOrigin(bottom_pos, position, rotation);
     cpVect   bottom = cpv(bottom_pos.x, bottom_pos.y);
     cpVect   middle = cpv(position.x, position.y);
-    m_anchor_bottom = cpBodyNewKinematic();     cpBodySetPosition( m_anchor_bottom, bottom);    cpBodySetUserData( m_anchor_bottom, nullptr);
-    m_anchor_middle = cpBodyNewKinematic();     cpBodySetPosition( m_anchor_middle, middle);    cpBodySetUserData( m_anchor_middle, nullptr);
+    m_anchor_bottom = cpBodyNewKinematic();
+    cpBodySetPosition( m_anchor_bottom, bottom);
+    cpBodySetUserData( m_anchor_bottom, nullptr);
     cpSpaceAddBody(engine_world->getSpace(), m_anchor_bottom);
+
+    m_anchor_middle = cpBodyNewKinematic();
+    cpBodySetPosition( m_anchor_middle, middle);
+    cpBodySetUserData( m_anchor_middle, nullptr);
     cpSpaceAddBody(engine_world->getSpace(), m_anchor_middle);
 
     // Pivot joint anchor to bottom body

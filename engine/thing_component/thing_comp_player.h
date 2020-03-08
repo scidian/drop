@@ -27,46 +27,49 @@ public:
     // #################### VARIABLES ####################
 private:
     // Player Movement (if DrEngineObject has this component, its physics update callback function is PlayerUpdateVelocity)
-    double          m_max_speed_x =  2000.0;        // Maximum speed x of object
-    double          m_max_speed_y =  2000.0;        // Maximum speed y of object
+    double          m_max_speed_x       { 2000.0 };         // Maximum speed x of object
+    double          m_max_speed_y       { 2000.0 };         // Maximum speed y of object
 
-    double          m_forced_speed_x =  0.0;        // Forced move speed x of object
-    double          m_forced_speed_y =  0.0;        // Forced move speed y of object
+    double          m_forced_speed_x    { 0.0 };            // Forced move speed x of object
+    double          m_forced_speed_y    { 0.0 };            // Forced move speed y of object
 
-    double          m_move_speed_x =  400.0;        // Movement speed x
-    double          m_move_speed_y =  400.0;        // Movement speed y
-    bool            m_angle_movement = false;       // Should the objects angle affect the objects move speeds? (good for first person, etc)
+    double          m_move_speed_x      { 400.0 };          // Movement speed x
+    double          m_move_speed_y      { 400.0 };          // Movement speed y
+    bool            m_angle_movement    { false };          // Should the objects angle affect the objects move speeds? (good for first person, etc)
 
-    double          m_jump_force_x =    0.0;        // Jump force x
-    double          m_jump_force_y =  250.0;        // Jump force y
-    long            m_jump_timeout =  800;          // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
-    int             m_jump_count =      0;          // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
+    double          m_jump_force_x      { 0.0 };            // Jump force x
+    double          m_jump_force_y      { 250.0 };          // Jump force y
+    long            m_jump_timeout      { 800 };            // Milliseconds to allow for jump to continue to receive a boost when jump button is held down
+    int             m_jump_count        { 0 };              // How many jumps this player is allowed, -1 = c_unlimited_jump, 0 = cannot jump, 1 = 1, 2 = 2, etc
 
-    double          m_acceleration =   1.00;        // Affects move / switch speeds, 0.0 is instant, 1.0 is default, 5.0 is slower
-    double          m_air_drag =       1.00;        // Affects acceleration and decceleration in air (0 to 1+)
-    double          m_ground_drag =    1.00;        // Affects acceleration and decceleration on the ground (0 to 1+)
-    double          m_rotate_drag =    0.25;        // Affects rotation acceleration and decceleration (0 to 1+)
+    double          m_acceleration      { 1.00 };           // Affects move / switch speeds, 0.0 is instant, 1.0 is default, 5.0 is slower
+    double          m_air_drag          { 1.00 };           // Affects acceleration and decceleration in air (0 to 1+)
+    double          m_ground_drag       { 1.00 };           // Affects acceleration and decceleration on the ground (0 to 1+)
+    double          m_rotate_drag       { 0.25 };           // Affects rotation acceleration and decceleration (0 to 1+)
 
-    bool            m_air_jump = true;              // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
-    bool            m_wall_jump = false;            // Can this player jump off of walls?
+    bool            m_air_jump          { true };           // Can this player jump while in the air (even if only has 1 jump, ex: fell off platform)
+    bool            m_wall_jump         { false };          // Can this player jump off of walls?
 
-    bool            m_mouse_rotate = false;         // If turned to true, player rotates to mouse position
+    bool            m_mouse_rotate      { false };          // If turned to true, player rotates to mouse position
+
 
     // ***** Local Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
-    int         m_remaining_jumps =         0;              // How many jumps player has left before it must hit ground before it can jump again
-    double      m_remaining_boost =         0.0;            // Used by Engine Update to process Jump Timeout boost
-    double      m_remaining_ground_time =   0.0;            // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
-    double      m_remaining_wall_time =     0.0;            // Used by Engine Update to allow some time for a wall jump to occur
+    int         m_remaining_jumps               { 0 };          // How many jumps player has left before it must hit ground before it can jump again
+    double      m_remaining_boost               { 0.0 };        // Used by Engine Update to process Jump Timeout boost
+    double      m_remaining_ground_time         { 0.0 };        // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
+    double      m_remaining_wall_time           { 0.0 };        // Used by Engine Update to allow some time for a wall jump to occur
 
-    bool        m_grounded = false;                         // Used by Engine Update to keep track of if this object is on the ground
-    bool        m_on_wall = false;                          // Used by Engine Update to keep track of if this object is on a wall
-    double      m_temp_gravity_multiplier = 1.0;            // Set multipler (0.0, 0.5, etc) when colliding with a gravity multiplying object (ladder, wall, etc)
+    bool        m_grounded                      { false };      // Used by Engine Update to keep track of if this object is on the ground
+    bool        m_on_wall                       { false };      // Used by Engine Update to keep track of if this object is on a wall
+    double      m_temp_gravity_multiplier       { 1.0 };        // Set multipler (0.0, 0.5, etc) when colliding with a gravity multiplying object (ladder, wall, etc)
 
-    cpVect      m_last_touched_ground_normal = cpvzero;     // Normal Vector of the last touched surface
-    double      m_last_touched_ground_dot = 1.0;            // Dot product of the last touched surface
-    Jump_State  m_jump_state = Jump_State::Need_To_Jump;    // Used by Engine Update to keep track of if the current jump button press has been processed
+    cpVect      m_last_touched_ground_normal    { cpvzero };    // Normal Vector of the last touched surface
+    double      m_last_touched_ground_dot       { 1.0 };        // Dot product of the last touched surface
+    Jump_State  m_jump_state = Jump_State::Need_To_Jump;        // Used by Engine Update to keep track of if the current jump button press has been processed
+
+    std::vector<cpShape*> m_ledge_grabbers      { };            // Stores shapes used to process ledge grabbing, if enabled
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -141,6 +144,8 @@ public:
     void            setLastTouchedGroundNormal(cpVect last_touched_normal) { m_last_touched_ground_normal = last_touched_normal; }
     void            setLastTouchedGroundDot(double last_touched_dot) { m_last_touched_ground_dot = last_touched_dot; }
     void            setJumpState(Jump_State new_jump_state) { m_jump_state = new_jump_state; }
+
+    std::vector<cpShape*>&  getLedgeGrabbers()      { return m_ledge_grabbers; }
 
 
 };
