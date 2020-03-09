@@ -81,6 +81,7 @@ void DrView::dropEvent(QDropEvent *event) {
     // ***** Check for Stage
     DrStage *stage = my_scene->getCurrentStageShown();
     DrThing *thing = nullptr;
+    DrAsset *asset = nullptr;
     if (stage == nullptr) return;
 
     // ***** Find Z Position to insert
@@ -159,12 +160,28 @@ void DrView::dropEvent(QDropEvent *event) {
 
         } else if (entity->getType() == DrType::Prefab) {
             DrPrefab *prefab = m_project->findPrefabFromKey( entity_key );
-            DrAsset *asset = Dr::AddPrefab(m_project, prefab->getPrefabType());
-            thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(),   0);
+            asset = Dr::AddPrefab(m_project, prefab->getPrefabType());
+            if (prefab->getPrefabType() != DrPrefabType::Character) {
+                thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(),      5);
+            } else {
+                thing = stage->addThing(DrThingType::Character, asset->getKey(), position.x(), -position.y(),   0);
+            }
 
             switch (prefab->getPrefabType()) {
                 case DrPrefabType::Blob:
+                    thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, static_cast<int>(Body_Type::Dynamic));
+                    break;
+                case DrPrefabType::Character:
+                    break;
                 case DrPrefabType::Foliage:
+                    thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, static_cast<int>(Body_Type::Dynamic));
+                    break;
+                case DrPrefabType::Ground:
+                    break;
+                case DrPrefabType::Ladder:
+                    thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Collide, false);
+                    break;
+                case DrPrefabType::Object:
                     thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, static_cast<int>(Body_Type::Dynamic));
                     break;
                 case DrPrefabType::Spike:
@@ -243,14 +260,37 @@ void DrView::dropEvent(QDropEvent *event) {
     // ***** Update Editor Widgets
     m_editor_relay->buildProjectTree();
 
-    // ***** Selects the newly dropped Thing, loads to Object Inspector
-    if (thing != nullptr) {
+    // ***** Selects the newly dropped Asset if created, otherwise Thing if created. Loads to Object Inspector
+    if (asset != nullptr) {
+        m_editor_relay->buildInspector( { asset->getKey() } );
+        m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
+        if (thing != nullptr) {
+            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
+        }
+        m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
+        m_editor_relay->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+
+    } else if (thing != nullptr) {
         this->setFocus();
         m_editor_relay->buildInspector( { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

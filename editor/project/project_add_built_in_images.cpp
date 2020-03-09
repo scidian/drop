@@ -56,11 +56,13 @@ DrImage* AddImage(DrProject *project, QString filename, long key, Asset_Category
 void AddBuiltInImages(DrProject *project) {
 
     AddImage(project, ":/assets/dr_images/empty.png" ,                          c_key_image_empty,                  Asset_Category::Image);
-    AddImage(project, ":/assets/dr_images/circle.png",                          c_key_image_character,              Asset_Category::Image);
-    AddImage(project, ":/assets/dr_images/box.png",                             c_key_image_object,                 Asset_Category::Image);
 
     AddImage(project, ":/assets/dr_images/blob.png" ,                           c_key_image_blob,                   Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/character.png",                       c_key_image_character,              Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/foliage.png",                         c_key_image_foliage,                Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/ground.png",                          c_key_image_ground,                 Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/ladder.png",                          c_key_image_ladder,                 Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/object.png",                          c_key_image_object,                 Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/spike.png",                           c_key_image_spike,                  Asset_Category::Image);
 
 

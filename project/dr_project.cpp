@@ -65,23 +65,27 @@ void DrProject::clearProject(bool add_built_in_items) {
 void DrProject::addDefaultAssets() {
 
     // ***** Add Effects
-    if (findEffectFromType(DrEffectType::Light) == nullptr)     this->addEffect(DrEffectType::Light,    c_key_effect_light);
-    if (findEffectFromType(DrEffectType::Water) == nullptr)     this->addEffect(DrEffectType::Water,    c_key_effect_water);
-    if (findEffectFromType(DrEffectType::Fire) == nullptr)      this->addEffect(DrEffectType::Fire,     c_key_effect_fire);
-    if (findEffectFromType(DrEffectType::Mirror) == nullptr)    this->addEffect(DrEffectType::Mirror,   c_key_effect_mirror);
-    if (findEffectFromType(DrEffectType::Fisheye) == nullptr)   this->addEffect(DrEffectType::Fisheye,  c_key_effect_fisheye);
-    if (findEffectFromType(DrEffectType::Swirl) == nullptr)     this->addEffect(DrEffectType::Swirl,    c_key_effect_swirl);
+    if (findEffectFromType(DrEffectType::Light) == nullptr)     this->addEffect(DrEffectType::Light,        c_key_effect_light);
+    if (findEffectFromType(DrEffectType::Water) == nullptr)     this->addEffect(DrEffectType::Water,        c_key_effect_water);
+    if (findEffectFromType(DrEffectType::Fire) == nullptr)      this->addEffect(DrEffectType::Fire,         c_key_effect_fire);
+    if (findEffectFromType(DrEffectType::Mirror) == nullptr)    this->addEffect(DrEffectType::Mirror,       c_key_effect_mirror);
+    if (findEffectFromType(DrEffectType::Fisheye) == nullptr)   this->addEffect(DrEffectType::Fisheye,      c_key_effect_fisheye);
+    if (findEffectFromType(DrEffectType::Swirl) == nullptr)     this->addEffect(DrEffectType::Swirl,        c_key_effect_swirl);
 
     // ***** Add Devices
-    if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,   c_key_device_camera);
+    if (findDeviceFromType(DrDeviceType::Camera) == nullptr)    this->addDevice(DrDeviceType::Camera,       c_key_device_camera);
 
     // ***** Add Items
-    if (findItemFromType(DrItemType::Tile) == nullptr)          this->addItem(DrItemType::Tile,         c_key_item_tile);
+    if (findItemFromType(DrItemType::Tile) == nullptr)          this->addItem(DrItemType::Tile,             c_key_item_tile);
 
     // ***** Add Prefabs
-    if (findPrefabFromType(DrPrefabType::Blob) == nullptr)      this->addPrefab(DrPrefabType::Blob,     c_key_prefab_blob);
-    if (findPrefabFromType(DrPrefabType::Foliage) == nullptr)   this->addPrefab(DrPrefabType::Foliage,  c_key_prefab_foliage);
-    if (findPrefabFromType(DrPrefabType::Spike) == nullptr)     this->addPrefab(DrPrefabType::Spike,    c_key_prefab_spike);
+    if (findPrefabFromType(DrPrefabType::Blob) == nullptr)      this->addPrefab(DrPrefabType::Blob,         c_key_prefab_blob);
+    if (findPrefabFromType(DrPrefabType::Character) == nullptr) this->addPrefab(DrPrefabType::Character,    c_key_prefab_character);
+    if (findPrefabFromType(DrPrefabType::Foliage) == nullptr)   this->addPrefab(DrPrefabType::Foliage,      c_key_prefab_foliage);
+    if (findPrefabFromType(DrPrefabType::Ground) == nullptr)    this->addPrefab(DrPrefabType::Ground,       c_key_prefab_ground);
+    if (findPrefabFromType(DrPrefabType::Ladder) == nullptr)    this->addPrefab(DrPrefabType::Ladder,       c_key_prefab_ladder);
+    if (findPrefabFromType(DrPrefabType::Object) == nullptr)    this->addPrefab(DrPrefabType::Object,       c_key_prefab_object);
+    if (findPrefabFromType(DrPrefabType::Spike) == nullptr)     this->addPrefab(DrPrefabType::Spike,        c_key_prefab_spike);
 }
 
 

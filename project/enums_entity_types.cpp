@@ -105,7 +105,11 @@ std::string StringFromItemType(DrItemType type) {
 std::string StringFromPrefabType(DrPrefabType type) {
     switch (type) {
         case DrPrefabType::Blob:        return "Blob";
+        case DrPrefabType::Character:   return "Character";
         case DrPrefabType::Foliage:     return "Foliage";
+        case DrPrefabType::Ground:      return "Ground";
+        case DrPrefabType::Ladder:      return "Ladder";
+        case DrPrefabType::Object:      return "Object";
         case DrPrefabType::Spike:       return "Spike";
     }
 }

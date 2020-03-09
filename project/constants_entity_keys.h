@@ -21,12 +21,14 @@ constexpr long c_key_starting_number =              1001;       // First 1001 ke
 //##    Basic Images                    001-099
 //############################
 constexpr long c_key_image_empty =                  1;          //  32 x  32    Empty Square
-constexpr long c_key_image_character =              2;          // 128 x 128    Yellow Circle
-constexpr long c_key_image_object =                 3;          // 256 x 256    Brown Box
 
-constexpr long c_key_image_blob =                   4;          // 128 x 128    Green Circle
-constexpr long c_key_image_foliage =                5;          //  32 x 128    Green / Brown Flower
-constexpr long c_key_image_spike =                  6;          // 128 x 128    Red Spike Triangle
+constexpr long c_key_image_blob =                   2;          // 128 x 128    Blue Split Circle
+constexpr long c_key_image_character =              3;          // 128 x 128    Tan Checker Circle
+constexpr long c_key_image_foliage =                4;          //  32 x 128    Green / Brown Flower
+constexpr long c_key_image_ground =                 5;          // 256 x 256    Green Square
+constexpr long c_key_image_ladder =                 6;          // 128 x 128    Ladder Piece
+constexpr long c_key_image_object =                 7;          // 128 x 128    Brown Box
+constexpr long c_key_image_spike =                  8;          // 128 x 128    Red Spike Triangle
 
 
 //####################################################################################
@@ -56,8 +58,12 @@ constexpr long c_key_item_tile =                    200;        // Tile Item
 //##    Prefabs                         250-299
 //############################
 constexpr long c_key_prefab_blob =                  250;        // Blob Prefab
-constexpr long c_key_prefab_foliage =               251;        // Foliage Prefab
-constexpr long c_key_prefab_spike =                 252;        // Spike Prefab
+constexpr long c_key_prefab_character =             251;        // Character Prefab
+constexpr long c_key_prefab_foliage =               252;        // Foliage Prefab
+constexpr long c_key_prefab_ground =                253;        // Ground Prefab
+constexpr long c_key_prefab_ladder =                254;        // Ladder Prefab
+constexpr long c_key_prefab_object =                255;        // Object Prefab
+constexpr long c_key_prefab_spike =                 256;        // Spike Prefab
 
 
 //####################################################################################

@@ -80,11 +80,24 @@ DrAsset* AddPrefab(DrProject *project, DrPrefabType prefab_type) {
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setValue(50.0);
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setEditable(true);
             break;
+        case DrPrefabType::Character:
+            asset = Dr::AddAsset(project, DrAssetType::Character, c_key_image_character, "Character");
+            break;
         case DrPrefabType::Foliage:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_foliage, "Foliage");
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Style)->setValue(static_cast<int>(Body_Style::Foliage));
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setValue(25.0);
             asset->getComponentProperty(Comps::Asset_Physics, Props::Asset_Physics_Body_Rigidness)->setEditable(true);
+            break;
+        case DrPrefabType::Ground:
+            asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_ground, "Ground");
+            break;
+        case DrPrefabType::Ladder:
+            asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_ladder, "Ladder");
+            asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Gravity_Multiplier)->setValue(0.0);
+            break;
+        case DrPrefabType::Object:
+            asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_object, "Object");
             break;
         case DrPrefabType::Spike:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_spike, "Spike");

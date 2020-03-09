@@ -25,8 +25,9 @@ ThingCompPlayer::ThingCompPlayer(DrEngineWorld *engine_world, DrEngineThing *par
     //## Ledge Grabber Test
     //##
     //###########################################
+    /**
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(parent_thing);
-    if (object) {
+    if (object != nullptr) {
         // Create Ledge-Grab shape, add to World
         double width =  object->getSize().x;
         double height = object->getSize().y;
@@ -49,6 +50,7 @@ ThingCompPlayer::ThingCompPlayer(DrEngineWorld *engine_world, DrEngineThing *par
         m_ledge_grabbers.push_back(ledge_grab_right);
         m_ledge_grabbers.push_back(ledge_grab_left);
     }
+    */
 
 
 

@@ -182,8 +182,6 @@
         <file>assets/gui_misc/empty_image.png</file>
         <file>assets/gui_misc/image_delete.png</file>
         <file>assets/gui_misc/image_edit.png</file>
-        <file>assets/dr_images/box.png</file>
-        <file>assets/dr_images/circle.png</file>
         <file>assets/dr_images/basic/circle_1.png</file>
         <file>assets/dr_images/basic/circle_2.png</file>
         <file>assets/dr_images/basic/circle_3.png</file>
@@ -456,5 +454,13 @@
         <file>assets/dr_images/foliage.png</file>
         <file>assets/dr_images/spike.png</file>
         <file>assets/asset_types/spike.png</file>
+        <file>assets/asset_types/object.png</file>
+        <file>assets/asset_types/ground.png</file>
+        <file>assets/dr_images/character.png</file>
+        <file>assets/dr_images/ground.png</file>
+        <file>assets/dr_images/object.png</file>
+        <file>assets/asset_types/ladder.png</file>
+        <file>assets/dr_images/ladder.png</file>
+        <file>assets/asset_types/character.png</file>
     </qresource>
 </RCC>

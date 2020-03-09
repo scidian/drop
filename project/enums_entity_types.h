@@ -92,7 +92,11 @@ enum class DrItemType {
 // ***** Prefabs,   Entities contained within DrProject::m_prefabs
 enum class DrPrefabType {
     Blob,
+    Character,
     Foliage,
+    Ground,
+    Ladder,
+    Object,
     Spike,
 };
 
