@@ -20,7 +20,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 ThingCompSoftBody::ThingCompSoftBody(DrEngineWorld *engine_world, DrEngineThing *parent_thing)
-    : DrEngineComponent(engine_world, parent_thing, Comps::Thing_Soft_Body) {
+    : DrThingComponent(engine_world, parent_thing, Comps::Thing_Soft_Body) {
 
 }
 

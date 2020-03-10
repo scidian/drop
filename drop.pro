@@ -227,7 +227,6 @@ SOURCES += \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
-    engine/engine_component.cpp \
     engine/engine_signal.cpp \
     engine/engine_spawner.cpp \
     engine/engine_texture.cpp \
@@ -255,10 +254,10 @@ SOURCES += \
     engine/opengl/opengl_render_objects.cpp \
     engine/opengl/opengl_render_space.cpp \
     engine/thing/engine_thing.cpp \
+    engine/thing/engine_thing_component.cpp \
     engine/thing/engine_thing_fire.cpp \
     engine/thing/engine_thing_fisheye.cpp \
     engine/thing/engine_thing_light.cpp \
-    engine/thing/engine_thing_mirror.cpp \
     engine/thing/engine_thing_object.cpp \
     engine/thing/engine_thing_object__shapes.cpp \
     engine/thing/engine_thing_object__update.cpp \
@@ -269,6 +268,7 @@ SOURCES += \
     engine/thing_component/thing_comp_foliage.cpp \
     engine/thing_component/thing_comp_player.cpp \
     engine/thing_component/thing_comp_soft_body.cpp \
+    engine/thing_component_effects/thing_comp_mirror.cpp \
     engine/world/engine_world.cpp \
     engine/world/engine_world__build_player.cpp \
     engine/world/engine_world__build_world.cpp \
@@ -978,7 +978,6 @@ HEADERS += \
     engine/debug_flags.h \
     engine/engine.h \
     engine/engine_camera.h \
-    engine/engine_component.h \
     engine/engine_signal.h \
     engine/engine_spawner.h \
     engine/engine_texture.h \
@@ -990,10 +989,10 @@ HEADERS += \
     engine/mesh/engine_vertex_debug.h \
     engine/opengl/opengl.h \
     engine/thing/engine_thing.h \
+    engine/thing/engine_thing_component.h \
     engine/thing/engine_thing_fire.h \
     engine/thing/engine_thing_fisheye.h \
     engine/thing/engine_thing_light.h \
-    engine/thing/engine_thing_mirror.h \
     engine/thing/engine_thing_object.h \
     engine/thing/engine_thing_swirl.h \
     engine/thing/engine_thing_water.h \
@@ -1002,6 +1001,7 @@ HEADERS += \
     engine/thing_component/thing_comp_foliage.h \
     engine/thing_component/thing_comp_player.h \
     engine/thing_component/thing_comp_soft_body.h \
+    engine/thing_component_effects/thing_comp_mirror.h \
     engine/world/engine_world.h \
     project/constants_component_info.h \
     project/constants_comps_and_props.h \

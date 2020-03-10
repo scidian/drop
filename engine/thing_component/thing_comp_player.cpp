@@ -17,7 +17,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 ThingCompPlayer::ThingCompPlayer(DrEngineWorld *engine_world, DrEngineThing *parent_thing)
-    : DrEngineComponent(engine_world, parent_thing, Comps::Thing_Player) {
+    : DrThingComponent(engine_world, parent_thing, Comps::Thing_Player) {
 
 
     //###########################################

@@ -16,10 +16,10 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_fisheye.h"
 #include "engine/thing/engine_thing_light.h"
-#include "engine/thing/engine_thing_mirror.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing_swirl.h"
 #include "engine/thing/engine_thing_water.h"
+#include "engine/thing_component_effects/thing_comp_mirror.h"
 #include "engine/world/engine_world.h"
 
 
@@ -146,7 +146,10 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
 //##    Renders FBO to screen buffer as a textured quad using Mirror Shader
 //##        - Returns true if rendered, false if not
 //####################################################################################
-bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineMirror *mirror) {
+bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineThing *mirror) {
+    // Get Mirror component of DrEngingThing
+    DrThingComponent *component = mirror->component(Comps::Thing_Settings_Mirror);      if (component == nullptr) return false;
+    ThingCompMirror  *mirror_settings = dynamic_cast<ThingCompMirror*>(component);      if (mirror_settings == nullptr) return false;
 
     // Check effect position and if we should render it
     double top, bottom, left, right;
@@ -155,7 +158,7 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 
     // If we are to render, bind the shader
     if (!m_mirror_shader.bind()) return false;
-    if (!fbo) return false;
+    if (fbo == nullptr) return false;
 
     // Bind offscreen frame buffer objects as textures
     glEnable(GL_TEXTURE_2D);
@@ -189,22 +192,20 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
     m_mirror_shader.enableAttributeArray( a_mirror_vertex );
 
     // Set mirror variables
-    m_mirror_shader.setUniformValue( u_mirror_top,        static_cast<float>(top) );
-    m_mirror_shader.setUniformValue( u_mirror_bottom,     static_cast<float>(bottom) );
-    m_mirror_shader.setUniformValue( u_mirror_left,       static_cast<float>(left) );
-    m_mirror_shader.setUniformValue( u_mirror_right,      static_cast<float>(right) );
-    m_mirror_shader.setUniformValue( u_mirror_color_top,
-                                        static_cast<float>(mirror->start_color.redF()),
-                                        static_cast<float>(mirror->start_color.greenF()),
-                                        static_cast<float>(mirror->start_color.blueF()) );
-    m_mirror_shader.setUniformValue( u_mirror_color_bottom,
-                                        static_cast<float>(mirror->end_color.redF()),
-                                        static_cast<float>(mirror->end_color.greenF()),
-                                        static_cast<float>(mirror->end_color.blueF()) );
-    m_mirror_shader.setUniformValue( u_mirror_color_tint,   mirror->tint_percent );
-    m_mirror_shader.setUniformValue( u_mirror_blur,         mirror->blur );
-    m_mirror_shader.setUniformValue( u_mirror_blur_stretch, mirror->blur_stretch );
-    m_mirror_shader.setUniformValue( u_mirror_scale,        mirror->scale );
+    m_mirror_shader.setUniformValue( u_mirror_top,          static_cast<float>(top) );
+    m_mirror_shader.setUniformValue( u_mirror_bottom,       static_cast<float>(bottom) );
+    m_mirror_shader.setUniformValue( u_mirror_left,         static_cast<float>(left) );
+    m_mirror_shader.setUniformValue( u_mirror_right,        static_cast<float>(right) );
+    m_mirror_shader.setUniformValue( u_mirror_color_top,    static_cast<float>(mirror_settings->start_color.redF()),
+                                                            static_cast<float>(mirror_settings->start_color.greenF()),
+                                                            static_cast<float>(mirror_settings->start_color.blueF()) );
+    m_mirror_shader.setUniformValue( u_mirror_color_bottom, static_cast<float>(mirror_settings->end_color.redF()),
+                                                            static_cast<float>(mirror_settings->end_color.greenF()),
+                                                            static_cast<float>(mirror_settings->end_color.blueF()) );
+    m_mirror_shader.setUniformValue( u_mirror_color_tint,   mirror_settings->tint_percent );
+    m_mirror_shader.setUniformValue( u_mirror_blur,         mirror_settings->blur );
+    m_mirror_shader.setUniformValue( u_mirror_blur_stretch, mirror_settings->blur_stretch );
+    m_mirror_shader.setUniformValue( u_mirror_scale,        mirror_settings->scale );
 
     // Set more variables for shader
     m_mirror_shader.setUniformValue( u_mirror_alpha,        mirror->getOpacity() );

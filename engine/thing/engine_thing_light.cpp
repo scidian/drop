@@ -16,17 +16,17 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
-                             double x, double y, double z, float  opacity,
+                             double x, double y, double z, float opacity,
                              Light_Type type_,
                              DrColor    color_,
                              float      diameter_,
                              DrPointF   cone_,
-                             float intensity_,
-                             float shadows_,
-                             bool  draw_shadows_,
-                             float blur_,
-                             float pulse_,
-                             float pulse_speed_)
+                             float      intensity_,
+                             float      shadows_,
+                             bool       draw_shadows_,
+                             float      blur_,
+                             float      pulse_,
+                             float      pulse_speed_)
     : DrEngineThing(world, unique_key, original_key) {
 
     this->setOpacity(opacity);

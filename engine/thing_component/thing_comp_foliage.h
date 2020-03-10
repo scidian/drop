@@ -9,16 +9,15 @@
 #define THING_COMP_FOLIAGE_H
 
 #include "3rd_party/chipmunk/chipmunk.h"
-#include "engine/engine_component.h"
 #include "engine/globals_engine.h"
-
+#include "engine/thing/engine_thing_component.h"
 
 
 //####################################################################################
 //##    ThingCompFoliage
 //##        Built-In Component for DrEngineThing dealing with Foliage physics
 //############################
-class ThingCompFoliage : public DrEngineComponent
+class ThingCompFoliage : public DrThingComponent
 {
 public:
     // Constructor / Destructor

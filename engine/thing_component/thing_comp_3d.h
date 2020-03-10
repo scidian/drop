@@ -8,15 +8,15 @@
 #ifndef THING_COMP_3D_H
 #define THING_COMP_3D_H
 
-#include "engine/engine_component.h"
 #include "engine/globals_engine.h"
+#include "engine/thing/engine_thing_component.h"
 
 
 //####################################################################################
 //##    ThingComp3D
 //##        Built-In Component for DrEngineThing dealing with 3D Properties
 //############################
-class ThingComp3D : public DrEngineComponent
+class ThingComp3D : public DrThingComponent
 {
 public:
     // Constructor / Destructor

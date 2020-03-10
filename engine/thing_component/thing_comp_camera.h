@@ -8,15 +8,15 @@
 #ifndef THING_COMP_CAMERA_H
 #define THING_COMP_CAMERA_H
 
-#include "engine/engine_component.h"
 #include "engine/globals_engine.h"
+#include "engine/thing/engine_thing_component.h"
 
 
 //####################################################################################
 //##    ThingCompCamera
 //##        Built-In Component for DrEngineThing dealing with Camera Properties
 //############################
-class ThingCompCamera : public DrEngineComponent
+class ThingCompCamera : public DrThingComponent
 {
 public:
     // Constructor / Destructor

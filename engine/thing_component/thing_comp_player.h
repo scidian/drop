@@ -8,15 +8,15 @@
 #ifndef THING_COMP_PLAYER_H
 #define THING_COMP_PLAYER_H
 
-#include "engine/engine_component.h"
 #include "engine/globals_engine.h"
+#include "engine/thing/engine_thing_component.h"
 
 
 //####################################################################################
 //##    ThingCompPlayer
 //##        Built-In Component for DrEngineThing dealing with Player Controls
 //############################
-class ThingCompPlayer : public DrEngineComponent
+class ThingCompPlayer : public DrThingComponent
 {
 public:
     // Constructor / Destructor

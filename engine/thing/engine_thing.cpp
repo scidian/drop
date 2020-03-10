@@ -6,9 +6,9 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/engine_component.h"
 #include "engine/engine_signal.h"
 #include "engine/thing/engine_thing.h"
+#include "engine/thing/engine_thing_component.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing_component/thing_comp_3d.h"
 #include "engine/world/engine_world.h"
@@ -23,6 +23,19 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
     m_world = world;
     m_key = unique_key;
     m_original_project_key = original_key;
+}
+
+DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z,
+                             DrPointF scale, double angle, float opacity, DrPointF size)
+    : DrEngineThing(world, unique_key, original_key) {
+
+    this->setAngle(angle);
+    this->setOpacity(opacity);
+    this->setPosition(DrPointF(x, y));
+    this->setScaleX(scale.x);                                                   // Save x scale for later
+    this->setScaleY(scale.y);                                                   // Save y scale for later
+    this->setSize(size);
+    this->setZOrder(z);
 }
 
 DrEngineThing::~DrEngineThing() {
@@ -45,8 +58,11 @@ DrEngineThing::~DrEngineThing() {
 //####################################################################################
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
-    // Reset Update Timer
     Dr::ResetTimer( update_timer );
+
+    // Call addToWorld() for each Component
+    for (auto component : m_components)
+        component.second->addToWorld();
 }
 
 // Update Function, Called every physics frame
@@ -56,9 +72,9 @@ bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) 
 
     bool remove = false;
 
-    for (auto component : m_components) {
+    // Call update() for each Component
+    for (auto component : m_components)
         component.second->update(time_passed, time_warp);
-    }
 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;
@@ -82,7 +98,7 @@ std::string DrEngineThing::name() {
 //##    Components Functions
 //####################################################################################
 // Returns component with matching component_name
-DrEngineComponent* DrEngineThing::component(std::string component_name) {
+DrThingComponent* DrEngineThing::component(std::string component_name) {
     if (component_name == "") return nullptr;
     auto it = m_components.find(component_name);
     if (it == m_components.end()) { return nullptr; }
@@ -107,11 +123,16 @@ void DrEngineThing::removeComponent(std::string component_name) {
 }
 
 // Sets Component to 'component', if nullptr is passed in, removes component
-void DrEngineThing::setComponent(std::string component_name, DrEngineComponent *component) {
+void DrEngineThing::setComponent(std::string component_name, DrThingComponent *component) {
     if (component_name == "") return;
     if (component == nullptr) {
         removeComponent(component_name);
     } else {
+        // Delete possible existing component
+        if (m_components[component_name] != nullptr) {
+            delete m_components[component_name];
+        }
+        // Set to new component
         m_components[component_name] = component;
     }
 }

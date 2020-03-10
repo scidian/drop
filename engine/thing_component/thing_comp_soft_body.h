@@ -8,8 +8,8 @@
 #ifndef THING_COMP_SOFT_BODY_H
 #define THING_COMP_SOFT_BODY_H
 
-#include "engine/engine_component.h"
 #include "engine/globals_engine.h"
+#include "engine/thing/engine_thing_component.h"
 
 // Forward Declarations
 struct Vertex;
@@ -19,7 +19,7 @@ struct Vertex;
 //##    ThingCompSoftBody
 //##        Built-In Component for DrEngineThing dealing with Soft Body Physics
 //############################
-class ThingCompSoftBody : public DrEngineComponent
+class ThingCompSoftBody : public DrThingComponent
 {
 public:
     // Constructor / Destructor

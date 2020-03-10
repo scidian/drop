@@ -22,7 +22,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineObject *parent_object, double springiness)
-    : DrEngineComponent(engine_world, parent_object, Comps::Thing_Soft_Body), m_springiness(springiness) {
+    : DrThingComponent(engine_world, parent_object, Comps::Thing_Soft_Body), m_springiness(springiness) {
 
     double   scale_x =  static_cast<double>(parent_object->getScaleX());
     double   scale_y =  static_cast<double>(parent_object->getScaleY());

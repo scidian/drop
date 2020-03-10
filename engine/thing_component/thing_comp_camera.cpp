@@ -17,7 +17,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 ThingCompCamera::ThingCompCamera(DrEngineWorld *engine_world, DrEngineThing *parent_thing) :
-    DrEngineComponent(engine_world, parent_thing, Comps::Thing_Settings_Camera) {
+    DrThingComponent(engine_world, parent_thing, Comps::Thing_Settings_Camera) {
 
     m_camera_edges[Edge_Location::Top] =    Frame_Edge::Normal;
     m_camera_edges[Edge_Location::Right] =  Frame_Edge::Normal;

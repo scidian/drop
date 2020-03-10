@@ -29,6 +29,8 @@ class DrEngineThing
 public:
     // Constructor / Destructor
     DrEngineThing(DrEngineWorld *world, long unique_key, long original_key);
+    DrEngineThing(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z,
+                  DrPointF scale, double angle, float opacity, DrPointF size);
     virtual ~DrEngineThing();
 
 
@@ -66,31 +68,31 @@ private:
 
 public:
     // ***** Image Post Processing Attributes
-    bool            extrude_3d          { false };                  // Auto convert to 3D   True / False
-    bool            wireframe           { false };                  // Wireframe            True / False
-    float           wireframe_width     { 1.0f };                   // Wireframe Width
-    bool            cartoon             { false };                  // Cartoon              True / False
-    float           cartoon_width       { 5.0f };                   // Cartoon Width
-    bool            cross_hatch         { false };                  // Cross Hatch          True / False
-    float           cross_hatch_width   { 5.0f };                   // Cross Hatch Width
+    bool            extrude_3d              { false };              // Auto convert to 3D   True / False
+    bool            wireframe               { false };              // Wireframe            True / False
+    float           wireframe_width         { 1.0f };               // Wireframe Width
+    bool            cartoon                 { false };              // Cartoon              True / False
+    float           cartoon_width           { 5.0f };               // Cartoon Width
+    bool            cross_hatch             { false };              // Cross Hatch          True / False
+    float           cross_hatch_width       { 5.0f };               // Cross Hatch Width
 
-    float           bitrate             { 256.0f };                 // Bitrate              1 to 256
-    float           pixel_x             { 1.0f };                   // Pixelation X         1.0+
-    float           pixel_y             { 1.0f };                   // Pixelation Y         1.0+
-    Pixel_Texture   pixel_texture       { Pixel_Texture::None };    // Pixel Texture        None, Knit, Woven, Wood, etc
-    bool            negative            { false };                  // Negative             True / False
-    bool            grayscale           { false };                  // Grayscale            True / False
-    float           hue                 { 0.0f };                   // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
-    float           saturation          { 0.0f };                   // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           contrast            { 0.0f };                   // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
-    float           brightness          { 0.0f };                   // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           bitrate                 { 256.0f };             // Bitrate              1 to 256
+    float           pixel_x                 { 1.0f };               // Pixelation X         1.0+
+    float           pixel_y                 { 1.0f };               // Pixelation Y         1.0+
+    Pixel_Texture   pixel_texture =         Pixel_Texture::None;    // Pixel Texture        None, Knit, Woven, Wood, etc
+    bool            negative                { false };              // Negative             True / False
+    bool            grayscale               { false };              // Grayscale            True / False
+    float           hue                     { 0.0f };               // Hue                  Editor:    0 to 360     Shader:  0.0 to 1.0
+    float           saturation              { 0.0f };               // Saturation           Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           contrast                { 0.0f };               // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
+    float           brightness              { 0.0f };               // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
 
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
-    bool        m_remove_me                 { false };          // Set to true for forced removal next update cycle
-    double      time_since_last_update      { 0.0 };            // Milliseconds since update() was called last
-    DrTime      update_timer                { Clock::now() };   // Used to keep track of time passed since update() was called last
+    bool        m_remove_me                 { false };              // Set to true for forced removal next update cycle
+    double      time_since_last_update      { 0.0 };                // Milliseconds since update() was called last
+    DrTime      update_timer                { Clock::now() };       // Used to keep track of time passed since update() was called last
 
 
 
@@ -102,9 +104,9 @@ public:
     DrEngineWorld*      world()                     { return m_world; }                     // Returns DrWorld this Entity is currently in
 
     // Thing Components
-    DrEngineComponent  *component(std::string component_name);
+    DrThingComponent   *component(std::string component_name);
     void                removeComponent(std::string component_name);
-    void                setComponent(std::string component_name, DrEngineComponent *component);
+    void                setComponent(std::string component_name, DrThingComponent *component);
 
     // Cameras
     ///long             followCameraID();                                                   // Returns ID of following camera if there is one
@@ -118,7 +120,7 @@ public:
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Abstract Virtual Functions
-    virtual DrThingType     getThingType() = 0;                                             // Returns DrThingType of this Thing
+    virtual DrThingType     getThingType()  { return DrThingType::None; }                   // Returns DrThingType of this Thing
 
     // Entity Properties
     long                    getKey() { return m_key; }                                      // Gets unique item key

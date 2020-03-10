@@ -16,7 +16,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 ThingComp3D::ThingComp3D(DrEngineWorld *engine_world, DrEngineThing *parent_thing)
-    : DrEngineComponent(engine_world, parent_thing, Comps::Thing_3D) {
+    : DrThingComponent(engine_world, parent_thing, Comps::Thing_3D) {
 
 }
 
