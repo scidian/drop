@@ -38,6 +38,16 @@ void ThingCompSoftBody::init() {
 
 }
 
+// Called when Thing is added to m_things DrEngineWorld vector
+void ThingCompSoftBody::addToWorld() {
+
+}
+
+// Called when it is time to Render Thing
+void ThingCompSoftBody::draw() {
+
+}
+
 // Called during DrEngineWorld->updateWorld() step
 void ThingCompSoftBody::update(double time_passed, double time_warp) {
     (void) time_passed;

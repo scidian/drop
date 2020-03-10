@@ -38,6 +38,16 @@ void ThingCompCamera::init() {
 
 }
 
+// Called when Thing is added to m_things DrEngineWorld vector
+void ThingCompCamera::addToWorld() {
+
+}
+
+// Called when it is time to Render Thing
+void ThingCompCamera::draw() {
+
+}
+
 // Called during DrEngineWorld->updateWorld() step
 void ThingCompCamera::update(double time_passed, double time_warp) {
     (void) time_passed;

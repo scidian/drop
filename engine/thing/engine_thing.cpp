@@ -35,7 +35,7 @@ DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long origina
     this->setScaleX(scale.x);                                                   // Save x scale for later
     this->setScaleY(scale.y);                                                   // Save y scale for later
     this->setSize(size);
-    this->setZOrder(z);
+    this->setZOrder(z);    
 }
 
 DrEngineThing::~DrEngineThing() {

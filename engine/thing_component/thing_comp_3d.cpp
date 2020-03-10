@@ -34,6 +34,16 @@ void ThingComp3D::init() {
 
 }
 
+// Called when Thing is added to m_things DrEngineWorld vector
+void ThingComp3D::addToWorld() {
+
+}
+
+// Called when it is time to Render Thing
+void ThingComp3D::draw() {
+
+}
+
 // Called during DrEngineWorld->updateWorld() step
 void ThingComp3D::update(double time_passed, double time_warp) {
     (void) time_passed;

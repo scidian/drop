@@ -21,8 +21,11 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineObject *parent_object, double springiness)
-    : DrThingComponent(engine_world, parent_object, Comps::Thing_Soft_Body), m_springiness(springiness) {
+ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineThing *parent_thing, double springiness)
+    : DrThingComponent(engine_world, parent_thing, Comps::Thing_Soft_Body), m_springiness(springiness) {
+
+    DrEngineObject *parent_object = dynamic_cast<DrEngineObject*>(parent_thing);
+    if (parent_object == nullptr) return;
 
     double   scale_x =  static_cast<double>(parent_object->getScaleX());
     double   scale_y =  static_cast<double>(parent_object->getScaleY());
@@ -74,6 +77,16 @@ ThingCompFoliage::~ThingCompFoliage() {
 //####################################################################################
 // Called when component is first created
 void ThingCompFoliage::init() {
+
+}
+
+// Called when Thing is added to m_things DrEngineWorld vector
+void ThingCompFoliage::addToWorld() {
+
+}
+
+// Called when it is time to Render Thing
+void ThingCompFoliage::draw() {
 
 }
 

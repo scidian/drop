@@ -14,11 +14,11 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_fisheye.h"
 #include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing_swirl.h"
 #include "engine/thing/engine_thing_water.h"
+#include "engine/thing_component_effects/thing_comp_fisheye.h"
 #include "engine/thing_component_effects/thing_comp_mirror.h"
 #include "engine/world/engine_world.h"
 
@@ -68,12 +68,15 @@ bool DrOpenGL::getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *t
 //##    Renders FBO to screen buffer as a textured quad using Fisheye Shader
 //##        - Returns true if rendered, false if not
 //####################################################################################
-bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens) {
+bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineThing *fisheye) {
+    // Get Fisheye component of DrEngingThing
+    DrThingComponent *component = fisheye->component(Comps::Thing_Settings_Fisheye);    if (component == nullptr) return false;
+    ThingCompFisheye *fisheye_settings = dynamic_cast<ThingCompFisheye*>(component);    if (fisheye_settings == nullptr) return false;
 
     // Check effect position and if we should render it
     double top, bottom, left, right;
-    float  angle = static_cast<float>(lens->getAngle());
-    if (getEffectPosition(fbo, lens, top, bottom, left, right, angle) == false) return false;
+    float  angle = static_cast<float>(fisheye->getAngle());
+    if (getEffectPosition(fbo, fisheye, top, bottom, left, right, angle) == false) return false;
 
     // If we are to render, bind the shader
     if (!m_fisheye_shader.bind()) return false;
@@ -104,30 +107,29 @@ bool DrOpenGL::drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, 
     m_fisheye_shader.enableAttributeArray( a_fisheye_vertex );
 
     // Set fisheye variables
-    m_fisheye_shader.setUniformValue( u_fisheye_top,        static_cast<float>(top) );
-    m_fisheye_shader.setUniformValue( u_fisheye_bottom,     static_cast<float>(bottom) );
-    m_fisheye_shader.setUniformValue( u_fisheye_left,       static_cast<float>(left) );
-    m_fisheye_shader.setUniformValue( u_fisheye_right,      static_cast<float>(right) );
-    m_fisheye_shader.setUniformValue( u_fisheye_start_color,
-                                        static_cast<float>(lens->start_color.redF()),
-                                        static_cast<float>(lens->start_color.greenF()),
-                                        static_cast<float>(lens->start_color.blueF()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_color_tint,         lens->color_tint );
-    m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,          lens->lens_zoom );
+    m_fisheye_shader.setUniformValue( u_fisheye_top,            static_cast<float>(top) );
+    m_fisheye_shader.setUniformValue( u_fisheye_bottom,         static_cast<float>(bottom) );
+    m_fisheye_shader.setUniformValue( u_fisheye_left,           static_cast<float>(left) );
+    m_fisheye_shader.setUniformValue( u_fisheye_right,          static_cast<float>(right) );
+    m_fisheye_shader.setUniformValue( u_fisheye_start_color,    static_cast<float>(fisheye_settings->start_color.redF()),
+                                                                static_cast<float>(fisheye_settings->start_color.greenF()),
+                                                                static_cast<float>(fisheye_settings->start_color.blueF()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_color_tint,     fisheye_settings->color_tint );
+    m_fisheye_shader.setUniformValue( u_fisheye_lens_zoom,      fisheye_settings->lens_zoom );
 
     // Set more variables for shader
-    m_fisheye_shader.setUniformValue( u_fisheye_alpha,      lens->getOpacity() );
-    m_fisheye_shader.setUniformValue( u_fisheye_zoom,       combinedZoomScale() );
-    m_fisheye_shader.setUniformValue( u_fisheye_pos,        m_engine->getCurrentWorld()->getCameraPosition().x,
-                                                            m_engine->getCurrentWorld()->getCameraPosition().y, 0.0f );
-    m_fisheye_shader.setUniformValue( u_fisheye_width,      static_cast<float>(fbo->width()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_height,     static_cast<float>(fbo->height()) );
-    m_fisheye_shader.setUniformValue( u_fisheye_time,       static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
-    m_fisheye_shader.setUniformValue( u_fisheye_angle,      angle );
+    m_fisheye_shader.setUniformValue( u_fisheye_alpha,          fisheye->getOpacity() );
+    m_fisheye_shader.setUniformValue( u_fisheye_zoom,           combinedZoomScale() );
+    m_fisheye_shader.setUniformValue( u_fisheye_pos,            m_engine->getCurrentWorld()->getCameraPosition().x,
+                                                                m_engine->getCurrentWorld()->getCameraPosition().y, 0.0f );
+    m_fisheye_shader.setUniformValue( u_fisheye_width,          static_cast<float>(fbo->width()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_height,         static_cast<float>(fbo->height()) );
+    m_fisheye_shader.setUniformValue( u_fisheye_time,           static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
+    m_fisheye_shader.setUniformValue( u_fisheye_angle,          angle );
 
-    m_fisheye_shader.setUniformValue( u_fisheye_pixel_x,    lens->pixel_x );
-    m_fisheye_shader.setUniformValue( u_fisheye_pixel_y,    lens->pixel_y );
-    m_fisheye_shader.setUniformValue( u_fisheye_bitrate,    lens->bitrate );
+    m_fisheye_shader.setUniformValue( u_fisheye_pixel_x,        fisheye->pixel_x );
+    m_fisheye_shader.setUniformValue( u_fisheye_pixel_y,        fisheye->pixel_y );
+    m_fisheye_shader.setUniformValue( u_fisheye_bitrate,        fisheye->bitrate );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

@@ -255,8 +255,6 @@ SOURCES += \
     engine/opengl/opengl_render_space.cpp \
     engine/thing/engine_thing.cpp \
     engine/thing/engine_thing_component.cpp \
-    engine/thing/engine_thing_fire.cpp \
-    engine/thing/engine_thing_fisheye.cpp \
     engine/thing/engine_thing_light.cpp \
     engine/thing/engine_thing_object.cpp \
     engine/thing/engine_thing_object__shapes.cpp \
@@ -268,6 +266,8 @@ SOURCES += \
     engine/thing_component/thing_comp_foliage.cpp \
     engine/thing_component/thing_comp_player.cpp \
     engine/thing_component/thing_comp_soft_body.cpp \
+    engine/thing_component_effects/thing_comp_fire.cpp \
+    engine/thing_component_effects/thing_comp_fisheye.cpp \
     engine/thing_component_effects/thing_comp_mirror.cpp \
     engine/world/engine_world.cpp \
     engine/world/engine_world__build_player.cpp \
@@ -990,8 +990,6 @@ HEADERS += \
     engine/opengl/opengl.h \
     engine/thing/engine_thing.h \
     engine/thing/engine_thing_component.h \
-    engine/thing/engine_thing_fire.h \
-    engine/thing/engine_thing_fisheye.h \
     engine/thing/engine_thing_light.h \
     engine/thing/engine_thing_object.h \
     engine/thing/engine_thing_swirl.h \
@@ -1001,6 +999,8 @@ HEADERS += \
     engine/thing_component/thing_comp_foliage.h \
     engine/thing_component/thing_comp_player.h \
     engine/thing_component/thing_comp_soft_body.h \
+    engine/thing_component_effects/thing_comp_fire.h \
+    engine/thing_component_effects/thing_comp_fisheye.h \
     engine/thing_component_effects/thing_comp_mirror.h \
     engine/world/engine_world.h \
     project/constants_component_info.h \

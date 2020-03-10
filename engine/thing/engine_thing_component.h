@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef ENGINE_COMPONENT_H
-#define ENGINE_COMPONENT_H
+#ifndef ENGINE_THING_COMPONENT_H
+#define ENGINE_THING_COMPONENT_H
 
 #include "engine/globals_engine.h"
 
@@ -36,36 +36,36 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld  *m_world     { nullptr };                    // Pointer to the parent DrEngineWorld
-    DrEngineThing  *m_thing     { nullptr };                    // Pointer to the parent DrEngineThing
+    DrEngineWorld      *m_world     { nullptr };                    // Pointer to the parent DrEngineWorld
+    DrEngineThing      *m_thing     { nullptr };                    // Pointer to the parent DrEngineThing
 
     // Local Variables
-    std::string     m_name;                                     // Name of this component
-    Attributes      m_attributes;                               // Holds variables for this component by name (as std::string)
+    std::string         m_name;                                     // Name of this component
+    Attributes          m_attributes;                               // Holds variables for this component by name (as std::string)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
-//    virtual void            collide(cpArbiter *arb);
-    virtual void            init();                                                                     // Called when component is first created
-    virtual void            addToWorld();                                                               // Called when Thing is added to m_things DrEngineWorld vector
-    virtual void            draw();                                                                     // Called when it is time to Render Thing
-    virtual void            update(double time_passed, double time_warp);                               // Called during DrEngineWorld->updateWorld() step
-    virtual void            destroy();                                                                  // Called when component is destroyed
+//    virtual void      collide(cpArbiter *arb);
+    virtual void        init();                                                                     // Called when component is first created
+    virtual void        addToWorld();                                                               // Called when Thing is added to m_things DrEngineWorld vector
+    virtual void        draw();                                                                     // Called when it is time to Render Thing
+    virtual void        update(double time_passed, double time_warp);                               // Called during DrEngineWorld->updateWorld() step
+    virtual void        destroy();                                                                  // Called when component is destroyed
 
     // Component Functions
-    virtual void            emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);     // Adds signal to stack
-    EngineSignals           signalList(std::string name);                                               // Returns list of signals with name
+    virtual void        emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);     // Adds signal to stack
+    EngineSignals       signalList(std::string name);                                               // Returns list of signals with name
 
     // Getters
-    std::string             name()      { return m_name; }                                              // Returns name of this Component
-    DrEngineThing          *thing()     { return m_thing; }                                             // Returns parent DrEngineWorld
-    DrEngineWorld          *world()     { return m_world; }                                             // Returns parent entity (Thing)
+    std::string         name()      { return m_name; }                                              // Returns name of this Component
+    DrEngineThing      *thing()     { return m_thing; }                                             // Returns parent DrEngineWorld
+    DrEngineWorld      *world()     { return m_world; }                                             // Returns parent entity (Thing)
 
     // Attributes
-    DrVariant               attribute(std::string attribute_name);                                      // Returns attribute by name
-    void                    setAttribute(std::string attribute_name, DrVariant value);                  // Sets attribute by name
+    DrVariant           attribute(std::string attribute_name);                                      // Returns attribute by name
+    void                setAttribute(std::string attribute_name, DrVariant value);                  // Sets attribute by name
 
 
     // #################### INTERNAL FUNCTIONS ####################
@@ -76,7 +76,7 @@ public:
 
 };
 
-#endif // ENGINE_COMPONENT_H
+#endif // ENGINE_THING_COMPONENT_H
 
 
 

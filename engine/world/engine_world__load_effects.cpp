@@ -6,12 +6,12 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/thing/engine_thing_fire.h"
-#include "engine/thing/engine_thing_fisheye.h"
 #include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing_swirl.h"
 #include "engine/thing/engine_thing_water.h"
+#include "engine/thing_component_effects/thing_comp_fire.h"
+#include "engine/thing_component_effects/thing_comp_fisheye.h"
 #include "engine/thing_component_effects/thing_comp_mirror.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
@@ -39,13 +39,15 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
     float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineFisheye *lens = new DrEngineFisheye(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
-                                                info.z_order, info.angle, info.opacity, info.size,
-                                                start_color, tint, zoom );
-    addThing( lens );
-    lens->bitrate = bit_rate;
-    lens->pixel_x = static_cast<float>(pixelation.x);
-    lens->pixel_y = static_cast<float>(pixelation.y);
+    DrEngineThing *fisheye = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
+                                               info.z_order, info.scale, info.angle, info.opacity, info.size);
+    fisheye->setComponent(Comps::Thing_Settings_Fisheye, new ThingCompFisheye(this, fisheye, start_color, tint, zoom));
+    addThing( fisheye );
+
+    // ***** Appearance settings
+    fisheye->bitrate = bit_rate;
+    fisheye->pixel_x = static_cast<float>(pixelation.x);
+    fisheye->pixel_y = static_cast<float>(pixelation.y);
 }
 
 
@@ -70,10 +72,14 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     // Calculate original size used in editor
     info.size.x = info.size.x / info.scale.x;
     info.size.y = info.size.y / info.scale.y;
-    DrEngineFire *fire = new DrEngineFire(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
-                                          info.z_order, info.scale, info.angle, info.opacity, info.size,
-                                          static_cast<Fire_Mask>(mask), color_1, color_2, smoke, intensity, smooth, wave, speed);
+
+    DrEngineThing *fire = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
+                                            info.z_order, info.scale, info.angle, info.opacity, info.size);
+    fire->setComponent3D(new ThingComp3D(this, fire));
+    fire->setComponent(Comps::Thing_Settings_Fire, new ThingCompFire(this, fire, static_cast<Fire_Mask>(mask), color_1, color_2, smoke, intensity, smooth, wave, speed));
     addThing( fire );
+
+    // ***** Appearance settings
     fire->bitrate = bit_rate;
     fire->pixel_x = static_cast<float>(pixelation.x);
     fire->pixel_y = static_cast<float>(pixelation.y);
@@ -130,6 +136,8 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
                                               info.z_order, info.scale, info.angle, info.opacity, info.size);
     mirror->setComponent(Comps::Thing_Settings_Mirror, new ThingCompMirror(this, mirror, color_1, color_2, color_tint, blur, blur_stretch, scale));
     addThing( mirror );
+
+    // ***** Appearance settings
     mirror->bitrate = bit_rate;
     mirror->pixel_x = static_cast<float>(pixelation.x);
     mirror->pixel_y = static_cast<float>(pixelation.y);

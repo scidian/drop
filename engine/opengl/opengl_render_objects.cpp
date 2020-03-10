@@ -11,7 +11,7 @@
 #include "engine/mesh/engine_vertex_data.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_object.h"
-#include "engine/thing/engine_thing_fire.h"
+#include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -630,14 +630,15 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 //##        - Returns true if rendered, false if not
 //####################################################################################
 bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
-    DrEngineFire *fire = dynamic_cast<DrEngineFire*>(thing);
-    if (fire == nullptr) return false;
+    // Get Fire component of DrEngingThing
+    DrThingComponent *component = thing->component(Comps::Thing_Settings_Fire);     if (component == nullptr) return false;
+    ThingCompFire *fire = dynamic_cast<ThingCompFire*>(component);                  if (fire == nullptr) return false;
 
     // ***** Enable shader program
     if (!m_fire_shader.bind()) return false;
 
     // Load possible 3D Info
-    ThingComp3D *comp_3d = fire->comp3D();
+    ThingComp3D *comp_3d = thing->comp3D();
     double comp_3d_angle_x { 0.0 };                                 // X axis rotation
     double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
     double comp_3d_rotate_x_speed { 0.0 };                          // X axis rotation speed
@@ -645,12 +646,12 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
     bool   comp_3d_billboard { false };                             // Make Object face camera?
     double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
     if (comp_3d != nullptr) {
-        comp_3d_angle_x =        fire->comp3D()->getAngleX();
-        comp_3d_angle_y =        fire->comp3D()->getAngleY();
-        comp_3d_rotate_x_speed = fire->comp3D()->getRotateSpeedX();
-        comp_3d_rotate_y_speed = fire->comp3D()->getRotateSpeedY();
-        comp_3d_billboard =      fire->comp3D()->getBillboard();
-        comp_3d_depth =          fire->comp3D()->getDepth();
+        comp_3d_angle_x =        comp_3d->getAngleX();
+        comp_3d_angle_y =        comp_3d->getAngleY();
+        comp_3d_rotate_x_speed = comp_3d->getRotateSpeedX();
+        comp_3d_rotate_y_speed = comp_3d->getRotateSpeedY();
+        comp_3d_billboard =      comp_3d->getBillboard();
+        comp_3d_depth =          comp_3d->getDepth();
     }
 
     // ***** Blend function
@@ -668,7 +669,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
     model.translate(x, y, z);
 
     // Rotate
-    model.rotate(static_cast<float>(fire->getAngle()), 0.f, 0.f, 1.f);
+    model.rotate(static_cast<float>(-thing->getAngle()), 0.f, 0.f, 1.f);
     model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
     model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
@@ -694,9 +695,9 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
     }
 
     // Scale
-    model.scale( static_cast<float>(fire->getSize().x), static_cast<float>(fire->getSize().y), 1.0f );
-    float final_x_scale = (fire->getScaleX());
-    float final_y_scale = (fire->getScaleY());
+    model.scale( static_cast<float>(thing->getSize().x), static_cast<float>(thing->getSize().y), 1.0f );
+    float final_x_scale = (thing->getScaleX());
+    float final_y_scale = (thing->getScaleY());
     model.scale( final_x_scale, final_y_scale, static_cast<float>(comp_3d_depth) );
 
     // Reverse Culling for Flipped Objects
@@ -741,11 +742,11 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
 
     // ***** Set Shader Variables
     now = Dr::MillisecondsSinceStartOfDay() / 1000.0;
-    m_fire_shader.setUniformValue( u_fire_alpha,    fire->getOpacity() );
+    m_fire_shader.setUniformValue( u_fire_alpha,    thing->getOpacity() );
     m_fire_shader.setUniformValue( u_fire_time,     static_cast<float>(now) );
     m_fire_shader.setUniformValue( u_fire_position, static_cast<float>(thing->getPosition().x), static_cast<float>(thing->getPosition().y) );
-    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(fire->getSize().x) * fire->getScaleX() );
-    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(fire->getSize().y) * fire->getScaleY() );
+    m_fire_shader.setUniformValue( u_fire_width,    static_cast<float>(thing->getSize().x) * thing->getScaleX() );
+    m_fire_shader.setUniformValue( u_fire_height,   static_cast<float>(thing->getSize().y) * thing->getScaleY() );
 
     m_fire_shader.setUniformValue( u_fire_shape,    static_cast<int>(fire->fire_mask) );
     m_fire_shader.setUniformValue( u_fire_start_color,
@@ -765,9 +766,9 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
     m_fire_shader.setUniformValue( u_fire_wavy,         fire->wavy );
     m_fire_shader.setUniformValue( u_fire_speed,       (fire->flame_speed / 2.f) );
 
-    m_fire_shader.setUniformValue( u_fire_pixel_x,      fire->pixel_x );
-    m_fire_shader.setUniformValue( u_fire_pixel_y,      fire->pixel_y );
-    m_fire_shader.setUniformValue( u_fire_bitrate,      fire->bitrate );
+    m_fire_shader.setUniformValue( u_fire_pixel_x,      thing->pixel_x );
+    m_fire_shader.setUniformValue( u_fire_pixel_y,      thing->pixel_y );
+    m_fire_shader.setUniformValue( u_fire_bitrate,      thing->bitrate );
 
     // ***** Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

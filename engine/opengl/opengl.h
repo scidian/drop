@@ -207,9 +207,9 @@ public:
     void            bindOffscreenBuffer(bool clear = true);
     void            cullingOn(bool reversed = false);
     void            cullingOff();
-    bool            drawEffect(DrEngineThing *thing, DrThingType thing_thing_type);
+    bool            drawEffect(DrEngineThing *thing, DrThingType thing_type);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
-    bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
+    bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineThing *lens);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
     bool            drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineThing *mirror);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);

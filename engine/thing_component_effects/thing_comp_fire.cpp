@@ -12,7 +12,7 @@
 #include "engine/engine_signal.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing_component_effects/thing_comp_mirror.h"
+#include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
@@ -21,19 +21,21 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-ThingCompMirror::ThingCompMirror(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
-                                 DrColor color_1, DrColor color_2, float tint_amount, float blur, float blur_stretch, float mirror_scale)
+ThingCompFire::ThingCompFire(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
+                             Fire_Mask mask, DrColor color_1, DrColor color_2, DrColor smoke, float color_intensity, float smooth, float wave, float speed)
     : DrThingComponent(engine_world, parent_thing, Comps::Thing_Soft_Body) {
 
+    this->fire_mask =       mask;
     this->start_color =     color_1;
     this->end_color =       color_2;
-    this->tint_percent =    tint_amount;
-    this->blur =            blur;
-    this->blur_stretch =    blur_stretch;
-    this->scale =           mirror_scale;
+    this->smoke_color =     smoke;
+    this->intensity =       color_intensity;
+    this->smoothness =      smooth;
+    this->wavy =            wave;
+    this->flame_speed =     speed;
 }
 
-ThingCompMirror::~ThingCompMirror() {
+ThingCompFire::~ThingCompFire() {
 
 }
 
@@ -43,33 +45,31 @@ ThingCompMirror::~ThingCompMirror() {
 //##    Basic Virtual Component Functions
 //####################################################################################
 // Called when component is first created
-void ThingCompMirror::init() {
+void ThingCompFire::init() {
 
 }
 
 // Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompMirror::addToWorld() {
+void ThingCompFire::addToWorld() {
 
 }
 
 // Called when it is time to Render Thing
-void ThingCompMirror::draw() {
-    world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Mirror);
+void ThingCompFire::draw() {
+    world()->getEngine()->getOpenGL()->drawObjectFire(thing());
 }
 
 // Called during DrEngineWorld->updateWorld() step
-void ThingCompMirror::update(double time_passed, double time_warp) {
+void ThingCompFire::update(double time_passed, double time_warp) {
     (void) time_passed;
     (void) time_warp;
 
 }
 
 // Called when component is destroyed
-void ThingCompMirror::destroy() {
+void ThingCompFire::destroy() {
 
 }
-
-
 
 
 

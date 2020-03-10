@@ -24,7 +24,7 @@ class ThingCompSoftBody : public DrThingComponent
 public:
     // Constructor / Destructor
     ThingCompSoftBody(DrEngineWorld *engine_world, DrEngineThing *parent_thing);
-    virtual ~ThingCompSoftBody();
+    virtual ~ThingCompSoftBody() override;
 
 
     // #################### VARIABLES ####################
@@ -54,9 +54,11 @@ public:
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
-    virtual void    init();                                                         // Called when component is first created
-    virtual void    update(double time_passed, double time_warp);                   // Called during DrEngineWorld->updateWorld() step
-    virtual void    destroy();
+    virtual void        init() override;                                                // Called when component is first created
+    virtual void        addToWorld() override;                                          // Called when Thing is added to m_things DrEngineWorld vector
+    virtual void        draw() override;                                                // Called when it is time to Render Thing
+    virtual void        update(double time_passed, double time_warp) override;          // Called during DrEngineWorld->updateWorld() step
+    virtual void        destroy() override;                                             // Called when component is destroyed
 
 
     // #################### INTERNAL FUNCTIONS ####################

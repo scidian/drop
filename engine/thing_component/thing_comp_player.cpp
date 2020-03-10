@@ -69,6 +69,16 @@ void ThingCompPlayer::init() {
 
 }
 
+// Called when Thing is added to m_things DrEngineWorld vector
+void ThingCompPlayer::addToWorld() {
+
+}
+
+// Called when it is time to Render Thing
+void ThingCompPlayer::draw() {
+
+}
+
 // Called during DrEngineWorld->updateWorld() step
 void ThingCompPlayer::update(double time_passed, double time_warp) {
     (void) time_passed;
@@ -112,8 +122,6 @@ void ThingCompPlayer::update(double time_passed, double time_warp) {
 void ThingCompPlayer::destroy() {
 
 }
-
-
 
 
 
