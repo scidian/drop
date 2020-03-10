@@ -40,6 +40,11 @@ void DrThingComponent::addToWorld() {
 
 }
 
+// Called when it is time to Render Thing
+void DrThingComponent::draw() {
+
+}
+
 // Called during DrEngineWorld->updateWorld() step
 void DrThingComponent::update(double time_passed, double time_warp) {
     (void) time_passed;

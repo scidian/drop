@@ -107,6 +107,10 @@ private:
     float           m_background_green = 0;
     float           m_background_blue = 0;
 
+    DrThingType     m_last_thing = DrThingType::None;               // This variable stores last draw type, so that multiple effects drawn back to back
+                                                                    // will use the same copy of the render fbo as it currently was, this saves lots of blit calls,
+                                                                    // and stops some vertical fragments from appearing as they would try to refract each other
+
     double          m_fps_count_render = 0.0;                       // Tracks frames per second
     long            m_triangles = 0;                                // Tracks how many triangles are drawn every frame, including occluder map draws
     double          m_add_z;                                        // Used to stop z fighting
@@ -203,7 +207,7 @@ public:
     void            bindOffscreenBuffer(bool clear = true);
     void            cullingOn(bool reversed = false);
     void            cullingOff();
-    bool            drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, DrThingType &last_thing);
+    bool            drawEffect(DrEngineThing *thing, DrThingType thing_thing_type);
     void            drawFrameBufferUsingDefaultShader(QOpenGLFramebufferObject *fbo);
     bool            drawFrameBufferUsingFisheyeShader(QOpenGLFramebufferObject *fbo, DrEngineFisheye *lens);
     void            drawFrameBufferUsingKernelShader(QOpenGLFramebufferObject *fbo);
@@ -213,9 +217,9 @@ public:
     bool            drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl);
     bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
     bool            drawGlowBuffer();
-    void            drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D);
+    void            drawObject(DrEngineThing *thing, bool draw2D);
     void            drawObjectSimple(DrEngineThing *thing);
-    bool            drawObjectFire(DrEngineThing *thing, DrThingType &last_thing);
+    bool            drawObjectFire(DrEngineThing *thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();
     bool            getEffectPosition(QOpenGLFramebufferObject *fbo, DrEngineThing *thing,

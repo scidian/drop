@@ -143,7 +143,6 @@ public:
     double          zoom_multiplier         { 1.0 };                        // When zoom_from_movement is true, decides multiplier of zoom change (1 = 100%, 2 = 200%, etc)
     double          zoom_damping            { 1.0 };                        // When zoom_from_movement is true, decides damping of zoom change (1 = normal, 100 = slow)
 
-    long            effect_count            { 0 };                          // Stores number of effects being rendered
     long            light_count             { 0 };                          // Stores number of lights in scene
     std::list<long> mark_light_as_deleted;                                  // Marks a light as removed from scene for use by other parts of engine (shadow fbos)
 

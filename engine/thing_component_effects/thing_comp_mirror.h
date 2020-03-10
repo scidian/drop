@@ -40,9 +40,10 @@ public:
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
-    virtual void    init();                                                         // Called when component is first created
-    virtual void    update(double time_passed, double time_warp);                   // Called during DrEngineWorld->updateWorld() step
-    virtual void    destroy();
+    virtual void    draw() override;
+    virtual void    init() override;                                                // Called when component is first created
+    virtual void    update(double time_passed, double time_warp) override;          // Called during DrEngineWorld->updateWorld() step
+    virtual void    destroy() override;
 
 
     // #################### INTERNAL FUNCTIONS ####################

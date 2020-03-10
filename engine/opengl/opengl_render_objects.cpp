@@ -96,7 +96,7 @@ QMatrix4x4 billboardSphericalBegin(glm::vec3 camera, glm::vec3 object, glm::vec3
 //####################################################################################
 //##    Draws a DrEngineObject effect type with Default Shader
 //####################################################################################
-void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool draw2D) {
+void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
 
     // ***** Initial type checks
     if (thing->getThingType() != DrThingType::Object) return;
@@ -136,7 +136,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
     }
 
     // ***** Enable shader program
-    if (last_thing != DrThingType::Object) {
+    if (m_last_thing != DrThingType::Object) {
         if (!m_default_shader.bind()) return;
     }
 
@@ -402,7 +402,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, DrThingType &last_thing, bool dr
 
     // Set Last Thing Type
     ///m_default_shader.release();
-    last_thing = DrThingType::Object;
+    m_last_thing = DrThingType::Object;
 }
 
 // Bind vertex array
@@ -629,7 +629,7 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 //##    Uses Fire Shader to draw Fire
 //##        - Returns true if rendered, false if not
 //####################################################################################
-bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
+bool DrOpenGL::drawObjectFire(DrEngineThing *thing) {
     DrEngineFire *fire = dynamic_cast<DrEngineFire*>(thing);
     if (fire == nullptr) return false;
 
@@ -778,7 +778,7 @@ bool DrOpenGL::drawObjectFire(DrEngineThing *thing, DrThingType &last_thing) {
     m_fire_shader.release();
 
     addTriangles( 2 );
-    last_thing = DrThingType::Fire;
+    m_last_thing = DrThingType::Fire;
     return true;
 }
 

@@ -52,19 +52,12 @@ void DrOpenGL::drawSpace() {
     // ***** Reset Frame Variables
     bool   has_rendered_glow_lights = false;                                            // Keeps track of if we have rendered the lights yet
     long   thing_count =  0;
-    long  &effect_count = m_engine->getCurrentWorld()->effect_count;
-    effect_count = 0;
     m_triangles =  0;                                                                   // Reset frame triangle count
 
     // Used to stop z fighting (a.k.a z-fighting, stitching)
     double z_divisor = (combinedZoomScale() < 0.001f) ? 0.001 : static_cast<double>(combinedZoomScale());
     double last_z;
     m_add_z = 0.0;
-
-    // This variable was put in so that multiple Water things drawn next to each other will use the same copy of the render fbo as it currently was,
-    //      this saves lots of blit calls, and stops some vertical fragments from appearing as they would try to refract each other
-    DrThingType last_thing = DrThingType::None;
-
 
     // ***** Get Things
     EngineThings &things = m_engine->getCurrentWorld()->getThings();
@@ -86,14 +79,11 @@ void DrOpenGL::drawSpace() {
         // ***** When we have gone past glow z_order, draw the lights to the scene
         if (!has_rendered_glow_lights && (thing->getZOrder() > m_engine->getCurrentWorld()->getGlowZOrder())) {
             has_rendered_glow_lights = drawGlowBuffer();
-            last_thing = DrThingType::None;
+            m_last_thing = DrThingType::None;
         }      
 
         // ***** Draw Thing with appropriate Shader
-        DrThingType thing_type = thing->getThingType();
-        if (thing->component(Comps::Thing_Settings_Mirror)) thing_type = DrThingType::Mirror;
-
-        switch (thing_type) {
+        switch (thing->getThingType()) {
             case DrThingType::Character:
             case DrThingType::Object: {
                 DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
@@ -139,14 +129,14 @@ void DrOpenGL::drawSpace() {
                     cullingOn(false);
                     glEnable(GL_DEPTH_TEST);
                     glDepthFunc(GL_LEQUAL);
-                    drawObject(thing, last_thing, draw2D);
+                    drawObject(thing, draw2D);
                     glDepthMask(GL_TRUE);
                     glDisable(GL_DEPTH_TEST);
 
                 } else {
                     // ***** Draw 2D Object / Character
                     // Standard Shader
-                    drawObject(thing, last_thing, draw2D);
+                    drawObject(thing, draw2D);
                     // Simple Shader
                     ///glEnable(GL_DEPTH_TEST);
                     ///drawObjectSimple(thing);
@@ -161,21 +151,22 @@ void DrOpenGL::drawSpace() {
 
             case DrThingType::Text:
                 // !!!!!
-                // !!!!! IMPLEMENT DRAW TEXT HERE !!!!!
+                // !!!!! IMPLEMENT TEXT DRAWING HERE !!!!!
                 // !!!!!
                 break;
 
             case DrThingType::Fire:
-                if (drawObjectFire(thing, last_thing)) ++effect_count;
+                drawObjectFire(thing);
                 break;
             case DrThingType::Fisheye:
             case DrThingType::Light:
-            case DrThingType::Mirror:
             case DrThingType::Swirl:
             case DrThingType::Water:
-                if (drawEffect(thing, thing_type, last_thing)) ++effect_count;
+                drawEffect(thing, thing->getThingType());
                 break;
+            case DrThingType::Mirror:
             case DrThingType::None:
+                thing->draw();
                 break;
         }
 
@@ -223,13 +214,13 @@ bool DrOpenGL::drawGlowBuffer() {
 //####################################################################################
 //##    Draws a DrEngineThing effect type with proper shader
 //####################################################################################
-bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, DrThingType &last_thing) {
+bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type) {
 
     // ***** If Fisheye, draw with seperate Fisheye Shader, then move to next Thing
     if (thing_thing_type == DrThingType::Fisheye) {
         DrEngineFisheye *lens = dynamic_cast<DrEngineFisheye*>(thing);
         if (lens) {
-            if (last_thing != DrThingType::Fisheye) {
+            if (m_last_thing != DrThingType::Fisheye) {
                 releaseOffscreenBuffer();
                 QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
                 bindOffscreenBuffer(false);
@@ -237,7 +228,7 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
             if (drawFrameBufferUsingFisheyeShader(m_texture_fbo, lens)) {
-                last_thing = DrThingType::Fisheye;
+                m_last_thing = DrThingType::Fisheye;
                 return true;
             }
         }
@@ -253,7 +244,7 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
                 if (draw2DLight(light)) {
-                    last_thing = DrThingType::Light;
+                    m_last_thing = DrThingType::Light;
                     return true;
                 }
             } else if (light->light_type == Light_Type::Glow) {
@@ -264,7 +255,7 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
 
     // ***** If Mirror, draw with seperate Mirror Shader, then move to next Thing
     if (thing_thing_type == DrThingType::Mirror) {
-        if (last_thing != DrThingType::Mirror) {
+        if (m_last_thing != DrThingType::Mirror) {
             releaseOffscreenBuffer();
             QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
             bindOffscreenBuffer(false);
@@ -272,7 +263,7 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
         if (drawFrameBufferUsingMirrorShader(m_texture_fbo, thing)) {
-            last_thing = DrThingType::Mirror;
+            m_last_thing = DrThingType::Mirror;
             return true;
         }
     }
@@ -281,7 +272,7 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
     if (thing_thing_type == DrThingType::Swirl) {
         DrEngineSwirl *swirl = dynamic_cast<DrEngineSwirl*>(thing);
         if (swirl) {
-            if (last_thing != DrThingType::Swirl) {
+            if (m_last_thing != DrThingType::Swirl) {
                 releaseOffscreenBuffer();
                 QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
                 bindOffscreenBuffer(false);
@@ -289,7 +280,7 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);          // Standard blend function
             if (drawFrameBufferUsingSwirlShader(m_texture_fbo, swirl)) {
-                last_thing = DrThingType::Swirl;
+                m_last_thing = DrThingType::Swirl;
                 return true;
             }
         }
@@ -299,14 +290,14 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_thing_type, Dr
     if (thing_thing_type == DrThingType::Water) {
         DrEngineWater *water = dynamic_cast<DrEngineWater*>(thing);
         if (water) {
-            if (last_thing != DrThingType::Water) {
+            if (m_last_thing != DrThingType::Water) {
                 releaseOffscreenBuffer();
                 QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
                 bindOffscreenBuffer(false);
             }
             glDisable(GL_BLEND);
             if (drawFrameBufferUsingWaterShader(m_texture_fbo, water)) {
-                last_thing = DrThingType::Water;
+                m_last_thing = DrThingType::Water;
                 return true;
             }
         }

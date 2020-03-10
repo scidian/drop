@@ -11,6 +11,7 @@
 #include "engine/engine.h"
 #include "engine/engine_signal.h"
 #include "engine/mesh/engine_mesh.h"
+#include "engine/opengl/opengl.h"
 #include "engine/thing_component_effects/thing_comp_mirror.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing.h"
@@ -46,11 +47,14 @@ void ThingCompMirror::init() {
 
 }
 
+void ThingCompMirror::draw() {
+    world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Mirror);
+}
+
 // Called during DrEngineWorld->updateWorld() step
 void ThingCompMirror::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
 
+    DrThingComponent::update(time_passed, time_warp);
 }
 
 // Called when component is destroyed

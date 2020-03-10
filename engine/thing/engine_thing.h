@@ -128,6 +128,7 @@ public:
 
     // Virtual Update Functions
     virtual void            addToWorld();                                                   // Called when Thing is added to m_things DrEngineWorld vector
+    virtual void            draw();                                                         // Called when it is time to Render Thing
     virtual bool            update(double time_passed, double time_warp, DrRectF &area);    // Process one update iteration for this Thing
 
     // Spawners

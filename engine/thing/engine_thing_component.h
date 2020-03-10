@@ -50,6 +50,7 @@ public:
 //    virtual void            collide(cpArbiter *arb);
     virtual void            init();                                                                     // Called when component is first created
     virtual void            addToWorld();                                                               // Called when Thing is added to m_things DrEngineWorld vector
+    virtual void            draw();                                                                     // Called when it is time to Render Thing
     virtual void            update(double time_passed, double time_warp);                               // Called during DrEngineWorld->updateWorld() step
     virtual void            destroy();                                                                  // Called when component is destroyed
 

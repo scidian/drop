@@ -59,37 +59,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
     }
 
     // Figure out name for Thing
-    std::string new_name;
-    switch (new_type) {
-        // Thing Types
-        case DrThingType::Character:
-        case DrThingType::Object:
-        case DrThingType::Text:
-
-        // Device Types
-        case DrThingType::Camera:
-
-        // Effect Types
-        case DrThingType::Fisheye:
-        case DrThingType::Fire:
-        case DrThingType::Light:
-        case DrThingType::Mirror:
-        case DrThingType::Swirl:
-        case DrThingType::Water:
-
-        // Item Types
-        case DrThingType::Tile:
-            new_name = asset->getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->getValue().toString();
-            break;
-
-        ///case DrThingType::Camera:
-        ///    "Camera " + std::to_string(static_cast<long>(m_things.size() + 1));
-        ///    break;
-
-        default:
-            Dr::PrintDebug("Error in DrStage::addThing, DrThingType not handled! \n"
-                           "New Type: " + Dr::StringFromThingType(new_type) + " - End Error.....");
-    }
+    std::string new_name = asset->getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->getValue().toString();
 
     long new_thing_key = (key == c_no_key) ? getParentProject()->getNextKey() : key;
     m_things[new_thing_key] = new DrThing(getParentProject(), m_parent_world, this, new_thing_key,

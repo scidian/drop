@@ -59,20 +59,19 @@ DrEngineThing::~DrEngineThing() {
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
     Dr::ResetTimer( update_timer );
+    for (auto component : m_components) component.second->addToWorld();
+}
 
-    // Call addToWorld() for each Component
-    for (auto component : m_components)
-        component.second->addToWorld();
+// Called when it is time to Render Thing
+void DrEngineThing::draw() {
+    for (auto component : m_components) component.second->draw();
 }
 
 // Update Function, Called every physics frame
 bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) {
-    (void)time_passed;
-    (void)time_warp;
-
     bool remove = false;
 
-    // Call update() for each Component
+    // ***** Call update() for each Component
     for (auto component : m_components)
         component.second->update(time_passed, time_warp);
 
