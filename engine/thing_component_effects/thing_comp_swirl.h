@@ -5,8 +5,8 @@
 //
 //
 //
-#ifndef THING_COMP_FISHEYE_H
-#define THING_COMP_FISHEYE_H
+#ifndef THING_COMP_SWIRL_H
+#define THING_COMP_SWIRL_H
 
 #include "3rd_party/chipmunk/chipmunk.h"
 #include "engine/globals_engine.h"
@@ -14,25 +14,24 @@
 
 
 //####################################################################################
-//##    ThingCompFisheye
-//##        Built-In Component for DrEngineThing dealing with Fisheye effect
+//##    ThingCompSwirl
+//##        Built-In Component for DrEngineThing dealing with Swirl effect
 //############################
-class ThingCompFisheye : public DrThingComponent
+class ThingCompSwirl : public DrThingComponent
 {
 public:
     // Constructor / Destructor
-    ThingCompFisheye(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
-                     DrColor color, float tint, float zoom);
-    virtual ~ThingCompFisheye() override;
+    ThingCompSwirl(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
+                   DrColor color, float tint, float rotation_amount);
+    virtual ~ThingCompSwirl() override;
 
 
     // #################### VARIABLES ####################
 public:
-    // Fisheye Variables
+    // Swirl Settings
     DrColor             start_color     { DrColor(128, 128, 255) };                     // Color tint of lens
     float               color_tint      { 0.5f };                                       // Color tint percentage     0 to  1
-    float               lens_zoom       { 2.2f };                                       // Lens Zoom                 0 to 10
-
+    float               rotation        { 0.0f };                                       // Amount of rotation for Swirl
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
@@ -51,19 +50,7 @@ public:
 
 };
 
-#endif // THING_COMP_FISHEYE_H
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // THING_COMP_SWIRL_H
 
 
 

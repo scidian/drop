@@ -7,8 +7,6 @@
 //
 #include <QOpenGLFramebufferObject>
 
-#include <vector>
-
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
@@ -16,7 +14,6 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
-#include "engine/thing/engine_thing_water.h"
 #include "engine/world/engine_world.h"
 
 

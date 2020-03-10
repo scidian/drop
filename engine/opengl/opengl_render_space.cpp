@@ -18,8 +18,6 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
-#include "engine/thing/engine_thing_swirl.h"
-#include "engine/thing/engine_thing_water.h"
 #include "engine/world/engine_world.h"
 
 
@@ -154,12 +152,11 @@ void DrOpenGL::drawSpace() {
                 break;
 
 
-            case DrThingType::Fisheye:
+
             case DrThingType::Light:
-            case DrThingType::Swirl:
-            case DrThingType::Water:
-                drawEffect(thing, thing->getThingType());
+                drawEffect(thing, DrThingType::Light);
                 break;
+
 
             default:
                 break;
@@ -232,7 +229,15 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_type) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // ***** If Light, draw with seperate Light Shader, then move to next Thing
+    if (thing_type == DrThingType::Fisheye)     return drawFrameBufferUsingFisheyeShader(m_texture_fbo, thing);
+    if (thing_type == DrThingType::Mirror)      return drawFrameBufferUsingMirrorShader(m_texture_fbo, thing);
+    if (thing_type == DrThingType::Swirl)       return drawFrameBufferUsingSwirlShader(m_texture_fbo, thing);
+
+    if (thing_type == DrThingType::Water) {
+        glDisable(GL_BLEND);
+        return drawFrameBufferUsingWaterShader(m_texture_fbo, thing);
+    }
+
     if (thing_type == DrThingType::Light) {
         DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
         if (light != nullptr) {
@@ -247,31 +252,6 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_type) {
 
             }
         }
-    }
-
-    // ***** If Fisheye, draw with seperate Fisheye Shader, then move to next Thing
-    if (thing_type == DrThingType::Fisheye) {
-        return drawFrameBufferUsingFisheyeShader(m_texture_fbo, thing);
-    }
-
-    // ***** If Mirror, draw with seperate Mirror Shader, then move to next Thing
-    if (thing_type == DrThingType::Mirror) {
-        return drawFrameBufferUsingMirrorShader(m_texture_fbo, thing);
-    }
-
-    // ***** If Swirl, draw with seperate Swirl Shader, then move to next Thing
-    if (thing_type == DrThingType::Swirl) {
-        DrEngineSwirl *swirl = dynamic_cast<DrEngineSwirl*>(thing);
-        if (swirl == nullptr) return false;
-        return drawFrameBufferUsingSwirlShader(m_texture_fbo, swirl);
-    }
-
-    // ***** If Water, draw with seperate Water Shader, then move to next Thing
-    if (thing_type == DrThingType::Water) {
-        DrEngineWater *water = dynamic_cast<DrEngineWater*>(thing);
-        if (water == nullptr) return false;
-        glDisable(GL_BLEND);
-        return drawFrameBufferUsingWaterShader(m_texture_fbo, water);
     }
 
     return false;

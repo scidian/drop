@@ -214,8 +214,8 @@ public:
     bool            drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, DrEngineThing *mirror);
     void            drawFrameBufferUsingScreenShader(QOpenGLFramebufferObject *upper, QOpenGLFramebufferObject *lower, Blend_Mode mode);
     void            drawFrameBufferUsingSimpleShader(QOpenGLFramebufferObject *fbo);
-    bool            drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl);
-    bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water);
+    bool            drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineThing *swirl);
+    bool            drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineThing *water);
     bool            drawGlowBuffer();
     void            drawObject(DrEngineThing *thing, bool draw2D);
     void            drawObjectSimple(DrEngineThing *thing);

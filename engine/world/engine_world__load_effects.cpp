@@ -8,11 +8,11 @@
 #include "engine/engine.h"
 #include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
-#include "engine/thing/engine_thing_swirl.h"
-#include "engine/thing/engine_thing_water.h"
 #include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/thing_component_effects/thing_comp_fisheye.h"
 #include "engine/thing_component_effects/thing_comp_mirror.h"
+#include "engine/thing_component_effects/thing_comp_swirl.h"
+#include "engine/thing_component_effects/thing_comp_water.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -157,10 +157,12 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
     float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineSwirl *swirl = new DrEngineSwirl(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
-                                             info.z_order, info.angle, info.opacity, info.size,
-                                             start_color, tint, rotation );
+    DrEngineThing *swirl = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
+                                             info.z_order, info.scale, info.angle, info.opacity, info.size);
+    swirl->setComponent(Comps::Thing_Settings_Swirl, new ThingCompSwirl(this, swirl, start_color, tint, rotation));
     addThing( swirl );
+
+    // ***** Appearance settings
     swirl->bitrate = bit_rate;
     swirl->pixel_x = static_cast<float>(pixelation.x);
     swirl->pixel_y = static_cast<float>(pixelation.y);
@@ -202,15 +204,17 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
 
-    DrEngineWater *water = new DrEngineWater(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
-                                             info.z_order, info.angle, info.opacity, info.size,
-                                             static_cast<Water_Texture>(texture), start_color, end_color,
-                                             water_tint, reflection,
-                                             ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
-                                             wave_freq, wave_speed, wave_amplitude,
-                                             foam_color, foam_tint, foam_height, foam_flat,
-                                             refract_1, refract_2, refract_3, foam_refract, move_speed );
+    DrEngineThing *water = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
+                                             info.z_order, info.scale, info.angle, info.opacity, info.size);
+    ThingCompWater *w = new ThingCompWater(this, water, static_cast<Water_Texture>(texture), start_color, end_color, water_tint, reflection,
+                                           ripple_freq, ripple_speed, ripple_amplitude, ripple_stretch,
+                                           wave_freq, wave_speed, wave_amplitude,
+                                           foam_color, foam_tint, foam_height, foam_flat,
+                                           refract_1, refract_2, refract_3, foam_refract, move_speed);
+    water->setComponent(Comps::Thing_Settings_Water, w);
     addThing( water );
+
+    // ***** Appearance settings
     water->bitrate = bit_rate;
     water->pixel_x = static_cast<float>(pixelation.x);
     water->pixel_y = static_cast<float>(pixelation.y);

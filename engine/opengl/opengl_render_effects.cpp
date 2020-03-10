@@ -16,10 +16,10 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
-#include "engine/thing/engine_thing_swirl.h"
-#include "engine/thing/engine_thing_water.h"
 #include "engine/thing_component_effects/thing_comp_fisheye.h"
 #include "engine/thing_component_effects/thing_comp_mirror.h"
+#include "engine/thing_component_effects/thing_comp_swirl.h"
+#include "engine/thing_component_effects/thing_comp_water.h"
 #include "engine/world/engine_world.h"
 
 
@@ -240,7 +240,10 @@ bool DrOpenGL::drawFrameBufferUsingMirrorShader(QOpenGLFramebufferObject *fbo, D
 //##    Renders FBO to screen buffer as a textured quad using Swirl Shader
 //##        - Returns true if rendered, false if not
 //####################################################################################
-bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineSwirl *swirl) {
+bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, DrEngineThing *swirl) {
+    // Get Swirl component of DrEngingThing
+    DrThingComponent *component = swirl->component(Comps::Thing_Settings_Swirl);        if (component == nullptr) return false;
+    ThingCompSwirl   *swirl_settings = dynamic_cast<ThingCompSwirl*>(component);        if (swirl_settings == nullptr) return false;
 
     // Check effect position and if we should render it
     double top, bottom, left, right;
@@ -276,32 +279,30 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
     m_swirl_shader.enableAttributeArray( a_swirl_vertex );
 
     // Set swirl variables
-    m_swirl_shader.setUniformValue( u_swirl_top,        static_cast<float>(top) );
-    m_swirl_shader.setUniformValue( u_swirl_bottom,     static_cast<float>(bottom) );
-    m_swirl_shader.setUniformValue( u_swirl_left,       static_cast<float>(left) );
-    m_swirl_shader.setUniformValue( u_swirl_right,      static_cast<float>(right) );
-
-    m_swirl_shader.setUniformValue( u_swirl_start_color,
-                                        static_cast<float>(swirl->start_color.redF()),
-                                        static_cast<float>(swirl->start_color.greenF()),
-                                        static_cast<float>(swirl->start_color.blueF()) );
-    m_swirl_shader.setUniformValue( u_swirl_color_tint,         swirl->color_tint );
-    m_swirl_shader.setUniformValue( u_swirl_rotation,   swirl->rotation );
-    m_swirl_shader.setUniformValue( u_swirl_radius,     static_cast<float>(swirl->getSize().x) );
+    m_swirl_shader.setUniformValue( u_swirl_top,            static_cast<float>(top) );
+    m_swirl_shader.setUniformValue( u_swirl_bottom,         static_cast<float>(bottom) );
+    m_swirl_shader.setUniformValue( u_swirl_left,           static_cast<float>(left) );
+    m_swirl_shader.setUniformValue( u_swirl_right,          static_cast<float>(right) );
+    m_swirl_shader.setUniformValue( u_swirl_start_color,    static_cast<float>(swirl_settings->start_color.redF()),
+                                                            static_cast<float>(swirl_settings->start_color.greenF()),
+                                                            static_cast<float>(swirl_settings->start_color.blueF()) );
+    m_swirl_shader.setUniformValue( u_swirl_color_tint,     swirl_settings->color_tint );
+    m_swirl_shader.setUniformValue( u_swirl_rotation,       swirl_settings->rotation );
+    m_swirl_shader.setUniformValue( u_swirl_radius,         static_cast<float>(swirl->getSize().x) );
 
     // Set more variables for shader
-    m_swirl_shader.setUniformValue( u_swirl_alpha,      swirl->getOpacity() );
-    m_swirl_shader.setUniformValue( u_swirl_zoom,       combinedZoomScale() );
-    m_swirl_shader.setUniformValue( u_swirl_pos,        m_engine->getCurrentWorld()->getCameraPosition().x,
-                                                        m_engine->getCurrentWorld()->getCameraPosition().y, 0.0f );
-    m_swirl_shader.setUniformValue( u_swirl_width,      static_cast<float>(fbo->width()) );
-    m_swirl_shader.setUniformValue( u_swirl_height,     static_cast<float>(fbo->height()) );
-    m_swirl_shader.setUniformValue( u_swirl_time,       static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
-    m_swirl_shader.setUniformValue( u_swirl_angle,      angle );
+    m_swirl_shader.setUniformValue( u_swirl_alpha,          swirl->getOpacity() );
+    m_swirl_shader.setUniformValue( u_swirl_zoom,           combinedZoomScale() );
+    m_swirl_shader.setUniformValue( u_swirl_pos,            m_engine->getCurrentWorld()->getCameraPosition().x,
+                                                            m_engine->getCurrentWorld()->getCameraPosition().y, 0.0f );
+    m_swirl_shader.setUniformValue( u_swirl_width,          static_cast<float>(fbo->width()) );
+    m_swirl_shader.setUniformValue( u_swirl_height,         static_cast<float>(fbo->height()) );
+    m_swirl_shader.setUniformValue( u_swirl_time,           static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
+    m_swirl_shader.setUniformValue( u_swirl_angle,          angle );
 
-    m_swirl_shader.setUniformValue( u_swirl_pixel_x,    swirl->pixel_x );
-    m_swirl_shader.setUniformValue( u_swirl_pixel_y,    swirl->pixel_y );
-    m_swirl_shader.setUniformValue( u_swirl_bitrate,    swirl->bitrate );
+    m_swirl_shader.setUniformValue( u_swirl_pixel_x,        swirl->pixel_x );
+    m_swirl_shader.setUniformValue( u_swirl_pixel_y,        swirl->pixel_y );
+    m_swirl_shader.setUniformValue( u_swirl_bitrate,        swirl->bitrate );
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
@@ -320,7 +321,10 @@ bool DrOpenGL::drawFrameBufferUsingSwirlShader(QOpenGLFramebufferObject *fbo, Dr
 //##    Renders FBO to screen buffer as a textured quad using Water Shader to draw reflective / refractive / textured water
 //##        - Returns true if rendered, false if not
 //####################################################################################
-bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineWater *water) {
+bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, DrEngineThing *water) {
+    // Get Water component of DrEngingThing
+    DrThingComponent *component = water->component(Comps::Thing_Settings_Water);        if (component == nullptr) return false;
+    ThingCompWater   *water_settings = dynamic_cast<ThingCompWater*>(component);        if (water_settings == nullptr) return false;
 
     // Check effect position and if we should render it
     double top, bottom, left, right;
@@ -343,7 +347,7 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
 
     // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
     glActiveTexture(GL_TEXTURE2);                           // Texture unit 2
-    switch (water->water_texture) {
+    switch (water_settings->water_texture) {
         case Water_Texture::None:
 
             break;
@@ -389,42 +393,39 @@ bool DrOpenGL::drawFrameBufferUsingWaterShader(QOpenGLFramebufferObject *fbo, Dr
     m_water_shader.enableAttributeArray( a_water_vertex );
 
     // Set water variables
-    m_water_shader.setUniformValue( u_water_top,        static_cast<float>(top) );
-    m_water_shader.setUniformValue( u_water_bottom,     static_cast<float>(bottom) );
-    m_water_shader.setUniformValue( u_water_left,       static_cast<float>(left) );
-    m_water_shader.setUniformValue( u_water_right,      static_cast<float>(right) );
-    m_water_shader.setUniformValue( u_water_start_color,
-                                        static_cast<float>(water->start_color.redF()),
-                                        static_cast<float>(water->start_color.greenF()),
-                                        static_cast<float>(water->start_color.blueF()) );
-    m_water_shader.setUniformValue( u_water_end_color,
-                                        static_cast<float>(water->end_color.redF()),
-                                        static_cast<float>(water->end_color.greenF()),
-                                        static_cast<float>(water->end_color.blueF()) );
+    m_water_shader.setUniformValue( u_water_top,                static_cast<float>(top) );
+    m_water_shader.setUniformValue( u_water_bottom,             static_cast<float>(bottom) );
+    m_water_shader.setUniformValue( u_water_left,               static_cast<float>(left) );
+    m_water_shader.setUniformValue( u_water_right,              static_cast<float>(right) );
+    m_water_shader.setUniformValue( u_water_start_color,        static_cast<float>(water_settings->start_color.redF()),
+                                                                static_cast<float>(water_settings->start_color.greenF()),
+                                                                static_cast<float>(water_settings->start_color.blueF()) );
+    m_water_shader.setUniformValue( u_water_end_color,          static_cast<float>(water_settings->end_color.redF()),
+                                                                static_cast<float>(water_settings->end_color.greenF()),
+                                                                static_cast<float>(water_settings->end_color.blueF()) );
 
-    m_water_shader.setUniformValue( u_water_color_tint,         water->water_tint );
-    m_water_shader.setUniformValue( u_water_reflection,         water->reflection_opacity );
-    m_water_shader.setUniformValue( u_water_ripple_frequency,   water->ripple_frequency );
-    m_water_shader.setUniformValue( u_water_ripple_speed,       water->ripple_speed );
-    m_water_shader.setUniformValue( u_water_ripple_amplitude,   water->ripple_amplitude );
-    m_water_shader.setUniformValue( u_water_ripple_stretch,     water->ripple_stretch );
-    m_water_shader.setUniformValue( u_water_wave_frequency,     water->wave_frequency );
-    m_water_shader.setUniformValue( u_water_wave_speed,         water->wave_speed );
-    m_water_shader.setUniformValue( u_water_wave_amplitude,     water->wave_amplitude );
+    m_water_shader.setUniformValue( u_water_color_tint,         water_settings->water_tint );
+    m_water_shader.setUniformValue( u_water_reflection,         water_settings->reflection_opacity );
+    m_water_shader.setUniformValue( u_water_ripple_frequency,   water_settings->ripple_frequency );
+    m_water_shader.setUniformValue( u_water_ripple_speed,       water_settings->ripple_speed );
+    m_water_shader.setUniformValue( u_water_ripple_amplitude,   water_settings->ripple_amplitude );
+    m_water_shader.setUniformValue( u_water_ripple_stretch,     water_settings->ripple_stretch );
+    m_water_shader.setUniformValue( u_water_wave_frequency,     water_settings->wave_frequency );
+    m_water_shader.setUniformValue( u_water_wave_speed,         water_settings->wave_speed );
+    m_water_shader.setUniformValue( u_water_wave_amplitude,     water_settings->wave_amplitude );
 
-    m_water_shader.setUniformValue( u_water_surface_color,
-                                        static_cast<float>(water->surface_color.redF()),
-                                        static_cast<float>(water->surface_color.greenF()),
-                                        static_cast<float>(water->surface_color.blueF()) );
-    m_water_shader.setUniformValue( u_water_surface_tint,       water->surface_tint );
-    m_water_shader.setUniformValue( u_water_surface_height,     water->surface_height );
-    m_water_shader.setUniformValue( u_water_surface_flat,       water->surface_keep_flat );
+    m_water_shader.setUniformValue( u_water_surface_color,      static_cast<float>(water_settings->surface_color.redF()),
+                                                                static_cast<float>(water_settings->surface_color.greenF()),
+                                                                static_cast<float>(water_settings->surface_color.blueF()) );
+    m_water_shader.setUniformValue( u_water_surface_tint,       water_settings->surface_tint );
+    m_water_shader.setUniformValue( u_water_surface_height,     water_settings->surface_height );
+    m_water_shader.setUniformValue( u_water_surface_flat,       water_settings->surface_keep_flat );
 
-    m_water_shader.setUniformValue( u_refract_reflection,       water->refract_reflection );
-    m_water_shader.setUniformValue( u_refract_underwater,       water->refract_underwater );
-    m_water_shader.setUniformValue( u_refract_texture,          water->refract_texture );
-    m_water_shader.setUniformValue( u_refract_foam,             water->refract_foam );
-    m_water_shader.setUniformValue( u_water_movement_speed,     water->movement_speed );
+    m_water_shader.setUniformValue( u_refract_reflection,       water_settings->refract_reflection );
+    m_water_shader.setUniformValue( u_refract_underwater,       water_settings->refract_underwater );
+    m_water_shader.setUniformValue( u_refract_texture,          water_settings->refract_texture );
+    m_water_shader.setUniformValue( u_refract_foam,             water_settings->refract_foam );
+    m_water_shader.setUniformValue( u_water_movement_speed,     water_settings->movement_speed );
 
     // Set variables for shader
     m_water_shader.setUniformValue( u_water_alpha,      water->getOpacity() );
