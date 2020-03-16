@@ -77,7 +77,7 @@ void DrOpenGL::drawSpace() {
         if (!has_rendered_glow_lights && (thing->getZOrder() > m_engine->getCurrentWorld()->getGlowZOrder())) {
             has_rendered_glow_lights = drawGlowBuffer();
             m_last_thing = DrThingType::None;
-        }      
+        }
 
         // ***** Draw Thing with appropriate Shader
         switch (thing->getThingType()) {
@@ -151,18 +151,15 @@ void DrOpenGL::drawSpace() {
                 // !!!!!
                 break;
 
-
-
             case DrThingType::Light:
                 drawEffect(thing, DrThingType::Light);
                 break;
-
 
             default:
                 break;
         }
 
-        // ***** Call Render Step of all Thing Compoenents
+        // ***** Call Render for all Thing Components
         thing->draw();
 
         // ***** Add to Thing Count processed, next for
@@ -171,6 +168,9 @@ void DrOpenGL::drawSpace() {
 
     // ***** If we didn't draw Glow Lights yet, do it now
     if (!has_rendered_glow_lights) drawGlowBuffer();
+
+    // ***** Reset last rendered DrThing, this will make sure we bind the proper shader next render step
+    m_last_thing = DrThingType::None;
 }
 
 
@@ -212,6 +212,7 @@ bool DrOpenGL::drawGlowBuffer() {
 //####################################################################################
 bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_type) {
 
+    // If about to use full screen shader, need to copy render buffer to texture buffer for binding
     if (thing_type == DrThingType::Fisheye ||
         thing_type == DrThingType::Mirror ||
         thing_type == DrThingType::Swirl ||
@@ -221,7 +222,6 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_type) {
             releaseOffscreenBuffer();
             QOpenGLFramebufferObject::blitFramebuffer(m_texture_fbo, m_render_fbo);
             bindOffscreenBuffer(false);
-            m_last_thing = thing_type;
         }
     }
 
@@ -229,32 +229,38 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_type) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if (thing_type == DrThingType::Fisheye)     return drawFrameBufferUsingFisheyeShader(m_texture_fbo, thing);
-    if (thing_type == DrThingType::Mirror)      return drawFrameBufferUsingMirrorShader(m_texture_fbo, thing);
-    if (thing_type == DrThingType::Swirl)       return drawFrameBufferUsingSwirlShader(m_texture_fbo, thing);
+    // Track if effect rendered successfully
+    bool finished_effect = false;
+
+    if (thing_type == DrThingType::Fisheye) finished_effect = drawFrameBufferUsingFisheyeShader(m_texture_fbo, thing);
+    if (thing_type == DrThingType::Mirror)  finished_effect = drawFrameBufferUsingMirrorShader(m_texture_fbo, thing);
+    if (thing_type == DrThingType::Swirl)   finished_effect = drawFrameBufferUsingSwirlShader(m_texture_fbo, thing);
 
     if (thing_type == DrThingType::Water) {
         glDisable(GL_BLEND);
-        return drawFrameBufferUsingWaterShader(m_texture_fbo, thing);
+        finished_effect = drawFrameBufferUsingWaterShader(m_texture_fbo, thing);
     }
 
     if (thing_type == DrThingType::Light) {
         DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
         if (light != nullptr) {
-            if (!light->isInView()) return false;
-
-            if (light->light_type == Light_Type::Opaque) {
-                if (draw2DLight(light)) {
-                    m_last_thing = DrThingType::Light;
-                    return true;
-                }
+            if (!light->isInView()) {
+                finished_effect = false;
+            } else if (light->light_type == Light_Type::Opaque) {
+                finished_effect = draw2DLight(light);
             } else if (light->light_type == Light_Type::Glow) {
 
             }
         }
     }
 
-    return false;
+    // If we finished rendering effect successfully, store last thing rendered type
+    if (finished_effect) {
+        m_last_thing = thing_type;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

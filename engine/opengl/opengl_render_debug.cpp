@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_random.h"
 #include "engine/debug_flags.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"

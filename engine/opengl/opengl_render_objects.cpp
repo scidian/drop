@@ -98,6 +98,11 @@ QMatrix4x4 billboardSphericalBegin(glm::vec3 camera, glm::vec3 object, glm::vec3
 //####################################################################################
 void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
 
+    // ***** Enable shader program
+    if (m_last_thing != DrThingType::Object) {
+        if (!m_default_shader.bind()) return;
+    }
+
     // ***** Initial type checks
     if (thing->getThingType() != DrThingType::Object) return;
     DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
@@ -134,12 +139,6 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     if (object->shapes.size() > 0) {
         if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
     }
-
-    // ***** Enable shader program
-    if (m_last_thing != DrThingType::Object) {
-        if (!m_default_shader.bind()) return;
-    }
-
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;

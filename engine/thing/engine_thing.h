@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 6/19/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Abstract base class that represents one DrThing in the physics engine
+//      Base class that represents one DrThing within a DrEngineWorld
 //
 //
 #ifndef ENGINE_THING_H
@@ -22,7 +22,7 @@ typedef std::map<cpShape*, Shape_Type> ShapeMap;
 
 //####################################################################################
 //##    DrEngineThing
-//##        Abstract base class that represents one DrThing in the physics engine
+//##        Base class that represents one DrThing within a DrEngineWorld
 //############################
 class DrEngineThing
 {
