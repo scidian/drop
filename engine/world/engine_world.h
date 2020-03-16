@@ -149,8 +149,8 @@ public:
     // !!!!! #TEMP: Variables
     Demo_Player     demo_player             { Demo_Player::Jump };
     DrEngineObject *ball                    { nullptr };
-    DrEngineLight  *light1                  { nullptr };
-    DrEngineLight  *light2                  { nullptr };
+    DrEngineThing  *light1                  { nullptr };
+    DrEngineThing  *light2                  { nullptr };
 
     // Image Post Processing Variables
     float           bitrate                 { 256.0f };                     // Bitrate              1 to 256

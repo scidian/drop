@@ -28,10 +28,10 @@ public:
     // #################### VARIABLES ####################
 public:
     // Foliage Variables
-    cpBody                 *m_anchor_bottom         { nullptr };        // Holds anchor point for the pivot joint to the base
-    cpBody                 *m_anchor_middle         { nullptr };        // Holds anchor point for the spring joint to the middle
+    cpBody             *m_anchor_bottom         { nullptr };            // Holds anchor point for the pivot joint to the base
+    cpBody             *m_anchor_middle         { nullptr };            // Holds anchor point for the spring joint to the middle
 
-    double                  m_springiness           { 0.0 };            // Springiness of foliage (0.0 == none, 1.0 == most)
+    double              m_springiness           { 0.0 };                // Springiness of foliage (0.0 == none, 1.0 == most)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################

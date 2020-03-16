@@ -10,8 +10,8 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
-#include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -145,8 +145,13 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         this->setGlowZOrder(100.0);
 
         ball = ball1;
-        light1 = new DrEngineLight(this, getNextKey(), c_no_key, 250, 325, -1, 1.0, Light_Type::Glow, DrColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f);
-        light2 = new DrEngineLight(this, getNextKey(), c_no_key, 250, 325,  1, 1.0, Light_Type::Glow, DrColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f);
+        light1 = new DrEngineThing(this, getNextKey(), c_no_key, 250, 325, -1, c_scale1x1, 0.0, 1.0, DrPointF(3400, 3400));
+        light2 = new DrEngineThing(this, getNextKey(), c_no_key, 250, 325,  1, c_scale1x1, 0.0, 1.0, DrPointF( 100,  100));
+
+        light1->setComponent(Comps::Thing_Settings_Light,
+                             new ThingCompLight(this, light1, Light_Type::Glow, DrColor(255, 255, 153), 3400, DrPointF(340,  20), 54, 50.0f, true, 15.0f, 0.00f, 0.00f));
+        light2->setComponent(Comps::Thing_Settings_Light,
+                             new ThingCompLight(this, light2, Light_Type::Glow, DrColor(255, 215, 215),  100, DrPointF(  0, 360), 60, 50.0f, true, 10.0f, 0.00f, 0.00f));
         ///light2->draw_shadows = false;
         addThings( { light1, light2 } );
 

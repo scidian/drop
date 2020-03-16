@@ -35,15 +35,9 @@
 class DebugVertex;
 class DrColor;
 class DrEngine;
-class DrEngineFire;
-class DrEngineFisheye;
-class DrEngineLight;
-class DrEngineMirror;
 class DrEngineObject;
-class DrEngineSwirl;
 class DrEngineThing;
 class DrEngineVertexData;
-class DrEngineWater;
 class DrImage;
 class FormEngine;
 
@@ -142,8 +136,8 @@ private:
     std::map<long, QOpenGLFramebufferObject*> m_shadows;            // Off screen Frame Buffer Objects for Light 1D Shadow Maps
 
     // Vectors to keep track of lights
-    std::vector<DrEngineLight*> m_shadow_lights;
-    std::vector<DrEngineLight*> m_glow_lights;
+    std::vector<DrEngineThing*> m_shadow_lights;
+    std::vector<DrEngineThing*> m_glow_lights;
 
 
     // #################### FUNCTIONS ####################
@@ -241,11 +235,11 @@ public:
     // Soft Shadows / Lights
     void            bindGlowLightsBuffer(float ambient_light);
     void            bindOccluderMapBuffer();
-    void            bindLightOcculderBuffer(DrEngineLight *light);
-    void            bindLightShadowBuffer(DrEngineLight *light);
+    void            bindLightOcculderBuffer(DrEngineThing *light);
+    void            bindLightShadowBuffer(DrEngineThing *light);
     void            checkLightBuffers();
-    void            draw1DShadowMap(DrEngineLight *light);
-    bool            draw2DLight(DrEngineLight *light);
+    void            draw1DShadowMap(DrEngineThing *light);
+    bool            draw2DLight(DrEngineThing *light);
     void            drawGlowLights();
     void            drawShadowMaps();
     int             findNeededShadowMaps();

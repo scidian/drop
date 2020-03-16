@@ -60,8 +60,8 @@ public:
 
     // Getters
     std::string         name()      { return m_name; }                                              // Returns name of this Component
-    DrEngineThing      *thing()     { return m_thing; }                                             // Returns parent DrEngineWorld
-    DrEngineWorld      *world()     { return m_world; }                                             // Returns parent entity (Thing)
+    DrEngineThing*      thing()     { return m_thing; }                                             // Returns parent DrEngineWorld
+    DrEngineWorld*      world()     { return m_world; }                                             // Returns parent entity (Thing)
 
     // Attributes
     DrVariant           attribute(std::string attribute_name);                                      // Returns attribute by name

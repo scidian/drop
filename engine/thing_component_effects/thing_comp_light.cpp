@@ -1,37 +1,38 @@
 //
-//      Created by Stephens Nunnally on 6/19/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/16/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
+#include "3rd_party/chipmunk/chipmunk.h"
+#include "core/dr_debug.h"
+#include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/form_engine.h"
+#include "engine/engine_signal.h"
+#include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_light.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
+#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
-                             double x, double y, double z, float opacity,
-                             Light_Type type_,
-                             DrColor    color_,
-                             float      diameter_,
-                             DrPointF   cone_,
-                             float      intensity_,
-                             float      shadows_,
-                             bool       draw_shadows_,
-                             float      blur_,
-                             float      pulse_,
-                             float      pulse_speed_)
-    : DrEngineThing(world, unique_key, original_key) {
-
-    this->setOpacity(opacity);
-    this->setPosition(DrPointF(x, y));
-    this->setZOrder(z);
+ThingCompLight::ThingCompLight(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
+                               Light_Type type_,
+                               DrColor    color_,
+                               float      diameter_,
+                               DrPointF   cone_,
+                               float      intensity_,
+                               float      shadows_,
+                               bool       draw_shadows_,
+                               float      blur_,
+                               float      pulse_,
+                               float      pulse_speed_)
+    : DrThingComponent(engine_world, parent_thing, Comps::Thing_Soft_Body) {
 
     this->light_type =      type_;
     this->color =           color_;
@@ -45,27 +46,32 @@ DrEngineLight::DrEngineLight(DrEngineWorld *world, long unique_key, long origina
     this->pulse_speed =     pulse_speed_;
 }
 
+ThingCompLight::~ThingCompLight() {
 
-DrEngineLight::~DrEngineLight() {
-    world()->mark_light_as_deleted.push_back( getKey() );
 }
 
 
+
 //####################################################################################
-//##    Override for DrEngineThing::addToWorld()
+//##    Basic Virtual Component Functions
 //####################################################################################
-void DrEngineLight::addToWorld() {
+// Called when component is first created
+void ThingCompLight::init() {
+
+}
+
+// Called when Thing is added to m_things DrEngineWorld vector
+void ThingCompLight::addToWorld() {
     world()->light_count++;
-
-    DrEngineThing::addToWorld();
 }
 
+// Called when it is time to Render Thing
+void ThingCompLight::draw() {
+    world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Light);
+}
 
-//####################################################################################
-//##    Override for DrEngineThing::update() - Pulses Light
-//####################################################################################
-bool DrEngineLight::update(double time_passed, double time_warp, DrRectF &area) {
-    bool remove = false;
+// Called during DrEngineWorld->updateWorld() step
+void ThingCompLight::update(double time_passed, double time_warp) {
 
     // ***** Pulse light
     if (Dr::FuzzyCompare(pulse_speed, 0.f) == false) {
@@ -85,17 +91,22 @@ bool DrEngineLight::update(double time_passed, double time_warp, DrRectF &area) 
         }
     }
 
-    return (remove || DrEngineThing::update(time_passed, time_warp, area));
+}
+
+// Called when component is destroyed
+void ThingCompLight::destroy() {
+    world()->mark_light_as_deleted.push_back( thing()->getKey() );
 }
 
 
+
 //####################################################################################
-//##    Override for DrEngineThing::setAgnle() - Sets rotated cone
+//##    Override for DrEngineThing::setAngle() - Sets rotated cone
 //####################################################################################
-void DrEngineLight::setAngle(double new_angle) {
+void ThingCompLight::setAngle(double new_angle) {
     while (new_angle <   0.0) new_angle += 360.0;
     while (new_angle > 360.0) new_angle -= 360.0;
-    DrEngineThing::setAngle(new_angle);
+    thing()->setAngle(new_angle);
 
     double new_x = cone.x + new_angle;
     double new_y = cone.y + new_angle;
@@ -109,6 +120,14 @@ void DrEngineLight::setAngle(double new_angle) {
 
     m_rotated_cone = DrPointF( new_x, new_y );
 }
+
+
+
+
+
+
+
+
 
 
 

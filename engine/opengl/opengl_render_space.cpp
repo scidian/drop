@@ -16,8 +16,8 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 
 
@@ -151,10 +151,6 @@ void DrOpenGL::drawSpace() {
                 // !!!!!
                 break;
 
-            case DrThingType::Light:
-                drawEffect(thing, DrThingType::Light);
-                break;
-
             default:
                 break;
         }
@@ -242,15 +238,15 @@ bool DrOpenGL::drawEffect(DrEngineThing *thing, DrThingType thing_type) {
     }
 
     if (thing_type == DrThingType::Light) {
-        DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
-        if (light != nullptr) {
-            if (!light->isInView()) {
-                finished_effect = false;
-            } else if (light->light_type == Light_Type::Opaque) {
-                finished_effect = draw2DLight(light);
-            } else if (light->light_type == Light_Type::Glow) {
+        // Get Light component of DrEngingThing
+        DrThingComponent *component = thing->component(Comps::Thing_Settings_Light);        if (component == nullptr) return false;
+        ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) return false;
+        if (!light_settings->isInView()) {
+            finished_effect = false;
+        } else if (light_settings->light_type == Light_Type::Opaque) {
+            finished_effect = draw2DLight(thing);
+        } else if (light_settings->light_type == Light_Type::Glow) {
 
-            }
         }
     }
 

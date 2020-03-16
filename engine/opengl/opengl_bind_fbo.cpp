@@ -7,7 +7,8 @@
 //
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_light.h"
+#include "engine/thing/engine_thing.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 
 
@@ -132,19 +133,23 @@ void DrOpenGL::bindOccluderMapBuffer() {
 //##        Light Occluder FBO's are the size of the light to be drawn, they have their location part of the
 //##        Occluder Map FBO copied on to them to be processed with the Shadow Map Frag shader to produce a 1D shadow map.
 //####################################################################################
-void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
+void DrOpenGL::bindLightOcculderBuffer(DrEngineThing *light) {
+    // Get Light component of DrEngingThing
+    DrThingComponent *component = light->component(Comps::Thing_Settings_Light);        if (component == nullptr) return;
+    ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) return;
+
     // Check Frame Buffer Object is initialized
     bool need_to_create_new = false;
     if (!(m_occluders[light->getKey()]))
         need_to_create_new = true;
-    else if (m_occluders[light->getKey()]->width()  != light->getLightDiameterFitted() ||
-             m_occluders[light->getKey()]->height() != light->getLightDiameterFitted())
+    else if (m_occluders[light->getKey()]->width()  != light_settings->getLightDiameterFitted() ||
+             m_occluders[light->getKey()]->height() != light_settings->getLightDiameterFitted())
         need_to_create_new = true;
 
     // Initialize light fbo
     if (need_to_create_new) {
         delete m_occluders[light->getKey()];
-        m_occluders[light->getKey()] = new QOpenGLFramebufferObject(light->getLightDiameterFitted(), light->getLightDiameterFitted());
+        m_occluders[light->getKey()] = new QOpenGLFramebufferObject(light_settings->getLightDiameterFitted(), light_settings->getLightDiameterFitted());
     }
 
     // Bind buffer
@@ -162,9 +167,13 @@ void DrOpenGL::bindLightOcculderBuffer(DrEngineLight *light) {
 //##        A 1D shadow map fbo for each light. The pixels are encoded with the distance from the light center to the nearest shadow
 //##        caster extending out at the respective angle to the shadow maps width (0 to width == 0 to 360 degrees)
 //####################################################################################
-void DrOpenGL::bindLightShadowBuffer(DrEngineLight *light) {
+void DrOpenGL::bindLightShadowBuffer(DrEngineThing *light) {
+    // Get Light component of DrEngingThing
+    DrThingComponent *component = light->component(Comps::Thing_Settings_Light);        if (component == nullptr) return;
+    ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) return;
+
     // Shadow map size is the smallest of c_angles, light_radius_fitted, and width()
-    int shadow_size = (light->getLightDiameterFitted() < g_max_rays) ? light->getLightDiameterFitted() : g_max_rays;
+    int shadow_size = (light_settings->getLightDiameterFitted() < g_max_rays) ? light_settings->getLightDiameterFitted() : g_max_rays;
         shadow_size = (width()*devicePixelRatio() < shadow_size) ? width()*devicePixelRatio() : shadow_size;
 
     // Check Frame Buffer Object is initialized

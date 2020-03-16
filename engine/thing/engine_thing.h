@@ -104,7 +104,7 @@ public:
     DrEngineWorld*      world()                     { return m_world; }                     // Returns DrWorld this Entity is currently in
 
     // Thing Components
-    DrThingComponent   *component(std::string component_name);
+    DrThingComponent*   component(std::string component_name);
     void                removeComponent(std::string component_name);
     void                setComponent(std::string component_name, DrThingComponent *component);
 

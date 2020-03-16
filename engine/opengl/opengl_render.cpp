@@ -13,7 +13,6 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 
@@ -181,6 +180,11 @@ void DrOpenGL::setShaderDefaultValues(float texture_width, float texture_height)
     m_default_shader.setUniformValue( u_default_wireframe,          false );
     m_default_shader.setUniformValue( u_default_wireframe_width,    1.0f );
 }
+
+
+
+
+
 
 
 

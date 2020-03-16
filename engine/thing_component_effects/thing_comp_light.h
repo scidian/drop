@@ -1,25 +1,35 @@
 //
-//      Created by Stephens Nunnally on 6/19/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/16/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
-//      2D Light w/ Pixel Perfect Shadows for use in the Physics World Engine
 //
 //
-#ifndef ENGINE_LIGHT_H
-#define ENGINE_LIGHT_H
+//
+#ifndef THING_COMP_LIGHT_H
+#define THING_COMP_LIGHT_H
 
+#include "3rd_party/chipmunk/chipmunk.h"
 #include "engine/globals_engine.h"
-#include "engine/thing/engine_thing.h"
+#include "engine/thing/engine_thing_component.h"
 
 
 //####################################################################################
-//##    DrEngineLight
-//##        Holds a 2D Light w/ Pixel Perfect Shadows for use in the Engine
+//##    ThingCompLight
+//##        Built-In Component for DrEngineThing acting as a 2D Light
 //############################
-class DrEngineLight : public DrEngineThing
+class ThingCompLight : public DrThingComponent
 {
 public:
-    // Light Settings
+    // Constructor / Destructor
+    ThingCompLight(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
+                   Light_Type type, DrColor color, float diameter, DrPointF cone, float intensity,
+                   float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed);
+    virtual ~ThingCompLight() override;
+
+
+    // #################### VARIABLES ####################
+public:
+    // Light Variables
     Light_Type      light_type = Light_Type::Opaque;        // Type of Light: Opaque or Glow
     float           light_size = 1500.0f;                   // Diameter of light
     DrColor         color = DrColor(192, 64, 192);          // Color of light
@@ -50,20 +60,22 @@ private:
     bool            m_visible = false;                      // Tracks if light is in view
     DrPointF        m_rotated_cone = DrPointF(0, 360);      // Cone set to current angle
 
+
+
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
-    // Constructor / Destructor
-    DrEngineLight(DrEngineWorld *world, long unique_key, long original_key,
-                  double x, double y, double z, float opacity, Light_Type type, DrColor color, float diameter, DrPointF cone, float intensity,
-                  float shadows, bool draw_shadows, float blur, float pulse, float pulse_speed);
-    virtual ~DrEngineLight() override;
+    // Basic Component Events
+    virtual void        init() override;                                                // Called when component is first created
+    virtual void        addToWorld() override;                                          // Called when Thing is added to m_things DrEngineWorld vector
+    virtual void        draw() override;                                                // Called when it is time to Render Thing
+    virtual void        update(double time_passed, double time_warp) override;          // Called during DrEngineWorld->updateWorld() step
+    virtual void        destroy() override;                                             // Called when component is destroyed
 
-    // Abstract Engine Thing Overrides
-    virtual void        addToWorld() override;
-    virtual DrThingType getThingType() override { return DrThingType::Light; }
-    virtual bool        update(double time_passed, double time_warp, DrRectF &area) override;
 
-    // Non-Abstract Engine Thing Overrides
-    virtual void        setAngle(double new_angle) override;
+    // #################### INTERNAL FUNCTIONS ####################
+public:
+    // Light Functions
+    void        setAngle(double new_angle);
 
 
     // Getters / Setters
@@ -84,11 +96,16 @@ public:
     void        setPerspectiveScale(float scale) { m_perspective_scale = scale; }
     void        setIsInView(bool in_view) { m_visible = in_view; }
 
-
 };
 
 
-#endif // ENGINE_LIGHT_H
+#endif // THING_COMP_LIGHT_H
+
+
+
+
+
+
 
 
 

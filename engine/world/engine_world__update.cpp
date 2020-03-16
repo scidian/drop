@@ -13,7 +13,6 @@
 #include "engine/engine_spawner.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"

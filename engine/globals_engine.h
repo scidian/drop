@@ -26,9 +26,7 @@
 // Forward declarations
 class DrAsset;
 class DrEngine;
-class DrEngineLight;
 class DrEngineCamera;
-class DrThingComponent;
 class DrEngineObject;
 class DrEngineSignal;
 class DrEngineSpawner;
@@ -39,6 +37,7 @@ class DrOpenGL;
 class DrProject;
 class DrStage;
 class DrThing;
+class DrThingComponent;
 class FormEngine;
 
 

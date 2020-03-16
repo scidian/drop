@@ -6,10 +6,10 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/thing_component_effects/thing_comp_fisheye.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/thing_component_effects/thing_comp_mirror.h"
 #include "engine/thing_component_effects/thing_comp_swirl.h"
 #include "engine/thing_component_effects/thing_comp_water.h"
@@ -109,10 +109,14 @@ void DrEngineWorld::loadLightToWorld(DrThing *thing, double offset_x, double off
 
     info.size.x = info.size.x * c_light_size_adjuster;
 
-    addThing( new DrEngineLight(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y, info.z_order, info.opacity,
-                                static_cast<Light_Type>(light_type),
-                                light_color, static_cast<float>(info.size.x),
-                                DrPointF(cone_start, cone_end), intensity, shadows, draw_shadows, blur, pulse, pulse_speed));
+    DrEngineThing *light = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
+                                             info.z_order, info.scale, info.angle, info.opacity, info.size);
+    light->setComponent(Comps::Thing_Settings_Light, new ThingCompLight(this, light, static_cast<Light_Type>(light_type),
+                                                                        light_color, static_cast<float>(info.size.x),
+                                                                        DrPointF(cone_start, cone_end), intensity, shadows,
+                                                                        draw_shadows, blur, pulse, pulse_speed));
+    addThing( light );
+
 }
 
 

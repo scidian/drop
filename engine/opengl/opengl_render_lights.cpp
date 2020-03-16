@@ -12,8 +12,8 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_light.h"
 #include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 
 
@@ -99,29 +99,30 @@ int DrOpenGL::findNeededShadowMaps() {
     m_glow_lights.clear();
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
         if (thing == nullptr) continue;
-        if (thing->getThingType() != DrThingType::Light) continue;
 
-        DrEngineLight *light = dynamic_cast<DrEngineLight*>(thing);
-        if (light->light_type == Light_Type::Glow) m_glow_lights.push_back(light);
+        // Get Light component of DrEngingThing
+        DrThingComponent *component = thing->component(Comps::Thing_Settings_Light);        if (component == nullptr) continue;
+        ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) continue;
+        if (light_settings->light_type == Light_Type::Glow) m_glow_lights.push_back(thing);
         light_count++;
 
         // Calculate size of light texture (fbo)
-        light->setLightDiameter( abs(static_cast<int>(light->light_size)) );
-        light->setLightDiameterFitted( (light->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light->getLightDiameter() );
+        light_settings->setLightDiameter( abs(static_cast<int>(light_settings->light_size)) );
+        light_settings->setLightDiameterFitted( (light_settings->getLightDiameter() > g_max_light_fbo_size) ? g_max_light_fbo_size : light_settings->getLightDiameter() );
 
         // In perspective mode we still draw the light the same size as z-order 0 even if its far away,
         // this allows for cool large lights (like a big sun) far away. This calculates the size difference for rendering later
-        double light_radius = (light->getLightDiameterFitted() / 2.0);
+        double light_radius = (light_settings->getLightDiameterFitted() / 2.0);
         if (m_engine->getCurrentWorld()->render_type == Render_Type::Perspective && m_occluder_fbo) {
             QMatrix4x4 view_matrix, proj_matrix;
             occluderMatrix(Render_Type::Perspective, view_matrix, proj_matrix);
 
-            glm::vec3 point_0_a = glm::vec3(static_cast<float>(light->getPosition().x), 0.0f, 0.0f);
-            glm::vec3 point_0_b = glm::vec3(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, 0.0f);
+            glm::vec3 point_0_a = glm::vec3(static_cast<float>(thing->getPosition().x), 0.0f, 0.0f);
+            glm::vec3 point_0_b = glm::vec3(static_cast<float>(thing->getPosition().x + (light_settings->getLightDiameterFitted()/2.0)), 0.0f, 0.0f);
 
-            float z_pos = static_cast<float>(light->getZOrder());
-            glm::vec3 point_z_a = glm::vec3(static_cast<float>(light->getPosition().x), 0.0f, z_pos);
-            glm::vec3 point_z_b = glm::vec3(static_cast<float>(light->getPosition().x + (light->getLightDiameterFitted()/2.0)), 0.0f, z_pos);
+            float z_pos = static_cast<float>(thing->getZOrder());
+            glm::vec3 point_z_a = glm::vec3(static_cast<float>(thing->getPosition().x), 0.0f, z_pos);
+            glm::vec3 point_z_b = glm::vec3(static_cast<float>(thing->getPosition().x + (light_settings->getLightDiameterFitted()/2.0)), 0.0f, z_pos);
 
             DrPointF map_0_a = mapToFBO( point_0_a, m_occluder_fbo, view_matrix, proj_matrix );
             DrPointF map_0_b = mapToFBO( point_0_b, m_occluder_fbo, view_matrix, proj_matrix );
@@ -130,25 +131,25 @@ int DrOpenGL::findNeededShadowMaps() {
 
             double map_0 = (map_0_a.x > map_0_b.x) ? (map_0_a.x - map_0_b.x) : (map_0_b.x - map_0_a.x);
             double map_z = (map_z_a.x > map_z_b.x) ? (map_z_a.x - map_z_b.x) : (map_z_b.x - map_z_a.x);
-            light->setPerspectiveScale( float(map_z / map_0) );
-            light_radius /= static_cast<double>(light->getPerspectiveScale() + 0.0001f);
+            light_settings->setPerspectiveScale( float(map_z / map_0) );
+            light_radius /= static_cast<double>(light_settings->getPerspectiveScale() + 0.0001f);
         }
 
         // Check if light is in view to be rendered
-        DrPoint top_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y + light_radius, light->getZOrder() ).toPoint();
-        DrPoint top_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y + light_radius, light->getZOrder() ).toPoint();
-        DrPoint bot_left =  mapToScreen(light->getPosition().x - light_radius, light->getPosition().y - light_radius, light->getZOrder() ).toPoint();
-        DrPoint bot_right = mapToScreen(light->getPosition().x + light_radius, light->getPosition().y - light_radius, light->getZOrder() ).toPoint();
+        DrPoint top_left =  mapToScreen(thing->getPosition().x - light_radius, thing->getPosition().y + light_radius, thing->getZOrder() ).toPoint();
+        DrPoint top_right = mapToScreen(thing->getPosition().x + light_radius, thing->getPosition().y + light_radius, thing->getZOrder() ).toPoint();
+        DrPoint bot_left =  mapToScreen(thing->getPosition().x - light_radius, thing->getPosition().y - light_radius, thing->getZOrder() ).toPoint();
+        DrPoint bot_right = mapToScreen(thing->getPosition().x + light_radius, thing->getPosition().y - light_radius, thing->getZOrder() ).toPoint();
         QPolygon light_box;
         light_box << Dr::ToQPoint(top_left) << Dr::ToQPoint(top_right) << Dr::ToQPoint(bot_left) << Dr::ToQPoint(bot_right);
         QRect in_view = QRect(0, 0, width()*devicePixelRatio(), height()*devicePixelRatio());
-        light->setIsInView( light_box.boundingRect().intersects(in_view) ||
-                            light_box.boundingRect().contains(in_view)   ||
-                            in_view.contains(light_box.boundingRect()) );
+        light_settings->setIsInView( light_box.boundingRect().intersects(in_view) ||
+                                     light_box.boundingRect().contains(in_view)   ||
+                                     in_view.contains(light_box.boundingRect()) );
 
         // If light needs shadows and is visible, add to shadow processing list
-        if (light->draw_shadows && light->isInView())
-            m_shadow_lights.push_back(light);
+        if (light_settings->draw_shadows && light_settings->isInView())
+            m_shadow_lights.push_back(thing);
     }
     return light_count;
 }
@@ -159,13 +160,17 @@ int DrOpenGL::findNeededShadowMaps() {
 //####################################################################################
 void DrOpenGL::drawShadowMaps() {
     for (auto light : m_shadow_lights) {
+        // Get Light component of DrEngingThing
+        DrThingComponent *component = light->component(Comps::Thing_Settings_Light);        if (component == nullptr) continue;
+        ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) continue;
+
         // Calculate light position on Occluder Map
         QMatrix4x4 view_matrix, proj_matrix;
         occluderMatrix(m_engine->getCurrentWorld()->render_type, view_matrix, proj_matrix);
         glm::vec3 light_position = glm::vec3(static_cast<float>(light->getPosition().x), static_cast<float>(light->getPosition().y), static_cast<float>(light->getZOrder()));
-        light->setScreenPos( mapToFBO( light_position, m_occluder_fbo, view_matrix, proj_matrix) );
+        light_settings->setScreenPos( mapToFBO( light_position, m_occluder_fbo, view_matrix, proj_matrix) );
         double middle = m_texture_fbo->height() / 2.0;
-        double y_diff = middle - light->getScreenPos().y;
+        double y_diff = middle - light_settings->getScreenPos().y;
 
         // Adjust scale for Perspective Mode lights
         double o_scale;
@@ -187,8 +192,8 @@ void DrOpenGL::drawShadowMaps() {
         QOpenGLFramebufferObject::blitFramebuffer(
                     light_fbo, QRect(0, 0, light_fbo->width(), light_fbo->height()),
                     m_occluder_fbo, QRect(
-                        static_cast<int>( floor(light->getScreenPos().x - ((light_fbo->width() / 2.0) * o_scale)) ),
-                        static_cast<int>( floor(light->getScreenPos().y - ((light_fbo->height()/ 2.0) * o_scale) + (y_diff * 2.0)) ),
+                        static_cast<int>( floor(light_settings->getScreenPos().x - ((light_fbo->width() / 2.0) * o_scale)) ),
+                        static_cast<int>( floor(light_settings->getScreenPos().y - ((light_fbo->height()/ 2.0) * o_scale) + (y_diff * 2.0)) ),
                         static_cast<int>( light_fbo->width()  * o_scale ),
                         static_cast<int>( light_fbo->height() * o_scale )),
                     GL_COLOR_BUFFER_BIT, GL_NEAREST);
@@ -204,7 +209,11 @@ void DrOpenGL::drawShadowMaps() {
 //####################################################################################
 //##    Renders the 1D Shadow Map based on the Occluder Map (For Each Light)
 //####################################################################################
-void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
+void DrOpenGL::draw1DShadowMap(DrEngineThing *light) {
+    // Get Light component of DrEngingThing
+    DrThingComponent *component = light->component(Comps::Thing_Settings_Light);        if (component == nullptr) return;
+    ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) return;
+
     // Bind Shadow Shader
     if (!m_shadow_shader.bind()) return;
 
@@ -232,9 +241,9 @@ void DrOpenGL::draw1DShadowMap(DrEngineLight *light) {
     m_shadow_shader.setUniformValue( u_shadow_texture, 0 );
 
     // ***** Give the shader our Ray Count and Scaled Light Radius
-    float screen_scale = width()*devicePixelRatio() / abs(light->light_size);
+    float screen_scale = width()*devicePixelRatio() / abs(light_settings->light_size);
     if (screen_scale > 1.0f) screen_scale = 1.0f;
-    m_shadow_shader.setUniformValue( u_shadow_resolution, light->getLightDiameter(), light->getLightDiameter() * screen_scale);
+    m_shadow_shader.setUniformValue( u_shadow_resolution, light_settings->getLightDiameter(), light_settings->getLightDiameter() * screen_scale);
     m_shadow_shader.setUniformValue( u_shadow_ray_count,  static_cast<float>(m_shadows[light->getKey()]->width()) );
     m_shadow_shader.setUniformValue( u_shadow_depth,      static_cast<float>(light->getZOrder()) );
     m_shadow_shader.setUniformValue( u_shadow_near_plane, c_near_plane );
@@ -278,12 +287,16 @@ void DrOpenGL::drawGlowLights() {
 //##    Renders the light using the Shadow Map
 //##        - Returns true if rendered, false if not
 //####################################################################################
-bool DrOpenGL::draw2DLight(DrEngineLight *light) {
+bool DrOpenGL::draw2DLight(DrEngineThing *light) {
+    // Get Light component of DrEngingThing
+    DrThingComponent *component = light->component(Comps::Thing_Settings_Light);        if (component == nullptr) return false;
+    ThingCompLight   *light_settings = dynamic_cast<ThingCompLight*>(component);        if (light_settings == nullptr) return false;
+
     // Bind Light Shader
     if (!m_light_shader.bind()) return false;
 
     // If drawing Shadows, Bind Shadow Map as a texture
-    if (light->draw_shadows) {
+    if (light_settings->draw_shadows) {
         if (m_shadows[light->getKey()] == nullptr) return false;
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, m_shadows[light->getKey()]->texture());
@@ -299,10 +312,10 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.enableAttributeArray( a_light_texture_coord );
 
     // Load vertices for this object
-    float perspective_scale = (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) ? 1.0 : (light->getPerspectiveScale() + 0.0001f);
+    float perspective_scale = (m_engine->getCurrentWorld()->render_type == Render_Type::Orthographic) ? 1.0 : (light_settings->getPerspectiveScale() + 0.0001f);
 
-    float quad_width =  (light->getLightDiameterFitted()/perspective_scale);
-    float quad_height = (light->getLightDiameterFitted()/perspective_scale);
+    float quad_width =  (light_settings->getLightDiameterFitted()/perspective_scale);
+    float quad_height = (light_settings->getLightDiameterFitted()/perspective_scale);
     std::vector<GLfloat> vertices;
     setQuadVertices(vertices, quad_width, quad_height, DrPointF(light->getPosition().x, light->getPosition().y), static_cast<float>(light->getZOrder()));
     m_light_shader.setAttributeArray(    a_light_vertex, vertices.data(), 3 );
@@ -312,33 +325,32 @@ bool DrOpenGL::draw2DLight(DrEngineLight *light) {
     m_light_shader.setUniformValue( u_light_texture, 0 );
 
     // Give the shader our Ray Count (Shadow Map width)
-    float shadow_width = (light->draw_shadows) ? m_shadows[light->getKey()]->width() : 0.0f;
+    float shadow_width = (light_settings->draw_shadows) ? m_shadows[light->getKey()]->width() : 0.0f;
     m_light_shader.setUniformValue( u_light_ray_count,      static_cast<float>(shadow_width) );
 
     // Give shader the light_size diameter, fitted diameter
-    m_light_shader.setUniformValue( u_light_diameter,       static_cast<float>(light->getLightDiameter()) );
-    m_light_shader.setUniformValue( u_light_fitted,         static_cast<float>(light->getLightDiameterFitted()) );
+    m_light_shader.setUniformValue( u_light_diameter,       static_cast<float>(light_settings->getLightDiameter()) );
+    m_light_shader.setUniformValue( u_light_fitted,         static_cast<float>(light_settings->getLightDiameterFitted()) );
 
     // Give shader the opacity, light color
     m_light_shader.setUniformValue( u_light_alpha,          light->getOpacity() );
-    m_light_shader.setUniformValue( u_light_color,
-                                    static_cast<float>(light->color.redF()),
-                                    static_cast<float>(light->color.greenF()),
-                                    static_cast<float>(light->color.blueF()) );
+    m_light_shader.setUniformValue( u_light_color,          static_cast<float>(light_settings->color.redF()),
+                                                            static_cast<float>(light_settings->color.greenF()),
+                                                            static_cast<float>(light_settings->color.blueF()) );
 
     // Give shader the light cone start and end angles
-    float cone_1 = Dr::DegreesToRadians(static_cast<float>(light->getRotatedCone().x));
-    float cone_2 = Dr::DegreesToRadians(static_cast<float>(light->getRotatedCone().y));
+    float cone_1 = Dr::DegreesToRadians(static_cast<float>(light_settings->getRotatedCone().x));
+    float cone_2 = Dr::DegreesToRadians(static_cast<float>(light_settings->getRotatedCone().y));
     if (cone_1 < 0.0f) cone_1 += (2.0f * 3.141592f);
     if (cone_2 < 0.0f) cone_2 += (2.0f * 3.141592f);
     m_light_shader.setUniformValue( u_light_cone, cone_1, cone_2 );
 
     // Give shader shadow visibility, reduced fade, blur values, whether or not to draw shadows
-    m_light_shader.setUniformValue( u_light_intensity,      light->intensity );
-    m_light_shader.setUniformValue( u_light_shadows,        light->shadows );
-    m_light_shader.setUniformValue( u_light_blur,           light->blur );
-    m_light_shader.setUniformValue( u_light_draw_shadows,   light->draw_shadows );
-    m_light_shader.setUniformValue( u_light_is_glow,        (light->light_type == Light_Type::Glow));
+    m_light_shader.setUniformValue( u_light_intensity,      light_settings->intensity );
+    m_light_shader.setUniformValue( u_light_shadows,        light_settings->shadows );
+    m_light_shader.setUniformValue( u_light_blur,           light_settings->blur );
+    m_light_shader.setUniformValue( u_light_draw_shadows,   light_settings->draw_shadows );
+    m_light_shader.setUniformValue( u_light_is_glow,       (light_settings->light_type == Light_Type::Glow));
 
     // Draw triangles using shader program
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
