@@ -64,6 +64,7 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/ladder.png",                          c_key_image_ladder,                 Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/object.png",                          c_key_image_object,                 Asset_Category::Image);
     AddImage(project, ":/assets/dr_images/spike.png",                           c_key_image_spike,                  Asset_Category::Image);
+    AddImage(project, ":/assets/dr_images/spring.png",                          c_key_image_spring,                 Asset_Category::Image);
 
 
     //##    Built In Images - Basic         300-399

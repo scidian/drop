@@ -58,6 +58,8 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Gravity_Multiplier, Property_Type::Double, 1.0,
                                "Gravity Multiplier", "Use to cancel Gravity (0.0) on Things that collide (climbable ladders), or to reduce "
                                                      "Gravity (0.75 for wall sliding), or to flip it completely (-1.0 for monkey bars).");
+        addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Repulse_Force, Property_Type::Double, 0.0,
+                               "Repulse Force", "Amount of force this Thing should apply to repulse other Things away upon collision.");
     }
 }
 

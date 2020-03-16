@@ -29,6 +29,7 @@ constexpr long c_key_image_ground =                 5;          // 256 x 256    
 constexpr long c_key_image_ladder =                 6;          // 128 x 128    Ladder Piece
 constexpr long c_key_image_object =                 7;          // 128 x 128    Brown Box
 constexpr long c_key_image_spike =                  8;          // 128 x 128    Red Spike Triangle
+constexpr long c_key_image_spring =                 9;          // 128 x 128    Red w/ Gray Spring
 
 
 //####################################################################################
@@ -64,6 +65,7 @@ constexpr long c_key_prefab_ground =                253;        // Ground Prefab
 constexpr long c_key_prefab_ladder =                254;        // Ladder Prefab
 constexpr long c_key_prefab_object =                255;        // Object Prefab
 constexpr long c_key_prefab_spike =                 256;        // Spike Prefab
+constexpr long c_key_prefab_spring =                257;        // Spring Prefab
 
 
 //####################################################################################

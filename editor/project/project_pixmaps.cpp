@@ -69,6 +69,7 @@ QPixmap GetAssetPixmapPrefab(DrPrefabType prefab_type) {
         case DrPrefabType::Ladder:      return QPixmap(":/assets/asset_types/ladder.png");
         case DrPrefabType::Object:      return QPixmap(":/assets/asset_types/object.png");
         case DrPrefabType::Spike:       return QPixmap(":/assets/asset_types/spike.png");
+        case DrPrefabType::Spring:      return QPixmap(":/assets/asset_types/spring.png");
     }
 }
 

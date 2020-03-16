@@ -103,7 +103,11 @@ DrAsset* AddPrefab(DrProject *project, DrPrefabType prefab_type) {
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_spike, "Spike");
             asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Shape)->setValue(static_cast<int>(Collision_Shape::Triangle));
             asset->getComponentProperty(Comps::Asset_Health, Props::Asset_Health_Health)->setValue(100.0);
-        break;
+            break;
+        case DrPrefabType::Spring:
+            asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_spring, "Spring");
+            asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Repulse_Force)->setValue(1000.0);
+            break;
     }
     return asset;
 }

@@ -187,6 +187,8 @@ void DrView::dropEvent(QDropEvent *event) {
                 case DrPrefabType::Spike:
                     thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Damage, static_cast<int>(Collision_Type::Damage_Player));
                     break;
+                case DrPrefabType::Spring:
+                    break;
             }
 
         } else {

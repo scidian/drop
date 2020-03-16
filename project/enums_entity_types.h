@@ -98,6 +98,7 @@ enum class DrPrefabType {
     Ladder,
     Object,
     Spike,
+    Spring,
 };
 
 // ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things

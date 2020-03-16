@@ -462,5 +462,7 @@
         <file>assets/asset_types/ladder.png</file>
         <file>assets/dr_images/ladder.png</file>
         <file>assets/asset_types/character.png</file>
+        <file>assets/asset_types/spring.png</file>
+        <file>assets/dr_images/spring.png</file>
     </qresource>
 </RCC>

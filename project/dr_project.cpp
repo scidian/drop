@@ -86,6 +86,7 @@ void DrProject::addDefaultAssets() {
     if (findPrefabFromType(DrPrefabType::Ladder) == nullptr)    this->addPrefab(DrPrefabType::Ladder,       c_key_prefab_ladder);
     if (findPrefabFromType(DrPrefabType::Object) == nullptr)    this->addPrefab(DrPrefabType::Object,       c_key_prefab_object);
     if (findPrefabFromType(DrPrefabType::Spike) == nullptr)     this->addPrefab(DrPrefabType::Spike,        c_key_prefab_spike);
+    if (findPrefabFromType(DrPrefabType::Spring) == nullptr)    this->addPrefab(DrPrefabType::Spring,       c_key_prefab_spring);
 }
 
 

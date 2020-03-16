@@ -111,6 +111,7 @@ std::string StringFromPrefabType(DrPrefabType type) {
         case DrPrefabType::Ladder:      return "Ladder";
         case DrPrefabType::Object:      return "Object";
         case DrPrefabType::Spike:       return "Spike";
+        case DrPrefabType::Spring:      return "Spring";
     }
 }
 

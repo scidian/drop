@@ -185,11 +185,18 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     // Interactive foliage
     if (object_a->compFoliage() != nullptr) {
         return cpFalse;
-
-    // Normal Collision
-    } else {
-        return cpTrue;
     }
+
+    // Repulse force
+    if (Dr::FuzzyCompare(object_b->getRepulseForce(), 0.0) == false) {
+        double mass =  cpBodyGetMass(object_a->body) * 100.0;
+        double force = object_b->getRepulseForce() * mass;;
+        cpVect v = cpvmult(cpArbiterGetNormal(arb), force);
+        cpBodyApplyImpulseAtWorldPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
+    }
+
+    // Normal collision
+    return cpTrue;
 }
 
 extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
