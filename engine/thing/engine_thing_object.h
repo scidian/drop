@@ -130,6 +130,8 @@ private:
     bool            m_flipped_x                 { false };                  // True when image is flipped (going left) over the x axis
     bool            m_flipped_y                 { false };                  // True when image is flipped (going down) over the y axis
 
+    double          m_reflect_force             { 0.0 };                    // Used by BodyAddRecoil callback to reflect m_repulse_force or m_damage_recoil
+
 public:
     // ***** Image Post Processing Attributes
     Blend_Object    blend_type                  { Blend_Object::Standard }; // Blend mode for current object
@@ -269,8 +271,8 @@ public:
 
     // #################### FUNCTIONS UPDATED BY ENGINE ####################
     // Player Control
-    const bool&     hasKeyControls()            { return m_key_controls; }
-    const bool&     hasLostControl()            { return m_lost_control; }
+    const bool&     hasKeyControls()                { return m_key_controls; }
+    const bool&     hasLostControl()                { return m_lost_control; }
     void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
     void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
 
@@ -289,8 +291,12 @@ public:
 
     bool            isFlippedX()                    { return (m_flipped_x); }
     bool            isFlippedY()                    { return (m_flipped_y); }
-    void            setFlipX(bool flipped)  { m_flipped_x = flipped; }
-    void            setFlipY(bool flipped)  { m_flipped_y = flipped; }
+    void            setFlipX(bool flipped)          { m_flipped_x = flipped; }
+    void            setFlipY(bool flipped)          { m_flipped_y = flipped; }
+
+    // Recoil / Reflection Force
+    const double&   getReflectForce()               { return m_reflect_force; }
+    void            setReflectForce(double force)   { m_reflect_force = force;}
 
     // Object->Body Data - Updated every frame by updateWorld()
     DrVec3          getPreviousPosition()           { return m_previous_position; }

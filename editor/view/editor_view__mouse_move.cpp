@@ -319,7 +319,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         if (m_allow_movement) {
             // Pass on event to allow movement, store starting selection center for snapping calculations
             QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
-            my_scene->setPreMoveSelectionCenter( pre_center );
+            my_scene->setPreMoveSelectionCenter(pre_center);
             my_scene->setHasCalculatedAdjustment(false);
             QGraphicsView::mouseMoveEvent(event);
 

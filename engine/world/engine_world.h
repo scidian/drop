@@ -37,7 +37,7 @@ struct Cam_Info {                                           // Character Camera 
 
 // Global Forward Declarations for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
-extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
+extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *);                               // defined in engine_world_collision.cpp
 extern void     PostSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                   // defined in engine_world_collision.cpp
 extern void     SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                    // defined in engine_world_collision.cpp
 

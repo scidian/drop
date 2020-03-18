@@ -25,7 +25,7 @@
 //                      balanced pairs, it will also be called when removing a shape while its in contact with something or when deallocating the space.
 
 // Internal Linkage (File Scope) Forward Declarations
-static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object);
+static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineObject *object);
 
 
 //####################################################################################
@@ -93,7 +93,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), force);
                    v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
                    v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
-            cpBodyApplyImpulseAtWorldPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
+            cpBodyApplyImpulseAtWorldPoint(object_a->body, v, cpArbiterGetPointA(arb, 0));
         }
         ///return cpArbiterIgnore(arb);
     }
@@ -127,7 +127,7 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 }
 
 
-extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
+extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
@@ -173,12 +173,10 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         // If we killed object and object wants instant death, cancel collision
         if (killed && object_b->getDeathDelay() == 0) return cpFalse;
 
-        // Add recoil to object if necessary and not invincible
-        if (!object_b->isInvincible() && object_b->getDamageRecoil() > 0.0 && object_b->body_type == Body_Type::Dynamic) {
-            if (cpBodyIsSleeping(object_b->body))
-                cpSpaceAddPostStepCallback(cpBodyGetSpace(object_b->body), cpPostStepFunc(BodyAddRecoil), arb, object_b);
-            else
-                BodyAddRecoil(cpBodyGetSpace(object_b->body), arb, object_b);
+        // Recoil force - if has and not invincible
+        if ((Dr::FuzzyCompare(object_b->getDamageRecoil(), 0.0) == false) && (object_b->isInvincible() == false)) {
+            object_b->setReflectForce(object_b->getDamageRecoil());
+            BodyAddRecoil(space, arb, object_b);
         }
     }
 
@@ -188,16 +186,15 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     }
 
     // Repulse force
-    if (Dr::FuzzyCompare(object_b->getRepulseForce(), 0.0) == false) {
-        double mass =  cpBodyGetMass(object_a->body) * 100.0;
-        double force = object_b->getRepulseForce() * mass;;
-        cpVect v = cpvmult(cpArbiterGetNormal(arb), force);
-        cpBodyApplyImpulseAtWorldPoint( object_a->body, v, cpArbiterGetPointA(arb, 0) );
+    if (Dr::FuzzyCompare(object_a->getRepulseForce(), 0.0) == false) {
+        object_b->setReflectForce(object_a->getRepulseForce());
+        BodyAddRecoil(space, arb, object_b);
     }
 
     // Normal collision
     return cpTrue;
 }
+
 
 extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
     CP_ARBITER_GET_SHAPES(arb, a, b)
@@ -236,24 +233,30 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 //####################################################################################
 //##    Applies Recoil Force after being damaged another object
 //####################################################################################
-static void BodyAddRecoil(cpSpace *, cpArbiter *arb, DrEngineObject *object) {
+static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineObject *object) {
     if (object->getPhysicsParent() != nullptr) object = object->getPhysicsParent();
+    if (object->body_type != Body_Type::Dynamic) return;
+    if (cpBodyIsSleeping(object->body)) {
+        cpSpaceAddPostStepCallback(space, cpPostStepFunc(BodyAddRecoil), arb, object);
+        return;
+    }
 
     // METHOD: Apply damage_recoil opposite velocity
     cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
     cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body
-    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0)         // If object isnt moving, give it the velocity towards the collision
+    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0) {       // If object isnt moving, give it the velocity towards the collision
         velocity = cpvneg(cpArbiterGetNormal(arb));
+    }
     double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
     if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
-        DrPointF v = DrPointF(velocity.x, velocity.y);          // Convert to DrPointF for better vector math operators than cpVect
+        DrPointF v { velocity.x, velocity.y };                  // Convert to DrPointF for better vector math operators than cpVect
         v = v - (DrPointF(n.x, n.y) * 2.0 * dot);               // Reflect velocity normal across the plane of the collision normal
         velocity = cpv(v.x, v.y);                               // Convert back to cpVect
     }
     velocity = cpvnormalize(velocity);                          // Normalize body velocity
-    velocity.x *= object->getDamageRecoil();                    // Apply recoil force x to new direction vector
-    velocity.y *= object->getDamageRecoil();                    // Apply recoil force y to new direction vector
-    cpBodySetVelocity( object->body, velocity );                // Set body to new velocity
+    velocity.x *= object->getReflectForce();                    // Apply reflect force x to new direction vector
+    velocity.y *= object->getReflectForce();                    // Apply reflect force y to new direction vector
+    cpBodySetVelocity(object->body, velocity);                  // Set body to new velocity
 }
 
 

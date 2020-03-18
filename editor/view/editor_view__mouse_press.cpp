@@ -173,6 +173,15 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                             m_view_mode = View_Mode::Translating;
                             m_origin_item_start_pos = m_origin_item->pos();
 
+                            // Pass on event to allow movement, store starting selection center for snapping calculations
+                            if (m_allow_movement) {
+                                QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
+                                my_scene->setPreMoveSelectionCenter(pre_center);
+                                my_scene->setHasCalculatedAdjustment(false);
+                                QGraphicsView::mousePressEvent(event);
+                            }
+
+                            // Force itemChange signals on items
                             for (auto item : my_scene->getSelectionItems()) {
                                 item->moveBy(0, 0);
                             }
