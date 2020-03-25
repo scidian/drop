@@ -250,6 +250,7 @@ namespace Props {
     const std::string Asset_Collision_Shape                 = "AsCoShape";                  // list, enum class Collision_Shape (Image_Shape, Circle, Square, Triangle)
     const std::string Asset_Collision_One_Way_Type          = "AsCoOneWayType";             // list, enum class One_Way (None, Pass_Through, Weak_Spot)
     const std::string Asset_Collision_One_Way_Direction     = "AsCoOneWayDirection";        // point
+    const std::string Asset_Collision_Drop_Down             = "AsCoDropDown";               // bool
     const std::string Asset_Collision_Gravity_Multiplier    = "AsCoGravityMultiplier";      // double
     const std::string Asset_Collision_Repulse_Force         = "AsCoRepulseForce";           // double
     const std::string Asset_Collision_Image_Shape           = "AsCoImageShape";             // DrPropertyCollision (polygons)

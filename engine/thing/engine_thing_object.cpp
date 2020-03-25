@@ -223,6 +223,15 @@ void DrEngineObject::decreaseCollisionCountWithObject(DrEngineObject *object) {
     }
 }
 
+// Returns a list of all Physics objects (DrEngineObjects) in DrEngineWorld that this object is currently colliding with (including sensor shapes)
+std::vector<long> DrEngineObject::listOfCollidingObjectKeys() {
+    std::vector<long> colliding_keys { };
+    for (auto it = this->m_colliding_bodies.begin(); it != this->m_colliding_bodies.end(); ++it) {
+        colliding_keys.push_back(it->first);
+    }
+    return colliding_keys;
+}
+
 
 //####################################################################################
 //##    Collision Type of Object

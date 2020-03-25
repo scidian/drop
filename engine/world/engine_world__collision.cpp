@@ -104,15 +104,10 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if (object_a->compPlayer() != nullptr) {
         // Ledge Grabbing
         if (Dr::VectorContains(object_a->compPlayer()->getLedgeGrabbers(), a)) {
-            cpVect n = cpvneg( cpArbiterGetNormal(arb) );                                       // Get normal vector of collision
-            double dot = cpvdot( n, g_gravity_normal );                                         // Compare angle of gravity to angle of normal
+            cpVect n = cpvneg(cpArbiterGetNormal(arb));                                         // Get normal vector of collision
+            double dot = cpvdot(n, g_gravity_normal);                                           // Compare angle of gravity to angle of normal
             if (dot > -0.50) return cpArbiterIgnore(arb);                                       // Cancel collision if not in direction of gravity
         }
-
-        // Temp cancel gravity on another object if colliding and should cancel it
-//        if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
-//            object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
-//        }
     }
 
     // Check for one way platform
@@ -153,10 +148,22 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
 
     // Some special Player collsion processing
     if (object_a->compPlayer() != nullptr) {
-        // Temp cancel gravity on another object if colliding and should cancel it
-        if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
-            object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
+        // Compare angle of button speed to angle of gravity normal
+        cpVect but_cpv = cpv(object_a->compPlayer()->getButtonSpeedX(), object_a->compPlayer()->getButtonSpeedY());
+        double but_dot = cpvdot(but_cpv, g_gravity_normal);
+
+        // Allow for Drop Down
+        if (object_b->getDropDown() && but_dot > 0.0) {
+            cpArbiterIgnore(arb);
+            return cpFalse;
         }
+
+        // Temp gravity multiplier if colliding with an object or sensor that should change its gravity
+        if (Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false) {
+            // Apply temp gravity multiplier if button pressed away from gravity
+            if (but_dot < 0.0 || but_dot > 0.0) object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
+        }
+
     }
 
     if (!object_a->doesDamage()) return cpTrue;                                                 // Object does no damage, exit

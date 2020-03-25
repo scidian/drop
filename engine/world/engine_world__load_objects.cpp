@@ -289,6 +289,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     // ***** Additional Collision Settings
     int         one_way_type =  asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Type).toInt();
     double      one_way_angle = asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Direction).toDouble();
+    bool        drop_down =     asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Drop_Down).toBool();
     double      gravity_multi = asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Gravity_Multiplier).toDouble();
     double      repulse_force = asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Repulse_Force).toDouble();
     DrPointF    surface_vel =   asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Surface_Velocity).toPointF();
@@ -298,7 +299,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
              one_way_point.y *= info.scale.y;
     block->setOneWay(static_cast<One_Way>(one_way_type));
     block->setOneWayDirection(one_way_point);
-
+    block->setDropDown(drop_down);
     block->setGravityMultiplier(gravity_multi);
     block->setRepulseForce(repulse_force);
     block->setSurfaceVelocity(cpv(surface_vel.x, surface_vel.y));

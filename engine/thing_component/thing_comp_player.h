@@ -61,6 +61,9 @@ private:
     double      m_remaining_ground_time         { 0.0 };        // Used by Engine Update to allow some time for a ground jump to occur (helps with bumpiness)
     double      m_remaining_wall_time           { 0.0 };        // Used by Engine Update to allow some time for a wall jump to occur
 
+    double      m_button_speed_x                { 0.0 };        // Tracks button status during PlayerUpdateVelocity
+    double      m_button_speed_y                { 0.0 };        // Tracks button status during PlayerUpdateVelocity
+
     bool        m_grounded                      { false };      // Used by Engine Update to keep track of if this object is on the ground
     bool        m_on_wall                       { false };      // Used by Engine Update to keep track of if this object is on a wall
     double      m_temp_gravity_multiplier       { 1.0 };        // Set multipler (0.0, 0.5, etc) when colliding with a gravity multiplying object (ladder, wall, etc)
@@ -130,16 +133,21 @@ public:
     const double&   getRemainingBoost()             { return m_remaining_boost; }
     const double&   getRemainingGroundTime()        { return m_remaining_ground_time; }
     const double&   getRemainingWallTime()          { return m_remaining_wall_time; }
+    const double&   getButtonSpeedX()               { return m_button_speed_x; }
+    const double&   getButtonSpeedY()               { return m_button_speed_y; }
     const bool&     isOnGround()                    { return m_grounded; }
     const bool&     isOnWall()                      { return m_on_wall; }
     const double&   getTempGravityMultiplier()      { return m_temp_gravity_multiplier; }
     const cpVect&   getLastTouchedGroundNormal()    { return m_last_touched_ground_normal; }
     const double&   getLastTouchedGroundDot()       { return m_last_touched_ground_dot; }
     Jump_State      getJumpState()                  { return m_jump_state; }
+
     void            setRemainingJumps(int new_remaining_jumps) { m_remaining_jumps = new_remaining_jumps; }
     void            setRemainingBoost(double boost_time) { m_remaining_boost = boost_time; }
     void            setRemainingGroundTime(double ground_time) { m_remaining_ground_time = ground_time; }
     void            setRemainingWallTime(double wall_time) { m_remaining_wall_time = wall_time; }
+    void            setButtonSpeedX(double new_button_speed_x) { m_button_speed_y = new_button_speed_x; }
+    void            setButtonSpeedY(double new_button_speed_y) { m_button_speed_y = new_button_speed_y; }
     void            setOnGround(bool on_ground) { m_grounded = on_ground; }
     void            setOnWall(bool on_wall) { m_on_wall = on_wall; }
     void            setTempGravityMultiplier(double gravity_multiplier) { m_temp_gravity_multiplier = gravity_multiplier; }

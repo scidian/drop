@@ -50,7 +50,7 @@ static void SelectPlayerGroundNormal(cpBody *body, cpArbiter *arb, Ground_Data *
     cpVect n = cpvneg( cpArbiterGetNormal(arb) );
 
     // Compare angle of gravity to angle of normal
-    double dot = cpvdot( n, g_gravity_normal );
+    double dot = cpvdot(n, g_gravity_normal);
 
     // Store the lowest dot product we find, 1 == gravity, -1 == opposite direction of gravity, 0 == perpendicular to gravity
     if (dot < (*ground).dot_product) {
@@ -150,6 +150,16 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     ground.dot_product = 2.0;                                                               // 2.0 is an impossible test number, dot products will always be between -1.0 to 1.0
     cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
 
+    // Found no ground but in collision with something (likely sensor shape like ladder, etc)
+    bool jump_from_sensor = false;
+    if (Dr::FuzzyCompare(ground.dot_product, 2.0)) {
+        if (object->listOfCollidingObjectKeys().size() != 0) {
+            jump_from_sensor = true;
+            ground.dot_product = -1.0;
+            //object->compPlayer()->setTempGravityMultiplier( 1.0 );
+        }
+    }
+
     // Ground Check for physics children of soft bodies
     if (object->compSoftBody() != nullptr) {
         for (size_t i = 0; i < object->compSoftBody()->soft_balls.size(); ++i) {
@@ -222,6 +232,9 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             } else {
                 jump_vx = comp_player->getJumpForceX() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceX() * -gravity.x);
                 jump_vy = comp_player->getJumpForceY() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceY() * -gravity.y);
+
+                // Cancel current lack of gravity to preform jump
+                if (jump_from_sensor) object->compPlayer()->setTempGravityMultiplier( 1.0 );
             }
 
             // Starting a new jump so partially cancel any previous jump forces
@@ -296,6 +309,10 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     bool has_key_y = (Dr::FuzzyCompare(button_speed_y, 0.0)) ? false : true;
     double move_speed_x = forced_speed_x + button_speed_x;
     double move_speed_y = forced_speed_y + button_speed_y;
+
+    // Store button direciton for use durin gother functions
+    comp_player->setButtonSpeedX(button_speed_x);
+    comp_player->setButtonSpeedY(button_speed_y);
 
 
     // ********** Drag / Acceleration

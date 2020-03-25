@@ -80,6 +80,7 @@ private:
     // Object Properties - One Way / Collision
     One_Way             m_one_way = One_Way::None;                          // Set one way collision type desired (None, Pass Through, Weak_Spot)
     cpVect              m_one_way_direction     { 0, 1 };                   // Direction for one way collision, defaults to Up (objects can pass upwards through the bottom of a block)
+    bool                m_drop_down             { false };                  // When true key movement with gravity will cancel collision on this object
     double              m_gravity_multiplier    { 1.0 };                    // Use to cancel gravity (0.0) on objects that collide (climbable ladders), or to reduce gravity (sticky wall)
     double              m_repulse_force         { 0.0 };                    // Repulsion force, used for springs
     cpVect              m_surface_velocity      { 0, 0 };                   // Provides surface movement on contact, useful for conveyor belts, etc.
@@ -169,6 +170,7 @@ public:
     long                checkCollisionCountWithObject(DrEngineObject *object);
     void                increaseCollisionCountWithObject(DrEngineObject *object);
     void                decreaseCollisionCountWithObject(DrEngineObject *object);
+    std::vector<long>   listOfCollidingObjectKeys();
 
 
     // Object Basic Settings
@@ -209,6 +211,7 @@ public:
     // Object Properties - One Way / Collision
     One_Way         getOneWay()                 { return m_one_way; }
     cpVect          getOneWayDirection()        { return m_one_way_direction; }
+    const bool&     getDropDown()               { return m_drop_down; }
     const double&   getGravityMultiplier()      { return m_gravity_multiplier; }
     double          getRepulseForce()           { return m_repulse_force; }
     cpVect          getSurfaceVelocity()        { return m_surface_velocity; }
@@ -216,6 +219,7 @@ public:
     void            setOneWay(One_Way one_way_type) { m_one_way = one_way_type; }
     void            setOneWayDirection(cpVect direction) { m_one_way_direction = direction; }
     void            setOneWayDirection(DrPointF direction) { m_one_way_direction = cpv(direction.x, direction.y); }
+    void            setDropDown(bool drop_down) { m_drop_down = drop_down; }
     void            setGravityMultiplier(double gravity_multiplier) { m_gravity_multiplier = gravity_multiplier; }
     void            setRepulseForce(double force) { m_repulse_force = force; }
     void            setSurfaceVelocity(cpVect surface_vel);
