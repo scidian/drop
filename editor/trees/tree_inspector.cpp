@@ -243,8 +243,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         if (new_settings_to_show->getType() == DrType::Thing) {
             DrThing *thing = dynamic_cast<DrThing*>(new_settings_to_show);
             m_editor_relay->getAssetTree()->setSelectedKey(thing->getAssetKey());
-        } else {
-            m_editor_relay->getAssetTree()->setSelectedKey(c_no_key);
+        } else if (new_settings_to_show->getType() != DrType::Asset) {
+            m_editor_relay->getAssetTree()->setSelectedKey(new_settings_to_show->getKey());
         }
     }
 
