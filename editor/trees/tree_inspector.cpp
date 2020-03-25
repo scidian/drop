@@ -106,6 +106,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         m_selected_keys.clear();
         m_selected_keys.push_back(c_no_key);
         m_selected_type = DrType::NotFound;
+        m_editor_relay->getAssetTree()->setSelectedKey(c_no_key);
         this->clear();
         m_widgets.clear();
         if (c_update_reason) qDebug() << "Inspector::buildInspectorFromKeys() exiting early... Inspector cleared...";
@@ -234,6 +235,16 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             }
         } else if (m_selected_type == new_type) {
             same_type = true;
+        }
+    }
+
+    // ***** Highlight DrAsset of selected Thing in AssetTree when a Thing is selected in the StageView or ProjectTree
+    if (new_settings_to_show != nullptr) {
+        if (new_settings_to_show->getType() == DrType::Thing) {
+            DrThing *thing = dynamic_cast<DrThing*>(new_settings_to_show);
+            m_editor_relay->getAssetTree()->setSelectedKey(thing->getAssetKey());
+        } else {
+            m_editor_relay->getAssetTree()->setSelectedKey(c_no_key);
         }
     }
 

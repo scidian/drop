@@ -194,6 +194,37 @@ void DrEngineObject::setAngle(double new_angle) {
 
 
 //####################################################################################
+//##    Collision Tracking with other DrEngineObjects
+//####################################################################################
+long DrEngineObject::checkCollisionCountWithObject(DrEngineObject *object) {
+    if (Dr::MapHasKey(this->m_colliding_bodies, object->getKey()) == false) {
+        return 0;
+    } else {
+        return this->m_colliding_bodies[object->getKey()];
+    }
+}
+
+void DrEngineObject::increaseCollisionCountWithObject(DrEngineObject *object) {
+    if (Dr::MapHasKey(this->m_colliding_bodies, object->getKey()) == false) {
+        this->m_colliding_bodies[object->getKey()] = 1;
+    } else {
+        this->m_colliding_bodies[object->getKey()]++;
+    }
+}
+
+void DrEngineObject::decreaseCollisionCountWithObject(DrEngineObject *object) {
+    if (Dr::MapHasKey(this->m_colliding_bodies, object->getKey()) == false) {
+        return;
+    } else {
+        this->m_colliding_bodies[object->getKey()]--;
+        if (this->m_colliding_bodies[object->getKey()] == 0) {
+            this->m_colliding_bodies.erase(object->getKey());
+        }
+    }
+}
+
+
+//####################################################################################
 //##    Collision Type of Object
 //####################################################################################
 void DrEngineObject::setCollisionType(Collision_Type what_should_collide) {

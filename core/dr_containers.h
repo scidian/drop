@@ -37,6 +37,15 @@ namespace Dr {
 
 
     //####################################################################################
+    //##    Map Functions
+    //############################
+    template<class T, class T2> bool MapHasKey(const std::map<T, T2> &my_map, T key_to_find) {
+        auto it = my_map.find(key_to_find);
+        return (it != my_map.end());
+    }
+
+
+    //####################################################################################
     //##    Set Functions
     //############################
     template<class T> bool SetContains(const std::set<T> &my_set, T variable_to_check) {

@@ -90,7 +90,7 @@ void TreeAssets::focusInEvent(QFocusEvent *) {
 
 // Removes selected key on focus loss
 void TreeAssets::focusOutEvent(QFocusEvent *) {
-    m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { } );
+    m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { });
 }
 
 // SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay

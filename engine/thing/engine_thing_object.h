@@ -49,6 +49,9 @@ public:
     double                  animation_speed             { 15 };             // Frames per second
     double                  animation_idle_last_change  { 0 };              // Milliseconds since last change frame
 
+private:
+    // Collision
+    std::map<long, long>    m_colliding_bodies;                             // First long is object key, second long is number of shapes from that object we're touching
 
 private:
     // ***** Object Component Properties
@@ -160,6 +163,12 @@ public:
     // Thing Basic Properties Overrides
     virtual double      getAngle() const override;
     virtual void        setAngle(double new_angle) override;
+
+
+    // Collision Tracking
+    long                checkCollisionCountWithObject(DrEngineObject *object);
+    void                increaseCollisionCountWithObject(DrEngineObject *object);
+    void                decreaseCollisionCountWithObject(DrEngineObject *object);
 
 
     // Object Basic Settings

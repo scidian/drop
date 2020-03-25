@@ -262,7 +262,9 @@ void DrView::dropEvent(QDropEvent *event) {
     // ***** Update Editor Widgets
     m_editor_relay->buildProjectTree();
 
-    // ***** Selects the newly dropped Asset if created, otherwise Thing if created. Loads to Object Inspector
+    // ***** Selects the newly dropped Asset if created, also loads selection to Object Inspector
+    ///if (asset == nullptr && thing != nullptr) { asset = m_project->findAssetFromKey(thing->getAssetKey()); }
+    /**
     if (asset != nullptr) {
         m_editor_relay->buildInspector( { asset->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
@@ -272,13 +274,16 @@ void DrView::dropEvent(QDropEvent *event) {
         }
         m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
         m_editor_relay->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+    } else **/
 
-    } else if (thing != nullptr) {
+    // ***** Selects the newly dropped Thing if created, also loads selection to Object Inspector
+    if (thing != nullptr) {
         this->setFocus();
         m_editor_relay->buildInspector( { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
     }
+
 }
 
 

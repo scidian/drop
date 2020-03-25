@@ -5,6 +5,8 @@
 //
 //
 //
+#include "core/dr_containers.h"
+#include "core/dr_random.h"
 #include "core/dr_time.h"
 #include "engine/engine.h"
 #include "engine/thing/engine_thing_object.h"
@@ -108,9 +110,9 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
         }
 
         // Temp cancel gravity on another object if colliding and should cancel it
-        if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
-            object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
-        }
+//        if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
+//            object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
+//        }
     }
 
     // Check for one way platform
@@ -123,6 +125,16 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
             return cpArbiterIgnore(arb);
     }
 
+    // Keeps track number of shape collisions between objects
+    if (cpArbiterIsFirstContact(arb)) {
+        object_a->increaseCollisionCountWithObject(object_b);
+    }
+
+    // !!!!! #TEMP: Player collision tracking
+    if (object_a->compPlayer() != nullptr) {
+        g_info = "Touching Shapes: " + std::to_string(object_a->checkCollisionCountWithObject(object_b));
+    }
+
     return cpTrue;
 }
 
@@ -133,18 +145,22 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
     bool a_was_physics_child = object_a->isPhysicsChild();
-    bool b_was_physics_child = object_b->isPhysicsChild();
+    bool b_was_physics_child = object_b->isPhysicsChild();    
     if (a_was_physics_child) { object_a = object_a->getPhysicsParent(); }
     if (b_was_physics_child) { object_b = object_b->getPhysicsParent(); }
 
     if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
     if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
     if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
-    if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {           // Temp cancel / reduce / increase gravity on another
-        if (object_a->compPlayer() != nullptr) {                                        //      object if colliding and should cancel / adjust it
+
+    // Some special Player collsion processing
+    if (object_a->compPlayer() != nullptr) {
+        // Temp cancel gravity on another object if colliding and should cancel it
+        if ( Dr::FuzzyCompare(object_b->getGravityMultiplier(), 1.0) == false ) {
             object_a->compPlayer()->setTempGravityMultiplier( object_b->getGravityMultiplier() );
         }
     }
+
     if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
 
     // Check for dealing damage
@@ -201,6 +217,8 @@ extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return;
+    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
+    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
 
     // We can react to collision force here, such as show an explosion based on impact force
     if (cpArbiterIsFirstContact(arb)) {
@@ -222,10 +240,17 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
     if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
 
+    // Keeps track number of shape collisions between objects
+    object_a->decreaseCollisionCountWithObject(object_b);
 
     // Stop canceling gravity when seperates
     if (object_a->compPlayer() != nullptr) {
         object_a->compPlayer()->setTempGravityMultiplier( 1.0 );
+    }
+
+    // !!!!! #TEMP: Player collision tracking
+    if (object_a->compPlayer() != nullptr) {
+        g_info = "Touching Shapes: " + std::to_string(object_a->checkCollisionCountWithObject(object_b));
     }
 }
 
