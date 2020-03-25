@@ -107,10 +107,11 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Highlights selected Asset Item
     } else if (event->type() == QEvent::Paint) {
-        if (asset_key == asset_tree->getSelectedKey()) { /// && (m_editor_relay->getActiveWidget() == Editor_Widgets::Asset_Tree)) {
+        if (asset_key == asset_tree->getSelectedKey()) {
             QPainter painter(asset_frame);
             painter.setRenderHint(QPainter::Antialiasing, true);
-            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark)), 2) );
+            int border_size = (m_editor_relay->getActiveWidget() == Editor_Widgets::Asset_Tree) ? 2 : 1;
+            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark)), border_size) );
             painter.setBrush(Qt::NoBrush);
             QRect box = asset_frame->rect();
             box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );

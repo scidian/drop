@@ -80,33 +80,33 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
-    bool a_was_physics_child = object_a->isPhysicsChild();
-    bool b_was_physics_child = object_b->isPhysicsChild();
-    if (a_was_physics_child) { object_a = object_a->getPhysicsParent(); }
-    if (b_was_physics_child) { object_b = object_b->getPhysicsParent(); }
+    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
+    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
     if (object_a->shouldCollide(object_b) == false) return cpArbiterIgnore(arb);
     if (object_b->shouldCollide(object_a) == false) return cpArbiterIgnore(arb);
 
     // Interactive foliage
     if (object_a->compFoliage() != nullptr) {
-        if (object_b->body_type != Body_Type::Static && b_was_physics_child == false) {
-            double mass =  cpBodyGetMass(object_a->body) * 2.0;
-            double force = mass * object_a->compFoliage()->getSpringiness();
-            cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), force);
-                   v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
-                   v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
-            cpBodyApplyImpulseAtWorldPoint(object_a->body, v, cpArbiterGetPointA(arb, 0));
+        if (object_a->checkCollisionCountWithObject(object_b) == 0) {                           // Only react to an objects first shape that collides
+            if (object_b->body_type != Body_Type::Static) {
+                double mass =  cpBodyGetMass(object_a->body) * 2.0;
+                double force = mass * object_a->compFoliage()->getSpringiness();
+                cpVect v = cpvmult(cpBodyGetVelocity(object_b->body), force);
+                       v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
+                       v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
+                cpBodyApplyImpulseAtWorldPoint(object_a->body, v, cpArbiterGetPointA(arb, 0));
+            }
+            ///return cpArbiterIgnore(arb);
         }
-        ///return cpArbiterIgnore(arb);
     }
 
     // Some special Player collsion processing
     if (object_a->compPlayer() != nullptr) {
         // Ledge Grabbing
         if (Dr::VectorContains(object_a->compPlayer()->getLedgeGrabbers(), a)) {
-            cpVect n = cpvneg( cpArbiterGetNormal(arb) );           // Get normal vector of collision
-            double dot = cpvdot( n, g_gravity_normal );             // Compare angle of gravity to angle of normal
-            if (dot > -0.50) return cpArbiterIgnore(arb);           // Cancel collision if not in direction of gravity
+            cpVect n = cpvneg( cpArbiterGetNormal(arb) );                                       // Get normal vector of collision
+            double dot = cpvdot( n, g_gravity_normal );                                         // Compare angle of gravity to angle of normal
+            if (dot > -0.50) return cpArbiterIgnore(arb);                                       // Cancel collision if not in direction of gravity
         }
 
         // Temp cancel gravity on another object if colliding and should cancel it
@@ -116,11 +116,11 @@ extern cpBool BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     }
 
     // Check for one way platform
-    if (object_a->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something trying to pass through you
+    if (object_a->getOneWay() == One_Way::Pass_Through) {                                       // Don't collide with something trying to pass through you
         if (cpvdot(cpArbiterGetNormal(arb), object_a->getOneWayDirection()) <= 0.0)
             return cpArbiterIgnore(arb);
     }
-    if (object_b->getOneWay() == One_Way::Pass_Through) {                               // Don't collide with something you want to pass through
+    if (object_b->getOneWay() == One_Way::Pass_Through) {                                       // Don't collide with something you want to pass through
         if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) >= 0.0)
             return cpArbiterIgnore(arb);
     }
@@ -144,14 +144,12 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
     DrEngineObject *object_a = static_cast<DrEngineObject*>(cpShapeGetUserData(a));
     DrEngineObject *object_b = static_cast<DrEngineObject*>(cpShapeGetUserData(b));
     if (object_a == nullptr || object_b == nullptr) return cpTrue;
-    bool a_was_physics_child = object_a->isPhysicsChild();
-    bool b_was_physics_child = object_b->isPhysicsChild();    
-    if (a_was_physics_child) { object_a = object_a->getPhysicsParent(); }
-    if (b_was_physics_child) { object_b = object_b->getPhysicsParent(); }
+    if (object_a->isPhysicsChild()) object_a = object_a->getPhysicsParent();
+    if (object_b->isPhysicsChild()) object_b = object_b->getPhysicsParent();
 
-    if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                     // Don't deal damage while dying
-    if (!object_a->isAlive()) return cpFalse;                                           // If object a is dead, cancel collision
-    if (!object_b->isAlive()) return cpFalse;                                           // If object b is dead, cancel collision
+    if ( object_a->isAlive() && object_a->isDying()) return cpTrue;                             // Don't deal damage while dying
+    if (!object_a->isAlive()) return cpFalse;                                                   // If object a is dead, cancel collision
+    if (!object_b->isAlive()) return cpFalse;                                                   // If object b is dead, cancel collision
 
     // Some special Player collsion processing
     if (object_a->compPlayer() != nullptr) {
@@ -161,18 +159,18 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
         }
     }
 
-    if (!object_a->doesDamage()) return cpTrue;                                         // Object does no damage, exit
+    if (!object_a->doesDamage()) return cpTrue;                                                 // Object does no damage, exit
 
     // Check for dealing damage
     bool should_damage = object_a->shouldDamage(object_b->getCollisionType());
 
     // Check for one way weak point
-    if (object_a->getOneWay() == One_Way::Weak_Spot) {                                  // Don't deal damage if something comes at your weak (vulnerable) spot
+    if (object_a->getOneWay() == One_Way::Weak_Spot) {                                          // Don't deal damage if something comes at your weak (vulnerable) spot
         if (cpvdot(cpArbiterGetNormal(arb), object_a->getOneWayDirection()) < 0.0)
             should_damage = false;
     }
-    if (object_b->getOneWay() == One_Way::Weak_Spot) {                                  // Don't deal damage unless you are hitting its weak spot
-        if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) < 0.001)    // i.e. floating point for <= 0
+    if (object_b->getOneWay() == One_Way::Weak_Spot) {                                          // Don't deal damage unless you are hitting its weak spot
+        if (cpvdot(cpArbiterGetNormal(arb), object_b->getOneWayDirection()) < 0.001)            // i.e. floating point for <= 0
             should_damage = false;
     }
 
@@ -255,6 +253,8 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
 }
 
 
+
+
 //####################################################################################
 //##    Applies Recoil Force after being damaged another object
 //####################################################################################
@@ -267,24 +267,22 @@ static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineObject *object
     }
 
     // METHOD: Apply damage_recoil opposite velocity
-    cpVect n = cpArbiterGetNormal(arb);                         // Get Normal of contact point
-    cpVect velocity = cpBodyGetVelocity(object->body);          // Get current velocity of body
-    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0) {       // If object isnt moving, give it the velocity towards the collision
+    cpVect n = cpArbiterGetNormal(arb);                                 // Get Normal of contact point
+    cpVect velocity = cpBodyGetVelocity(object->body);                  // Get current velocity of body
+    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0) {               // If object isnt moving, give it the velocity towards the collision
         velocity = cpvneg(cpArbiterGetNormal(arb));
     }
-    double dot = cpvdot(velocity, n);                           // Calculate dot product (difference of angle from collision normal)
-    if (dot < 0.0) {                                            // If objects velocity if goings towards collision point, reflect it
-        DrPointF v { velocity.x, velocity.y };                  // Convert to DrPointF for better vector math operators than cpVect
-        v = v - (DrPointF(n.x, n.y) * 2.0 * dot);               // Reflect velocity normal across the plane of the collision normal
-        velocity = cpv(v.x, v.y);                               // Convert back to cpVect
+    double dot = cpvdot(velocity, n);                                   // Calculate dot product (difference of angle from collision normal)
+    if (dot < 0.0) {                                                    // If objects velocity if goings towards collision point, reflect it
+        DrPointF v { velocity.x, velocity.y };                          // Convert to DrPointF for better vector math operators than cpVect
+        v = v - (DrPointF(n.x, n.y) * 2.0 * dot);                       // Reflect velocity normal across the plane of the collision normal
+        velocity = cpv(v.x, v.y);                                       // Convert back to cpVect
     }
-    velocity = cpvnormalize(velocity);                          // Normalize body velocity
-    velocity.x *= object->getReflectForce();                    // Apply reflect force x to new direction vector
-    velocity.y *= object->getReflectForce();                    // Apply reflect force y to new direction vector
-    cpBodySetVelocity(object->body, velocity);                  // Set body to new velocity
+    velocity = cpvnormalize(velocity);                                  // Normalize body velocity
+    velocity.x *= object->getReflectForce();                            // Apply reflect force x to new direction vector
+    velocity.y *= object->getReflectForce();                            // Apply reflect force y to new direction vector
+    cpBodySetVelocity(object->body, velocity);                          // Set body to new velocity
 }
-
-
 
 
 

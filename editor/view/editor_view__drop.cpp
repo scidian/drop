@@ -127,6 +127,14 @@ void DrView::dropEvent(QDropEvent *event) {
                 case DrAssetType::Object:    thing = stage->addThing(DrThingType::Object,    entity_key, position.x(), -position.y(),   0); break;
             }
 
+            // Assets with a Dynamic type body style should drop as Dynamic by default
+            if (asset->getAssetType() == DrAssetType::Object) {
+                int body_style = asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style).toInt();
+                if (static_cast<Body_Style>(body_style) != Body_Style::Rigid_Body) {
+                    thing->setComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Physics_Type, static_cast<int>(Body_Type::Dynamic));
+                }
+            }
+
         } else if (entity->getType() == DrType::Device) {
             DrDevice *device = m_project->findDeviceFromKey( entity_key );
             switch (device->getDeviceType()) {
