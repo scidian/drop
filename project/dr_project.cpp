@@ -229,7 +229,7 @@ DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Cat
     // Check if copy of this Bitmap already exists in DrImage map, if so return that DrImage
     for (auto &image_pair : getImageMap()) {
         DrImage *dr_image = image_pair.second;
-        if (dr_image->getSimplifiedName() == image_name) {
+        if (dr_image->getSimplifiedName() == image_name && dr_image->getKey() >= c_key_starting_number) {
             if (Dr::CompareBitmaps(bitmap, dr_image->getBitmap())) {
                 if (progress != nullptr) {
                     progress->unlockProgress();

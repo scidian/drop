@@ -215,6 +215,7 @@ void DrView::dropEvent(QDropEvent *event) {
 
     // ********** External Files
     } else if (event->mimeData()->hasUrls()) {
+
         // Extract the local paths of the files
         QStringList path_list;
         QList<QUrl> url_list = event->mimeData()->urls();
