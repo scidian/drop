@@ -14,6 +14,7 @@
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -101,7 +102,15 @@ void DrEngineWorld::updateWorld(double time_passed) {
     if (demo_player == Demo_Player::Light) {
         light1->setPosition( ball->getPosition() );
         light2->setPosition( ball->getPosition() );
-        light1->setAngle( ball->getAngle() + 90 );
+
+        // Get Light component of DrEngingThing
+        DrThingComponent *component = light1->component(Comps::Thing_Settings_Light);
+        if (component != nullptr) {
+            ThingCompLight *light_settings = dynamic_cast<ThingCompLight*>(component);
+            if (light_settings != nullptr) {
+                light_settings->setAngle( ball->getAngle() + 90 );
+            }
+        }
     }
 }
 

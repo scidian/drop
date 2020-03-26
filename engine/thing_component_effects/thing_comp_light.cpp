@@ -118,7 +118,7 @@ void ThingCompLight::setAngle(double new_angle) {
         new_x -= 360.0;
     }
 
-    m_rotated_cone = DrPointF( new_x, new_y );
+    m_rotated_cone = DrPointF(new_x, new_y);
 }
 
 

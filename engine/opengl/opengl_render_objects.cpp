@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_math.h"
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
