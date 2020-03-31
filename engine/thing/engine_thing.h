@@ -45,7 +45,7 @@ private:
 
     // Containers
     EngineSpawners      m_spawners;                                 // Holds all Spawners that have been attached to this Thing
-    EngineComponents    m_components;                               // Container of all components this Thing owns
+    ThingComponents     m_components;                               // Container of all components this Thing owns
 
     // Built In Components
     ThingComp3D        *m_comp_3d           { nullptr };            // Component that handles 3D rendering
@@ -141,7 +141,7 @@ public:
     }
 
     // Built In Thing Components
-    EngineComponents&       componentMap()      { return m_components; }
+    ThingComponents&        componentMap()      { return m_components; }
     ThingComp3D*            comp3D()            { return m_comp_3d; }
     ThingCompCamera*        compCamera()        { return m_comp_camera; }
     ThingCompPlayer*        compPlayer()        { return m_comp_player; }

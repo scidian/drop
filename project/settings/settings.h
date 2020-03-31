@@ -10,15 +10,18 @@
 
 #include "core/types/dr_variant.h"
 #include "project/constants_comps_and_props.h"
+#include "project/constants_variables.h"
 #include "project/enums_entity_types.h"
 
 // Forward Declarations
 class DrProject;
 class DrProperty;
 class DrComponent;
+class DrVariable;
 
 // Type Definitions
-typedef std::map<std::string, DrComponent*>     ComponentMap;           // Map of pointers to DrComponent classes, built in keys in file components_and_properties.h
+typedef std::map<std::string, DrComponent*>     ComponentMap;       // Map of pointers to DrComponent classes, built in keys in file components_and_properties.h
+typedef std::map<std::string, DrVariable*>      VariableMap;        // Map of pointers to DrVariables for this Entity
 
 
 //####################################################################################
@@ -27,22 +30,35 @@ typedef std::map<std::string, DrComponent*>     ComponentMap;           // Map o
 //############################
 class DrSettings
 {
-private:
-    // External Borrowed Pointers
-    DrProject   *m_parent_project;                              // Holds reference to parent Project
-
-    // Local Variables
-    ComponentMap m_components;                                  // Map of pointers to DrComponent classes
-
-    long         m_is_visible = true;                           // Should this be visible in editor?
-    long         m_is_locked = false;                           // Should this Entity be locked from editing?
-
-
 public:
     // Constructor / Destructor
     DrSettings(DrProject *parent_project);
     virtual ~DrSettings();
 
+
+    // #################### VARIABLES ####################
+private:
+    // External Borrowed Pointers
+    DrProject      *m_parent_project;                               // Holds reference to parent Project
+
+    // Local Variables
+    ComponentMap    m_components;                                   // Map of pointers to DrComponent classes
+    VariableMap     m_variables;                                    // Holds variables for this Entity
+
+    long            m_is_visible = true;                            // Should this be visible in editor?
+    long            m_is_locked = false;                            // Should this Entity be locked from editing?
+
+
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
+public:
+
+    // Variables
+    DrVariable*     variable(std::string variable_name);                            // Returns variable by name
+    void            setVariable(std::string variable_name, DrVariant value);        // Sets variable by name
+
+
+    // #################### INTERNAL FUNCTIONS ####################
+public:
     // Abstract Functions
     virtual DrType  getType() = 0;
 
@@ -58,7 +74,6 @@ public:
     bool            isVisible()                 { return m_is_visible; }
     void            setLocked(bool locked)      { m_is_locked = locked; }
     void            setVisible(bool visible)    { m_is_visible = visible; }
-
 
     // Component Handling
     ComponentMap&   getComponentMap()           { return m_components; }
@@ -87,7 +102,11 @@ public:
     void            addComponentSizeSettings();
 
     // Setttings Helpers
-    void            copyEntitySettings(DrSettings *from_entity);
+    void                    copyEntitySettings(DrSettings *from_entity);
+
+    // Variable Functions
+    void                    addDefaultVariables();
+    static Property_Type    propertyTypeFromVariantType(Variant_Type type);
 };
 
 

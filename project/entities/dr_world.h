@@ -26,7 +26,7 @@ class DrWorld : public DrSettings
 {
 private:
     // Local variables
-    StageMap        m_stages;                               // Map of pointers to DrStage classes       (holds the stages for current world)
+    StageMap        m_stages;                               // Map of pointers to DrStage classes (holds the stages for current world)
 
     long            m_start_stage_key;                      // Stores key of StartStage for this World
     long            m_last_stage_shown_in_editor;           // Last Stage shown in editor when this World was selected, set to StartStage on creation
@@ -38,7 +38,7 @@ public:
     virtual ~DrWorld() override;
 
     // DrSettings Overrides
-    virtual DrType  getType() override      { return DrType::World; }
+    virtual DrType  getType() override                  { return DrType::World; }
 
     // Getters / Setters
     StageMap&       getStageMap()                       { return m_stages; }
@@ -49,8 +49,8 @@ public:
     long            getLastStageShownKey()              { return m_last_stage_shown_in_editor; }
     void            setLastStageShownKey(long stage)    { m_last_stage_shown_in_editor = stage; }
 
-    bool            getExpanded()       { return m_expanded; }
-    void            setExpanded(bool expanded) { m_expanded = expanded; }
+    bool            getExpanded()                       { return m_expanded; }
+    void            setExpanded(bool expanded)          { m_expanded = expanded; }
 
     // Function Calls
     DrStage*    addStage(std::string new_stage_name = std::string(""));

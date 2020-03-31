@@ -14,6 +14,9 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
+#include "project/entities/dr_variable.h"
+#include "project/entities/dr_world.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################
@@ -81,7 +84,14 @@ void DrOpenGL::drawDebug() {
         fonsDrawText(fs,  20,  80, "Zoom:",         nullptr );                          // World scale
         ///fonsDrawText(fs,  20, 120, "Physics:",   nullptr );                          // Physics update
 
-        fonsDrawText(fs, 570,  20, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getMaxDistance(), 2).c_str(), nullptr );            // Game Distance
+        // Get Distance
+        long   world_key = getEngine()->getCurrentWorld()->getWorldKey();
+        ///double distance_current = m_engine->getCurrentWorld()->getMaxDistance();
+        double distance_current = getEngine()->getProject()->findWorldFromKey(world_key)->variable(Variables::Distance)->getCurrent().toDouble();
+        double distance_best =    getEngine()->getProject()->findWorldFromKey(world_key)->variable(Variables::Distance)->getBest().toDouble();
+        std::string distance = Dr::RoundToDecimalPlace(distance_current, 2) + ", Best: " + Dr::RoundToDecimalPlace(distance_best, 2);
+
+        fonsDrawText(fs, 570,  20, distance.c_str(), nullptr );                                                                             // Game Distance
         fonsDrawText(fs,  90,  20, Dr::RoundToDecimalPlace(m_form_engine->fps_render, 1).c_str(), nullptr );                                // Frames per second
         fonsDrawText(fs,  90,  40, Dr::RoundToDecimalPlace(m_engine->getCurrentWorld()->getThings().size(), 0).c_str(), nullptr );          // Object count
         fonsDrawText(fs,  90,  60, Dr::RoundToDecimalPlace(getTriangleCount(), 0).c_str(), nullptr );                                       // Triangle count

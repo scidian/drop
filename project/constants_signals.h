@@ -13,14 +13,13 @@
 namespace Signals {
 
 
-
-    //############################ THINGS
+    // ############################ THINGS
     ///const std::string ThingCollide              = "Thing Collide";              //
     const std::string ThingDamaged              = "Thing Damaged";              // double:  amount +/- damaged
     const std::string ThingDied                 = "Thing Died";                 // double:  current health
 
 
-    //############################ INPUT
+    // ############################ INPUT
     // Mouse
     const std::string MouseLeftDown             = "Mouse Left Down";            // bool:    true
     const std::string MouseLeftUp               = "Mouse Left Up";              // bool:    true

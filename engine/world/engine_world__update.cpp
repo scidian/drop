@@ -17,8 +17,9 @@
 #include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
+#include "project/entities/dr_variable.h"
+#include "project/entities/dr_world.h"
 
 
 // Local Structs
@@ -91,6 +92,14 @@ void DrEngineWorld::updateWorld(double time_passed) {
         DrPointF rotated = Dr::RotatePointAroundOrigin( DrPointF(getCameraPositionX(), getCameraPositionY()), m_game_start, m_game_direction );
         m_game_distance = rotated.x - m_game_start.x;
         m_max_game_distance = Dr::Max(m_game_distance, m_max_game_distance);
+
+        // Update local DrWorld::DrVariable that tracks Distance
+        DrWorld *world = getProject()->findWorldFromKey(getWorldKey());
+        world->variable(Variables::Distance)->setCurrent(m_max_game_distance);
+        if (m_max_game_distance > world->variable(Variables::Distance)->getBest().toDouble()) {
+            world->variable(Variables::Distance)->setBest(m_max_game_distance);
+        }
+
 
         if (m_loaded_to - m_game_distance < m_load_buffer) {
             addStage();
@@ -178,7 +187,7 @@ void DrEngineWorld::updateSpawners(double time_passed, double time_warp, DrRectF
 //####################################################################################
 void DrEngineWorld::addStage() {
     // Get DrWorld from Project
-    DrWorld *world = m_project->findWorldFromKey(m_world);
+    DrWorld *world = m_project->findWorldFromKey(m_world_key);
 
     // Find a list of possible Stages to pick from
     std::vector<DrStage*> stages;

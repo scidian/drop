@@ -47,19 +47,19 @@ public:
     virtual ~DrStage() override;
 
     // DrSettings Overrides
-    virtual DrType  getType() override      { return DrType::Stage; }
+    virtual DrType  getType() override                      { return DrType::Stage; }
 
     // Getters / Setters
-    DrWorld*        getParentWorld()        { return m_parent_world; }
-    ThingMap&       getThingMap()           { return m_things; }
-    DrThing*        getThing(long key)      { return m_things[key]; }
+    DrWorld*        getParentWorld()                        { return m_parent_world; }
+    ThingMap&       getThingMap()                           { return m_things; }
+    DrThing*        getThing(long key)                      { return m_things[key]; }
 
-    bool            isStartStage()          { return m_is_start_stage; }
+    bool            isStartStage()                          { return m_is_start_stage; }
     void            setIsStartStage(bool is_start_stage)    { m_is_start_stage = is_start_stage; }
 
-    bool            getExpanded()           { return m_expanded; }
-    DrPointF        getViewCenterPoint()    { return m_center_view_point; }
-    double          getViewZoomLevel()      { return m_zoom_level; }
+    bool            getExpanded()                           { return m_expanded; }
+    DrPointF        getViewCenterPoint()                    { return m_center_view_point; }
+    double          getViewZoomLevel()                      { return m_zoom_level; }
     void            setExpanded(bool expanded)              { m_expanded = expanded; }
     void            setViewCenterPoint(DrPointF new_point)  { m_center_view_point = new_point; }
     void            setViewZoomLevel(double zoom)           { m_zoom_level = zoom; }

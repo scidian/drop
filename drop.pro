@@ -308,6 +308,7 @@ SOURCES += \
     project/entities/dr_thing__settings_items.cpp \
     project/entities/dr_thing__settings_shared.cpp \
     project/entities/dr_thing__z_order.cpp \
+    project/entities/dr_variable.cpp \
     project/entities/dr_world.cpp \
     project/entities/dr_world__settings.cpp \
     project/enums_entity_types.cpp \
@@ -1007,6 +1008,7 @@ HEADERS += \
     project/constants_comps_and_props.h \
     project/constants_entity_keys.h \
     project/constants_signals.h \
+    project/constants_variables.h \
     project/dr_project.h \
     project/entities/dr_animation.h \
     project/entities/dr_asset.h \
@@ -1018,6 +1020,7 @@ HEADERS += \
     project/entities/dr_prefab.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
+    project/entities/dr_variable.h \
     project/entities/dr_world.h \
     project/enums_entity_types.h \
     project/properties/property_collision.h \

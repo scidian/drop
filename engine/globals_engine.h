@@ -43,14 +43,16 @@ class FormEngine;
 
 // Type definitions
 typedef std::chrono::high_resolution_clock          Clock;
+
 typedef std::vector<   DrEngineCamera*>             EngineCameraList;
 typedef std::map<long, DrEngineCamera*>             EngineCameraMap;
-typedef std::map<std::string, DrThingComponent*>   EngineComponents;
 typedef std::list<     DrEngineSignal*>             EngineSignals;
 typedef std::vector<   DrEngineSpawner*>            EngineSpawners;
 typedef std::map<long, DrEngineTexture*>            EngineTextureMap;
 typedef std::vector<   DrEngineThing*>              EngineThings;
 typedef std::map<long, DrEngineWorld*>              EngineWorldMap;
+
+typedef std::map<std::string, DrThingComponent*>    ThingComponents;
 
 
 // Input / Engine Globals - defined in engine_update_player.cpp

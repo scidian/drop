@@ -23,7 +23,6 @@ typedef std::pair<std::string, std::string>     ComponentProperty;      // Compo
 //##
 //############################
 enum class Property_Type {
-
     Bool            =  1,   // bool                 True or False
     BoolDouble      =  2,   // vector<variant>      True or False, when True shows double spinbox
                             //                          6 values: bool, double value, min, max, double step size, string spinText
@@ -108,6 +107,9 @@ namespace Comps {
 
     // ***** DrFrame Components
     const std::string Frame_Settings                    = "FrSe";
+
+    // ***** DrVariable Components
+    const std::string Variable_Data                     = "VaData";
 
     // ***** DrAsset Components
     const std::string Asset_Collision                   = "AsCollision";
@@ -206,7 +208,7 @@ namespace Props {
     const std::string Size_Min_Size                         = "SiMinSize";                  // pointf
 
 
-    // ******************** DrAnimation Components
+    // ******************** DrAnimation Properties
     // Animation_Settings
     const std::string Animation_Settings_Speed              = "AnSeSpeed";                  // double
     const std::string Animation_Settings_Loops              = "AnSeLoops";                  // int
@@ -215,6 +217,11 @@ namespace Props {
     const std::string Animation_Settings_Future_2           = "AnSeFuture2";
     const std::string Animation_Settings_Future_3           = "AnSeFuture3";
 
+
+    // ******************** DrVariable Properties
+    const std::string Variable_Data_Current                 = "VaDaCurrent";                // double
+    const std::string Variable_Data_Best                    = "VaDaBest";                   // double
+    const std::string Variable_Data_Total                   = "VaDaTotal";                  // double
 
 
     // ******************** DrAsset Component Properties

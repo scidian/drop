@@ -310,7 +310,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     double  angle =         original->data(User_Roles::Rotation).toDouble();
     QPointF start_scale =   original->data(User_Roles::Pre_Resize_Scale).toPointF();
 
-    // If item is roated closer to a vertical orientation swap the x and y scaling factor we calculated for the group resize
+    // If item is rotated closer to a vertical orientation swap the x and y scaling factor we calculated for the group resize
     double new_scale_x;
     double new_scale_y;
     double select_angle = my_scene->getSelectionAngle();

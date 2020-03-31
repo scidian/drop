@@ -70,6 +70,7 @@ public:
     DrProject*              getProject()                { return m_project; }
 
     long                    getCurrentEditorWorld()     { return m_current_editor_world; }
+    long                    getCurrentEngineWorld()     { return m_current_world; }
     DrEngineWorld*          getCurrentWorld()           { return m_worlds[m_current_world]; }
     DrEngineWorld*          getWorld(long world_key)    { return m_worlds[world_key]; }
 

@@ -55,7 +55,7 @@ extern cpBool   WaterPreSolve(cpArbiter *arb, cpSpace *space, void *);
 class DrEngineWorld
 {
 public:
-    // Constructor / Destrcutor
+    // Constructor / Destructor
     DrEngineWorld(DrEngine *engine, DrProject *project, EngineTextureMap &textures, long world_key);
     ~DrEngineWorld();
 
@@ -69,7 +69,7 @@ private:
 
     // Local Variables
     long                m_key_generator = 100;      // Variable to hand out unique id key's to all children items, keys start at 1
-    long                m_world;                    // Key of world from Project represented in this instance of DrEngineWorld
+    long                m_world_key;                // Key of world from Project represented in this instance of DrEngineWorld
 
     // **********
     //      Every Item In These Projects Maps:
@@ -177,20 +177,22 @@ public:
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basics
-    ///void             addStage(std::string name);                         // Adds DrStage with name to the World
-    ///DrEngineThing   *clone();                                            // Will clone a Thing and return a copy of it
-    ///DrEngineThing   *create(std::string name);                           // Will create a Thing based on an DrAsset name
-    EngineThings        find(std::string name);                             // Returns a list of Things (entities) with designated name
+    ///void             addStage(std::string name);                                 // Adds DrStage with name to the World
+    ///DrEngineThing   *clone();                                                    // Will clone a Thing and return a copy of it
+    ///DrEngineThing   *create(std::string name);                                   // Will create a Thing based on an DrAsset name
+    EngineThings        find(std::string name);                                     // Returns a list of Things (entities) with designated name
 
     // Cameras
-    ///DrEngineCamera  *camera(long camera_id);                             // Returns a camera by ID number
+    ///DrEngineCamera  *camera(long camera_id);                                     // Returns a camera by ID number
 
     // Variables
-    ///DrVariant        global(std::string name);                           // Returns global variable
-    ///void             setGlobal(std::string name, DrVariant value);       // Sets global variable
+    ///DrVariant           local(std::string variable_name);                           // Returns  local  variable by name
+    ///void                setLocal(std::string variable_name, DrVariant value);       // Sets     local  variable by name
+    ///DrVariant           global(std::string variable_name);                          // Returns  global variable by name
+    ///void                setGlobal(std::string variable_name, DrVariant value);      // Sets     global variable by name
 
     // Input
-    ///DrPointF         mousePosition();                                    // Returns mouse world coordinate position
+    ///DrPointF         mousePosition();                                            // Returns mouse world coordinate position
 
     // Math
     /// Comparison, Random, Vectors
@@ -203,9 +205,9 @@ public:
     // Timers
 
     // System
-    ///std::string      device();                                           // Returns device name
-    ///DrPointF         screenSize();                                       // Returns screen size of rendering window
-    ///void             vibrate(double intensity);                          // Cause device to vibrate
+    ///std::string      device();                                                   // Returns device name
+    ///DrPointF         screenSize();                                               // Returns screen size of rendering window
+    ///void             vibrate(double intensity);                                  // Cause device to vibrate
 
 
 
@@ -213,6 +215,7 @@ public:
 public:
     // Important Functions
     long                getNextKey()            { return m_key_generator++; }
+    long                getWorldKey()           { return m_world_key; }
 
     // Thing Finding
     DrEngineThing*      findThingByKey(long key);

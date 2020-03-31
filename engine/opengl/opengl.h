@@ -142,6 +142,9 @@ private:
 
     // #################### FUNCTIONS ####################
 public:
+    // Getters
+    DrEngine*       getEngine() { return m_engine; }
+
     // Event Overrides
     virtual void    keyPressEvent(QKeyEvent *event) override;
     virtual void    keyReleaseEvent(QKeyEvent *event) override;

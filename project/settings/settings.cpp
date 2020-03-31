@@ -12,6 +12,7 @@
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_thing.h"
+#include "project/entities/dr_variable.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -31,7 +32,8 @@ DrSettings::DrSettings(DrProject *parent_project) : m_parent_project(parent_proj
 DrSettings::~DrSettings() {
     getParentProject()->setHasSaved(false);
 
-    for (auto i: m_components) { delete i.second; }
+    for (auto it = m_components.begin();    it != m_components.end(); ) {   delete it->second; it = m_components.erase(it); }
+    for (auto it = m_variables.begin();     it != m_variables.end(); )  {   delete it->second; it = m_variables.erase(it); }
 }
 
 
@@ -149,7 +151,8 @@ std::string DrSettings::getName() {
         case DrType::Prefab:
         case DrType::Stage:
         case DrType::Thing:
-        case DrType::World:
+        case DrType::Variable:
+        case DrType::World:        
             name_component = getComponent(Comps::Entity_Settings);              if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Props::Entity_Name);   if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();
@@ -230,6 +233,72 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
     m_is_visible = from_entity->isVisible();
     m_is_locked =  from_entity->isLocked();
 }
+
+
+
+//####################################################################################
+//##    Variables
+//####################################################################################
+void DrSettings::addDefaultVariables() {
+    this->setVariable(Variables::Deaths,    0);
+    this->setVariable(Variables::Coins,     0);
+    this->setVariable(Variables::Gems,      0);
+    this->setVariable(Variables::Stars,     0);
+
+    this->setVariable(Variables::Distance,  0.0);
+    this->setVariable(Variables::Time,      0.0);
+
+    this->setVariable(Variables::PointsA,   0.0);
+    this->setVariable(Variables::PointsB,   0.0);
+    this->setVariable(Variables::PointsC,   0.0);
+}
+
+// Convert DrVariant::Variant_Type to Property_Type
+Property_Type DrSettings::propertyTypeFromVariantType(Variant_Type type) {
+    Property_Type property_type;
+    switch (type) {
+        case Variant_Type::Int:
+        case Variant_Type::Long:
+        case Variant_Type::Unsigned_Int:    property_type = Property_Type::Int;         break;
+        case Variant_Type::Float:
+        case Variant_Type::Double:          property_type = Property_Type::Double;      break;
+        case Variant_Type::String:          property_type = Property_Type::String;      break;
+        case Variant_Type::Bool:            property_type = Property_Type::Bool;        break;
+        default:                            property_type = Property_Type::Double;      break;
+    }
+    return property_type;
+}
+
+// Sets DrVariable in Project
+void DrSettings::setVariable(std::string variable_name, DrVariant value) {
+    DrVariable *var = variable(variable_name);
+    if (var != nullptr) {
+        var->setCurrent(value);
+    } else {
+        m_variables[variable_name] = new DrVariable(this->getParentProject(), variable_name, value.getType(), value);
+    }
+}
+
+// Gets a DrVariable
+DrVariable* DrSettings::variable(std::string variable_name) {
+    VariableMap::iterator variable_iter = m_variables.find(variable_name);
+    if (variable_iter != m_variables.end()) {
+        return variable_iter->second;
+    } else {
+        return nullptr;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

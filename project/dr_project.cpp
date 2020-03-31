@@ -19,9 +19,9 @@
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_item.h"
 #include "project/entities/dr_prefab.h"
-#include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
+#include "project/entities/dr_world.h"
 
 
 //####################################################################################
@@ -37,6 +37,9 @@ DrProject::~DrProject() {
 
 void DrProject::clearProject(bool add_built_in_items) {
     m_test_only = false;
+
+    // Clear Data Maps
+    for (auto it = m_options.begin();       it != m_options.end(); )    {   it = m_options.erase(it);   }
 
     for (auto it = m_animations.begin();    it != m_animations.end(); ) {   delete it->second; it = m_animations.erase(it); }
     for (auto it = m_assets.begin();        it != m_assets.end(); )     {   delete it->second; it = m_assets.erase(it);     }

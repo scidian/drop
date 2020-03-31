@@ -37,6 +37,7 @@ enum class DrType {
     Image,                      // Entities contained within DrProject::m_images
     Item,                       // Entities contained within DrProject::m_items
     Prefab,                     // Entities contained within DrProject::m_prefabs
+    Variable,                   // Entities contained within DrProject::m_variables
     World,                      // Entities contained within DrProject::m_worlds
         Stage,                  // Entities contained within DrProject::DrWorld::m_stages
             Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
@@ -45,7 +46,6 @@ enum class DrType {
     //        Foreground,
 
     //Logic,
-    //Variable,
 
     //UI,
     //    Label,

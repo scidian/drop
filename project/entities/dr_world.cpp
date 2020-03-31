@@ -21,6 +21,7 @@ DrWorld::DrWorld(DrProject *parent_project, long key, std::string new_world_name
     this->setKey(key);
 
     initializeWorldSettings(new_world_name);
+    this->addDefaultVariables();
 
     // Adds the initial "Start Stage"
     if (add_start_stage) {

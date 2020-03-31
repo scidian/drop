@@ -18,20 +18,20 @@ const int   c_project_height =     1600;            // Default Height for Game
 
 
 enum class Project_Options {
-    Name,                   // string,  Name of Current Project
-    File_Name_Path,         // string,  Full Path and File Name of Project, will save to this unless choose Save As
+    Name                = 10,       // string,  Name of Current Project
+    File_Name_Path      = 11,       // string,  Full Path and File Name of Project, will save to this unless choose Save As
 
-    Current_World,          // long,    World currently displayed in editor
-    Current_Stage,          // long,    Scene currently displayed in editor
+    Current_World       = 20,       // long,    World currently displayed in editor
+    Current_Stage       = 21,       // long,    Scene currently displayed in editor
 
-    Orientation,            // int,     This Projects target device orientation (enum Orientation)
-    Width,                  // long,    This Projects target device window width,  usually 800
-    Height,                 // long,    This Projects target device window height, usually 1600
+    Orientation         = 30,       // int,     This Projects target device orientation (enum Orientation)
+    Width               = 31,       // long,    This Projects target device window width,  usually 800
+    Height              = 32,       // long,    This Projects target device window height, usually 1600
 };
 
 enum class Orientation {
-    Portrait,
-    Landscape
+    Portrait            = 0,
+    Landscape           = 1,
 };
 
 // Forward declarations
@@ -45,21 +45,22 @@ class DrItem;
 class DrPrefab;
 class DrStage;
 class DrThing;
+class DrVariable;
 class DrWorld;
 class IProgressBar;
 
 // Type definitions
-typedef std::map<long, DrAnimation*>    AnimationMap;
-typedef std::map<long, DrAsset*>        AssetMap;
-typedef std::map<long, DrDevice*>       DeviceMap;
-typedef std::map<long, DrEffect*>       EffectMap;
-typedef std::map<long, DrFont*>         FontMap;
-typedef std::map<long, DrImage*>        ImageMap;
-typedef std::map<long, DrItem*>         ItemMap;
-typedef std::map<long, DrPrefab*>       PrefabMap;
-typedef std::map<long, DrWorld*>        WorldMap;
+typedef std::map<Project_Options,   DrVariant>      OptionMap;
 
-typedef std::map<Project_Options, DrVariant> OptionMap;
+typedef std::map<long,              DrAnimation*>   AnimationMap;
+typedef std::map<long,              DrAsset*>       AssetMap;
+typedef std::map<long,              DrDevice*>      DeviceMap;
+typedef std::map<long,              DrEffect*>      EffectMap;
+typedef std::map<long,              DrFont*>        FontMap;
+typedef std::map<long,              DrImage*>       ImageMap;
+typedef std::map<long,              DrItem*>        ItemMap;
+typedef std::map<long,              DrPrefab*>      PrefabMap;
+typedef std::map<long,              DrWorld*>       WorldMap;
 
 
 //####################################################################################
@@ -68,15 +69,20 @@ typedef std::map<Project_Options, DrVariant> OptionMap;
 //############################
 class DrProject
 {
+public:
+    // Constructor / Destructor
+    DrProject();
+    ~DrProject();
+
+    // #################### VARIABLES ####################
 private:
     // Usage Variables
-    bool        m_has_saved = false;                            // If project is edited at all, turns to false until user saves
-    bool        m_test_only = false;                            // For debugging purposes, stops Drop from asking to save when exiting
+    bool            m_has_saved = false;                            // If project is edited at all, turns to false until user saves
+    bool            m_test_only = false;                            // For debugging purposes, stops Drop from asking to save when exiting
 
     // Project Variables
-    long        m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children entities
-    OptionMap   m_options;                                      // Map holding DrProject Wide options
-
+    long            m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children entities
+    OptionMap       m_options;                                      // Map holding DrProject Wide options
 
     // **********
     //      Every Item In These Project Maps is called an Entity and:
@@ -94,29 +100,29 @@ private:
     WorldMap        m_worlds;                                       // Holds worlds         for the project
 
 
+    // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
-    // Constructor / Destructor
-    DrProject();
-    ~DrProject();
 
 
+
+    // #################### INTERNAL FUNCTIONS ####################
+public:
     // Local Variable Functions
     long        checkCurrentKey()                               { return m_key_generator; }
     long        getNextKey()                                    { return m_key_generator++; }
     void        setKeyGeneratorStartNumber(long initial_key)    { m_key_generator = initial_key; }
 
-
-    bool        hasSaved()              { return m_has_saved; }
-    bool        isTestOnly()            { return m_test_only; }
-    void        setHasSaved(bool saved) { m_has_saved = saved; }
-    void        setTestOnly(bool test)  { m_test_only = test; }
+    bool        hasSaved()                  { return m_has_saved; }
+    bool        isTestOnly()                { return m_test_only; }
+    void        setHasSaved(bool saved)     { m_has_saved = saved; }
+    void        setTestOnly(bool test)      { m_test_only = test; }
 
 
     // Options Calls
-    DrVariant   getOption(Project_Options option_to_get)                        { return m_options[option_to_get]; }
-    void        setOption(Project_Options option_to_set, DrVariant new_value)   { m_options[option_to_set] = new_value; }
+    DrVariant       getOption(Project_Options option_to_get)                        { return m_options[option_to_get]; }
+    void            setOption(Project_Options option_to_set, DrVariant new_value)   { m_options[option_to_set] = new_value; }
 
-    Orientation getOptionOrientation() { return static_cast<Orientation>( m_options[Project_Options::Orientation].toInt()); }
+    Orientation     getOptionOrientation() { return static_cast<Orientation>( m_options[Project_Options::Orientation].toInt()); }
 
 
     // Finding Project Entities
