@@ -551,7 +551,7 @@ namespace Props {
 
     // ********** Item Specific
     // Tile Settings
-    const std::string Thing_Tile_Scroll                     = "ThTilScroll";                // percent
+    const std::string Thing_Tile_Animation                  = "ThTiAnimation";              // image
 
 };
 

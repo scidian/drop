@@ -31,10 +31,8 @@ void DrThing::addComponentSettingsTile(std::string new_name) {
     addComponent(Comps::Thing_Settings_Tile, "Tile Settings", "Settings for this Tile.", Component_Colors::RGB_10_Green, true);
     getComponent(Comps::Thing_Settings_Tile)->setIcon(Component_Icons::Tile);
 
-    addPropertyToComponent(Comps::Thing_Settings_Tile, Props::Thing_Tile_Scroll, Property_Type::Percent, 100.0,
-                           "Scroll", "Future...");
-
-
+    addPropertyToComponent(Comps::Thing_Settings_Tile, Props::Thing_Tile_Animation, Property_Type::Image, c_no_key,
+                           "Tile Animation", "Animation for this Tile.");
 }
 
 

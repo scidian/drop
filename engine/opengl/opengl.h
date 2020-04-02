@@ -216,6 +216,7 @@ public:
     bool            drawGlowBuffer();
     void            drawObject(DrEngineThing *thing, bool draw2D);
     void            drawObjectSimple(DrEngineThing *thing);
+    void            drawObjectTile(DrEngineThing *thing);
     bool            drawObjectFire(DrEngineThing *thing);
     bool            drawObjectOccluder(DrEngineThing *thing, bool need_init_shader = true);
     void            drawSpace();

@@ -35,8 +35,8 @@ Thing_Info DrEngineWorld::loadThingBasicInfo(DrThing *thing) {
 //####################################################################################
 //##    Loads 3D Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
-    if (object->comp3D() == nullptr) return;
+void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *engine_thing) {
+    if (engine_thing->comp3D() == nullptr) return;
     int      convert_type =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Type).toInt();
     double   depth =            thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Depth).toDouble();
     DrPointF x_axis_rotate =    thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_X_Axis_Rotation).toPointF();
@@ -44,24 +44,29 @@ void DrEngineWorld::loadThing3DSettings(DrThing *thing, DrEngineThing *object) {
     DrPointF x_axis_speed =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_X_Axis_Speed).toPointF();
     DrPointF y_axis_speed =     thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Y_Axis_Speed).toPointF();
     bool     billboard =        thing->getComponentPropertyValue(Comps::Thing_3D, Props::Thing_3D_Billboard).toBool();
-    object->comp3D()->set3DType(static_cast<Convert_3D_Type>(convert_type));
-    object->comp3D()->setAngleX( x_axis_rotate.x + (Dr::RandomDouble(0.0, x_axis_rotate.y * 2.0) - x_axis_rotate.y) );
-    object->comp3D()->setAngleY( y_axis_rotate.x + (Dr::RandomDouble(0.0, y_axis_rotate.y * 2.0) - y_axis_rotate.y) );
-    object->comp3D()->setBillboard( billboard );
-    object->comp3D()->setDepth(depth);
-    object->comp3D()->setRotateSpeedX( (x_axis_speed.x + (Dr::RandomDouble(0.0, x_axis_speed.y * 2.0) - x_axis_speed.y)) / 100.0 );
-    object->comp3D()->setRotateSpeedY( (y_axis_speed.x + (Dr::RandomDouble(0.0, y_axis_speed.y * 2.0) - y_axis_speed.y)) / 100.0 );
+    engine_thing->comp3D()->set3DType(static_cast<Convert_3D_Type>(convert_type));
+    engine_thing->comp3D()->setAngleX( x_axis_rotate.x + (Dr::RandomDouble(0.0, x_axis_rotate.y * 2.0) - x_axis_rotate.y) );
+    engine_thing->comp3D()->setAngleY( y_axis_rotate.x + (Dr::RandomDouble(0.0, y_axis_rotate.y * 2.0) - y_axis_rotate.y) );
+    engine_thing->comp3D()->setBillboard( billboard );
+    engine_thing->comp3D()->setDepth(depth);
+    engine_thing->comp3D()->setRotateSpeedX( (x_axis_speed.x + (Dr::RandomDouble(0.0, x_axis_speed.y * 2.0) - x_axis_speed.y)) / 100.0 );
+    engine_thing->comp3D()->setRotateSpeedY( (y_axis_speed.x + (Dr::RandomDouble(0.0, y_axis_speed.y * 2.0) - y_axis_speed.y)) / 100.0 );
 }
 
 
 //####################################################################################
 //##    Loads Appearance Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object) {
-    int         blend_type =        thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Blend_Object).toInt();
-    bool        cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
+void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineThing *engine_thing, bool simple_settings) {
     int         bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
     DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
+    engine_thing->bitrate =             bit_rate;
+    engine_thing->pixel_x =             static_cast<float>(pixelation.x);
+    engine_thing->pixel_y =             static_cast<float>(pixelation.y);
+    if (simple_settings) return;
+
+    int         blend_type =        thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Blend_Object).toInt();
+    bool        cast_shadows =      thing->getComponentPropertyValue(Comps::Thing_Lighting,   Props::Thing_Lighting_Cast_Shadows).toBool();
     int         pixel_type =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_PixelType).toInt();
     float       brightness =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt() / 255.f;
     float       contrast =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt() / 255.f;
@@ -76,25 +81,22 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineObject *
     float       cartoon_width =     thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cartoon).toVector()[1].toFloat();
     bool        cross_hatch =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[0].toBool();
     float       cross_width =       thing->getComponentPropertyValue(Comps::Thing_Special_Effects, Props::Thing_Filter_Cross_Hatch).toVector()[1].toFloat();
-    object->blend_type =        static_cast<Blend_Object>(blend_type);
-    object->cast_shadows =      cast_shadows;
-    object->bitrate =           bit_rate;
-    object->pixel_x =           static_cast<float>(pixelation.x);
-    object->pixel_y =           static_cast<float>(pixelation.y);
-    object->pixel_texture =     static_cast<Pixel_Texture>(pixel_type);
-    object->brightness =        brightness;
-    object->contrast =          contrast;
-    object->saturation =        saturation;
-    object->hue =               hue;
-    object->grayscale =         grayscale;
-    object->negative =          negative;
-    object->extrude_3d =        instant_3d;
-    object->wireframe =         wireframe;
-    object->wireframe_width =   wireframe_width;
-    object->cartoon =           cartoon;
-    object->cartoon_width =     cartoon_width;
-    object->cross_hatch =       cross_hatch;
-    object->cross_hatch_width = cross_width;
+    engine_thing->blend_type =          static_cast<Blend_Object>(blend_type);
+    engine_thing->cast_shadows =        cast_shadows;
+    engine_thing->pixel_texture =       static_cast<Pixel_Texture>(pixel_type);
+    engine_thing->brightness =          brightness;
+    engine_thing->contrast =            contrast;
+    engine_thing->saturation =          saturation;
+    engine_thing->hue =                 hue;
+    engine_thing->grayscale =           grayscale;
+    engine_thing->negative =            negative;
+    engine_thing->extrude_3d =          instant_3d;
+    engine_thing->wireframe =           wireframe;
+    engine_thing->wireframe_width =     wireframe_width;
+    engine_thing->cartoon =             cartoon;
+    engine_thing->cartoon_width =       cartoon_width;
+    engine_thing->cross_hatch =         cross_hatch;
+    engine_thing->cross_hatch_width =   cross_width;
 }
 
 
@@ -286,7 +288,7 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     }
 
 
-    // ***** Additional Collision Settings
+    // ***** Collision Settings
     int         one_way_type =  asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Type).toInt();
     double      one_way_angle = asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Direction).toDouble();
     bool        drop_down =     asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Drop_Down).toBool();
@@ -304,17 +306,11 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     block->setRepulseForce(repulse_force);
     block->setSurfaceVelocity(cpv(surface_vel.x, surface_vel.y));
 
-    // ***** Appearance settings
-    loadThingAppearanceSettings(thing, block);
-
-    // ***** Health / Damage Settings
-    loadThingHealthSettings(asset, block);
-
-    // ***** 3D Settings
-    loadThing3DSettings(thing, block);
-
-    // ***** Controls Settings
-    loadThingControlsSettings(asset, block);
+    // ***** Additional settings
+    loadThingAppearanceSettings(thing, block);                      // Appearance settings
+    loadThingHealthSettings(asset, block);                          // Health / Damage Settings
+    loadThing3DSettings(thing, block);                              // 3D Settings
+    loadThingControlsSettings(asset, block);                        // Controls Settings
 
     // ***** Add Velocity, HAVE TO WAIT until is in world!!
     if (body_type != Body_Type::Static) {

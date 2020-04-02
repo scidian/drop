@@ -109,8 +109,24 @@ void DrProject::deleteAnimation(long animation_key_to_delete, long ignore_asset_
         if (asset_pair.second == nullptr) continue;
 
         // If key is used by another Asset, don't delete
-        for (auto &check_key : asset_pair.second->animationsUsedByAsset()) {
+        for (auto &check_key : asset_pair.second->animationsUsedByEntity()) {
             if (check_key == animation_key_to_delete) return;
+        }
+    }
+
+    // See if Animations are used by any other Thing
+    for (auto &world_pair : getWorldMap()) {
+        for (auto &stage_pair : world_pair.second->getStageMap()) {
+            for (auto &thing_pair : stage_pair.second->getThingMap()) {
+                if (thing_pair.first == ignore_asset_key) continue;
+                if (thing_pair.second == nullptr) continue;
+
+                // If key is used by another Thing, don't delete
+                for (auto &check_key : thing_pair.second->animationsUsedByEntity()) {
+                    if (check_key == animation_key_to_delete) return;
+                }
+            }
+
         }
     }
 

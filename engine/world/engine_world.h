@@ -252,8 +252,8 @@ public:
     int                 countCharacters();
 
     static Cam_Info     loadCharacterCameraSettings(DrThing *thing);
-    void                loadThing3DSettings(DrThing *thing, DrEngineThing *object);
-    void                loadThingAppearanceSettings(DrThing *thing, DrEngineObject *object);
+    void                loadThing3DSettings(DrThing *thing, DrEngineThing *engine_thing);
+    void                loadThingAppearanceSettings(DrThing *thing, DrEngineThing *engine_thing, bool simple_settings = false);
     static Thing_Info   loadThingBasicInfo(DrThing *thing);
     void                loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
     void                loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
@@ -269,6 +269,7 @@ public:
                                           double angle, double x_velocity, double y_velocity, double rotate_spawn = 0.0);
     void                loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
     void                loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
+    void                loadTileToWorld (DrThing *thing, double offset_x, double offset_y);
     void                loadWaterToWorld(DrThing *thing, double offset_x, double offset_y);
 
     void                updateSpace(double time_passed);

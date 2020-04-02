@@ -36,18 +36,13 @@ void DrEngineWorld::loadFisheyeToWorld(DrThing *thing, double offset_x, double o
     float       tint =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color_Tint).toFloat() / 100.0f;
     float       zoom =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Lens_Zoom).toVector()[0].toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
-
     DrEngineThing *fisheye = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                                info.z_order, info.scale, info.angle, info.opacity, info.size);
     fisheye->setComponent(Comps::Thing_Settings_Fisheye, new ThingCompFisheye(this, fisheye, start_color, tint, zoom));
     addThing( fisheye );
 
-    // ***** Appearance settings
-    fisheye->bitrate = bit_rate;
-    fisheye->pixel_x = static_cast<float>(pixelation.x);
-    fisheye->pixel_y = static_cast<float>(pixelation.y);
+    // ***** Apply additional settings
+    loadThingAppearanceSettings(thing, fisheye, true);          // Appearance settings
 }
 
 
@@ -66,9 +61,6 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     float       wave =              thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Wavy).toFloat() / 100.f;
     float       speed =             thing->getComponentPropertyValue(Comps::Thing_Settings_Fire, Props::Thing_Fire_Speed).toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
-
     // Calculate original size used in editor
     info.size.x = info.size.x / info.scale.x;
     info.size.y = info.size.y / info.scale.y;
@@ -79,13 +71,9 @@ void DrEngineWorld::loadFireToWorld(DrThing *thing, double offset_x, double offs
     fire->setComponent(Comps::Thing_Settings_Fire, new ThingCompFire(this, fire, static_cast<Fire_Mask>(mask), color_1, color_2, smoke, intensity, smooth, wave, speed));
     addThing( fire );
 
-    // ***** Appearance settings
-    fire->bitrate = bit_rate;
-    fire->pixel_x = static_cast<float>(pixelation.x);
-    fire->pixel_y = static_cast<float>(pixelation.y);
-
-    // ***** 3D Settings
-    loadThing3DSettings(thing, fire);
+    // ***** Apply additional settings
+    loadThingAppearanceSettings(thing, fire, true);             // Appearance settings
+    loadThing3DSettings(thing, fire);                           // 3D Settings
 }
 
 
@@ -133,18 +121,14 @@ void DrEngineWorld::loadMirrorToWorld(DrThing *thing, double offset_x, double of
     float       blur_stretch =      thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Blur_Stretch).toFloat();
     float       scale =             thing->getComponentPropertyValue(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Scale).toVector()[0].toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
-
     DrEngineThing *mirror = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                               info.z_order, info.scale, info.angle, info.opacity, info.size);
     mirror->setComponent(Comps::Thing_Settings_Mirror, new ThingCompMirror(this, mirror, color_1, color_2, color_tint, blur, blur_stretch, scale));
     addThing( mirror );
 
-    // ***** Appearance settings
-    mirror->bitrate = bit_rate;
-    mirror->pixel_x = static_cast<float>(pixelation.x);
-    mirror->pixel_y = static_cast<float>(pixelation.y);
+    // ***** Apply additional settings
+    loadThingAppearanceSettings(thing, mirror, true);           // Appearance settings
+    loadThing3DSettings(thing, mirror);                         // 3D Settings
 }
 
 
@@ -158,18 +142,14 @@ void DrEngineWorld::loadSwirlToWorld(DrThing *thing, double offset_x, double off
     float       tint =              thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Color_Tint).toFloat() / 100.0f;
     float       rotation =          thing->getComponentPropertyValue(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Angle).toFloat();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
-
     DrEngineThing *swirl = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.scale, info.angle, info.opacity, info.size);
     swirl->setComponent(Comps::Thing_Settings_Swirl, new ThingCompSwirl(this, swirl, start_color, tint, rotation));
     addThing( swirl );
 
-    // ***** Appearance settings
-    swirl->bitrate = bit_rate;
-    swirl->pixel_x = static_cast<float>(pixelation.x);
-    swirl->pixel_y = static_cast<float>(pixelation.y);
+    // ***** Apply additional settings
+    loadThingAppearanceSettings(thing, swirl, true);            // Appearance settings
+    loadThing3DSettings(thing, swirl);                          // 3D Settings
 }
 
 
@@ -205,9 +185,6 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     float       foam_height =       thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Height).toFloat();
     bool        foam_flat =         thing->getComponentPropertyValue(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Is_Flat).toBool();
 
-    float       bit_rate =          thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Bitrate).toVector()[0].toInt();
-    DrPointF    pixelation =        thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Pixelation).toPointF();
-
     DrEngineThing *water = new DrEngineThing(this, getNextKey(), thing->getKey(), info.position.x + offset_x, -info.position.y + offset_y,
                                              info.z_order, info.scale, info.angle, info.opacity, info.size);
     ThingCompWater *w = new ThingCompWater(this, water, static_cast<Water_Texture>(texture), start_color, end_color, water_tint, reflection,
@@ -218,10 +195,9 @@ void DrEngineWorld::loadWaterToWorld(DrThing *thing, double offset_x, double off
     water->setComponent(Comps::Thing_Settings_Water, w);
     addThing( water );
 
-    // ***** Appearance settings
-    water->bitrate = bit_rate;
-    water->pixel_x = static_cast<float>(pixelation.x);
-    water->pixel_y = static_cast<float>(pixelation.y);
+    // ***** Apply additional settings
+    loadThingAppearanceSettings(thing, water, true);            // Appearance settings
+    loadThing3DSettings(thing, water);                          // 3D Settings
 }
 
 

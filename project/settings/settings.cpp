@@ -10,9 +10,12 @@
 #include "project/constants_component_info.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
 #include "project/entities/dr_asset.h"
+#include "project/entities/dr_image.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_variable.h"
+#include "project/properties/property_collision.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -190,6 +193,66 @@ DrProperty* DrSettings::addPropertyToComponent(std::string component_key, std::s
     return prop;
 }
 
+
+
+
+//####################################################################################
+//##    List of Animations used by Entity
+//####################################################################################
+std::list<long> DrSettings::animationsUsedByEntity() {
+    std::list<long> animation_keys_used { };
+    for (auto &component_pair : getComponentMap()) {
+        for (auto &property_pair : component_pair.second->getPropertyMap()) {
+            DrProperty *property = property_pair.second;
+            if (property->getPropertyType() == Property_Type::Image) {
+                if (property->getValue().toLong() >= c_key_starting_number)
+                    animation_keys_used.push_back(property->getValue().toLong());
+            }
+        }
+    }
+    return animation_keys_used;
+}
+
+//####################################################################################
+//##    Deletes Underlying Animations, called when DrAsset is deleted
+//##        Verify first if Animations are used by other DrAssets or if Animation is built in
+//####################################################################################
+void DrSettings::deleteAnimations() {
+    for (auto &animation_key : animationsUsedByEntity()) {
+        getParentProject()->deleteAnimation(animation_key, this->getKey());
+    }
+}
+
+//####################################################################################
+//##    Updates Default Animation Images / Collsion Shape
+//####################################################################################
+void DrSettings::updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key) {
+    ///if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
+
+    // ***** Get existing DrProperty to Replace
+    DrProperty *property = getComponentProperty(animation_component_property_key);
+    if (property == nullptr) return;
+    long old_animation = property->getValue().toLong();
+
+    // ***** Create new animation from new image keys
+    DrAnimation *animation = getParentProject()->addAnimation(image_keys);
+    property->setValue( animation->getKey() );
+    DrImage *new_image = animation->getFirstFrameImage();
+
+    if (property->getPropertyKey() == Props::Asset_Animation_Idle) {
+        DrAsset *asset = dynamic_cast<DrAsset*>(this);
+        asset->setWidth( new_image->getBitmap().width );
+        asset->setHeight( new_image->getBitmap().height );
+        asset->setBaseKey( animation->getKey() );
+
+        // Calculate new image collision shape
+        DrPropertyCollision shape = DrAsset::autoCollisionShape(new_image);
+        setComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Image_Shape, shape);
+    }
+
+    // ***** Delete Old Animation
+    getParentProject()->deleteAnimation(old_animation, this->getKey());
+}
 
 
 //####################################################################################

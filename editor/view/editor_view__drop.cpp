@@ -116,7 +116,7 @@ void DrView::dropEvent(QDropEvent *event) {
         else
             position = m_drop_location;
 
-        // Create new Thing from drop data,                                                                 !!!!! #NOTE: Sets initial Z value of Thing
+        // Create new Thing from drop data
         long        entity_key = variant_key.toInt();
         DrSettings *entity =     m_editor_relay->currentProject()->findSettingsFromKey(entity_key);
 
@@ -170,7 +170,7 @@ void DrView::dropEvent(QDropEvent *event) {
             DrPrefab *prefab = m_project->findPrefabFromKey( entity_key );
             asset = Dr::AddPrefab(m_project, prefab->getPrefabType());
             if (prefab->getPrefabType() != DrPrefabType::Character) {
-                thing = stage->addThing(DrThingType::Object, asset->getKey(), position.x(), -position.y(),      5);
+                thing = stage->addThing(DrThingType::Object,    asset->getKey(), position.x(), -position.y(),   5);
             } else {
                 thing = stage->addThing(DrThingType::Character, asset->getKey(), position.x(), -position.y(),   0);
             }

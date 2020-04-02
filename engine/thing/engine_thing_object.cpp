@@ -45,7 +45,7 @@ DrEngineObject::DrEngineObject(DrEngineWorld *world, long unique_key, long origi
 
     // Object Basics                 !!!!! #NOTE: texture_number == Asset Key
     long image_number = asset_key;
-    if (asset_key < 0) {
+    if (asset_key <= 0) {
         image_number = asset_key;
     } else if (asset_key > 0) {
         DrAsset *asset = world->getProject()->findAssetFromKey(asset_key);

@@ -25,39 +25,6 @@
 
 
 //####################################################################################
-//##    Determines automatic collision shapes based on image
-//####################################################################################
-DrPropertyCollision autoCollisionShape(const DrImage *image) {
-    // Go through each polygon and reduce points if necessary
-    DrPropertyCollision     shapes;
-    for (int poly_number = 0; poly_number < static_cast<int>(image->m_poly_list.size()); poly_number++) {
-        // Run Polyline Simplification algorithm, keep running until collision shape polygon has less than 100 points
-        std::vector<DrPointF> simple_points = image->m_poly_list[poly_number];
-        double simple_tolerance = 2.0;
-        while (simple_points.size() > 100) {
-            simple_points = PolylineSimplification::RamerDouglasPeucker(simple_points, simple_tolerance);
-            simple_tolerance = std::pow(simple_tolerance, 2.0);
-        }
-
-        // Add polygon to list of polygons in shape
-        shapes.addPolygon( simple_points );
-    }
-
-    // If we don't have polygons by this point, just add a simple box
-    if (shapes.getPolygons().size() < 1) shapes.addPolygon( image->getBitmap().polygon().points() );
-
-    // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image
-    for (auto &shape : shapes.getPolygons()) {
-        for (auto &point : shape) {
-            point.x = point.x - (image->getBitmap().width / 2.0);
-            point.y = (image->getBitmap().height - point.y) - (image->getBitmap().height / 2.0);
-        }
-    }
-    return shapes;
-}
-
-
-//####################################################################################
 //##    Constructor, Destructor
 //####################################################################################
 DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long base_key) : DrSettings(parent_project) {
@@ -125,31 +92,37 @@ DrAsset::~DrAsset() { }
 
 
 //####################################################################################
-//##    List of Animations used by Asset
+//##    Determines automatic collision shapes based on image
 //####################################################################################
-std::list<long> DrAsset::animationsUsedByAsset() {
-    std::list<long> animation_keys_used { };
-    for (auto &component_pair : getComponentMap()) {
-        for (auto &property_pair : component_pair.second->getPropertyMap()) {
-            DrProperty *property = property_pair.second;
-            if (property->getPropertyType() == Property_Type::Image) {
-                if (property->getValue().toLong() >= c_key_starting_number)
-                    animation_keys_used.push_back(property->getValue().toLong());
-            }
+DrPropertyCollision DrAsset::autoCollisionShape(const DrImage *image) {
+    // Go through each polygon and reduce points if necessary
+    DrPropertyCollision shapes;
+    for (int poly_number = 0; poly_number < static_cast<int>(image->m_poly_list.size()); poly_number++) {
+        // Run Polyline Simplification algorithm, keep running until collision shape polygon has less than 100 points
+        std::vector<DrPointF> simple_points = image->m_poly_list[poly_number];
+        double simple_tolerance = 2.0;
+        while (simple_points.size() > 100) {
+            simple_points = PolylineSimplification::RamerDouglasPeucker(simple_points, simple_tolerance);
+            simple_tolerance = std::pow(simple_tolerance, 2.0);
+        }
+
+        // Add polygon to list of polygons in shape
+        shapes.addPolygon( simple_points );
+    }
+
+    // If we don't have polygons by this point, just add a simple box
+    if (shapes.getPolygons().size() < 1) shapes.addPolygon( image->getBitmap().polygon().points() );
+
+    // Adjust points in Boxes / Polygons so that (0, 0) is the center of the image
+    for (auto &shape : shapes.getPolygons()) {
+        for (auto &point : shape) {
+            point.x = point.x - (image->getBitmap().width / 2.0);
+            point.y = (image->getBitmap().height - point.y) - (image->getBitmap().height / 2.0);
         }
     }
-    return animation_keys_used;
+    return shapes;
 }
 
-//####################################################################################
-//##    Deletes Underlying Animations, called when DrAsset is deleted
-//##        Verify first if Animations are used by other DrAssets or if Animation is built in
-//####################################################################################
-void DrAsset::deleteAnimations() {
-    for (auto &animation_key : animationsUsedByAsset()) {
-        getParentProject()->deleteAnimation(animation_key, this->getKey());
-    }
-}
 
 //####################################################################################
 //##    Returns Key of Idle Animation
@@ -173,39 +146,6 @@ long DrAsset::getIdleAnimationFirstFrameImageKey() {
 
     return animation->getFrame(animation->getStartFrameNumber())->getKey();
 }
-
-
-//####################################################################################
-//##    Updates Default Animation Images / Collsion Shape
-//####################################################################################
-void DrAsset::updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key) {
-    if (m_asset_type != DrAssetType::Object && m_asset_type != DrAssetType::Character) return;
-
-    // ***** Get existing DrProperty to Replace
-    DrProperty *property =   getComponentProperty(animation_component_property_key);
-    if (property == nullptr) return;
-    long old_animation = property->getValue().toLong();
-
-    // ***** Create new animation from new image keys
-    DrAnimation *animation = getParentProject()->addAnimation(image_keys);    
-    property->setValue( animation->getKey() );
-
-    if (property->getPropertyKey() == Props::Asset_Animation_Idle) {
-        DrImage     *new_image = animation->getFirstFrameImage();
-        m_width =    new_image->getBitmap().width;
-        m_height =   new_image->getBitmap().height;
-        m_base_key = animation->getKey();
-
-        // Calculate new image collision shape
-        DrPropertyCollision shape = autoCollisionShape(new_image);
-        setComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Image_Shape, shape);
-    }
-
-    // ***** Delete Old Animation
-    getParentProject()->deleteAnimation(old_animation, this->getKey());
-}
-
-
 
 
 

@@ -74,7 +74,11 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
                 break;
             }
 
-            // Load Thing Effect
+            // ***** Don't load Character, only on Start Stage for now
+            case DrThingType::Character:
+                break;
+
+            // ***** Load Effect
             case DrThingType::Fire:     loadFireToWorld(    thing, offset_x, offset_y);     break;
             case DrThingType::Fisheye:  loadFisheyeToWorld( thing, offset_x, offset_y);     break;
             case DrThingType::Light:    loadLightToWorld(   thing, offset_x, offset_y);     break;
@@ -82,14 +86,16 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
             case DrThingType::Swirl:    loadSwirlToWorld(   thing, offset_x, offset_y);     break;
             case DrThingType::Water:    loadWaterToWorld(   thing, offset_x, offset_y);     break;
 
-            // Load Device
+            // ***** Load Device
             case DrThingType::Camera:   loadCameraToWorld(  thing, offset_x, offset_y);     break;
 
-            // Don't load Character, only on Start Stage for now
-            case DrThingType::Character:
-                break;
+            // ***** Load Item
+            case DrThingType::Tile:     loadTileToWorld(    thing, offset_x, offset_y);     break;
 
-            default:
+
+            // !!!!! NOT IMPLEMENTED:
+            case DrThingType::Text:
+            case DrThingType::None:
                 break;
         }
 

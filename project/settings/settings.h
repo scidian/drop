@@ -75,6 +75,7 @@ public:
     void            setLocked(bool locked)      { m_is_locked = locked; }
     void            setVisible(bool visible)    { m_is_visible = visible; }
 
+
     // Component Handling
     ComponentMap&   getComponentMap()           { return m_components; }
     long            getComponentCount()         { return static_cast<int>(m_components.size()); }
@@ -100,6 +101,12 @@ public:
     void            addComponentEntitySettings();
     void            addComponentHiddenSettings();
     void            addComponentSizeSettings();
+
+
+    // Animation Functions
+    std::list<long>         animationsUsedByEntity();
+    void                    deleteAnimations();
+    void                    updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key);
 
     // Setttings Helpers
     void                    copyEntitySettings(DrSettings *from_entity);

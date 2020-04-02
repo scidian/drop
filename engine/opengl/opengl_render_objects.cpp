@@ -12,10 +12,12 @@
 #include "engine/mesh/engine_vertex_data.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component/thing_comp_tile.h"
 #include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/world/engine_world.h"
-#include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
 #include "project/entities/dr_asset.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################
@@ -533,7 +535,71 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     m_simple_shader.disableAttributeArray( a_simple_texture_coord );
     addTriangles( 2 );
 
-    m_simple_shader.release();
+    // Set Last Thing Type
+    m_last_thing = DrThingType::None;
+}
+
+
+//####################################################################################
+//##    Draws a DrThingType::Tile with Simple Shader
+//####################################################################################
+void DrOpenGL::drawObjectTile(DrEngineThing *thing) {
+
+    // Get Tile component of DrEngingThing
+    DrThingComponent *component = thing->component(Comps::Thing_Settings_Tile);     if (component == nullptr) return;
+    ThingCompTile *tile_settings = dynamic_cast<ThingCompTile*>(component);         if (tile_settings == nullptr) return;
+
+    // Enable shader program
+    if (!m_simple_shader.bind()) return;
+
+    // ***** Blend function
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                    // Premultiplied alpha blend
+
+    // ***** Get texture to render with, set texture coordinates
+    DrEngineTexture *texture;
+    long texture_number = c_key_image_empty;
+    DrAnimation *animation = getEngine()->getProject()->findAnimationFromKey(tile_settings->getAnimationKey());
+    if (animation != nullptr) {
+        texture_number = animation->getFrame(animation->getStartFrameNumber())->getKey();
+    }
+    texture = m_engine->getTexture(texture_number);
+    if (texture == nullptr) return;
+    if (!texture->texture()->isBound()) texture->texture()->bind();
+
+    // ***** Set Matrix for Shader, calculates current matrix, adds in object location
+    float x =   static_cast<float>(thing->getPosition().x + m_add_z);
+    float y =   static_cast<float>(thing->getPosition().y + m_add_z);
+    float z =   static_cast<float>(thing->getZOrder()     + m_add_z);
+
+    // Translate
+    QMatrix4x4 model;
+    model.translate(x, y, z);
+
+    // Rotate
+    model.rotate(static_cast<float>(thing->getAngle()), 0.f, 0.f, 1.f);
+
+    // Scale
+    model.scale(static_cast<float>(texture->width()), static_cast<float>(texture->height()), 1.0f);
+    model.scale( thing->getScaleX(), thing->getScaleY(), 1.0f );
+
+    // ***** Set Shader Variables
+    m_simple_shader.setUniformValue( u_simple_texture,      0 );                                        // Use texture unit 0
+    m_simple_shader.setUniformValue( u_simple_matrix,       m_projection * m_view * model );
+    m_simple_shader.setUniformValue( u_simple_alpha,        thing->getOpacity() );
+
+    // ***** Draw triangles using shader program
+    m_simple_shader.enableAttributeArray( a_simple_vertex );
+    m_simple_shader.enableAttributeArray( a_simple_texture_coord );
+    m_simple_shader.setAttributeArray(    a_simple_vertex,        m_quad_vertices.data(),               3 );
+    m_simple_shader.setAttributeArray(    a_simple_texture_coord, m_quad_texture_coordinates.data(),    2 );
+    glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+    m_simple_shader.disableAttributeArray( a_simple_vertex );
+    m_simple_shader.disableAttributeArray( a_simple_texture_coord );
+    addTriangles( 2 );
+
+    // Set Last Thing Type
+    m_last_thing = DrThingType::Tile;
 }
 
 

@@ -69,6 +69,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
 
 // Removes a Thing from the project
 void DrStage::deleteThing(DrThing *&thing) {
+    thing->deleteAnimations();
     m_things.erase(thing->getKey());
     delete thing;
 }

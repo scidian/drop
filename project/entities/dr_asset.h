@@ -11,6 +11,7 @@
 #include "project/settings/settings.h"
 
 // Forward Declarations
+class DrImage;
 class DrProject;
 class DrPropertyCollision;
 
@@ -23,12 +24,12 @@ class DrAsset : public DrSettings
 {
 private:
     // Local Variables
-    DrAssetType     m_asset_type;                       // Holds asset type (object, character, etc)
+    DrAssetType     m_asset_type;                           // Holds asset type (object, character, etc)
 
-    long            m_base_key = c_no_key;              // Holds key to source (asset pulls from an DrAnimation, DrImage)
-                                                        // For more info, look at DrAsset Constructor
-    long            m_width;
-    long            m_height;
+    long            m_base_key          { c_no_key };       // Holds key to source (asset pulls from an DrAnimation, DrImage)
+                                                            // For more info, look at DrAsset Constructor
+    long            m_width             { 0 };
+    long            m_height            { 0 };
 
 
 public:
@@ -42,6 +43,8 @@ public:
     // Getters / Setters
     long            getWidth()              { return m_width; }
     long            getHeight()             { return m_height; }
+    void            setWidth(long width)    { m_width = width; }
+    void            setHeight(long height)  { m_height = height; }
 
     DrAssetType     getAssetType()          { return m_asset_type; }
     void            setAssetType(DrAssetType type)  { m_asset_type = type; }
@@ -50,11 +53,11 @@ public:
     void            setBaseKey(long key)    { m_base_key = key; }
 
     // Function Calls
-    std::list<long> animationsUsedByAsset();
-    void            deleteAnimations();
-    long            getIdleAnimationKey();
-    long            getIdleAnimationFirstFrameImageKey();
-    void            updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key);
+    long                        getIdleAnimationKey();
+    long                        getIdleAnimationFirstFrameImageKey();
+
+    // Shape Functions
+    static DrPropertyCollision  autoCollisionShape(const DrImage *image);
 
     // Initialize Calls
     void        initializeAssetSettingsCharacter(std::string new_name);

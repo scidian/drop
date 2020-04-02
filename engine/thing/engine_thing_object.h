@@ -136,10 +136,6 @@ private:
 
     double          m_reflect_force             { 0.0 };                    // Used by BodyAddRecoil callback to reflect m_repulse_force or m_damage_recoil
 
-public:
-    // ***** Image Post Processing Attributes
-    Blend_Object    blend_type                  { Blend_Object::Standard }; // Blend mode for current object
-    bool            cast_shadows                { true };                   // Will cast shadows when in front of a Light
 
 
     // #################### FUNCTIONS ####################

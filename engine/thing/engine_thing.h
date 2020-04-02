@@ -87,12 +87,15 @@ public:
     float           contrast                { 0.0f };               // Contrast             Editor: -255 to 255     Shader: -1.0 to 1.0
     float           brightness              { 0.0f };               // Brightness           Editor: -255 to 255     Shader: -1.0 to 1.0
 
+    Blend_Object    blend_type              { Blend_Object::Standard };     // Blend mode for current object
+    bool            cast_shadows            { true };                       // Will cast shadows when in front of a Light
+
 
     // ********** Local Variables Updated by Engine
     //                NOT TO BE SET BY USER
-    bool        m_remove_me                 { false };              // Set to true for forced removal next update cycle
-    double      time_since_last_update      { 0.0 };                // Milliseconds since update() was called last
-    DrTime      update_timer                { Clock::now() };       // Used to keep track of time passed since update() was called last
+    bool        m_remove_me                 { false };                      // Set to true for forced removal next update cycle
+    double      time_since_last_update      { 0.0 };                        // Milliseconds since update() was called last
+    DrTime      update_timer                { Clock::now() };                // Used to keep track of time passed since update() was called last
 
 
 

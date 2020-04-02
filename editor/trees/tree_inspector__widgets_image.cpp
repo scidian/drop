@@ -29,6 +29,7 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_item.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -229,13 +230,14 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             return false;
         }
 
-        // Extract the local paths of the files
+        // ***** Extract the local paths of the files
         QStringList path_list;
         QList<QUrl> url_list = drop_event->mimeData()->urls();
-        for (auto url : url_list)
+        for (auto url : url_list) {
             path_list.append( url.toLocalFile() );
+        }
 
-        // Try to load the images, if they dont load, exit. If they do, make sure they are #AARRGGBB and convert to pixmap
+        // ***** Try to load the images, if they dont load, exit. If they do, make sure they are #AARRGGBB and convert to pixmap
         QList<QString> file_paths;
         double width = 0, height = 0;
         int count = 0;
@@ -258,41 +260,36 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
             return QObject::eventFilter(object, event);
         }
 
-        // ********** Dropped on to Asset Property
-        if (settings->getType() == DrType::Asset) {
-            DrAsset *asset = dynamic_cast<DrAsset*>(settings);
+        // ***** Add Images, Update Animation
+        FormProgressBox *progress = new FormProgressBox("...", "Cancel", file_paths.size() * 2, frame->window());
+        progress->setPrefix(" Importing Images: \n");
+        std::list<long> image_keys;
+        for (auto file_path : file_paths) {
+            DrImage *image = Dr::AddImage(project, file_path, c_no_key, Asset_Category::Image, progress);
+            image_keys.push_back(image->getKey());
+        }
+        progress->stopProgress();
+        settings->updateAnimationProperty( image_keys, property->getCompPropPair() );
 
-            // Add Images, Update Animation
-            FormProgressBox *progress = new FormProgressBox("...", "Cancel", file_paths.size() * 2, frame->window());
-            progress->setPrefix(" Importing Images: \n");
-            std::list<long> image_keys;
-            for (auto file_path : file_paths) {
-                DrImage *image = Dr::AddImage(project, file_path, c_no_key, Asset_Category::Image, progress);
-                image_keys.push_back(image->getKey());
-            }
-            progress->stopProgress();
-            asset->updateAnimationProperty( image_keys, property->getCompPropPair() );
-
-            // Update all Things, Thing_Size that use Asset
-            for (auto world_pair : project->getWorldMap()) {
-                for (auto stage_pair : world_pair.second->getStageMap()) {
-                    for (auto thing_pair : stage_pair.second->getThingMap()) {
-                        DrThing *thing = thing_pair.second;
-                        if (thing->getAssetKey() == settings_key) {
-                            DrPointF scale = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
-                            DrPointF new_size(width * scale.x, height * scale.y);
-                            thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size, new_size);
-                        }
+        // ***** Update all Things, Thing_Size that use Asset
+        for (auto world_pair : project->getWorldMap()) {
+            for (auto stage_pair : world_pair.second->getStageMap()) {
+                for (auto thing_pair : stage_pair.second->getThingMap()) {
+                    DrThing *thing = thing_pair.second;
+                    if (thing->getAssetKey() == settings_key) {
+                        DrPointF scale = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
+                        DrPointF new_size(width * scale.x, height * scale.y);
+                        thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size, new_size);
                     }
                 }
             }
-
-            getEditorRelay()->buildScene( c_same_key );
-            getEditorRelay()->buildAssetTree();
-            getEditorRelay()->buildInspector( { settings_key }, true );
-            drop_event->acceptProposedAction();
         }
 
+        // ***** Update UI
+        getEditorRelay()->buildScene( c_same_key );
+        getEditorRelay()->buildAssetTree();
+        getEditorRelay()->buildInspector( { settings_key }, true );
+        drop_event->acceptProposedAction();
     }
 
     return QObject::eventFilter(object, event);

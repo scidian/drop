@@ -263,6 +263,7 @@ SOURCES += \
     engine/thing_component/thing_comp_foliage.cpp \
     engine/thing_component/thing_comp_player.cpp \
     engine/thing_component/thing_comp_soft_body.cpp \
+    engine/thing_component/thing_comp_tile.cpp \
     engine/thing_component_effects/thing_comp_fire.cpp \
     engine/thing_component_effects/thing_comp_fisheye.cpp \
     engine/thing_component_effects/thing_comp_light.cpp \
@@ -277,6 +278,7 @@ SOURCES += \
     engine/world/engine_world__collision.cpp \
     engine/world/engine_world__load_characters.cpp \
     engine/world/engine_world__load_effects.cpp \
+    engine/world/engine_world__load_items.cpp \
     engine/world/engine_world__load_objects.cpp \
     engine/world/engine_world__load_stage.cpp \
     engine/world/engine_world__soft_body_blobs.cpp \
@@ -997,6 +999,7 @@ HEADERS += \
     engine/thing_component/thing_comp_foliage.h \
     engine/thing_component/thing_comp_player.h \
     engine/thing_component/thing_comp_soft_body.h \
+    engine/thing_component/thing_comp_tile.h \
     engine/thing_component_effects/thing_comp_fire.h \
     engine/thing_component_effects/thing_comp_fisheye.h \
     engine/thing_component_effects/thing_comp_light.h \
