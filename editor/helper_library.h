@@ -54,7 +54,7 @@ namespace Dr {
     QString     FindCopyName(QString original, std::vector<QString> others);
 
 
-    // ***** Dr Libary Misc Conversion
+    // ***** DrLibary Misc Conversion
     DrColor     FromQColor(const QColor &color);
     DrPoint     FromQPoint(const QPoint &point);
     DrPointF    FromQPointF(const QPointF &pointf);
@@ -71,6 +71,10 @@ namespace Dr {
 
     // ***** Qt Comparison
     bool        SameQColor(QColor color1, QColor color2, double tolerance);
+
+    // ***** Qt Math
+    QTransform  CreateRotatedQTransform(QPointF  offset, double angle_in_degrees);
+    QTransform  CreateRotatedQTransform(DrPointF offset, double angle_in_degrees);
 
 
     // ***** User Interaction

@@ -97,6 +97,14 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                 m_origin_timer.restart();
                 m_allow_movement = false;
 
+                // ******************** If clicked on Stage resize box, need to start resizing it
+                if (m_over_handle == Position_Flags::Stage_Size) {
+                    m_view_mode = View_Mode::Resizing_Stage;
+                    startResizeStage(m_origin);
+                    my_scene->scene_mutex.unlock();
+                    return;
+                }
+
                 // ******************** If clicked on camera, need to start rotating it
                 if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
                     // Select camera's parent graphics item in Object Inspector
@@ -111,7 +119,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                         return;
                     }
                 }
-
 
                 if (my_scene->getSelectionCount() > 0) {
                     // ******************* If clicked while holding Alt key start rotating

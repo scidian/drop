@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 
 #include "core/colors/colors.h"
+#include "core/dr_math.h"
 #include "core/dr_string.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
@@ -48,7 +49,7 @@ namespace Mouse_Cursors {
 //##    Mouse Leaves View
 //####################################################################################
 void DrView::leaveEvent(QEvent *event) {
-    (void)event;
+    (void) event;
     m_editor_relay->setMousePosition("", "");
 }
 
@@ -62,6 +63,9 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     // Test for scene and lock the scene
     if (scene() == nullptr) return;
     if (my_scene->scene_mutex.tryLock(10) == false) return;
+
+    // Get current DrStage shown in view
+    DrStage *stage = my_scene->getCurrentStageShown();
 
     // Update keyboard modifiers in case a keyPressEvent snuck through while we didnt have focus
     if (m_flag_dont_check_keys == false) {
@@ -128,12 +132,11 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     } else if (m_mouse_mode == Mouse_Mode::Pointer) {
 
-        // ********** Check selection handles to see if mouse is over one
-        if (m_over_handle == Position_Flags::Move_Item) m_over_handle = Position_Flags::No_Position;
+        // Reset flag that holds which interactive mouse object we are over and has priority
+        m_over_handle = Position_Flags::No_Position;
 
+        // Check selection handles to see if mouse is over one
         if (my_scene->getSelectionCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
-            m_over_handle = Position_Flags::No_Position;
-
             if      (m_handles[Position_Flags::Rotate       ].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
             else if (m_handles[Position_Flags::Top_Left     ].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Top_Left;
             else if (m_handles[Position_Flags::Top_Right    ].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Top_Right;
@@ -145,16 +148,18 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
             else if (m_handles[Position_Flags::Right        ].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Right;
 
             if (m_over_handle == Position_Flags::No_Position && my_scene->getSelectionItems().contains(item_under_mouse)) {
-                if (m_flag_key_down_alt == false)
+                if (m_flag_key_down_alt == false) {
                     m_over_handle = Position_Flags::Move_Item;
+                }
             }
 
-            if (m_flag_key_down_alt == true)
+            if (m_flag_key_down_alt == true) {
                 m_over_handle = Position_Flags::Rotate;
+            }
         }
 
         // Check if over camera when Debug Camera mode is activated
-        if (Dr::GetPreference(Preferences::World_Editor_Show_Camera_Boxes).toBool() && m_view_mode == View_Mode::None  && m_flag_key_down_spacebar == false) {
+        if (Dr::GetPreference(Preferences::World_Editor_Show_Camera_Boxes).toBool() && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
             if (m_cam_selected == nullptr) {
                 DrThing *before_check = m_cam_mouse_over;
                 DrThing *over = nullptr;
@@ -166,57 +171,41 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
                     }
                 }
                 m_cam_mouse_over = over;
-                if (m_cam_mouse_over != nullptr)
+                if (m_cam_mouse_over != nullptr) {
                     m_over_handle = Position_Flags::Over_Camera;
-                else if (m_over_handle == Position_Flags::Over_Camera)
-                    m_over_handle = Position_Flags::No_Position;
+                }
                 if (before_check != m_cam_mouse_over) this->update();
             }
         }
 
-        // ********** If we are over a handle, and not doing anything, set cursor based on precalculated angle
-        if (m_over_handle != Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
-
-            if (m_over_handle == Position_Flags::Move_Item) {
-                viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
-            } else if (m_over_handle == Position_Flags::Rotate) {
-                viewport()->setCursor(Mouse_Cursors::rotateAll());
-            } else if (m_over_handle == Position_Flags::Over_Camera) {
-                viewport()->unsetCursor();
-            } else {
-                mouse_angle = m_handles_angles[m_over_handle];
-
-                ///// Custom rotated cursor
-                ///QPixmap arrow = QPixmap(":/assets/cursors/size_vertical.png", nullptr, Qt::ImageConversionFlag::AutoDither);
-                ///QPixmap rotated = arrow.transformed(QTransform().rotate(a));
-                ///int xoffset = (rotated.width() - arrow.width()) / 2;
-                ///int yoffset = (rotated.height() - arrow.height()) / 2;
-                ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
-                ///viewport()->setCursor(rotated);
-
-                if      (mouse_angle <  11.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());            // 0        Top
-                else if (mouse_angle <  33.75) viewport()->setCursor(Mouse_Cursors::size022());                 // 22.5
-                else if (mouse_angle <  56.25) viewport()->setCursor(Mouse_Cursors::size045());                 // 45       Top Right
-                else if (mouse_angle <  78.75) viewport()->setCursor(Mouse_Cursors::size067());                 // 67.5
-                else if (mouse_angle < 101.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());          // 90       Right
-                else if (mouse_angle < 123.75) viewport()->setCursor(Mouse_Cursors::size112());                 // 112.5
-                else if (mouse_angle < 146.25) viewport()->setCursor(Mouse_Cursors::size135());                 // 135      Bottom Right
-                else if (mouse_angle < 168.75) viewport()->setCursor(Mouse_Cursors::size157());                 // 157
-                else if (mouse_angle < 191.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());            // 180      Bottom
-                else if (mouse_angle < 213.75) viewport()->setCursor(Mouse_Cursors::size022());                 // 202
-                else if (mouse_angle < 236.25) viewport()->setCursor(Mouse_Cursors::size045());                 // 225      Bottom Left
-                else if (mouse_angle < 258.75) viewport()->setCursor(Mouse_Cursors::size067());                 // 247
-                else if (mouse_angle < 281.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());          // 270      Left
-                else if (mouse_angle < 303.75) viewport()->setCursor(Mouse_Cursors::size112());                 // 292
-                else if (mouse_angle < 326.25) viewport()->setCursor(Mouse_Cursors::size135());                 // 315      Top Left
-                else if (mouse_angle < 348.75) viewport()->setCursor(Mouse_Cursors::size157());                 // 337
-                else                           viewport()->setCursor(Mouse_Cursors::sizeVertical());            // 360      Top
+        // Check if over Stage Size grabber box
+        if (stage != nullptr) {
+            if (m_stage_grab_handle.containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) {
+                m_over_handle = Position_Flags::Stage_Size;
             }
         }
 
-        // ********** If no longer over handle and mouse is up, reset mouse cursor
-        if (m_mouse_mode == Mouse_Mode::Pointer) {
-            if (m_over_handle == Position_Flags::No_Position && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+        // ********** If we are not doing anything (View_Mode::None), set cursor based on Position Flag
+        if (m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+
+            if (m_over_handle >= Position_Flags::Top && m_over_handle <= Position_Flags::Bottom_Right) {
+                mouse_angle = m_handles_angles[m_over_handle];
+                setMouseCursorFromAngle(mouse_angle);
+
+            } else if (m_over_handle == Position_Flags::Rotate) {
+                viewport()->setCursor(Mouse_Cursors::rotateAll());
+
+            } else if (m_over_handle == Position_Flags::Move_Item) {
+                viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+
+            } else if (m_over_handle == Position_Flags::Over_Camera) {
+                viewport()->unsetCursor();
+
+            } else if (m_over_handle == Position_Flags::Stage_Size) {
+                double game_direction = stage->getParentWorld()->getComponentPropertyValue(Comps::World_Settings, Props::World_Game_Direction).toDouble();
+                setMouseCursorFromAngle(game_direction + 90.0);
+
+            } else { ///if (m_over_handle == Position_Flags::No_Position) {
                 viewport()->unsetCursor();
             }
         }
@@ -226,20 +215,21 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
     // !!!!! #DEBUG:    Draw mouse coords on screen
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Mouse_Coordinates)) {
         long thing_count = 0;
-        if (my_scene)
+        if (my_scene) {
             if (my_scene->getCurrentStageShown())
                 thing_count = static_cast<long>(my_scene->getCurrentStageShown()->getThingMap().size());
+        }
         Dr::SetLabelText(Label_Names::Label_Mouse_1, "Mouse Scene X: " + QString::number(mapToScene(m_last_mouse_pos).x()) +
                                                                ", Y: " + QString::number(mapToScene(m_last_mouse_pos).y()) );
         Dr::SetLabelText(Label_Names::Label_Mouse_2, "Mouse View  X: " + QString::number(m_last_mouse_pos.x()) +
                                                                ", Y: " + QString::number(m_last_mouse_pos.y()) );
-        Dr::SetLabelText(Label_Names::Label_Pos_Flag, "Pos Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
-                                                     "Pos Angle: " + QString::number(mouse_angle) + QString("\t") +
-                                                    "Item Count: " + QString::number(thing_count)  );
-        Dr::SetLabelText(Label_Names::Label_Object_5, "Assets: " + QString::number(m_project->getAssetMap().size()) +
-                                                    ", Images: " + QString::number(m_project->getImageMap().size()) +
-                                                    ", Animes: " + QString::number(m_project->getAnimationMap().size()) +
-                                                     ", Fonts: " + QString::number(m_project->getFontMap().size()));
+        Dr::SetLabelText(Label_Names::Label_Pos_Flag,     "Pos Flag: " + Dr::StringFromPositionFlag(m_over_handle) + QString("\t") +
+                                                         "Pos Angle: " + QString::number(mouse_angle) + QString("\t") +
+                                                        "Item Count: " + QString::number(thing_count)  );
+        Dr::SetLabelText(Label_Names::Label_Object_5,       "Assets: " + QString::number(m_project->getAssetMap().size()) +
+                                                          ", Images: " + QString::number(m_project->getImageMap().size()) +
+                                                      ", Animations: " + QString::number(m_project->getAnimationMap().size()) +
+                                                           ", Fonts: " + QString::number(m_project->getFontMap().size()));
     }
     // !!!!! END
 
@@ -309,9 +299,14 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         rotateSelection(event->pos());
     }
 
-    // ******************* If mouse moved while alt pressed, rotate
+    // ******************* If mouse moved while rotating a camera
     if (m_view_mode == View_Mode::Moving_Camera) {
         rotateCamera(event->pos());
+    }
+
+    // ******************* If mouse moved while resizing a stage
+    if (m_view_mode == View_Mode::Resizing_Stage) {
+        resizeStage(event->pos());
     }
 
     // ******************* If mouse moved while in translating mode, update tooltip
@@ -351,6 +346,38 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 }
 
 
+//####################################################################################
+//##    Sets Mouse Cursor based on angle_in_degrees
+//####################################################################################
+void DrView::setMouseCursorFromAngle(double angle_in_degrees) {
+    ///// Custom rotated cursor
+    ///QPixmap arrow = QPixmap(":/assets/cursors/size_vertical.png", nullptr, Qt::ImageConversionFlag::AutoDither);
+    ///QPixmap rotated = arrow.transformed(QTransform().rotate(a));
+    ///int xoffset = (rotated.width() - arrow.width()) / 2;
+    ///int yoffset = (rotated.height() - arrow.height()) / 2;
+    ///rotated = rotated.copy(xoffset, yoffset, arrow.width(), arrow.height());
+    ///viewport()->setCursor(rotated);
+
+    angle_in_degrees = Dr::EqualizeAngle0to360(angle_in_degrees);
+
+    if      (angle_in_degrees <  11.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());           // 0        Top
+    else if (angle_in_degrees <  33.75) viewport()->setCursor(Mouse_Cursors::size022());                // 22.5
+    else if (angle_in_degrees <  56.25) viewport()->setCursor(Mouse_Cursors::size045());                // 45       Top Right
+    else if (angle_in_degrees <  78.75) viewport()->setCursor(Mouse_Cursors::size067());                // 67.5
+    else if (angle_in_degrees < 101.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());         // 90       Right
+    else if (angle_in_degrees < 123.75) viewport()->setCursor(Mouse_Cursors::size112());                // 112.5
+    else if (angle_in_degrees < 146.25) viewport()->setCursor(Mouse_Cursors::size135());                // 135      Bottom Right
+    else if (angle_in_degrees < 168.75) viewport()->setCursor(Mouse_Cursors::size157());                // 157
+    else if (angle_in_degrees < 191.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());           // 180      Bottom
+    else if (angle_in_degrees < 213.75) viewport()->setCursor(Mouse_Cursors::size022());                // 202
+    else if (angle_in_degrees < 236.25) viewport()->setCursor(Mouse_Cursors::size045());                // 225      Bottom Left
+    else if (angle_in_degrees < 258.75) viewport()->setCursor(Mouse_Cursors::size067());                // 247
+    else if (angle_in_degrees < 281.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());         // 270      Left
+    else if (angle_in_degrees < 303.75) viewport()->setCursor(Mouse_Cursors::size112());                // 292
+    else if (angle_in_degrees < 326.25) viewport()->setCursor(Mouse_Cursors::size135());                // 315      Top Left
+    else if (angle_in_degrees < 348.75) viewport()->setCursor(Mouse_Cursors::size157());                // 337
+    else                                viewport()->setCursor(Mouse_Cursors::sizeVertical());           // 360      Top
+}
 
 
 

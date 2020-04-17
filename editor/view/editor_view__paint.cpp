@@ -57,7 +57,7 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
 
     // Draw Game Frame
     DrStage *stage = my_scene->getCurrentStageShown();
-    if (stage) {
+    if (stage != nullptr) {
         if (stage->isStartStage()) {
             paintGameFrame(*painter);
         }
@@ -88,6 +88,7 @@ void DrView::paintEvent(QPaintEvent *event) {
     // Initiate QPainter object
     QPainter painter(viewport());
 
+    // Turn on anti-aliasing flags
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
@@ -308,7 +309,7 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     stageBoundingRect(m_project, stage, h2);
 
     // Draw start bracket (in Scene coordinates)
-    QPainterPath left, right, direction, arrow;
+    QPainterPath left, right, direction, direction_box, arrow;
     left.moveTo(  30,  h2 );
     left.lineTo(   0,  h2 );
     left.lineTo(   0, -h2 );
@@ -323,15 +324,18 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     right.translate( stage_size, 0 );
     right = t_scene.map(right);
 
-    // Direction Box (in View Coordinates)
+    // Figure out middle right location, rotation of scene
     QPoint middle_right = mapFromScene( t_scene.map(QPointF(stage_size, 0)) );
-    direction.addRect( middle_right.x() - 5, middle_right.y() - 5, 10, 10);
+    QTransform t_view = Dr::CreateRotatedQTransform(middle_right, game_direction);
 
-    // Figure out rotation QGraphicsView transform
-    QTransform t_view = QTransform().translate( middle_right.x(),  middle_right.y())
-                                    .rotate(game_direction)
-                                    .translate(-middle_right.x(), -middle_right.y());
+    // Direction Box (in View Coordinates)
+    direction.addRect( middle_right.x() - 5, middle_right.y() - 5, 10, 10);
     direction = t_view.map(direction);
+
+    // Box used for mouse resizing of Stage Size
+    direction_box.addRect( middle_right.x() - 5, middle_right.y() - 5, 14, 14);
+    direction_box = t_view.map(direction_box);
+    m_stage_grab_handle = direction_box.toFillPolygon();
 
     // Directional Arrow (in View Coordinates)
     arrow.moveTo( middle_right.x() + 11, middle_right.y());
@@ -348,9 +352,11 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
     QPen frame_pen_outline = QPen(line_color, 4);
     QPen frame_pen_inside  = QPen(fill_color, 2);
 
+    // Draw sides
     painter.setPen( frame_pen_outline );    painter.drawPath( mapFromScene(left) );     painter.drawPath( mapFromScene(right) );
     painter.setPen( frame_pen_inside );     painter.drawPath( mapFromScene(left) );     painter.drawPath( mapFromScene(right) );
 
+    // Draw direction box with little arrow
     painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark)) );
     painter.setPen( frame_pen_outline );
     painter.drawPath( direction );

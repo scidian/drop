@@ -137,7 +137,9 @@ QString DrView::currentViewModeAsString() {
         case View_Mode::Zooming:            return "Zooming";
         case View_Mode::Holding_Keys:       return "Holding Keys";
         case View_Mode::Moving_Camera:      return "Moving Camera";
+        case View_Mode::Resizing_Stage:     return "Resizing Stage";
     }
+    return "Mode not handled...";
 }
 
 
@@ -203,7 +205,7 @@ void DrView::updateSelectionBoundingBox(int called_from) {
     m_handles[Position_Flags::Center] =       rectAtCenterPoint( mapFromScene( center    ), corner_size);
 
     // ***** Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
-    QTransform remove_rotation = QTransform().translate(center.x(), center.y()).rotate(-angle).translate(-center.x(), -center.y());
+    QTransform remove_rotation = Dr::CreateRotatedQTransform(center, -angle);
     top_left =  mapFromScene( remove_rotation.map(top_left) );
     top_right=  mapFromScene( remove_rotation.map(top_right) );
     bot_left =  mapFromScene( remove_rotation.map(bot_left) );
@@ -217,7 +219,7 @@ void DrView::updateSelectionBoundingBox(int called_from) {
 
     // ***** Add rotation back onto side boxes
     center = QLineF(top_left, bot_right).pointAt(.5);
-    QTransform add_rotation =    QTransform().translate(center.x(), center.y()).rotate( angle).translate(-center.x(), -center.y());
+    QTransform add_rotation = Dr::CreateRotatedQTransform(center, angle);
     m_handles[Position_Flags::Top] =    add_rotation.map(temp_top);
     m_handles[Position_Flags::Bottom] = add_rotation.map(temp_bottom);
     m_handles[Position_Flags::Left] =   add_rotation.map(temp_left);
@@ -254,7 +256,7 @@ void DrView::updateSelectionBoundingBox(int called_from) {
     else
         zero.setY(zero.y() + 22);
 
-    QTransform rotate = QTransform().translate(top.x(), top.y()).rotate(m_handles_angles[Position_Flags::Top]).translate(-top.x(), -top.y());
+    QTransform rotate = Dr::CreateRotatedQTransform(top, m_handles_angles[Position_Flags::Top]);
     zero = rotate.map(zero);
     m_handles[Position_Flags::Rotate] = rectAtCenterPoint( zero, corner_size);
     m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();

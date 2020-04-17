@@ -124,7 +124,7 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
     m_tool_tip->updateToolTipData(angle);
 
     // ********** Create transform for new angle, apply it, and destroy temporary item group
-    QTransform transform = QTransform().translate(offset.x(), offset.y()).rotate(angle - start_angle).translate(-offset.x(), -offset.y());
+    QTransform transform = Dr::CreateRotatedQTransform(offset, angle - start_angle);
     group->setTransform(transform);
     scene()->destroyItemGroup(group);
 

@@ -57,8 +57,8 @@ struct Camera_Data {
 };
 
 // Class Constants
-constexpr double c_angle_tolerance = 2.5;                               // Angle distance to fuzzy compare to desired angle
-constexpr int    c_angle_step = 15;                                     // Angle intervals rotate function should snap to
+constexpr double c_angle_tolerance = 2.5;                                   // Angle distance to fuzzy compare to desired angle
+constexpr int    c_angle_step = 15;                                         // Angle intervals rotate function should snap to
 
 
 //####################################################################################
@@ -71,116 +71,124 @@ class DrView : public QGraphicsView
 
 private:
     // External Borrowed Pointers
-    DrProject              *m_project;                                  // Pointer to currently loaded project
-    IEditorRelay           *m_editor_relay;                             // Pointer to IEditorRelay class of parent form
+    DrProject              *m_project;                                      // Pointer to currently loaded project
+    IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
-    DrScene                *my_scene;                                   // Holds the scene() this view is set to as a DrScene Class
+    DrScene                *my_scene;                                       // Holds the scene() this view is set to as a DrScene Class
 
     // Local Variables
-    Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;         // Tracks current view mouse mode
-    View_Mode               m_view_mode = View_Mode::None;              // Tracks current view interaction mode
+    Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;             // Tracks current view mouse mode
+    View_Mode               m_view_mode = View_Mode::None;                  // Tracks current view interaction mode
 
     // Display Variables
-    int             m_zoom = 200; // (50%)                              // Zoom level of current view, 200 is 50% - 250 is 100%
-    double          m_zoom_scale = 0.5;                                 // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
-    QElapsedTimer   m_zoom_timer;                                       // Used to auto hide zoom tool tip after time has passed
-    int             m_rotate = 0;                      // NOT IMPLEMENTED: Rotation of current view
+    int                     m_zoom = 200; // (50%)                          // Zoom level of current view, 200 is 50% - 250 is 100%
+    double                  m_zoom_scale = 0.5;                             // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    QElapsedTimer           m_zoom_timer;                                   // Used to auto hide zoom tool tip after time has passed
+    int                     m_rotate = 0;                           // NOT IMPLEMENTED: Rotation of current view
 
     // Grid Drawing Variables
-    QVector<QPointF> m_grid_points;                                     // Holds latest calculated grid points
-    QVector<QLineF>  m_grid_lines;                                      // Holds latest calculated grid lines
-    QPixmap          m_grid_buffer;                                     // Back buffer for painting, grid lines are drawn onto this when view changes and then
-                                                                        //      this gets painted instead of drawLine calls every time paintEvent is called
-    QRectF           m_grid_view_rect;                                  // Holds the desired area we wish to draw lines or dots
-    bool             m_grid_needs_redraw = true;                        // Flag used to mark grid for redrawing during next paintEvent
+    QVector<QPointF>        m_grid_points;                                  // Holds latest calculated grid points
+    QVector<QLineF>         m_grid_lines;                                   // Holds latest calculated grid lines
+    QPixmap                 m_grid_buffer;                                  // Back buffer for painting, grid lines are drawn onto this when view changes and then
+                                                                            //      this gets painted instead of drawLine calls every time paintEvent is called
+    QRectF                  m_grid_view_rect;                               // Holds the desired area we wish to draw lines or dots
+    bool                    m_grid_needs_redraw = true;                     // Flag used to mark grid for redrawing during next paintEvent
 
     // Grid Style Variables (currently re-populated from DrView::updateGrid by way of updateEditorWidgetsAfterItemChange -> DrScene::updateChangesInScene)
-    Grid_Style   m_grid_style { Grid_Style::Lines };                    // Grid type to display
-    QPointF      m_grid_origin { 0, 0 };                                // Origin point of grid in scene
-    QPointF      m_grid_size { 50, 50 };                                // Grid size
-    QPointF      m_grid_scale { 1, 1 };                                 // X and Y scaling for after grid has been rotated
-    double       m_grid_rotate = 0;                                     // Rotation of grid lines
-    QColor       m_grid_color;                                          // Grid color
-    bool         m_back_color_use = false;                              // Should we use background color?
-    QColor       m_back_color;                                          // World background color
+    Grid_Style              m_grid_style        { Grid_Style::Lines };      // Grid type to display
+    QPointF                 m_grid_origin       { 0, 0 };                   // Origin point of grid in scene
+    QPointF                 m_grid_size         { 50, 50 };                 // Grid size
+    QPointF                 m_grid_scale        { 1, 1 };                   // X and Y scaling for after grid has been rotated
+    double                  m_grid_rotate       { 0 };                      // Rotation of grid lines
+    QColor                  m_grid_color;                                   // Grid color
+    bool                    m_back_color_use    { false };                  // Should we use background color?
+    QColor                  m_back_color;                                   // World background color
 
-    bool         m_grid_should_snap = true;                             // Should snap to grid?
-    bool         m_grid_resize_snap = true;                             // Should snap while resizing?
-    bool         m_grid_show_on_top = false;                            // Paint grid on top?
+    bool                    m_grid_should_snap  { true };                   // Should snap to grid?
+    bool                    m_grid_resize_snap  { true };                   // Should snap while resizing?
+    bool                    m_grid_show_on_top  { false };                  // Paint grid on top?
+
+    // Stage Bounds Variables
+    QPolygonF               m_stage_grab_handle;                            // Stores QRect of box that can be dragged to change Stage size
 
     // Misc Flags
-    bool         m_flag_has_shown_a_scene_yet = false;                  // False until a scene has been loaded into the view
+    bool                    m_flag_has_shown_a_scene_yet    { false };      // False until a scene has been loaded into the view
 
     // Keyboard Flags
-    bool         m_flag_dont_check_keys =   false;                      // True when we don't want mouseMoveEvent to update key flags
-    bool         m_flag_key_down_spacebar = false;                      // True when View has focus and spacebar      is down
-    bool         m_flag_key_down_control =  false;                      // True when View has focus and control (cmd) is down
-    bool         m_flag_key_down_alt =      false;                      // True when View has focus and alt (option)  is down
-    bool         m_flag_key_down_shift =    false;                      // True when View has focus and shift         is down
+    bool                    m_flag_dont_check_keys          { false };      // True when we don't want mouseMoveEvent to update key flags
+    bool                    m_flag_key_down_spacebar        { false };      // True when View has focus and spacebar      is down
+    bool                    m_flag_key_down_control         { false };      // True when View has focus and control (cmd) is down
+    bool                    m_flag_key_down_alt             { false };      // True when View has focus and alt (option)  is down
+    bool                    m_flag_key_down_shift           { false };      // True when View has focus and shift         is down
 
     // Drag and Drop Variables
-    bool         m_drop_might_happen = false;                           // True when its possible we may get an asset drop and need to draw crosshairs
-    QPointF      m_drop_location;                                       // Potential drop location of drag and drop operation
+    bool                    m_drop_might_happen             { false };      // True when its possible we may get an asset drop and need to draw crosshairs
+    QPointF                 m_drop_location;                                // Potential drop location of drag and drop operation
 
     // Mouse event variables
-    QPoint                              m_origin;                       // Stores mouse down position in view coordinates
-    QPointF                             m_origin_in_scene;              // Stores mouse down position in scene coordinates
-    QGraphicsItem                      *m_origin_item;                  // Stores top item under mouse (if any) on mouse down event
+    QPoint                              m_origin;                           // Stores mouse down position in view coordinates
+    QPointF                             m_origin_in_scene;                  // Stores mouse down position in scene coordinates
+    QGraphicsItem                      *m_origin_item;                      // Stores top item under mouse (if any) on mouse down event
 
     // Tool Tip Variables
-    DrViewToolTip                      *m_tool_tip;                     // Holds our view's custom Tool Tip box
+    DrViewToolTip                      *m_tool_tip;                         // Holds our view's custom Tool Tip box
 
     // Selection Bounding Box Variables
-    std::map<Position_Flags, QPointF>   m_selection_points;             // Stores all points of the current selection box
-    std::map<Position_Flags, QPolygonF> m_handles;                      // Stores QRects of current selection box handles
-    std::map<Position_Flags, QPointF>   m_handles_centers;              // Stores QPointF center points of selection box handles
-    std::map<Position_Flags, double>    m_handles_angles;               // Stores angle used for mouse cursor of selection box handles
-    Handle_Shapes                       m_handles_shape;                // Stores which style handles should we draw
-    Position_Flags                      m_over_handle;                  // Tracks if mouse is over a handle
-    QPoint                              m_last_mouse_pos;               // Tracks last known mouse position in view coordinates
+    std::map<Position_Flags, QPointF>   m_selection_points;                 // Stores all points of the current selection box
+    std::map<Position_Flags, QPolygonF> m_handles;                          // Stores QRects of current selection box handles
+    std::map<Position_Flags, QPointF>   m_handles_centers;                  // Stores QPointF center points of selection box handles
+    std::map<Position_Flags, double>    m_handles_angles;                   // Stores angle used for mouse cursor of selection box handles
+    Handle_Shapes                       m_handles_shape;                    // Stores which style handles should we draw
+    Position_Flags                      m_over_handle;                      // Tracks if mouse is over a handle
+    QPoint                              m_last_mouse_pos;                   // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
-    DrViewRubberBand               *m_rubber_band;                      // Holds our view's RubberBand object
-    QList<QGraphicsItem*>           m_items_start;                      // Stores items selected at start of new rubber band box
-    QList<QGraphicsItem*>           m_items_keep;                       // Stores list of items to keep on top of rubber band items (with control key)
+    DrViewRubberBand                   *m_rubber_band;                      // Holds our view's RubberBand object
+    QList<QGraphicsItem*>               m_items_start;                      // Stores items selected at start of new rubber band box
+    QList<QGraphicsItem*>               m_items_keep;                       // Stores list of items to keep on top of rubber band items (with control key)
 
     // View_Mode::Translating Variables
-    QElapsedTimer                   m_origin_timer;                     // Tracks time since mouse down to help buffer movement while selecting
-    bool                            m_allow_movement = false;           // Used along with m_origin_timer to help buffer movement while selecting
-    bool                            m_hide_bounding = false;            // True when moving items to stop bounding box from updating and painting
-    QPointF                         m_origin_item_start_pos { 0, 0 };   // Tracks starting position of origin item when View_Mode::Translating started
+    QElapsedTimer                       m_origin_timer;                     // Tracks time since mouse down to help buffer movement while selecting
+    bool                                m_allow_movement = false;           // Used along with m_origin_timer to help buffer movement while selecting
+    bool                                m_hide_bounding = false;            // True when moving items to stop bounding box from updating and painting
+    QPointF                             m_origin_item_start_pos { 0, 0 };   // Tracks starting position of origin item when View_Mode::Translating started
 
     // View_Mode::Resizing Variables
-    QRectF                          m_start_resize_rect;                // Stores starting rect of selection before resize starts
-    Position_Flags                  m_start_resize_grip;                // Stores which Size Grip Handle we started resize over
-    X_Axis                          m_do_x;                             // Processed after click to know which sides to resize from
-    Y_Axis                          m_do_y;                             // Processed after click to know which sides to resize from
-    bool                            m_resize_started = false;           // Turns to true after the first time resize function has been run, resets to false when done
-    QPointF                         m_last_mouse_snap { 0, 0 };         // Keeps track of the last point the item was snapped to while resizing
-    QPointF                         m_pre_resize_scale;                 // Scale of selection group before we start resize
-    QMap<Position_Flags, QPointF>   m_pre_resize_corners;               // Stores corner coordinates before resizing starts
-    QGraphicsItemGroup             *m_group;                            // Loads a copy of selected items in a new group before resize starts to better calculate resizing
+    QRectF                              m_start_resize_rect;                // Stores starting rect of selection before resize starts
+    Position_Flags                      m_start_resize_grip;                // Stores which Size Grip Handle we started resize over
+    X_Axis                              m_do_x;                             // Processed after click to know which sides to resize from
+    Y_Axis                              m_do_y;                             // Processed after click to know which sides to resize from
+    bool                                m_resize_started = false;           // Turns to true after the first time resize function has been run, resets to false when done
+    QPointF                             m_last_mouse_snap { 0, 0 };         // Keeps track of the last point the item was snapped to while resizing
+    QPointF                             m_pre_resize_scale;                 // Scale of selection group before we start resize
+    QMap<Position_Flags, QPointF>       m_pre_resize_corners;               // Stores corner coordinates before resizing starts
+    QGraphicsItemGroup                 *m_group;                            // Loads a copy of selected items in a new group before resize starts to better calculate resizing
 
     // View_Mode::Rotating Variables
-    double                          m_rotate_start_angle;               // Stores angle of selection group at start of rotate routine
+    double                              m_rotate_start_angle;               // Stores angle of selection group at start of rotate routine
 
     // View_Mode::Moving_Camera Variables
-    QPoint                          m_cam_mouse_start;                  // Starting mouse position when camera move starts
-    double                          m_cam_angle_x_start = 0;            // Camera angle when camera move starts
-    double                          m_cam_angle_y_start = 0;            // Camera angle when camera move starts
-    bool                            m_cam_at_back = false;              // Whether or not camera is behind target when camera move starts
-    bool                            m_cam_reversed = false;             // Stores is x rotation is reversed when camera move starts
+    QPoint                              m_cam_mouse_start;                  // Starting mouse position when Camera Move starts
+    double                              m_cam_angle_x_start = 0;            // Camera angle when camera move starts
+    double                              m_cam_angle_y_start = 0;            // Camera angle when camera move starts
+    bool                                m_cam_at_back = false;              // Whether or not camera is behind target when camera move starts
+    bool                                m_cam_reversed = false;             // Stores is x rotation is reversed when camera move starts
+
+    // View_Mode::Resizing_Stage Variables
+    QPoint                              m_resize_stage_mouse_start;         // Starting mouse position when Stage Resize starts
+    double                              m_resize_stage_angle;               // Stage angle (DrWorld Game Direction)
+    double                              m_resize_stage_start_size;          // Stage size when Stage Resize starts
 
     // Debug Camera Mode Variables
-    DrThing                        *m_cam_mouse_over = nullptr;         // Stores which camera mouse is over, if none == nullptr
-    DrThing                        *m_cam_selected = nullptr;           // Stores which camera is selected, if none == nullptr
-    std::map<DrThing*, Camera_Data> m_cam_data;                         // Stores view bounding coordinates of all cameras within view
+    DrThing                            *m_cam_mouse_over = nullptr;         // Stores which camera mouse is over, if none == nullptr
+    DrThing                            *m_cam_selected = nullptr;           // Stores which camera is selected, if none == nullptr
+    std::map<DrThing*, Camera_Data>     m_cam_data;                         // Stores view bounding coordinates of all cameras within view
 
 
     // !!!!! #DEBUG: Debugging Variables
-    long                            m_debug_fps = 0;         // #DEBUG
-    long                            m_debug_fps_last;        // #DEBUG
-    QElapsedTimer                   m_debug_timer;           // #DEBUG
+    long                                m_debug_fps = 0;         // #DEBUG
+    long                                m_debug_fps_last;        // #DEBUG
+    QElapsedTimer                       m_debug_timer;           // #DEBUG
 
 
 
@@ -277,6 +285,10 @@ public:
     void            startRotateCamera(QPoint mouse_in_view);
     void            rotateCamera(QPointF mouse_in_view);
 
+    // Resize Stage Functions
+    void            startResizeStage(QPoint mouse_in_view);
+    void            resizeStage(QPointF mouse_in_view);
+
 
     // Getters / Setters
     View_Mode       currentViewMode() { return m_view_mode; }
@@ -287,6 +299,7 @@ public:
     IEditorRelay*   getEditorRelay() { return m_editor_relay; }
     Mouse_Mode      getMouseMode() { return m_mouse_mode; }
     void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
+    void            setMouseCursorFromAngle(double angle_in_degrees);
     void            setMouseMode(Mouse_Mode mode) { m_mouse_mode = mode; }
     void            setViewMode(View_Mode mode) { m_view_mode = mode; }
     void            spaceBarDown();

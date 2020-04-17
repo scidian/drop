@@ -102,7 +102,7 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
                 double  radius = mapFromScene(QPointF(size.x/2, 0)).x() - mapFromScene(0, 0).x();
                 QPointF top =    mapFromScene(QPointF(center.x, center.y - size.y/2));
 
-                QTransform t = QTransform().translate(offset.x(), offset.y()).rotate(angle).translate(-offset.x(), -offset.y());
+                QTransform t = Dr::CreateRotatedQTransform(offset, angle);
                 QRect bounding_box = QRectF(QPointF(offset.x() - radius, offset.y() - radius), QPointF(offset.x() + radius, offset.y() + radius)).toRect();
                 if ((this->rect().intersects(bounding_box) || this->rect().contains(bounding_box)) &&
                     (bounding_box.width() * 0.1 < this->width()) && (bounding_box.height() * 0.1 < this->height())) {
@@ -144,7 +144,7 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
             }
 
         } else if (shape == Collision_Shape::Square || shape == Collision_Shape::Triangle) {
-            QTransform t = QTransform().translate(center.x, center.y).rotate(angle).translate(-center.x, -center.y);
+            QTransform t = Dr::CreateRotatedQTransform(center, angle);
 
             QPolygonF polygon;
             if (shape == Collision_Shape::Square) {

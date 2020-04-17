@@ -215,6 +215,7 @@ SOURCES += \
     editor/view/editor_view__paint_collision.cpp \
     editor/view/editor_view__paint_items.cpp \
     editor/view/editor_view__resize.cpp \
+    editor/view/editor_view__resize_stage.cpp \
     editor/view/editor_view__rotate.cpp \
     editor/view/editor_view__rotate_camera.cpp \
     editor/view/editor_view__select.cpp \

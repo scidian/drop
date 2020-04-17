@@ -173,7 +173,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle) {
 
     // Make a copy of line rotated at the current Selection Group angle (passed in)
     QPointF origin = center_point;
-    QTransform rotate = QTransform().translate(origin.x(), origin.y()).rotate(angle).translate(-origin.x(), -origin.y());
+    QTransform rotate = Dr::CreateRotatedQTransform(origin, angle);
     QLineF  line_rotated = rotate.map(line_zero);
     line_zero.setP1( QPointF(line_zero.x1(), line_zero.y1() - 1) );
 

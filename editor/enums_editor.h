@@ -110,7 +110,8 @@ enum class Position_Flags {                                 // !!!!! Order is im
     Rotate              =  9,
     Move_Item           = 10,
     Over_Camera         = 11,
-    No_Position         = 12,                               // When adding positions, can be changed to stay last number
+    Stage_Size          = 12,
+    No_Position         = 13,                               // When adding positions, can be changed to stay last number
 };
 
 
@@ -138,6 +139,7 @@ enum class View_Mode {
     Zooming,                        // Zooming in / out of view
     Holding_Keys,                   // Holding arrow keys to move or layering keys
     Moving_Camera,                  // Rotating a camera around its target
+    Resizing_Stage,                 // Resizing Stage bounds
 };
 
 

@@ -228,6 +228,20 @@ bool SameQColor(QColor color1, QColor color2, double tolerance) {
              Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), tolerance) );
 }
 
+
+//####################################################################################
+//##
+//##    Qt Math
+//##
+//####################################################################################
+QTransform CreateRotatedQTransform(QPointF offset, double angle_in_degrees) {
+    return QTransform().translate(offset.x(), offset.y()).rotate(angle_in_degrees).translate(-offset.x(), -offset.y());
+}
+QTransform CreateRotatedQTransform(DrPointF offset, double angle_in_degrees) {
+    return CreateRotatedQTransform(ToQPointF(offset), angle_in_degrees);
+}
+
+
 //####################################################################################
 //##
 //##    User Interaction

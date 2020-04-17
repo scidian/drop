@@ -293,7 +293,7 @@ void DrView::recalculateGrid() {
     rounded_center.setX( round((rounded_center.x()) / m_grid_size.x()) * m_grid_size.x() );
     rounded_center.setY( round((rounded_center.y()) / m_grid_size.y()) * m_grid_size.y() );
     rounded_center = add_angle.map ( rounded_center );
-    QTransform slide = QTransform().translate( -rounded_center.x(), -rounded_center.y() );
+    QTransform slide = QTransform().translate(-rounded_center.x(), -rounded_center.y());
     QTransform scale = QTransform().scale(m_grid_scale.x(), m_grid_scale.y());
 
     // Apply the rotation and translation transforms to the new lines
