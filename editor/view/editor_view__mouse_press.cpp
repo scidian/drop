@@ -100,6 +100,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                 // ******************** If clicked on Stage resize box, need to start resizing it
                 if (m_over_handle == Position_Flags::Stage_Size) {
                     m_view_mode = View_Mode::Resizing_Stage;
+                    m_editor_relay->buildInspector( { my_scene->getCurrentStageShown()->getKey() } );
                     startResizeStage(m_origin);
                     my_scene->scene_mutex.unlock();
                     return;

@@ -156,7 +156,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyCircle(long original_key, long asset_k
     double w = abs(size.x / scale.x);
     double h = abs(size.y / scale.y);
     double center_diameter =    w * abs(scale.x);
-    double height_width_ratio = (h / w) * abs(size.y / size.x);
+    double height_width_ratio = (h / w) * abs(scale.y / scale.x);
     double center_scale =       diameter/center_diameter;
     double center_radius =      (center_diameter * center_scale) / 2.0;
 

@@ -97,6 +97,12 @@ void DrView::mouseReleaseEvent(QMouseEvent *event) {
             m_cam_selected = nullptr;
         }
 
+        // Stop Stage resizing
+        if (m_view_mode == View_Mode::Resizing_Stage) {
+            m_view_mode = View_Mode::None;
+            updateGrid();
+        }
+
         updateSelectionBoundingBox(6);
 
         m_view_mode = View_Mode::None;
