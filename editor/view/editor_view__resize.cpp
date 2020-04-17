@@ -39,7 +39,8 @@ void DrView::startResizeSelection(QPoint mouse_in_view, bool use_tool_tip) {
     double angle = my_scene->getSelectionAngle();
     m_group = my_scene->createEmptyItemGroup(angle, m_pre_resize_scale);
     for (auto child : my_scene->getSelectionItems()) {
-        child->setData(User_Roles::Pre_Resize_Scale, (child->data(User_Roles::Scale).toPointF()) );
+        child->setData(User_Roles::Pre_Resize_Scale,    (child->data(User_Roles::Scale).toPointF()) );
+        child->setData(User_Roles::Pre_Rotate_Rotation, (child->data(User_Roles::Rotation).toDouble()) );
         DrGraphicsItem *child_as_item = dynamic_cast<DrGraphicsItem*>(child);
         DrGraphicsItem *graphics_item = new DrGraphicsItem(m_project, child_as_item->getEditorRelay(), child_as_item->getThing(), true);
         graphics_item->setVisible(false);
@@ -147,7 +148,7 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     }
 
     // Map resize point to scene coordinates
-    QPointF point_in_shape = remove_rotation.map( mouse_in_scene);
+    QPointF point_in_shape = remove_rotation.map(mouse_in_scene);
     double  scale_x;
     double  scale_y;
 
@@ -307,7 +308,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     if (clone == nullptr) return;
 
     // Calculate a transform that includes rotation and new scale
-    double  angle =         original->data(User_Roles::Rotation).toDouble();
+    double  angle =         original->data(User_Roles::Pre_Rotate_Rotation).toDouble();
     QPointF start_scale =   original->data(User_Roles::Pre_Resize_Scale).toPointF();
 
     // If item is rotated closer to a vertical orientation swap the x and y scaling factor we calculated for the group resize
@@ -316,40 +317,73 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     double select_angle = Dr::EqualizeAngle0to360(my_scene->getSelectionAngle());
     double diff_angle =   Dr::EqualizeAngle0to360(angle - select_angle);
 
+    double flip_angle = diff_angle * 2.0;
+
     // Check if item is more vertical or more horizontal, figure out our new scale factor for this item accordingly
-    // More Vertical??
+    bool flipped = false;
+    // More Horizontal
     if ((diff_angle > 45 && diff_angle < 135) || (diff_angle > 225 && diff_angle < 315)) {
         new_scale_x = abs(start_scale.x()) * abs(scale.y());
         new_scale_y = abs(start_scale.y()) * abs(scale.x());
 
+        Dr::SetLabelText(Label_Names::Label_Object_1, "Pre Resize Scale X: " + QString::number(m_pre_resize_scale.x()) +  ", Y: " + QString::number(m_pre_resize_scale.y()));
+        Dr::SetLabelText(Label_Names::Label_1, "Item Start Scale X: " + QString::number(start_scale.x()) + ", Y: " + QString::number(start_scale.y()));
+        Dr::SetLabelText(Label_Names::Label_2, "Passed In Scale X:  " + QString::number(scale.x()) +       ", Y: " + QString::number(scale.y()));
+
         // Check to make sure we respect flipping
-        if ((m_pre_resize_scale.y() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.x() > 0)) {
-            if (scale.y() < 0) { new_scale_x *= -1; }
+        if ((m_pre_resize_scale.y() > 0 && start_scale.y() > 0) || (m_pre_resize_scale.y() < 0 && start_scale.y() < 0)) {
+            if (scale.y() < 0) { new_scale_y *= -1.0; }
         } else {
-            if (scale.y() > 0) { new_scale_x *= -1; }
+            if (scale.y() > 0) { new_scale_y *= -1.0; }
         }
-        if ((m_pre_resize_scale.x() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.y() > 0)) {
-            if (scale.x() < 0) { new_scale_y *= -1; }
+        if ((scale.y() < 0 && start_scale.y() > 0) || (scale.y() > 0 && start_scale.y() < 0)) {
+            angle = Dr::EqualizeAngle0to360(angle - flip_angle);
+            flipped = true;
+        }
+        if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
+            if (scale.x() < 0) { new_scale_x *= -1.0; }
         } else {
-            if (scale.x() > 0) { new_scale_y *= -1; }
+            if (scale.x() > 0) { new_scale_x *= -1.0;  }
+        }
+        if ((scale.x() < 0 && start_scale.x() > 0) || (scale.x() > 0 && start_scale.x() < 0)) {
+            if (flipped == false) {
+                angle = Dr::EqualizeAngle0to360(angle - flip_angle);
+            } else {
+                angle += flip_angle;
+            }
         }
 
-    // More ??
+
+//        // Check to make sure we respect flipping
+//        if ((m_pre_resize_scale.y() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.x() > 0)) {
+//            if (scale.y() < 0) { new_scale_x *= -1; }
+//        } else {
+//            if (scale.y() > 0) { new_scale_x *= -1; }
+//        }
+//        if ((m_pre_resize_scale.x() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.y() > 0)) {
+//            if (scale.x() < 0) { new_scale_y *= -1; }
+//        } else {
+//            if (scale.x() > 0) { new_scale_y *= -1; }
+//        }
+
+    // More Vertical
     } else {
         new_scale_x = abs(start_scale.x()) * abs(scale.x());
         new_scale_y = abs(start_scale.y()) * abs(scale.y());
 
-        // Check to make sure we respect flipping
-        if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
-            if (scale.x() < 0) { new_scale_x *= -1; }
-        } else {
-            if (scale.x() > 0) { new_scale_x *= -1; }
-        }
-        if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
-            if (scale.y() < 0) { new_scale_y *= -1; }
-        } else {
-            if (scale.y() > 0) { new_scale_y *= -1; }
-        }
+
+
+//        // Check to make sure we respect flipping
+//        if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
+//            if (scale.x() < 0) { new_scale_x *= -1; }
+//        } else {
+//            if (scale.x() > 0) { new_scale_x *= -1; }
+//        }
+//        if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
+//            if (scale.y() < 0) { new_scale_y *= -1; }
+//        } else {
+//            if (scale.y() > 0) { new_scale_y *= -1; }
+//        }
     }
 
     // ***** Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
@@ -377,6 +411,7 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     }
 
     // Update item property
+    original->setData(User_Roles::Rotation, angle);
     original->setData(User_Roles::Scale, QPointF(new_scale_x, new_scale_y) );
     double transform_scale_x = Dr::CheckScaleNotZero(new_scale_x);
     double transform_scale_y = Dr::CheckScaleNotZero(new_scale_y);
