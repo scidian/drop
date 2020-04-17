@@ -125,7 +125,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     // ******************* If clicked while holding Alt key start rotating
                     if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
                         m_view_mode = View_Mode::Rotating;
-                        startRotate(m_origin);
+                        startRotateSelection(m_origin);
                         my_scene->scene_mutex.unlock();
                         return;
                     }
@@ -133,7 +133,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     // ******************* If clicked while in a Size Grip Handle start resizing
                     if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
                         m_view_mode = View_Mode::Resizing;
-                        startResize(m_origin);
+                        startResizeSelection(m_origin);
                         my_scene->scene_mutex.unlock();
                         return;
                     }

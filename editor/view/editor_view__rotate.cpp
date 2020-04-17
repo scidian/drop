@@ -28,7 +28,7 @@
 //####################################################################################
 //##    Starts rotating mode
 //####################################################################################
-void DrView::startRotate(QPoint mouse_in_view, bool use_tool_tip) {
+void DrView::startRotateSelection(QPoint mouse_in_view, bool use_tool_tip) {
     // Store starting rotation of current selection group
     m_rotate_start_angle = my_scene->getSelectionAngle();
 

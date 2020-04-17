@@ -129,7 +129,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
         QPointF scale = (clicked == Buttons_Transform::Flip_H) ? QPointF(-1, 1) : QPointF(1, -1);
 
         if (sceneEditor->scene_mutex.tryLock() == true) {
-            viewEditor->startResize(QPoint(0, 0), false);
+            viewEditor->startResizeSelection(QPoint(0, 0), false);
             viewEditor->resizeSelection(QPointF(0, 0), true, scale);
             sceneEditor->scene_mutex.unlock();
         }
@@ -138,7 +138,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
         double angle = (clicked == Buttons_Transform::Rotate_L) ? -90 : 90;
 
         if (sceneEditor->scene_mutex.tryLock() == true) {
-            viewEditor->startRotate(QPoint(0, 0), false);
+            viewEditor->startRotateSelection(QPoint(0, 0), false);
             viewEditor->rotateSelection(QPoint(0, 0), true, angle);
             sceneEditor->scene_mutex.unlock();
         }

@@ -29,7 +29,7 @@
 //####################################################################################
 //##    Starts resizing mode
 //####################################################################################
-void DrView::startResize(QPoint mouse_in_view, bool use_tool_tip) {
+void DrView::startResizeSelection(QPoint mouse_in_view, bool use_tool_tip) {
     // Figure out starting orientation
     m_pre_resize_scale = QPointF(1, 1);
     if (my_scene->getSelectionScale().x() < 0) m_pre_resize_scale.setX(-1);
@@ -313,44 +313,42 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     // If item is rotated closer to a vertical orientation swap the x and y scaling factor we calculated for the group resize
     double new_scale_x;
     double new_scale_y;
-    double select_angle = my_scene->getSelectionAngle();
-    while (select_angle >  360) { select_angle -= 360; }
-    while (select_angle <    0) { select_angle += 360; }
-    double diff_angle = angle - select_angle;
-    while (diff_angle >  360)   { diff_angle -= 360; }
-    while (diff_angle <    0)   { diff_angle += 360; }
+    double select_angle = Dr::EqualizeAngle0to360(my_scene->getSelectionAngle());
+    double diff_angle =   Dr::EqualizeAngle0to360(angle - select_angle);
 
     // Check if item is more vertical or more horizontal, figure out our new scale factor for this item accordingly
+    // More Vertical??
     if ((diff_angle > 45 && diff_angle < 135) || (diff_angle > 225 && diff_angle < 315)) {
         new_scale_x = abs(start_scale.x()) * abs(scale.y());
         new_scale_y = abs(start_scale.y()) * abs(scale.x());
 
         // Check to make sure we respect flipping
         if ((m_pre_resize_scale.y() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.x() > 0)) {
-            if (scale.y() < 0) new_scale_x *= -1;
+            if (scale.y() < 0) { new_scale_x *= -1; }
         } else {
-            if (scale.y() > 0) new_scale_x *= -1;
+            if (scale.y() > 0) { new_scale_x *= -1; }
         }
         if ((m_pre_resize_scale.x() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.y() > 0)) {
-            if (scale.x() < 0) new_scale_y *= -1;
+            if (scale.x() < 0) { new_scale_y *= -1; }
         } else {
-            if (scale.x() > 0) new_scale_y *= -1;
+            if (scale.x() > 0) { new_scale_y *= -1; }
         }
 
+    // More ??
     } else {
         new_scale_x = abs(start_scale.x()) * abs(scale.x());
         new_scale_y = abs(start_scale.y()) * abs(scale.y());
 
         // Check to make sure we respect flipping
         if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
-            if (scale.x() < 0) new_scale_x *= -1;
+            if (scale.x() < 0) { new_scale_x *= -1; }
         } else {
-            if (scale.x() > 0) new_scale_x *= -1;
+            if (scale.x() > 0) { new_scale_x *= -1; }
         }
         if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
-            if (scale.y() < 0) new_scale_y *= -1;
+            if (scale.y() < 0) { new_scale_y *= -1; }
         } else {
-            if (scale.y() > 0) new_scale_y *= -1;
+            if (scale.y() > 0) { new_scale_y *= -1; }
         }
     }
 

@@ -270,12 +270,12 @@ public:
     void            processSelection(QPoint mouse_in_view);
 
     // Rotation Functions
-    void            startRotate(QPoint mouse_in_view, bool use_tool_tip = true);
+    void            startRotateSelection(QPoint mouse_in_view, bool use_tool_tip = true);
     void            rotateSelection(QPointF mouse_in_view, bool use_exact_angle = false, double angle_to_use = 0.0);
 
     // Resize functions
     bool            containsSquareItem(QGraphicsItem *item);
-    void            startResize(QPoint mouse_in_view, bool use_tool_tip = true);
+    void            startResizeSelection(QPoint mouse_in_view, bool use_tool_tip = true);
     void            resizeSelection(QPointF mouse_in_scene, bool use_exact_scale = false, QPointF scale_to_use = QPointF(0, 0));
     void            resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use);
     Position_Flags  findOppositeSide(Position_Flags start_side);
