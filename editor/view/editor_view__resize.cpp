@@ -316,75 +316,56 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
     double new_scale_y;
     double select_angle = Dr::EqualizeAngle0to360(my_scene->getSelectionAngle());
     double diff_angle =   Dr::EqualizeAngle0to360(angle - select_angle);
+    double flip_angle =   diff_angle * 2.0;
 
-    double flip_angle = diff_angle * 2.0;
 
-    // Check if item is more vertical or more horizontal, figure out our new scale factor for this item accordingly
-    bool flipped = false;
-    // More Horizontal
+    // ***** Check if item is more vertical or more horizontal, figure out our new scale factor for this item accordingly
+    // More Horizontal than vertical, switch x and y scaling
     if ((diff_angle > 45 && diff_angle < 135) || (diff_angle > 225 && diff_angle < 315)) {
         new_scale_x = abs(start_scale.x()) * abs(scale.y());
         new_scale_y = abs(start_scale.y()) * abs(scale.x());
-
-        Dr::SetLabelText(Label_Names::Label_Object_1, "Pre Resize Scale X: " + QString::number(m_pre_resize_scale.x()) +  ", Y: " + QString::number(m_pre_resize_scale.y()));
-        Dr::SetLabelText(Label_Names::Label_1, "Item Start Scale X: " + QString::number(start_scale.x()) + ", Y: " + QString::number(start_scale.y()));
-        Dr::SetLabelText(Label_Names::Label_2, "Passed In Scale X:  " + QString::number(scale.x()) +       ", Y: " + QString::number(scale.y()));
-
-        // Check to make sure we respect flipping
-        if ((m_pre_resize_scale.y() > 0 && start_scale.y() > 0) || (m_pre_resize_scale.y() < 0 && start_scale.y() < 0)) {
-            if (scale.y() < 0) { new_scale_y *= -1.0; }
-        } else {
-            if (scale.y() > 0) { new_scale_y *= -1.0; }
-        }
-        if ((scale.y() < 0 && start_scale.y() > 0) || (scale.y() > 0 && start_scale.y() < 0)) {
-            angle = Dr::EqualizeAngle0to360(angle - flip_angle);
-            flipped = true;
-        }
-        if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
-            if (scale.x() < 0) { new_scale_x *= -1.0; }
-        } else {
-            if (scale.x() > 0) { new_scale_x *= -1.0;  }
-        }
-        if ((scale.x() < 0 && start_scale.x() > 0) || (scale.x() > 0 && start_scale.x() < 0)) {
-            if (flipped == false) {
-                angle = Dr::EqualizeAngle0to360(angle - flip_angle);
-            } else {
-                angle += flip_angle;
-            }
-        }
-
-
-//        // Check to make sure we respect flipping
-//        if ((m_pre_resize_scale.y() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.x() > 0)) {
-//            if (scale.y() < 0) { new_scale_x *= -1; }
-//        } else {
-//            if (scale.y() > 0) { new_scale_x *= -1; }
-//        }
-//        if ((m_pre_resize_scale.x() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.y() > 0)) {
-//            if (scale.x() < 0) { new_scale_y *= -1; }
-//        } else {
-//            if (scale.x() > 0) { new_scale_y *= -1; }
-//        }
-
     // More Vertical
     } else {
         new_scale_x = abs(start_scale.x()) * abs(scale.x());
         new_scale_y = abs(start_scale.y()) * abs(scale.y());
-
-
-
-//        // Check to make sure we respect flipping
-//        if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
-//            if (scale.x() < 0) { new_scale_x *= -1; }
-//        } else {
-//            if (scale.x() > 0) { new_scale_x *= -1; }
-//        }
-//        if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
-//            if (scale.y() < 0) { new_scale_y *= -1; }
-//        } else {
-//            if (scale.y() > 0) { new_scale_y *= -1; }
-//        }
     }
+
+    // Variables:
+    //  m_pre_resize_scale   == Selection scale at start of resize function
+    //  scale                == Selection scale now
+    //  start_scale          == Item scale at start of resize function
+
+    // If item Y scale and Y selection scale are both positive or both negative, flip new Y scale
+    if ((m_pre_resize_scale.y() < 0 && start_scale.y() < 0) || (m_pre_resize_scale.y() > 0 && start_scale.y() > 0)) {
+        if (scale.y() < 0) { new_scale_y *= -1.0; } else { new_scale_y *= 1.0; }
+    } else {
+        if (scale.y() > 0) { new_scale_y *= -1.0; } else { new_scale_y *= 1.0; }
+    }
+
+    // If item is to be flipped, flip angle over axis as well
+    bool flipped = false;
+    if ((new_scale_y < 0 && start_scale.y() > 0) || (new_scale_y > 0 && start_scale.y() < 0)) {
+        angle = Dr::EqualizeAngle0to360(angle - flip_angle);
+        flipped = true;
+    }
+
+    // If item X scale and X selection scale are both positive or both negative, flip new X scale
+    if ((m_pre_resize_scale.x() < 0 && start_scale.x() < 0) || (m_pre_resize_scale.x() > 0 && start_scale.x() > 0)) {
+        if (scale.x() < 0) { new_scale_x *= -1.0; }
+    } else {
+        if (scale.x() > 0) { new_scale_x *= -1.0;  }
+    }
+
+    // If item is to be flipped, flip angle over axis as well. If item was already flipped over Y axis above,
+    // undo angle adjustment. Flipping over both axes cancels any angles needing to be adjusted.
+    if ((new_scale_x < 0 && start_scale.x() > 0) || (new_scale_x > 0 && start_scale.x() < 0)) {
+        if (flipped == false) {
+            angle = Dr::EqualizeAngle0to360(angle - flip_angle);
+        } else {
+            angle += flip_angle;
+        }
+    }
+
 
     // ***** Checks if Items should have to remain Square shaped (light, etc) and forces it to do so
     // ***** Also limits max size
