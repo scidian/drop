@@ -262,6 +262,7 @@ SOURCES += \
     engine/thing_component/thing_comp_3d.cpp \
     engine/thing_component/thing_comp_camera.cpp \
     engine/thing_component/thing_comp_foliage.cpp \
+    engine/thing_component/thing_comp_physics.cpp \
     engine/thing_component/thing_comp_player.cpp \
     engine/thing_component/thing_comp_soft_body.cpp \
     engine/thing_component/thing_comp_tile.cpp \
@@ -998,6 +999,7 @@ HEADERS += \
     engine/thing_component/thing_comp_3d.h \
     engine/thing_component/thing_comp_camera.h \
     engine/thing_component/thing_comp_foliage.h \
+    engine/thing_component/thing_comp_physics.h \
     engine/thing_component/thing_comp_player.h \
     engine/thing_component/thing_comp_soft_body.h \
     engine/thing_component/thing_comp_tile.h \

@@ -25,7 +25,7 @@ DrVariable::DrVariable(DrProject *parent_project, std::string variable_name, Var
 
     // Initialize Variable
     Property_Type prop_type = DrSettings::propertyTypeFromVariantType(variable_type);
-    addComponent(Comps::Variable_Data, "Variable Data", "Variable Data", Component_Colors::RGB_19_Silver, true);
+    addComponent(Comps::Variable_Data, "Variables", "Variable Data", Component_Colors::RGB_19_Silver, true);
     addPropertyToComponent(Comps::Variable_Data, Props::Variable_Data_Current,  prop_type, initial_value, "Current",  "Current value of variable.");
     addPropertyToComponent(Comps::Variable_Data, Props::Variable_Data_Best,     prop_type, initial_value, "Best",     "Best result ever in game.");
     addPropertyToComponent(Comps::Variable_Data, Props::Variable_Data_Total,    prop_type, initial_value, "Total",    "Total value of variable since start.");

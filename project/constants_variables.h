@@ -16,8 +16,9 @@ namespace Variables {
     /// Also have:
     ///     Bombs, Bullets
 
-    // Keep value for each:
-    //      Current, Best, Total
+
+    // ##### World Variables
+    //      Keep value for each:    Current, Best, Total
     const std::string Deaths                    = "Deaths";                 // int
     const std::string Coins                     = "Coins";                  // int
     const std::string Gems                      = "Gems";                   // int

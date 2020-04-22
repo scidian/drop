@@ -72,8 +72,9 @@ bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) 
     bool remove = false;
 
     // ***** Call update() for each Component
-    for (auto component : m_components)
-        component.second->update(time_passed, time_warp);
+    for (auto component : m_components) {
+        remove = (remove || component.second->update(time_passed, time_warp));
+    }
 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;

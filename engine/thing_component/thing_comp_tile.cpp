@@ -47,11 +47,12 @@ void ThingCompTile::draw() {
     world()->getEngine()->getOpenGL()->drawObjectTile(thing());
 }
 
-// Called during DrEngineWorld->updateWorld() step
-void ThingCompTile::update(double time_passed, double time_warp) {
+// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
+bool ThingCompTile::update(double time_passed, double time_warp) {
     (void) time_passed;
     (void) time_warp;
 
+    return false;
 }
 
 // Called when component is destroyed

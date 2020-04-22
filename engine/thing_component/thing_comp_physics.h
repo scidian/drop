@@ -1,12 +1,12 @@
 //
-//      Created by Stephens Nunnally on 3/10/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/22/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#ifndef THING_COMP_SWIRL_H
-#define THING_COMP_SWIRL_H
+#ifndef THING_COMP_PHYSICS_H
+#define THING_COMP_PHYSICS_H
 
 #include "3rd_party/chipmunk/chipmunk.h"
 #include "engine/globals_engine.h"
@@ -14,24 +14,25 @@
 
 
 //####################################################################################
-//##    ThingCompSwirl
-//##        Built-In Component for DrEngineThing dealing with Swirl effect
+//##    ThingCompPhysics
+//##        Built-In Component for DrEngineThing dealing with Physics
 //############################
-class ThingCompSwirl : public DrThingComponent
+class ThingCompPhysics : public DrThingComponent
 {
 public:
     // Constructor / Destructor
-    ThingCompSwirl(DrEngineWorld *engine_world, DrEngineThing *parent_thing,
-                   DrColor color, float tint, float rotation_amount);
-    virtual ~ThingCompSwirl() override;
+    ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *parent_thing);
+    virtual ~ThingCompPhysics() override;
 
 
     // #################### VARIABLES ####################
 public:
-    // Swirl Settings
-    DrColor             start_color     { DrColor(128, 128, 255) };                     // Color tint of lens
-    float               color_tint      { 0.5f };                                       // Color tint percentage     0 to  1
-    float               rotation        { 0.0f };                                       // Amount of rotation for Swirl
+    // Physics Variables
+    cpBody             *m_anchor_bottom         { nullptr };            // Holds anchor point for the pivot joint to the base
+    cpBody             *m_anchor_middle         { nullptr };            // Holds anchor point for the spring joint to the middle
+
+    double              m_springiness           { 0.0 };                // Springiness of foliage (0.0 == none, 1.0 == most)
+
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
@@ -45,21 +46,10 @@ public:
 
     // #################### INTERNAL FUNCTIONS ####################
 public:
-    // Getters / Setters
+
+
 
 
 };
 
-#endif // THING_COMP_SWIRL_H
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // THING_COMP_PHYSICS_H

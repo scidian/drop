@@ -70,8 +70,8 @@ void ThingCompLight::draw() {
     world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Light);
 }
 
-// Called during DrEngineWorld->updateWorld() step
-void ThingCompLight::update(double time_passed, double time_warp) {
+// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
+bool ThingCompLight::update(double time_passed, double time_warp) {
 
     // ***** Pulse light
     if (Dr::FuzzyCompare(pulse_speed, 0.f) == false) {
@@ -91,6 +91,7 @@ void ThingCompLight::update(double time_passed, double time_warp) {
         }
     }
 
+    return false;
 }
 
 // Called when component is destroyed

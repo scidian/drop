@@ -112,7 +112,7 @@ public:
     void                    copyEntitySettings(DrSettings *from_entity);
 
     // Variable Functions
-    void                    addDefaultVariables();
+    void                    addWorldVariables();
     static Property_Type    propertyTypeFromVariantType(Variant_Type type);
 };
 

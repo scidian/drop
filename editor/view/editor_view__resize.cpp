@@ -246,12 +246,12 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
     Position_Flags origin_flag = resize_flag;
     if (scale_y < 0 && scale_x > 0) {
          switch (origin_flag) {
-             case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;              break;
-             case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;        break;
-             case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;         break;
-             case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;           break;
-             case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;     break;
-             case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;      break;
+             case Position_Flags::Bottom:        origin_flag = Position_Flags::Top;             break;
+             case Position_Flags::Bottom_Right:  origin_flag = Position_Flags::Top_Right;       break;
+             case Position_Flags::Bottom_Left:   origin_flag = Position_Flags::Top_Left;        break;
+             case Position_Flags::Top:           origin_flag = Position_Flags::Bottom;          break;
+             case Position_Flags::Top_Right:     origin_flag = Position_Flags::Bottom_Right;    break;
+             case Position_Flags::Top_Left:      origin_flag = Position_Flags::Bottom_Left;     break;
              default: ;
         }
     } else if (scale_y > 0 && scale_x < 0) {

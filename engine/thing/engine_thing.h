@@ -160,28 +160,31 @@ public:
     void                    calculateTimeSinceLastUpdate();
     void                    emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);
 
-    // Basic Properties
-    virtual double          getAngle() const        { return m_angle_z; }                   // Returns Thing angle (in degrees)
-    virtual const float&    getOpacity() const      { return m_opacity; }                   // Returns Opacity (alpha 0.0 to 1.0) of Thing
-    virtual DrPointF        getPosition() const     { return m_position; }                  // Returns Thing center position in world coordinates
-    virtual const float&    getScaleX() const       { return m_scale_x; }
-    virtual const float&    getScaleY() const       { return m_scale_y; }
-    virtual DrPointF        getSize()  const        { return m_size; }                      // Returns original Thing size
-    virtual const double&   getVelocityX() const    { return m_velocity_x; }
-    virtual const double&   getVelocityY() const    { return m_velocity_y; }
-    virtual const double&   getZOrder() const       { return m_z_order; }
 
+    // Virtual Properties
+    virtual double          getAngle() const                { return m_angle_z; }           // Returns Thing angle (in degrees)
     virtual void            setAngle(double new_angle)      { m_angle_z = new_angle; }
-    virtual void            setOpacity(float new_opacity)   { m_opacity = new_opacity; }
-    virtual void            setPosition(DrPointF position)  { m_position = position; }
+
+    // Basic Properties
+    const float&            getOpacity() const      { return m_opacity; }                   // Returns Opacity (alpha 0.0 to 1.0) of Thing
+    DrPointF                getPosition() const     { return m_position; }                  // Returns Thing center position in world coordinates
+    const float&            getScaleX() const       { return m_scale_x; }
+    const float&            getScaleY() const       { return m_scale_y; }
+    DrPointF                getSize()  const        { return m_size; }                      // Returns original Thing size
+    const double&           getVelocityX() const    { return m_velocity_x; }
+    const double&           getVelocityY() const    { return m_velocity_y; }
+    const double&           getZOrder() const       { return m_z_order; }
+
+    void                    setOpacity(float new_opacity)   { m_opacity = new_opacity; }
+    void                    setPosition(DrPointF position)  { m_position = position; }
     void                    setScaleX(float new_scale_x)    { m_scale_x = new_scale_x; }
     void                    setScaleX(double new_scale_x)   { m_scale_x = static_cast<float>(new_scale_x); }
     void                    setScaleY(float new_scale_y)    { m_scale_y = new_scale_y; }
     void                    setScaleY(double new_scale_y)   { m_scale_y = static_cast<float>(new_scale_y); }
-    virtual void            setSize(DrPointF size)          { m_size = size; }
+    void                    setSize(DrPointF size)          { m_size = size; }
     void                    setVelocityX(double x_vel)      { m_velocity_x = x_vel; }
     void                    setVelocityY(double y_vel)      { m_velocity_y = y_vel; }
-    virtual void            setZOrder(double z_order)       { m_z_order = z_order; }   
+    void                    setZOrder(double z_order)       { m_z_order = z_order; }
 
 };
 

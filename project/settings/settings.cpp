@@ -302,7 +302,7 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
 //####################################################################################
 //##    Variables
 //####################################################################################
-void DrSettings::addDefaultVariables() {
+void DrSettings::addWorldVariables() {
     this->setVariable(Variables::Deaths,    0);
     this->setVariable(Variables::Coins,     0);
     this->setVariable(Variables::Gems,      0);
