@@ -12,6 +12,7 @@
 #include "engine/globals_engine.h"
 #include "engine/thing_component/thing_comp_3d.h"
 #include "engine/thing_component/thing_comp_camera.h"
+#include "engine/thing_component/thing_comp_physics.h"
 #include "engine/thing_component/thing_comp_player.h"
 #include "engine/thing_component/thing_comp_soft_body.h"
 #include "engine/thing_component/thing_comp_foliage.h"
@@ -50,13 +51,14 @@ private:
     // Built In Components
     ThingComp3D        *m_comp_3d           { nullptr };            // Component that handles 3D rendering
     ThingCompCamera    *m_comp_camera       { nullptr };            // Component that handles a following camera
+    ThingCompPhysics   *m_comp_physics      { nullptr };            // Component that handles using Thing as a Physics Object
     ThingCompPlayer    *m_comp_player       { nullptr };            // Component that handles using Thing as a Player (character)
     ThingCompSoftBody  *m_comp_soft_body    { nullptr };            // Component that handles giving Thing a Soft Body
     ThingCompFoliage   *m_comp_foliage      { nullptr };            // Component that handles using Thing as Foliage
 
 
     // Basic Thing Properties
-    double          m_angle_z               { 0.0 };                // Current rotation angle (on Z axis), (for DrEngineObject this is updated every frame by update())
+    double          m_angle_z               { 0.0 };                // Current rotation angle (on Z axis), (for physics objects this is updated every frame by update())
     float           m_opacity               { 1.0f };               // Transparency of Thing (0.0 invisible, 1.0 opaque)
     DrPointF        m_position              { 0.0, 0.0 };           // Current center posiiton
     double          m_z_order               { 0.0 };                // Used for layering, used for distance sorting
@@ -111,6 +113,9 @@ public:
     void                removeComponent(std::string component_name);
     void                setComponent(std::string component_name, DrThingComponent *component);
 
+    // Helper Functions
+    DrPointF            mapPositionToScreen();
+
     // Cameras
     ///long             followCameraID();                                                   // Returns ID of following camera if there is one
 
@@ -147,11 +152,13 @@ public:
     ThingComponents&        componentMap()      { return m_components; }
     ThingComp3D*            comp3D()            { return m_comp_3d; }
     ThingCompCamera*        compCamera()        { return m_comp_camera; }
+    ThingCompPhysics*       compPhysics()       { return m_comp_physics; }
     ThingCompPlayer*        compPlayer()        { return m_comp_player; }
     ThingCompSoftBody*      compSoftBody()      { return m_comp_soft_body; }
     ThingCompFoliage*       compFoliage()       { return m_comp_foliage; }
     void                    setComponent3D(ThingComp3D *component);
     void                    setComponentCamera(ThingCompCamera *component);
+    void                    setComponentPhysics(ThingCompPhysics *component);
     void                    setComponentPlayer(ThingCompPlayer *component);
     void                    setComponentSoftBody(ThingCompSoftBody *component);
     void                    setComponentFoliage(ThingCompFoliage *component);
@@ -161,9 +168,9 @@ public:
     void                    emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);
 
 
-    // Virtual Properties
-    virtual double          getAngle() const                { return m_angle_z; }           // Returns Thing angle (in degrees)
-    virtual void            setAngle(double new_angle)      { m_angle_z = new_angle; }
+    // Old Virtual Properties
+    double                  getAngle();
+    void                    setAngle(double new_angle);
 
     // Basic Properties
     const float&            getOpacity() const      { return m_opacity; }                   // Returns Opacity (alpha 0.0 to 1.0) of Thing
