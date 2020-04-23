@@ -11,7 +11,6 @@
 #include "engine/engine_signal.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/thing_component/thing_comp_soft_body.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
@@ -96,9 +95,9 @@ Vertex& getVertex(std::vector<Vertex> &vertices, int get_at) {
 }
 
 //####################################################################################
-//##    Grabs a DrEngineObject at index from Array avoiding index out of bounds
+//##    Grabs a DrEngineThing at index from Array avoiding index out of bounds
 //####################################################################################
-DrEngineObject* getEngineObject(std::vector<DrEngineObject*> &objects, int get_at) {
+DrEngineThing* getEngineThing(std::vector<DrEngineThing*> &objects, int get_at) {
     if (get_at < 0) {
         return objects[ objects.size() + get_at ];
     } else if (get_at > static_cast<int>(objects.size()-1)) {
@@ -113,36 +112,35 @@ DrEngineObject* getEngineObject(std::vector<DrEngineObject*> &objects, int get_a
 //##        RETURNS: true if ready to render, false if there was an error
 //####################################################################################
 bool ThingCompSoftBody::calculateSoftBodyMesh(Body_Style body_style, Soft_Mesh_Style mesh_style) {
-    if (thing()->getThingType() != DrThingType::Object && thing()->getThingType() != DrThingType::Character) return false;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing());
-    if (object == nullptr) return false;
+    ThingCompPhysics *physics = thing()->compPhysics();
+    if (physics == nullptr) return false;
     if (soft_balls.size() < 3) return false;
 
     // ***** Adjust shakiness of non-rotating soft bodies
-    double angle_diff = -object->getAngle();
-    if (object->canRotate() == false) {
+    double angle_diff = -thing()->getAngle();
+    if (physics->canRotate() == false) {
         ///if (body_style == Body_Style::Circular_Blob) {
-            DrEngineObject *first_ball = world()->findObjectByKey(soft_balls[0]);
+            DrEngineThing *first_ball = world()->findPhysicsObjectByKey(soft_balls[0]);
             if (first_ball == nullptr) return false;
             double angle_start = soft_start_angle;
-            double angle_now =   Dr::CalcRotationAngleInDegrees(object->getPosition(), first_ball->getPosition());
+            double angle_now =   Dr::CalcRotationAngleInDegrees(thing()->getPosition(), first_ball->getPosition());
             angle_diff =  angle_start - angle_now;
             ///g_info = "Start Angle: " +   std::to_string(angle_start) + ", Angle Now: " + std::to_string(angle_now) + ", Diff: " +    std::to_string(angle_diff);
         ///}
     }
 
     // ***** Calculate Current Points
-    std::vector<DrEngineObject*> balls;
+    std::vector<DrEngineThing*> balls;
     std::vector<Vertex> vertices;
     for (size_t i = 0; i < soft_balls.size(); ++i) {
-        DrEngineObject *next_ball = world()->findObjectByKey(soft_balls[i]);
+        DrEngineThing *next_ball = world()->findPhysicsObjectByKey(soft_balls[i]);
         if (next_ball == nullptr) return false;
         ThingCompSoftBody *next_body = next_ball->compSoftBody();
         if (next_body == nullptr) return false;
 
         balls.push_back(next_ball);
-        DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), object->getPosition(), angle_diff);
-                 unrotated = unrotated - object->getPosition();
+        DrPointF unrotated = Dr::RotatePointAroundOrigin(next_ball->getPosition(), thing()->getPosition(), angle_diff);
+                 unrotated = unrotated - thing()->getPosition();
                  // Scale soft balls to outer radius
                  if (body_style == Body_Style::Square_Blob || body_style == Body_Style::Mesh_Blob) {
                      unrotated.x = unrotated.x * soft_scale.x;
@@ -177,20 +175,20 @@ bool ThingCompSoftBody::calculateSoftBodyMesh(Body_Style body_style, Soft_Mesh_S
             weight = 1.0f;
             average += getVertex(vertices, i).position * weight;            total_weight += weight;
 
-            if (getEngineObject(balls, i-1)->compSoftBody()->soft_corner == false &&
-                getEngineObject(balls, i  )->compSoftBody()->soft_corner == false &&
-                getEngineObject(balls, i+1)->compSoftBody()->soft_corner == false) {
+            if (getEngineThing(balls, i-1)->compSoftBody()->soft_corner == false &&
+                getEngineThing(balls, i  )->compSoftBody()->soft_corner == false &&
+                getEngineThing(balls, i+1)->compSoftBody()->soft_corner == false) {
                 weight = 0.75f;
                 average += getVertex(vertices, i-1).position * weight;      total_weight += weight;
                 average += getVertex(vertices, i+1).position * weight;      total_weight += weight;
 
-                if (getEngineObject(balls, i-2)->compSoftBody()->soft_corner == false &&
-                    getEngineObject(balls, i+2)->compSoftBody()->soft_corner == false) {
+                if (getEngineThing(balls, i-2)->compSoftBody()->soft_corner == false &&
+                    getEngineThing(balls, i+2)->compSoftBody()->soft_corner == false) {
                     weight = 0.50f;
                     average += getVertex(vertices, i-2).position * weight;  total_weight += weight;
                     average += getVertex(vertices, i+2).position * weight;  total_weight += weight;
                 }
-            } else if (getEngineObject(balls, i)->compSoftBody()->soft_corner == false) {
+            } else if (getEngineThing(balls, i)->compSoftBody()->soft_corner == false) {
                 weight = 0.50f;
                 average += getVertex(vertices, i-1).position * weight;      total_weight += weight;
                 average += getVertex(vertices, i+1).position * weight;      total_weight += weight;

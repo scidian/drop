@@ -13,7 +13,7 @@
 #include "engine/engine_spawner.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -25,12 +25,14 @@
 //####################################################################################
 extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // ***** Grab object from User Data
-    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
-    if (object == nullptr) return;
+    DrEngineThing *thing = static_cast<DrEngineThing*>(cpBodyGetUserData(body));
+    if (thing == nullptr) return;
+    ThingCompPhysics *physics = thing->compPhysics();
+    if (physics == nullptr) return;
 
     // Adjust object gravity
-    gravity.x *= object->getGravityScale().x;
-    gravity.y *= object->getGravityScale().y;
+    gravity.x *= physics->getGravityScale().x;
+    gravity.y *= physics->getGravityScale().y;
 
     // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
     cpBodyUpdateVelocity(body, gravity, damping, dt);
@@ -42,11 +44,13 @@ extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 //####################################################################################
 extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
     // Grab object from User Data
-    DrEngineObject *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
-    if (object == nullptr) return;
+    DrEngineThing *thing = static_cast<DrEngineThing*>(cpBodyGetUserData(body));
+    if (thing == nullptr) return;
+    ThingCompPhysics *physics = thing->compPhysics();
+    if (physics == nullptr) return;
 
     // Try and turn object to rotate toward player
-    if (object->getRotateToPlayer()) {
+    if (physics->getRotateToPlayer()) {
         // Angle to Player
         cpVect my_pos =     cpBodyGetPosition(body);
         double my_angle =   cpBodyGetAngle(body);
@@ -60,7 +64,7 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
 
         // Set Rotate Direction Towards Player
         double angle3 =     Dr::FindClosestAngle180(angle2, angle1);
-        double angle_vel =  abs(object->getOriginalSpinVelocity());
+        double angle_vel =  abs(physics->getOriginalSpinVelocity());
         double new_spin =   (angle3 > angle2) ? angle_vel : -angle_vel;
 
         double angle_diff = abs(angle3 - angle2);
@@ -73,12 +77,12 @@ extern void KinematicUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampin
     }
 
     // Figure out new velocity based on current object angle
-    if (object->getUseAngleVelocity()) {
+    if (physics->getUseAngleVelocity()) {
         double  angle =     Dr::RadiansToDegrees( cpBodyGetAngle(body) );
-        double  x_scale =   (object->getScaleX() < 0.f) ? -1.0 : 1.0;
-        double  y_scale =   (object->getScaleY() < 0.f) ? -1.0 : 1.0;
+        double  x_scale =   (thing->getScaleX() < 0.f) ? -1.0 : 1.0;
+        double  y_scale =   (thing->getScaleY() < 0.f) ? -1.0 : 1.0;
 
-        DrPointF original = DrPointF(object->getOriginalVelocityX(), object->getOriginalVelocityY());
+        DrPointF original = DrPointF(physics->getOriginalVelocityX(), physics->getOriginalVelocityY());
         DrPointF rotated =  Dr::RotatePointAroundOrigin( DrPointF(original.x * x_scale, original.y * y_scale), DrPointF(0, 0), angle);
         cpBodySetVelocity( body, cpv(rotated.x, rotated.y) );
     }

@@ -13,7 +13,6 @@
 #include "engine/engine_signal.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/thing_component/thing_comp_foliage.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
@@ -24,14 +23,15 @@
 ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineThing *parent_thing, double springiness)
     : DrThingComponent(engine_world, parent_thing, Comps::Thing_Soft_Body), m_springiness(springiness) {
 
-    DrEngineObject *parent_object = dynamic_cast<DrEngineObject*>(parent_thing);
-    if (parent_object == nullptr) return;
+    if (parent_thing == nullptr) return;
+    if (parent_thing->compPhysics() == nullptr) return;
+    ThingCompPhysics *physics = parent_thing->compPhysics();
 
-    double   scale_x =  static_cast<double>(parent_object->getScaleX());
-    double   scale_y =  static_cast<double>(parent_object->getScaleY());
-    double   rotation = parent_object->getAngle();
-    DrPointF position = parent_object->getPosition();
-    DrPointF size  =    parent_object->getSize();
+    double   scale_x =  static_cast<double>(thing()->getScaleX());
+    double   scale_y =  static_cast<double>(thing()->getScaleY());
+    double   rotation = thing()->getAngle();
+    DrPointF position = thing()->getPosition();
+    DrPointF size  =    thing()->getSize();
              size.x *= scale_x;
              size.y *= scale_y;
 
@@ -51,15 +51,15 @@ ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineThing *p
     cpSpaceAddBody(engine_world->getSpace(), m_anchor_middle);
 
     // Pivot joint anchor to bottom body
-    cpConstraint *pivot = cpPivotJointNew(parent_object->body, m_anchor_bottom, bottom);
+    cpConstraint *pivot = cpPivotJointNew(physics->body, m_anchor_bottom, bottom);
     cpSpaceAddConstraint( engine_world->getSpace(), pivot );
 
     // Spring joint to middle body
     double max_slide = (abs(size.y / 4.0) * (abs(size.y) / abs(size.x)));
-    if (max_slide > abs(size.y / 3.0)) max_slide = abs(size.y / 3.0);           // Slide distance of slide joint
-    double force = 3000.0 + (cpBodyGetMass(parent_object->body) * 100.0);       // Force of spring, increases with additional mass
-    cpConstraint *slide_joint_1 =   cpSlideJointNew(parent_object->body,   m_anchor_middle, cpv(0, 0), cpv(0, 0), 0.0, max_slide);
-    cpConstraint *damped_spring_1 = cpDampedSpringNew(parent_object->body, m_anchor_middle, cpv(0, 0), cpv(0, 0), 0.0, force, 100.0);
+    if (max_slide > abs(size.y / 3.0)) max_slide = abs(size.y / 3.0);               // Slide distance of slide joint
+    double force = 3000.0 + (cpBodyGetMass(physics->body) * 100.0);                 // Force of spring, increases with additional mass
+    cpConstraint *slide_joint_1 =   cpSlideJointNew(physics->body,   m_anchor_middle, cpv(0, 0), cpv(0, 0), 0.0, max_slide);
+    cpConstraint *damped_spring_1 = cpDampedSpringNew(physics->body, m_anchor_middle, cpv(0, 0), cpv(0, 0), 0.0, force, 100.0);
     cpSpaceAddConstraint( engine_world->getSpace(), slide_joint_1 );
     cpSpaceAddConstraint( engine_world->getSpace(), damped_spring_1 );
 }

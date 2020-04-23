@@ -5,11 +5,12 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
@@ -225,7 +226,7 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
             if ((*it).second->getThingFollowingKey() != c_no_key) {
                 DrEngineThing *following = findThingByKey((*it).second->getThingFollowingKey());
                 if (following != nullptr) {
-                    if (only_switch_to_character_cameras == false || following->getThingType() == DrThingType::Object)
+                    if (only_switch_to_character_cameras == false || following->compPlayer() != nullptr)
                         found_camera = true;
                 }
             } else if (only_switch_to_character_cameras == false) {
@@ -237,32 +238,25 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
     // If not active camera already, switch cameras
     long new_key = (*it).second->getKey();
     if (new_key != m_active_camera) {
-
-        DrEngineThing  *thing_new =  nullptr;
-        DrEngineObject *object_new = nullptr;
+        DrEngineThing *thing_new =  nullptr;
 
         // Switch on new player if there is one
-        bool switched = false;
-        if (m_cameras[new_key]->getThingFollowingKey() != c_no_key) {
-            thing_new = findThingByKey(m_cameras[new_key]->getThingFollowingKey());
-            if (thing_new != nullptr && thing_new->getThingType() == DrThingType::Object) {
-                object_new = dynamic_cast<DrEngineObject*>(thing_new);
-                if (switch_player_controls && object_new != nullptr) {
-                    object_new->setLostControl(false);
-                    switched = true;
-                }
-            }
-        }
+        if (switch_player_controls) {
+            if (m_cameras[new_key]->getThingFollowingKey() != c_no_key) {
+                thing_new = findThingByKey(m_cameras[new_key]->getThingFollowingKey());
+                if (thing_new != nullptr) {
 
-        // Switch off other players if we switched to new player
-        if (switched) {
-            for (auto &thing : m_things) {
-                if (thing->getKey() != thing_new->getKey()) {
-                    if (thing_new->getThingType() == DrThingType::Object) {
-                        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                        if (object != nullptr) object->setLostControl(true);
+                    // Switch on new player, off other players
+                    for (auto &thing : m_things) {
+                        if (thing->compPhysics() != nullptr) {
+                            if (thing->getKey() != thing_new->getKey()) {
+                                thing->compPhysics()->setLostControl(true);
+                            } else {
+                                thing->compPhysics()->setLostControl(false);
+                            }
+                        }
                     }
-                }
+                }    
             }
         }
 

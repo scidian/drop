@@ -10,10 +10,10 @@
 #include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 
 
+// Local Constants
 const float c_not_zero = 0.0001f;
 
 //####################################################################################

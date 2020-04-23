@@ -35,7 +35,6 @@
 class DebugVertex;
 class DrColor;
 class DrEngine;
-class DrEngineObject;
 class DrEngineThing;
 class DrEngineVertexData;
 class DrImage;

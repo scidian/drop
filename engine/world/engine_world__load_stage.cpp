@@ -9,7 +9,6 @@
 #include "engine/engine_camera.h"
 #include "engine/engine_spawner.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -68,7 +67,7 @@ void DrEngineWorld::loadStageToWorld(DrStage *stage, double offset_x, double off
                 spawner = new DrEngineSpawner(this, thing, static_cast<Spawn_Type>(spawn_type), DrPointF(pos.x + offset_x, -pos.y + offset_y),
                                               spawn_rate.x, spawn_rate.y, spawn_instant, spawn_count, spawns_remaining, spawn_chance,
                                               nullptr, attached_id, spawn_x.x, spawn_x.y, spawn_y.x, spawn_y.y);
-                DrEngineObject *object = spawner->update(0.0, 1.0, DrRectF(), false);
+                DrEngineThing *object = spawner->update(0.0, 1.0, DrRectF(), false);
                 if (object != nullptr) things_in_stage.push_back(object);
                 spawners.push_back(spawner);
                 break;

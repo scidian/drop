@@ -7,7 +7,7 @@
 //
 #include "core/dr_debug.h"
 #include "engine/engine.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
@@ -63,37 +63,42 @@ static void SelectPlayerGroundNormal(cpBody *body, cpArbiter *arb, Ground_Data *
 //####################################################################################
 //##    Applies Jump Force
 //####################################################################################
-void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, bool initial_jump) {
+void ApplyJumpForce(DrEngineThing *thing, cpVect player_vel, cpVect jump_vel, bool initial_jump) {
+    if (thing->compPhysics() == nullptr) return;
+
     player_vel = cpvadd(player_vel, jump_vel);
 
     // Soft Body Jump
-    if ((object->body_style != Body_Style::Rigid_Body) && (object->compSoftBody() != nullptr)) {
+    if ((thing->compPhysics()->body_style != Body_Style::Rigid_Body) && (thing->compSoftBody() != nullptr)) {
         // Adjust initial velocity for soft bodies
         player_vel = player_vel * 0.85;
 
         // Apply force to Parent Object
-        double body_r = cpBodyGetAngularVelocity( object->body );
+        double body_r = cpBodyGetAngularVelocity( thing->compPhysics()->body );
         if (initial_jump) {
-            cpBodySetVelocity( object->body, player_vel );
-            cpBodySetAngularVelocity(object->body, body_r * 2.5);
+            cpBodySetVelocity( thing->compPhysics()->body, player_vel );
+            cpBodySetAngularVelocity(thing->compPhysics()->body, body_r * 2.5);
         } else {
-            cpBodyApplyForceAtWorldPoint( object->body, jump_vel * cpBodyGetMass(object->body) * 50.0, cpBodyGetPosition(object->body) );
+            cpBodyApplyForceAtWorldPoint( thing->compPhysics()->body, jump_vel * cpBodyGetMass(thing->compPhysics()->body) * 50.0,
+                                          cpBodyGetPosition(thing->compPhysics()->body) );
         }
 
         // Apply force to Children Soft Ball Objects
-        for (auto ball_number : object->compSoftBody()->soft_balls) {
-            DrEngineObject *soft_ball = object->world()->findObjectByKey(ball_number);
+        for (auto ball_number : thing->compSoftBody()->soft_balls) {
+            DrEngineThing *soft_ball = thing->world()->findPhysicsObjectByKey(ball_number);
             if (soft_ball == nullptr) return;
+            if (soft_ball->physics() == nullptr) return;
             if (initial_jump) {
-                cpBodySetVelocity( soft_ball->body, player_vel );
+                cpBodySetVelocity( soft_ball->physics()->body, player_vel );
             } else {
-                cpBodyApplyForceAtWorldPoint( soft_ball->body, jump_vel * cpBodyGetMass(soft_ball->body) * 50.0, cpBodyGetPosition(soft_ball->body) );
+                cpBodyApplyForceAtWorldPoint( soft_ball->physics()->body, jump_vel * cpBodyGetMass(soft_ball->physics()->body) * 50.0,
+                                              cpBodyGetPosition(soft_ball->physics()->body) );
             }
         }
 
     // Normal Body Jump
     } else {
-        cpBodySetVelocity( object->body, player_vel );
+        cpBodySetVelocity( thing->compPhysics()->body, player_vel );
     }
 }
 
@@ -105,14 +110,14 @@ void ApplyJumpForce(DrEngineObject *object, cpVect player_vel, cpVect jump_vel, 
 extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
 
     // ********** Grab object from User Data
-    DrEngineObject  *object = static_cast<DrEngineObject*>(cpBodyGetUserData(body));
-    if (object == nullptr) {        cpBodyUpdateVelocity(body, gravity, damping, dt);   return; }
-    ThingCompPlayer *comp_player = object->compPlayer();
-    if (comp_player == nullptr) {   cpBodyUpdateVelocity(body, gravity, damping, dt);   return; }
+    DrEngineThing *thing = static_cast<DrEngineThing*>(cpBodyGetUserData(body));
+    if (thing == nullptr) {            cpBodyUpdateVelocity(body, gravity, damping, dt);    return; }
+    if (thing->physics() == nullptr) { cpBodyUpdateVelocity(body, gravity, damping, dt);    return; }
+    if (thing->player() == nullptr) {  cpBodyUpdateVelocity(body, gravity, damping, dt);    return; }
 
     // Adjust object gravity
-    gravity.x *= object->getGravityScale().x;
-    gravity.y *= object->getGravityScale().y;
+    gravity.x *= thing->physics()->getGravityScale().x;
+    gravity.y *= thing->physics()->getGravityScale().y;
 
     // ********** Get Keys - If player is still active, get keyboard status
     double  key_x =     0;
@@ -121,39 +126,39 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     bool    key_shoot = false;
     Pedal   pedal = Pedal::None;
 
-    if (!object->hasLostControl()) {
+    if (!thing->physics()->hasLostControl()) {
         key_x =     g_keyboard_x;
         key_y =     g_keyboard_y;
         key_jump =  g_jump_button;
         key_shoot = g_shoot_button;
         pedal =     g_pedal;
 
-        cpVect pos = cpBodyGetPosition(object->body);
+        cpVect pos = cpBodyGetPosition(thing->physics()->body);
         g_player_position = DrPointF(pos.x, pos.y);
 
-        if (object->shouldFlipImageX() && (key_x < 0 && !object->isFlippedX())) object->setFlipX(true);
-        if (object->shouldFlipImageX() && (key_x > 0 &&  object->isFlippedX())) object->setFlipX(false);
-        if (object->shouldFlipImageY() && (key_y < 0 && !object->isFlippedY())) object->setFlipY(true);
-        if (object->shouldFlipImageY() && (key_y > 0 &&  object->isFlippedY())) object->setFlipY(false);
+        if (thing->physics()->shouldFlipImageX() && (key_x < 0 && !thing->physics()->isFlippedX())) thing->physics()->setFlipX(true);
+        if (thing->physics()->shouldFlipImageX() && (key_x > 0 &&  thing->physics()->isFlippedX())) thing->physics()->setFlipX(false);
+        if (thing->physics()->shouldFlipImageY() && (key_y < 0 && !thing->physics()->isFlippedY())) thing->physics()->setFlipY(true);
+        if (thing->physics()->shouldFlipImageY() && (key_y > 0 &&  thing->physics()->isFlippedY())) thing->physics()->setFlipY(false);
     }
 
     // ***** Mouse Rotate
-    if (comp_player->shouldMouseRotate()) {
-        DrPointF pos = object->mapPositionToScreen();
+    if (thing->player()->shouldMouseRotate()) {
+        DrPointF pos = thing->mapPositionToScreen();
         double angle = Dr::CalcRotationAngleInDegrees(pos, g_mouse_position);
-        cpBodySetAngle( object->body, Dr::DegreesToRadians(-angle) );
+        cpBodySetAngle( thing->physics()->body, Dr::DegreesToRadians(-angle) );
     }
 
 
     // ********** Ground Check - Grab the grounding normal from last frame, if we hit the ground, turn off m_remaining_boost time
     Ground_Data ground;
     ground.dot_product = 2.0;                                                               // 2.0 is an impossible test number, dot products will always be between -1.0 to 1.0
-    cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
+    cpBodyEachArbiter(thing->physics()->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
 
     // Found no ground but in collision with something (likely sensor shape like ladder, etc)
     bool jump_from_sensor = false;
     if (Dr::FuzzyCompare(ground.dot_product, 2.0)) {
-        if (object->listOfCollidingObjectKeys().size() != 0) {
+        if (thing->physics()->listOfCollidingObjectKeys().size() != 0) {
             jump_from_sensor = true;
             ground.dot_product = -1.0;
             //object->compPlayer()->setTempGravityMultiplier( 1.0 );
@@ -161,84 +166,84 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     }
 
     // Ground Check for physics children of soft bodies
-    if (object->compSoftBody() != nullptr) {
-        for (size_t i = 0; i < object->compSoftBody()->soft_balls.size(); ++i) {
-            DrEngineObject *next_ball = object->world()->findObjectByKey(object->compSoftBody()->soft_balls[i]);
+    if (thing->compSoftBody() != nullptr) {
+        for (size_t i = 0; i < thing->compSoftBody()->soft_balls.size(); ++i) {
+            DrEngineThing *next_ball = thing->world()->findPhysicsObjectByKey(thing->compSoftBody()->soft_balls[i]);
             if (next_ball == nullptr) continue;
-            cpBodyEachArbiter(next_ball->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
+            cpBodyEachArbiter(next_ball->physics()->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
         }
     }
 
     // Figure out if any collision points count as ground or as wall
-    comp_player->setOnWall( ground.dot_product <= 0.50 && comp_player->canWallJump() );     //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
-    comp_player->setOnGround( ground.dot_product < -0.30 );                                 // -0.30 == approx up to ~20 degrees slab (slightly less than vertical)
-    if (comp_player->isOnGround() || comp_player->isOnWall()) {
-        comp_player->setLastTouchedGroundNormal( ground.normal );
-        comp_player->setLastTouchedGroundDot( ground.dot_product );
-        comp_player->setRemainingJumps( comp_player->getJumpCount() );
-        comp_player->setRemainingBoost( 0.0 );
+    thing->player()->setOnWall( ground.dot_product <= 0.50 && thing->player()->canWallJump() );     //  0.50 == approx up to ~30 degrees roof (slightly overhanging)
+    thing->player()->setOnGround( ground.dot_product < -0.30 );                                 // -0.30 == approx up to ~20 degrees slab (slightly less than vertical)
+    if (thing->player()->isOnGround() || thing->player()->isOnWall()) {
+        thing->player()->setLastTouchedGroundNormal( ground.normal );
+        thing->player()->setLastTouchedGroundDot( ground.dot_product );
+        thing->player()->setRemainingJumps( thing->player()->getJumpCount() );
+        thing->player()->setRemainingBoost( 0.0 );
     }
 
     // Update wall jump time (gives player some time to do a wall jump), updated 11/12/2019: also give player time to do a ground jump (helps with bumpiness)
-    comp_player->setRemainingGroundTime( comp_player->getRemainingGroundTime() - dt );
-    comp_player->setRemainingWallTime(   comp_player->getRemainingWallTime() - dt );
-    if (comp_player->isOnWall()) {
-        comp_player->setRemainingGroundTime( 0.00 );
-        comp_player->setRemainingWallTime(   0.25 );
+    thing->player()->setRemainingGroundTime( thing->player()->getRemainingGroundTime() - dt );
+    thing->player()->setRemainingWallTime(   thing->player()->getRemainingWallTime() - dt );
+    if (thing->player()->isOnWall()) {
+        thing->player()->setRemainingGroundTime( 0.00 );
+        thing->player()->setRemainingWallTime(   0.25 );
     }
-    if (comp_player->isOnGround()) {
-        comp_player->setRemainingGroundTime( 0.25 );
-        comp_player->setRemainingWallTime(   0.00 );
+    if (thing->player()->isOnGround()) {
+        thing->player()->setRemainingGroundTime( 0.25 );
+        thing->player()->setRemainingWallTime(   0.00 );
     }
-    if (comp_player->getRemainingGroundTime() < 0.0) comp_player->setRemainingGroundTime( 0.00 );
-    if (comp_player->getRemainingWallTime()   < 0.0) comp_player->setRemainingWallTime( 0.00 );
+    if (thing->player()->getRemainingGroundTime() < 0.0) thing->player()->setRemainingGroundTime( 0.00 );
+    if (thing->player()->getRemainingWallTime()   < 0.0) thing->player()->setRemainingWallTime( 0.00 );
 
 
     // ********** Process Boost - Continues to provide jump velocity, although slowly fades
-    if (comp_player->getRemainingBoost() > 0) comp_player->setRemainingBoost( comp_player->getRemainingBoost() - dt );
-    if (key_jump && (comp_player->getRemainingBoost() > 0.0 || comp_player->getJumpTimeout() < 0.0)) {
-        cpVect player_v = cpBodyGetVelocity( object->body );
-        cpVect jump_v =   cpv(comp_player->getJumpForceX() * 2.0 * dt, comp_player->getJumpForceY() * 2.0 * dt);
-        ApplyJumpForce(object, player_v, jump_v, false);
+    if (thing->player()->getRemainingBoost() > 0) thing->player()->setRemainingBoost( thing->player()->getRemainingBoost() - dt );
+    if (key_jump && (thing->player()->getRemainingBoost() > 0.0 || thing->player()->getJumpTimeout() < 0.0)) {
+        cpVect player_v = cpBodyGetVelocity( thing->physics()->body );
+        cpVect jump_v =   cpv(thing->player()->getJumpForceX() * 2.0 * dt, thing->player()->getJumpForceY() * 2.0 * dt);
+        ApplyJumpForce(thing, player_v, jump_v, false);
     }
 
     // ********** Process Jump - If the jump key was just pressed this frame and it wasn't pressed last frame, jump!
-    if ((key_jump == true) && (comp_player->getJumpState() == Jump_State::Need_To_Jump)) {
-        if ((comp_player->getRemainingGroundTime() > 0.0) ||                                                                // Jump from ground
-            (comp_player->getRemainingWallTime() > 0.0 ) ||                                                                 // Jump from wall
-            ///(object->isOnWall() && object->getRemainingJumps() > 0) ||                                                   // Jump from wall if jumps remaining
-            (comp_player->canAirJump() && comp_player->getRemainingJumps() > 0) ||                                          // Jump from air if jumps remaining
-            (comp_player->getRemainingJumps() > 0 && comp_player->getJumpCount() != comp_player->getRemainingJumps()) ||    // Already jumped once from ground and jumps remaining
-            (comp_player->getJumpCount() == -1) ) {                                                                         // Unlimited jumping
+    if ((key_jump == true) && (thing->player()->getJumpState() == Jump_State::Need_To_Jump)) {
+        if ((thing->player()->getRemainingGroundTime() > 0.0) ||                                                                        // Jump from ground
+            (thing->player()->getRemainingWallTime() > 0.0 ) ||                                                                         // Jump from wall
+            ///(object->isOnWall() && object->getRemainingJumps() > 0) ||                                                               // Jump from wall if jumps remaining
+            (thing->player()->canAirJump() && thing->player()->getRemainingJumps() > 0) ||                                              // Jump from air if jumps remaining
+            (thing->player()->getRemainingJumps() > 0 && thing->player()->getJumpCount() != thing->player()->getRemainingJumps()) ||    // Already jumped once from ground and jumps remaining
+            (thing->player()->getJumpCount() == -1) ) {                                                                                 // Unlimited jumping
 
             // Mark current jump button press as processed
-            comp_player->setJumpState( Jump_State::Jumped );
+            thing->player()->setJumpState( Jump_State::Jumped );
 
             // Calculate wall jump forces
             cpFloat jump_vx, jump_vy;
-            if (comp_player->getRemainingWallTime() > 0.0) {
-                double angle = atan2(comp_player->getLastTouchedGroundNormal().y, comp_player->getLastTouchedGroundNormal().x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
+            if (thing->player()->getRemainingWallTime() > 0.0) {
+                double angle = atan2(thing->player()->getLastTouchedGroundNormal().y, thing->player()->getLastTouchedGroundNormal().x) - atan2(g_gravity_normal.y, g_gravity_normal.x);
                 angle = Dr::RadiansToDegrees( angle ) - 180;
                 ///Dr::PrintDebug("Wall jump - Angle: " + std::to_string(angle) + ", Dot: " + std::to_string(object->getLastTouchedGroundDot()));
                 if (angle < -180) angle += 360;
                 if (angle >  180) angle -= 360;
                 angle /= 3;
 
-                DrPointF wall_jump_force = Dr::RotatePointAroundOrigin( DrPointF(comp_player->getJumpForceX(), comp_player->getJumpForceY()), DrPointF(0, 0), angle );
+                DrPointF wall_jump_force = Dr::RotatePointAroundOrigin( DrPointF(thing->player()->getJumpForceX(), thing->player()->getJumpForceY()), DrPointF(0, 0), angle );
                 jump_vx = wall_jump_force.x * 2.0;
                 jump_vy = wall_jump_force.y * 2.0;
 
             // Calculate ground jump forces
             } else {
-                jump_vx = comp_player->getJumpForceX() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceX() * -gravity.x);
-                jump_vy = comp_player->getJumpForceY() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceY() * -gravity.y);
+                jump_vx = thing->player()->getJumpForceX() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceX() * -gravity.x);
+                jump_vy = thing->player()->getJumpForceY() * 2.0;   ///cpfsqrt(2.0 * object->getJumpForceY() * -gravity.y);
 
                 // Cancel current lack of gravity to preform jump
-                if (jump_from_sensor) object->compPlayer()->setTempGravityMultiplier( 1.0 );
+                if (jump_from_sensor) thing->player()->setTempGravityMultiplier( 1.0 );
             }
 
             // Starting a new jump so partially cancel any previous jump forces
-            cpVect  player_v = cpBodyGetVelocity( object->body );
+            cpVect  player_v = cpBodyGetVelocity( thing->physics()->body );
             if (player_v.x < 0) {
                 if (jump_vx < 0) {
                     if (player_v.x - (jump_vx*.5) < 0) player_v.x -= jump_vx*.5;
@@ -272,36 +277,36 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
             ///if (Dr::FuzzyCompare(jump_vx, 0.0) == false) player_v.x = 0;
             ///if (Dr::FuzzyCompare(jump_vy, 0.0) == false) player_v.y = 0;
 
-            ApplyJumpForce(object, player_v, cpv(jump_vx, jump_vy), true);
+            ApplyJumpForce(thing, player_v, cpv(jump_vx, jump_vy), true);
 
             // Reset wall_timeout, jump timeout boost and subtract remaining jumps until ground
-            comp_player->setRemainingGroundTime( 0.0 );
-            comp_player->setRemainingWallTime( 0.0 );
-            comp_player->setRemainingBoost( static_cast<double>(comp_player->getJumpTimeout()) / 1000.0 );
-            comp_player->setRemainingJumps( comp_player->getRemainingJumps() - 1 );
-            if (comp_player->getRemainingJumps() < c_unlimited_jump) comp_player->setRemainingJumps( c_unlimited_jump );
+            thing->player()->setRemainingGroundTime( 0.0 );
+            thing->player()->setRemainingWallTime( 0.0 );
+            thing->player()->setRemainingBoost( static_cast<double>(thing->player()->getJumpTimeout()) / 1000.0 );
+            thing->player()->setRemainingJumps( thing->player()->getRemainingJumps() - 1 );
+            if (thing->player()->getRemainingJumps() < c_unlimited_jump) thing->player()->setRemainingJumps( c_unlimited_jump );
         }
     }
 
     // If jump button is let go, reset this objects ability to receive a jump command
-    if (!g_jump_button) comp_player->setJumpState( Jump_State::Need_To_Jump );
+    if (!g_jump_button) thing->player()->setJumpState( Jump_State::Need_To_Jump );
 
 
 
     // ********** Velocity - Target horizontal speed for air / ground control
-    cpVect  velocity = cpBodyGetVelocity( object->body );
+    cpVect  velocity = cpBodyGetVelocity( thing->physics()->body );
 
     // Movement Speed, adjust to angle if desired
-    double  button_speed_x = comp_player->getMoveSpeedX() * key_x;
-    double  button_speed_y = comp_player->getMoveSpeedY() * key_y;
-    double  forced_speed_x = comp_player->getForcedSpeedX();
-    double  forced_speed_y = comp_player->getForcedSpeedY();
-    double  rotate_speed =   object->getRotateSpeedZ();
-    if (comp_player->getAngleMovement()) {
-        DrPointF button_angle = Dr::RotatePointAroundOrigin( DrPointF(button_speed_x, button_speed_y), DrPointF(0, 0), object->getAngle() );
+    double  button_speed_x = thing->player()->getMoveSpeedX() * key_x;
+    double  button_speed_y = thing->player()->getMoveSpeedY() * key_y;
+    double  forced_speed_x = thing->player()->getForcedSpeedX();
+    double  forced_speed_y = thing->player()->getForcedSpeedY();
+    double  rotate_speed =   thing->physics()->getRotateSpeedZ();
+    if (thing->player()->getAngleMovement()) {
+        DrPointF button_angle = Dr::RotatePointAroundOrigin( DrPointF(button_speed_x, button_speed_y), DrPointF(0, 0), thing->getAngle() );
             button_speed_x = button_angle.x;
             button_speed_y = button_angle.y;
-        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
+        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), thing->getAngle() );
             forced_speed_x = forced_angle.x;
             forced_speed_y = forced_angle.y;
     }
@@ -311,8 +316,8 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double move_speed_y = forced_speed_y + button_speed_y;
 
     // Store button direciton for use durin gother functions
-    comp_player->setButtonSpeedX(button_speed_x);
-    comp_player->setButtonSpeedY(button_speed_y);
+    thing->player()->setButtonSpeedX(button_speed_x);
+    thing->player()->setButtonSpeedY(button_speed_y);
 
 
     // ********** Drag / Acceleration
@@ -323,22 +328,22 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double c_accel =                0.125;
 
     // Increase slowdown speed while in contact with a ladder (cancel gravity object)
-    if (Dr::FuzzyCompare(comp_player->getTempGravityMultiplier(), 1.0) == false) {
-        c_drag_air    = (c_drag_air *    abs(comp_player->getTempGravityMultiplier())) + 0.0001;
-        c_drag_ground = (c_drag_ground * abs(comp_player->getTempGravityMultiplier())) + 0.0001;
+    if (Dr::FuzzyCompare(thing->player()->getTempGravityMultiplier(), 1.0) == false) {
+        c_drag_air    = (c_drag_air *    abs(thing->player()->getTempGravityMultiplier())) + 0.0001;
+        c_drag_ground = (c_drag_ground * abs(thing->player()->getTempGravityMultiplier())) + 0.0001;
     }
 
     // Air / Ground / Rotation Drag
-    double air_drag =       comp_player->getAirDrag();
-    double ground_drag =    comp_player->getGroundDrag();
-    double rotate_drag =    comp_player->getRotateDrag();
-    double acceleration =   comp_player->getAcceleration();              // Acceleration, 1.0 is default, 5.0 is 5 times as slow, 0 is instant acceleration
+    double air_drag =       thing->player()->getAirDrag();
+    double ground_drag =    thing->player()->getGroundDrag();
+    double rotate_drag =    thing->player()->getRotateDrag();
+    double acceleration =   thing->player()->getAcceleration();             // Acceleration, 1.0 is default, 5.0 is 5 times as slow, 0 is instant acceleration
 
     // Adjust Move Speeds for Drag
     double air_increase =    (air_drag    > 1.0) ? sqrt(air_drag) :    1.0;
     double ground_increase = (ground_drag > 1.0) ? sqrt(ground_drag) : 1.0;
     double rotate_increase = (rotate_drag > 1.0) ? sqrt(rotate_drag) : 1.0;
-    if (!comp_player->isOnGround() && !comp_player->isOnWall()) {
+    if (!thing->player()->isOnGround() && !thing->player()->isOnWall()) {
         move_speed_x /= air_increase;
         move_speed_y /= air_increase;
     } else {
@@ -353,16 +358,16 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     double  target_vy = move_speed_y;
     double  target_spin = 0.0;
     switch (pedal) {
-        case Pedal::Brake:              target_spin = 0.0;                          break;
-        case Pedal::Clockwise:          target_spin = -object->getRotateSpeedZ();   break;
-        case Pedal::CounterClockwise:   target_spin =  object->getRotateSpeedZ();   break;
+        case Pedal::Brake:              target_spin = 0.0;                                  break;
+        case Pedal::Clockwise:          target_spin = -thing->physics()->getRotateSpeedZ(); break;
+        case Pedal::CounterClockwise:   target_spin =  thing->physics()->getRotateSpeedZ(); break;
         case Pedal::None:               break;
     }
 
     // This code subtracts gravity from target speed, not sure if we want to leave this in
     //      (useful for allowing movement force against gravity for m_cancel_gravity property, i.e. climbing up ladders)
-    double actual_gravity_x = gravity.x * comp_player->getTempGravityMultiplier();
-    double actual_gravity_y = gravity.y * comp_player->getTempGravityMultiplier();
+    double actual_gravity_x = gravity.x * thing->player()->getTempGravityMultiplier();
+    double actual_gravity_y = gravity.y * thing->player()->getTempGravityMultiplier();
     if (target_vx < 0 && gravity.x > 0) {
         target_vx += actual_gravity_x;
         if (target_vx > 0) target_vx = 0;
@@ -405,15 +410,15 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     ///bool forced_y_is_zero = Dr::FuzzyCompare(forced_speed_y, 0.0);
 
     // Interpolate towards desired velocity if in air
-    if (!comp_player->isOnGround() && !comp_player->isOnWall()) {
+    if (!thing->player()->isOnGround() && !thing->player()->isOnWall()) {
         if (target_x_is_zero || (has_key_x == false && speed_x_greater_than_forced)) {
-            velocity.x = cpflerpconst(velocity.x, comp_player->getForcedSpeedX(), air_drag / c_drag_air * dt);
+            velocity.x = cpflerpconst(velocity.x, thing->player()->getForcedSpeedX(), air_drag / c_drag_air * dt);
         } else {
             velocity.x = cpflerpconst(velocity.x, target_vx, air_accel_x * dt);
         }
 
         if (target_y_is_zero || (has_key_y == false && speed_y_greater_than_forced)) {
-            velocity.y = cpflerpconst(velocity.y, comp_player->getForcedSpeedY(), air_drag / c_drag_air * dt);
+            velocity.y = cpflerpconst(velocity.y, thing->player()->getForcedSpeedY(), air_drag / c_drag_air * dt);
         } else {
             velocity.y = cpflerpconst(velocity.y, target_vy, air_accel_y * dt);
         }
@@ -421,13 +426,13 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Interpolate towards desired velocity if on ground / wall
     } else {
         if (target_x_is_zero || (has_key_x == false && speed_x_greater_than_forced)) {
-            velocity.x = cpflerpconst(velocity.x, comp_player->getForcedSpeedX(), ground_drag / c_drag_ground * dt);
+            velocity.x = cpflerpconst(velocity.x, thing->player()->getForcedSpeedX(), ground_drag / c_drag_ground * dt);
         } else {
             velocity.x = cpflerpconst(velocity.x, target_vx, ground_accel_x * dt);
         }
 
         if (target_y_is_zero || (has_key_y == false && speed_y_greater_than_forced)) {
-            velocity.y = cpflerpconst(velocity.y, comp_player->getForcedSpeedY(), ground_drag / c_drag_ground * dt);
+            velocity.y = cpflerpconst(velocity.y, thing->player()->getForcedSpeedY(), ground_drag / c_drag_ground * dt);
         } else {
             velocity.y = cpflerpconst(velocity.y, target_vy, ground_accel_y * dt);
         }
@@ -436,23 +441,23 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
 
     // ********** Max Speed - Limit Velocity
-    velocity.x = cpfclamp(velocity.x, -comp_player->getMaxSpeedX(), comp_player->getMaxSpeedX());
-    velocity.y = cpfclamp(velocity.y, -comp_player->getMaxSpeedY(), comp_player->getMaxSpeedY());
+    velocity.x = cpfclamp(velocity.x, -thing->player()->getMaxSpeedX(), thing->player()->getMaxSpeedX());
+    velocity.y = cpfclamp(velocity.y, -thing->player()->getMaxSpeedY(), thing->player()->getMaxSpeedY());
 
 
 
     // ********** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
-    cpBodySetVelocity( object->body, velocity );
+    cpBodySetVelocity( thing->physics()->body, velocity );
 
     // Apply movement force evenly to Mesh Cloth players
-    if (object->body_style == Body_Style::Mesh_Blob && (has_key_x || has_key_y)) {
-        for (auto ball_number : object->compSoftBody()->soft_balls) {
-            DrEngineObject *soft_ball = object->world()->findObjectByKey(ball_number);
+    if (thing->physics()->body_style == Body_Style::Mesh_Blob && (has_key_x || has_key_y)) {
+        for (auto ball_number : thing->compSoftBody()->soft_balls) {
+            DrEngineThing *soft_ball = thing->world()->findPhysicsObjectByKey(ball_number);
             if (soft_ball == nullptr) return;
-            cpVect soft_ball_velocity = cpBodyGetVelocity(soft_ball->body);
+            cpVect soft_ball_velocity = cpBodyGetVelocity(soft_ball->physics()->body);
             double x_vel = cpflerp(soft_ball_velocity.x, velocity.x, 0.25);
             double y_vel = cpflerp(soft_ball_velocity.y, velocity.y, 0.25);
-            cpBodySetVelocity( soft_ball->body, cpv(x_vel, y_vel));
+            cpBodySetVelocity( soft_ball->physics()->body, cpv(x_vel, y_vel));
         }
     }
 

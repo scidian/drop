@@ -12,7 +12,7 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_vertex_debug.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/entities/dr_variable.h"
 #include "project/entities/dr_world.h"
@@ -155,11 +155,13 @@ void DrOpenGL::drawDebugJoints() {
 
         // Dont draw joints for soft bodies unless debug flag is on
         if (body_a != m_engine->mouse_body && body_b != m_engine->mouse_body) {
-            DrEngineObject *object_a = static_cast<DrEngineObject*>(cpBodyGetUserData(body_a));
-            DrEngineObject *object_b = static_cast<DrEngineObject*>(cpBodyGetUserData(body_b));
+            DrEngineThing *object_a = static_cast<DrEngineThing*>(cpBodyGetUserData(body_a));
+            DrEngineThing *object_b = static_cast<DrEngineThing*>(cpBodyGetUserData(body_b));
             if (object_a != nullptr && object_b != nullptr) {
-                if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
-                    if (object_a->isPhysicsChild() || object_b->isPhysicsChild()) continue;
+                if (object_a->physics() != nullptr && object_b->physics() != nullptr) {
+                    if (Dr::CheckDebugFlag(Debug_Flags::Render_Soft_Body_Shapes) == false) {
+                        if (object_a->physics()->isPhysicsChild() || object_b->physics()->isPhysicsChild()) continue;
+                    }
                 }
             }
         }
@@ -222,15 +224,15 @@ void DrOpenGL::drawDebugCollisions() {
     // ***** Build mesh of collisions
     DebugVertex vertexes;
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if ( thing->getThingType() != DrThingType::Object)  continue;
+        if ( thing->physics() == nullptr) continue;
 
-        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-        if ( object->body_type != Body_Type::Dynamic)        continue;
+        ThingCompPhysics *physics = thing->physics();
+        if ( physics->body_type != Body_Type::Dynamic) continue;
 
         std::vector<DrPointF> point_list;   point_list.clear();
         std::vector<cpVect>   normal_list;  normal_list.clear();
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
-        cpBodyEachArbiter(object->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
+        cpBodyEachArbiter(physics->body, cpBodyArbiterIteratorFunc(GetBodyContactPoints),  &point_list);
+        cpBodyEachArbiter(physics->body, cpBodyArbiterIteratorFunc(GetBodyContactNormals), &normal_list);
 
         for (int i = 0; i < static_cast<int>(point_list.size()); i++) {
             DrPointF point_1(point_list[i].x + 2.5, point_list[i].y);/// + 2.5);

@@ -7,7 +7,7 @@
 //
 #include "core/dr_debug.h"
 #include "engine/engine.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -54,25 +54,25 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     Cam_Info    cam =       loadCharacterCameraSettings(thing);
 
     // ***** Load Character Settings
-    DrPointF max_speed =        asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Max_Speed).toPointF();
-    DrPointF forced_speed =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Forced_Speed).toPointF();
-    DrPointF move_speed =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Move_Speed).toPointF();
-    bool     angle_move =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Angle_Movement).toBool();
+    DrPointF    max_speed =        asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Max_Speed).toPointF();
+    DrPointF    forced_speed =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Forced_Speed).toPointF();
+    DrPointF    move_speed =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Move_Speed).toPointF();
+    bool        angle_move =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Angle_Movement).toBool();
 
-    DrPointF jump_force =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Force).toPointF();
-    int      jump_timeout =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Timeout).toInt();
-    int      jump_count =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Counter).toInt();
-    bool     jump_air =         asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Air).toBool();
-    bool     jump_wall =        asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Wall).toBool();
+    DrPointF    jump_force =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Force).toPointF();
+    int         jump_timeout =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Timeout).toInt();
+    int         jump_count =       asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Counter).toInt();
+    bool        jump_air =         asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Air).toBool();
+    bool        jump_wall =        asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Jump_Wall).toBool();
 
-    double   acceleration =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Acceleration).toDouble();
-    double   air_drag =         asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Air_Drag).toDouble();
-    double   ground_drag =      asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Ground_Drag).toDouble();
-    double   rotate_drag =      asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Rotation_Drag).toDouble();
+    double      acceleration =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Acceleration).toDouble();
+    double      air_drag =         asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Air_Drag).toDouble();
+    double      ground_drag =      asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Ground_Drag).toDouble();
+    double      rotate_drag =      asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Rotation_Drag).toDouble();
 
-    bool     flip_image_x =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_X).toBool();
-    bool     flip_image_y =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_Y).toBool();
-    bool     mouse_rotate =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Mouse_Rotate).toBool();
+    bool        flip_image_x =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_X).toBool();
+    bool        flip_image_y =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Flip_Image_Y).toBool();
+    bool        mouse_rotate =     asset->getComponentPropertyValue(Comps::Asset_Settings_Character, Props::Asset_Character_Mouse_Rotate).toBool();
 
 
     int         physics_body_style =    asset->getComponentPropertyValue(Comps::Asset_Physics, Props::Asset_Physics_Body_Style).toInt();
@@ -86,13 +86,14 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     double      use_bounce =    (bounce[0].toBool())   ? bounce[1].toDouble()   : c_bounce;
 
     // ***** Add the player to the cpSpace
-    DrEngineObject *player = nullptr;
+    DrEngineThing *player = nullptr;
     switch (body_style) {
         case Body_Style::Rigid_Body:
         case Body_Style::Foliage:
-            player = new DrEngineObject(this, getNextKey(), thing->getKey(), Body_Type::Dynamic, asset->getKey(),
-                                        info.position.x, -info.position.y, info.z_order, info.scale, use_friction, use_bounce,
-                                        c_collide_true, can_rotate, info.angle, info.opacity);
+            player = new DrEngineThing(this, getNextKey(), thing->getKey());
+            player->setComponentPhysics(new ThingCompPhysics(this, player, Body_Type::Dynamic, asset->getKey(),
+                                                             info.position.x, -info.position.y, info.z_order, info.scale, use_friction, use_bounce,
+                                                             c_collide_true, can_rotate, info.angle, info.opacity));
             loadThingCollisionShape(asset, player);
             addThing(player);
             break;
@@ -155,9 +156,9 @@ void DrEngineWorld::loadCharacterToWorld(DrThing *thing) {
     player->compPlayer()->setMouseRotate( mouse_rotate );
 
     // ***** Object Movement Settings
-    player->setFlipImageX( flip_image_x );
-    player->setFlipImageY( flip_image_y );
-    player->setGravityScale( gravity_scale );
+    player->compPhysics()->setFlipImageX( flip_image_x );
+    player->compPhysics()->setFlipImageY( flip_image_y );
+    player->compPhysics()->setGravityScale( gravity_scale );
 
     // ***** Appearance settings
     loadThingAppearanceSettings(thing, player);

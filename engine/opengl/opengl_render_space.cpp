@@ -16,7 +16,7 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 
@@ -46,8 +46,8 @@ void DrOpenGL::cullingOff() {
 void DrOpenGL::drawSpace() {
 
     // ***** Reset Frame Variables
-    bool   has_rendered_glow_lights = false;                                            // Keeps track of if we have rendered the lights yet
-    long   thing_count =  0;
+    bool has_rendered_glow_lights = false;                                              // Keeps track of if we have rendered the lights yet
+    long thing_count =  0;
     m_triangles =  0;                                                                   // Reset frame triangle count
 
     // ***** Used to stop z fighting (a.k.a z-fighting, stitching)
@@ -79,81 +79,65 @@ void DrOpenGL::drawSpace() {
             m_last_thing = DrThingType::None;
         }
 
-        // ***** Draw Thing with appropriate Shader
-        switch (thing->getThingType()) {
-            case DrThingType::Character:
-            case DrThingType::Object: {
-                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                if (object == nullptr) continue;
-                if (object->isPhysicsChild()) continue;
+        // ***** If physics component present, draw physics object
+        ThingCompPhysics *physics = thing->compPhysics();
+        if (physics != nullptr) {
+            if (physics->isPhysicsChild()) continue;
 
-                // ***** If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
-                bool draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
-                if (thing->comp3D() == nullptr)
-                    draw2D = true;
-                else if (thing->comp3D()->get3DType() == Convert_3D_Type::None || Dr::FuzzyCompare(thing->comp3D()->getDepth(), 0.0))
-                    draw2D = true;
-                else if (thing->extrude_3d)
-                    draw2D = false;
+            // ***** If in 2D Mode (Object has no Depth, World is in 2D, etc) just draw quad
+            bool draw2D = m_engine->getCurrentWorld()->render_mode == Render_Mode::Mode_2D;
+            if (thing->comp3D() == nullptr)
+                draw2D = true;
+            else if (thing->comp3D()->get3DType() == Convert_3D_Type::None || Dr::FuzzyCompare(thing->comp3D()->getDepth(), 0.0))
+                draw2D = true;
+            else if (thing->extrude_3d)
+                draw2D = false;
 
-                // ***** Handle Soft Body
-                if (object->body_style == Body_Style::Circular_Blob || object->body_style == Body_Style::Square_Blob) {
-                    if (object->compSoftBody() == nullptr) continue;
-                    if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Radial) == false) continue;
-                    draw2D = true;
-                } else if (object->body_style == Body_Style::Mesh_Blob) {
-                    if (object->compSoftBody() == nullptr) continue;
-                    if (object->compSoftBody()->calculateSoftBodyMesh(object->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
-                    draw2D = true;
-                }
-
-
-                // ***** Trying to stop z-fighting, move objects apart with same z_order
-                //       ...The further away the more they have to move since the precision of the z buffer is scaled away from the camera
-                if (draw2D == false) {
-                    // Calculate distance from thing to camera
-                    glm::vec3 thing_position = glm::vec3(thing->getPosition().x, thing->getPosition().y, thing->getZOrder());
-                    glm::vec3 cam_position =   glm::vec3(m_eye.x(), m_eye.y(), m_eye.z());
-                    double cam_distance = 1.0 + (static_cast<double>(glm::distance(thing_position, cam_position)) / 400.0);
-
-                    // Adjust offset we're going to add onto things location to stop z-fighting
-                    double z_spacing = (0.001 / z_divisor) * cam_distance;
-                    if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
-                    if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += z_spacing; else m_add_z = 0.0;
-                    last_z = thing->getZOrder();
-
-                    // ***** Draw 3D Object / Character
-                    cullingOn(false);
-                    glEnable(GL_DEPTH_TEST);
-                    glDepthFunc(GL_LEQUAL);
-                    drawObject(thing, draw2D);
-                    glDepthMask(GL_TRUE);
-                    glDisable(GL_DEPTH_TEST);
-
-                } else {
-                    // ***** Draw 2D Object / Character
-                    // Standard Shader
-                    drawObject(thing, draw2D);
-                    // Simple Shader
-                    ///glEnable(GL_DEPTH_TEST);
-                    ///drawObjectSimple(thing);
-                    ///glDisable(GL_DEPTH_TEST);
-                }
-
-                cullingOff();
-                break;
+            // ***** Handle Soft Body
+            if (physics->body_style == Body_Style::Circular_Blob || physics->body_style == Body_Style::Square_Blob) {
+                if (thing->compSoftBody() == nullptr) continue;
+                if (thing->compSoftBody()->calculateSoftBodyMesh(physics->body_style, Soft_Mesh_Style::Radial) == false) continue;
+                draw2D = true;
+            } else if (physics->body_style == Body_Style::Mesh_Blob) {
+                if (thing->compSoftBody() == nullptr) continue;
+                if (thing->compSoftBody()->calculateSoftBodyMesh(physics->body_style, Soft_Mesh_Style::Grid_Square) == false) continue;
+                draw2D = true;
             }
 
 
-            case DrThingType::Text:
-                // !!!!!
-                // !!!!! NEEDS DRAWING IMPLEMENTED
-                // !!!!!
-                break;
+            // ***** Trying to stop z-fighting, move objects apart with same z_order
+            //       ...The further away the more they have to move since the precision of the z buffer is scaled away from the camera
+            if (draw2D == false) {
+                // Calculate distance from thing to camera
+                glm::vec3 thing_position = glm::vec3(thing->getPosition().x, thing->getPosition().y, thing->getZOrder());
+                glm::vec3 cam_position =   glm::vec3(m_eye.x(), m_eye.y(), m_eye.z());
+                double cam_distance = 1.0 + (static_cast<double>(glm::distance(thing_position, cam_position)) / 400.0);
 
+                // Adjust offset we're going to add onto things location to stop z-fighting
+                double z_spacing = (0.001 / z_divisor) * cam_distance;
+                if (thing_count == 0) last_z = thing->getZOrder() - 1000.0;
+                if (Dr::IsCloseTo(last_z, thing->getZOrder(), 0.01)) m_add_z += z_spacing; else m_add_z = 0.0;
+                last_z = thing->getZOrder();
 
-            default:
-                break;
+                // ***** Draw 3D Object / Character
+                cullingOn(false);
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LEQUAL);
+                drawObject(thing, draw2D);
+                glDepthMask(GL_TRUE);
+                glDisable(GL_DEPTH_TEST);
+
+            } else {
+                // ***** Draw 2D Object / Character
+                // Standard Shader
+                drawObject(thing, draw2D);
+                // Simple Shader
+                ///glEnable(GL_DEPTH_TEST);
+                ///drawObjectSimple(thing);
+                ///glDisable(GL_DEPTH_TEST);
+            }
+
+            cullingOff();
         }
 
         // ***** Call Render for all Thing Components

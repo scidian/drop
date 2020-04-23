@@ -11,7 +11,7 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_vertex_data.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/thing_component/thing_comp_tile.h"
 #include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/world/engine_world.h"
@@ -106,13 +106,12 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
         if (!m_default_shader.bind()) return;
     }
 
-    // ***** Initial type checks
-    if (thing->getThingType() != DrThingType::Object) return;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (object == nullptr) return;
+    // ***** Initial type checks (no physics component == not a physics object)
+    ThingCompPhysics* physics = thing->physics();
+    if (physics == nullptr) return;
 
     // ***** Load possible 3D Info
-    ThingComp3D *comp_3d = object->comp3D();
+    ThingComp3D *comp_3d = thing->comp3D();
     Convert_3D_Type comp_3d_type = Convert_3D_Type::None;           // Type of 3D extrusion
     double comp_3d_angle_x { 0.0 };                                 // X axis rotation
     double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
@@ -121,13 +120,13 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     bool   comp_3d_billboard { false };                             // Make Object face camera?
     double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
     if (comp_3d != nullptr) {
-        comp_3d_type =           object->comp3D()->get3DType();
-        comp_3d_angle_x =        object->comp3D()->getAngleX();
-        comp_3d_angle_y =        object->comp3D()->getAngleY();
-        comp_3d_rotate_x_speed = object->comp3D()->getRotateSpeedX();
-        comp_3d_rotate_y_speed = object->comp3D()->getRotateSpeedY();
-        comp_3d_billboard =      object->comp3D()->getBillboard();
-        comp_3d_depth =          object->comp3D()->getDepth();
+        comp_3d_type =           thing->comp3D()->get3DType();
+        comp_3d_angle_x =        thing->comp3D()->getAngleX();
+        comp_3d_angle_y =        thing->comp3D()->getAngleY();
+        comp_3d_rotate_x_speed = thing->comp3D()->getRotateSpeedX();
+        comp_3d_rotate_y_speed = thing->comp3D()->getRotateSpeedY();
+        comp_3d_billboard =      thing->comp3D()->getBillboard();
+        comp_3d_depth =          thing->comp3D()->getDepth();
     } else {
         draw2D = true;
     }
@@ -139,15 +138,15 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     ///        skip_object = true;
     ///}
     ///if (skip_object) return;
-    if (object->shapes.size() > 0) {
-        if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
+    if (physics->shapes.size() > 0) {
+        if (physics->shape_type[physics->shapes[0]] == Shape_Type::Segment) return;
     }
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;
-    long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.size() > 0) {
-        texture_number = object->animation_idle_keys[object->animation_idle_frame - 1];
+    long texture_number = physics->getTextureNumber();
+    if (physics->animation_idle_keys.size() > 0) {
+        texture_number = physics->animation_idle_keys[physics->animation_idle_frame - 1];
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return;
@@ -155,7 +154,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
 
     // ***** Blend function
     glEnable(GL_BLEND);
-    switch (object->blend_type) {
+    switch (thing->blend_type) {
         case Blend_Object::Standard:
             ///glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);                   // Standard non-premultiplied alpha blend
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);                            // Premultiplied alpha blend
@@ -173,7 +172,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
 
 
     // ***** Pixelation
-    if (object->pixel_texture != Pixel_Texture::None) {
+    if (thing->pixel_texture != Pixel_Texture::None) {
         glEnable(GL_TEXTURE_2D);
         GLint texture_object = glGetUniformLocation(m_default_shader.programId(), "u_texture");
         GLint texture_pixel =  glGetUniformLocation(m_default_shader.programId(), "u_texture_pixel");
@@ -183,13 +182,13 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
         // Bind textures - !!!!! #NOTE: Must be called in descending order and end on 0
         glActiveTexture(GL_TEXTURE1);                           // Texture unit 1
         long texture_number = 0;
-        if      (object->pixel_texture == Pixel_Texture::Ascii_Text)    texture_number = Asset_Textures::Pixel_Ascii_1;
-        else if (object->pixel_texture == Pixel_Texture::Brick_Wall)    texture_number = Asset_Textures::Pixel_Brick_1;
-        else if (object->pixel_texture == Pixel_Texture::Ceramic_Tile)  texture_number = Asset_Textures::Pixel_Tile_1;
-        else if (object->pixel_texture == Pixel_Texture::Cross_Stitch)  texture_number = Asset_Textures::Pixel_Cross_1;
-        else if (object->pixel_texture == Pixel_Texture::Knit_Stitch)   texture_number = Asset_Textures::Pixel_Sitch_1;
-        else if (object->pixel_texture == Pixel_Texture::Woven_Cloth)   texture_number = Asset_Textures::Pixel_Woven_1;
-        else if (object->pixel_texture == Pixel_Texture::Wood_Blocks)   texture_number = Asset_Textures::Pixel_Wood_1;
+        if      (thing->pixel_texture == Pixel_Texture::Ascii_Text)    texture_number = Asset_Textures::Pixel_Ascii_1;
+        else if (thing->pixel_texture == Pixel_Texture::Brick_Wall)    texture_number = Asset_Textures::Pixel_Brick_1;
+        else if (thing->pixel_texture == Pixel_Texture::Ceramic_Tile)  texture_number = Asset_Textures::Pixel_Tile_1;
+        else if (thing->pixel_texture == Pixel_Texture::Cross_Stitch)  texture_number = Asset_Textures::Pixel_Cross_1;
+        else if (thing->pixel_texture == Pixel_Texture::Knit_Stitch)   texture_number = Asset_Textures::Pixel_Sitch_1;
+        else if (thing->pixel_texture == Pixel_Texture::Woven_Cloth)   texture_number = Asset_Textures::Pixel_Woven_1;
+        else if (thing->pixel_texture == Pixel_Texture::Wood_Blocks)   texture_number = Asset_Textures::Pixel_Wood_1;
         if (texture_number != 0) {
             glBindTexture(GL_TEXTURE_2D, m_engine->getTexture(texture_number)->texture()->textureId());
             m_engine->getTexture(texture_number)->texture()->setWrapMode(QOpenGLTexture::WrapMode::Repeat);
@@ -216,7 +215,7 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     model.translate(x, y, z);
 
     // Rotate
-    model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+    model.rotate(static_cast<float>(thing->getAngle()), 0.f, 0.f, 1.f);
     model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
     model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
@@ -253,23 +252,23 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     } else {
         // Add an extra pixel on 3D objects to reduce blockiness of world
         float pixels_to_add = 1.5f;
-        add_pixel_x = (pixels_to_add * object->getScaleX()) / (static_cast<float>(texture_width));
-        add_pixel_y = (pixels_to_add * object->getScaleY()) / (static_cast<float>(texture_height));
+        add_pixel_x = (pixels_to_add * thing->getScaleX()) / (static_cast<float>(texture_width));
+        add_pixel_y = (pixels_to_add * thing->getScaleY()) / (static_cast<float>(texture_height));
     }
-    float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
-    float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
-    float final_x_scale = (object->getScaleX() + add_pixel_x) * flip_x;
-    float final_y_scale = (object->getScaleY() + add_pixel_y) * flip_y;
+    float flip_x = (physics->isFlippedX()) ? -1.0 : 1.0;
+    float flip_y = (physics->isFlippedY()) ? -1.0 : 1.0;
+    float final_x_scale = (thing->getScaleX() + add_pixel_x) * flip_x;
+    float final_y_scale = (thing->getScaleY() + add_pixel_y) * flip_y;
     model.scale( final_x_scale, final_y_scale, static_cast<float>(comp_3d_depth) );
 
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
-    float alpha = object->getOpacity();                                                     // Start with object alpha
-    if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
-        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
-        if (object->getDeathAnimation() == Death_Animation::Fade) {
+    float alpha = thing->getOpacity();                                                     // Start with object alpha
+    if (!physics->isAlive() && physics->getDeathAnimation() != Death_Animation::None) {
+        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(physics->getFadeTimer())) / static_cast<float>(physics->getDeathDuration()));
+        if (physics->getDeathAnimation() == Death_Animation::Fade) {
             alpha *= static_cast<float>(fade_percent);
-        } else if (object->getDeathAnimation() == Death_Animation::Shrink) {
+        } else if (physics->getDeathAnimation() == Death_Animation::Shrink) {
             model.scale( fade_percent, fade_percent );
         }
     }
@@ -305,31 +304,31 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     m_default_shader.setUniformValue( u_default_time,                   static_cast<float>(Dr::MillisecondsSinceStartOfDay() / 1000.0) );
     m_default_shader.setUniformValue( u_default_pre,                    true );
 
-    m_default_shader.setUniformValue( u_default_bitrate,                object->bitrate );
-    m_default_shader.setUniformValue( u_default_pixel_x,                object->pixel_x );
-    m_default_shader.setUniformValue( u_default_pixel_y,                object->pixel_y );
+    m_default_shader.setUniformValue( u_default_bitrate,                thing->bitrate );
+    m_default_shader.setUniformValue( u_default_pixel_x,                thing->pixel_x );
+    m_default_shader.setUniformValue( u_default_pixel_y,                thing->pixel_y );
     m_default_shader.setUniformValue( u_default_pixel_offset,           0.0f, 0.0f );
-    m_default_shader.setUniformValue( u_default_pixel_type,             static_cast<float>(object->pixel_texture) );
-    m_default_shader.setUniformValue( u_default_negative,               object->negative );
-    m_default_shader.setUniformValue( u_default_grayscale,              object->grayscale );
-    m_default_shader.setUniformValue( u_default_hue,                    object->hue );
-    m_default_shader.setUniformValue( u_default_saturation,             object->saturation );
-    m_default_shader.setUniformValue( u_default_contrast,               object->contrast );
-    m_default_shader.setUniformValue( u_default_brightness,             object->brightness );
+    m_default_shader.setUniformValue( u_default_pixel_type,             static_cast<float>(thing->pixel_texture) );
+    m_default_shader.setUniformValue( u_default_negative,               thing->negative );
+    m_default_shader.setUniformValue( u_default_grayscale,              thing->grayscale );
+    m_default_shader.setUniformValue( u_default_hue,                    thing->hue );
+    m_default_shader.setUniformValue( u_default_saturation,             thing->saturation );
+    m_default_shader.setUniformValue( u_default_contrast,               thing->contrast );
+    m_default_shader.setUniformValue( u_default_brightness,             thing->brightness );
 
     m_default_shader.setUniformValue( u_default_camera_type,            static_cast<float>(m_engine->getCurrentWorld()->render_type));
     m_default_shader.setUniformValue( u_default_shade_away,             !draw2D );
     m_default_shader.setUniformValue( u_default_camera_pos,             eye.x, eye.y, eye.z );
     m_default_shader.setUniformValue( u_default_look_at_pos,            look_at.x, look_at.y, look_at.z );
 
-    m_default_shader.setUniformValue( u_default_cartoon,                object->cartoon );
-    m_default_shader.setUniformValue( u_default_cartoon_width,          object->cartoon_width );
-    m_default_shader.setUniformValue( u_default_cross_hatch,            object->cross_hatch );
-    m_default_shader.setUniformValue( u_default_cross_hatch_width,      object->cross_hatch_width );
+    m_default_shader.setUniformValue( u_default_cartoon,                thing->cartoon );
+    m_default_shader.setUniformValue( u_default_cartoon_width,          thing->cartoon_width );
+    m_default_shader.setUniformValue( u_default_cross_hatch,            thing->cross_hatch );
+    m_default_shader.setUniformValue( u_default_cross_hatch_width,      thing->cross_hatch_width );
     m_default_shader.setUniformValue( u_default_wavy,                   false );
-    if (m_engine->getCurrentWorld()->wireframe || object->wireframe) {
+    if (m_engine->getCurrentWorld()->wireframe || thing->wireframe) {
         m_default_shader.setUniformValue( u_default_wireframe,          true );
-        if (object->wireframe)  m_default_shader.setUniformValue( u_default_wireframe_width,    object->wireframe_width );
+        if (thing->wireframe)   m_default_shader.setUniformValue( u_default_wireframe_width,    thing->wireframe_width );
         else                    m_default_shader.setUniformValue( u_default_wireframe_width,    m_engine->getCurrentWorld()->wireframe_width );
     } else {
         m_default_shader.setUniformValue( u_default_wireframe,          false );
@@ -339,18 +338,18 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
 
     // ***** Draw triangles using shader program
     // Soft Body Render
-    if ((object->body_style != Body_Style::Rigid_Body) && (object->compSoftBody() != nullptr)) {
+    if ((physics->body_style != Body_Style::Rigid_Body) && (thing->compSoftBody() != nullptr)) {
         m_default_shader.enableAttributeArray( a_default_vertex );
         m_default_shader.enableAttributeArray( a_default_texture_coord );
         m_default_shader.enableAttributeArray( a_default_barycentric );
-        m_default_shader.setAttributeArray(    a_default_vertex,        object->compSoftBody()->m_soft_vertices.data(),             3 );
-        m_default_shader.setAttributeArray(    a_default_texture_coord, object->compSoftBody()->m_soft_texture_coordinates.data(),  2 );
-        m_default_shader.setAttributeArray(    a_default_barycentric,   object->compSoftBody()->m_soft_barycentric.data(),          3 );
-        glDrawArrays( GL_TRIANGLES, 0, object->compSoftBody()->m_soft_triangles*3 );
+        m_default_shader.setAttributeArray(    a_default_vertex,        thing->compSoftBody()->m_soft_vertices.data(),             3 );
+        m_default_shader.setAttributeArray(    a_default_texture_coord, thing->compSoftBody()->m_soft_texture_coordinates.data(),  2 );
+        m_default_shader.setAttributeArray(    a_default_barycentric,   thing->compSoftBody()->m_soft_barycentric.data(),          3 );
+        glDrawArrays( GL_TRIANGLES, 0, thing->compSoftBody()->m_soft_triangles*3 );
         m_default_shader.disableAttributeArray( a_default_vertex );
         m_default_shader.disableAttributeArray( a_default_texture_coord );
         m_default_shader.disableAttributeArray( a_default_barycentric );
-        addTriangles( object->compSoftBody()->m_soft_triangles );
+        addTriangles( thing->compSoftBody()->m_soft_triangles );
 
     // Simple Quad Render
     } else if (draw2D) {
@@ -445,29 +444,28 @@ void DrOpenGL::releaseDefaultAttributeBuffer() {
 //####################################################################################
 void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 
-    // ***** Initial type checks
-    if (thing->getThingType() != DrThingType::Object) return;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (object == nullptr) return;
+    // ***** Initial type checks (no physics component == not a physics object)
+    ThingCompPhysics* physics = thing->physics();
+    if (physics == nullptr) return;
 
     // Load possible 3D Info
-    ThingComp3D *comp_3d = object->comp3D();
+    ThingComp3D *comp_3d = thing->comp3D();
     double comp_3d_angle_x { 0.0 };                                 // X axis rotation
     double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
     double comp_3d_rotate_x_speed { 0.0 };                          // X axis rotation speed
     double comp_3d_rotate_y_speed { 0.0 };                          // Y axis rotation speed
     double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
     if (comp_3d != nullptr) {
-        comp_3d_angle_x =        object->comp3D()->getAngleX();
-        comp_3d_angle_y =        object->comp3D()->getAngleY();
-        comp_3d_rotate_x_speed = object->comp3D()->getRotateSpeedX();
-        comp_3d_rotate_y_speed = object->comp3D()->getRotateSpeedY();
-        comp_3d_depth =          object->comp3D()->getDepth();
+        comp_3d_angle_x =        thing->comp3D()->getAngleX();
+        comp_3d_angle_y =        thing->comp3D()->getAngleY();
+        comp_3d_rotate_x_speed = thing->comp3D()->getRotateSpeedX();
+        comp_3d_rotate_y_speed = thing->comp3D()->getRotateSpeedY();
+        comp_3d_depth =          thing->comp3D()->getDepth();
     }
 
     // Don't draw Segments (lines)
-    if (object->shapes.size() > 0) {
-        if (object->shape_type[object->shapes[0]] == Shape_Type::Segment) return;
+    if (physics->shapes.size() > 0) {
+        if (physics->shape_type[physics->shapes[0]] == Shape_Type::Segment) return;
     }
 
     // Enable shader program
@@ -479,9 +477,9 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;
-    long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.size() > 0) {
-        texture_number = object->animation_idle_keys[object->animation_idle_frame - 1];
+    long texture_number = physics->getTextureNumber();
+    if (physics->animation_idle_keys.size() > 0) {
+        texture_number = physics->animation_idle_keys[physics->animation_idle_frame - 1];
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return;
@@ -498,23 +496,23 @@ void DrOpenGL::drawObjectSimple(DrEngineThing *thing) {
     model.translate(x, y, z);
 
     // Rotate
-    model.rotate(static_cast<float>(object->getAngle()), 0.f, 0.f, 1.f);
+    model.rotate(static_cast<float>(thing->getAngle()), 0.f, 0.f, 1.f);
     model.rotate(static_cast<float>(comp_3d_angle_x + (now * comp_3d_rotate_x_speed)), 1.f, 0.f, 0.f);
     model.rotate(static_cast<float>(comp_3d_angle_y + (now * comp_3d_rotate_y_speed)), 0.f, 1.f, 0.f);
 
     // Scale
-    float flip_x = (object->isFlippedX()) ? -1.0 : 1.0;
-    float flip_y = (object->isFlippedY()) ? -1.0 : 1.0;
+    float flip_x = (physics->isFlippedX()) ? -1.0 : 1.0;
+    float flip_y = (physics->isFlippedY()) ? -1.0 : 1.0;
     model.scale(static_cast<float>(texture->width()) * flip_x, static_cast<float>(texture->height()) * flip_y, 1.0f);
-    model.scale( object->getScaleX(), object->getScaleY(), static_cast<float>(comp_3d_depth) );
+    model.scale( thing->getScaleX(), thing->getScaleY(), static_cast<float>(comp_3d_depth) );
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
-    float alpha = object->getOpacity();                                                 // Start with object alpha
-    if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
-        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
-        if (object->getDeathAnimation() == Death_Animation::Fade) {
+    float alpha = thing->getOpacity();                                                 // Start with object alpha
+    if (!physics->isAlive() && physics->getDeathAnimation() != Death_Animation::None) {
+        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(physics->getFadeTimer())) / static_cast<float>(physics->getDeathDuration()));
+        if (physics->getDeathAnimation() == Death_Animation::Fade) {
             alpha *= static_cast<float>(fade_percent);
-        } else if (object->getDeathAnimation() == Death_Animation::Shrink) {
+        } else if (physics->getDeathAnimation() == Death_Animation::Shrink) {
             model.scale( fade_percent, fade_percent );
         }
     }
@@ -607,18 +605,18 @@ void DrOpenGL::drawObjectTile(DrEngineThing *thing) {
 //##    Renders the light to the using the Shadow Map
 //####################################################################################
 bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
-    if (thing->getThingType() != DrThingType::Object) return false;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-    if (object == nullptr) return false;
+    // ***** Initial type checks (no physics component == not a physics object)
+    ThingCompPhysics* physics = thing->physics();
+    if (physics == nullptr) return false;
 
     // ***** Don't draw Segments (lines)
     bool skip_object = false;
-    for (auto shape : object->shapes) {
-        if (object->shape_type[shape] == Shape_Type::Segment)
+    for (auto shape : physics->shapes) {
+        if (physics->shape_type[shape] == Shape_Type::Segment)
             skip_object = true;
     }
     if (skip_object) return false;
-    if (!object->cast_shadows) return false;
+    if (!thing->cast_shadows) return false;
 
     // ***** Enable shader program
     if (need_init_shader) {
@@ -640,9 +638,9 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
 
     // ***** Get texture to render with, set texture coordinates
     DrEngineTexture *texture;
-    long texture_number = object->getTextureNumber();
-    if (object->animation_idle_keys.size() > 0) {
-        texture_number = object->animation_idle_keys[object->animation_idle_frame - 1];
+    long texture_number = physics->getTextureNumber();
+    if (physics->animation_idle_keys.size() > 0) {
+        texture_number = physics->animation_idle_keys[physics->animation_idle_frame - 1];
     }
     texture = m_engine->getTexture(texture_number);
     if (texture == nullptr) return true;
@@ -651,29 +649,29 @@ bool DrOpenGL::drawObjectOccluder(DrEngineThing *thing, bool need_init_shader) {
     double texture_height = texture->height();
 
     // ***** Fade Away / Shrink Dying Object (Death Animation
-    float alpha = object->getOpacity();                                                     // Start with object alpha
+    float alpha = thing->getOpacity();                                                      // Start with object alpha
     float animation_scale = 1.0;
-    if (!object->isAlive() && object->getDeathAnimation() != Death_Animation::None) {
-        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(object->getFadeTimer())) / static_cast<float>(object->getDeathDuration()));
-        if (object->getDeathAnimation() == Death_Animation::Fade) {
+    if (!physics->isAlive() && physics->getDeathAnimation() != Death_Animation::None) {
+        float fade_percent = 1.0f - (static_cast<float>(Dr::MillisecondsElapsed(physics->getFadeTimer())) / static_cast<float>(physics->getDeathDuration()));
+        if (physics->getDeathAnimation() == Death_Animation::Fade) {
             alpha *= static_cast<float>(fade_percent);
-        } else if (object->getDeathAnimation() == Death_Animation::Shrink) {
+        } else if (physics->getDeathAnimation() == Death_Animation::Shrink) {
             animation_scale = fade_percent;
         }
     }
 
     // ***** Load vertices for this object
-    float flip_x = (object->isFlippedX()) ? -animation_scale : animation_scale;
-    float flip_y = (object->isFlippedY()) ? -animation_scale : animation_scale;
+    float flip_x = (physics->isFlippedX()) ? -animation_scale : animation_scale;
+    float flip_y = (physics->isFlippedY()) ? -animation_scale : animation_scale;
     std::vector<GLfloat> vertices;
-    getThingVertices(vertices, object, texture_width, texture_height, flip_x, flip_y);
+    getThingVertices(vertices, thing, texture_width, texture_height, flip_x, flip_y);
     m_occluder_shader.setAttributeArray(    a_occluder_vertex, vertices.data(), 3 );
     m_occluder_shader.enableAttributeArray( a_occluder_vertex );
 
     // ***** Set Shader Variables
     m_occluder_shader.setUniformValue( u_occluder_texture,      0 );                        // Texture unit 0
     m_occluder_shader.setUniformValue( u_occluder_alpha,        alpha );
-    m_occluder_shader.setUniformValue( u_occluder_depth,        static_cast<float>(object->getZOrder()) );
+    m_occluder_shader.setUniformValue( u_occluder_depth,        static_cast<float>(thing->getZOrder()) );
     m_occluder_shader.setUniformValue( u_occluder_near_plane,   c_near_plane );
     m_occluder_shader.setUniformValue( u_occluder_far_plane,    c_far_plane );
 

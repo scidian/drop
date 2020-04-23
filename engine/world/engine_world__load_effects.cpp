@@ -6,7 +6,7 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/thing_component_effects/thing_comp_fire.h"
 #include "engine/thing_component_effects/thing_comp_fisheye.h"
 #include "engine/thing_component_effects/thing_comp_light.h"

@@ -148,7 +148,7 @@ public:
 
     // !!!!! #TEMP: Variables
     Demo_Player     demo_player             { Demo_Player::Jump };
-    DrEngineObject *ball                    { nullptr };
+    DrEngineThing  *ball                    { nullptr };
     DrEngineThing  *light1                  { nullptr };
     DrEngineThing  *light2                  { nullptr };
 
@@ -219,26 +219,25 @@ public:
 
     // Thing Finding
     DrEngineThing*      findThingByKey(long key);
-    DrEngineObject*     findObjectByKey(long key);
-
+    DrEngineThing*      findPhysicsObjectByKey(long key);
 
 
     // Soft Bodies
-    DrEngineObject*     addBall(DrEngineWorld *world, long original_key, long asset_key, Soft_Body_Shape shape,
+    DrEngineThing*      addBall(DrEngineWorld *world, long original_key, long asset_key, Soft_Body_Shape shape,
                                 double pos_x, double pos_y, double pos_z, DrPointF scale, DrPointF radius_multiplier, double friction, double bounce,
                                 bool collides, bool can_rotate);
-    DrEngineObject*     addSoftBodyCircle(long original_key, long asset_key,
+    DrEngineThing*      addSoftBodyCircle(long original_key, long asset_key,
                                           double pos_x, double pos_y, double pos_z, DrPointF  size, DrPointF scale,
                                           double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject*     addSoftBodySquare(long original_key, long asset_key,
+    DrEngineThing*      addSoftBodySquare(long original_key, long asset_key,
                                           double pos_x, double pos_y, double pos_z, DrPointF  size, DrPointF scale,
                                           double stiffness, double friction, double bounce, bool can_rotate = true);
-    DrEngineObject*     addSoftBodyMesh(  long original_key, long asset_key,
+    DrEngineThing*      addSoftBodyMesh(  long original_key, long asset_key,
                                           double pos_x, double pos_y, double pos_z, DrPointF  size, DrPointF scale,
                                           double stiffness, double friction, double bounce, bool can_rotate = true);
 
     // Physics
-    void                applyCategoryMask(DrEngineObject *central, long group_id);
+    void                applyCategoryMask(DrEngineThing *central, long group_id);
 
     // Building / Updating
     void                addPlayer(Demo_Player new_player_type);
@@ -246,7 +245,7 @@ public:
     void                addThing(DrEngineThing *thing);
     void                addThings(std::list<DrEngineThing*> things);
 
-    void                assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool set_active_camera);
+    void                assignPlayerControls(DrEngineThing *engine_thing, bool has_controls_now, bool set_active_camera);
     void                buildWorld(long world_id_to_build, Demo_Player player_to_use = Demo_Player::Player);
     void                clearWorld();
     int                 countCharacters();
@@ -255,9 +254,9 @@ public:
     void                loadThing3DSettings(DrThing *thing, DrEngineThing *engine_thing);
     void                loadThingAppearanceSettings(DrThing *thing, DrEngineThing *engine_thing, bool simple_settings = false);
     static Thing_Info   loadThingBasicInfo(DrThing *thing);
-    void                loadThingCollisionShape(DrAsset *asset, DrEngineObject *object);
-    void                loadThingControlsSettings(DrAsset *asset, DrEngineObject *object);
-    void                loadThingHealthSettings(DrAsset *asset, DrEngineObject *object);
+    void                loadThingCollisionShape(DrAsset *asset, DrEngineThing *engine_thing);
+    void                loadThingControlsSettings(DrAsset *asset, DrEngineThing *engine_thing);
+    void                loadThingHealthSettings(DrAsset *asset, DrEngineThing *engine_thing);
 
     void                loadCameraToWorld(DrThing *thing, double offset_x, double offset_y);
     void                loadCharacterToWorld(DrThing *thing);
@@ -265,8 +264,8 @@ public:
     void                loadFisheyeToWorld(DrThing *thing, double offset_x, double offset_y);
     void                loadLightToWorld(DrThing *thing, double offset_x, double offset_y);
     void                loadMirrorToWorld(DrThing *thing, double offset_x, double offset_y);
-    DrEngineObject*     loadObjectToWorld(DrThing *thing, double offset_x, double offset_y, double scale_x, double scale_y,
-                                          double angle, double x_velocity, double y_velocity, double rotate_spawn = 0.0);
+    DrEngineThing*      loadPhysicsObjectToWorld(DrThing *thing, double offset_x, double offset_y, double scale_x, double scale_y,
+                                                 double angle, double x_velocity, double y_velocity, double rotate_spawn = 0.0);
     void                loadStageToWorld(DrStage *stage, double offset_x, double offset_y, bool start_stage = false);
     void                loadSwirlToWorld(DrThing *thing, double offset_x, double offset_y);
     void                loadTileToWorld (DrThing *thing, double offset_x, double offset_y);

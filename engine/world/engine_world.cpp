@@ -5,7 +5,7 @@
 //
 //
 //
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
@@ -58,23 +58,21 @@ EngineThings DrEngineWorld::find(std::string name) {
 //####################################################################################
 DrEngineThing* DrEngineWorld::findThingByKey(long key) {
     for (auto thing : m_things) {
+        if (thing == nullptr) continue;
         if (thing->getKey() == key) return thing;
     }
     return nullptr;
 }
 
 // Finds a Object by Unique Key
-DrEngineObject* DrEngineWorld::findObjectByKey(long key) {
+DrEngineThing* DrEngineWorld::findPhysicsObjectByKey(long key) {
     for (auto thing : m_things) {
         if (thing == nullptr) continue;
         if (thing->getKey() == key) {
-            if (thing->getThingType() == DrThingType::Object ||
-                thing->getThingType() == DrThingType::Character) {
-                DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-                return object;
-            } else {
+            if (thing->compPhysics() != nullptr)
+                return thing;
+            else
                 return nullptr;
-            }
         }
     }
     return nullptr;
@@ -96,10 +94,10 @@ void DrEngineWorld::addThing(DrEngineThing *thing) {
 int DrEngineWorld::countCharacters() {
     int character_count = 0;
     for (auto thing : m_things) {
-        if (thing->getThingType() == DrThingType::Object) {
-            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-            if (object == nullptr) continue;
-            if (object->hasKeyControls()) character_count++;
+        if (thing != nullptr) {
+            if (thing->compPhysics() != nullptr) {
+                if (thing->compPhysics()->hasKeyControls()) character_count++;
+            }
         }
     }
     return character_count;

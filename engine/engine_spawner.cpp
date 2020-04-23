@@ -8,7 +8,6 @@
 #include "core/dr_random.h"
 #include "engine/engine_spawner.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "project/entities/dr_thing.h"
 
@@ -80,10 +79,10 @@ void DrEngineSpawner::setSpawnerForFirstTime() {
 //####################################################################################
 //##    Update Function, called every physics frame
 //####################################################################################
-DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, DrRectF area, bool use_area) {
+DrEngineThing* DrEngineSpawner::update(double time_passed, double time_warp, DrRectF area, bool use_area) {
     (void)time_warp;
 
-    DrEngineObject *return_object = nullptr;
+    DrEngineThing *return_thing = nullptr;
 
     // ***** Can't find Thing to Spawn, mark for removal
     if (readyForRemoval()) return nullptr;
@@ -114,26 +113,26 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, Dr
         rotate_spawn = angle;
 
         // Find velocity of follow object
-        if (thing_attached_to->getThingType() == DrThingType::Object || thing_attached_to->getThingType() == DrThingType::Character) {
-            DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing_attached_to);
-            if (object != nullptr) {
+        if (thing_attached_to->compPhysics() != nullptr) {
+            ThingCompPhysics *physics = thing_attached_to->compPhysics();
+            if (physics != nullptr) {
                 // If character with forced velocity, find forced velocity
                 double forced_speed_x {0}, forced_speed_y {0};
-                if (object->compPlayer() != nullptr) {
-                    forced_speed_x = object->compPlayer()->getForcedSpeedX();
-                    forced_speed_y = object->compPlayer()->getForcedSpeedY();
-                    if (object->compPlayer()->getAngleMovement()) {
-                        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), object->getAngle() );
+                if (thing_attached_to->compPlayer() != nullptr) {
+                    forced_speed_x = thing_attached_to->compPlayer()->getForcedSpeedX();
+                    forced_speed_y = thing_attached_to->compPlayer()->getForcedSpeedY();
+                    if (thing_attached_to->compPlayer()->getAngleMovement()) {
+                        DrPointF forced_angle = Dr::RotatePointAroundOrigin( DrPointF(forced_speed_x, forced_speed_y), DrPointF(0, 0), thing_attached_to->getAngle() );
                             forced_speed_x = forced_angle.x;
                             forced_speed_y = forced_angle.y;
                     }
                 }
 
                 // Use Forced Speed for Dynamic objects, otherwise use Current Velocity of Kinematic objects
-                if (object->body_type == Body_Type::Dynamic) {
+                if (physics->body_type == Body_Type::Dynamic) {
                     x_velocity = forced_speed_x;
                     y_velocity = forced_speed_y;
-                } else if (object->body_type == Body_Type::Kinematic) {
+                } else if (physics->body_type == Body_Type::Kinematic) {
                     x_velocity = thing_attached_to->getVelocityX();
                     y_velocity = thing_attached_to->getVelocityY();
                 }
@@ -176,9 +175,9 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, Dr
 
             double spawn_chance = Dr::RandomDouble(0.0, 100.0);                                     // Get a random number between 0 and 100
             if (spawn_chance <= this->getSpawnChance()) {
-                return_object = m_world->loadObjectToWorld( thing_to_spawn,
-                                                            x_pos, y_pos, x_scale, y_scale, angle,
-                                                            x_velocity, y_velocity, rotate_spawn );
+                return_thing = m_world->loadPhysicsObjectToWorld( thing_to_spawn,
+                                                                  x_pos, y_pos, x_scale, y_scale, angle,
+                                                                  x_velocity, y_velocity, rotate_spawn );
             }
             resetSpawnTime();
             setNextSpawnTimeAmount();
@@ -198,7 +197,7 @@ DrEngineObject* DrEngineSpawner::update(double time_passed, double time_warp, Dr
             }
         }
     }
-    return return_object;
+    return return_thing;
 }
 
 

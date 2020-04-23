@@ -17,6 +17,7 @@
 // Type Definitions
 typedef std::vector<DrPointF>            PointList;
 typedef std::vector<std::vector<cpVect>> PolygonList;
+typedef std::map<cpShape*, Shape_Type>   ShapeMap;
 
 
 //####################################################################################
@@ -27,9 +28,9 @@ class ThingCompPhysics : public DrThingComponent
 {
 public:
     // Constructor / Destructor
-    ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *parent_thing, Body_Type body_type, long asset_key,
-                     double x, double y, double z, DrPointF scale, double friction, double bounce,
-                     bool should_collide, bool can_rotate, double angle, float opacity);
+    ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *parent_thing, Body_Type body_type, long asset_key = 0,
+                     double x = 0, double y = 0, double z = 0, DrPointF scale = c_scale1x1, double friction = c_friction, double bounce = c_bounce,
+                     bool should_collide = true, bool can_rotate = true, double angle = c_zero_rotate, float opacity = c_opaque);
     virtual ~ThingCompPhysics() override;
 
 
@@ -232,7 +233,7 @@ public:
     const long&     getDeathDelay()             { return m_death_delay; }
     Death_Animation getDeathAnimation()         { return m_death_animation; }
     const long&     getDeathDuration()          { return m_death_duration; }
-    const double&   getDamageRecoil()           { return (getPhysicsParent() == nullptr) ? m_damage_recoil : getPhysicsParent()->compPhysics()->getDamageRecoil(); }
+    const double&   getDamageRecoil();
 
     void            setCollisionType(Collision_Type what_should_collide);
     void            setInvincible(bool invincible) { m_invincible = invincible; }
@@ -282,8 +283,8 @@ public:
     // Player Control
     const bool&     hasKeyControls()                { return m_key_controls; }
     const bool&     hasLostControl()                { return m_lost_control; }
-    void            setKeyControls(bool has_key_controls) { m_key_controls = has_key_controls; }
-    void            setLostControl(bool lost_control) { m_lost_control = lost_control; }
+    void            setKeyControls(bool has_key_controls)   { m_key_controls = has_key_controls; }
+    void            setLostControl(bool lost_control)       { m_lost_control = lost_control; }
 
     const bool&     isDying()                       { return m_dying; }
     const bool&     isAlive()                       { return m_alive; }

@@ -256,13 +256,12 @@ SOURCES += \
     engine/opengl/opengl_render_space.cpp \
     engine/thing/engine_thing.cpp \
     engine/thing/engine_thing_component.cpp \
-    engine/thing/engine_thing_object.cpp \
-    engine/thing/engine_thing_object__shapes.cpp \
-    engine/thing/engine_thing_object__update.cpp \
     engine/thing_component/thing_comp_3d.cpp \
     engine/thing_component/thing_comp_camera.cpp \
     engine/thing_component/thing_comp_foliage.cpp \
     engine/thing_component/thing_comp_physics.cpp \
+    engine/thing_component/thing_comp_physics__shapes.cpp \
+    engine/thing_component/thing_comp_physics__update.cpp \
     engine/thing_component/thing_comp_player.cpp \
     engine/thing_component/thing_comp_soft_body.cpp \
     engine/thing_component/thing_comp_tile.cpp \
@@ -995,7 +994,6 @@ HEADERS += \
     engine/opengl/opengl.h \
     engine/thing/engine_thing.h \
     engine/thing/engine_thing_component.h \
-    engine/thing/engine_thing_object.h \
     engine/thing_component/thing_comp_3d.h \
     engine/thing_component/thing_comp_camera.h \
     engine/thing_component/thing_comp_foliage.h \

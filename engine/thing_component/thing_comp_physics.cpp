@@ -15,7 +15,6 @@
 #include "engine/mesh/engine_mesh.h"
 #include "engine/thing_component/thing_comp_physics.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
@@ -31,8 +30,8 @@ ThingCompPhysics::ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *p
                                    bool should_collide, bool can_rotate, double angle, float opacity)
     : DrThingComponent(engine_world, parent_thing, Comps::Thing_Physics) {
 
-///    // Initialize Components
-///    setComponent3D(new ThingComp3D(world, this));
+    // Initialize Components
+    if (thing()->comp3D() == nullptr) thing()->setComponent3D(new ThingComp3D(world(), thing()));
 
     // Initialize variables
     polygons.clear();
@@ -82,9 +81,9 @@ ThingCompPhysics::ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *p
         case Body_Type::Dynamic:    this->body = cpBodyNew( 0.0, 0.0 );                             break;
         case Body_Type::Kinematic:  this->body = cpBodyNewKinematic();                              break;
     }
-    cpBodySetPosition( this->body, cpv(x, y));
+    cpBodySetPosition( this->body, cpv(x, y) );
     thing()->setAngle( -angle );
-    cpBodySetUserData( this->body, this);                                       // Set chipmunk User Data, store DrEngineThing* for use later
+    cpBodySetUserData( this->body, thing() );                                   // Set chipmunk User Data, store DrEngineThing* for use later
 
     if (body_type == Body_Type::Kinematic) {
         cpBodySetVelocityUpdateFunc(this->body, KinematicUpdateVelocity);
@@ -166,13 +165,10 @@ void ThingCompPhysics::draw() {
 
 }
 
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompPhysics::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
-    return false;
-}
+// ***** Update Moved To: thing_comp_physics.cpp
+///bool ThingCompPhysics::update(double time_passed, double time_warp) {
+///
+///}
 
 // Called when component is destroyed
 void ThingCompPhysics::destroy() {
@@ -220,6 +216,16 @@ std::vector<long> ThingCompPhysics::listOfCollidingObjectKeys() {
     }
     return colliding_keys;
 }
+
+
+
+//####################################################################################
+//##    Misc Getters / Setters
+//####################################################################################
+const double& ThingCompPhysics::getDamageRecoil() {
+    return (getPhysicsParent() == nullptr) ? m_damage_recoil : getPhysicsParent()->compPhysics()->getDamageRecoil();
+}
+
 
 
 //####################################################################################

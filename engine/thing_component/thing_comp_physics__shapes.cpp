@@ -1,23 +1,31 @@
 //
-//      Created by Stephens Nunnally on 6/27/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/22/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
+#include "3rd_party/chipmunk/chipmunk.h"
 #include "3rd_party/hull_finder.h"
 #include "3rd_party/poly_partition.h"
 #include "core/dr_debug.h"
+#include "core/dr_random.h"
 #include "engine/engine.h"
+#include "engine/engine_signal.h"
 #include "engine/engine_texture.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/mesh/engine_mesh.h"
+#include "engine/thing_component/thing_comp_physics.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
+#include "project/entities/dr_asset.h"
 
 
 //####################################################################################
 //##    Creates a list of Vertices that represent a scaled circle
 //####################################################################################
-PointList DrEngineObject::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
+PointList ThingCompPhysics::createEllipseFromCircle(const DrPointF &center, const double &radius, const int &point_count) {
     std::vector<DrPointF> ellipse;
     int count = point_count;
     for (int i = 0; i < count; i++) {
@@ -30,38 +38,38 @@ PointList DrEngineObject::createEllipseFromCircle(const DrPointF &center, const 
 //####################################################################################
 //##    Add Shapes to Object
 //####################################################################################
-cpShape* DrEngineObject::addShapeBox(double width, double height) {
-    width =  width *  abs(static_cast<double>(this->getScaleX()));
-    height = height * abs(static_cast<double>(this->getScaleY()));
+cpShape* ThingCompPhysics::addShapeBox(double width, double height) {
+    width =  width *  abs(static_cast<double>(thing()->getScaleX()));
+    height = height * abs(static_cast<double>(thing()->getScaleY()));
     cpShape *shape = cpBoxShapeNew(this->body, width, height, c_extra_radius);
     double   area = (width * height);
     return applyShapeSettings(shape, area, Shape_Type::Box);
 }
-cpShape* DrEngineObject::addShapeBox(cpBB box) {
+cpShape* ThingCompPhysics::addShapeBox(cpBB box) {
     cpShape *shape = cpBoxShapeNew2(this->body, box, c_extra_radius);
     double   area = ((box.r - box.l) * (box.t - box.b));
     return applyShapeSettings(shape, area, Shape_Type::Box);
 }
-cpShape* DrEngineObject::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
+cpShape* ThingCompPhysics::addShapeBoxFromTexture(long texture_number, DrPointF extra_scale) {
     double width =  world()->getTexture(texture_number)->width() *  abs(extra_scale.x);
     double height = world()->getTexture(texture_number)->height() * abs(extra_scale.y);
     return addShapeBox(width, height);
 }
 
-cpShape* DrEngineObject::addShapeCircle(double circle_radius, DrPointF shape_offset) {
+cpShape* ThingCompPhysics::addShapeCircle(double circle_radius, DrPointF shape_offset) {
     // Check if Circle, but not perfect square scale, if so, create with a polygon ellipse instead of a circle
-    if (Dr::FuzzyCompare(abs(this->getScaleX()), abs(this->getScaleY())) == false) {
+    if (Dr::FuzzyCompare(abs(thing()->getScaleX()), abs(thing()->getScaleY())) == false) {
         std::vector<DrPointF> points = createEllipseFromCircle(shape_offset, circle_radius, 18);
         return addShapePolygon(points);
     } else {
-        double  radius = circle_radius * static_cast<double>(abs(this->getScaleX()));
+        double  radius = circle_radius * static_cast<double>(abs(thing()->getScaleX()));
         cpVect  offset = cpv(shape_offset.x, shape_offset.y);                                       // Offset of collision shape
         cpShape *shape = cpCircleShapeNew(this->body, radius, offset);
         double    area = cpAreaForCircle( 0, circle_radius );
         return applyShapeSettings(shape, area, Shape_Type::Circle);
     }
 }
-cpShape* DrEngineObject::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
+cpShape* ThingCompPhysics::addShapeCircleFromTexture(long texture_number, double radius_multiplier, DrPointF extra_scale) {
     double width =  world()->getTexture(texture_number)->width() *  abs(extra_scale.x);
     double height = world()->getTexture(texture_number)->height() * abs(extra_scale.y);
     double radius = (width / 2.0) * radius_multiplier;
@@ -87,7 +95,7 @@ cpShape* DrEngineObject::addShapeCircleFromTexture(long texture_number, double r
     }
 }
 
-cpShape* DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
+cpShape* ThingCompPhysics::addShapeTriangleFromTexture(long texture_number) {
     double width =  world()->getTexture(texture_number)->width();
     double height = world()->getTexture(texture_number)->height();
     std::vector<DrPointF> points;
@@ -97,17 +105,17 @@ cpShape* DrEngineObject::addShapeTriangleFromTexture(long texture_number) {
     return addShapePolygon(points);
 }
 
-cpShape* DrEngineObject::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
+cpShape* ThingCompPhysics::addShapeSegment(DrPointF p1, DrPointF p2, double padding) {
     cpShape *shape = cpSegmentShapeNew(this->body, cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     double   area =  cpAreaForSegment(cpv(p1.x, p1.y), cpv(p2.x, p2.y), padding);
     return applyShapeSettings(shape, area, Shape_Type::Segment);
 }
 
-cpShape* DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
+cpShape* ThingCompPhysics::addShapePolygon(const std::vector<DrPointF> &points) {
     // Apply scale to points, verify Winding
     int old_point_count = static_cast<int>(points.size());
-    double scale_x = static_cast<double>(this->getScaleX());
-    double scale_y = static_cast<double>(this->getScaleY());
+    double scale_x = static_cast<double>(thing()->getScaleX());
+    double scale_y = static_cast<double>(thing()->getScaleY());
     std::vector<DrPointF> scaled_points;
     for (auto &point : points) {
         scaled_points.push_back( DrPointF(point.x * scale_x, point.y * scale_y) );
@@ -174,7 +182,7 @@ cpShape* DrEngineObject::addShapePolygon(const std::vector<DrPointF> &points) {
 //####################################################################################
 //##    Applies Object Settings to Shape
 //####################################################################################
-cpShape* DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type) {
+cpShape* ThingCompPhysics::applyShapeSettings(cpShape *shape, double area, Shape_Type shape_type) {
     // Figrue out friction and bounce to use for this object
     double friction = (this->getCustomFriction() < 0) ? world()->getFriction() : this->getCustomFriction();
     double bounce =   (this->getCustomBounce() < 0)   ? world()->getBounce()   : this->getCustomBounce();
@@ -183,7 +191,7 @@ cpShape* DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_T
     cpShapeSetMass( shape, area * c_mass_multiplier );
     cpShapeSetFriction( shape, friction );
     cpShapeSetElasticity( shape, bounce );                                          // Ideally between 0 and .99999
-    cpShapeSetUserData( shape, this );                                              // Set UserData to DrEngineObject pointer
+    cpShapeSetUserData( shape, thing() );                                           // Set UserData to DrEngineObject pointer
 
     // If we don't want the object to collide with other objects, set as sensor
     cpShapeSetSensor( shape, !(this->doesCollide()) );
@@ -194,8 +202,6 @@ cpShape* DrEngineObject::applyShapeSettings(cpShape *shape, double area, Shape_T
 
     return shape;
 }
-
-
 
 
 

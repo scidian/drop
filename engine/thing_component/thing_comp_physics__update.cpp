@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 11/12/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/22/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -7,32 +7,36 @@
 //
 #include "engine/engine.h"
 #include "engine/engine_texture.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing_component/thing_comp_physics.h"
 #include "engine/world/engine_world.h"
+
 
 
 //####################################################################################
 //##    Updates - Override for DrEngineThing::update()
 //####################################################################################
-void DrEngineObject::updateBodyPosition(DrPointF updated_position, bool update_previous_position_also) {
+void ThingCompPhysics::updateBodyPosition(DrPointF updated_position, bool update_previous_position_also) {
     if (update_previous_position_also) {
-        m_previous_position = DrVec3(static_cast<float>(updated_position.x), static_cast<float>(updated_position.y), static_cast<float>(getZOrder()));
+        m_previous_position = DrVec3(static_cast<float>(updated_position.x), static_cast<float>(updated_position.y), static_cast<float>(thing()->getZOrder()));
     } else {
-        m_previous_position = DrVec3(static_cast<float>(getPosition().x), static_cast<float>(getPosition().y), static_cast<float>(getZOrder()));
+        m_previous_position = DrVec3(static_cast<float>(thing()->getPosition().x), static_cast<float>(thing()->getPosition().y), static_cast<float>(thing()->getZOrder()));
     }
 
-    setPosition( updated_position );
+    thing()->setPosition( updated_position );
 }
 
-bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area) {
+// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
+bool ThingCompPhysics::update(double time_passed, double time_warp) {
+    (void) time_warp;
+
     bool remove = false;
 
     // ***** Get some info about the current object from the space and save it to the current DrEngineObject
     cpVect new_position = cpBodyGetPosition( body );
     cpVect new_velocity = cpBodyGetVelocity( body );
     updateBodyPosition( DrPointF( new_position.x, new_position.y ));
-    setVelocityX( new_velocity.x );
-    setVelocityY( new_velocity.y );
+    thing()->setVelocityX( new_velocity.x );
+    thing()->setVelocityY( new_velocity.y );
 
 
     // ***** Animation Time Updating
@@ -80,7 +84,7 @@ bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area)
     // ***** Auto Damage
     if (getHealth() > c_epsilon) {
         if (getAutoDamage() < -c_epsilon || getAutoDamage() > c_epsilon) {
-            takeDamage(getAutoDamage() * (time_since_last_update / 1000.0), false);
+            takeDamage(getAutoDamage() * (thing()->time_since_last_update / 1000.0), false);
         }
     }
 
@@ -103,14 +107,8 @@ bool DrEngineObject::update(double time_passed, double time_warp, DrRectF &area)
         }
     }
 
-
-    return (remove || DrEngineThing::update(time_passed, time_warp, area));
+    return remove;
 };
-
-
-
-
-
 
 
 

@@ -12,7 +12,7 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -57,16 +57,17 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
                 double ball_radius =  m_engine->getTexture(Asset_Textures::Ball)->width()  / 2.0;
 
-                DrEngineObject *circle;
+                DrEngineThing *circle;
                 if (Dr::RandomBool()) {
-                    circle = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
+                    circle = new DrEngineThing(world, world->getNextKey(), c_no_key);
+                    circle->setComponentPhysics(new ThingCompPhysics(world, circle, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z));
                 } else {
-                    ///circle = new DrEngineObject(world, world->getNextKey(), Body_Type::Dynamic, Asset_Textures::Ball, x, y, z);
-                    circle = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPointF(2, 1));
+                    circle = new DrEngineThing(world, world->getNextKey(), c_no_key);
+                    circle->setComponentPhysics(new ThingCompPhysics(world, circle, Body_Type::Dynamic, Asset_Textures::Ball, x, y, z, DrPointF(2, 1)));
                 }
-                circle->addShapeCircle(ball_radius, c_center);
-                circle->setOriginalVelocityX(vel_x);
-                circle->setOriginalVelocityX(vel_y);
+                circle->compPhysics()->addShapeCircle(ball_radius, c_center);
+                circle->compPhysics()->setOriginalVelocityX(vel_x);
+                circle->compPhysics()->setOriginalVelocityX(vel_y);
                 world->addThing(circle);
             }
         } else if (event->button() & Qt::RightButton) {
@@ -79,8 +80,9 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             points.push_back( DrPointF(-46, -10) );     // Left Middle
             points.push_back( DrPointF(-38, -55) );     // Left Bottom
 
-            DrEngineObject *plant = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPointF(2, .5));
-            plant->addShapePolygon(points);
+            DrEngineThing *plant = new DrEngineThing(world, world->getNextKey(), c_no_key);
+            plant->setComponentPhysics(new ThingCompPhysics(world, plant, Body_Type::Dynamic, Asset_Textures::Plant, x, y, z, DrPointF(2, .5)));
+            plant->compPhysics()->addShapePolygon(points);
             world->addThing(plant);
         }
 
@@ -105,36 +107,40 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
             //      cpFloat distance;               // The distance to the point. The distance is negative if the point is inside the shape.
             //      cpVect gradient;                // The gradient of the signed distance function. The value should be similar to info.p/info.d,
             //                                      //      but accurate even for very small values of info.d
-            DrEngineObject  *touch = nullptr;
+            DrEngineThing   *touch = nullptr;
             cpPointQueryInfo point_query;
             cpFloat          max_distance = 10.0;
             cpShape         *nearest = cpSpacePointQueryNearest(world->getSpace(), cpv(x, y), max_distance, CP_SHAPE_FILTER_ALL, &point_query);
 
             if (nearest != nullptr) {
-                touch = static_cast<DrEngineObject*>(cpShapeGetUserData(nearest));
-
+                touch = static_cast<DrEngineThing*>(cpShapeGetUserData(nearest));
                 if (touch != nullptr) {
-                    if (touch->hasTouchDamage()) {
-                        touch->takeDamage(touch->getTouchDamagePoints(), true);
-                        should_jump = false;
-                    }
+                    ThingCompPhysics *physics = touch->compPhysics();
+                    if (physics != nullptr) {
 
-                    if (touch->hasTouchDrag()) {
-                        if (touch->body_type == Body_Type::Kinematic) {
-                            l_drag_body = touch->body;
-                            l_drag_offset = cpvsub(cpBodyGetPosition(l_drag_body), cpv(x, y));
-                            should_jump = false;
-
-                        } else if (touch->body_type == Body_Type::Dynamic) {
-                            m_engine->mouse_joint = cpPivotJointNew(m_engine->mouse_body, touch->body, cpBodyGetPosition(touch->body));
-                            double max_force = 10000;
-                            double body_mass = cpBodyGetMass(touch->body);
-                            if (Dr::RealDouble(body_mass)) max_force *= body_mass * (touch->getTouchDragForce() / 100.0);
-                            if (touch->body_style == Body_Style::Mesh_Blob) max_force *= 20.0;
-                            cpConstraintSetMaxForce(m_engine->mouse_joint, max_force);
-                            cpSpaceAddConstraint(world->getSpace(), m_engine->mouse_joint);
+                        if (physics->hasTouchDamage()) {
+                            physics->takeDamage(physics->getTouchDamagePoints(), true);
                             should_jump = false;
                         }
+
+                        if (physics->hasTouchDrag()) {
+                            if (physics->body_type == Body_Type::Kinematic) {
+                                l_drag_body = physics->body;
+                                l_drag_offset = cpvsub(cpBodyGetPosition(l_drag_body), cpv(x, y));
+                                should_jump = false;
+
+                            } else if (physics->body_type == Body_Type::Dynamic) {
+                                m_engine->mouse_joint = cpPivotJointNew(m_engine->mouse_body, physics->body, cpBodyGetPosition(physics->body));
+                                double max_force = 10000;
+                                double body_mass = cpBodyGetMass(physics->body);
+                                if (Dr::RealDouble(body_mass)) max_force *= body_mass * (physics->getTouchDragForce() / 100.0);
+                                if (physics->body_style == Body_Style::Mesh_Blob) max_force *= 20.0;
+                                cpConstraintSetMaxForce(m_engine->mouse_joint, max_force);
+                                cpSpaceAddConstraint(world->getSpace(), m_engine->mouse_joint);
+                                should_jump = false;
+                            }
+                        }
+
                     }
                 }
             }
@@ -151,7 +157,7 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 //##    Soft Body Demo
                 //##
                 //###########################################
-                DrEngineObject *soft_body = nullptr;
+                DrEngineThing *soft_body = nullptr;
                 long   asset_texture;
                 double friction = 0.25;
                 double bounce =   0.5;
@@ -188,8 +194,8 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 }
                 soft_body->saturation = 255.0;
                 soft_body->hue = static_cast<float>(Dr::RandomDouble(0, 360));
-                soft_body->setDamageRecoil(1000.0);
-                soft_body->setTouchDrag(true);
+                soft_body->compPhysics()->setDamageRecoil(1000.0);
+                soft_body->compPhysics()->setTouchDrag(true);
 
             } else {
 
@@ -223,12 +229,13 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
                 //##
                 //###########################################
                 for (int i = 0; i < 25; i++ ) {
-                    DrEngineObject *block = new DrEngineObject(world, world->getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Block, x, y, z);
-                    block->addShapeBoxFromTexture(Asset_Textures::Block);
+                    DrEngineThing *block = new DrEngineThing(world, world->getNextKey(), c_no_key);
+                    block->setComponentPhysics(new ThingCompPhysics(world, block, Body_Type::Dynamic, Asset_Textures::Block, x, y, z));
+                    block->compPhysics()->addShapeBoxFromTexture(Asset_Textures::Block);
                     block->comp3D()->set3DType(Convert_3D_Type::Cube);
                     block->comp3D()->setDepth(61);
-                    block->setTouchDrag(true);
-                    block->setTouchDragForce(5000.0);
+                    block->compPhysics()->setTouchDrag(true);
+                    block->compPhysics()->setTouchDragForce(5000.0);
                     world->addThing(block);
 
                     double hue = Dr::RandomDouble(0.0, 1.0);

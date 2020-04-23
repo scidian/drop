@@ -8,7 +8,7 @@
 #include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/properties/property_collision.h"
 #include "project/dr_project.h"
@@ -103,7 +103,8 @@ void DrEngineWorld::loadThingAppearanceSettings(DrThing *thing, DrEngineThing *e
 //####################################################################################
 //##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *object) {
+void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineThing *engine_thing) {
+    if (engine_thing->compPhysics() == nullptr) return;
     double  max_health =        asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Max_Health).toDouble();
     double  health =            asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Health).toDouble();
     double  damage =            asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Damage).toDouble();
@@ -115,68 +116,69 @@ void DrEngineWorld::loadThingHealthSettings(DrAsset *asset, DrEngineObject *obje
     double  damage_recoil =     asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Damage_Recoil).toDouble();
     bool    invincible =        asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Invincible).toBool();
     bool    death_touch =       asset->getComponentPropertyValue(Comps::Asset_Health, Props::Asset_Health_Death_Touch).toBool();
-    object->setMaxHealth(max_health);
-    object->setHealth(health);
-    object->setDamage(damage);
-    object->setDamageDelay(damage_delay);
-    object->setAutoDamage(auto_damage);
-    object->setDeathDelay(death_delay);
-    object->setDeathAnimation(static_cast<Death_Animation>(death_animation));
-    object->setDeathDuration(death_duration);
-    object->setDamageRecoil(damage_recoil);
-    object->setInvincible(invincible);
-    object->setDeathTouch(death_touch);
+    engine_thing->compPhysics()->setMaxHealth(max_health);
+    engine_thing->compPhysics()->setHealth(health);
+    engine_thing->compPhysics()->setDamage(damage);
+    engine_thing->compPhysics()->setDamageDelay(damage_delay);
+    engine_thing->compPhysics()->setAutoDamage(auto_damage);
+    engine_thing->compPhysics()->setDeathDelay(death_delay);
+    engine_thing->compPhysics()->setDeathAnimation(static_cast<Death_Animation>(death_animation));
+    engine_thing->compPhysics()->setDeathDuration(death_duration);
+    engine_thing->compPhysics()->setDamageRecoil(damage_recoil);
+    engine_thing->compPhysics()->setInvincible(invincible);
+    engine_thing->compPhysics()->setDeathTouch(death_touch);
 }
 
 
 //####################################################################################
 //##    Loads Health / Damage Settings from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineObject *object) {
+void DrEngineWorld::loadThingControlsSettings(DrAsset *asset, DrEngineThing *engine_thing) {
+    if (engine_thing->compPhysics() == nullptr) return;
     double  rotate_speed =      asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Rotate_Speed).toDouble();
     bool    touch_drag =        asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Drag).toVector()[0].toBool();
     double  touch_drag_force =  asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Drag).toVector()[1].toDouble();
     bool    touch_damage =      asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Damage).toVector()[0].toBool();
     double  touch_damage_pts =  asset->getComponentPropertyValue(Comps::Asset_Controls, Props::Asset_Controls_Touch_Damage).toVector()[1].toDouble();
-
-    object->setRotateSpeedZ(      rotate_speed);
-    object->setTouchDrag(         touch_drag);
-    object->setTouchDragForce(    touch_drag_force);
-    object->setTouchDamage(       touch_damage);
-    object->setTouchDamagePoints( touch_damage_pts);
+    engine_thing->compPhysics()->setRotateSpeedZ(      rotate_speed);
+    engine_thing->compPhysics()->setTouchDrag(         touch_drag);
+    engine_thing->compPhysics()->setTouchDragForce(    touch_drag_force);
+    engine_thing->compPhysics()->setTouchDamage(       touch_damage);
+    engine_thing->compPhysics()->setTouchDamagePoints( touch_damage_pts);
 }
 
 
 //####################################################################################
 //##    Loads Collision Shape from DrThing in DrProject to DrEngineObject
 //####################################################################################
-void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineObject *object) {
+void DrEngineWorld::loadThingCollisionShape(DrAsset *asset, DrEngineThing *engine_thing) {
+    if (engine_thing->compPhysics() == nullptr) return;
     int shape_type =        asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Shape).toInt();
     Collision_Shape shape = static_cast<Collision_Shape>(shape_type);
     if (shape == Collision_Shape::Image) {
         DrVariant shapes =  asset->getComponentPropertyValue(Comps::Asset_Collision, Props::Asset_Collision_Image_Shape);
         DrPropertyCollision shape = boost::any_cast<DrPropertyCollision>(shapes.value());
         for (auto poly : shape.getPolygons()) {
-            object->addShapePolygon(poly);
+            engine_thing->compPhysics()->addShapePolygon(poly);
         }
     } else if (shape == Collision_Shape::Circle) {
-        object->addShapeCircleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
+        engine_thing->compPhysics()->addShapeCircleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
     } else if (shape == Collision_Shape::Square) {
-        object->addShapeBoxFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
+        engine_thing->compPhysics()->addShapeBoxFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
     } else if (shape == Collision_Shape::Triangle) {
-        object->addShapeTriangleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
+        engine_thing->compPhysics()->addShapeTriangleFromTexture( asset->getIdleAnimationFirstFrameImageKey() );
     }
 }
 
 
 //####################################################################################
-//##    Loads one DrProject DrThingType::Object to World / Space
+//##    Loads one DrProject DrThingType::Object (physics object) to World / Space
 //####################################################################################
-DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
-                                                 double x, double y, double scale_x, double scale_y,
-                                                 double angle, double x_velocity, double y_velocity,
-                                                 double rotate_spawn) {
-            if (thing == nullptr) return nullptr;
+DrEngineThing* DrEngineWorld::loadPhysicsObjectToWorld(DrThing *thing,
+                                                       double x, double y, double scale_x, double scale_y,
+                                                       double angle, double x_velocity, double y_velocity,
+                                                       double rotate_spawn) {
+    if (thing == nullptr) return nullptr;
 
     // ***** Load Object Thing Properties
     long        asset_key = thing->getAssetKey();
@@ -225,45 +227,45 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
 
     // ***** Add the block to the cpSpace
-    DrEngineObject *block = nullptr;
+    DrEngineThing *object = nullptr;
     if (body_type != Body_Type::Dynamic && body_style != Body_Style::Rigid_Body) body_style = Body_Style::Rigid_Body;
 
     switch (body_style) {
         case Body_Style::Rigid_Body:
         case Body_Style::Foliage:
-            block = new DrEngineObject(this, getNextKey(), thing->getKey(), body_type, asset->getKey(),
-                                       x + x_offset, y + y_offset, info.z_order, info.scale,
-                                       use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity);
-            loadThingCollisionShape(asset, block);
-            addThing(block);
-
-            if (body_style == Body_Style::Foliage) block->setComponentFoliage(new ThingCompFoliage(this, block, body_rigidness));
+            object = new DrEngineThing(this, this->getNextKey(), thing->getKey());
+            object->setComponentPhysics(new ThingCompPhysics(this, object, body_type, asset->getKey(),
+                                                             x + x_offset, y + y_offset, info.z_order, info.scale,
+                                                             use_friction, use_bounce, collide, can_rotate, info.angle, info.opacity));
+            loadThingCollisionShape(asset, object);
+            addThing(object);
+            if (body_style == Body_Style::Foliage) object->setComponentFoliage(new ThingCompFoliage(this, object, body_rigidness));
 
             break;
         case Body_Style::Circular_Blob:
-            block = addSoftBodyCircle( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
-                                       info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
+            object = addSoftBodyCircle( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                        info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
             break;
         case Body_Style::Square_Blob:
-            block = addSoftBodySquare( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
-                                       info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
+            object = addSoftBodySquare( thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                        info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
             break;
         case Body_Style::Mesh_Blob:
-            block = addSoftBodyMesh(   thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
-                                       info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
+            object = addSoftBodyMesh(   thing->getKey(), asset->getKey(), x + x_offset, y + y_offset, info.z_order,
+                                        info.size, info.scale, body_rigidness, use_friction, use_bounce, can_rotate);
             break;
     }
 
     // Soft Body constructors dont set angle or opacity, do it now
-    block->setOpacity(info.opacity);
-    block->setAngle(-info.angle);
+    object->setOpacity(info.opacity);
+    object->setAngle(-info.angle);
 
 
     // ***** Set collision type
     long     damage_type =      thing->getComponentPropertyValue(Comps::Thing_Settings_Object, Props::Thing_Object_Damage).toInt();
-    block->setCollidesWith(static_cast<Collision_Groups>(collide_with));
-    block->setCollisionType(static_cast<Collision_Type>(damage_type));
-    block->setGravityScale( DrPointF(gravity_scale.x, gravity_scale.y) );
+    object->compPhysics()->setCollidesWith(static_cast<Collision_Groups>(collide_with));
+    object->compPhysics()->setCollisionType(static_cast<Collision_Type>(damage_type));
+    object->compPhysics()->setGravityScale( DrPointF(gravity_scale.x, gravity_scale.y) );
 
     // ***** Velocity settings
     DrPointF vel_x =            thing->getComponentPropertyValue(Comps::Thing_Movement, Props::Thing_Velocity_X).toPointF();
@@ -280,11 +282,11 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
 
     // Attached to KinematicUpdateVelocity callback function in DrEngineObject Contructor
     if (body_type == Body_Type::Kinematic) {
-        block->setOriginalVelocityX( velocity.x + x_velocity );
-        block->setOriginalVelocityY( velocity.y + y_velocity );
-        block->setOriginalSpinVelocity( rad_angular );
-        block->setUseAngleVelocity( angle_velocity );
-        block->setRotateToPlayer( angle_player );
+        object->compPhysics()->setOriginalVelocityX( velocity.x + x_velocity );
+        object->compPhysics()->setOriginalVelocityY( velocity.y + y_velocity );
+        object->compPhysics()->setOriginalSpinVelocity( rad_angular );
+        object->compPhysics()->setUseAngleVelocity( angle_velocity );
+        object->compPhysics()->setRotateToPlayer( angle_player );
     }
 
 
@@ -299,26 +301,26 @@ DrEngineObject* DrEngineWorld::loadObjectToWorld(DrThing *thing,
     DrPointF one_way_point = Dr::RotatePointAroundOrigin( DrPointF(0.0, 1.0), DrPointF(0, 0), one_way_angle - info.angle);
              one_way_point.x *= info.scale.x;
              one_way_point.y *= info.scale.y;
-    block->setOneWay(static_cast<One_Way>(one_way_type));
-    block->setOneWayDirection(one_way_point);
-    block->setDropDown(drop_down);
-    block->setGravityMultiplier(gravity_multi);
-    block->setRepulseForce(repulse_force);
-    block->setSurfaceVelocity(cpv(surface_vel.x, surface_vel.y));
+    object->compPhysics()->setOneWay(static_cast<One_Way>(one_way_type));
+    object->compPhysics()->setOneWayDirection(one_way_point);
+    object->compPhysics()->setDropDown(drop_down);
+    object->compPhysics()->setGravityMultiplier(gravity_multi);
+    object->compPhysics()->setRepulseForce(repulse_force);
+    object->compPhysics()->setSurfaceVelocity(cpv(surface_vel.x, surface_vel.y));
 
     // ***** Additional settings
-    loadThingAppearanceSettings(thing, block);                      // Appearance settings
-    loadThingHealthSettings(asset, block);                          // Health / Damage Settings
-    loadThing3DSettings(thing, block);                              // 3D Settings
-    loadThingControlsSettings(asset, block);                        // Controls Settings
+    loadThingAppearanceSettings(thing, object);                     // Appearance settings
+    loadThingHealthSettings(asset, object);                         // Health / Damage Settings
+    loadThing3DSettings(thing, object);                             // 3D Settings
+    loadThingControlsSettings(asset, object);                       // Controls Settings
 
     // ***** Add Velocity, HAVE TO WAIT until is in world!!
     if (body_type != Body_Type::Static) {
-        cpBodySetVelocity( block->body, velocity + cpv(x_velocity, y_velocity) );
-        cpBodySetAngularVelocity( block->body, rad_angular );
+        cpBodySetVelocity( object->compPhysics()->body, velocity + cpv(x_velocity, y_velocity) );
+        cpBodySetAngularVelocity( object->compPhysics()->body, rad_angular );
     }
 
-    return block;
+    return object;
 }
 
 

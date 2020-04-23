@@ -17,9 +17,6 @@
 #include "engine/thing_component/thing_comp_soft_body.h"
 #include "engine/thing_component/thing_comp_foliage.h"
 
-// Type Definitions
-typedef std::map<cpShape*, Shape_Type> ShapeMap;
-
 
 //####################################################################################
 //##    DrEngineThing
@@ -107,6 +104,8 @@ public:
     std::string         name();                                                             // Returns name of this Entity
     void                remove()                    { m_remove_me = true; }                 // Call to remove this Thing
     DrEngineWorld*      world()                     { return m_world; }                     // Returns DrWorld this Entity is currently in
+    ThingCompPhysics*   physics()                   { return compPhysics(); }               // Returns physics component of Entity (if never initialized returns nullptr)
+    ThingCompPlayer*    player()                    { return compPlayer(); }                // Returns player component of Entity (if never initialized returns nullptr)
 
     // Thing Components
     DrThingComponent*   component(std::string component_name);
@@ -127,9 +126,6 @@ public:
 
     // #################### INTERNAL FUNCTIONS ####################
 public:
-    // Abstract Virtual Functions
-    virtual DrThingType     getThingType()  { return DrThingType::None; }                   // Returns DrThingType of this Thing
-
     // Entity Properties
     long                    getKey() { return m_key; }                                      // Gets unique item key
     long                    getOriginalKey() { return m_original_project_key; }             // Gets original Project Data Model key

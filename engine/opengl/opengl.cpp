@@ -11,7 +11,7 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_vertex_data.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 

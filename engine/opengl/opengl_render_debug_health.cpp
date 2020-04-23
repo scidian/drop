@@ -12,7 +12,7 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
@@ -40,17 +40,17 @@ void DrOpenGL::drawDebugHealth() {
 
     // ***** Loop through each object and draws its health
     for (auto thing : m_engine->getCurrentWorld()->getThings()) {
-        if ( thing->getThingType() != DrThingType::Object)  continue;
-        DrEngineObject *object = dynamic_cast<DrEngineObject*>(thing);
-        if (object->isPhysicsChild()) continue;
+        ThingCompPhysics *physics = thing->physics();
+        if (physics == nullptr) continue;
+        if (physics->isPhysicsChild()) continue;
 
         // Get health as string
-        std::string health = Dr::RoundToDecimalPlace(object->getHealth(), 2);
+        std::string health = Dr::RoundToDecimalPlace(physics->getHealth(), 2);
         std::string hp = Dr::RemoveTrailingZeros( health );
         if (hp.length() < 1) continue;
 
         // ***** Load object position
-        DrPointF center = object->getPosition();
+        DrPointF center = thing->getPosition();
         float x, y, z;
         float half_width, half_height;
         x = static_cast<float>(center.x);
@@ -73,7 +73,7 @@ void DrOpenGL::drawDebugHealth() {
         vertices.resize( 12 * hp.length() );
 
         // Figure out what color to make the health, get health as string
-        DrColor color = objectDebugColor(object->getCollisionType(), cpBodyIsSleeping(object->body));
+        DrColor color = objectDebugColor(physics->getCollisionType(), cpBodyIsSleeping(physics->body));
 
         // ***** Set Shader Variables
         setShaderDefaultValues(static_cast<float>(texture->width()), static_cast<float>(texture->height()));

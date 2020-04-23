@@ -27,7 +27,6 @@
 class DrAsset;
 class DrEngine;
 class DrEngineCamera;
-class DrEngineObject;
 class DrEngineSignal;
 class DrEngineSpawner;
 class DrEngineThing;
@@ -39,7 +38,7 @@ class DrStage;
 class DrThing;
 class DrThingComponent;
 class FormEngine;
-
+class ThingCompPhysics;
 
 // Type definitions
 typedef std::chrono::high_resolution_clock          Clock;

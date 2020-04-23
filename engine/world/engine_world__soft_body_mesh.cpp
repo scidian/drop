@@ -9,7 +9,7 @@
 #include "core/dr_random.h"
 #include "core/types/dr_point.h"
 #include "engine/engine_texture.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
@@ -73,9 +73,9 @@ void JoinCenterBodyMesh(cpSpace *space, cpBody *center_body, cpBody *body2, cpVe
 //##    Creates Square Soft Body Mesh - ORIGINAL
 //##      This implementation creates a grid of soft bodies for a truly full soft body
 //####################################################################################
-DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key,
-                                               double pos_x, double pos_y, double pos_z, DrPointF size, DrPointF scale,
-                                               double stiffness, double friction, double bounce, bool can_rotate) {
+DrEngineThing* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key,
+                                              double pos_x, double pos_y, double pos_z, DrPointF size, DrPointF scale,
+                                              double stiffness, double friction, double bounce, bool can_rotate) {
     long   min_balls =      10;
     double render_scale =   1.01;
 
@@ -116,10 +116,10 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
     long center_ball_y = (y_balls / 2);
 
     // Add Soft Ball Grid
-    std::vector<DrEngineObject*>    balls;
-    std::vector<DrPointF>           starting_positions;
-    std::vector<DrPointF>           uv_coordinates;
-    DrEngineObject                 *central = nullptr;
+    std::vector<DrEngineThing*> balls;
+    std::vector<DrPointF>       starting_positions;
+    std::vector<DrPointF>       uv_coordinates;
+    DrEngineThing              *central = nullptr;
     double  first_ball_angle = 0;
     long    count = 0;
     for (long y = 0; y < y_balls; y++) {
@@ -141,7 +141,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
             if (count == 0) first_ball_angle = Dr::CalcRotationAngleInDegrees(DrPointF(0, 0), ball_at);
 
             // Add soft ball to world
-            DrEngineObject *soft_ball;
+            DrEngineThing *soft_ball;
             if (x == center_ball_x && y == center_ball_y) {
                 soft_ball = addBall(this, original_key, asset_key, Soft_Body_Shape::Mesh, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
                                     scale, radius_multiplier, friction, bounce, true, can_rotate);
@@ -151,25 +151,25 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
                                     DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
             }
             balls.push_back(soft_ball);
-            soft_ball->body_style = Body_Style::Mesh_Blob;
+            soft_ball->compPhysics()->body_style = Body_Style::Mesh_Blob;
 
             // Toward the left
             if (x > 0) {
-                DrEngineObject *ball_1 = balls[balls.size()-1];
-                DrEngineObject *ball_2 = balls[balls.size()-2];
-                JoinBodiesMesh(m_space, ball_1->body, ball_2->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
+                DrEngineThing *ball_1 = balls[balls.size()-1];
+                DrEngineThing *ball_2 = balls[balls.size()-2];
+                JoinBodiesMesh(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
             }
             // Toward the bottom
             if (y > 0) {
-                DrEngineObject *ball_1 = balls[balls.size()-1];
-                DrEngineObject *ball_2 = balls[balls.size()-(x_balls+1)];
-                JoinBodiesMesh(m_space, ball_1->body, ball_2->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
+                DrEngineThing *ball_1 = balls[balls.size()-1];
+                DrEngineThing *ball_2 = balls[balls.size()-(x_balls+1)];
+                JoinBodiesMesh(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
             }
             // Diagonal left and down
             if (x > 0 && y > 0) {
-                DrEngineObject *ball_1 = balls[balls.size()-1];
-                DrEngineObject *ball_2 = balls[balls.size()-(x_balls+2)];
-                JoinBodiesMesh(m_space, ball_1->body, ball_2->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
+                DrEngineThing *ball_1 = balls[balls.size()-1];
+                DrEngineThing *ball_2 = balls[balls.size()-(x_balls+2)];
+                JoinBodiesMesh(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::None);
             }
 
             if (x == 0         && y == 0)         soft_ball->compSoftBody()->soft_corner = true;
@@ -181,18 +181,18 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
     }
 
     // Set central mass to match other soft balls
-    cpBodySetMass(central->body, cpBodyGetMass(balls[0]->body));
+    cpBodySetMass(central->physics()->body, cpBodyGetMass(balls[0]->physics()->body));
 
     // Copy soft ball arrays to Central Ball
     for (size_t i = 0; i < balls.size(); ++i) {
         // Attach rotary limit joints to help fight rotation for non rotating soft bodies
         if (can_rotate == false) {
             ///if (i % 2 == 0) {    // #NOTE: Chipmunk doesnt like too many constraints on one body
-                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->body, central->body, 0.0, 0.0));
+                cpSpaceAddConstraint(m_space, cpRotaryLimitJointNew(balls[i]->physics()->body, central->physics()->body, 0.0, 0.0));
             ///}
         }
         // Copy ball data
-        balls[i]->setPhysicsParent(central);
+        balls[i]->physics()->setPhysicsParent(central);
         central->compSoftBody()->soft_balls.push_back(balls[i]->getKey());
         central->compSoftBody()->soft_uv.push_back(   uv_coordinates[i]);
         central->compSoftBody()->soft_start.push_back(starting_positions[i]);
@@ -220,7 +220,7 @@ DrEngineObject* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key
     } while (outline_loop < 4);
 
     // Update Central Ball properties
-    central->setPhysicsParent(nullptr);
+    central->compPhysics()->setPhysicsParent(nullptr);
     central->compSoftBody()->height_width_ratio =   height_width_ratio;
     central->compSoftBody()->soft_size =            DrPointF(center_width, center_height);
     central->compSoftBody()->soft_grid_size =       DrPoint(x_balls, y_balls);

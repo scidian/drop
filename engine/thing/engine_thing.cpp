@@ -10,7 +10,6 @@
 #include "engine/opengl/opengl.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/thing/engine_thing_component.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/thing_component/thing_comp_3d.h"
 #include "engine/world/engine_world.h"
 #include "project/entities/dr_asset.h"
@@ -156,6 +155,7 @@ void DrEngineThing::setComponent(std::string component_name, DrThingComponent *c
 //####################################################################################
 void DrEngineThing::setComponent3D(ThingComp3D *component)              { m_comp_3d = component;        setComponent(component->name(), component); }
 void DrEngineThing::setComponentCamera(ThingCompCamera *component)      { m_comp_camera = component;    setComponent(component->name(), component); }
+void DrEngineThing::setComponentPhysics(ThingCompPhysics *component)    { m_comp_physics = component;   setComponent(component->name(), component); }
 void DrEngineThing::setComponentPlayer(ThingCompPlayer *component)      { m_comp_player = component;    setComponent(component->name(), component); }
 void DrEngineThing::setComponentSoftBody(ThingCompSoftBody *component)  { m_comp_soft_body = component; setComponent(component->name(), component); }
 void DrEngineThing::setComponentFoliage(ThingCompFoliage *component)    { m_comp_foliage = component;   setComponent(component->name(), component); }
@@ -184,33 +184,31 @@ void DrEngineThing::calculateTimeSinceLastUpdate() {
 //####################################################################################
 // Returns Thing angle (in degrees)
 double DrEngineThing::getAngle() {
-    if (getThingType() == DrThingType::Object) {
-        DrEngineObject *object = dynamic_cast<DrEngineObject*>(this);
-        if (object->body == nullptr) return 0.0;
-        return Dr::RadiansToDegrees( cpBodyGetAngle(object->body) );
+    if (compPhysics() != nullptr) {
+        if (compPhysics()->body == nullptr) return 0.0;
+        return Dr::RadiansToDegrees( cpBodyGetAngle(compPhysics()->body) );
     } else {
         return m_angle_z;
     }
 }
 
 void DrEngineThing::setAngle(double new_angle) {
-    if (getThingType() == DrThingType::Object) {
-        DrEngineObject *object = dynamic_cast<DrEngineObject*>(this);
-        if (object->body == nullptr) return;
+    if (compPhysics() != nullptr) {
+        if (compPhysics()->body == nullptr) return;
 
         // Get current angle, set new angle
-        double current_angle = Dr::RadiansToDegrees( cpBodyGetAngle(object->body) );
-        cpBodySetAngle( object->body, Dr::DegreesToRadians(new_angle) );
+        double current_angle = Dr::RadiansToDegrees( cpBodyGetAngle(compPhysics()->body) );
+        cpBodySetAngle( compPhysics()->body, Dr::DegreesToRadians(new_angle) );
 
         // Set angle of all soft body physics children
-        if (this->compSoftBody() != nullptr && object->isPhysicsChild() == false) {
+        if (this->compSoftBody() != nullptr && compPhysics()->isPhysicsChild() == false) {
             for (size_t i = 0; i < this->compSoftBody()->soft_balls.size(); ++i) {
-                DrEngineObject *next_ball = world()->findObjectByKey(this->compSoftBody()->soft_balls[i]);
+                DrEngineThing *next_ball = world()->findPhysicsObjectByKey(this->compSoftBody()->soft_balls[i]);
                 if (next_ball == this) continue;
                 if (next_ball == nullptr) continue;
-                if (next_ball->body == nullptr) continue;
+                if (next_ball->compPhysics()->body == nullptr) continue;
                 DrPointF new_position = Dr::RotatePointAroundOrigin(next_ball->getPosition(), this->getPosition(), new_angle - current_angle);
-                cpBodySetPosition(next_ball->body, cpv(new_position.x, new_position.y));
+                cpBodySetPosition(next_ball->compPhysics()->body, cpv(new_position.x, new_position.y));
                 next_ball->setAngle(new_angle);
             }
         }

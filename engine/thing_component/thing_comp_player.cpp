@@ -9,7 +9,6 @@
 #include "engine/engine_signal.h"
 #include "engine/thing_component/thing_comp_player.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/world/engine_world.h"
 
 

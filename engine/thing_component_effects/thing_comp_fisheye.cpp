@@ -13,7 +13,6 @@
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing_component_effects/thing_comp_fisheye.h"
-#include "engine/thing/engine_thing_object.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 

@@ -11,7 +11,7 @@
 #include "engine/engine_camera.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 
 
@@ -49,7 +49,7 @@ DrEngineThing* DrEngineCamera::getThingFollowing() {
         }
         return nullptr;
     }
-    if (follow->getThingType() != DrThingType::Object) {
+    if (follow->compPhysics() == nullptr) {
         m_follow_key = c_no_key;
         m_follow_lost = true;
         return nullptr;
@@ -114,9 +114,9 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
         if (m_follow_key != c_no_key) {
             DrEngineThing *follow = getThingFollowing();
             if (follow != nullptr) {
-                DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);
-                if (object != nullptr) {
-                    if (object->isDying() == false && object->isDead() == false) {
+                ThingCompPhysics *physics = follow->compPhysics();
+                if (physics != nullptr) {
+                    if (physics->isDying() == false && physics->isDead() == false) {
                         average_speed = static_cast<double>(Dr::Max(abs(m_average_speed.x), abs(m_average_speed.y)));
                     }
                 }
@@ -193,16 +193,16 @@ void DrEngineCamera::updateCamera() {
     // Movement is based on following an object stored in m_follow
     if (m_follow_key == c_no_key) return;
     DrEngineThing *follow = getThingFollowing();                        if (follow == nullptr) return;
-    DrEngineObject *object = dynamic_cast<DrEngineObject*>(follow);     if (object == nullptr) return;
-    ThingCompCamera *comp_camera = object->compCamera();                if (comp_camera == nullptr) return;
-    if (object->isDying() || object->isDead()) return;
+    ThingCompPhysics *physics = follow->compPhysics();                  if (physics == nullptr) return;
+    ThingCompCamera *comp_camera = follow->compCamera();                if (comp_camera == nullptr) return;
+    if (physics->isDying() || physics->isDead()) return;
 
-    double follow_pos_x = object->getPosition().x + static_cast<double>(comp_camera->getCameraPosition().x);
-    double follow_pos_y = object->getPosition().y + static_cast<double>(comp_camera->getCameraPosition().y);
-    double follow_pos_z = object->getZOrder() +     static_cast<double>(comp_camera->getCameraPosition().z);
-    double follow_previous_pos_x = static_cast<double>(object->getPreviousPosition().x) + static_cast<double>(comp_camera->getCameraPosition().x);
-    double follow_previous_pos_y = static_cast<double>(object->getPreviousPosition().y) + static_cast<double>(comp_camera->getCameraPosition().y);
-    double follow_previous_pos_z = static_cast<double>(object->getPreviousPosition().z) + static_cast<double>(comp_camera->getCameraPosition().z);
+    double follow_pos_x = follow->getPosition().x + static_cast<double>(comp_camera->getCameraPosition().x);
+    double follow_pos_y = follow->getPosition().y + static_cast<double>(comp_camera->getCameraPosition().y);
+    double follow_pos_z = follow->getZOrder() +     static_cast<double>(comp_camera->getCameraPosition().z);
+    double follow_previous_pos_x = static_cast<double>(physics->getPreviousPosition().x) + static_cast<double>(comp_camera->getCameraPosition().x);
+    double follow_previous_pos_y = static_cast<double>(physics->getPreviousPosition().y) + static_cast<double>(comp_camera->getCameraPosition().y);
+    double follow_previous_pos_z = static_cast<double>(physics->getPreviousPosition().z) + static_cast<double>(comp_camera->getCameraPosition().z);
 
     // Check for Lag Bounding Box
     bool update_x = false;

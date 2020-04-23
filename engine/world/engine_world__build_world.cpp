@@ -9,7 +9,7 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
@@ -120,22 +120,22 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     pixel_y =               static_cast<float>(pixelation.y);
     int pixel_type =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_PixelType).toInt();
     pixel_texture =         static_cast<Pixel_Texture>(pixel_type);
-    brightness =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Brightness).toVector()[0].toInt() / 255.f;
-    contrast =          world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Contrast).toVector()[0].toInt() / 255.f;
-    saturation =        world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Saturation).toVector()[0].toInt() / 255.f;
-    hue =               world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Hue).toVector()[0].toInt() / 360.f;
-    grayscale =         world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Grayscale).toBool();
-    negative =          world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Negative).toBool();
+    brightness =            world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Brightness).toVector()[0].toInt() / 255.f;
+    contrast =              world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Contrast).toVector()[0].toInt() / 255.f;
+    saturation =            world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Saturation).toVector()[0].toInt() / 255.f;
+    hue =                   world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Hue).toVector()[0].toInt() / 360.f;
+    grayscale =             world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Grayscale).toBool();
+    negative =              world->getComponentPropertyValue(Comps::World_Appearance, Props::World_Filter_Negative).toBool();
 
-    bool draw_3D =      world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Convert_3D).toBool();
-    render_mode =       draw_3D ? Render_Mode::Mode_3D : Render_Mode::Mode_2D;
-    wireframe =         world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wireframe).toVector()[0].toBool();
-    wireframe_width =   world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wireframe).toVector()[1].toFloat();
-    cartoon =           world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cartoon).toVector()[0].toBool();
-    cartoon_width =     world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cartoon).toVector()[1].toFloat();
-    cross_hatch =       world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cross_Hatch).toVector()[0].toBool();
-    cross_hatch_width = world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cross_Hatch).toVector()[1].toFloat();
-    wavy =              world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wavy).toBool();
+    bool draw_3D =          world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Convert_3D).toBool();
+    render_mode =           draw_3D ? Render_Mode::Mode_3D : Render_Mode::Mode_2D;
+    wireframe =             world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wireframe).toVector()[0].toBool();
+    wireframe_width =       world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wireframe).toVector()[1].toFloat();
+    cartoon =               world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cartoon).toVector()[0].toBool();
+    cartoon_width =         world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cartoon).toVector()[1].toFloat();
+    cross_hatch =           world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cross_Hatch).toVector()[0].toBool();
+    cross_hatch_width =     world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Cross_Hatch).toVector()[1].toFloat();
+    wavy =                  world->getComponentPropertyValue(Comps::World_Special_Effects, Props::World_Filter_Wavy).toBool();
 
 
     // ***** Load Start Stage Players

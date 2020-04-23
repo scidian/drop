@@ -10,7 +10,7 @@
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
 #include "engine/engine_texture.h"
-#include "engine/thing/engine_thing_object.h"
+#include "engine/thing/engine_thing.h"
 #include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
@@ -27,20 +27,23 @@
 //##        i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
 //####################################################################################
 // Sets up an object to be controlled as a "player", i.e. have PlayerUpdateVelocity function attached as a callback during cpSpaceStep
-void DrEngineWorld::assignPlayerControls(DrEngineObject *object, bool has_controls_now, bool set_active_camera) {
+void DrEngineWorld::assignPlayerControls(DrEngineThing *engine_thing, bool has_controls_now, bool set_active_camera) {
+    ThingCompPhysics *physics = engine_thing->physics();
+    if (physics == nullptr) return;
+
     // Add Player Components
-    if (object->compCamera() == nullptr) object->setComponentCamera(new ThingCompCamera(this, object));
-    if (object->compPlayer() == nullptr) object->setComponentPlayer(new ThingCompPlayer(this, object));
+    if (engine_thing->compCamera() == nullptr) engine_thing->setComponentCamera(new ThingCompCamera(this, engine_thing));
+    if (engine_thing->compPlayer() == nullptr) engine_thing->setComponentPlayer(new ThingCompPlayer(this, engine_thing));
 
     // Create Camera
-    DrEngineCamera *camera = addCamera(object->getKey());
+    DrEngineCamera *camera = addCamera(engine_thing->getKey());
     if (set_active_camera) setActiveCamera( camera->getKey() );
 
     // Make Player Changes
-    object->setCollisionType( Collision_Type::Damage_Enemy );
-    object->setKeyControls( true );
-    object->setLostControl( !has_controls_now );                            // Turn on jump / movement buttons
-    cpBodySetVelocityUpdateFunc(object->body, PlayerUpdateVelocity);        // Assign the PlayerUpdateVelocity callback function
+    physics->setCollisionType( Collision_Type::Damage_Enemy );
+    physics->setKeyControls( true );
+    physics->setLostControl( !has_controls_now );                           // Turn on jump / movement buttons
+    cpBodySetVelocityUpdateFunc(physics->body, PlayerUpdateVelocity);       // Assign the PlayerUpdateVelocity callback function
 }
 
 
@@ -69,8 +72,9 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
     } else if (new_player_type == Demo_Player::Jump) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false);
-        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+        DrEngineThing *ball1 = new DrEngineThing(this, getNextKey(), c_no_key);
+        ball1->setComponentPhysics(new ThingCompPhysics(this, ball1, Body_Type::Dynamic, Asset_Textures::Ball, -150, 100, 10, DrPointF(1.5,1.5), 0.25, 0.5, true, false));
+        ball1->physics()->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
         assignPlayerControls(ball1, true, true);
         ball1->comp3D()->setDepth(30);
@@ -78,25 +82,26 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ball1->compPlayer()->setJumpCount( 1 );
         ball1->compPlayer()->setCanAirJump( false );
         ball1->compPlayer()->setCanWallJump( true );
-        ball1->setHealth( 80.0 );
+        ball1->physics()->setHealth( 80.0 );
         ///ball1->setDeathTouch( true );
         ball1->compPlayer()->setMoveSpeedY( 300 );
-        ball1->setTouchDrag(true);
+        ball1->physics()->setTouchDrag(true);
 
-        DrEngineObject *ball2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5);
-        ball2->addShapeCircleFromTexture(Asset_Textures::Ball);
+        DrEngineThing *ball2 = new DrEngineThing(this, getNextKey(), c_no_key);
+        ball2->setComponentPhysics(new ThingCompPhysics(this, ball2, Body_Type::Dynamic, Asset_Textures::Ball, -250, 100, 10, DrPointF(1.5,1.5), 1, 0.5));
+        ball2->physics()->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball2);
         assignPlayerControls(ball2, false, false);
         ball2->comp3D()->setDepth(30);
         ball2->compCamera()->setCameraRotation( -25, -40, 0 );
         ball2->compPlayer()->setJumpCount( c_unlimited_jump );
-        ball2->setRotateSpeedZ( 20.0 );
-        ball2->setTouchDrag(true);
+        ball2->physics()->setRotateSpeedZ( 20.0 );
+        ball2->physics()->setTouchDrag(true);
 
         DrAsset *dragon = m_project->findAssetFromKey(1024);
         if (dragon != nullptr) {
-            DrEngineObject *softy = addSoftBodyCircle(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 0, 100, 0,
-                                                      DrPointF(dragon->getWidth(), dragon->getHeight()), c_scale1x1, 0.8, 0.50, 0.25, false);
+            DrEngineThing *softy = addSoftBodyCircle(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 0, 100, 0,
+                                                     DrPointF(dragon->getWidth(), dragon->getHeight()), c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy != nullptr) {
                 assignPlayerControls(softy, false, false);
                 if (getCamerasFollowThing(softy->getKey()).size() > 0)
@@ -107,12 +112,12 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy->compPlayer()->setJumpCount( 1 );
                 softy->compPlayer()->setCanWallJump(true);
                 softy->compPlayer()->setCanWallJump(false);
-                softy->setRotateSpeedZ( 7 );
-                softy->setTouchDrag(true);
+                softy->physics()->setRotateSpeedZ( 7 );
+                softy->physics()->setTouchDrag(true);
             }
 
-            DrEngineObject *softy2 = addSoftBodyMesh(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0,
-                                                     DrPointF(dragon->getWidth(), dragon->getHeight()), c_scale1x1, 0.8, 0.50, 0.25, false);
+            DrEngineThing *softy2 = addSoftBodyMesh(c_no_key, dragon->getIdleAnimationFirstFrameImageKey(), 200, 100, 0,
+                                                    DrPointF(dragon->getWidth(), dragon->getHeight()), c_scale1x1, 0.8, 0.50, 0.25, false);
             if (softy2 != nullptr) {
                 assignPlayerControls(softy2, false, false);
                 if (getCamerasFollowThing(softy2->getKey()).size() > 0)
@@ -122,14 +127,15 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
                 softy2->compPlayer()->setJumpTimeout(5000);
                 softy2->compPlayer()->setJumpCount( -1 );
                 softy2->compPlayer()->setCanWallJump(false);
-                softy2->setRotateSpeedZ( 7 );
-                softy2->setTouchDrag(true);
+                softy2->physics()->setRotateSpeedZ( 7 );
+                softy2->physics()->setTouchDrag(true);
             }
         }
 
     } else if (new_player_type == Demo_Player::Light) {
-        DrEngineObject *ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false);
-        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+        DrEngineThing *ball1 = new DrEngineThing(this, getNextKey(), c_no_key);
+        ball1->setComponentPhysics(new ThingCompPhysics(this, ball1, Body_Type::Dynamic, Asset_Textures::Ball, 200, 350, 0, c_scale1x1, 0.25, 0.5, true, false));
+        ball1->physics()->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
         assignPlayerControls(ball1, true, true);
@@ -159,13 +165,14 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         ///addThing(new DrEngineLight(this, getNextKey(), 1100, 350, 0, Light_Type::Opaque, DrColor(255, 213, 79), 1350, DrPointF(0, 360), 50, 50.0f, true, 50.0f, 0.0f, 0.0f, 1.0));
 
     } else if (new_player_type == Demo_Player::Spawn) {
-        DrEngineObject *ball1;
-        ball1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Kinematic, Asset_Textures::Ball, -300, 450, 0, c_scale1x1, 0.7, 0.5);
-        ball1->addShapeCircleFromTexture(Asset_Textures::Ball);
+        DrEngineThing *ball1;
+        ball1 = new DrEngineThing(this, getNextKey(), c_no_key);
+        ball1->setComponentPhysics(new ThingCompPhysics(this, ball1, Body_Type::Kinematic, Asset_Textures::Ball, -300, 450, 0, c_scale1x1, 0.7, 0.5));
+        ball1->physics()->addShapeCircleFromTexture(Asset_Textures::Ball);
         addThing(ball1);
 
-        ball1->setOriginalVelocityX( 15 );
-        ball1->setOriginalVelocityY(  0 );
+        ball1->physics()->setOriginalVelocityX( 15 );
+        ball1->physics()->setOriginalVelocityY(  0 );
 
         setActiveCamera( addCamera(ball1->getKey())->getKey() );
 
@@ -186,8 +193,9 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         points.push_back( DrPointF(  20.0,  16.0 ));
         points.push_back( DrPointF(   5.5,  16.0 ));
         points.push_back( DrPointF(   5.5,  -5.0 ));
-        DrEngineObject *rover = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true);
-        rover->addShapePolygon(points);
+        DrEngineThing *rover = new DrEngineThing(this, getNextKey(), c_no_key);
+        rover->setComponentPhysics(new ThingCompPhysics(this, rover, Body_Type::Dynamic, Asset_Textures::Rover, 50, 375, 5, c_scale1x1, 5, 0.1, true));
+        rover->physics()->addShapePolygon(points);
         rover->comp3D()->setDepth(30);
         addThing(rover);
         rover->setComponentCamera(new ThingCompCamera(this, rover));
@@ -198,43 +206,48 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
 
 
         // Add wheels
-        DrEngineObject *wheel1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Wheel,  10,  345, 6, c_scale1x1, 3, 0.7);
-        DrEngineObject *wheel2 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Wheel,  50,  345, 6, c_scale1x1, 3, 0.7);
-        DrEngineObject *wheel3 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Wheel,  90,  345, 6, c_scale1x1, 3, 0.7);
-        wheel1->addShapeCircleFromTexture(Asset_Textures::Wheel);
-        wheel2->addShapeCircleFromTexture(Asset_Textures::Wheel);
-        wheel3->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        DrEngineThing *wheel1 = new DrEngineThing(this, getNextKey(), c_no_key);
+        DrEngineThing *wheel2 = new DrEngineThing(this, getNextKey(), c_no_key);
+        DrEngineThing *wheel3 = new DrEngineThing(this, getNextKey(), c_no_key);
+        wheel1->setComponentPhysics(new ThingCompPhysics(this, wheel1, Body_Type::Dynamic, Asset_Textures::Wheel,  10,  345, 6, c_scale1x1, 3, 0.7));
+        wheel2->setComponentPhysics(new ThingCompPhysics(this, wheel2, Body_Type::Dynamic, Asset_Textures::Wheel,  50,  345, 6, c_scale1x1, 3, 0.7));
+        wheel3->setComponentPhysics(new ThingCompPhysics(this, wheel3, Body_Type::Dynamic, Asset_Textures::Wheel,  90,  345, 6, c_scale1x1, 3, 0.7));
+        wheel1->physics()->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        wheel2->physics()->addShapeCircleFromTexture(Asset_Textures::Wheel);
+        wheel3->physics()->addShapeCircleFromTexture(Asset_Textures::Wheel);
         wheel1->comp3D()->setDepth(30);
         wheel2->comp3D()->setDepth(30);
         wheel3->comp3D()->setDepth(30);
         addThings( { wheel1, wheel2, wheel3 } );
-        wheel1->setRotateSpeedZ( 110.0 );
-        wheel2->setRotateSpeedZ(  60.0 );
-        wheel3->setRotateSpeedZ(  90.0 );
+        wheel1->physics()->setRotateSpeedZ( 110.0 );
+        wheel2->physics()->setRotateSpeedZ(  60.0 );
+        wheel3->physics()->setRotateSpeedZ(  90.0 );
 
-        DrEngineObject *spare1 = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Spare, -11,  349, 4, c_scale1x1, 4, 0.7);
-        spare1->addShapeCircleFromTexture(Asset_Textures::Spare);
+        DrEngineThing *spare1 = new DrEngineThing(this, getNextKey(), c_no_key);
+        spare1->setComponentPhysics(new ThingCompPhysics(this, spare1, Body_Type::Dynamic, Asset_Textures::Spare, -11,  349, 4, c_scale1x1, 4, 0.7));
+        spare1->physics()->addShapeCircleFromTexture(Asset_Textures::Spare);
         addThing(spare1);
 
         // Add Careful Cargo
-        DrEngineObject *cargo = new DrEngineObject(this, getNextKey(), c_no_key, Body_Type::Dynamic, Asset_Textures::Ball, 30, 415, 5, c_scale1x1, 0.7, 0);
-        cargo->addShapeCircleFromTexture(Asset_Textures::Ball);
+        DrEngineThing *cargo = new DrEngineThing(this, getNextKey(), c_no_key);
+        cargo->setComponentPhysics(new ThingCompPhysics(this, cargo, Body_Type::Dynamic, Asset_Textures::Ball, 30, 415, 5, c_scale1x1, 0.7, 0));
+        cargo->physics()->addShapeCircleFromTexture(Asset_Textures::Ball);
         cargo->comp3D()->setDepth(31);
         addThing(cargo);
 
         // New bouncy shocks joint, Grooves a/b are relative to the car, anchor point B is on the wheel
-        cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel1->body, cpv(-40,  15), cpv(-40, -28), cpvzero));
-        cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel2->body, cpv(  0,  15), cpv(  0, -28), cpvzero));
-        cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->body, wheel3->body, cpv( 40,  15), cpv( 40, -28), cpvzero));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel1->body, cpv(-40, 0), cpvzero, 50.0, 400.0, 50.0));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel2->body, cpv(  0, 0), cpvzero, 50.0, 400.0, 25.0));
-        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->body, wheel3->body, cpv( 40, 0), cpvzero, 50.0, 400.0, 40.0));
+        cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->physics()->body, wheel1->physics()->body, cpv(-40,  15), cpv(-40, -28), cpvzero));
+        cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->physics()->body, wheel2->physics()->body, cpv(  0,  15), cpv(  0, -28), cpvzero));
+        cpSpaceAddConstraint(m_space, cpGrooveJointNew( rover->physics()->body, wheel3->physics()->body, cpv( 40,  15), cpv( 40, -28), cpvzero));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->physics()->body, wheel1->physics()->body, cpv(-40, 0), cpvzero, 50.0, 400.0, 50.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->physics()->body, wheel2->physics()->body, cpv(  0, 0), cpvzero, 50.0, 400.0, 25.0));
+        cpSpaceAddConstraint(m_space, cpDampedSpringNew(rover->physics()->body, wheel3->physics()->body, cpv( 40, 0), cpvzero, 50.0, 400.0, 40.0));
 
         // Old school solid pin joint
         ///cpSpaceAddConstraint( m_space, cpPivotJointNew(wheel1->body, rover->body, cpBodyGetPosition(wheel1->body)) );
         ///cpSpaceAddConstraint( m_space, cpPivotJointNew(wheel2->body, rover->body, cpBodyGetPosition(wheel2->body)) );
         ///cpSpaceAddConstraint( m_space, cpPivotJointNew(wheel3->body, rover->body, cpBodyGetPosition(wheel3->body)) );
-        cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->body, spare1->body, cpBodyGetPosition(spare1->body)) );
+        cpSpaceAddConstraint( m_space, cpPivotJointNew(rover->physics()->body, spare1->physics()->body, cpBodyGetPosition(spare1->physics()->body)) );
 
         // Simple Motor Example, Applies constant speed to joint
         ///cpConstraint *wheel_motor_1 = cpSimpleMotorNew(rover->body, wheel1->body, 25);
