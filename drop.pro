@@ -254,23 +254,23 @@ SOURCES += \
     engine/opengl/opengl_render_lights.cpp \
     engine/opengl/opengl_render_objects.cpp \
     engine/opengl/opengl_render_space.cpp \
+    engine/thing/components/thing_comp_3d.cpp \
+    engine/thing/components/thing_comp_camera.cpp \
+    engine/thing/components/thing_comp_foliage.cpp \
+    engine/thing/components/thing_comp_physics.cpp \
+    engine/thing/components/thing_comp_physics__shapes.cpp \
+    engine/thing/components/thing_comp_physics__update.cpp \
+    engine/thing/components/thing_comp_player.cpp \
+    engine/thing/components/thing_comp_soft_body.cpp \
+    engine/thing/components/thing_comp_tile.cpp \
+    engine/thing/components_effects/thing_comp_fire.cpp \
+    engine/thing/components_effects/thing_comp_fisheye.cpp \
+    engine/thing/components_effects/thing_comp_light.cpp \
+    engine/thing/components_effects/thing_comp_mirror.cpp \
+    engine/thing/components_effects/thing_comp_swirl.cpp \
+    engine/thing/components_effects/thing_comp_water.cpp \
     engine/thing/engine_thing.cpp \
     engine/thing/engine_thing_component.cpp \
-    engine/thing_component/thing_comp_3d.cpp \
-    engine/thing_component/thing_comp_camera.cpp \
-    engine/thing_component/thing_comp_foliage.cpp \
-    engine/thing_component/thing_comp_physics.cpp \
-    engine/thing_component/thing_comp_physics__shapes.cpp \
-    engine/thing_component/thing_comp_physics__update.cpp \
-    engine/thing_component/thing_comp_player.cpp \
-    engine/thing_component/thing_comp_soft_body.cpp \
-    engine/thing_component/thing_comp_tile.cpp \
-    engine/thing_component_effects/thing_comp_fire.cpp \
-    engine/thing_component_effects/thing_comp_fisheye.cpp \
-    engine/thing_component_effects/thing_comp_light.cpp \
-    engine/thing_component_effects/thing_comp_mirror.cpp \
-    engine/thing_component_effects/thing_comp_swirl.cpp \
-    engine/thing_component_effects/thing_comp_water.cpp \
     engine/world/engine_world.cpp \
     engine/world/engine_world__build_player.cpp \
     engine/world/engine_world__build_world.cpp \
@@ -992,21 +992,21 @@ HEADERS += \
     engine/mesh/engine_vertex_data.h \
     engine/mesh/engine_vertex_debug.h \
     engine/opengl/opengl.h \
+    engine/thing/components/thing_comp_3d.h \
+    engine/thing/components/thing_comp_camera.h \
+    engine/thing/components/thing_comp_foliage.h \
+    engine/thing/components/thing_comp_physics.h \
+    engine/thing/components/thing_comp_player.h \
+    engine/thing/components/thing_comp_soft_body.h \
+    engine/thing/components/thing_comp_tile.h \
+    engine/thing/components_effects/thing_comp_fire.h \
+    engine/thing/components_effects/thing_comp_fisheye.h \
+    engine/thing/components_effects/thing_comp_light.h \
+    engine/thing/components_effects/thing_comp_mirror.h \
+    engine/thing/components_effects/thing_comp_swirl.h \
+    engine/thing/components_effects/thing_comp_water.h \
     engine/thing/engine_thing.h \
     engine/thing/engine_thing_component.h \
-    engine/thing_component/thing_comp_3d.h \
-    engine/thing_component/thing_comp_camera.h \
-    engine/thing_component/thing_comp_foliage.h \
-    engine/thing_component/thing_comp_physics.h \
-    engine/thing_component/thing_comp_player.h \
-    engine/thing_component/thing_comp_soft_body.h \
-    engine/thing_component/thing_comp_tile.h \
-    engine/thing_component_effects/thing_comp_fire.h \
-    engine/thing_component_effects/thing_comp_fisheye.h \
-    engine/thing_component_effects/thing_comp_light.h \
-    engine/thing_component_effects/thing_comp_mirror.h \
-    engine/thing_component_effects/thing_comp_swirl.h \
-    engine/thing_component_effects/thing_comp_water.h \
     engine/world/engine_world.h \
     project/constants_component_info.h \
     project/constants_comps_and_props.h \

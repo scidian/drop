@@ -6,8 +6,8 @@
 //
 //
 #include "engine/engine.h"
+#include "engine/thing/components/thing_comp_tile.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing_component/thing_comp_tile.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"

@@ -9,6 +9,8 @@
 #include "engine/engine.h"
 #include "engine/mesh/engine_vertex_debug.h"
 #include "engine/opengl/opengl.h"
+#include "engine/thing/components/thing_comp_physics.h"
+#include "engine/thing/components/thing_comp_soft_body.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 

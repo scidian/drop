@@ -16,8 +16,11 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
+#include "engine/thing/components/thing_comp_3d.h"
+#include "engine/thing/components/thing_comp_physics.h"
+#include "engine/thing/components/thing_comp_soft_body.h"
+#include "engine/thing/components_effects/thing_comp_light.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing_component_effects/thing_comp_light.h"
 #include "engine/world/engine_world.h"
 
 

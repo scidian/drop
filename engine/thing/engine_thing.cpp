@@ -8,9 +8,14 @@
 #include "engine/engine.h"
 #include "engine/engine_signal.h"
 #include "engine/opengl/opengl.h"
+#include "engine/thing/components/thing_comp_3d.h"
+#include "engine/thing/components/thing_comp_camera.h"
+#include "engine/thing/components/thing_comp_foliage.h"
+#include "engine/thing/components/thing_comp_physics.h"
+#include "engine/thing/components/thing_comp_player.h"
+#include "engine/thing/components/thing_comp_soft_body.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/thing/engine_thing_component.h"
-#include "engine/thing_component/thing_comp_3d.h"
 #include "engine/world/engine_world.h"
 #include "project/entities/dr_asset.h"
 #include "project/dr_project.h"
@@ -59,12 +64,16 @@ DrEngineThing::~DrEngineThing() {
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
     Dr::ResetTimer( update_timer );
-    for (auto component : m_components) component.second->addToWorld();
+    for (auto component : m_components) {
+        component.second->addToWorld();
+    }
 }
 
 // Called when it is time to Render Thing
 void DrEngineThing::draw() {
-    for (auto component : m_components) component.second->draw();
+    for (auto component : m_components) {
+        component.second->draw();
+    }
 }
 
 // Update Function, Called every physics frame

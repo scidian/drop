@@ -7,6 +7,8 @@
 //
 #include "core/dr_random.h"
 #include "engine/engine_spawner.h"
+#include "engine/thing/components/thing_comp_physics.h"
+#include "engine/thing/components/thing_comp_player.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/entities/dr_thing.h"

@@ -12,7 +12,7 @@
 #include "engine/engine_signal.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
-#include "engine/thing_component_effects/thing_comp_water.h"
+#include "engine/thing/components_effects/thing_comp_water.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 

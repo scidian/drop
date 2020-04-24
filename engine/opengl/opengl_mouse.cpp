@@ -12,6 +12,8 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
+#include "engine/thing/components/thing_comp_3d.h"
+#include "engine/thing/components/thing_comp_physics.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"

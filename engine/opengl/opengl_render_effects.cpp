@@ -14,11 +14,11 @@
 #include "engine/engine_texture.h"
 #include "engine/form_engine.h"
 #include "engine/opengl/opengl.h"
+#include "engine/thing/components_effects/thing_comp_fisheye.h"
+#include "engine/thing/components_effects/thing_comp_mirror.h"
+#include "engine/thing/components_effects/thing_comp_swirl.h"
+#include "engine/thing/components_effects/thing_comp_water.h"
 #include "engine/thing/engine_thing.h"
-#include "engine/thing_component_effects/thing_comp_fisheye.h"
-#include "engine/thing_component_effects/thing_comp_mirror.h"
-#include "engine/thing_component_effects/thing_comp_swirl.h"
-#include "engine/thing_component_effects/thing_comp_water.h"
 #include "engine/world/engine_world.h"
 
 

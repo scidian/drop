@@ -5,6 +5,7 @@
 //
 //
 //
+#include "engine/thing/components/thing_comp_physics.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 

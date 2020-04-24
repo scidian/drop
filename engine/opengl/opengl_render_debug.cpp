@@ -12,6 +12,7 @@
 #include "engine/form_engine.h"
 #include "engine/mesh/engine_vertex_debug.h"
 #include "engine/opengl/opengl.h"
+#include "engine/thing/components/thing_comp_physics.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/entities/dr_variable.h"
@@ -227,7 +228,7 @@ void DrOpenGL::drawDebugCollisions() {
         if ( thing->physics() == nullptr) continue;
 
         ThingCompPhysics *physics = thing->physics();
-        if ( physics->body_type != Body_Type::Dynamic) continue;
+        if (physics->body_type != Body_Type::Dynamic) continue;
 
         std::vector<DrPointF> point_list;   point_list.clear();
         std::vector<cpVect>   normal_list;  normal_list.clear();

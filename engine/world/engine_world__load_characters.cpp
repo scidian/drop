@@ -7,6 +7,9 @@
 //
 #include "core/dr_debug.h"
 #include "engine/engine.h"
+#include "engine/thing/components/thing_comp_camera.h"
+#include "engine/thing/components/thing_comp_physics.h"
+#include "engine/thing/components/thing_comp_player.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
