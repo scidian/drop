@@ -93,16 +93,14 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
         QString asset_name = QString::fromStdString(entity->getName());
 
         if (asset_name != label_name->text()) {
-            if (scrolling_mutex.tryLock()) {
-                m_flag_scrolling =  true;
-                m_position =        0;
-                m_scroll_text =     asset_name + "     ";
-                m_scroll_width =    Dr::CheckFontWidth(label_name->font(), m_scroll_text);
-                m_starting_rect =   label_name->geometry();
-                m_starting_text =   label_name->text();
-                m_label_to_scroll = label_name;
-                m_timer->start();
-            }
+            m_flag_scrolling =  true;
+            m_position =        0;
+            m_scroll_text =     asset_name + "     ";
+            m_scroll_width =    Dr::CheckFontWidth(label_name->font(), m_scroll_text);
+            m_starting_rect =   label_name->geometry();
+            m_starting_text =   label_name->text();
+            m_label_to_scroll = label_name;
+            m_timer->start();
         }
 
     // Highlights selected Asset Item
@@ -123,11 +121,8 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     } else if (event->type() == QEvent::HoverLeave) {
         m_flag_scrolling = false;
         m_timer->stop();
-        if (scrolling_mutex.tryLock() == false) {
-            label_name->setGeometry( m_starting_rect );
-            label_name->setText( m_starting_text );
-        }
-        scrolling_mutex.unlock();
+        label_name->setGeometry( m_starting_rect );
+        label_name->setText( m_starting_text );
     }
 
 

@@ -9,7 +9,6 @@
 #define EDITOR_TREE_ASSETS_H
 
 #include <QLabel>
-#include <QMutex>
 #include <QPushButton>
 #include <QTimer>
 #include <QTreeWidget>
@@ -116,7 +115,6 @@ private:
     IEditorRelay      *m_editor_relay;                  // Pointer to IEditorRelay class of parent form
 
     // Local Variables - Following variables are used for Asset Name scrolling on mouse over
-    QMutex             scrolling_mutex { QMutex::NonRecursive };
     QTimer            *m_timer;                         // Timer used to start scrolling
     bool               m_flag_scrolling = false;        // Flag to track when scrolling is active
 
