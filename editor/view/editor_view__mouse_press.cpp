@@ -40,7 +40,7 @@ void DrView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event);
 void DrView::mousePressEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
-    if (my_scene->scene_mutex.tryLock(100) == false) return;
+    QMutexLocker lock_scene(&my_scene->scene_mutex);
 
     // On initial mouse down, store mouse origin point
     m_origin =          event->pos();
@@ -102,7 +102,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     m_view_mode = View_Mode::Resizing_Stage;
                     m_editor_relay->buildInspector( { my_scene->getCurrentStageShown()->getKey() } );
                     startResizeStage(m_origin);
-                    my_scene->scene_mutex.unlock();
                     return;
                 }
 
@@ -116,7 +115,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     if (m_cam_mouse_over->isLocked() == false) {
                         m_view_mode = View_Mode::Moving_Camera;
                         startRotateCamera(m_origin);
-                        my_scene->scene_mutex.unlock();
                         return;
                     }
                 }
@@ -126,7 +124,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     if (event->modifiers() & Qt::KeyboardModifier::AltModifier || m_over_handle == Position_Flags::Rotate) {
                         m_view_mode = View_Mode::Rotating;
                         startRotateSelection(m_origin);
-                        my_scene->scene_mutex.unlock();
                         return;
                     }
 
@@ -134,7 +131,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     if (m_over_handle != Position_Flags::No_Position && m_over_handle != Position_Flags::Move_Item) {
                         m_view_mode = View_Mode::Resizing;
                         startResizeSelection(m_origin);
-                        my_scene->scene_mutex.unlock();
                         return;
                     }
                 }
@@ -218,7 +214,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                     m_view_mode = View_Mode::Selecting;
                     startSelect(event);
                     processSelection(event->pos());
-                    my_scene->scene_mutex.unlock();
                     return;
                 }
 
@@ -233,7 +228,6 @@ void DrView::mousePressEvent(QMouseEvent *event) {
     }
 
     update();
-    my_scene->scene_mutex.unlock();
 }
 
 

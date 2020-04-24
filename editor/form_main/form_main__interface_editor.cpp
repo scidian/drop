@@ -73,8 +73,6 @@ void FormMain::buildProjectTree() {
 
 // Fires an Undo stack command to change Stages within Scene
 void FormMain::buildScene(long stage_key) {
-    if (sceneEditor->scene_mutex.tryLock(10) == false) return;
-
     // Rebuild existing Stage
     if (stage_key == c_same_key) {
         emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), sceneEditor->getCurrentStageKeyShown());
@@ -83,8 +81,6 @@ void FormMain::buildScene(long stage_key) {
     } else if (sceneEditor->getCurrentStageKeyShown() != stage_key) {
         emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), stage_key);
     }
-
-    sceneEditor->scene_mutex.unlock();
 }
 
 void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys) {
