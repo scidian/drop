@@ -258,6 +258,7 @@ SOURCES += \
     engine/thing/components/thing_comp_camera.cpp \
     engine/thing/components/thing_comp_foliage.cpp \
     engine/thing/components/thing_comp_physics.cpp \
+    engine/thing/components/thing_comp_physics__collide.cpp \
     engine/thing/components/thing_comp_physics__shapes.cpp \
     engine/thing/components/thing_comp_physics__update.cpp \
     engine/thing/components/thing_comp_player.cpp \

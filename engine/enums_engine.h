@@ -228,6 +228,13 @@ enum class Collision_Type {
     Damage_All              = 3,
 };
 
+enum class Collision_Step {
+    Collide_First           = 0,            // cpBeginFunc
+    Collide_Step            = 1,            // cpPreSolveFunc
+    Collide_End             = 2,            // cpPostSolveFunc
+    Collide_Seperate        = 3,            // cpSeperateFunc
+};
+
 enum class Collision_Shape {
     Image                   = 0,
     Circle                  = 1,

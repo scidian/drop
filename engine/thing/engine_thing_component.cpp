@@ -28,7 +28,7 @@ DrThingComponent::~DrThingComponent() {
 
 
 //####################################################################################
-//##    Basic Virtual Component Functions
+//##    Virtual Component Event Functions
 //####################################################################################
 // Called when component is first created
 void DrThingComponent::init() {

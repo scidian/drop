@@ -163,15 +163,16 @@ void ThingCompPhysics::addToWorld() {
     Dr::ResetTimer( m_fade_timer );
 }
 
+// ***** Collide moved to: thing_comp_physics__collide.cpp
+///bool ThingCompPhysics::collide(Collision_Step step, cpArbiter *arb, DrEngineThing *collided_with) { }
+
 // Called when it is time to Render Thing
 void ThingCompPhysics::draw() {
 
 }
 
-// ***** Update Moved To: thing_comp_physics.cpp
-///bool ThingCompPhysics::update(double time_passed, double time_warp) {
-///
-///}
+// ***** Update moved to: thing_comp_physics__update.cpp
+///bool ThingCompPhysics::update(double time_passed, double time_warp) { }
 
 // Called when component is destroyed
 void ThingCompPhysics::destroy() {
@@ -263,8 +264,8 @@ bool ThingCompPhysics::shouldDamage(Collision_Type check_damage) {
 }
 
 // Returns true if two objects should collide
-bool ThingCompPhysics::shouldCollide(DrEngineThing *object) {
-    ThingCompPhysics *physics = object->compPhysics();
+bool ThingCompPhysics::shouldCollide(ThingCompPhysics *with_object_physics) {
+    ThingCompPhysics *physics = with_object_physics;
     if (physics == nullptr) return false;
     switch (this->getCollidesWith()) {
         case Collision_Groups::None:                return false;

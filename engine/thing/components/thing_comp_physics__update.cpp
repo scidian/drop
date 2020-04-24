@@ -13,7 +13,7 @@
 
 
 //####################################################################################
-//##    Updates - Override for DrEngineThing::update()
+//##    Updates - Called from DrEngineThing::update()
 //####################################################################################
 void ThingCompPhysics::updateBodyPosition(DrPointF updated_position, bool update_previous_position_also) {
     if (update_previous_position_also) {

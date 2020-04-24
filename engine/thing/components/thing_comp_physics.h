@@ -142,11 +142,17 @@ private:
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
     // Basic Component Events
-    virtual void        init() override;                                                // Called when component is first created
-    virtual void        addToWorld() override;                                          // Called when Thing is added to m_things DrEngineWorld vector
-    virtual void        draw() override;                                                // Called when it is time to Render Thing
-    virtual bool        update(double time_passed, double time_warp) override;          // Called during DrEngineWorld->updateWorld() step
-    virtual void        destroy() override;                                             // Called when component is destroyed
+    virtual void        init() override;                                                        // Called when component is first created
+    virtual void        addToWorld() override;                                                  // Called when Thing is added to m_things DrEngineWorld vector
+    virtual void        draw() override;                                                        // Called when it is time to Render Thing
+    virtual bool        update(double time_passed, double time_warp) override;                  // Called during DrEngineWorld->updateWorld() step
+    virtual void        destroy() override;                                                     // Called when component is destroyed
+
+    // Physics Component Events
+    bool                collideBegin(cpArbiter *arb, DrEngineThing *collided_with);             // Called when any collision step is to be processed
+    bool                collideStep(cpArbiter *arb, DrEngineThing *collided_with);              // Called when any collision step is to be processed
+    bool                collideEnd(cpArbiter *arb, DrEngineThing *collided_with);               // Called when any collision step is to be processed
+    bool                collideSeperate(cpArbiter *arb, DrEngineThing *collided_with);          // Called when any collision step is to be processed
 
 
     // #################### INTERNAL FUNCTIONS ####################
@@ -252,7 +258,7 @@ public:
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false, bool force_death = false, long damaged_by_key = c_no_key);
 
-    bool            shouldCollide(DrEngineThing *object);
+    bool            shouldCollide(ThingCompPhysics *with_object_physics);
 
     // Object Movement
     const double&   getRotateSpeedZ()           { return m_rotate_speed; }

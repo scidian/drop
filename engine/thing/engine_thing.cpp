@@ -28,6 +28,8 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
     m_world = world;
     m_key = unique_key;
     m_original_project_key = original_key;
+
+    init();
 }
 
 DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z,
@@ -41,9 +43,12 @@ DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long origina
     this->setScaleY(scale.y);                                                   // Save y scale for later
     this->setSize(size);
     this->setZOrder(z);    
+
+    init();
 }
 
 DrEngineThing::~DrEngineThing() {
+    destroy();
     for (auto component_pair : m_components) {
         delete component_pair.second;
     }
@@ -59,8 +64,13 @@ DrEngineThing::~DrEngineThing() {
 //####################################################################################
 
 //####################################################################################
-//##    Basic Virtual Component Functions
+//##    Basic Event Functions
 //####################################################################################
+// Called when Thing is first created
+void DrEngineThing::init() {
+
+}
+
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
     Dr::ResetTimer( update_timer );
@@ -88,6 +98,11 @@ bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) 
     // ***** Delete object if ends up outside the deletion threshold
     if (area.contains(getPosition()) == false) remove = true;
     return (remove || m_remove_me);
+}
+
+// Called when Thing is destroyed
+void DrEngineThing::destroy() {
+
 }
 
 
@@ -176,6 +191,11 @@ void DrEngineThing::setComponentFoliage(ThingCompFoliage *component)    { m_comp
 // Adds signal to stack
 void DrEngineThing::emitSignal(std::string name, DrVariant value, long thing_b) {
     m_world->getEngine()->pushSignal(name, value, this->getKey(), thing_b);
+}
+
+// Returns list of signals with name
+EngineSignals DrEngineThing::signalList(std::string name) {
+    return m_world->getEngine()->signalList(name);
 }
 
 

@@ -133,10 +133,10 @@ void DrEngineWorld::updateThings(double time_passed, double time_warp, DrRectF &
 
         // ***** Update Thing
         thing->calculateTimeSinceLastUpdate();
-        bool remove = thing->update(time_passed, time_warp, area);
+        bool remove_thing = thing->update(time_passed, time_warp, area);
 
         // ***** Process Removal
-        if (remove) {
+        if (remove_thing) {
             // Let Spawners know that the Object they're attached to is being deleted
             for (auto spawner : thing->getSpawners()) {
                 spawner->setAttachedThing(nullptr);

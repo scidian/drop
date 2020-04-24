@@ -35,6 +35,16 @@ struct Cam_Info {                                           // Character Camera 
     Frame_Edge  frame_left =    Frame_Edge::Normal;
 };
 
+struct Collision_Info {
+    cpShape *shape_a            { nullptr };
+    cpShape *shape_b            { nullptr };
+    cpVect   point_a            { 0, 0 };
+    cpVect   point_b            { 0, 0 };
+    cpVect   normal             { 0, 0 };
+    long     collision_count    { 0 };
+    cpVect   impulse_force      { 0, 0 };
+};
+
 // Global Forward Declarations for static Chipmunk callbacks
 extern cpBool   BeginFuncWildcard(cpArbiter *arb, cpSpace *, void *);                                       // defined in engine_world_collision.cpp
 extern cpBool   PreSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *);                               // defined in engine_world_collision.cpp
@@ -237,7 +247,7 @@ public:
                                           double stiffness, double friction, double bounce, bool can_rotate = true);
 
     // Physics
-    void                applyCategoryMask(DrEngineThing *central, long group_id);
+    void                applyCategoryMask(DrEngineThing *parent_thing, long group_id);
 
     // Building / Updating
     void                addPlayer(Demo_Player new_player_type);

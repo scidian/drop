@@ -90,8 +90,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
         if (entity == nullptr) return QObject::eventFilter(object, event);
-        QString asset_name = QString::fromStdString(entity->getName());
-
+        QString asset_name = QString::fromStdString(entity->getName());        
         if (asset_name != label_name->text()) {
             m_flag_scrolling =  true;
             m_position =        0;
@@ -119,10 +118,12 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Reset asset name if it was scrolling
     } else if (event->type() == QEvent::HoverLeave) {
-        m_flag_scrolling = false;
-        m_timer->stop();
-        label_name->setGeometry( m_starting_rect );
-        label_name->setText( m_starting_text );
+        if (m_flag_scrolling) {
+            m_flag_scrolling = false;
+            m_timer->stop();
+            label_name->setGeometry( m_starting_rect );
+            label_name->setText( m_starting_text );
+        }
     }
 
 

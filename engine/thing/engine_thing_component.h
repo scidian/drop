@@ -36,25 +36,24 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld      *m_world     { nullptr };                    // Pointer to the parent DrEngineWorld
-    DrEngineThing      *m_thing     { nullptr };                    // Pointer to the parent DrEngineThing
+    DrEngineWorld      *m_world         { nullptr };                        // Pointer to the parent DrEngineWorld
+    DrEngineThing      *m_thing         { nullptr };                        // Pointer to the parent DrEngineThing
 
     // Local Variables
-    std::string         m_name;                                     // Name of this component
-    Attributes          m_attributes;                               // Holds variables for this component by name (as std::string)
+    std::string         m_name;                                             // Name of this component
+    Attributes          m_attributes;                                       // Holds variables for this component by name (as std::string)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
-    // Basic Component Events
-//    virtual void      collide(cpArbiter *arb);
+    // Component Events
     virtual void        init();                                                                     // Called when component is first created
     virtual void        addToWorld();                                                               // Called when Thing is added to m_things DrEngineWorld vector
     virtual void        draw();                                                                     // Called when it is time to Render Thing
     virtual bool        update(double time_passed, double time_warp);                               // Called during DrEngineWorld->updateWorld() step, return true to remove m_thing
     virtual void        destroy();                                                                  // Called when component is destroyed
 
-    // Component Functions
+    // Signals
     virtual void        emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);     // Adds signal to stack
     EngineSignals       signalList(std::string name);                                               // Returns list of signals with name
 
