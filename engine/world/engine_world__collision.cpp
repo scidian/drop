@@ -118,57 +118,19 @@ extern cpBool PreSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     return physics_a->collideStep(arb, physics_b->thing());
 }
 
-
-extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *space, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b)
-    DrEngineThing *thing_a = static_cast<DrEngineThing*>(cpShapeGetUserData(a));
-    DrEngineThing *thing_b = static_cast<DrEngineThing*>(cpShapeGetUserData(b));
-    if (thing_a == nullptr || thing_b == nullptr) return;
-    ThingCompPhysics *physics_a = thing_a->physics();
-    ThingCompPhysics *physics_b = thing_b->physics();
-    if (physics_a == nullptr || physics_b == nullptr) return;
-    if (physics_a->isPhysicsChild()) { thing_a = physics_a->getPhysicsParent(); physics_a = thing_a->compPhysics(); }
-    if (physics_b->isPhysicsChild()) { thing_b = physics_b->getPhysicsParent(); physics_b = thing_b->compPhysics(); }
-
-    // We can react to collision force here, such as show an explosion based on impact force
-    if (cpArbiterIsFirstContact(arb)) {
-        // Divide the impulse by the timestep to get the collision force
-        double impact = cpvlength(cpArbiterTotalImpulse(arb)) / cpSpaceGetCurrentTimeStep(space);
-
-        if (impact > 100.0) {
-
-        }
-    }
+extern void PostSolveFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
+    ThingCompPhysics *physics_a = nullptr;
+    ThingCompPhysics *physics_b = nullptr;
+    if (GetPhysicsObjects(arb, physics_a, physics_b)) return;
+    physics_a->collideEnd(arb, physics_b->thing());
 }
-
 
 extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
-    CP_ARBITER_GET_SHAPES(arb, a, b)
-    DrEngineThing *thing_a = static_cast<DrEngineThing*>(cpShapeGetUserData(a));
-    DrEngineThing *thing_b = static_cast<DrEngineThing*>(cpShapeGetUserData(b));
-    if (thing_a == nullptr || thing_b == nullptr) return;
-    ThingCompPhysics *physics_a = thing_a->physics();
-    ThingCompPhysics *physics_b = thing_b->physics();
-    if (physics_a == nullptr || physics_b == nullptr) return;
-    if (physics_a->isPhysicsChild()) { thing_a = physics_a->getPhysicsParent(); physics_a = thing_a->compPhysics(); }
-    if (physics_b->isPhysicsChild()) { thing_b = physics_b->getPhysicsParent(); physics_b = thing_b->compPhysics(); }
-
-    // Keeps track number of shape collisions between objects
-    physics_a->decreaseCollisionCountWithObject(thing_b);
-
-    // Stop canceling gravity when seperates
-    if (thing_a->compPlayer() != nullptr) {
-        thing_a->compPlayer()->setTempGravityMultiplier( 1.0 );
-    }
-
-    // !!!!! #TEMP: Player collision tracking
-    if (thing_a->compPlayer() != nullptr) {
-        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
-    }
+    ThingCompPhysics *physics_a = nullptr;
+    ThingCompPhysics *physics_b = nullptr;
+    if (GetPhysicsObjects(arb, physics_a, physics_b)) return;
+    physics_a->collideSeperate(arb, physics_b->thing());
 }
-
-
-
 
 
 

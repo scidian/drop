@@ -172,7 +172,23 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
 //##        Called when collision stops
 //####################################################################################
 bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    DrEngineThing    *thing_a =   thing();
+    ThingCompPhysics *physics_a = thing_a->physics();
+    ThingCompPhysics *physics_b = thing_b->physics();
 
+    (void) physics_a;
+    (void) physics_b;
+
+    // We can react to collision force here, such as show an explosion based on impact force
+    if (cpArbiterIsFirstContact(arb)) {
+        // Divide the impulse by the timestep to get the collision force
+        double impact = cpvlength(cpArbiterTotalImpulse(arb)) / cpSpaceGetCurrentTimeStep(world()->getSpace());
+        if (impact > 100.0) {
+
+        }
+    }
+    return cpTrue;
 }
 
 
@@ -181,8 +197,28 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
 //##        Called when two objects seperate
 //####################################################################################
 bool ThingCompPhysics::collideSeperate(cpArbiter *arb, DrEngineThing *thing_b) {
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    DrEngineThing    *thing_a =   thing();
+    ThingCompPhysics *physics_a = thing_a->physics();
+    ThingCompPhysics *physics_b = thing_b->physics();
 
+    (void) physics_b;
+
+    // Keeps track number of shape collisions between objects
+    physics_a->decreaseCollisionCountWithObject(thing_b);
+
+    // Stop canceling gravity when seperates
+    if (thing_a->compPlayer() != nullptr) {
+        thing_a->compPlayer()->setTempGravityMultiplier( 1.0 );
+    }
+
+    // !!!!! #TEMP: Player collision tracking
+    if (thing_a->compPlayer() != nullptr) {
+        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
+    }
+    return cpTrue;
 }
+
 
 
 
