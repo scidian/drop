@@ -116,20 +116,20 @@ void DrOpenGL::drawObject(DrEngineThing *thing, bool draw2D) {
     // ***** Load possible 3D Info
     ThingComp3D *comp_3d = thing->comp3D();
     Convert_3D_Type comp_3d_type = Convert_3D_Type::None;           // Type of 3D extrusion
-    double comp_3d_angle_x { 0.0 };                                 // X axis rotation
-    double comp_3d_angle_y { 0.0 };                                 // Y axis rotation
-    double comp_3d_rotate_x_speed { 0.0 };                          // X axis rotation speed
-    double comp_3d_rotate_y_speed { 0.0 };                          // Y axis rotation speed
-    bool   comp_3d_billboard { false };                             // Make Object face camera?
-    double comp_3d_depth { 0.0 };                                   // Desired 3D Depth of 2D Objects
+    double comp_3d_angle_x          { 0.0 };                        // X axis rotation
+    double comp_3d_angle_y          { 0.0 };                        // Y axis rotation
+    double comp_3d_rotate_x_speed   { 0.0 };                        // X axis rotation speed
+    double comp_3d_rotate_y_speed   { 0.0 };                        // Y axis rotation speed
+    bool   comp_3d_billboard        { false };                      // Make Object face camera?
+    double comp_3d_depth            { 0.0 };                        // Desired 3D Depth of 2D Objects
     if (comp_3d != nullptr) {
-        comp_3d_type =           thing->comp3D()->get3DType();
-        comp_3d_angle_x =        thing->comp3D()->getAngleX();
-        comp_3d_angle_y =        thing->comp3D()->getAngleY();
-        comp_3d_rotate_x_speed = thing->comp3D()->getRotateSpeedX();
-        comp_3d_rotate_y_speed = thing->comp3D()->getRotateSpeedY();
-        comp_3d_billboard =      thing->comp3D()->getBillboard();
-        comp_3d_depth =          thing->comp3D()->getDepth();
+        comp_3d_type =              thing->comp3D()->get3DType();
+        comp_3d_angle_x =           thing->comp3D()->getAngleX();
+        comp_3d_angle_y =           thing->comp3D()->getAngleY();
+        comp_3d_rotate_x_speed =    thing->comp3D()->getRotateSpeedX();
+        comp_3d_rotate_y_speed =    thing->comp3D()->getRotateSpeedY();
+        comp_3d_billboard =         thing->comp3D()->getBillboard();
+        comp_3d_depth =             thing->comp3D()->getDepth();
     } else {
         draw2D = true;
     }

@@ -32,32 +32,9 @@ ThingCompTile::~ThingCompTile() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompTile::init() {
-
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompTile::addToWorld() {
-
-}
-
 // Called when it is time to Render Thing
 void ThingCompTile::draw() {
     world()->getEngine()->getOpenGL()->drawObjectTile(thing());
-}
-
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompTile::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompTile::destroy() {
-
 }
 
 

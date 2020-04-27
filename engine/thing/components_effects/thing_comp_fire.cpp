@@ -43,32 +43,9 @@ ThingCompFire::~ThingCompFire() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompFire::init() {
-
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompFire::addToWorld() {
-
-}
-
 // Called when it is time to Render Thing
 void ThingCompFire::draw() {
     world()->getEngine()->getOpenGL()->drawObjectFire(thing());
-}
-
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompFire::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompFire::destroy() {
-
 }
 
 

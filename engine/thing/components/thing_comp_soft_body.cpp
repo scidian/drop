@@ -33,33 +33,7 @@ ThingCompSoftBody::~ThingCompSoftBody() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompSoftBody::init() {
 
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompSoftBody::addToWorld() {
-
-}
-
-// Called when it is time to Render Thing
-void ThingCompSoftBody::draw() {
-
-}
-
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompSoftBody::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompSoftBody::destroy() {
-
-}
 
 
 

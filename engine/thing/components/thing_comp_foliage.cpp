@@ -98,9 +98,9 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
 
     // If signal exists with this Foliage that is started colliding with something, apply collision force
     for (auto &signal : signalList(Signals::ThingCollideStart)) {
-        if (signal->thingEngineKeyA() == thing()->getKey()) {
+        if (signal->thingA()->getKey() == thing()->getKey()) {
             DrEngineThing *thing_a = thing();
-            DrEngineThing *thing_b = world()->findThingByKey(signal->thingEngineKeyB());
+            DrEngineThing *thing_b = signal->thingB();
             ThingCompPhysics *physics_a = thing_a->physics();
             ThingCompPhysics *physics_b = thing_b->physics();
             Collision_Info info = boost::any_cast<Collision_Info>(signal->value().value());

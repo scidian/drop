@@ -37,11 +37,11 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngineWorld      *m_world             { nullptr };                    // Points to current parent DrEngineWorld
+    DrEngineWorld      *m_world                 { nullptr };                // Points to current parent DrEngineWorld
 
     // Engine Info
-    long            m_key                   { c_no_key };                   // Unique key for this item
-    long            m_original_project_key  { c_no_key };                   // Key of item when it was in Project Data Model
+    long                m_key                   { c_no_key };               // Unique key for this item
+    long                m_original_project_key  { c_no_key };               // Key of item when it was in Project Data Model
 
     // Containers
     EngineSpawners      m_spawners;                                         // Holds all Spawners that have been attached to this Thing
@@ -121,8 +121,8 @@ public:
     void                setComponent(std::string component_name, DrThingComponent *component);
 
     // Signals
-    void                emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);     // Adds signal to stack
-    EngineSignals       signalList(std::string name);                                               // Returns list of signals with name
+    void                emitSignal(std::string name, DrVariant value, DrEngineThing* thing_b = nullptr);    // Adds signal to stack
+    EngineSignals       signalList(std::string name);                                                       // Returns list of signals with name
 
     // Helper Functions
     DrPointF            mapPositionToScreen();

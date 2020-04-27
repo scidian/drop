@@ -12,6 +12,9 @@
 #include "engine/constants_engine.h"
 #include "project/enums_entity_types.h"
 
+// Forward Declarations
+class DrEngineThing;
+
 // Local Enums
 enum class Signal_Life {
     Born                    = 0,                            // First pushed into messaging system
@@ -27,45 +30,38 @@ class DrEngineSignal
 {
 public:
     // Constructor / Destructor
-    DrEngineSignal(std::string name, DrVariant value,
-                   std::string thing_a_name = "", long thing_a_asset_key = c_no_key, long thing_a_engine_key = c_no_key,
-                   std::string thing_b_name = "", long thing_b_asset_key = c_no_key, long thing_b_engine_key = c_no_key);
+    DrEngineSignal(std::string name, DrVariant value, DrEngineThing *thing_a = nullptr, DrEngineThing *thing_b = nullptr);
     ~DrEngineSignal();
 
 
 private:
-    std::string     m_name;                                 // Name of this signal, can be from project/constants_signals.h, or custom
-    DrVariant       m_value;                                // Event data
-    Signal_Life     m_life;                                 // Tracks age of signal
+    std::string         m_name;                                 // Name of this signal, can be from project/constants_signals.h, or custom
+    DrVariant           m_value;                                // Event data
+    Signal_Life         m_life;                                 // Tracks age of signal
 
-    std::string     m_thing_a_name        { "" };           // Name of Primary Thing that emiited signal
-    long            m_thing_a_asset_key   { c_no_key };     // Project Asset ID Key of Primary Thing that emiited signal
-    long            m_thing_a_engine_key  { c_no_key };     // Engine ID Key of Primary Thing that emiited signal
-
-    std::string     m_thing_b_name        { "" };           // Name of Primary Thing that emiited signal
-    long            m_thing_b_asset_key   { c_no_key };     // Project Asset ID Key of Primary Thing that emiited signal
-    long            m_thing_b_engine_key  { c_no_key };     // Engine ID Key of Primary Thing that emiited signal
+    DrEngineThing*      m_thing_a;                              // Primary Thing that emiited signal (if there was one)
+    DrEngineThing*      m_thing_b;                              // Primary Thing that emiited signal (if there was one)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
-    std::string     name()                          { return m_name; }
-    DrVariant&      value()                         { return m_value; }
+    std::string         name()                          { return m_name; }
+    DrVariant&          value()                         { return m_value; }
 
-    std::string     thingNameA()                     { return m_thing_a_name; }
-    long            thingAssetKeyA()                 { return m_thing_a_asset_key; }
-    long            thingEngineKeyA()                { return m_thing_a_engine_key; }
+    DrEngineThing*      thingA()                        { return m_thing_a; }
+    DrEngineThing*      thingB()                        { return m_thing_b; }
 
-    std::string     thingNameB()                     { return m_thing_b_name; }
-    long            thingAssetKeyB()                 { return m_thing_b_asset_key; }
-    long            thingEngineKeyB()                { return m_thing_b_engine_key; }
+    std::string         thingNameA();
+    std::string         thingNameB();
+    long                thingAssetKeyA();
+    long                thingAssetKeyB();
 
 
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Getters / Setters
-    Signal_Life     getLife()                       { return m_life; }
-    void            setLife(Signal_Life life)       { m_life = life; }
+    Signal_Life         getLife()                       { return m_life; }
+    void                setLife(Signal_Life life)       { m_life = life; }
 
 };
 

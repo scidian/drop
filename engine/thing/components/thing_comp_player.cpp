@@ -84,7 +84,6 @@ bool ThingCompPlayer::update(double time_passed, double time_warp) {
     (void) time_warp;
 
 
-
     //###########################################
     //##
     //## Messaging System Test

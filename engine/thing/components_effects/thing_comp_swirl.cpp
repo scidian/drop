@@ -38,32 +38,9 @@ ThingCompSwirl::~ThingCompSwirl() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompSwirl::init() {
-
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompSwirl::addToWorld() {
-
-}
-
 // Called when it is time to Render Thing
 void ThingCompSwirl::draw() {
     world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Swirl);
-}
-
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompSwirl::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompSwirl::destroy() {
-
 }
 
 

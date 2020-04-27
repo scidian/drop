@@ -338,8 +338,9 @@ void ThingCompPhysics::setHealth(double new_health, long damaged_by_key) {
     double health_change = m_health - new_health;
     m_health = new_health;
     if (isPhysicsChild() == false) {
-        if      (Dr::FuzzyCompare(m_health,      0.0) == true)  emitSignal(Signals::ThingDied,    m_health,      damaged_by_key);
-        else if (Dr::FuzzyCompare(health_change, 0.0) == false) emitSignal(Signals::ThingDamaged, health_change, damaged_by_key);
+        DrEngineThing *damaged_by = world()->findThingByKey(damaged_by_key);
+        if      (Dr::FuzzyCompare(m_health,      0.0) == true)  emitSignal(Signals::ThingDied,    m_health,      damaged_by);
+        else if (Dr::FuzzyCompare(health_change, 0.0) == false) emitSignal(Signals::ThingDamaged, health_change, damaged_by);
     }
 }
 

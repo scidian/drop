@@ -66,7 +66,7 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
 
 
     // ***** Emit collision as signal
-    emitSignal(Signals::ThingCollideStart, collide_info, thing_b->getKey());
+    emitSignal(Signals::ThingCollideStart, collide_info, thing_b);
 
     // ***** Keeps track number of shape collisions between objects
     if (cpArbiterIsFirstContact(arb)) {

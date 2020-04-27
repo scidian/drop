@@ -74,15 +74,17 @@ void DrEngineThing::init() {
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
     Dr::ResetTimer( update_timer );
-    for (auto component : m_components) {
+    for (auto &component : m_components) {
         component.second->addToWorld();
     }
 }
 
 // Called when it is time to Render Thing
 void DrEngineThing::draw() {
-    for (auto component : m_components) {
-        component.second->draw();
+    for (auto &component : m_components) {
+        if (component.second->callDrawFunction()) {
+            component.second->draw();
+        }
     }
 }
 
@@ -91,8 +93,10 @@ bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) 
     bool remove = false;
 
     // ***** Call update() for each Component
-    for (auto component : m_components) {
-        remove = (remove || component.second->update(time_passed, time_warp));
+    for (auto &component : m_components) {
+        if (component.second->callUpdateFunction()) {
+            remove = (remove || component.second->update(time_passed, time_warp));
+        }
     }
 
     // ***** Delete object if ends up outside the deletion threshold
@@ -113,7 +117,7 @@ void DrEngineThing::destroy() {
 std::string DrEngineThing::name() {
     if (m_world == nullptr) return "";
     DrSettings *entity = m_world->getProject()->findSettingsFromKey(m_original_project_key);
-    if (entity == nullptr)   return "";
+    if (entity == nullptr) return "";
     return (entity->getName());
 }
 
@@ -189,8 +193,8 @@ void DrEngineThing::setComponentFoliage(ThingCompFoliage *component)    { m_comp
 //##    Signals
 //####################################################################################
 // Adds signal to stack
-void DrEngineThing::emitSignal(std::string name, DrVariant value, long thing_b) {
-    m_world->getEngine()->pushSignal(name, value, this->getKey(), thing_b);
+void DrEngineThing::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b) {
+    m_world->getEngine()->pushSignal(name, value, this, thing_b);
 }
 
 // Returns list of signals with name

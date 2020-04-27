@@ -39,6 +39,10 @@ private:
     DrEngineWorld      *m_world         { nullptr };                        // Pointer to the parent DrEngineWorld
     DrEngineThing      *m_thing         { nullptr };                        // Pointer to the parent DrEngineThing
 
+    // Component Usage Flags
+    bool                m_call_draw     { true };                           // When classes are using base empty functions, this is false and functions are skipped
+    bool                m_call_update   { true };                           // When classes are using base empty functions, this is false and functions are skipped
+
     // Local Variables
     std::string         m_name;                                             // Name of this component
     Attributes          m_attributes;                                       // Holds variables for this component by name (as std::string)
@@ -54,8 +58,8 @@ public:
     virtual void        destroy();                                                                  // Called when component is destroyed
 
     // Signals
-    virtual void        emitSignal(std::string name, DrVariant value, long thing_b = c_no_key);     // Adds signal to stack
-    EngineSignals       signalList(std::string name);                                               // Returns list of signals with name
+    virtual void        emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr);    // Adds signal to stack
+    EngineSignals       signalList(std::string name);                                                       // Returns list of signals with name
 
     // Getters
     std::string         name()      { return m_name; }                                              // Returns name of this Component
@@ -70,7 +74,8 @@ public:
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Getters / Setters
-
+    bool                callDrawFunction()      { return m_call_draw; }
+    bool                callUpdateFunction()    { return m_call_update; }
 
 
 };

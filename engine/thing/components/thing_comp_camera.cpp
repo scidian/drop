@@ -33,33 +33,12 @@ ThingCompCamera::~ThingCompCamera() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompCamera::init() {
-
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompCamera::addToWorld() {
-
-}
-
 // Called when it is time to Render Thing
-void ThingCompCamera::draw() {
-
-}
+///void ThingCompCamera::draw() { }
 
 // Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompCamera::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
+///bool ThingCompCamera::update(double time_passed, double time_warp) { return false; }
 
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompCamera::destroy() {
-
-}
 
 
 //####################################################################################

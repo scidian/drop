@@ -324,6 +324,12 @@ public:
     void                updateCameras();
 
 
+    // Getter and Setters - Simplified
+    DrEngine*           engine()                    { return m_engine; }
+    DrProject*          project()                   { return m_project; }
+    cpSpace*            space()                     { return m_space; }
+    EngineThings&       things()                    { return m_things; }
+
     // Getter and Setters
     DrEngine*           getEngine()                 { return m_engine; }
     DrProject*          getProject()                { return m_project; }

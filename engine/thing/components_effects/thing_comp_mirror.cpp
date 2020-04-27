@@ -41,35 +41,10 @@ ThingCompMirror::~ThingCompMirror() {
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompMirror::init() {
-
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompMirror::addToWorld() {
-
-}
-
 // Called when it is time to Render Thing
 void ThingCompMirror::draw() {
     world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Mirror);
 }
-
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompMirror::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompMirror::destroy() {
-
-}
-
-
 
 
 

@@ -62,37 +62,15 @@ ThingCompWater::~ThingCompWater() {
 }
 
 
-
 //####################################################################################
 //##    Basic Virtual Component Functions
 //####################################################################################
-// Called when component is first created
-void ThingCompWater::init() {
-
-}
-
-// Called when Thing is added to m_things DrEngineWorld vector
-void ThingCompWater::addToWorld() {
-
-}
-
 // Called when it is time to Render Thing
 void ThingCompWater::draw() {
     world()->getEngine()->getOpenGL()->drawEffect(thing(), DrThingType::Water);
 }
 
-// Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool ThingCompWater::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
 
-    return false;
-}
-
-// Called when component is destroyed
-void ThingCompWater::destroy() {
-
-}
 
 
 
