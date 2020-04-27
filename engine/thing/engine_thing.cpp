@@ -49,7 +49,7 @@ DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long origina
 
 DrEngineThing::~DrEngineThing() {
     destroy();
-    for (auto component_pair : m_components) {
+    for (auto &component_pair : m_components) {
         delete component_pair.second;
     }
 }
@@ -199,7 +199,11 @@ void DrEngineThing::emitSignal(std::string name, DrVariant value, DrEngineThing 
 
 // Returns list of signals with name
 EngineSignals DrEngineThing::signalList(std::string name) {
-    return m_world->getEngine()->signalList(name);
+    if (name == "") {
+        return m_world->engine()->signalList();
+    } else {
+        return m_world->engine()->signalList(name);
+    }
 }
 
 

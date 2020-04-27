@@ -122,10 +122,10 @@ DrProperty* DrSettings::getComponentProperty(std::string component_key, std::str
 }
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(std::string property_key_to_find) {
-    for (auto component: m_components) {
-        for (auto property: component.second->getPropertyMap()) {
-            if (property.second->getPropertyKey() == property_key_to_find) {
-                return property.second;
+    for (auto &component_pair: m_components) {
+        for (auto &property_pair: component_pair.second->getPropertyMap()) {
+            if (property_pair.second->getPropertyKey() == property_key_to_find) {
+                return property_pair.second;
             }
         }
     }

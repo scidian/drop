@@ -19,16 +19,17 @@ static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineThing *engine_
 //####################################################################################
 //##    Gets Arbiter Info for Signals
 //####################################################################################
-Collision_Info GetCollisionInfo(cpArbiter *arb, ThingCompPhysics *physics_a, ThingCompPhysics *physics_b) {
+Collision_Info GetCollisionInfo(cpArbiter *arb, ThingCompPhysics *physics_a, ThingCompPhysics *physics_b, bool get_points) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     Collision_Info info;
-    info.shape_a =          a;
-    info.shape_b =          b;
-    info.point_a =          cpArbiterGetPointA(arb, 0);
-    info.point_b =          cpArbiterGetPointB(arb, 0);
-    info.normal =           cpArbiterGetNormal(arb);
-    info.collision_count =  physics_a->checkCollisionCountWithObject(physics_b->thing());
-    info.impulse_force =    cpArbiterTotalImpulse(arb);
+    info.shape_a =              a;
+    info.shape_b =              b;
+    info.collision_count =      physics_a->checkCollisionCountWithObject(physics_b->thing());
+    if (get_points) {
+        info.point_a =          cpArbiterGetPointA(arb, 0);
+        info.point_b =          cpArbiterGetPointB(arb, 0);
+        info.normal =           cpArbiterGetNormal(arb);
+    }
     return info;
 }
 
@@ -42,7 +43,7 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
     ThingCompPhysics *physics_b = thing_b->physics();
     if (physics_a->shouldCollide(physics_b) == false) return cpArbiterIgnore(arb);
     if (physics_b->shouldCollide(physics_a) == false) return cpArbiterIgnore(arb);
-    Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b);
+    Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
 
     // Some special Player collsion processing
     if (thing_a->compPlayer() != nullptr) {
@@ -66,7 +67,9 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
 
 
     // ***** Emit collision as signal
-    emitSignal(Signals::ThingCollideStart, collide_info, thing_b);
+    if (collide_info.collision_count == 0) {
+        emitSignal(Signals::ThingCollide, collide_info, thing_b);
+    }
 
     // ***** Keeps track number of shape collisions between objects
     if (cpArbiterIsFirstContact(arb)) {
@@ -75,10 +78,10 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
 
     // !!!!! #TEMP: Player collision tracking
     if (thing_a->compPlayer() != nullptr) {
-        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
+///        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
     }
 
-    return true;
+    return cpTrue;
 }
 
 
@@ -96,7 +99,7 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
     if (!physics_a->isAlive()) return cpFalse;                                                  // If object a is dead, cancel collision
     if (!physics_b->isAlive()) return cpFalse;                                                  // If object b is dead, cancel collision
 
-    // Some special Player collsion processing
+    // Some special Player collision processing
     if (thing_a->compPlayer() != nullptr) {
         // Compare angle of button speed to angle of gravity normal
         cpVect but_cpv = cpv(thing_a->compPlayer()->getButtonSpeedX(), thing_a->compPlayer()->getButtonSpeedY());
@@ -162,7 +165,11 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         BodyAddRecoil(world()->getSpace(), arb, thing_b);
     }
 
-    // Normal collision
+    // ***** Emit ThingCollideStep Signal
+    ///Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
+    ///emitSignal(Signals::ThingCollideStep, collide_info, thing_b);
+
+    // ***** Normal collision
     return cpTrue;
 }
 
@@ -188,6 +195,12 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
 
         }
     }
+
+    // ***** Emit ThingCollideEnd Signal
+    ///Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
+    ///emitSignal(Signals::ThingCollideEnd, collide_info, thing_b);
+
+    // ***** End collision, return value for this function has no effect
     return cpTrue;
 }
 
@@ -202,8 +215,6 @@ bool ThingCompPhysics::collideSeperate(cpArbiter *arb, DrEngineThing *thing_b) {
     ThingCompPhysics *physics_a = thing_a->physics();
     ThingCompPhysics *physics_b = thing_b->physics();
 
-    (void) physics_b;
-
     // Keeps track number of shape collisions between objects
     physics_a->decreaseCollisionCountWithObject(thing_b);
 
@@ -212,10 +223,19 @@ bool ThingCompPhysics::collideSeperate(cpArbiter *arb, DrEngineThing *thing_b) {
         thing_a->compPlayer()->setTempGravityMultiplier( 1.0 );
     }
 
+
+    // ***** Emit seperation signal
+    Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, false);
+    if (collide_info.collision_count == 0) {
+        emitSignal(Signals::ThingSeperate, collide_info, thing_b);
+    }
+
     // !!!!! #TEMP: Player collision tracking
     if (thing_a->compPlayer() != nullptr) {
-        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
+///        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
     }
+
+    // ***** End collision, return value for this function has no effect
     return cpTrue;
 }
 

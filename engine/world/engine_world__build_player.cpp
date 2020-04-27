@@ -65,7 +65,7 @@ void DrEngineWorld::addPlayer(Demo_Player new_player_type) {
         DrStage *stage = world->getStageFromKey(world->getFirstStageKey());
 
         // Load Characters
-        for (auto thing_pair : stage->getThingMap()) {
+        for (auto &thing_pair : stage->getThingMap()) {
             // Grab current Thing, check if Character so we can load it
             DrThing *thing = thing_pair.second;
             if (thing->getType() != DrType::Thing) continue;

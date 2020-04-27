@@ -39,7 +39,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
 }
 
 DrStage::~DrStage() {
-    for (auto i: m_things) { delete i.second; }
+    for (auto &thing_pair: m_things) { delete thing_pair.second; }
 }
 
 
@@ -121,7 +121,7 @@ std::vector<DrThing*> DrStage::thingsSortedByZOrder(Sort_Order sort_order, bool 
 //##    Remove any references within the current Stage Things to any GraphicsScene Items
 //####################################################################################
 void DrStage::removeGraphicsItemReferences() {
-    for (auto thing_pair : getThingMap()) {
+    for (auto &thing_pair : getThingMap()) {
         thing_pair.second->setDrGraphicsItem(nullptr);
     }
 }

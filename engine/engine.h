@@ -61,6 +61,7 @@ public:
     // Signals
     void                    clearSignals();
     void                    pushSignal(std::string name, DrVariant value, DrEngineThing *thing_a = nullptr, DrEngineThing *thing_b = nullptr);
+    EngineSignals&          signalList() { return m_signals; }
     EngineSignals           signalList(std::string name);
     void                    updateSignalList();
 

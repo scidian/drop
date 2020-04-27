@@ -82,8 +82,8 @@ DrEngineThing* DrEngineWorld::findPhysicsObjectByKey(long key) {
 //####################################################################################
 //##    Adds Things to the World
 //####################################################################################
-void DrEngineWorld::addThings(std::list<DrEngineThing*> things) {
-    for (auto thing : things) {
+void DrEngineWorld::addThings(std::list<DrEngineThing*> things_to_add) {
+    for (auto thing : things_to_add) {
         addThing(thing);
     }
 }

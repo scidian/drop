@@ -35,18 +35,16 @@ DrEngine::~DrEngine() {
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::clearWorlds() {
     clearSignals();
-    for (auto world : m_worlds) {
-        delete world.second;
-    }
+    for (auto &world_pair : m_worlds) { delete world_pair.second; }
 }
 
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::deleteTextures() {
-    for (auto texture : m_textures) {
-        if (texture.second->isTextureLoaded()) {
-            texture.second->deleteTexture();
+    for (auto &texture_pair : m_textures) {
+        if (texture_pair.second->isTextureLoaded()) {
+            texture_pair.second->deleteTexture();
         }
-        delete texture.second;
+        delete texture_pair.second;
     }
 }
 

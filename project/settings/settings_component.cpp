@@ -31,7 +31,7 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
 }
 
 DrComponent::~DrComponent() {
-    for (auto i: m_properties) { delete i.second; }
+    for (auto &property_pair: m_properties) { delete property_pair.second; }
 }
 
 

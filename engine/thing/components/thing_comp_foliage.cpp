@@ -97,7 +97,7 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
     (void) time_warp;
 
     // If signal exists with this Foliage that is started colliding with something, apply collision force
-    for (auto &signal : signalList(Signals::ThingCollideStart)) {
+    for (auto &signal : signalList(Signals::ThingCollide)) {
         if (signal->thingA()->getKey() == thing()->getKey()) {
             DrEngineThing *thing_a = thing();
             DrEngineThing *thing_b = signal->thingB();

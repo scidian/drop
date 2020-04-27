@@ -42,7 +42,6 @@ struct Collision_Info {
     cpVect   point_b            { 0, 0 };
     cpVect   normal             { 0, 0 };
     long     collision_count    { 0 };
-    cpVect   impulse_force      { 0, 0 };
 };
 
 // Global Forward Declarations for static Chipmunk callbacks

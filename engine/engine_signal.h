@@ -39,8 +39,8 @@ private:
     DrVariant           m_value;                                // Event data
     Signal_Life         m_life;                                 // Tracks age of signal
 
-    DrEngineThing*      m_thing_a;                              // Primary Thing that emiited signal (if there was one)
-    DrEngineThing*      m_thing_b;                              // Primary Thing that emiited signal (if there was one)
+    DrEngineThing*      m_thing_a;                              // Primary Thing that emitted signal (if there was one)
+    DrEngineThing*      m_thing_b;                              // Secondary Thing that interated with Primary Thing (if there was one)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################

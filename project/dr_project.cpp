@@ -357,12 +357,12 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
     WorldMap::iterator world_iter = worlds.find(check_key);
     if (world_iter != worlds.end())             return world_iter->second;
 
-    for (auto world_pair : worlds) {
+    for (auto &world_pair : worlds) {
         StageMap &stages = world_pair.second->getStageMap();
         StageMap::iterator stage_iter = stages.find(check_key);
         if (stage_iter != stages.end())         return stage_iter->second;
 
-        for (auto stage_pair : stages) {
+        for (auto &stage_pair : stages) {
             ThingMap &things = stage_pair.second->getThingMap();
             ThingMap::iterator thing_iter = things.find(check_key);
             if (thing_iter != things.end())     return thing_iter->second;
@@ -414,7 +414,7 @@ DrDevice* DrProject::findDeviceFromKey(long check_key) {
 }
 
 DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
-    for (auto device_pair : m_devices) {
+    for (auto &device_pair : m_devices) {
         if (device_pair.second->getDeviceType() == type) {
             return device_pair.second;
         }
@@ -431,7 +431,7 @@ DrEffect* DrProject::findEffectFromKey(long check_key) {
 }
 
 DrEffect* DrProject::findEffectFromType(DrEffectType type) {
-    for (auto effect_pair : m_effects) {
+    for (auto &effect_pair : m_effects) {
         if (effect_pair.second->getEffectType() == type) {
             return effect_pair.second;
         }
@@ -464,7 +464,7 @@ DrItem* DrProject::findItemFromKey(long check_key) {
 }
 
 DrItem* DrProject::findItemFromType(DrItemType type) {
-    for (auto item_pair : m_items) {
+    for (auto &item_pair : m_items) {
         if (item_pair.second->getItemType() == type) {
             return item_pair.second;
         }
@@ -481,7 +481,7 @@ DrPrefab* DrProject::findPrefabFromKey(long check_key) {
 }
 
 DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
-    for (auto prefab_pair : m_prefabs) {
+    for (auto &prefab_pair : m_prefabs) {
         if (prefab_pair.second->getPrefabType() == type) {
             return prefab_pair.second;
         }
@@ -490,7 +490,7 @@ DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
 }
 
 DrStage* DrProject::findStageFromKey(long check_key) {
-    for (auto world_pair : m_worlds) {
+    for (auto &world_pair : m_worlds) {
         StageMap &stages = world_pair.second->getStageMap();
         StageMap::iterator stage_iter = stages.find(check_key);
 
@@ -501,9 +501,9 @@ DrStage* DrProject::findStageFromKey(long check_key) {
 }
 
 DrThing* DrProject::findThingFromKey(long check_key) {
-    for (auto world : m_worlds) {
-        for (auto stage : world.second->getStageMap()) {
-            ThingMap &things = stage.second->getThingMap();
+    for (auto &world_pair : m_worlds) {
+        for (auto &stage_pair : world_pair.second->getStageMap()) {
+            ThingMap &things = stage_pair.second->getThingMap();
             ThingMap::iterator thing_iter = things.find(check_key);
             if (thing_iter != things.end())
                 return thing_iter->second;
@@ -523,7 +523,7 @@ DrWorld* DrProject::findWorldFromKey(long check_key) {
 // Returns a pointer to the World with the mathcing name
 DrWorld* DrProject::findWorldWithName(std::string world_name) {
     std::string compare_name;
-    for (auto world_pair: m_worlds) {
+    for (auto &world_pair: m_worlds) {
         compare_name = world_pair.second->getName();
         if (compare_name == world_name) { return world_pair.second; }
     }

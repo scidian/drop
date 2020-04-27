@@ -113,7 +113,7 @@ DrBitmap FloodFill(DrBitmap &bitmap, int at_x, int at_y, DrColor fill_color, dou
     do {
         // Go through each point and find new points to fill
         processed_some = false;
-        for (auto point: points) {
+        for (auto point : points) {
             if (processed.getPixel(point.x, point.y) == FLOOD_WAS_PROCESSED) continue;
             bitmap.setPixel(point.x, point.y, fill_color);
             flood.setPixel(point.x, point.y, fill_color);

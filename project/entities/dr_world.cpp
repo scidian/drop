@@ -32,7 +32,7 @@ DrWorld::DrWorld(DrProject *parent_project, long key, std::string new_world_name
 }
 
 DrWorld::~DrWorld() {
-    for (auto i: m_stages) { delete i.second; }
+    for (auto &stage_pair: m_stages) { delete stage_pair.second; }
 }
 
 // Removes a Stage from the Project
@@ -109,9 +109,9 @@ DrStage* DrWorld::getStageFromKey(long from_stage_key) {
 // Returns a pointer to the World with the mathcing name
 DrStage* DrWorld::getStageWithName(std::string stage_name) {
     std::string compare_name;
-    for (auto i: m_stages) {
-        compare_name = i.second->getName();
-        if (compare_name == stage_name) { return i.second; }
+    for (auto &stage_pair: m_stages) {
+        compare_name = stage_pair.second->getName();
+        if (compare_name == stage_name) { return stage_pair.second; }
     }
     return nullptr;
 }

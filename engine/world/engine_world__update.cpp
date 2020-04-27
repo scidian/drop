@@ -87,6 +87,10 @@ void DrEngineWorld::updateWorld(double time_passed) {
     updateSpawners(time_passed, m_time_warp, threshold);
 
 
+    g_info = "Signal Qty: " + std::to_string(engine()->signalList().size());
+
+
+
     // ***** Calculate distance and Add New Stage if needed
     if (has_scene == true) {
         DrPointF rotated = Dr::RotatePointAroundOrigin( DrPointF(getCameraPositionX(), getCameraPositionY()), m_game_start, m_game_direction );
