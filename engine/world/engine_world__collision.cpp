@@ -63,12 +63,11 @@ void DrEngineWorld::applyCategoryMask(DrEngineThing *parent_thing, long group_id
     // Apply all shapes of physics children to same group filter
     if (parent_thing->compSoftBody() != nullptr) {
         if (parent_thing->compSoftBody()->soft_balls.size() > 0) {
-            for (auto ball_number : parent_thing->compSoftBody()->soft_balls) {
-                DrEngineThing *ball = this->findPhysicsObjectByKey(ball_number);
-                if (ball == nullptr) continue;
-                if (ball->physics() == nullptr) continue;
-                for (auto shape : ball->physics()->shapes) {
-                    cpShapeSetFilter( shape, filter);
+            for (auto child : parent_thing->compSoftBody()->soft_balls) {
+                if (child == nullptr) continue;
+                if (child->physics() == nullptr) continue;
+                for (auto shape : child->physics()->shapes) {
+                    cpShapeSetFilter(shape, filter);
                 }
             }
         }

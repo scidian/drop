@@ -22,7 +22,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 ThingCompFoliage::ThingCompFoliage(DrEngineWorld *engine_world, DrEngineThing *parent_thing, double springiness)
-    : DrThingComponent(engine_world, parent_thing, Comps::Thing_Soft_Body), m_springiness(springiness) {
+    : DrThingComponent(engine_world, parent_thing, Comps::Thing_Foliage), m_springiness(springiness) {
 
     if (parent_thing == nullptr) return;
     if (parent_thing->compPhysics() == nullptr) return;

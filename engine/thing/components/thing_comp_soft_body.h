@@ -35,9 +35,9 @@ public:
     DrPointF                soft_size           { 1.0, 1.0 };       // Stores total size of soft body object
     DrPointF                soft_scale          { 1.0, 1.0 };       // Stores scale difference between outside of soft body and ball location
 
-    std::vector<long>       soft_balls;                             // Stores keys of children soft bodies
-    std::vector<DrPointF>   soft_start;                             // Soft body starting positions
-    std::vector<DrPointF>   soft_uv;                                // Soft body texture coordinates
+    std::vector<DrEngineThing*> soft_balls;                         // Stores pointers to children soft bodies
+    std::vector<DrPointF>       soft_start;                         // Soft body starting positions
+    std::vector<DrPointF>       soft_uv;                            // Soft body texture coordinates
 
     bool                    soft_corner         { false };          // Used to store corners of soft bodies to stop from average corners of mesh
     double                  soft_start_angle    { 0.0 };            // Tracks starting angle of 1st soft child

@@ -49,6 +49,9 @@ DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long origina
 
 DrEngineThing::~DrEngineThing() {
     destroy();
+    // Remove physics component first
+    if (compPhysics() != nullptr) { removeComponent(Comps::Thing_Physics); }
+    // Then other componenets
     for (auto &component_pair : m_components) {
         delete component_pair.second;
     }
@@ -143,8 +146,10 @@ void DrEngineThing::removeComponent(std::string component_name) {
         if ((*it).first == component_name) {
             if (component_name == Comps::Thing_3D)                  m_comp_3d =         nullptr;
             if (component_name == Comps::Thing_Settings_Camera)     m_comp_camera =     nullptr;
+            if (component_name == Comps::Thing_Foliage)             m_comp_foliage =    nullptr;
+            if (component_name == Comps::Thing_Physics)             m_comp_physics =    nullptr;
             if (component_name == Comps::Thing_Player)              m_comp_player =     nullptr;
-            if (component_name == Comps::Thing_Soft_Body)           m_comp_soft_body=   nullptr;
+            if (component_name == Comps::Thing_Soft_Body)           m_comp_soft_body=   nullptr;            
             delete (*it).second;
             it = m_components.erase(it);
             continue;
@@ -240,7 +245,7 @@ void DrEngineThing::setAngle(double new_angle) {
         // Set angle of all soft body physics children
         if (this->compSoftBody() != nullptr && compPhysics()->isPhysicsChild() == false) {
             for (size_t i = 0; i < this->compSoftBody()->soft_balls.size(); ++i) {
-                DrEngineThing *next_ball = world()->findPhysicsObjectByKey(this->compSoftBody()->soft_balls[i]);
+                DrEngineThing *next_ball = this->compSoftBody()->soft_balls[i];
                 if (next_ball == this) continue;
                 if (next_ball == nullptr) continue;
                 if (next_ball->compPhysics()->body == nullptr) continue;

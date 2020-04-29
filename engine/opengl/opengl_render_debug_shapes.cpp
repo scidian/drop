@@ -49,8 +49,7 @@ void DrOpenGL::drawDebugShapes() {
                 size_t   point_count = thing->compSoftBody()->soft_outline_indexes.size();
                 if (point_count == 0) continue;
                 for (size_t i = 0; i < point_count; ++i) {
-                    DrEngineWorld *world = m_engine->getCurrentWorld();
-                    DrEngineThing *soft_ball = world->findPhysicsObjectByKey(thing->compSoftBody()->soft_balls[thing->compSoftBody()->soft_outline_indexes[i]]);
+                    DrEngineThing *soft_ball = thing->compSoftBody()->soft_balls[thing->compSoftBody()->soft_outline_indexes[i]];
                     if (soft_ball == nullptr) continue;
 
                     cpVect vert = cpv(soft_ball->compSoftBody()->soft_position.x, soft_ball->compSoftBody()->soft_position.y) + cpv(center.x, center.y);

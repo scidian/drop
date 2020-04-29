@@ -144,6 +144,7 @@ namespace Comps {
     const std::string Thing_Appearance                  = "Appearance";
     const std::string Thing_Special_Effects             = "SpecialEffects";
 
+    const std::string Thing_Foliage                     = "Foliage";
     const std::string Thing_Physics                     = "Physics";
     const std::string Thing_Player                      = "Player";
     const std::string Thing_Soft_Body                   = "SoftBody";

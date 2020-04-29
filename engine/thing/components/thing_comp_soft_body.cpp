@@ -95,7 +95,7 @@ bool ThingCompSoftBody::calculateSoftBodyMesh(Body_Style body_style, Soft_Mesh_S
     double angle_diff = -thing()->getAngle();
     if (physics->canRotate() == false) {
         ///if (body_style == Body_Style::Circular_Blob) {
-            DrEngineThing *first_ball = world()->findPhysicsObjectByKey(soft_balls[0]);
+            DrEngineThing *first_ball = soft_balls[0];
             if (first_ball == nullptr) return false;
             double angle_start = soft_start_angle;
             double angle_now =   Dr::CalcRotationAngleInDegrees(thing()->getPosition(), first_ball->getPosition());
@@ -108,7 +108,7 @@ bool ThingCompSoftBody::calculateSoftBodyMesh(Body_Style body_style, Soft_Mesh_S
     std::vector<DrEngineThing*> balls;
     std::vector<Vertex> vertices;
     for (size_t i = 0; i < soft_balls.size(); ++i) {
-        DrEngineThing *next_ball = world()->findPhysicsObjectByKey(soft_balls[i]);
+        DrEngineThing *next_ball = soft_balls[i];
         if (next_ball == nullptr) return false;
         ThingCompSoftBody *next_body = next_ball->compSoftBody();
         if (next_body == nullptr) return false;

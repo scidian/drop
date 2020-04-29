@@ -191,8 +191,8 @@ DrEngineThing* DrEngineWorld::addSoftBodyCircle(long original_key, long asset_ke
 
 
     // Add Soft Balls
-    std::vector<long>   &ball_list =        central->compSoftBody()->soft_balls;
-    std::vector<size_t> &outline_indexes =  central->compSoftBody()->soft_outline_indexes;
+    std::vector<DrEngineThing*> &ball_list =        central->compSoftBody()->soft_balls;
+    std::vector<size_t>         &outline_indexes =  central->compSoftBody()->soft_outline_indexes;
     for (int circle = 0; circle < number_of_circles; circle++) {
         // Figure out location
         DrPointF ball_at =      Dr::RotatePointAroundOrigin(DrPointF(inside_radius_x, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
@@ -213,23 +213,23 @@ DrEngineThing* DrEngineWorld::addSoftBodyCircle(long original_key, long asset_ke
         DrEngineThing *soft_ball = addBall(this, c_no_key, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
                                             DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                        soft_ball->compPhysics()->setPhysicsParent(central);
-        ball_list.push_back(soft_ball->getKey());
+        ball_list.push_back(soft_ball);
         outline_indexes.push_back(circle);
 
         // Create joints to central body / neighbor body
         DrPointF center_join =   Dr::RotatePointAroundOrigin(DrPointF(center_radius * inner_size, 0), DrPointF(0, 0), (360.0/double(number_of_circles))*double(circle), false);
                  center_join.y = center_join.y * height_width_ratio;
-        DrEngineThing *ball_1 = findPhysicsObjectByKey(ball_list[ball_list.size()-1]);
+        DrEngineThing *ball_1 = ball_list[ball_list.size()-1];
         JoinCenterBodyBlob(m_space, central, ball_1->physics()->body, cpv(center_join.x, center_join.y), stiffness);
         if (ball_list.size() > 1) {
-            DrEngineThing *ball_2 = findPhysicsObjectByKey(ball_list[ball_list.size()-2]);
+            DrEngineThing *ball_2 = ball_list[ball_list.size()-2];
             JoinBodiesBlob(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Circle);
         }
     }
 
     // Create joints from First / Last
-    DrEngineThing *ball_1 = findPhysicsObjectByKey(ball_list[0]);
-    DrEngineThing *ball_2 = findPhysicsObjectByKey(ball_list[ball_list.size()-1]);
+    DrEngineThing *ball_1 = ball_list[0];
+    DrEngineThing *ball_2 = ball_list[ball_list.size()-1];
     JoinBodiesBlob(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Circle);
 
     // Set collision groups so that soft bodies do not collide with each other, but do other things
@@ -307,8 +307,8 @@ DrEngineThing* DrEngineWorld::addSoftBodySquare(long original_key, long asset_ke
 
 
     // Add Soft Balls
-    std::vector<long>   &ball_list =        central->compSoftBody()->soft_balls;
-    std::vector<size_t> &outline_indexes =  central->compSoftBody()->soft_outline_indexes;
+    std::vector<DrEngineThing*> &ball_list =        central->compSoftBody()->soft_balls;
+    std::vector<size_t>         &outline_indexes =  central->compSoftBody()->soft_outline_indexes;
     long count = 0;
     long loop = 0;
     long x =    0;
@@ -336,15 +336,15 @@ DrEngineThing* DrEngineWorld::addSoftBodySquare(long original_key, long asset_ke
         DrEngineThing *soft_ball = addBall(this, c_no_key, c_key_image_empty, Soft_Body_Shape::Circle, ball_at.x + pos_x, ball_at.y + pos_y, pos_z,
                                            DrPointF(empty_scale, empty_scale), DrPointF(1.0, 1.0), friction, bounce, true, true);
                        soft_ball->compPhysics()->setPhysicsParent(central);
-        ball_list.push_back(soft_ball->getKey());
+        ball_list.push_back(soft_ball);
         outline_indexes.push_back(count);
 
         // Create joints to central body / neighbor body
         DrPointF center_join = DrPointF(outside_at.x * radius_multiplier.x, outside_at.y * radius_multiplier.y);
-        DrEngineThing *ball_1 = findPhysicsObjectByKey(ball_list[ball_list.size()-1]);
+        DrEngineThing *ball_1 = ball_list[ball_list.size()-1];
         JoinCenterBodyBlob(m_space, central, ball_1->physics()->body, cpv(center_join.x, center_join.y), stiffness);
         if (ball_list.size() > 1) {
-            DrEngineThing *ball_2 = findPhysicsObjectByKey(ball_list[ball_list.size()-2]);
+            DrEngineThing *ball_2 = ball_list[ball_list.size()-2];
             if      (loop == static_cast<long>(Soft_Sides::Bottom)) {
                 JoinBodiesBlob(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::Bottom); }
             else if (loop == static_cast<long>(Soft_Sides::Right))  {
@@ -378,8 +378,8 @@ DrEngineThing* DrEngineWorld::addSoftBodySquare(long original_key, long asset_ke
     } while (loop < 4);
 
     // Create joints from First / Last
-    DrEngineThing *ball_1 = findPhysicsObjectByKey(ball_list[0]);
-    DrEngineThing *ball_2 = findPhysicsObjectByKey(ball_list[ball_list.size()-1]);
+    DrEngineThing *ball_1 = ball_list[0];
+    DrEngineThing *ball_2 = ball_list[ball_list.size()-1];
     JoinBodiesBlob(m_space, ball_1->physics()->body, ball_2->physics()->body, stiffness, Soft_Body_Shape::Square, Soft_Sides::Left);
 
     // Set collision groups so that soft bodies do not collide with each other, but do other things

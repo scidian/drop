@@ -87,15 +87,14 @@ void ApplyJumpForce(DrEngineThing *thing, cpVect player_vel, cpVect jump_vel, bo
         }
 
         // Apply force to Children Soft Ball Objects
-        for (auto ball_number : thing->compSoftBody()->soft_balls) {
-            DrEngineThing *soft_ball = thing->world()->findPhysicsObjectByKey(ball_number);
-            if (soft_ball == nullptr) return;
-            if (soft_ball->physics() == nullptr) return;
+        for (auto child : thing->compSoftBody()->soft_balls) {
+            if (child == nullptr) return;
+            if (child->physics() == nullptr) return;
             if (initial_jump) {
-                cpBodySetVelocity( soft_ball->physics()->body, player_vel );
+                cpBodySetVelocity( child->physics()->body, player_vel );
             } else {
-                cpBodyApplyForceAtWorldPoint( soft_ball->physics()->body, jump_vel * cpBodyGetMass(soft_ball->physics()->body) * 50.0,
-                                              cpBodyGetPosition(soft_ball->physics()->body) );
+                cpBodyApplyForceAtWorldPoint( child->physics()->body, jump_vel * cpBodyGetMass(child->physics()->body) * 50.0,
+                                              cpBodyGetPosition(child->physics()->body) );
             }
         }
 
@@ -171,7 +170,7 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // Ground Check for physics children of soft bodies
     if (thing->compSoftBody() != nullptr) {
         for (size_t i = 0; i < thing->compSoftBody()->soft_balls.size(); ++i) {
-            DrEngineThing *next_ball = thing->world()->findPhysicsObjectByKey(thing->compSoftBody()->soft_balls[i]);
+            DrEngineThing *next_ball = thing->compSoftBody()->soft_balls[i];
             if (next_ball == nullptr) continue;
             cpBodyEachArbiter(next_ball->physics()->body, cpBodyArbiterIteratorFunc(SelectPlayerGroundNormal), &ground);
         }
@@ -454,13 +453,12 @@ extern void PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
 
     // Apply movement force evenly to Mesh Cloth players
     if (thing->physics()->body_style == Body_Style::Mesh_Blob && (has_key_x || has_key_y)) {
-        for (auto ball_number : thing->compSoftBody()->soft_balls) {
-            DrEngineThing *soft_ball = thing->world()->findPhysicsObjectByKey(ball_number);
-            if (soft_ball == nullptr) return;
-            cpVect soft_ball_velocity = cpBodyGetVelocity(soft_ball->physics()->body);
+        for (auto child : thing->compSoftBody()->soft_balls) {
+            if (child == nullptr) return;
+            cpVect soft_ball_velocity = cpBodyGetVelocity(child->physics()->body);
             double x_vel = cpflerp(soft_ball_velocity.x, velocity.x, 0.25);
             double y_vel = cpflerp(soft_ball_velocity.y, velocity.y, 0.25);
-            cpBodySetVelocity( soft_ball->physics()->body, cpv(x_vel, y_vel));
+            cpBodySetVelocity( child->physics()->body, cpv(x_vel, y_vel));
         }
     }
 

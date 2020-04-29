@@ -97,26 +97,29 @@ ThingCompPhysics::ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *p
 
 ThingCompPhysics::~ThingCompPhysics() {
     // ***** Signal physics children to remove themselves
-    if ((body_style != Body_Style::Rigid_Body) && (thing()->compSoftBody() != nullptr)) {
-        for (auto &ball_number : thing()->compSoftBody()->soft_balls) {
-            if (world() != nullptr) {
-                DrEngineThing *ball = world()->findThingByKey(ball_number);
-                if (ball != nullptr) {
-                    if (ball->compPhysics() != nullptr) {
-                        ball->compPhysics()->setPhysicsParent(nullptr);
-                        ball->remove();
+    if (thing()->compSoftBody() != nullptr) {
+        for (auto &child : thing()->compSoftBody()->soft_balls) {
+            if (child != nullptr) {
+                if (child->compPhysics() != nullptr) {
+                    child->compPhysics()->setPhysicsParent(nullptr);
+                    child->remove();
+                }
+                child = nullptr;
+            }
+        }
+    }
+
+    // ***** Tell physics parent to remove itself
+    if (isPhysicsChild()) {
+        if (getPhysicsParent() != nullptr) {
+            if (getPhysicsParent()->compSoftBody() != nullptr) {
+                for (auto &child : getPhysicsParent()->compSoftBody()->soft_balls) {
+                    if (child != nullptr) {
+                        if (child->getKey() == thing()->getKey()) child = nullptr;
                     }
                 }
             }
-        }
-    // Seperates physics body from parent
-    } else if (isPhysicsChild()) {
-        if (getPhysicsParent() != nullptr) {
-            if (getPhysicsParent()->compSoftBody() != nullptr) {
-                for (auto &ball_number : getPhysicsParent()->compSoftBody()->soft_balls) {
-                    if (ball_number == thing()->getKey()) ball_number = c_no_key;
-                }
-            }
+            getPhysicsParent()->remove();
         }
         setPhysicsParent(nullptr);
     }
@@ -371,7 +374,7 @@ void ThingCompPhysics::setTouchDamagePoints(double damage) {
 void ThingCompPhysics::updatePhysicsChildren() {
     if (thing()->compSoftBody() != nullptr) {
         for (size_t i = 0; i < thing()->compSoftBody()->soft_balls.size(); ++i) {
-            DrEngineThing *next_ball = world()->findThingByKey(thing()->compSoftBody()->soft_balls[i]);
+            DrEngineThing *next_ball = thing()->compSoftBody()->soft_balls[i];
             if (next_ball == nullptr) continue;
             if (next_ball == thing()) continue;
             if (next_ball->compPhysics() == nullptr) continue;

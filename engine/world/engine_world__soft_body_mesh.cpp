@@ -195,7 +195,7 @@ DrEngineThing* DrEngineWorld::addSoftBodyMesh(long original_key, long asset_key,
         }
         // Copy ball data
         balls[i]->physics()->setPhysicsParent(central);
-        central->compSoftBody()->soft_balls.push_back(balls[i]->getKey());
+        central->compSoftBody()->soft_balls.push_back(balls[i]);
         central->compSoftBody()->soft_uv.push_back(   uv_coordinates[i]);
         central->compSoftBody()->soft_start.push_back(starting_positions[i]);
     }
