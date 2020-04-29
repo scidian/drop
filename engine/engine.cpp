@@ -68,15 +68,22 @@ void DrEngine::clearSignals() {
     }
 }
 
-// Returns first found instance of a signal if it exists, otherwise returns 0
-EngineSignals DrEngine::signalList(std::string name) {
-    std::list<DrEngineSignal*> signal_list;
-    for (auto &signal : m_signals) {
-        if (signal->name() == name && signal->getLife() == Signal_Life::Active) {
-            signal_list.push_back(signal);
+// Returns list of signals by name, by key, or by both.
+//      Passing value of "" for name returns all signals with any name
+//      Passing default optional value of c_no_key for thing_key includes all signals with name
+EngineSignals DrEngine::signalList(std::string name, long thing_key) {
+    if (thing_key == c_no_key) {
+        if (name == "")
+            return m_signal_list;
+        else
+            return m_signal_map_by_name[name];
+    } else {
+        if (name == "") {
+            return m_signal_map_by_thing[thing_key];
+        } else {
+            return m_signal_map_by_thing_name[thing_key][name];
         }
     }
-    return signal_list;
 }
 
 // Add signal to stack
@@ -86,6 +93,11 @@ void DrEngine::pushSignal(std::string name, DrVariant value, DrEngineThing *thin
 
 // Sets new signals to active, kills old signals
 void DrEngine::updateSignalList() {
+    m_signal_list.clear();
+    m_signal_map_by_name.clear();
+    m_signal_map_by_thing.clear();
+    m_signal_map_by_thing_name.clear();
+
     for (auto it = m_signals.begin(); it != m_signals.end(); ) {
         if ((*it)->getLife() == Signal_Life::Active) {
             delete (*it);
@@ -93,6 +105,18 @@ void DrEngine::updateSignalList() {
             continue;
         } else if ((*it)->getLife() == Signal_Life::Born) {
             (*it)->setLife(Signal_Life::Active);
+
+            // Push to full list of active things
+            m_signal_list.push_back(*it);
+
+            // Push to map sorted by Signal Names
+            m_signal_map_by_name[(*it)->name()].push_back(*it);
+
+            // If signal is associated with a Thing, push onto list for each Thing
+            if ((*it)->thingA() != nullptr) {
+                m_signal_map_by_thing[(*it)->thingA()->getKey()].push_back(*it);
+                m_signal_map_by_thing_name[(*it)->thingA()->getKey()][(*it)->name()].push_back(*it);
+            }
         }
         it++;
     }

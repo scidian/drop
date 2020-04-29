@@ -31,8 +31,10 @@ DrPointF        g_mouse_position =  DrPointF(0, 0);
 std::string     g_info =    "";
 
 bool            g_bool =    false;
-int             g_int =     1;
 double          g_double =  1.0;
+int             g_int =     1;
+long            g_long =    1;
+size_t          g_size_t =  0;
 
 
 //####################################################################################

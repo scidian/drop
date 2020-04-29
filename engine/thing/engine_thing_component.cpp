@@ -46,12 +46,8 @@ void DrThingComponent::draw() {
 }
 
 // Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
-bool DrThingComponent::update(double time_passed, double time_warp) {
-    (void) time_passed;
-    (void) time_warp;
-
+bool DrThingComponent::update(double, double) {
     m_call_update = false;
-
     return false;
 }
 
@@ -65,13 +61,13 @@ void DrThingComponent::destroy() {
 //##    Component Functions
 //####################################################################################
 // Adds signal to stack
-void DrThingComponent::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b) {
+void DrThingComponent::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr) {
     m_world->getEngine()->pushSignal(name, value, m_thing, thing_b);
 }
 
 // Returns list of signals with name
-EngineSignals DrThingComponent::signalList(std::string name) {
-    return m_world->getEngine()->signalList(name);
+EngineSignals DrThingComponent::signalList(std::string name, long thing_key) {
+    return m_world->engine()->signalList(name, thing_key);
 }
 
 

@@ -16,6 +16,8 @@ namespace Signals {
     // ############################ THINGS
     const std::string ThingCollide              = "Thing Collide";              // struct:  Collision_Info
     const std::string ThingSeperate             = "Thing Seperate";             // struct:  Collision_Info
+    const std::string ThingCancelCollision      = "Thing Cancel Collision";     // struct:  Collision_Info
+
     const std::string ThingDamaged              = "Thing Damaged";              // double:  amount +/- damaged
     const std::string ThingDied                 = "Thing Died";                 // double:  current health
 

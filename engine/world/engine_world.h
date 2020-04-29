@@ -228,7 +228,6 @@ public:
 
     // Thing Finding
     DrEngineThing*      findThingByKey(long key);
-    DrEngineThing*      findPhysicsObjectByKey(long key);
 
 
     // Soft Bodies

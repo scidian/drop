@@ -58,8 +58,8 @@ public:
     virtual void        destroy();                                                                  // Called when component is destroyed
 
     // Signals
-    virtual void        emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr);    // Adds signal to stack
-    EngineSignals       signalList(std::string name);                                                       // Returns list of signals with name
+    virtual void        emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b);      // Adds signal to stack
+    EngineSignals       signalList(std::string name, long thing_key = c_no_key);                    // Returns list of signals with name, optional attached to thing
 
     // Getters
     std::string         name()      { return m_name; }                                              // Returns name of this Component

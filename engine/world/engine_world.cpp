@@ -65,19 +65,6 @@ DrEngineThing* DrEngineWorld::findThingByKey(long key) {
     return nullptr;
 }
 
-// Finds a Object by Unique Key
-DrEngineThing* DrEngineWorld::findPhysicsObjectByKey(long key) {
-    for (auto thing : m_things) {
-        if (thing == nullptr) continue;
-        if (thing->getKey() == key) {
-            if (thing->compPhysics() != nullptr)
-                return thing;
-            else
-                return nullptr;
-        }
-    }
-    return nullptr;
-}
 
 //####################################################################################
 //##    Adds Things to the World

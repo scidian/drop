@@ -54,7 +54,7 @@ typedef std::map<long, DrEngineWorld*>              EngineWorldMap;
 typedef std::map<std::string, DrThingComponent*>    ThingComponents;
 
 
-// Input / Engine Globals - defined in engine_update_player.cpp
+// Input / Engine Globals - defined in engine_world__velocity_player.cpp
 extern double        g_keyboard_x;                      // Used to pass keyboard x button state to static callback functions
 extern double        g_keyboard_y;                      // Used to pass keyboard y button state to static callback functions
 extern bool          g_jump_button;                     // Used to pass jump  button state to static callback functions
@@ -68,9 +68,12 @@ extern DrPointF      g_mouse_position;                  // Stores last known mou
 
 extern std::string   g_info;                            // Used to draw some debug text onto the Engine screen
 
-extern bool          g_bool;                            // Global bool   to use for debuging
-extern int           g_int;                             // Global int    to use for debuging
-extern double        g_double;                          // Global double to use for debuging
+extern bool          g_bool;                            // Global bool   to use for debugging
+extern double        g_double;                          // Global double to use for debugging
+extern int           g_int;                             // Global int    to use for debugging
+extern long          g_long;                            // Global long   to use for debugging
+extern size_t        g_size_t;                          // Global size_t to use for debugging
+
 
 
 #endif // GLOBALS_ENGINE_H

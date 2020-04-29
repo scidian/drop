@@ -286,8 +286,8 @@ SOURCES += \
     engine/world/engine_world__soft_body_blobs.cpp \
     engine/world/engine_world__soft_body_mesh.cpp \
     engine/world/engine_world__update.cpp \
-    engine/world/engine_world__update_player.cpp \
-    engine/world/engine_world__update_velocity.cpp \
+    engine/world/engine_world__velocity_objects.cpp \
+    engine/world/engine_world__velocity_player.cpp \
     header_builds.cpp \
     main.cpp \
     project/dr_project.cpp \

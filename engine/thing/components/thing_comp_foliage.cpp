@@ -97,24 +97,23 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
     (void) time_warp;
 
     // If signal exists with this Foliage that is started colliding with something, apply collision force
-    for (auto &signal : signalList(Signals::ThingCollide)) {
-        if (signal->thingA()->getKey() == thing()->getKey()) {
-            DrEngineThing *thing_a = thing();
-            DrEngineThing *thing_b = signal->thingB();
-            ThingCompPhysics *physics_a = thing_a->physics();
-            ThingCompPhysics *physics_b = thing_b->physics();
-            Collision_Info info = boost::any_cast<Collision_Info>(signal->value().value());
+    for (auto &signal : signalList(Signals::ThingCollide, thing()->getKey())) {
+        DrEngineThing *thing_a = thing();
+        DrEngineThing *thing_b = signal->thingB();
+        ThingCompPhysics *physics_a = thing_a->physics();
+        ThingCompPhysics *physics_b = thing_b->physics();
+        Collision_Info info = boost::any_cast<Collision_Info>(signal->value().value());
 
-            // Only react to an objects first shape that collides (i.e. collision_count == 0)
-            if (info.collision_count == 0) {
-                if (physics_b->body_type != Body_Type::Static) {
-                    double mass =  cpBodyGetMass(physics_a->body) * 2.0;
-                    double force = mass * thing_a->compFoliage()->getSpringiness();
-                    cpVect v = cpvmult(cpBodyGetVelocity(physics_b->body), force);
-                           v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
-                           v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
-                    cpBodyApplyImpulseAtWorldPoint(physics_a->body, v, info.point_a);
-                }
+        // Only react to an objects first shape that collides (i.e. collision_count == 0)
+        if (info.collision_count == 0) {
+            if (physics_b->body_type != Body_Type::Static) {
+                double mass =  cpBodyGetMass(physics_a->body) * 2.0;
+                double force = mass * thing_a->compFoliage()->getSpringiness();
+                cpVect v = cpvmult(cpBodyGetVelocity(physics_b->body), force);
+                       v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
+                       v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
+                cpBodyApplyImpulseAtWorldPoint(physics_a->body, v, info.point_a);
+                emitSignal(Signals::ThingCancelCollision, info, thing_b);
             }
         }
     }

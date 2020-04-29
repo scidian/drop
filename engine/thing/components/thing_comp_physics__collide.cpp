@@ -6,6 +6,7 @@
 //
 //
 #include "engine/engine.h"
+#include "engine/engine_signal.h"
 #include "engine/engine_texture.h"
 #include "engine/thing/components/thing_comp_foliage.h"
 #include "engine/thing/components/thing_comp_physics.h"
@@ -32,6 +33,7 @@ Collision_Info GetCollisionInfo(cpArbiter *arb, ThingCompPhysics *physics_a, Thi
     }
     return info;
 }
+
 
 //####################################################################################
 //##    Collide Begin (BeginFuncWildcard)
@@ -95,6 +97,13 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
     ThingCompPhysics *physics_a = thing_a->physics();
     ThingCompPhysics *physics_b = thing_b->physics();
 
+    // ***** Check if something has tried to cancel this collision elsewhere in game
+    if (signalList(Signals::ThingCancelCollision, thing()->getKey()).size() > 0) {
+        return cpArbiterIgnore(arb);
+    }
+
+
+    // Check health
     if ( physics_a->isAlive() && physics_a->isDying()) return cpTrue;                           // Don't deal damage while dying
     if (!physics_a->isAlive()) return cpFalse;                                                  // If object a is dead, cancel collision
     if (!physics_b->isAlive()) return cpFalse;                                                  // If object b is dead, cancel collision

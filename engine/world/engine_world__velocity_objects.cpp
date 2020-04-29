@@ -30,12 +30,11 @@ extern void ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, 
     // ***** Grab object from User Data
     DrEngineThing *thing = static_cast<DrEngineThing*>(cpBodyGetUserData(body));
     if (thing == nullptr) return;
-    ThingCompPhysics *physics = thing->compPhysics();
-    if (physics == nullptr) return;
+    if (thing->compPhysics() == nullptr) return;
 
     // Adjust object gravity
-    gravity.x *= physics->getGravityScale().x;
-    gravity.y *= physics->getGravityScale().y;
+    gravity.x *= thing->compPhysics()->getGravityScale().x;
+    gravity.y *= thing->compPhysics()->getGravityScale().y;
 
     // ***** Update Velocity - #NOTE: MUST CALL actual Update Velocity function some time during this callback!
     cpBodyUpdateVelocity(body, gravity, damping, dt);

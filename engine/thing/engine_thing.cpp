@@ -77,16 +77,16 @@ void DrEngineThing::init() {
 // Called when Thing is added to world
 void DrEngineThing::addToWorld() {
     Dr::ResetTimer( update_timer );
-    for (auto &component : m_components) {
-        component.second->addToWorld();
+    for (auto &component_pair : m_components) {
+        component_pair.second->addToWorld();
     }
 }
 
 // Called when it is time to Render Thing
 void DrEngineThing::draw() {
-    for (auto &component : m_components) {
-        if (component.second->callDrawFunction()) {
-            component.second->draw();
+    for (auto &component_pair : m_components) {
+        if (component_pair.second->callDrawFunction()) {
+            component_pair.second->draw();
         }
     }
 }
@@ -96,9 +96,9 @@ bool DrEngineThing::update(double time_passed, double time_warp, DrRectF &area) 
     bool remove = false;
 
     // ***** Call update() for each Component
-    for (auto &component : m_components) {
-        if (component.second->callUpdateFunction()) {
-            remove = (remove || component.second->update(time_passed, time_warp));
+    for (auto &component_pair : m_components) {
+        if (component_pair.second->callUpdateFunction()) {
+            remove = (remove || component_pair.second->update(time_passed, time_warp));
         }
     }
 
@@ -198,17 +198,13 @@ void DrEngineThing::setComponentFoliage(ThingCompFoliage *component)    { m_comp
 //##    Signals
 //####################################################################################
 // Adds signal to stack
-void DrEngineThing::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b) {
+void DrEngineThing::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr) {
     m_world->getEngine()->pushSignal(name, value, this, thing_b);
 }
 
 // Returns list of signals with name
-EngineSignals DrEngineThing::signalList(std::string name) {
-    if (name == "") {
-        return m_world->engine()->signalList();
-    } else {
-        return m_world->engine()->signalList(name);
-    }
+EngineSignals DrEngineThing::signalList(std::string name, long thing_key) {
+    return m_world->engine()->signalList(name, thing_key);
 }
 
 

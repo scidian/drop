@@ -86,7 +86,22 @@ bool ThingCompPlayer::update(double time_passed, double time_warp) {
 
     //###########################################
     //##
-    //## Messaging System Test
+    //##    Process Messages
+    //##
+    //###########################################
+    // If signal exists with this Foliage that is started colliding with something, apply collision force
+    for (auto &signal : signalList(Signals::ThingCollide, thing()->getKey())) {
+        DrEngineThing *thing_a = thing();
+        DrEngineThing *thing_b = signal->thingB();
+        ThingCompPhysics *physics_a = thing_a->physics();
+        ThingCompPhysics *physics_b = thing_b->physics();
+        Collision_Info info = boost::any_cast<Collision_Info>(signal->value().value());
+    }
+
+
+    //###########################################
+    //##
+    //##    Message System Testing
     //##
     //###########################################
     /**
