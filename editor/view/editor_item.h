@@ -18,6 +18,7 @@ class DrSettings;
 class DrThing;
 class IEditorRelay;
 
+
 //####################################################################################
 //##    DrGraphicsItem
 //##        A QGraphicsItem for use with our custom QGraphicsScene

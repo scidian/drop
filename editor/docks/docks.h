@@ -32,9 +32,9 @@ namespace Dr {
     QDockWidget*        BuildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) ;
 
     // ***** Handling Shared Dock Widgets
-    void        InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector);
-    void        LockDockWidth(QDockWidget *&dock, int width);
-    void        UnlockDockWidth(QMainWindow *window, QDockWidget *&dock);
+    void                InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector);
+    void                LockDockWidth(QDockWidget *&dock, int width);
+    void                UnlockDockWidth(QMainWindow *window, QDockWidget *&dock);
 
 
 }   // namespace Dr

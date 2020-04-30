@@ -32,29 +32,29 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrOpenGL               *m_opengl                    { nullptr };            // Pointer to QOpenGLWidget instance
-    DrProject              *m_project                   { nullptr };            // Pointer to Project to load into Engine
+    DrOpenGL               *m_opengl                        { nullptr };            // Pointer to QOpenGLWidget instance
+    DrProject              *m_project                       { nullptr };            // Pointer to Project to load into Engine
 
-    // Local Variables
-    EngineSignals           m_signals;                                          // List of all Signals
-    EngineSignals           m_signal_list;                                      // List of active Signals
-    SignalMapByName         m_signal_map_by_name;                               // Map  of active Signals, grouped into lists by Signal Name
-    SignalMapByThing        m_signal_map_by_thing;                              // Map  of active Signals, grouped into lists by Thing Key
-    SignalMapByThingName    m_signal_map_by_thing_name;                         // Map  of active Signals, grouped into lists by Thing Key, then grouped by Signal Name
+    // Signals
+    EngineSignals           m_signals;                                              // List of all Signals
+    EngineSignals               m_signal_list;                                      // List of active Signals
+    SignalMapByName             m_signal_map_by_name;                               // Map  of active Signals, grouped into lists by Signal Name
+    SignalMapByThing            m_signal_map_by_thing;                              // Map  of active Signals, grouped into lists by Thing Key
+    SignalMapByThingName        m_signal_map_by_thing_name;                         // Map  of active Signals, grouped into lists by Thing Key, then grouped by Signal Name
 
-    EngineTextureMap        m_textures;                                         // Map of Textures used for this Engine
+    // Textures
+    EngineTextureMap        m_textures;                                             // Map of Textures used for this Engine
 
-    EngineWorldMap          m_worlds;                                           // Map of Physics Worlds loaded into the Engine
-    long                    m_current_world             { c_no_key };           // Project Key of current world shown in Engine
-    long                    m_current_editor_world      { c_no_key };           // Project Key of current world shown in EDITOR
-
-    // Stage Variables
-    long                    m_stage_key                 { c_no_key };           // If "Play Stage" was clicked in editor, this will hold the Key of Stage
+    // Worlds
+    EngineWorldMap          m_worlds;                                               // Map of Physics Worlds loaded into the Engine
+    long                        m_current_world             { c_no_key };           // Project Key of current world shown in Engine
+    long                        m_current_editor_world      { c_no_key };           // Project Key of current world shown in EDITOR
+    long                        m_stage_key                 { c_no_key };           // If "Play Stage" was clicked in EDITOR, this will hold the Project Key of Stage
 
 
 public:
-    cpBody                 *mouse_body                  { nullptr };            // A Body to use for mouse tracking / grabbing
-    cpConstraint           *mouse_joint                 { nullptr };            // A Joint to use to attach to mouse
+    cpBody                 *mouse_body                      { nullptr };            // A Body to use for mouse tracking / grabbing
+    cpConstraint           *mouse_joint                     { nullptr };            // A Joint to use to attach to mouse
 
 
     // #################### FUNCTIONS ####################

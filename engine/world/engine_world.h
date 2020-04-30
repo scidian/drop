@@ -72,21 +72,22 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrEngine           *m_engine    { nullptr };    // Pointer to Engine
-    DrProject          *m_project   { nullptr };    // Pointer to Project loaded into Engine
-    EngineTextureMap   &m_textures;                 // Reference to map of Textures used for Rendering
+    DrEngine           *m_engine            { nullptr };        // Pointer to Engine
+    DrProject          *m_project           { nullptr };        // Pointer to Project loaded into Engine
+    EngineTextureMap   &m_textures;                             // Reference to map of Textures used for Rendering
 
     // Local Variables
-    long                m_key_generator = 100;      // Variable to hand out unique id key's to all children items, keys start at 1
-    long                m_world_key;                // Key of world from Project represented in this instance of DrEngineWorld
+    long                m_key_generator     { 100 };            // Variable to hand out unique id key's to all children items, keys start at 100
+    long                m_world_key;                            // Key of world from Project that is loaded into this instance of DrEngineWorld
+
 
     // **********
-    //      Every Item In These Projects Maps:
+    //      Every Item In These Containers:
     //          - Is assigned an unique key upon creation from DrEngineWorld::getNextKey()
     //
-    EngineCameraMap     m_cameras;                  // Map of Cameras used for this Engine
-    EngineSpawners      m_spawners;                 // Holds all recurring Spawners loaded into this world
-    EngineThings        m_things;                   // Holds all things being used in this World / cpSpace
+    EngineCameraMap     m_cameras;                              // Map of Cameras used for this Engine
+    EngineSpawners      m_spawners;                             // Holds all recurring Spawners loaded into this world
+    EngineThings        m_things;                               // Holds all things being used in this World / cpSpace
 
 
 
@@ -110,9 +111,10 @@ private:
                                                     //      0 = no bounce, 1.0 will give a “perfect” bounce.
                                                     //      Due to inaccuracies in the simulation using 1.0 or greater is not recommended
 
+
     // Camera Variables
-    long            m_active_camera = c_no_key;                             // Key to active camera in the Engine, c_no_key == No Camera
-    bool            m_switching_cameras = false;                            // True when we want to start tweening towards a new camera
+    long            m_active_camera         { c_no_key };                   // Key to active camera in the Engine, c_no_key == No Camera
+    bool            m_switching_cameras     { false };                      // True when we want to start tweening towards a new camera
 
     double          m_switch_milliseconds;                                  // Used for tweening between cameras
     glm::vec3       m_switch_position,          m_temp_position;            // Used for tweening between cameras

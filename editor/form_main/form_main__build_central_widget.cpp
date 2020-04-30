@@ -45,6 +45,11 @@ void FormMain::buildCentralWidgetMain() {
 }
 
 
+void FormMain::buildCentralWidgetWorldMap() {
+
+}
+
+
 //####################################################################################
 //##    Builds Widgets used for FormMainMode "World Editor"
 //####################################################################################

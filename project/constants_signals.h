@@ -10,28 +10,36 @@
 
 #include <string>
 
+//####################################################################################
+//##    !!!!! #NOTE:    All uncommented Signals should be implmented. When adding uncommented
+//##                    Signals, make sure to implement them to some degree.
+//############################
+
+
 namespace Signals {
 
+    // ############################ THING EVENTS
+    const std::string ThingCollide              = "Thing Collide";              // struct:      Collision_Info
+    const std::string ThingSeperate             = "Thing Seperate";             // struct:      Collision_Info
+    const std::string ThingDamaged              = "Thing Damaged";              // double:      amount +/- damaged
+    const std::string ThingDied                 = "Thing Died";                 // double:      current health
 
-    // ############################ THINGS
-    const std::string ThingCollide              = "Thing Collide";              // struct:  Collision_Info
-    const std::string ThingSeperate             = "Thing Seperate";             // struct:  Collision_Info
-    const std::string ThingCancelCollision      = "Thing Cancel Collision";     // struct:  Collision_Info
 
-    const std::string ThingDamaged              = "Thing Damaged";              // double:  amount +/- damaged
-    const std::string ThingDied                 = "Thing Died";                 // double:  current health
+    // ############################ THING COMMANDS
+    const std::string ThingCancelCollision      = "Cancel Collision";           // struct:      Collision_Info
 
 
     // ############################ INPUT
     // Mouse
-    const std::string MouseLeftDown             = "Mouse Left Down";            // bool:    true
-    const std::string MouseLeftUp               = "Mouse Left Up";              // bool:    true
-    const std::string MouseMiddleDown           = "Mouse Middle Down";          // bool:    true
-    const std::string MouseMiddleUp             = "Mouse Middle Up";            // bool:    true
-    const std::string MouseRightDown            = "Mouse Right Down";           // bool:    true
-    const std::string MouseRightUp              = "Mouse Right Up";             // bool:    true
-    const std::string MouseScroll               = "Mouse Scroll";               // int:     amount scrolled
-    ///const std::string MouseMove                 = "Mouse Move";                 // bool:    true
+    const std::string MouseLeftDown             = "Mouse Left Down";            // DrPointF:    screen position
+    const std::string MouseLeftUp               = "Mouse Left Up";              // DrPointF:    screen position
+    const std::string MouseMiddleDown           = "Mouse Middle Down";          // DrPointF:    screen position
+    const std::string MouseMiddleUp             = "Mouse Middle Up";            // DrPointF:    screen position
+    const std::string MouseRightDown            = "Mouse Right Down";           // DrPointF:    screen position
+    const std::string MouseRightUp              = "Mouse Right Up";             // DrPointF:    screen position
+
+    const std::string MouseScroll               = "Mouse Scroll";               // int:         amount scrolled
+    const std::string MouseMove                 = "Mouse Move";                 // DrPointF:    screen position
     ///const std::string MouseClick                = "Mouse Click";                // bool:    true
     ///const std::string MouseDoubleClick          = "Mouse Double Click";         // bool:    true
 
@@ -41,11 +49,26 @@ namespace Signals {
     ///const std::string TouchMove                 = "Touch Move";                 // int:     touch number
 
 
-
-
 }   // End namespace Signals
 
 
-
-
 #endif // CONSTANTS_SIGNALS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

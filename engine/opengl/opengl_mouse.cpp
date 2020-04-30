@@ -33,7 +33,8 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
-    glm::vec3 vec = mapFromScreen( DrPointF(event->pos().x(), event->pos().y()) );
+    DrPointF  screen_position = DrPointF(event->pos().x(), event->pos().y());
+    glm::vec3 vec = mapFromScreen( screen_position );
     double x = static_cast<double>(vec.x);
     double y = static_cast<double>(vec.y);
     double z = static_cast<double>(vec.z);
@@ -43,11 +44,11 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 
     // ***** Push Signals onto Signal Stack
     if        (event->button() & Qt::LeftButton) {
-        m_engine->pushSignal(Signals::MouseLeftDown, true);
+        m_engine->pushSignal(Signals::MouseLeftDown, screen_position);
     } else if (event->button() & Qt::RightButton) {
-        m_engine->pushSignal(Signals::MouseRightDown, true);
+        m_engine->pushSignal(Signals::MouseRightDown, screen_position);
     } else if (event->button() & Qt::MiddleButton) {
-        m_engine->pushSignal(Signals::MouseMiddleDown, true);
+        m_engine->pushSignal(Signals::MouseMiddleDown, screen_position);
     }
 
     // ***** Handle Demo Specific functions
@@ -254,14 +255,15 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
 void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     if (m_engine->getCurrentWorld()->has_scene == false) return;
     DrEngineWorld *world = m_engine->getCurrentWorld();
+    DrPointF screen_position = DrPointF(event->pos().x(), event->pos().y());
 
     // ***** Push Signals onto Signal Stack
     if        (event->button() & Qt::LeftButton) {
-        m_engine->pushSignal(Signals::MouseLeftUp, true);
+        m_engine->pushSignal(Signals::MouseLeftUp, screen_position);
     } else if (event->button() & Qt::RightButton) {
-        m_engine->pushSignal(Signals::MouseRightUp, true);
+        m_engine->pushSignal(Signals::MouseRightUp, screen_position);
     } else if (event->button() & Qt::MiddleButton) {
-        m_engine->pushSignal(Signals::MouseMiddleUp, true);
+        m_engine->pushSignal(Signals::MouseMiddleUp, screen_position);
     }
 
     // ***** Process mouse up for current demo mode
@@ -294,11 +296,16 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     ///DrEngineWorld *world = m_engine->getCurrentWorld();
 
     // ***** Convert mouse click to world coordinates
+    DrPointF  screen_position = DrPointF(event->pos().x(), event->pos().y());
     glm::vec3 vec = mapFromScreen( DrPointF(event->pos().x(), event->pos().y()) );
     double x = static_cast<double>(vec.x);
     double y = static_cast<double>(vec.y);
     ///double z = static_cast<double>(vec.z());
 
+    // ***** Push Signals onto Signal Stack
+    m_engine->pushSignal(Signals::MouseMove, screen_position);
+
+    // Store mouse position as global for convienience
     g_mouse_position = DrPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
 
     // If running, process mouse move
@@ -326,9 +333,7 @@ void DrOpenGL::wheelEvent(QWheelEvent *event) {
     }
 
     // ***** Push Signals onto Signal Stack
-    if (m_engine->getCurrentWorld()->has_scene) {
-        m_engine->pushSignal(Signals::MouseScroll, event->delta());
-    }
+    m_engine->pushSignal(Signals::MouseScroll, event->delta());
 
     if (event->delta() > 0) { zoomInOut( 10); }
     else                    { zoomInOut(-10); }

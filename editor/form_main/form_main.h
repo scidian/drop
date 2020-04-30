@@ -53,6 +53,8 @@ class DrScene;
 class DrView;
 class DrViewRubberBand;
 class DrFilterHoverHandler;
+class WorldMapScene;
+class WorldMapView;
 
 
 //####################################################################################
@@ -75,6 +77,7 @@ private:
     DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
 
     Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what state FormMain is in
+
 
     // ***** Menu Widgets
     QMenuBar       *menuBar;
@@ -123,12 +126,17 @@ private:
     //       "Editor" Status Bar Widgets
     QLabel         *labelSelected,  *labelInfo,     *labelMousePosition;
 
-
-    // ***** Labels to display info
+    //       "Editor" Labels to display info
     QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
     QLabel         *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;
     QLabel         *labelPosition,  *labelCenter,   *labelScale,    *labelRotate,   *labelZOrder,   *labelPosFlag;
     QLabel         *labelBottom;
+
+
+    // ***** "WorldMap" Widgets
+    WorldMapScene  *sceneWorldMap;
+    WorldMapView   *viewWorldMap;
+
 
 
 public:
@@ -141,7 +149,7 @@ public:
     virtual void        resizeEvent(QResizeEvent *event) override;                                          // Inherited from QWidget
 
 
-    // Interface Relay Implementations
+    //############################ START: Interface Relay Implementations
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
@@ -165,6 +173,8 @@ public:
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
     virtual void        viewCenterOnPoint(QPointF center_point) override;
     virtual void        viewZoomToScale(double zoom_scale) override;
+    //############################ END: Interface Relay Implementations
+
 
 public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
@@ -180,6 +190,7 @@ private:
     void        buildViewToolBar(QWidget *parent);
     void        buildCentralWidgetEditor();
     void        buildCentralWidgetMain();
+    void        buildCentralWidgetWorldMap();
     void        changePalette(Color_Scheme new_color_scheme);
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
     void        initializeFormMain();

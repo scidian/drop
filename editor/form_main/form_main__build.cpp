@@ -60,10 +60,10 @@ void FormMain::initializeFormMain() {
     buildCentralWidgetEditor();
 
     // Build Docks
-    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);
-    dockAssetsEditor =  Dr::BuildDockAssets(   m_project, this, treeAssetEditor, "Assets",
-                                             { DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
-    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);
+    dockAdvisor =       Dr::BuildDockAdvisor(   m_project, this, treeAdvisor);
+    dockAssetsEditor =  Dr::BuildDockAssets(    m_project, this, treeAssetEditor, "Assets",
+                                                { DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
+    dockInspector =     Dr::BuildDockInspector( m_project, this, treeInspector);
     Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 }
 
