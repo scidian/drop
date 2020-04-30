@@ -21,7 +21,7 @@ class IEditorRelay;
 
 //####################################################################################
 //##    EditorItem
-//##        A QGraphicsItem for use with our custom QGraphicsScene (EditorScene)
+//##        A QGraphicsItem (representing DrProject::DrThing) for use with our custom QGraphicsScene (EditorScene)
 //############################
 class EditorItem : public QGraphicsPixmapItem
 {

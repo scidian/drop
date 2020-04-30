@@ -63,7 +63,7 @@ constexpr int    c_angle_step = 15;                                         // A
 
 //####################################################################################
 //##    EditorView
-//##        A sub classed QGraphicsView to show our QGraphicsScene
+//##        A sub classed QGraphicsView to show our QGraphicsScene (EditorScene)
 //############################
 class EditorView : public QGraphicsView
 {

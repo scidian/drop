@@ -5,6 +5,6 @@
 //
 //
 //
-#include "world_map_view.h"
+#include "world_map_scene.h"
 
 

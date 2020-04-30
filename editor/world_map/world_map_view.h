@@ -8,11 +8,37 @@
 #ifndef WORLD_MAP_VIEW_H
 #define WORLD_MAP_VIEW_H
 
+#include <QGraphicsView>
 
-class world_map_view
+// Forward Declarations
+class DrProject;
+class IEditorRelay;
+
+
+//####################################################################################
+//##    WorldMapView
+//##        A sub classed QGraphicsView to show our QGraphicsScene (WorldMapScene)
+//############################
+class WorldMapView : public QGraphicsView
 {
-public:
-    world_map_view();
+    Q_OBJECT
+
+private:
+    // External Borrowed Pointers
+    DrProject              *m_project;                                      // Pointer to currently loaded project
+    IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
+
 };
 
 #endif // WORLD_MAP_VIEW_H
+
+
+
+
+
+
+
+
+
+
+

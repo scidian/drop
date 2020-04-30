@@ -26,7 +26,7 @@ class IEditorRelay;
 
 //####################################################################################
 //##    EditorScene
-//##        Holds items of one stage
+//##        Holds items (DrProject::DrThings) of one stage (DrProject::DrStage)
 //############################
 class EditorScene : public QGraphicsScene
 {
@@ -34,7 +34,7 @@ class EditorScene : public QGraphicsScene
 
 private:
     // External Borrowed Pointers
-    DrProject      *m_project;                              // Pointer to currently loaded project
+    DrProject      *m_project;                              // Pointer to currently loaded Project
     IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
 
     // Local Variables

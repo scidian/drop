@@ -225,6 +225,7 @@ SOURCES += \
     editor/widgets/widgets_combobox.cpp \
     editor/widgets/widgets_slider.cpp \
     editor/widgets/widgets_spin.cpp \
+    editor/world_map/world_map_scene.cpp \
     editor/world_map/world_map_view.cpp \
     engine/debug_flags.cpp \
     engine/engine.cpp \
@@ -980,6 +981,7 @@ HEADERS += \
     editor/view/editor_view.h \
     editor/interface_editor_relay.h \
     editor/widgets/widgets.h \
+    editor/world_map/world_map_scene.h \
     editor/world_map/world_map_view.h \
     engine/constants_engine.h \
     engine/debug_flags.h \
