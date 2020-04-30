@@ -10,13 +10,13 @@
 
 #include "project/settings/settings.h"
 
-// Forward declarations
-class DrGraphicsItem;
+// Forward Declarations
 class DrProject;
 class DrAsset;
 class DrWorld;
 class DrStage;
 class DrThing;
+class EditorItem;
 
 // Local Structs / Enums
 struct Order_Info {
@@ -46,7 +46,7 @@ private:
     // Local Variables
     DrThingType         m_thing_type;                       // Holds type of current Thing
     long                m_asset_key;                        // Holds the associated asset (Asset, Effect, etc) key, this way we know what image to grab for GraphicsView
-    DrGraphicsItem     *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
+    EditorItem         *m_item_in_scene = nullptr;          // Holds a pointer to a QGraphicsItem if this Thing is currently represented in the editor
 
 public:
     // Constructor / Destructor
@@ -62,12 +62,12 @@ public:
     DrStage*        getParentStage()            { return m_parent_stage; }
 
     long            getAssetKey()               { return m_asset_key; }
-    DrGraphicsItem* getDrGraphicsItem()         { return m_item_in_scene; }
+    EditorItem*     getEditorItem()             { return m_item_in_scene; }
     DrThingType     getThingType()              { return m_thing_type; }
 
-    void            setAssetKey(long key)                       { m_asset_key = key; }
-    void            setDrGraphicsItem(DrGraphicsItem *item)     { m_item_in_scene = item; }
-    void            setThingType(DrThingType type)              { m_thing_type = type; }
+    void            setAssetKey(long key)               { m_asset_key = key; }
+    void            setEditorItem(EditorItem *item)     { m_item_in_scene = item; }
+    void            setThingType(DrThingType type)      { m_thing_type = type; }
 
     // Size Limits
     bool            keepSquare()        { return getComponentPropertyValue(Comps::Size_Settings, Props::Size_Keep_Square).toBool(); }

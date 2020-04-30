@@ -24,7 +24,6 @@ class DrProject;
 class FormProgressBox;
 
 
-
 //####################################################################################
 //##    FormProgressBox
 //##        A popup progress box to be used during intense calculations

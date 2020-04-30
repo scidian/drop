@@ -17,17 +17,18 @@
 #include "editor/interface_editor_relay.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
-class DrGraphicsItem;
+// Forward Declarations
 class DrProject;
 class DrStage;
+class EditorItem;
 class IEditorRelay;
 
+
 //####################################################################################
-//##    DrScene
+//##    EditorScene
 //##        Holds items of one stage
 //############################
-class DrScene : public QGraphicsScene
+class EditorScene : public QGraphicsScene
 {
     Q_OBJECT
 
@@ -65,15 +66,15 @@ public:
 
 public:
     // Constructor
-    explicit DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
-    virtual ~DrScene() override;
+    explicit EditorScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
+    virtual ~EditorScene() override;
 
     // Event Overrides, start at Qt Docs for QGraphicsScene Class to find more
     virtual void    keyPressEvent(QKeyEvent *event) override;                              // Inherited from QGraphicsScene
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
     // Scene Functions
-    DrGraphicsItem* addItemToSceneFromThing(DrThing *thing);
+    EditorItem* addItemToSceneFromThing(DrThing *thing);
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 
@@ -139,9 +140,9 @@ public slots:
     void            selectionChanged();
 
     // Undo Commands
-    void            newStageSelected(DrProject *project, DrScene *scene, long old_stage, long new_stage);
-    void            selectionGroupMoved(DrScene *scene, const QPointF &old_position);
-    void            selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
+    void            newStageSelected(DrProject *project, EditorScene *scene, long old_stage, long new_stage);
+    void            selectionGroupMoved(EditorScene *scene, const QPointF &old_position);
+    void            selectionGroupNewGroup(EditorScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
 
 signals:
     void            setViewRect(QRectF new_rect);                           // Connected to setViewRect() function of attached Views

@@ -27,7 +27,7 @@
 //####################################################################################
 //##    Constructor & destructor
 //####################################################################################
-DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
+EditorScene::EditorScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
                  QGraphicsScene(parent),
                  m_project(project),
                  m_editor_relay(editor_relay) {
@@ -52,9 +52,9 @@ DrScene::DrScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay
     // !!!!! END
 }
 
-DrScene::~DrScene() { }
+EditorScene::~EditorScene() { }
 
-void DrScene::clearStageShown() {
+void EditorScene::clearStageShown() {
     setCurrentStageKeyShown(c_no_key);
     setCurrentStageShown(nullptr);
     clear();
@@ -65,7 +65,7 @@ void DrScene::clearStageShown() {
 //##    SLOT's: sceneRectChanged, sceneChanged
 //####################################################################################
 // Connected from SIGNAL: QGraphicsScene::sceneRectChanged
-void DrScene::sceneRectChanged(QRectF new_rect) {
+void EditorScene::sceneRectChanged(QRectF new_rect) {
     Q_UNUSED (new_rect)
     //Dr::SetLabelText(Label_Names::Label_1,
     //                 "SRect X: " + QString::number(round(new_rect.x())) + ", Y: " + QString::number(round(new_rect.y())) +
@@ -73,7 +73,7 @@ void DrScene::sceneRectChanged(QRectF new_rect) {
 }
 
 // Connected from SIGNAL: QGraphicsScene::changed
-void DrScene::sceneChanged(QList<QRectF>) {
+void EditorScene::sceneChanged(QList<QRectF>) {
     QRectF my_rect = sceneRect();
     QRectF items_rect = itemsBoundingRect();
     double buffer = 300;
@@ -96,7 +96,7 @@ void DrScene::sceneChanged(QList<QRectF>) {
 //####################################################################################
 //##    setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
-void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y) {
+void EditorScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y) {
     item->setPos(new_x, new_y);
 
     QRectF      item_rect = item->boundingRect();
@@ -113,19 +113,15 @@ void DrScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin,
         case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
         case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
 
-        // We don't want to process these options, use top left as position
-        case Position_Flags::Move_Item:
-        case Position_Flags::Rotate:
-        case Position_Flags::No_Position:
-        case Position_Flags::Over_Camera:
-            item_pos = item_rect.topLeft();
+        // We don't want to process any other options, use top left as position
+        default:                            item_pos = item_rect.topLeft();
     }
     item_pos = item->sceneTransform().map(item_pos);
 
     setPositionByOrigin(item, item_pos, new_x, new_y);
 }
 
-void DrScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y) {
+void EditorScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y) {
     QPointF     new_pos;
 
     double x_diff = origin_point.x() - new_x;

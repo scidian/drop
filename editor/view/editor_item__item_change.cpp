@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 3/9/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      Handles ItemChange event of custom DrGraphicsItem QGraphicsPixmapItem
+//      Handles ItemChange event of custom EditorItem QGraphicsPixmapItem
 //
 //
 
@@ -63,7 +63,7 @@
 //####################################################################################
 //##    Item Change Event - Allows for auto updating on property changes
 //####################################################################################
-QVariant DrGraphicsItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value) {
     // If this is a temporary item, or not attached to a scene, do not process change
     if (m_temp_only || !m_editor_relay)         return QGraphicsPixmapItem::itemChange(change, value);
 
@@ -89,7 +89,7 @@ QVariant DrGraphicsItem::itemChange(GraphicsItemChange change, const QVariant &v
 
         // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool() == true) {
-            DrScene *drscene = dynamic_cast<DrScene*>(this->scene());
+            EditorScene *drscene = dynamic_cast<EditorScene*>(this->scene());
             QPointF old_select_center, new_select_center, rounded_select_center;
             QPointF adjust_by;
 

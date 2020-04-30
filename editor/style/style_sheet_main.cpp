@@ -71,7 +71,7 @@ QString CustomStyleSheetFormatting() {
         " QSplitter::handle:vertical { image: url(:/assets/gui_misc/splitter_v.png); } "
         " QSplitter::handle:horizontal { image: url(:/assets/gui_misc/splitter_h.png); } "
 
-        // DrView display area
+        // EditorView display area
         " QGraphicsView { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         // Bottom label area

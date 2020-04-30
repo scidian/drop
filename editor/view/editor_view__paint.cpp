@@ -31,7 +31,7 @@
 //####################################################################################
 //##    DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
-void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
+void EditorView::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect)
 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
@@ -48,7 +48,7 @@ void DrView::drawBackground(QPainter *painter, const QRectF &rect) {
     }
 }
 
-void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
+void EditorView::drawForeground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect)
 
     if (m_grid_show_on_top == true) {
@@ -66,9 +66,9 @@ void DrView::drawForeground(QPainter *painter, const QRectF &rect) {
 
 
 //####################################################################################
-//##    PAINT: Main Paint Event for QGraphicsView (DrView)
+//##    PAINT: Main Paint Event for QGraphicsView (EditorView)
 //####################################################################################
-void DrView::paintEvent(QPaintEvent *event) {
+void EditorView::paintEvent(QPaintEvent *event) {
     // ******************** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
 
@@ -161,7 +161,7 @@ void DrView::paintEvent(QPaintEvent *event) {
 //####################################################################################
 //##    PAINT: Draws grid lines
 //####################################################################################
-void DrView::paintGrid(QPainter &painter) {
+void EditorView::paintGrid(QPainter &painter) {
     double point_size = 4;
     if (m_zoom_scale <=  .5) point_size = 3;
     if (m_zoom_scale <= 1.0) point_size = 4;
@@ -240,7 +240,7 @@ void DrView::paintGrid(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Paints Game Frame in Scene Coordinates
 //####################################################################################
-void DrView::paintGameFrame(QPainter &painter) {
+void EditorView::paintGameFrame(QPainter &painter) {
     painter.setBrush(Qt::NoBrush);
     QColor frame_color;
     if (Dr::GetColorScheme() == Color_Scheme::Light) {
@@ -296,7 +296,7 @@ void DrView::paintGameFrame(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Paints Stage Bounds in Scene Coordinates
 //####################################################################################
-void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
+void EditorView::paintStageBounds(QPainter &painter, DrStage *stage) {
     if (stage == nullptr) return;
 
     // Get Stage Size, Game Direction, figure out rotation QGraphicsScene transform
@@ -373,7 +373,7 @@ void DrView::paintStageBounds(QPainter &painter, DrStage *stage) {
 //####################################################################################
 //##    PAINT: Paints tool tip when using OpenGL
 //####################################################################################
-void DrView::paintToolTip(QPainter &painter) {
+void EditorView::paintToolTip(QPainter &painter) {
     int w = m_tool_tip->geometry().width();
     int h = m_tool_tip->geometry().height();
     int left_offset = m_tool_tip->pos().x();
@@ -398,7 +398,7 @@ void DrView::paintToolTip(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Draw our Rubber Band selection box with custom colors
 //####################################################################################
-void DrViewRubberBand::paintEvent(QPaintEvent *) {
+void EditorViewRubberBand::paintEvent(QPaintEvent *) {
     QStylePainter painter(this);
 
     QColor bg = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));

@@ -35,9 +35,9 @@
 //##
 //####################################################################################
 // Forwards a double click as just another mouse down
-void DrView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
+void EditorView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
 
-void DrView::mousePressEvent(QMouseEvent *event) {
+void EditorView::mousePressEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
     QMutexLocker lock_scene(&my_scene->scene_mutex);
@@ -140,7 +140,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                 //                           if the item clicked was already selected (but the Inspector was showing something
                 //                           else like an asset or something)
                 //                    #NOTE: If object was not already selected the Inspector will be updated when the
-                //                           DrScene::selectionChanged slot fires
+                //                           EditorScene::selectionChanged slot fires
                 if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
                     if (m_origin_item != nullptr && origin_item_settings != nullptr) {
 
@@ -153,7 +153,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
                         // ***** Process press event for item movement (Translation)
                         if (origin_item_settings->isLocked() == false) {
                             // Disable item changes before messing with Z-Order
-                            DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(m_origin_item);
+                            EditorItem *graphics_item = dynamic_cast<EditorItem*>(m_origin_item);
                             bool flags_enabled_before = false;
                             if (graphics_item) {
                                 flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
@@ -235,7 +235,7 @@ void DrView::mousePressEvent(QMouseEvent *event) {
 //##    SLOT:   Fired from single shot timer when mouse is down,
 //##            starts tooltip after x milliseconds if user pressed mouse but hasn't started moving it yet
 //####################################################################################
-void DrView::checkTranslateToolTipStarted() {
+void EditorView::checkTranslateToolTipStarted() {
     if (m_view_mode == View_Mode::Translating) {
         if (m_tool_tip->getTipType() != View_Mode::Translating) {
             my_scene->updateSelectionBox();
@@ -252,10 +252,10 @@ void DrView::checkTranslateToolTipStarted() {
 //##        Looks through Items and if it finds an Item representing DrThing argument, clears selection and sets
 //##        Object Inspector to that Item. Makes it easier to interact with camera settings without selection box in the way
 //####################################################################################
-QGraphicsItem* DrView::setInspectorClearSelection(DrThing *thing) {
+QGraphicsItem* EditorView::setInspectorClearSelection(DrThing *thing) {
     QGraphicsItem *found_item = nullptr;
     for (auto &item : items()) {
-        DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(item);
+        EditorItem *graphics_item = dynamic_cast<EditorItem*>(item);
         if (graphics_item == nullptr) continue;
         if (graphics_item->getThing() == thing) {
             found_item = graphics_item;

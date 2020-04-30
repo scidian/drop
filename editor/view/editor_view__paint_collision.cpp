@@ -44,7 +44,7 @@ DrColor editorThingDebugColor(DrThing *thing) {
 //####################################################################################
 //##    PAINT: Paints Collision Shapes of all Things in Stage
 //####################################################################################
-void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
+void EditorView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
     for (auto &thing_pair : stage->getThingMap()) {
         DrThing *thing = thing_pair.second;
         if (thing == nullptr) continue;
@@ -173,7 +173,7 @@ void DrView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
 //####################################################################################
 //##    Draws the health of each object using QPainter
 //####################################################################################
-void DrView::paintDebugHealth(QPainter &painter, DrStage *stage) {
+void EditorView::paintDebugHealth(QPainter &painter, DrStage *stage) {
     QFont health_font("Avenir", static_cast<int>(18 * m_zoom_scale));
     health_font.setBold(true);
     painter.setPen(Qt::NoPen);

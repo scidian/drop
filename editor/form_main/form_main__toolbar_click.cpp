@@ -113,7 +113,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
                                                   std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) };
 
         for (auto item : sceneEditor->getSelectionItems()) {
-            DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(item);
+            EditorItem *graphics_item = dynamic_cast<EditorItem*>(item);
             if (graphics_item == nullptr) continue;
             DrThing *thing = graphics_item->getThing();
             if (thing == nullptr) continue;
@@ -181,7 +181,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
         engine->show();
 
     } else if (clicked == Buttons_Play::Play_Stage) {
-        long only_stage_key = this->getStageView()->getDrScene()->getCurrentStageKeyShown();
+        long only_stage_key = this->getStageView()->getEditorScene()->getCurrentStageKeyShown();
 
         DrStage *stage = m_project->findStageFromKey(only_stage_key);
         if (stage != nullptr) {

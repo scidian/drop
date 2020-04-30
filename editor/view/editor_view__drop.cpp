@@ -34,7 +34,7 @@
 //####################################################################################
 //##    Drag Handling
 //####################################################################################
-void DrView::dragEnterEvent(QDragEnterEvent *event) {
+void EditorView::dragEnterEvent(QDragEnterEvent *event) {
     if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {                // From asset tree
         m_drop_might_happen = true;
         m_drop_location = roundToGrid( mapToScene(event->pos()) );
@@ -44,14 +44,14 @@ void DrView::dragEnterEvent(QDragEnterEvent *event) {
     } else  event->ignore();
 }
 
-void DrView::dragLeaveEvent(QDragLeaveEvent *event) {
+void EditorView::dragLeaveEvent(QDragLeaveEvent *event) {
     // Make sure we stop drawing drop locaiton, calling update to repaint
     m_drop_might_happen = false;
     update();
     event->accept();
 }
 
-void DrView::dragMoveEvent(QDragMoveEvent *event) {
+void EditorView::dragMoveEvent(QDragMoveEvent *event) {
     if (event->mimeData()->hasFormat("application/x-drop-asset-data")) {                // From asset tree
         m_drop_might_happen = true;
 
@@ -74,7 +74,7 @@ void DrView::dragMoveEvent(QDragMoveEvent *event) {
 //####################################################################################
 //##    Drop Handling - Accept an asset fropped from the Asset Tree
 //####################################################################################
-void DrView::dropEvent(QDropEvent *event) {
+void EditorView::dropEvent(QDropEvent *event) {
     // ***** Stop drawing crosshairs under item drop
     m_drop_might_happen = false;
 

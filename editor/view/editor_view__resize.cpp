@@ -29,7 +29,7 @@
 //####################################################################################
 //##    Starts resizing mode
 //####################################################################################
-void DrView::startResizeSelection(QPoint mouse_in_view, bool use_tool_tip) {
+void EditorView::startResizeSelection(QPoint mouse_in_view, bool use_tool_tip) {
     // Figure out starting orientation
     m_pre_resize_scale = QPointF(1, 1);
     if (my_scene->getSelectionScale().x() < 0) m_pre_resize_scale.setX(-1);
@@ -41,8 +41,8 @@ void DrView::startResizeSelection(QPoint mouse_in_view, bool use_tool_tip) {
     for (auto child : my_scene->getSelectionItems()) {
         child->setData(User_Roles::Pre_Resize_Scale,    (child->data(User_Roles::Scale).toPointF()) );
         child->setData(User_Roles::Pre_Rotate_Rotation, (child->data(User_Roles::Rotation).toDouble()) );
-        DrGraphicsItem *child_as_item = dynamic_cast<DrGraphicsItem*>(child);
-        DrGraphicsItem *graphics_item = new DrGraphicsItem(m_project, child_as_item->getEditorRelay(), child_as_item->getThing(), true);
+        EditorItem *child_as_item = dynamic_cast<EditorItem*>(child);
+        EditorItem *graphics_item = new EditorItem(m_project, child_as_item->getEditorRelay(), child_as_item->getThing(), true);
         graphics_item->setVisible(false);
         graphics_item->setEnabled(false);
         graphics_item->setPos(child_as_item->pos());
@@ -72,7 +72,7 @@ void DrView::startResizeSelection(QPoint mouse_in_view, bool use_tool_tip) {
 //####################################################################################
 //##    Call appropriate resize function
 //####################################################################################
-void DrView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
+void EditorView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
     // Figure out what sides to use for x axis and y axis
     switch (m_start_resize_grip) {
         case Position_Flags::Top_Left:      m_do_x = X_Axis::Left;    m_do_y = Y_Axis::Top;     break;
@@ -90,7 +90,7 @@ void DrView::resizeSelection(QPointF mouse_in_scene, bool use_exact_scale, QPoin
 
 
 // Finds the ooposite side name of side passed in, no error catch if corner passed in
-Position_Flags DrView::findOppositeSide(Position_Flags start_side) {
+Position_Flags EditorView::findOppositeSide(Position_Flags start_side) {
     switch (start_side) {
         case Position_Flags::Top:          return Position_Flags::Bottom;
         case Position_Flags::Bottom:       return Position_Flags::Top;
@@ -109,7 +109,7 @@ Position_Flags DrView::findOppositeSide(Position_Flags start_side) {
 //####################################################################################
 //##    Main resize function
 //####################################################################################
-void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
+void EditorView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use) {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
 
@@ -293,13 +293,13 @@ void DrView::resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_sc
 //####################################################################################
 //##    Remove shearing from item during Resize function
 //####################################################################################
-void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
+void EditorView::removeShearing(QGraphicsItem *item, QPointF scale) {
 
     // Figure out which item in invisible cloned resize group to base transform off of
-    DrGraphicsItem *original = dynamic_cast<DrGraphicsItem*>(item);
-    DrGraphicsItem *clone = nullptr;
+    EditorItem *original = dynamic_cast<EditorItem*>(item);
+    EditorItem *clone = nullptr;
     for (auto child : m_group->childItems()) {
-        DrGraphicsItem *child_as_item = dynamic_cast<DrGraphicsItem*>(child);
+        EditorItem *child_as_item = dynamic_cast<EditorItem*>(child);
         if (child_as_item->getThingKey() == original->getThingKey()) {
             clone = child_as_item;
             break;
@@ -412,8 +412,8 @@ void DrView::removeShearing(QGraphicsItem *item, QPointF scale) {
 //####################################################################################
 //##    Checks if any of these Items should have to remain Square shaped
 //####################################################################################
-bool DrView::containsSquareItem(QGraphicsItem *item) {
-    DrGraphicsItem *original = dynamic_cast<DrGraphicsItem*>(item);
+bool EditorView::containsSquareItem(QGraphicsItem *item) {
+    EditorItem *original = dynamic_cast<EditorItem*>(item);
     if (original == nullptr) return false;
 
     DrThing *thing = original->getThing();

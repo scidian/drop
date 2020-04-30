@@ -22,7 +22,7 @@
 class DrThing;
 class DrProject;
 class DrSettings;
-class DrView;
+class EditorView;
 class TreeAssets;
 class TreeInspector;
 class TreeProject;
@@ -46,7 +46,7 @@ public:
     virtual TreeAssets*     getAssetTree() = 0;
     virtual TreeInspector*  getInspector() = 0;
     virtual TreeProject*    getProjectTree() = 0;
-    virtual DrView*         getStageView() = 0;
+    virtual EditorView*     getStageView() = 0;
 
     // Editor Functions
     virtual void        buildAssetTree() = 0;

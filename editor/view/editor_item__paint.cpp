@@ -22,7 +22,7 @@
 //####################################################################################
 //##    Custom Paint Handling
 //####################################################################################
-void DrGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
+void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
 
@@ -85,7 +85,7 @@ void DrGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
 }
 
 
-QColor DrGraphicsItem::getColorAtPoint(QPointF at_local_point) {
+QColor EditorItem::getColorAtPoint(QPointF at_local_point) {
     QImage image = this->pixmap().toImage();
 
     if (image.rect().contains(at_local_point.toPoint()))
@@ -94,7 +94,7 @@ QColor DrGraphicsItem::getColorAtPoint(QPointF at_local_point) {
         return QColor(0, 0, 0, 0);
 }
 
-QColor DrGraphicsItem::getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view) {
+QColor EditorItem::getColorAtPoint(QPointF at_view_point, QGraphicsView *mouse_over_view) {
     QPointF in_scene = mouse_over_view->mapToScene(at_view_point.toPoint());
     QPointF in_object = this->mapFromScene(in_scene);
     return this->getColorAtPoint(in_object);

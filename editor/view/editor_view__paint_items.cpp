@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 3/9/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrView Paint Functions that paint on / around QGraphicsItems
+//      EditorView Paint Functions that paint on / around QGraphicsItems
 //
 //
 #include <QDebug>
@@ -28,7 +28,7 @@ const double c_square_radius = 3.5;             // Determines size of square / c
 //####################################################################################
 //##    PAINT: Paints outline around every selected item
 //####################################################################################
-void DrView::paintItemOutlines(QPainter &painter) {
+void EditorView::paintItemOutlines(QPainter &painter) {
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     QBrush pen_brush( Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) );
@@ -66,7 +66,7 @@ void DrView::paintItemOutlines(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Paints bounding box onto view
 //####################################################################################
-void DrView::paintBoundingBox(QPainter &painter) {
+void EditorView::paintBoundingBox(QPainter &painter) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::Antialiasing, false);
     painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 1));
@@ -88,7 +88,7 @@ void DrView::paintBoundingBox(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Paints handles onto view
 //####################################################################################
-void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
+void EditorView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
     painter.resetTransform();
 
     QList<Position_Flags> handles {
@@ -154,7 +154,7 @@ void DrView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
 //####################################################################################
 //##    PAINT: Paints lines showing rotation while rotating
 //####################################################################################
-void DrView::paintGroupAngle(QPainter &painter, double angle) {
+void EditorView::paintGroupAngle(QPainter &painter, double angle) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::Antialiasing, false);
 
@@ -187,7 +187,7 @@ void DrView::paintGroupAngle(QPainter &painter, double angle) {
 //####################################################################################
 //##    PAINT: Paints cross in the center of item / selection box while translating
 //####################################################################################
-void DrView::paintItemCenters(QPainter &painter) {
+void EditorView::paintItemCenters(QPainter &painter) {
     // Don't draw if snap to grid is off
     if (m_grid_should_snap == false) return;
     if (m_allow_movement == false) return;
@@ -219,7 +219,7 @@ void DrView::paintItemCenters(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Paints the actual crosshairs for function paintItemCenters
 //####################################################################################
-void DrView::paintCrossHairs(QPainter &painter, QPoint center) {
+void EditorView::paintCrossHairs(QPainter &painter, QPoint center) {
     QTransform t = QTransform()
             .translate(center.x(), center.y())
             .scale(m_grid_scale.x(), m_grid_scale.y())

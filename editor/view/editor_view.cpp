@@ -27,13 +27,14 @@
 //####################################################################################
 //##    Constructor & destructor
 //####################################################################################
-DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay) :
-               QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
+EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_scene, IEditorRelay *editor_relay)
+    : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
+
     // Initialize rubber band object used as a selection box
-    m_rubber_band = new DrViewRubberBand(QRubberBand::Shape::Rectangle, this);
+    m_rubber_band = new EditorViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
     // Initialize tool tip object used for displaying some helpful info
-    m_tool_tip = new DrViewToolTip(this);
+    m_tool_tip = new EditorViewToolTip(this);
     m_tool_tip->hide();
 
     m_over_handle = Position_Flags::No_Position;
@@ -50,25 +51,25 @@ DrView::DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditor
     connect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(my_scene, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
 
-    connect(my_scene, &DrScene::updateGrid,  this, [this]() { updateGrid(); });
-    connect(my_scene, &DrScene::updateViews, this, [this]() { update(); });
-    connect(my_scene, &DrScene::setViewRect, this, [this](QRectF new_rect) { setViewRect(new_rect); });
+    connect(my_scene, &EditorScene::updateGrid, this, [this]() { updateGrid(); });
+    connect(my_scene, &EditorScene::updateViews, this, [this]() { update(); });
+    connect(my_scene, &EditorScene::setViewRect, this, [this](QRectF new_rect) { setViewRect(new_rect); });
 
-    connect(this,   SIGNAL(selectionGroupMoved(DrScene*, QPointF)),
-            my_scene, SLOT(selectionGroupMoved(DrScene*, QPointF)));
+    connect(this,   SIGNAL(selectionGroupMoved(EditorScene*, QPointF)),
+            my_scene, SLOT(selectionGroupMoved(EditorScene*, QPointF)));
 
-    connect(this,   SIGNAL(selectionGroupNewGroup(DrScene*, QList<DrThing*>, QList<DrThing*>)),
-            my_scene, SLOT(selectionGroupNewGroup(DrScene*, QList<DrThing*>, QList<DrThing*>)) );
+    connect(this,   SIGNAL(selectionGroupNewGroup(EditorScene*, QList<DrThing*>, QList<DrThing*>)),
+            my_scene, SLOT(selectionGroupNewGroup(EditorScene*, QList<DrThing*>, QList<DrThing*>)) );
 
 }
 
 
-DrView::~DrView() {
+EditorView::~EditorView() {
     delete m_rubber_band;
     delete m_tool_tip;
 }
 
-void DrView::focusInEvent(QFocusEvent *event) {
+void EditorView::focusInEvent(QFocusEvent *event) {
     m_editor_relay->setActiveWidget(Editor_Widgets::Stage_View);
     QGraphicsView::focusInEvent(event);
 }
@@ -79,7 +80,7 @@ void DrView::focusInEvent(QFocusEvent *event) {
 //##    Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################
 // SLOT: Connected from scene().sceneRectChanged
-void DrView::sceneRectChanged(QRectF new_rect) {
+void EditorView::sceneRectChanged(QRectF new_rect) {
     double adjust = 4000;
     QRectF adjusted_rect = new_rect.adjusted(-adjust, -adjust, adjust, adjust);
     this->setSceneRect( adjusted_rect );
@@ -91,18 +92,18 @@ void DrView::sceneRectChanged(QRectF new_rect) {
     updateSelectionBoundingBox(1);
     updateGrid();
 }
-void DrView::setViewRect(QRectF new_rect) { this->setSceneRect(new_rect); }
+void EditorView::setViewRect(QRectF new_rect)   { this->setSceneRect(new_rect); }
 
 // SLOTs: Connected from scene().changed and scene().selectionChanged
-void DrView::sceneChanged(QList<QRectF>) { updateSelectionBoundingBox(7); }
-void DrView::selectionChanged()          { updateSelectionBoundingBox(2); }
+void EditorView::sceneChanged(QList<QRectF>)    { updateSelectionBoundingBox(7); }
+void EditorView::selectionChanged()             { updateSelectionBoundingBox(2); }
 
 // EVENT: Called when viewport is dragged or scrollbars are used
-void DrView::scrollContentsBy(int dx, int dy) {
+void EditorView::scrollContentsBy(int dx, int dy) {
     QGraphicsView::scrollContentsBy(dx, dy);
     updateSelectionBoundingBox(3);
-    updateGrid();                       // Updates grid when view is dragged or zoomed, also called from zoom
-                                        // function (zoomInOut()) in case there are no scrollbars due to zoomed too far out
+    updateGrid();                               // Updates grid when view is dragged or zoomed, also called from zoom
+                                                // function (zoomInOut()) in case there are no scrollbars due to zoomed too far out
 }
 
 
@@ -110,7 +111,7 @@ void DrView::scrollContentsBy(int dx, int dy) {
 //##    Recenters view when window is resized (after FormMain has loaded and view
 //##    has shown a scene at least once)
 //####################################################################################
-void DrView::resizeEvent(QResizeEvent *event) {
+void EditorView::resizeEvent(QResizeEvent *event) {
     QGraphicsView::resizeEvent(event);
 
     if (Dr::CheckDoneLoading() == false) return;
@@ -125,7 +126,7 @@ void DrView::resizeEvent(QResizeEvent *event) {
 //####################################################################################
 //##    Returns current view mode as QString
 //####################################################################################
-QString DrView::currentViewModeAsString() {
+QString EditorView::currentViewModeAsString() {
     switch (m_view_mode) {
         case View_Mode::None:               return "None";
         case View_Mode::Disable_Update:     return "Disable Updates";
@@ -147,7 +148,7 @@ QString DrView::currentViewModeAsString() {
 //##    Recalculates corner and sides handles,
 //##    Usually called after View or Item changes
 //####################################################################################
-void DrView::updateSelectionBoundingBox(int called_from) {
+void EditorView::updateSelectionBoundingBox(int called_from) {
     // Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
     if (m_hide_bounding == true) return;
@@ -275,12 +276,12 @@ void DrView::updateSelectionBoundingBox(int called_from) {
 }
 
 // Helper function, returns a RectF around center point with sides length of rect_size
-QRectF DrView::rectAtCenterPoint(QPoint center, double rect_size) {
+QRectF EditorView::rectAtCenterPoint(QPoint center, double rect_size) {
     return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
 
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners
-double DrView::calculateCornerAngle(double angle1, double angle2) {
+double EditorView::calculateCornerAngle(double angle1, double angle2) {
     double bigger_angle = angle1;
     if (angle1 < angle2) bigger_angle += 360;
 

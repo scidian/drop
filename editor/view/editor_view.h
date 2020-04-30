@@ -18,17 +18,17 @@
 #include "editor/enums_editor.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
+class DrSettings;
 class DrStage;
 class DrThing;
-class DrGraphicsItem;
-class SelectionGroup;
+class EditorItem;
+class EditorScene;
+class EditorViewRubberBand;
+class EditorViewToolTip;
 class IEditorRelay;
-class DrScene;
-class DrSettings;
-class DrViewRubberBand;
-class DrViewToolTip;
+class SelectionGroup;
 
 
 //####################################################################################
@@ -62,10 +62,10 @@ constexpr int    c_angle_step = 15;                                         // A
 
 
 //####################################################################################
-//##    DrView
+//##    EditorView
 //##        A sub classed QGraphicsView to show our QGraphicsScene
 //############################
-class DrView : public QGraphicsView
+class EditorView : public QGraphicsView
 {
     Q_OBJECT
 
@@ -74,7 +74,7 @@ private:
     DrProject              *m_project;                                      // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
-    DrScene                *my_scene;                                       // Holds the scene() this view is set to as a DrScene Class
+    EditorScene            *my_scene;                                       // Holds the scene() this view is set to as a EditorScene Class
 
     // Local Variables
     Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;             // Tracks current view mouse mode
@@ -94,7 +94,7 @@ private:
     QRectF                  m_grid_view_rect;                               // Holds the desired area we wish to draw lines or dots
     bool                    m_grid_needs_redraw = true;                     // Flag used to mark grid for redrawing during next paintEvent
 
-    // Grid Style Variables (currently re-populated from DrView::updateGrid by way of updateEditorWidgetsAfterItemChange -> DrScene::updateChangesInScene)
+    // Grid Style Variables (currently re-populated from EditorView::updateGrid by way of updateEditorWidgetsAfterItemChange -> EditorScene::updateChangesInScene)
     Grid_Style              m_grid_style        { Grid_Style::Lines };      // Grid type to display
     QPointF                 m_grid_origin       { 0, 0 };                   // Origin point of grid in scene
     QPointF                 m_grid_size         { 50, 50 };                 // Grid size
@@ -131,7 +131,7 @@ private:
     QGraphicsItem                      *m_origin_item;                      // Stores top item under mouse (if any) on mouse down event
 
     // Tool Tip Variables
-    DrViewToolTip                      *m_tool_tip;                         // Holds our view's custom Tool Tip box
+    EditorViewToolTip                  *m_tool_tip;                         // Holds our view's custom Tool Tip box
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPointF>   m_selection_points;                 // Stores all points of the current selection box
@@ -143,7 +143,7 @@ private:
     QPoint                              m_last_mouse_pos;                   // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
-    DrViewRubberBand                   *m_rubber_band;                      // Holds our view's RubberBand object
+    EditorViewRubberBand               *m_rubber_band;                      // Holds our view's RubberBand object
     QList<QGraphicsItem*>               m_items_start;                      // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>               m_items_keep;                       // Stores list of items to keep on top of rubber band items (with control key)
 
@@ -194,8 +194,8 @@ private:
 
 public:
     // Constructor
-    explicit DrView(QWidget *parent, DrProject *project, DrScene *from_scene, IEditorRelay *editor_relay);
-    virtual ~DrView() override;
+    explicit EditorView(QWidget *parent, DrProject *project, EditorScene *from_scene, IEditorRelay *editor_relay);
+    virtual ~EditorView() override;
 
     // Event Overrides - Paint
     virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;
@@ -291,17 +291,17 @@ public:
 
 
     // Getters / Setters
-    View_Mode       currentViewMode() { return m_view_mode; }
+    View_Mode       currentViewMode()                   { return m_view_mode; }
     QString         currentViewModeAsString();
-    double          currentZoomLevel() { return m_zoom_scale; }
-    bool            hasShownAScene() const { return m_flag_has_shown_a_scene_yet; }
-    DrScene*        getDrScene() { return my_scene; }
-    IEditorRelay*   getEditorRelay() { return m_editor_relay; }
-    Mouse_Mode      getMouseMode() { return m_mouse_mode; }
-    void            setHasShownAScene(bool has) { m_flag_has_shown_a_scene_yet = has; }
+    double          currentZoomLevel()                  { return m_zoom_scale; }
+    bool            hasShownAScene() const              { return m_flag_has_shown_a_scene_yet; }
+    EditorScene*    getEditorScene()                    { return my_scene; }
+    IEditorRelay*   getEditorRelay()                    { return m_editor_relay; }
+    Mouse_Mode      getMouseMode()                      { return m_mouse_mode; }
+    void            setHasShownAScene(bool has)         { m_flag_has_shown_a_scene_yet = has; }
     void            setMouseCursorFromAngle(double angle_in_degrees);
-    void            setMouseMode(Mouse_Mode mode) { m_mouse_mode = mode; }
-    void            setViewMode(View_Mode mode) { m_view_mode = mode; }
+    void            setMouseMode(Mouse_Mode mode)       { m_mouse_mode = mode; }
+    void            setViewMode(View_Mode mode)         { m_view_mode = mode; }
     void            spaceBarDown();
     void            spaceBarUp();
 
@@ -317,8 +317,8 @@ public slots:
 
 signals:
     // Signals used to fire UndoStack Commands
-    void    selectionGroupMoved(DrScene *scene, const QPointF &old_position);
-    void    selectionGroupNewGroup(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
+    void    selectionGroupMoved(EditorScene *scene, const QPointF &old_position);
+    void    selectionGroupNewGroup(EditorScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list);
 
     // Mouse Mode Hand Signals
     void    updateCenterPointX(double new_value);                       // Emitted to update View Tool Bar Hand Mode Center Point X Coordinate
@@ -332,15 +332,14 @@ signals:
 
 
 //####################################################################################
-//##    DrViewRubberBand
+//##    EditorViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
-class DrViewRubberBand : public QRubberBand
+class EditorViewRubberBand : public QRubberBand
 {
-
 public:
     // Constructor
-    DrViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
+    EditorViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -349,10 +348,10 @@ public:
 
 
 //####################################################################################
-//##    DrViewToolTip
+//##    EditorViewToolTip
 //##        A parentless widget to be used as a custom tooltip
 //############################
-class DrViewToolTip : public QWidget
+class EditorViewToolTip : public QWidget
 {
 private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
@@ -366,7 +365,7 @@ private:
 
 public:
     // Constructor
-    DrViewToolTip(QWidget *parent = nullptr);
+    EditorViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;

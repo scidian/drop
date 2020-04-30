@@ -28,7 +28,7 @@
 //####################################################################################
 //##    Starts rotating mode
 //####################################################################################
-void DrView::startRotateSelection(QPoint mouse_in_view, bool use_tool_tip) {
+void EditorView::startRotateSelection(QPoint mouse_in_view, bool use_tool_tip) {
     // Store starting rotation of current selection group
     m_rotate_start_angle = my_scene->getSelectionAngle();
 
@@ -47,7 +47,7 @@ void DrView::startRotateSelection(QPoint mouse_in_view, bool use_tool_tip) {
 //####################################################################################
 //##    Main Rotation Function
 //####################################################################################
-void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double angle_to_use) {
+void EditorView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double angle_to_use) {
 
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
@@ -144,12 +144,12 @@ void DrView::rotateSelection(QPointF mouse_in_view, bool use_exact_angle, double
 //####################################################################################
 //##    Extract Angle, Scale and Skew from Transforms
 //####################################################################################
-double DrView::extractAngleFromTransform(QTransform &from_transform) {
+double EditorView::extractAngleFromTransform(QTransform &from_transform) {
     QTransform t = from_transform;
     return qRadiansToDegrees(qAtan2(t.m12(), t.m11()));
 }
 
-Transform_Data DrView::decomposeTransform(QTransform &from_transform, bool qr_type) {
+Transform_Data EditorView::decomposeTransform(QTransform &from_transform, bool qr_type) {
     double a = from_transform.m11();    double c = from_transform.m12();
     double b = from_transform.m21();    double d = from_transform.m22();
 

@@ -31,7 +31,7 @@
 //##    Called after some change has been made to items on another widget besides
 //##    the QGraphicsView, updates the items in the scene
 //####################################################################################
-void DrScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs) {
+void EditorScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs) {
     if (changed_items.empty()) return;
 
     for (auto settings_item : changed_items) {
@@ -60,9 +60,9 @@ void DrScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::li
 //##    Updates all items Z Values
 //##        Needs to update them all since the sub ordering can change them all if something moves to back / front
 //####################################################################################
-void DrScene::updateItemZValues() {
+void EditorScene::updateItemZValues() {
     for (auto &item : items()) {
-        DrGraphicsItem *graphics_item = dynamic_cast<DrGraphicsItem*>(item);
+        EditorItem *graphics_item = dynamic_cast<EditorItem*>(item);
         if (graphics_item == nullptr) continue;
         if (graphics_item->isTempOnly()) continue;
 
@@ -83,13 +83,13 @@ void DrScene::updateItemZValues() {
 //####################################################################################
 //##    Updates the item in the scene based on the new property_keys
 //####################################################################################
-void DrScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentProperty> component_property_pairs) {
+void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<ComponentProperty> component_property_pairs) {
     DrThing *thing = dynamic_cast<DrThing*>(changed_item);
     if (thing == nullptr) return;
-    DrGraphicsItem *graphics_item = thing->getDrGraphicsItem();
+    EditorItem *graphics_item = thing->getEditorItem();
     if (graphics_item == nullptr)  return;
 
-    // ***** Make sure this object is currently being shown in the DrScene before we try to update it
+    // ***** Make sure this object is currently being shown in the EditorScene before we try to update it
     if (thing->getParentStage()->getKey() != m_current_stage_key) return;
 
     // ***** Some local item variables, prepping for update

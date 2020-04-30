@@ -17,7 +17,7 @@
 #include "project/constants_comps_and_props.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class DrProperty;
 class DrSettings;
@@ -27,7 +27,7 @@ class AssetCategoryButton;
 class IEditorRelay;
 class DrFilterHoverHandler;
 
-// Class constants
+// Class Constants
 constexpr int   c_asset_size_left =  3;                         // Size policy width of left column
 constexpr int   c_asset_size_right = 5;                         // Size policy width of right column
 

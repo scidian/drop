@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 2/16/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrView MouseMove event
+//      EditorView MouseMove event
 //
 //
 #include <QtMath>
@@ -48,7 +48,7 @@ namespace Mouse_Cursors {
 //####################################################################################
 //##    Mouse Leaves View
 //####################################################################################
-void DrView::leaveEvent(QEvent *event) {
+void EditorView::leaveEvent(QEvent *event) {
     (void) event;
     m_editor_relay->setMousePosition("", "");
 }
@@ -59,7 +59,7 @@ void DrView::leaveEvent(QEvent *event) {
 //##    Mouse Moved
 //##
 //####################################################################################
-void DrView::mouseMoveEvent(QMouseEvent *event) {
+void EditorView::mouseMoveEvent(QMouseEvent *event) {
     // Test for scene and lock the scene
     if (scene() == nullptr) return;
     if (my_scene->scene_mutex.tryLock(10) == false) return;
@@ -73,7 +73,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
         m_flag_key_down_alt     = event->modifiers() & Qt::KeyboardModifier::AltModifier;
         m_flag_key_down_shift   = event->modifiers() & Qt::KeyboardModifier::ShiftModifier;
     } else {
-        // This variable is used to stop modifier flags from updating when mouseMoveEvent is forcefully called from DrView::keyPressEvent()
+        // This variable is used to stop modifier flags from updating when mouseMoveEvent is forcefully called from EditorView::keyPressEvent()
         m_flag_dont_check_keys =  false;
     }
 
@@ -109,7 +109,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 
     // !!!!! #DEBUG: Shows red, green, blue and alpha of pixel under mouse
     if (Dr::CheckDebugFlag(Debug_Flags::Label_Top_Item_RGBA)) {
-        QColor pixel_color = dynamic_cast<DrGraphicsItem*>(item_under_mouse)->getColorAtPoint(m_last_mouse_pos, this);
+        QColor pixel_color = dynamic_cast<EditorItem*>(item_under_mouse)->getColorAtPoint(m_last_mouse_pos, this);
         Dr::SetLabelText(Label_Names::Label_1, "R: " + QString::number(pixel_color.red()) +
                                                "G: " + QString::number(pixel_color.green()) +
                                                "B: " + QString::number(pixel_color.blue()) );
@@ -318,7 +318,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
             my_scene->setHasCalculatedAdjustment(false);
             QGraphicsView::mouseMoveEvent(event);
 
-            // Update selection box location, disable DrGraphicsItem->itemChange before we update selection box by setting View_Mode to Disable_Update
+            // Update selection box location, disable EditorItem->itemChange before we update selection box by setting View_Mode to Disable_Update
             m_view_mode = View_Mode::Disable_Update;
             my_scene->updateSelectionBox();
             m_view_mode = View_Mode::Translating;
@@ -349,7 +349,7 @@ void DrView::mouseMoveEvent(QMouseEvent *event) {
 //####################################################################################
 //##    Sets Mouse Cursor based on angle_in_degrees
 //####################################################################################
-void DrView::setMouseCursorFromAngle(double angle_in_degrees) {
+void EditorView::setMouseCursorFromAngle(double angle_in_degrees) {
     ///// Custom rotated cursor
     ///QPixmap arrow = QPixmap(":/assets/cursors/size_vertical.png", nullptr, Qt::ImageConversionFlag::AutoDither);
     ///QPixmap rotated = arrow.transformed(QTransform().rotate(a));

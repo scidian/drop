@@ -19,12 +19,12 @@
 
 //####################################################################################
 //##    Extracts a list of DrSettings pointers from a list of
-//##    DrGraphicsItems (QGraphicsItems) representing DrThings in a QGraphicsScene
+//##    EditorItems (QGraphicsItems) representing DrThings in a QGraphicsScene
 //####################################################################################
 QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
     QList<DrSettings*> new_list;
     for (auto item : list) {
-        DrGraphicsItem *as_item = dynamic_cast<DrGraphicsItem*>(item);
+        EditorItem *as_item = dynamic_cast<EditorItem*>(item);
         DrThing *as_thing = as_item->getThing();
         new_list.append(as_thing);
     }
@@ -37,7 +37,7 @@ QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
 //##    Mouse Released
 //##
 //####################################################################################
-void DrView::mouseReleaseEvent(QMouseEvent *event) {
+void EditorView::mouseReleaseEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
 

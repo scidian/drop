@@ -30,7 +30,7 @@
 //####################################################################################
 //##    Key Release
 //####################################################################################
-void DrScene::keyReleaseEvent(QKeyEvent *event) {
+void EditorScene::keyReleaseEvent(QKeyEvent *event) {
     // Reset key timer
     Qt::Key key_released = static_cast<Qt::Key>(event->key());
     m_key_down[key_released] = false;
@@ -42,7 +42,7 @@ void DrScene::keyReleaseEvent(QKeyEvent *event) {
 //####################################################################################
 //##    Key Press
 //####################################################################################
-void DrScene::keyPressEvent(QKeyEvent *event) {
+void EditorScene::keyPressEvent(QKeyEvent *event) {
 
     // ***** If no selected items, pass on key press event and exit
     if (getSelectionCount() < 1) {
@@ -189,9 +189,9 @@ void DrScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Process Delete, Convert to DrThings
         for (auto item : list_old_items) {
-            DrGraphicsItem  *graphics_item  =   dynamic_cast<DrGraphicsItem*>(item);    if (graphics_item == nullptr) continue;
-            DrThing         *drthing =          graphics_item->getThing();              if (drthing == nullptr) continue;
-            DrStage         *drstage =          drthing->getParentStage();
+            EditorItem  *graphics_item  =   dynamic_cast<EditorItem*>(item);    if (graphics_item == nullptr) continue;
+            DrThing     *drthing =          graphics_item->getThing();          if (drthing == nullptr) continue;
+            DrStage     *drstage =          drthing->getParentStage();
 
              // Delete selected items
             switch (key_pressed) {

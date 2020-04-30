@@ -26,7 +26,7 @@
 //####################################################################################
 //##    Starts Rotating Camera Mode
 //####################################################################################
-void DrView::startRotateCamera(QPoint mouse_in_view) {
+void EditorView::startRotateCamera(QPoint mouse_in_view) {
     // Set selected camera to whichever camera mouse is currently over
     m_cam_selected = m_cam_mouse_over;
     m_cam_mouse_over = nullptr;
@@ -53,7 +53,7 @@ void DrView::startRotateCamera(QPoint mouse_in_view) {
 //####################################################################################
 //##    Main Rotation Function
 //####################################################################################
-void DrView::rotateCamera(QPointF mouse_in_view) {
+void EditorView::rotateCamera(QPointF mouse_in_view) {
 
     // Calculate difference between starting mouse position and current mouse posisiton. Use that to assign new rotation angle
     double x_diff = ((mouse_in_view.x() - m_cam_mouse_start.x()) * 0.125) / currentZoomLevel();

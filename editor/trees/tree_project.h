@@ -16,17 +16,18 @@
 #include "project/constants_comps_and_props.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
+// Forward Declarations
 class IEditorRelay;
-class DrScene;
 class DrProject;
 class DrSettings;
 class DrThing;
+class EditorScene;
 
 // Local Defines
 #define COLUMN_TITLE    0
 #define COLUMN_LOCK     1
 #define COLUMN_Z_ORDER  2
+
 
 //####################################################################################
 //##    TreeProject

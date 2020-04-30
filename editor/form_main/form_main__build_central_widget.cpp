@@ -70,11 +70,11 @@ void FormMain::buildCentralWidgetEditor() {
 
 
     // ***** Initialize scene used for showing stages World Editor Mode viewEditor widget
-    sceneEditor = new DrScene(this, m_project, this);
+    sceneEditor = new EditorScene(this, m_project, this);
 
     // Connects signal used to populate scene
-    connect(this,       SIGNAL(newStageSelected(DrProject*, DrScene*, long, long)),
-            sceneEditor,  SLOT(newStageSelected(DrProject*, DrScene*, long, long)) );
+    connect(this,       SIGNAL(newStageSelected(DrProject*, EditorScene*, long, long)),
+            sceneEditor,  SLOT(newStageSelected(DrProject*, EditorScene*, long, long)) );
 
 
     // ***** Build central widgets
@@ -152,8 +152,8 @@ void FormMain::buildCentralWidgetEditor() {
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
-                        // ***** Load our DrView to display our DrScene collection of items
-                        viewEditor = new DrView(widgetStageView, m_project, sceneEditor, this);
+                        // ***** Load our EditorView to display our EditorScene collection of items
+                        viewEditor = new EditorView(widgetStageView, m_project, sceneEditor, this);
                         viewEditor->setObjectName(QStringLiteral("viewEditor"));
                         viewEditor->setAcceptDrops(true);
                         viewEditor->setFrameShape(QFrame::NoFrame);

@@ -82,7 +82,7 @@ FormMain::~FormMain() {
 
 
 //####################################################################################
-//##    Populates DrScene with passed in DrStage when Program is done loading
+//##    Populates EditorScene with passed in DrStage when Program is done loading
 //####################################################################################
 void FormMain::buildSceneAfterLoading(long stage_key) {
     if (Dr::CheckDoneLoading() == false) {

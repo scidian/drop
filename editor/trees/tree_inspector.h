@@ -20,7 +20,7 @@
 #include "project/enums_entity_types.h"
 
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class DrThing;
 class DrSettings;
@@ -31,7 +31,7 @@ class DrImageHolder;
 class DrQTripleSpinBox;
 class DrFilterHoverHandler;
 
-// Class constants
+// Class Constants
 constexpr int    c_inspector_size_left =   3;           // Size policy width of left column
 constexpr int    c_inspector_size_right =  5;           // Size policy width of right column
 constexpr int    c_minimum_grid_size =     1;//5;       // Minimum grid size

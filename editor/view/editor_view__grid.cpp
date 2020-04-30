@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 2/27/2019, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrView Grid Functions
+//      EditorView Grid Functions
 //
 //
 #include <QtMath>
@@ -22,7 +22,7 @@
 //####################################################################################
 //##    Updates grid based on current stage shown, recalculates points and lines
 //####################################################################################
-void DrView::updateGrid() {
+void EditorView::updateGrid() {
     if (scene() == nullptr) return;
     if (my_scene->getCurrentStageShown() == nullptr) return;
 
@@ -31,7 +31,7 @@ void DrView::updateGrid() {
 
     // Increase Scene Rect if Stage Rect changed
     double h2;
-    QRectF stage_rect = DrView::stageBoundingRect(m_project, stage, h2).adjusted(-500, -500, 500, 500);
+    QRectF stage_rect = EditorView::stageBoundingRect(m_project, stage, h2).adjusted(-500, -500, 500, 500);
     scene()->setSceneRect( scene()->sceneRect().united(stage_rect) );
 
     // Update Grid Properties
@@ -71,7 +71,7 @@ void DrView::updateGrid() {
 //####################################################################################
 //##    Rounds point in scene to nearest point aligned to grid
 //####################################################################################
-QPointF DrView::roundToGrid(QPointF point_in_scene) {
+QPointF EditorView::roundToGrid(QPointF point_in_scene) {
     // ***** Align new desired center to grid
     QTransform remove_angle = QTransform().rotate(-m_grid_rotate);
     QTransform add_angle =    QTransform().rotate( m_grid_rotate);
@@ -98,7 +98,7 @@ QPointF DrView::roundToGrid(QPointF point_in_scene) {
 //####################################################################################
 //##    Calculate Game Frame
 //####################################################################################
-QRectF DrView::gameFrame(DrProject *project) {
+QRectF EditorView::gameFrame(DrProject *project) {
     if (project == nullptr) return QRectF();
     QRectF game_frame;
     int width =  project->getOption(Project_Options::Width).toInt();
@@ -116,7 +116,7 @@ QRectF DrView::gameFrame(DrProject *project) {
 //##    Returns: - Bounding Box Rect of DrStage (rotated + size)
 //##             - Half height of bracket side of Stage Rect as half_height
 //####################################################################################
-QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage, double &half_height) {
+QRectF EditorView::stageBoundingRect(DrProject *project, DrStage *stage, double &half_height) {
     if (project == nullptr) return QRectF();
     if (stage == nullptr)   return QRectF();
 
@@ -159,7 +159,7 @@ QRectF DrView::stageBoundingRect(DrProject *project, DrStage *stage, double &hal
 //####################################################################################
 //##    Recalculates grid points into local QVectors, m_grid_points & m_grid_lines
 //####################################################################################
-void DrView::recalculateGrid() {
+void EditorView::recalculateGrid() {
     // Map viewport to scene rect
     QRectF  scene_rect = this->scene()->sceneRect();
     QPointF top_left = mapToScene(0, 0);

@@ -23,7 +23,7 @@
 //####################################################################################
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void DrView::wheelEvent(QWheelEvent *event) {
+void EditorView::wheelEvent(QWheelEvent *event) {
     // ********** Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
@@ -81,7 +81,7 @@ void DrView::wheelEvent(QWheelEvent *event) {
 #endif
 
 // SLOT: Handles hiding tool tip after done zooming
-void DrView::stoppedZooming() {
+void EditorView::stoppedZooming() {
     // If over 1.2 seconds have passed since last time mouse wheel was activated, stop tool tip
     if (m_tool_tip->getTipType() == View_Mode::Zooming) {
         if (m_zoom_timer.elapsed() > 1200) {
@@ -93,7 +93,7 @@ void DrView::stoppedZooming() {
     }
 }
 
-void DrView::zoomInOut(int level) {
+void EditorView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -50) m_zoom = -50;
@@ -101,14 +101,14 @@ void DrView::zoomInOut(int level) {
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
-void DrView::zoomToPower(int level) {
+void EditorView::zoomToPower(int level) {
     m_zoom = level;
     if (m_zoom > 500) m_zoom = 500;
     if (m_zoom < -50) m_zoom = -50;
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
-void DrView::zoomToScale(double scale, bool recalculate_level) {
+void EditorView::zoomToScale(double scale, bool recalculate_level) {
     m_zoom_scale = scale;
 
     if (recalculate_level) {
@@ -133,7 +133,7 @@ void DrView::zoomToScale(double scale, bool recalculate_level) {
 }
 
 // Fits contents of stage into View, called from button on View Toolbar
-void DrView::zoomToContents() {
+void EditorView::zoomToContents() {
     this->fitInView( this->scene()->sceneRect() );
 
     QMatrix fit_matrix = this->matrix();

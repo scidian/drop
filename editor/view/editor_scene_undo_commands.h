@@ -11,10 +11,11 @@
 #include <QPointF>
 #include <QUndoCommand>
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
-class DrScene;
 class DrThing;
+class EditorScene;
+
 
 //####################################################################################
 //##    Change Stage in StageView
@@ -23,20 +24,20 @@ class UndoCommandChangeStage : public QUndoCommand
 {
 private:
     // External Borrowed Pointers
-    DrProject  *m_project;
-    DrScene    *m_scene;
+    DrProject      *m_project;
+    EditorScene    *m_scene;
 
     // Local Variables
-    long        m_old_stage_key;
-    long        m_new_stage_key;
+    long            m_old_stage_key;
+    long            m_new_stage_key;
 
 public:
-    UndoCommandChangeStage(DrProject *project, DrScene *scene, long old_stage_key, long new_stage_key, QUndoCommand *parent = nullptr);
+    UndoCommandChangeStage(DrProject *project, EditorScene *scene, long old_stage_key, long new_stage_key, QUndoCommand *parent = nullptr);
 
-    void        undo() override;
-    void        redo() override;
+    void            undo() override;
+    void            redo() override;
 
-    QString     changeStage(long old_stage_key, long new_stage_key, bool is_undo);
+    QString         changeStage(long old_stage_key, long new_stage_key, bool is_undo);
 };
 
 
@@ -48,17 +49,17 @@ class UndoCommandMove : public QUndoCommand
 {
 private:
     // External Borrowed Pointers
-    DrScene    *m_scene;
+    EditorScene    *m_scene;
 
     // Local Variables
-    QPointF     m_old_pos;
-    QPointF     m_new_pos;
+    QPointF         m_old_pos;
+    QPointF         m_new_pos;
 
 public:
-    UndoCommandMove(DrScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
+    UndoCommandMove(EditorScene *scene, const QPointF &old_pos, QUndoCommand *parent = nullptr);
 
-    void        undo() override;
-    void        redo() override;
+    void            undo() override;
+    void            redo() override;
 };
 
 
@@ -69,16 +70,16 @@ class UndoCommandNewSelection : public QUndoCommand
 { 
 private:
     // External Borrowed Pointers
-    DrScene    *m_scene;
+    EditorScene    *m_scene;
 
     // Local Variables
-    QList<DrThing*>     m_old_list;
-    QList<DrThing*>     m_new_list;
+    QList<DrThing*> m_old_list;
+    QList<DrThing*> m_new_list;
 
 public:
-    UndoCommandNewSelection(DrScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list, QUndoCommand *parent = nullptr);
-    void        undo() override;
-    void        redo() override;
+    UndoCommandNewSelection(EditorScene *scene, QList<DrThing*> old_list, QList<DrThing*> new_list, QUndoCommand *parent = nullptr);
+    void            undo() override;
+    void            redo() override;
 };
 
 

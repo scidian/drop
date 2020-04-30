@@ -42,7 +42,7 @@ void FormMain::updateToolbar() {
                 for (auto button : buttonsGroupTransform->buttons())    if (!button->isEnabled()) button->setEnabled(true);
 
                 if (sceneEditor->getSelectionCount() == 1) {
-                    DrThing *thing = dynamic_cast<DrGraphicsItem*>(sceneEditor->getSelectionItems().first())->getThing();
+                    DrThing *thing = dynamic_cast<EditorItem*>(sceneEditor->getSelectionItems().first())->getThing();
                     if (thing != nullptr) {
                         DrSettings *settings = m_project->findSettingsFromKey(thing->getAssetKey());
                         if (settings != nullptr) selected = QString::fromStdString(settings->getName());

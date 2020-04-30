@@ -122,7 +122,7 @@ std::vector<DrThing*> DrStage::thingsSortedByZOrder(Sort_Order sort_order, bool 
 //####################################################################################
 void DrStage::removeGraphicsItemReferences() {
     for (auto &thing_pair : getThingMap()) {
-        thing_pair.second->setDrGraphicsItem(nullptr);
+        thing_pair.second->setEditorItem(nullptr);
     }
 }
 

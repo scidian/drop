@@ -17,16 +17,16 @@
 #include "editor/interface_editor_relay.h"
 
 // Necessary forward declarations
+class DrFilterHoverHandler;
+class DrProject;
+class EditorScene;
+class EditorView;
+class EditorViewRubberBand;
 class FormPopup;
 class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
 class TreeProject;
-class DrProject;
-class DrScene;
-class DrView;
-class DrViewRubberBand;
-class DrFilterHoverHandler;
 
 
 //####################################################################################
@@ -55,8 +55,8 @@ private:
     QWidget        *widgetCentral;
 
     // ***** "Editor" (Animation Editor) Widgets
-    DrScene        *sceneEditor;                            // Holds the currently selected Stage
-    DrView         *viewEditor;                             // Renders the StageView
+    EditorScene    *sceneEditor;                            // Holds the currently selected Stage
+    EditorView     *viewEditor;                             // Renders the StageView
     QScrollArea    *areaBottom;
 
 
@@ -73,7 +73,7 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual DrView*             getStageView() override     { return viewEditor; }
+    virtual EditorView*         getStageView() override     { return viewEditor; }
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;

@@ -26,7 +26,7 @@
 //####################################################################################
 //##    Starts Resizing Stage Mode
 //####################################################################################
-void DrView::startResizeStage(QPoint mouse_in_view) {
+void EditorView::startResizeStage(QPoint mouse_in_view) {
     // Store starting mouse position
     m_resize_stage_mouse_start = mouse_in_view;
 
@@ -43,7 +43,7 @@ void DrView::startResizeStage(QPoint mouse_in_view) {
 //####################################################################################
 //##    Main Stage Resize Function
 //####################################################################################
-void DrView::resizeStage(QPointF mouse_in_view) {
+void EditorView::resizeStage(QPointF mouse_in_view) {
     // Get current DrStage
     DrStage *stage = my_scene->getCurrentStageShown();
 

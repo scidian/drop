@@ -59,7 +59,7 @@ void paintFrameEdge(QPainter &painter, QPointF point1, QPointF point2) {
 //####################################################################################
 //##    PAINT: Paints Camera Boxes
 //####################################################################################
-void DrView::paintCameras(QPainter &painter, DrStage *stage) {
+void EditorView::paintCameras(QPainter &painter, DrStage *stage) {
     // Reset camera data
     m_cam_data.clear();
 

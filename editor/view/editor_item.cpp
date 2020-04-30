@@ -2,7 +2,7 @@
 //      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
 //
 //  File:
-//      DrGraphicsItem Class Definitions
+//      EditorItem Class Definitions
 //
 //
 #include <QDebug>
@@ -37,7 +37,7 @@
 //####################################################################################
 //##    Constructor & destructor
 //####################################################################################
-DrGraphicsItem::DrGraphicsItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only) : m_editor_relay(editor_relay) {
+EditorItem::EditorItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only) : m_editor_relay(editor_relay) {
     // ***** Store relevant project / thing data for use later
     m_project    = project;
     m_thing      = thing;
@@ -165,7 +165,7 @@ DrGraphicsItem::DrGraphicsItem(DrProject *project, IEditorRelay *editor_relay, D
         }
 
         default:
-            Dr::PrintDebug("Error in DrGraphicsItem Constructor, DrType not handled! \n"
+            Dr::PrintDebug("Error in EditorItem Constructor, DrType not handled! \n"
                            "Type Not Handled: " + Dr::StringFromType(m_asset->getType()) + " - End Error.....");
     }
 
@@ -217,12 +217,12 @@ DrGraphicsItem::DrGraphicsItem(DrProject *project, IEditorRelay *editor_relay, D
 
 }                                     
 
-void DrGraphicsItem::disableItemChangeFlags() {
+void EditorItem::disableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, false);
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
     m_item_change_flags_enabled = false;
 }
-void DrGraphicsItem::enableItemChangeFlags() {
+void EditorItem::enableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, true);
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
     m_item_change_flags_enabled = true;
@@ -232,13 +232,13 @@ void DrGraphicsItem::enableItemChangeFlags() {
 //##    Item Property Overrides
 //####################################################################################
 // Outline of entire item
-QRectF DrGraphicsItem::boundingRect() const {
+QRectF EditorItem::boundingRect() const {
     QRectF my_rect = QRectF(0, 0, m_asset_width, m_asset_height);
     return my_rect;
 }
 
 // Seems to define mouseOver events, and intersection events for Rubber Band Box
-QPainterPath DrGraphicsItem::shape() const {
+QPainterPath EditorItem::shape() const {
     ///QPainterPath path;
     ///path.addRect(0, 0, m_width, m_height);
     ///return path;
@@ -251,7 +251,7 @@ QPainterPath DrGraphicsItem::shape() const {
 //####################################################################################
 //##    Pixmap Filters
 //####################################################################################
-void DrGraphicsItem::applyFilters() {
+void EditorItem::applyFilters() {
     QImage new_image = m_pixmap.toImage().copy();
 
     if (m_thing == nullptr) return;
@@ -291,28 +291,28 @@ void DrGraphicsItem::applyFilters() {
 //####################################################################################
 //##    Input overrides
 //####################################################################################
-void DrGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void EditorItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
     if (settings == nullptr)  event->ignore();
     if (settings->isLocked()) event->ignore();
     QGraphicsItem::mousePressEvent(event);
 }
 
-void DrGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+void EditorItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
     if (settings == nullptr)  event->ignore();
     if (settings->isLocked()) event->ignore();
     QGraphicsItem::mouseMoveEvent(event);
 }
 
-void DrGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+void EditorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
     if (settings == nullptr)  event->ignore();
     if (settings->isLocked()) event->ignore();
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-void DrGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) { QGraphicsItem::hoverLeaveEvent(event);}
+void EditorItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) { QGraphicsItem::hoverLeaveEvent(event);}
 
 
 
