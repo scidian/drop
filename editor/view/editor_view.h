@@ -77,14 +77,14 @@ private:
     EditorScene            *my_scene;                                       // Holds the scene() this view is set to as a EditorScene Class
 
     // Local Variables
-    Mouse_Mode              m_mouse_mode = Mouse_Mode::Pointer;             // Tracks current view mouse mode
-    View_Mode               m_view_mode = View_Mode::None;                  // Tracks current view interaction mode
+    Mouse_Mode              m_mouse_mode        { Mouse_Mode::Pointer };    // Tracks current view mouse mode
+    View_Mode               m_view_mode         { View_Mode::None };        // Tracks current view interaction mode
 
     // Display Variables
-    int                     m_zoom = 200; // (50%)                          // Zoom level of current view, 200 is 50% - 250 is 100%
-    double                  m_zoom_scale = 0.5;                             // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    int                     m_zoom              { 200 }; // (50%)           // Zoom level of current view, 200 is 50% - 250 is 100%
+    double                  m_zoom_scale        { 0.5 };                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     QElapsedTimer           m_zoom_timer;                                   // Used to auto hide zoom tool tip after time has passed
-    int                     m_rotate = 0;                           // NOT IMPLEMENTED: Rotation of current view
+    int                     m_rotate            { 0 };                      // NOT IMPLEMENTED: Rotation of current view
 
     // Grid Drawing Variables
     QVector<QPointF>        m_grid_points;                                  // Holds latest calculated grid points
@@ -228,6 +228,8 @@ public:
 
     // View Display Functions
     void            setViewRect(QRectF new_rect);
+    void            spaceBarDown();
+    void            spaceBarUp();
     void            zoomInOut(int level);
     void            zoomToContents();
     void            zoomToPower(int level);
@@ -302,8 +304,6 @@ public:
     void            setMouseCursorFromAngle(double angle_in_degrees);
     void            setMouseMode(Mouse_Mode mode)       { m_mouse_mode = mode; }
     void            setViewMode(View_Mode mode)         { m_view_mode = mode; }
-    void            spaceBarDown();
-    void            spaceBarUp();
 
 
 public slots:

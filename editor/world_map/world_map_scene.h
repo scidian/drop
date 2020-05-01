@@ -34,6 +34,8 @@ public:
     explicit WorldMapScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
     virtual ~WorldMapScene() override;
 
+    // Construction
+    void                    buildScene();                                   // Clears / builds node scene
 
 };
 

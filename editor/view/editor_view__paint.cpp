@@ -69,13 +69,13 @@ void EditorView::drawForeground(QPainter *painter, const QRectF &rect) {
 //##    PAINT: Main Paint Event for QGraphicsView (EditorView)
 //####################################################################################
 void EditorView::paintEvent(QPaintEvent *event) {
-    // ******************** Pass on event to parent class paint items into scene
+    // ***** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
 
-    // ******************** At this point, if no selected items get out of here
+    // ***** Make sure we have a scene to paint
     if (scene() == nullptr) return;
 
-    // Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
+    // ***** Store current center point of scene, so that if we go to a new scene and come back we stay in the same place
     DrStage *stage = my_scene->getCurrentStageShown();
     if (stage != nullptr && Dr::CheckDoneLoading()) {
         QRect   viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
@@ -85,7 +85,7 @@ void EditorView::paintEvent(QPaintEvent *event) {
         stage->setViewZoomLevel( m_zoom_scale );
     }
 
-    // Initiate QPainter object
+    // ***** Initiate QPainter object
     QPainter painter(viewport());
 
     // Turn on anti-aliasing flags

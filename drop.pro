@@ -228,6 +228,9 @@ SOURCES += \
     editor/world_map/world_map_item.cpp \
     editor/world_map/world_map_scene.cpp \
     editor/world_map/world_map_view.cpp \
+    editor/world_map/world_map_view__key_press.cpp \
+    editor/world_map/world_map_view__mouse_wheel.cpp \
+    editor/world_map/world_map_view__paint.cpp \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \

@@ -54,6 +54,9 @@ void FormMain::buildCentralWidgetWorldMap() {
     QSizePolicy sizePolicyPreferredHorizontal(  QSizePolicy::Preferred,         QSizePolicy::Preferred);
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);      sizePolicyPreferredHorizontal.setVerticalStretch(0);
 
+    // ***** Initialize scene used for showing stages World Editor Mode viewEditor widget
+    sceneWorldMap = new WorldMapScene(this, m_project, this);
+
     // ***** Build central widgets
     widgetCentralWorldMap = new QWidget();
     widgetCentralWorldMap->setObjectName(QStringLiteral("widgetCentralWorldMap"));

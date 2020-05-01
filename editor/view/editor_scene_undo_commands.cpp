@@ -87,7 +87,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     // ***** Remove any references within the current project stage things to any GraphicsScene items
     DrStage *displayed = m_project->findStageFromKey(old_stage_key);
     QString redo_name = "ERROR";
-    if (displayed) {
+    if (displayed != nullptr) {
         displayed->removeGraphicsItemReferences();
         redo_name = QString::fromStdString(displayed->getName());
     }

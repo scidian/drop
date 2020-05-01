@@ -22,6 +22,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "editor/world_map/world_map_scene.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
@@ -73,13 +74,17 @@ void FormMain::buildProjectTree() {
 
 // Fires an Undo stack command to change Stages within Scene
 void FormMain::buildScene(long stage_key) {
-    // Rebuild existing Stage
-    if (stage_key == c_same_key) {
-        emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), sceneEditor->getCurrentStageKeyShown());
+    if (m_current_mode == Form_Main_Mode::World_Editor) {
+        // Rebuild existing Stage
+        if (stage_key == c_same_key) {
+            emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), sceneEditor->getCurrentStageKeyShown());
+        // Select new stage
+        } else if (sceneEditor->getCurrentStageKeyShown() != stage_key) {
+            emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), stage_key);
+        }
 
-    // Select new stage
-    } else if (sceneEditor->getCurrentStageKeyShown() != stage_key) {
-        emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), stage_key);
+    } else if (m_current_mode == Form_Main_Mode::World_Map) {
+        sceneWorldMap->buildScene();
     }
 }
 
