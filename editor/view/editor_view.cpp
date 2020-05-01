@@ -25,7 +25,7 @@
 
 
 //####################################################################################
-//##    Constructor & destructor
+//##    Constructor / Destructor
 //####################################################################################
 EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_scene, IEditorRelay *editor_relay)
     : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
@@ -51,7 +51,7 @@ EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_sc
     connect(my_scene, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(my_scene, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
 
-    connect(my_scene, &EditorScene::updateGrid, this, [this]() { updateGrid(); });
+    connect(my_scene, &EditorScene::updateGrid,  this, [this]() { updateGrid(); });
     connect(my_scene, &EditorScene::updateViews, this, [this]() { update(); });
     connect(my_scene, &EditorScene::setViewRect, this, [this](QRectF new_rect) { setViewRect(new_rect); });
 

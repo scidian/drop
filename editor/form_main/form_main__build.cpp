@@ -56,8 +56,9 @@ void FormMain::initializeFormMain() {
     buildMenu();
     buildToolBar();
 
-    buildCentralWidgetMain();
+    buildCentralWidgetClear();
     buildCentralWidgetEditor();
+    buildCentralWidgetWorldMap();
 
     // Build Docks
     dockAdvisor =       Dr::BuildDockAdvisor(   m_project, this, treeAdvisor);
@@ -84,13 +85,17 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     if ((old_mode != new_mode) && (old_mode != Form_Main_Mode::Program_Loading)) {
         clearToolbar();
         switch (old_mode) {
+            case Form_Main_Mode::World_Map:
+                widgetCentralWorldMap = takeCentralWidget();
+                buildInspector( { } );
+                break;
             case Form_Main_Mode::World_Editor:
                 widgetCentralEditor = takeCentralWidget();
                 buildInspector( { } );
                 dockAssetsEditor->hide();
                 break;
             case Form_Main_Mode::Clear:
-                widgetCentral = takeCentralWidget();
+                widgetCentralClear = takeCentralWidget();
                 break;
 
             default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known", QMessageBox::Icon::Warning, this);
@@ -98,24 +103,32 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     }
     setToolbar(new_mode);           // Sets toolbar widgets for the new mode selected
 
+    // Wait for possible finish loading
+    if (new_mode != Form_Main_Mode::World_Editor) {
+        while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
+    }
+    Dr::SetDoneLoading(false);
+
     // ***** Set up new layout
     switch (new_mode) {
+        case Form_Main_Mode::World_Map:
+            setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
+            this->setCentralWidget( widgetCentralWorldMap );
+            break;
+
         case Form_Main_Mode::World_Editor:
-            Dr::SetDoneLoading(false);
-                setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
-                this->setCentralWidget( widgetCentralEditor );
-                buildAssetTree();
-                dockAssetsEditor->show();
-                buildProjectTree();
-                sceneEditor->clearStageShown();
-                buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
+            setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
+            this->setCentralWidget( widgetCentralEditor );
+            buildAssetTree();
+            dockAssetsEditor->show();
+            buildProjectTree();
+            sceneEditor->clearStageShown();
+            buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
 
         case Form_Main_Mode::Clear:
-            while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
-            Dr::SetDoneLoading(false);
-                setWindowTitle( tr("Drop") );
-                this->setCentralWidget( widgetCentral );
+            setWindowTitle( tr("Drop") );
+            this->setCentralWidget( widgetCentralClear );
             break;
 
         default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known", QMessageBox::Icon::Warning, this);

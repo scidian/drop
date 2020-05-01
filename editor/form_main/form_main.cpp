@@ -75,8 +75,9 @@ FormMain::~FormMain() {
     sceneEditor->deleteLater();
 
     // Delete widgets not currently attached to main form
-    if (m_current_mode != Form_Main_Mode::World_Editor)   widgetCentralEditor->deleteLater();
-    if (m_current_mode != Form_Main_Mode::Clear)          widgetCentral->deleteLater();
+    if (m_current_mode != Form_Main_Mode::Clear)            widgetCentralClear->deleteLater();
+    if (m_current_mode != Form_Main_Mode::World_Editor)     widgetCentralEditor->deleteLater();
+    if (m_current_mode != Form_Main_Mode::World_Map)        widgetCentralWorldMap->deleteLater();
     delete m_project;
 }
 
@@ -86,9 +87,9 @@ FormMain::~FormMain() {
 //####################################################################################
 void FormMain::buildSceneAfterLoading(long stage_key) {
     if (Dr::CheckDoneLoading() == false) {
-        QTimer::singleShot( 100, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
+        QTimer::singleShot( 10, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
     } else {
-        QTimer::singleShot(  50, this, [this, stage_key] { this->buildSceneAfterWaiting(stage_key); } );
+        QTimer::singleShot(  5, this, [this, stage_key] { this->buildSceneAfterWaiting(stage_key); } );
     }
 }
 void FormMain::buildSceneAfterWaiting(long stage_key) {

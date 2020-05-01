@@ -16,21 +16,21 @@ namespace Dr {
 //####################################################################################
 std::string StringFromType(DrType type) {
     switch (type) {
-        case DrType::Animation:     return "Animation";
-        case DrType::Asset:         return "Asset";
-        case DrType::Device:        return "Device";
-        case DrType::Effect:        return "Effect";
-        case DrType::Font:          return "Font";
-        case DrType::Frame:         return "Frame";
-        case DrType::Image:         return "Image";
-        case DrType::Item:          return "Item";
-        case DrType::Prefab:        return "Prefab";
-        case DrType::Stage:         return "Stage";
-        case DrType::Thing:         return "Thing";
-        case DrType::Variable:      return "Variable";
-        case DrType::World:         return "World";
+        case DrType::Animation:         return "Animation";
+        case DrType::Asset:             return "Asset";
+        case DrType::Device:            return "Device";
+        case DrType::Effect:            return "Effect";
+        case DrType::Font:              return "Font";
+        case DrType::Frame:             return "Frame";
+        case DrType::Image:             return "Image";
+        case DrType::Item:              return "Item";
+        case DrType::Prefab:            return "Prefab";
+        case DrType::Stage:             return "Stage";
+        case DrType::Thing:             return "Thing";
+        case DrType::Variable:          return "Variable";
+        case DrType::World:             return "World";
 
-        case DrType::NotFound:      return "Not Found";
+        case DrType::NotFound:          return "Not Found";
     }
     return "Unknown";
 }
@@ -89,11 +89,11 @@ std::string StringFromEffectType(DrEffectType type) {
         case DrEffectType::Mirror:      return "Mirror";
         case DrEffectType::Fisheye:     return "Fisheye";
         case DrEffectType::Swirl:       return "Swirl";
-        //case DrEffectType::Flag:        return "Flag";
-        //case DrEffectType::Rain:        return "Rain";
-        //case DrEffectType::Snow:        return "Snow";
-        //case DrEffectType::Clouds:      return "Clouds";
-        //case DrEffectType::Fog:         return "Fog";
+        ///case DrEffectType::Flag:        return "Flag";
+        ///case DrEffectType::Rain:        return "Rain";
+        ///case DrEffectType::Snow:        return "Snow";
+        ///case DrEffectType::Clouds:      return "Clouds";
+        ///case DrEffectType::Fog:         return "Fog";
     }
 }
 

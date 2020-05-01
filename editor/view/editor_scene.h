@@ -74,7 +74,7 @@ public:
     virtual void    keyReleaseEvent(QKeyEvent *event) override;                            // Inherited from QGraphicsScene
 
     // Scene Functions
-    EditorItem* addItemToSceneFromThing(DrThing *thing);
+    EditorItem*     addItemToSceneFromThing(DrThing *thing);
     void            setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void            setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
 

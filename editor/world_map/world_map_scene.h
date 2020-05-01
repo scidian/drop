@@ -17,7 +17,7 @@ class IEditorRelay;
 
 //####################################################################################
 //##    WorldMapScene
-//##        Holds layers (DrProject::DrWorld, DrProject::DrUI) of DrProject
+//##        Holds nodes (WorldMapItem) representing layers (DrProject::DrWorld, DrProject::DrUI) of DrProject
 //############################
 class WorldMapScene : public QGraphicsScene
 {
@@ -25,8 +25,15 @@ class WorldMapScene : public QGraphicsScene
 
 private:
     // External Borrowed Pointers
-    DrProject      *m_project;                              // Pointer to currently loaded Project
-    IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
+    DrProject              *m_project;                                      // Pointer to currently loaded Project
+    IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
+
+
+public:
+    // Constructor / Destructor
+    explicit WorldMapScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
+    virtual ~WorldMapScene() override;
+
 
 };
 

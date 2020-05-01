@@ -13,6 +13,7 @@
 // Forward Declarations
 class DrProject;
 class IEditorRelay;
+class WorldMapScene;
 
 
 //####################################################################################
@@ -25,8 +26,15 @@ class WorldMapView : public QGraphicsView
 
 private:
     // External Borrowed Pointers
-    DrProject              *m_project;                                      // Pointer to currently loaded project
+    DrProject              *m_project;                                      // Pointer to currently loaded Project
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
+
+
+public:
+    // Constructor / Destructor
+    explicit WorldMapView(QWidget *parent, DrProject *project, WorldMapScene *scene, IEditorRelay *editor_relay);
+    virtual ~WorldMapView() override;
+
 
 };
 

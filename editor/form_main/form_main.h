@@ -104,7 +104,10 @@ private:
     TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
     TreeInspector  *treeInspector;                          // Custom classes for Inspector Window
     QDockWidget    *dockAdvisor, *dockInspector;
-    QWidget        *widgetCentral;
+
+
+    // ***** "Empty" Main Widget
+    QWidget        *widgetCentralClear;
 
 
     // ***** "Editor" (World Editor) Widgets
@@ -134,6 +137,7 @@ private:
 
 
     // ***** "WorldMap" Widgets
+    QWidget        *widgetCentralWorldMap;
     WorldMapScene  *sceneWorldMap;
     WorldMapView   *viewWorldMap;
 
@@ -188,8 +192,8 @@ private:
     void        buildSceneAfterLoading(long stage_key);
     void        buildToolBar();
     void        buildViewToolBar(QWidget *parent);
+    void        buildCentralWidgetClear();
     void        buildCentralWidgetEditor();
-    void        buildCentralWidgetMain();
     void        buildCentralWidgetWorldMap();
     void        changePalette(Color_Scheme new_color_scheme);
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);

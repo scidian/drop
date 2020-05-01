@@ -75,21 +75,25 @@ enum class Form_Main_Mode {
     // App_Editor               = 6,
     // Puzzle_World_Editor      = 7,
 
-
 };
 
 
 
 //####################################################################################
-//##    Different widgets in an editor window, used for cross updating widgets
+//##    Different widgets in an Editor window, used for cross updating widgets
 //############################
 enum class Editor_Widgets {
-    Asset_Tree,
+    // Universal Widgets
+    ToolBar,
     Inspector_Tree,
+
+    // "World Editor" Widgets
+    Asset_Tree,
     Project_Tree,
     Stage_View,
 
-    ToolBar,
+    // "World Map" Widgets
+    Map_View,
 };
 
 

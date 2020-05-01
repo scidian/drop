@@ -5,6 +5,23 @@
 //
 //
 //
-#include "world_map_scene.h"
+#include <QWidget>
+
+#include "editor/world_map/world_map_scene.h"
+
+
+//####################################################################################
+//##    Constructor / Destructor
+//####################################################################################
+WorldMapScene::WorldMapScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay)
+    : QGraphicsScene(parent), m_project(project), m_editor_relay(editor_relay) {
+
+
+
+}
+
+WorldMapScene::~WorldMapScene() {
+
+}
 
 

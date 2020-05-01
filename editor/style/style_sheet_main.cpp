@@ -43,7 +43,7 @@ QString CustomStyleSheetFormatting() {
         " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
 
         // Shared Empty Widgets
-        " QWidget#widgetCentral { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
+        " QWidget#widgetCentralClear { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         " QWidget#childForm     { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
         " QWidget#innerWidget     { "

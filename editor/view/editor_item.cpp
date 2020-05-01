@@ -35,7 +35,7 @@
 
 
 //####################################################################################
-//##    Constructor & destructor
+//##    Constructor / Destructor
 //####################################################################################
 EditorItem::EditorItem(DrProject *project, IEditorRelay *editor_relay, DrThing *thing, bool is_temp_only) : m_editor_relay(editor_relay) {
     // ***** Store relevant project / thing data for use later

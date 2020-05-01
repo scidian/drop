@@ -25,12 +25,11 @@
 
 
 //####################################################################################
-//##    Constructor & destructor
+//##    Constructor / Destructor
 //####################################################################################
-EditorScene::EditorScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                 QGraphicsScene(parent),
-                 m_project(project),
-                 m_editor_relay(editor_relay) {
+EditorScene::EditorScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay)
+    : QGraphicsScene(parent), m_project(project), m_editor_relay(editor_relay) {
+
     connect(this, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
     connect(this, SIGNAL(sceneRectChanged(QRectF)), this, SLOT(sceneRectChanged(QRectF)));
     connect(this, SIGNAL(selectionChanged()),       this, SLOT(selectionChanged()));

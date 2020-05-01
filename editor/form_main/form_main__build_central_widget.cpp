@@ -22,22 +22,24 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "editor/world_map/world_map_scene.h"
+#include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
 
 
 //####################################################################################
 //##    Builds shared widgets used for all modes of FormMain
 //####################################################################################
-void FormMain::buildCentralWidgetMain() {
+void FormMain::buildCentralWidgetClear() {
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
 
     // ***** Empty central widget
-    widgetCentral = new QWidget();
-    widgetCentral->setObjectName(QStringLiteral("widgetCentral"));
-    widgetCentral->setSizePolicy(sizePolicy);
-    QGridLayout *layout = new QGridLayout(widgetCentral);
+    widgetCentralClear = new QWidget();
+    widgetCentralClear->setObjectName(QStringLiteral("widgetCentralClear"));
+    widgetCentralClear->setSizePolicy(sizePolicy);
+    QGridLayout *layout = new QGridLayout(widgetCentralClear);
         QLabel *label = new QLabel("Coming Soon...");
         label->setFont(Dr::CustomFontLarger());
         layout->addWidget(label, 0, 0, Qt::AlignmentFlag::AlignCenter);
@@ -45,7 +47,48 @@ void FormMain::buildCentralWidgetMain() {
 }
 
 
+//####################################################################################
+//##    Builds Widgets used for FormMainMode "World Editor"
+//####################################################################################
 void FormMain::buildCentralWidgetWorldMap() {
+    QSizePolicy sizePolicyPreferredHorizontal(  QSizePolicy::Preferred,         QSizePolicy::Preferred);
+    sizePolicyPreferredHorizontal.setHorizontalStretch(1);      sizePolicyPreferredHorizontal.setVerticalStretch(0);
+
+    // ***** Build central widgets
+    widgetCentralWorldMap = new QWidget();
+    widgetCentralWorldMap->setObjectName(QStringLiteral("widgetCentralWorldMap"));
+    widgetCentralWorldMap->setSizePolicy(sizePolicyPreferredHorizontal);
+        QVBoxLayout *verticalLayoutWorldMap = new QVBoxLayout(widgetCentralWorldMap);
+        verticalLayoutWorldMap->setSpacing(0);
+        verticalLayoutWorldMap->setObjectName(QStringLiteral("verticalLayoutWorldMap"));
+        // This sets the border with for the main view area between middle and docks
+        verticalLayoutWorldMap->setContentsMargins(0, 0, 0, 0);
+
+        // ***** Load our EditorView to display our EditorScene collection of items
+        viewWorldMap = new WorldMapView(widgetCentralWorldMap, m_project, sceneWorldMap, this);
+        viewWorldMap->setObjectName(QStringLiteral("viewWorldMap"));
+        viewWorldMap->setAcceptDrops(true);
+        viewWorldMap->setFrameShape(QFrame::NoFrame);
+        viewWorldMap->setDragMode(QGraphicsView::DragMode::NoDrag);
+        viewWorldMap->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+        viewWorldMap->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+        ///viewWorldMap->zoomInOut( 0 );
+
+        ///// This setting means we will decide when to call update(), controls recurssive paint events
+        ///viewWorldMap->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+        viewWorldMap->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+
+        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
+            viewWorldMap->setRenderHint(QPainter::Antialiasing, false);
+        else
+            viewWorldMap->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+        if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
+            QOpenGLWidget *gl_widget = new QOpenGLWidget();
+            gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
+            viewWorldMap->setViewport(gl_widget);
+        }
+    verticalLayoutWorldMap->addWidget(viewWorldMap);
 
 }
 
@@ -83,7 +126,7 @@ void FormMain::buildCentralWidgetEditor() {
     widgetCentralEditor->setSizePolicy(sizePolicyPreferredHorizontal);
         QVBoxLayout *verticalLayoutCentral = new QVBoxLayout(widgetCentralEditor);
         verticalLayoutCentral->setSpacing(0);
-        verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayoutCentral"));
         // This sets the border with for the main view area between middle and docks
         verticalLayoutCentral->setContentsMargins(0, 0, 0, 0);
 

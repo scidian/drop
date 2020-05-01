@@ -106,7 +106,7 @@ void FormAnimation::buildCentralWidget() {
     widgetCentral->setSizePolicy(sizePolicyPreferredHorizontal);
         QVBoxLayout *verticalLayoutCentral = new QVBoxLayout(widgetCentral);
         verticalLayoutCentral->setSpacing(0);
-        verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayoutCentral->setObjectName(QStringLiteral("verticalLayoutCentral"));
         // This sets the border with for the main view area between middle and docks
         verticalLayoutCentral->setContentsMargins(0, 0, 0, 0);
 
