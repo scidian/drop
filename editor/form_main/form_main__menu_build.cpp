@@ -82,8 +82,9 @@ void FormMain::buildMenu() {
     QMenu *menuColor_Schemes;
     menuColor_Schemes = new QMenu(menuBar);
     menuColor_Schemes->setObjectName(QStringLiteral("menuColor_Schemes"));
-    QAction *actionDark, *actionLight, *actionNavy, *actionGrape, *actionRust, *actionCoffee, *actionEmerald;
+    QAction *actionDark, *actionMid, *actionLight, *actionNavy, *actionGrape, *actionRust, *actionCoffee, *actionEmerald;
     actionDark =    new QAction(this);  actionDark->setObjectName(QStringLiteral("actionDark"));
+    actionMid =     new QAction(this);  actionMid->setObjectName(QStringLiteral("actionMid"));
     actionLight =   new QAction(this);  actionLight->setObjectName(QStringLiteral("actionLight"));
     actionNavy =    new QAction(this);  actionNavy->setObjectName(QStringLiteral("actionNavy"));
     actionGrape =   new QAction(this);  actionGrape->setObjectName(QStringLiteral("actionGrape"));
@@ -93,6 +94,7 @@ void FormMain::buildMenu() {
         QActionGroup *alignmentGroup;
         alignmentGroup = new QActionGroup(this);
         alignmentGroup->addAction(actionDark);
+        alignmentGroup->addAction(actionMid);
         alignmentGroup->addAction(actionLight);
         alignmentGroup->addAction(actionNavy);
         alignmentGroup->addAction(actionGrape);
@@ -101,6 +103,7 @@ void FormMain::buildMenu() {
         alignmentGroup->addAction(actionEmerald);
         alignmentGroup->setExclusive(true);
         actionDark->setCheckable(true);
+        actionMid->setCheckable(true);
         actionLight->setCheckable(true);
         actionNavy->setCheckable(true);
         actionGrape->setCheckable(true);
@@ -109,6 +112,7 @@ void FormMain::buildMenu() {
         actionEmerald->setCheckable(true);
         switch (Dr::GetColorScheme()) {
             case Color_Scheme::Dark:    actionDark->setChecked(true);       break;
+            case Color_Scheme::Mid:     actionMid->setChecked(true);        break;
             case Color_Scheme::Light:   actionLight->setChecked(true);      break;
             case Color_Scheme::Navy:    actionNavy->setChecked(true);       break;
             case Color_Scheme::Grape:   actionGrape->setChecked(true);      break;
@@ -120,6 +124,7 @@ void FormMain::buildMenu() {
     //      to signals. This allows for passing of variables not included in the SIGNAL that was fired.
     // Such as in this instance, passing a new Color_Scheme to FormMain::changePalette)
     connect(actionDark,     &QAction::triggered, [this]() {     changePalette(Color_Scheme::Dark);      });
+    connect(actionMid,      &QAction::triggered, [this]() {     changePalette(Color_Scheme::Mid);       });
     connect(actionLight,    &QAction::triggered, [this]() {     changePalette(Color_Scheme::Light);     });
     connect(actionNavy,     &QAction::triggered, [this]() {     changePalette(Color_Scheme::Navy);      });
     connect(actionGrape,    &QAction::triggered, [this]() {     changePalette(Color_Scheme::Grape);     });
@@ -129,6 +134,7 @@ void FormMain::buildMenu() {
 
     menuBar->addAction(menuColor_Schemes->menuAction());
     menuColor_Schemes->addAction(actionDark);
+    menuColor_Schemes->addAction(actionMid);
     menuColor_Schemes->addAction(actionLight);
     menuColor_Schemes->addSeparator();
     menuColor_Schemes->addAction(actionNavy);
@@ -206,6 +212,7 @@ void FormMain::buildMenu() {
 
     menuColor_Schemes->setTitle(QApplication::translate("MainWindow",   "Color Schemes", nullptr));
     actionDark->setText(QApplication::translate("MainWindow",               "Dark", nullptr));
+    actionMid->setText(QApplication::translate("MainWindow",                "Mid", nullptr));
     actionLight->setText(QApplication::translate("MainWindow",              "Light", nullptr));
     actionNavy->setText(QApplication::translate("MainWindow",               "Navy", nullptr));
     actionGrape->setText(QApplication::translate("MainWindow",              "Grape", nullptr));

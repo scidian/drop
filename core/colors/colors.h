@@ -17,6 +17,7 @@
 enum class Color_Scheme {
     Dark,
     Light,
+    Mid,
 
     Navy,
     Grape,

@@ -95,6 +95,22 @@ void LoadPalettes() {
     l_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Icon_Dark,             DrColor(  0, 150, 145)));
     l_color_schemes[Color_Scheme::Dark].insert(std::make_pair(Window_Colors::Icon_Light,            DrColor(  0, 180, 175)));
 
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Shadow,                 DrColor( 30,  30,  30)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Seperator,              DrColor( 51,  51,  51)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Background_Dark,        DrColor( 71,  71,  71)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Background_Light,       DrColor( 91,  91,  91)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Button_Dark,            DrColor(112, 112, 112)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Button_Light,           DrColor(132, 132, 132)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Midlight,               DrColor(153, 153, 153)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Text_Dark,              DrColor(178, 178, 178)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Text,                   DrColor(204, 204, 204)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Text_Light,             DrColor(229, 229, 229)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Highlight,              DrColor(255, 255, 255)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Header_Text,            DrColor(229, 229, 229)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Header_Fade,            DrColor(127,   8, 117)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Icon_Dark,              DrColor(216,   4, 201)));
+    l_color_schemes[Color_Scheme::Mid].insert(std::make_pair(Window_Colors::Icon_Light,             DrColor(255,  19, 237)));
+
     l_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Shadow,               DrColor(230, 230, 230)));
     l_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Seperator,            DrColor(200, 200, 200)));
     l_color_schemes[Color_Scheme::Light].insert(std::make_pair(Window_Colors::Background_Dark,      DrColor(180, 180, 180)));
