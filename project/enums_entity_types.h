@@ -15,7 +15,6 @@
 class       DrSettings;
 enum class  Editor_Widgets;
 
-
 // Global Enum Constants
 constexpr int   c_no_key =        -1;               // Value that represents no item selected
 constexpr int   c_same_key =    -100;               // Value signifying to use the value already obtained
@@ -28,6 +27,8 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //##
 //############################
 enum class DrType {
+    Variable,                   // Entities contained within DrSettings::m_variables
+
     Animation,                  // Entities contained within DrProject::m_animations
         Frame,                  // Entities contained within DrProject::DrAnimation::m_frames
     Asset,                      // Entities contained within DrProject::m_assets
@@ -37,7 +38,8 @@ enum class DrType {
     Image,                      // Entities contained within DrProject::m_images
     Item,                       // Entities contained within DrProject::m_items
     Prefab,                     // Entities contained within DrProject::m_prefabs
-    Variable,                   // Entities contained within DrProject::m_variables
+    UI,                         // Entities contained within DrProject::m_uis
+        Widget,                 // Entities contained within DrProject::DrUI::m_widgets
     World,                      // Entities contained within DrProject::m_worlds
         Stage,                  // Entities contained within DrProject::DrWorld::m_stages
             Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
@@ -46,11 +48,6 @@ enum class DrType {
     //        Foreground,
 
     //Logic,
-
-    //UI,
-    //    Label,
-    //    Button,
-    //    Joystick,
 
     NotFound,
 };
@@ -131,6 +128,16 @@ enum class DrThingType {
     // Particle,
 };
 
+// ***** Widgets,   Entities contained within DrProject::DrUI::m_widgets
+enum class DrWidgetType {
+    None,
+
+    Button,
+    Joystick,
+    Navigation,
+    Text,
+};
+
 
 //####################################################################################
 //##    Categories for the Asset Tree
@@ -164,6 +171,11 @@ enum class Sort_Order {
     DescendingOrder  = 1,
 };
 
+enum class Z_Insert {
+    Back,
+    Front,
+    At_Position,
+};
 
 //####################################################################################
 //##    Some public forward function declarations for some enum functions
@@ -176,6 +188,7 @@ namespace Dr {
     std::string         StringFromItemType(DrItemType type);
     std::string         StringFromPrefabType(DrPrefabType type);
     std::string         StringFromThingType(DrThingType type);
+    std::string         StringFromWidgetType(DrWidgetType type);
 }
 
 

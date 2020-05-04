@@ -35,9 +35,9 @@ static void GetBodyContactNormals(cpBody *, cpArbiter *arb, std::vector<cpVect> 
     normal_list->push_back( normal );
 }
 // Used for body iterator to get a list of all Bodies in cpSpace
-static void GetSpaceBodyList(cpBody *body, std::vector<cpBody*> *body_list) {
-    body_list->push_back(body);
-}
+///static void GetSpaceBodyList(cpBody *body, std::vector<cpBody*> *body_list) {
+///    body_list->push_back(body);
+///}
 // Used for constraint iterator to get a list of all Constraints (joints) in cpSpace
 static void GetSpaceJointList(cpConstraint *constraint, std::vector<cpConstraint*> *joint_list) {
     joint_list->push_back(constraint);

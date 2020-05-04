@@ -15,8 +15,7 @@
 #include "project/constants_comps_and_props.h"
 #include "project/enums_entity_types.h"
 
-
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class FormMain;
 class IEditorRelay;

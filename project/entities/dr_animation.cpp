@@ -17,7 +17,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, std::list<long> image_keys)
         : DrSettings(parent_project) {
@@ -49,8 +49,8 @@ DrAnimation::DrAnimation(DrProject *parent_project, long new_animation_key, std:
     initializeAnimationSettings(new_animation_name);
 
     // Add Frames
-    for (auto key : image_keys) {
-        m_frames.push_back(new DrFrame(parent_project, { key }));
+    for (auto &key : image_keys) {
+        m_frames.push_back(new DrFrame(parent_project, this, { key }));
     }
 }
 
@@ -62,7 +62,7 @@ DrAnimation::~DrAnimation() {
 //##    Adds frame using given DrImage Key
 //####################################################################################
 long DrAnimation::addFrame(long image_key) {
-    m_frames.push_back(new DrFrame(getParentProject(), { image_key }));
+    m_frames.push_back(new DrFrame(getParentProject(), this, { image_key }));
     return static_cast<long>(m_frames.size());
 }
 

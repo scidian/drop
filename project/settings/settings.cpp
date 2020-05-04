@@ -22,7 +22,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrSettings::DrSettings(DrProject *parent_project) : m_parent_project(parent_project) {
     getParentProject()->setHasSaved(false);
@@ -154,12 +154,15 @@ std::string DrSettings::getName() {
         case DrType::Prefab:
         case DrType::Stage:
         case DrType::Thing:
+        case DrType::UI:
         case DrType::Variable:
+        case DrType::Widget:
         case DrType::World:        
             name_component = getComponent(Comps::Entity_Settings);              if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Props::Entity_Name);   if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();
-        case DrType::Frame:     return "DrFrame - Unknown Name";
+        case DrType::Frame:
+            return "DrFrame - Child of Animation: " + dynamic_cast<DrFrame*>(this)->getParentAnimation()->getName();
         case DrType::NotFound:  return "Type \"DrType::NotFound\"";
     }
     return "Unknown Type, Can't Find Name";

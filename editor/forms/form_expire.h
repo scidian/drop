@@ -11,7 +11,7 @@
 #include <QMainWindow>
 #include <QWidget>
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 
 

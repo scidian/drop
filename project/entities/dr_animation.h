@@ -10,12 +10,13 @@
 
 #include "project/settings/settings.h"
 
-// Forward declarations
+// Forward Declarations
 class DrFrame;
 class DrImage;
 class DrProject;
 class DrWorld;
 
+// Type Definitions
 typedef std::vector<DrFrame*> Frames;
 
 
@@ -27,16 +28,15 @@ class DrAnimation : public DrSettings
 {
 private:
     // Local Variables
-    Frames          m_frames;                               // Holds frames of this animation
-                                                            // !!!!! #NOTE: Frame numbers start at 1 !!!!!
-
+    Frames          m_frames;                                   // Holds frames of this animation
+                                                                // !!!!! #NOTE: Frame numbers start at 1 !!!!!
 public:
     // Constructor / Destructor
     DrAnimation(DrProject *parent_project, long new_animation_key, std::list<long> image_keys);
     virtual ~DrAnimation() override;
 
     // DrSettings Virtual Overrides
-    virtual DrType  getType() override      { return DrType::Animation; }
+    virtual DrType  getType() override                  { return DrType::Animation; }
 
     // Function Calls
     long        addFrame(long image_key);
@@ -60,10 +60,12 @@ public:
 class DrFrame : public DrSettings
 {
 private:
+    // External Borrowed Pointers
+    DrAnimation             *m_parent_animation;                // Holds pointer to parent DrAnimation
 
 public:
     // Constructor / Destructor
-    DrFrame(DrProject *parent_project, std::list<long> image_keys);
+    DrFrame(DrProject *parent_project, DrAnimation *parent_animation, std::list<long> image_keys);
     virtual ~DrFrame() override;
 
     // Function Calls
@@ -71,6 +73,7 @@ public:
 
     // Getters / Setters
     virtual DrType  getType() override      { return DrType::Frame; }
+    DrAnimation*    getParentAnimation()    { return m_parent_animation; }
 };
 
 

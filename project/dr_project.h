@@ -34,7 +34,7 @@ enum class Orientation {
     Landscape           = 1,
 };
 
-// Forward declarations
+// Forward Declarations
 class DrAnimation;
 class DrAsset;
 class DrDevice;
@@ -45,11 +45,12 @@ class DrItem;
 class DrPrefab;
 class DrStage;
 class DrThing;
-class DrVariable;
+class DrUI;
+class DrWidget;
 class DrWorld;
 class IProgressBar;
 
-// Type definitions
+// Type Definitions
 typedef std::map<Project_Options,   DrVariant>      OptionMap;
 
 typedef std::map<long,              DrAnimation*>   AnimationMap;
@@ -60,6 +61,7 @@ typedef std::map<long,              DrFont*>        FontMap;
 typedef std::map<long,              DrImage*>       ImageMap;
 typedef std::map<long,              DrItem*>        ItemMap;
 typedef std::map<long,              DrPrefab*>      PrefabMap;
+typedef std::map<long,              DrUI*>          UIMap;
 typedef std::map<long,              DrWorld*>       WorldMap;
 
 
@@ -89,15 +91,16 @@ private:
     //          - Inherit DrSettings for DrComponent / DrProperty usage
     //          - Is assigned an unique key upon creation from DrProject::getNextKey()
     //
-    AnimationMap    m_animations;                                   // Holds animations     for the project
-    AssetMap        m_assets;                                       // Holds assets         for the project
-    DeviceMap       m_devices;                                      // Holds devices        for the project
-    EffectMap       m_effects;                                      // Holds effects        for the project
-    FontMap         m_fonts;                                        // Holds custom fonts   for the project
-    ImageMap        m_images;                                       // Holds images         for the project
-    ItemMap         m_items;                                        // Holds items          for the project
-    PrefabMap       m_prefabs;                                      // Holds prefabs        for the project
-    WorldMap        m_worlds;                                       // Holds worlds         for the project
+    AnimationMap    m_animations;                                   // Holds DrAnimations (which in turn hold DrFrames)
+    AssetMap        m_assets;                                       // Holds DrAssets
+    DeviceMap       m_devices;                                      // Holds DrDevices
+    EffectMap       m_effects;                                      // Holds DrEffects
+    FontMap         m_fonts;                                        // Holds DrFonts (currently custom bitmap fonts)
+    ImageMap        m_images;                                       // Holds DrImages (for use in DrFrames, loaded into DrEngineTextures)
+    ItemMap         m_items;                                        // Holds DrItems
+    PrefabMap       m_prefabs;                                      // Holds DrPrefabs
+    UIMap           m_uis;                                          // Holds DrUIs (which in turn hold DrThings)
+    WorldMap        m_worlds;                                       // Holds DrWorlds (which in turn hold DrStages, which hold DrThings)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -134,6 +137,7 @@ public:
     ImageMap&       getImageMap()           { return m_images; }
     ItemMap&        getItemMap()            { return m_items; }
     PrefabMap&      getPrefabMap()          { return m_prefabs; }
+    UIMap&          getUIMap()              { return m_uis; }
     WorldMap&       getWorldMap()           { return m_worlds; }
 
     long            getNumberOfAnimations() { return static_cast<long>(m_animations.size()); }
@@ -151,18 +155,21 @@ public:
     DrAnimation*    findAnimationFromKey(long check_key);
     DrAsset*        findAssetFromKey(long check_key);
     DrDevice*       findDeviceFromKey(long check_key);
-    DrDevice*       findDeviceFromType(DrDeviceType type);
     DrEffect*       findEffectFromKey(long check_key);
-    DrEffect*       findEffectFromType(DrEffectType type);
     DrFont*         findFontFromKey(long check_key);
     DrImage*        findImageFromKey(long check_key);
     DrItem*         findItemFromKey(long check_key);
-    DrItem*         findItemFromType(DrItemType type);
     DrPrefab*       findPrefabFromKey(long check_key);
-    DrPrefab*       findPrefabFromType(DrPrefabType type);
     DrStage*        findStageFromKey(long check_key);
     DrThing*        findThingFromKey(long check_key);
+    DrUI*           findUIFromKey(long check_key);
+    DrWidget*       findWidgetFromKey(long check_key);
     DrWorld*        findWorldFromKey(long check_key);
+
+    DrDevice*       findDeviceFromType(DrDeviceType type);
+    DrEffect*       findEffectFromType(DrEffectType type);
+    DrItem*         findItemFromType(DrItemType type);
+    DrPrefab*       findPrefabFromType(DrPrefabType type);
 
     // Worlds
     long            getFirstWorldKey()      { return m_worlds.begin()->first; }
@@ -179,8 +186,10 @@ public:
                              long key = c_no_key, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
-    DrWorld*        addWorld();
-    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
+    DrUI*           addUI();
+    DrUI*           addUI(long key);
+    DrUI*           addUICopyFromUI(DrUI* from_ui, std::string new_name);
+    DrWorld*        addWorld();    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);
 
 
@@ -192,6 +201,7 @@ public:
     void            deleteEntity(long entity_key);
     void            deleteFont(long font_key);
     void            deleteImage(long image_key);
+    void            deleteUI(long ui_key);
     void            deleteWorld(long world_key);
 
 };

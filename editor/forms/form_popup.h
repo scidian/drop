@@ -16,7 +16,7 @@
 
 #include "core/types/dr_color.h"
 
-// Forward declarations
+// Forward Declarations
 class       DrProject;
 class       FormPopup;
 class       TreeInspector;

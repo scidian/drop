@@ -9,30 +9,28 @@
 #include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_asset.h"
-#include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
+#include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
-DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world,
-                 long new_stage_key, std::string new_stage_name, bool is_start_stage) : DrSettings(parent_project) {
-    m_center_view_point = DrPointF(0, 0);
-    m_parent_world = parent_world;                  // pointer to parent World
+DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stage_key, std::string new_stage_name, bool is_start_stage)
+    : DrSettings(parent_project) {
 
-    this->setKey(new_stage_key);                    // assign key passed in from key generator, this key matches key in parent World map container
+    this->setViewCenterPoint(DrPointF(0, 0));
+    this->setParentWorld(parent_world);                 // Pointer to parent World
+    this->setKey(new_stage_key);                        // assign key passed in from key generator, this key matches key in parent World map container
+    this->setIsStartStage(is_start_stage);              // Is this a "Start Stage" or not, can only be one "Start Stage" per World
+    initializeStageSettings(new_stage_name);            // Call to load in all the components / properties for this Stage entity
 
-    m_is_start_stage = is_start_stage;              // is this a start stage or not, can only be one start stage per World
-
-    initializeStageSettings(new_stage_name);        // call to load in all the components / properties for this Stage entity
-
-    // If start stage, make name hidden to stop user from changing it
-    if (m_is_start_stage) {
+    // If "Start Stage", make name hidden to stop user from changing it
+    if (isStartStage()) {
         DrProperty *my_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
         my_name->setEditable(false);
     }
@@ -63,7 +61,7 @@ DrThing* DrStage::addThing(DrThingType new_type, long from_asset_key, double x, 
 
     long new_thing_key = (key == c_no_key) ? getParentProject()->getNextKey() : key;
     m_things[new_thing_key] = new DrThing(getParentProject(), m_parent_world, this, new_thing_key,
-                                          new_name, new_type, from_asset_key, x, y, z, should_collide);
+                                          new_name, new_type, asset, x, y, z, should_collide);
     return m_things[new_thing_key];
 }
 
@@ -76,7 +74,7 @@ void DrStage::deleteThing(DrThing *&thing) {
 
 
 //####################################################################################
-//##    Returns a list of Thing keys contained in stage, sorted from high z value to low
+//##    Returns a list of Thing keys contained in Stage, sorted from high z value to low
 //####################################################################################
 std::vector<long> DrStage::thingKeysSortedByZOrder(Sort_Order sort_order) {
     std::vector<long> z_ordered_keys;
@@ -86,7 +84,7 @@ std::vector<long> DrStage::thingKeysSortedByZOrder(Sort_Order sort_order) {
 }
 
 //####################################################################################
-//##    Returns a list of Things contained in stage, sorted from high z value to low
+//##    Returns a list of Things contained in Stage, sorted from high z value to low
 //####################################################################################
 std::vector<DrThing*> DrStage::thingsSortedByZOrder(Sort_Order sort_order, bool all_things, std::list<DrThing*> just_these_things) {
     // Make a Vector of pairs for sorting

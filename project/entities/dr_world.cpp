@@ -6,16 +6,16 @@
 //
 //
 #include "project/dr_project.h"
-#include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
+#include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrWorld::DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage) : DrSettings(parent_project) {
     this->setKey(key);

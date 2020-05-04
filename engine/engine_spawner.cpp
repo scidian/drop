@@ -15,7 +15,7 @@
 
 
 //####################################################################################
-//##    Constructor
+//##    Constructor / Destructor
 //####################################################################################
 DrEngineSpawner::DrEngineSpawner(DrThing *thing) : m_thing_to_spawn(thing) { }
 

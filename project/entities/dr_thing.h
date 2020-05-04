@@ -11,24 +11,19 @@
 #include "project/settings/settings.h"
 
 // Forward Declarations
-class DrProject;
 class DrAsset;
-class DrWorld;
+class DrProject;
+class DrSettings;
 class DrStage;
 class DrThing;
+class DrWorld;
 class EditorItem;
 
 // Local Structs / Enums
-struct Order_Info {
+struct Order_Info_Thing {
     long        key;
     DrThing    *thing;
     int         sub_order;
-};
-
-enum class Z_Insert {
-    Back,
-    Front,
-    At_Position,
 };
 
 
@@ -40,8 +35,8 @@ class DrThing : public DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrWorld            *m_parent_world;                     // Holds reference to parent World class
-    DrStage            *m_parent_stage;                     // Holds reference to parent Stage class
+    DrWorld            *m_parent_world;                     // Holds reference to parent DrWorld class
+    DrStage            *m_parent_stage;                     // Holds reference to parent DrStage class
 
     // Local Variables
     DrThingType         m_thing_type;                       // Holds type of current Thing
@@ -51,7 +46,7 @@ private:
 public:
     // Constructor / Destructor
     explicit DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage, long new_thing_key,
-                     std::string new_thing_name, DrThingType new_thing_type, long from_asset_key, double x, double y, double z, bool should_collide = true);
+                     std::string new_thing_name, DrThingType new_thing_type, DrSettings *from_entity, double x, double y, double z, bool should_collide = true);
     virtual ~DrThing() override;
 
     // DrSettings Base Class Overrides

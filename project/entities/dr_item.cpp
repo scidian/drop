@@ -12,7 +12,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrItem::DrItem(DrProject *parent_project, long key, DrItemType item_type) : DrSettings(parent_project) {
     this->setKey(key);

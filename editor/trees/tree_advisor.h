@@ -11,7 +11,7 @@
 #include <QTreeWidget>
 #include <QMutex>
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class IEditorRelay;
 

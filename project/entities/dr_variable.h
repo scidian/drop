@@ -21,14 +21,13 @@ private:
     // Local Variables
     Variant_Type    m_variable_type;                                // Stores initial type of Variable
 
-
 public:
     // Constructors
     DrVariable(DrProject *parent_project, std::string variable_name, Variant_Type variable_type, DrVariant initial_value);
     virtual ~DrVariable() override;
 
     // DrSettings Overrides
-    virtual DrType      getType() override  { return DrType::Variable; }
+    virtual DrType      getType() override          { return DrType::Variable; }
 
     // Data Functions
     DrVariant           getCurrent();

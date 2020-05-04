@@ -19,7 +19,7 @@
 
 #include "core/interface/dr_progress.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class FormProgressBox;
 

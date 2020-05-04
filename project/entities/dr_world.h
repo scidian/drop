@@ -10,11 +10,11 @@
 
 #include "project/settings/settings.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class DrStage;
 
-// Type definitions
+// Type Definitions
 typedef std::map<long, DrStage*> StageMap;
 
 
@@ -34,7 +34,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage = true);
+    DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage);
     virtual ~DrWorld() override;
 
     // DrSettings Overrides

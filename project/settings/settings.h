@@ -60,9 +60,10 @@ public:
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Abstract Functions
-    virtual DrType  getType() = 0;
+    virtual DrType      getType() = 0;
 
     // Getters / Setters
+    DrProject*          project()               { return m_parent_project; }
     DrProject*          getParentProject()      { return m_parent_project; }
     long                getKey()                { return getComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Key).toLong(); }
     void                setKey (long new_key)   { setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Key, DrVariant(new_key)); }

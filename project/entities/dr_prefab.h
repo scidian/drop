@@ -22,7 +22,7 @@ class DrPrefab : public DrSettings
 {
 private:
     // Local Variables
-    DrPrefabType        m_prefab_type;                  // Prefab Type as DrPrefabType
+    DrPrefabType        m_prefab_type;                      // Prefab Type as DrPrefabType
 
 public:
     // Constructor

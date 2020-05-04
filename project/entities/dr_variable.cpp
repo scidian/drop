@@ -13,7 +13,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrVariable::DrVariable(DrProject *parent_project, std::string variable_name, Variant_Type variable_type, DrVariant initial_value)
     : DrSettings(parent_project) {

@@ -12,9 +12,9 @@
 #include "project/constants_comps_and_props.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
-class DrSettings;
+// Forward Declarations
 class DrComponent;
+class DrSettings;
 
 
 //####################################################################################
@@ -29,17 +29,17 @@ private:
     DrComponent    *m_parent_component;
 
     // The 7 Parts of Data for Every Property
-    std::string     m_display_name =      "Unknown Property";                   // Name to be displayed in Editor
-    std::string     m_description =       "No description.";                    // Description to be displayed in Editor
-    Property_Type   m_property_type =     Property_Type::String;                // Variable type of 'm_value'
-    DrVariant       m_value =             std::string("0");                     // The stored data this property represents
-    std::string     m_property_key =      "";                                   // The unique id of this property within the parent object
-    bool            m_is_hidden =         false;                                // Should this appear in the Inspector
-    bool            m_is_editable =       true;                                 // Should this be editable in the Inspector
+    std::string     m_display_name      { "Unknown Property" };             // Name to be displayed in Editor
+    std::string     m_description       { "No description." };              // Description to be displayed in Editor
+    Property_Type   m_property_type     { Property_Type::String };          // Variable type of 'm_value'
+    DrVariant       m_value             { std::string("0") };               // The stored data this property represents
+    std::string     m_property_key      { "" };                             // The unique id of this property within the parent object
+    bool            m_is_hidden         { false };                          // Should this appear in the Inspector
+    bool            m_is_editable       { true };                           // Should this be editable in the Inspector
 
     // For now this is not stored, assignined during creation in void DrComponent::addProperty()
     // Used for sorting in Object Inspector
-    int             m_list_order = 0;
+    int             m_list_order        { 0 };
 
 public:
     // Constructor / Destructor

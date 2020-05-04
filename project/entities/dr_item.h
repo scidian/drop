@@ -22,7 +22,7 @@ class DrItem : public DrSettings
 {
 private:
     // Local Variables
-    DrItemType          m_item_type;                     // Item Type as DrItemType
+    DrItemType          m_item_type;                        // Item Type as DrItemType
 
 public:
     // Constructor

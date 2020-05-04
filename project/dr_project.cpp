@@ -21,11 +21,13 @@
 #include "project/entities/dr_prefab.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
+#include "project/entities/dr_ui.h"
+#include "project/entities/dr_widget.h"
 #include "project/entities/dr_world.h"
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrProject::DrProject() {
     clearProject();
@@ -49,6 +51,7 @@ void DrProject::clearProject(bool add_built_in_items) {
     for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_items.begin();         it != m_items.end(); )      {   delete it->second; it = m_items.erase(it);      }
     for (auto it = m_prefabs.begin();       it != m_prefabs.end(); )    {   delete it->second; it = m_prefabs.erase(it);    }
+    for (auto it = m_uis.begin();           it != m_uis.end(); )        {   delete it->second; it = m_uis.erase(it);        }
     for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
     // Add these Images to every project for use with New Assets
@@ -56,8 +59,8 @@ void DrProject::clearProject(bool add_built_in_items) {
         addDefaultAssets();
     }
 
-    // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 could conflict with nullptr results
-    //              (starts at 1001)
+    // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 (or less) could conflict with nullptr results
+    //             (c_key_starting_number currently starts at 1001)
     m_key_generator = c_key_starting_number;
 }
 
@@ -198,6 +201,14 @@ void DrProject::deleteImage(long image_key) {
     delete image;
 }
 
+// Removes a UI from the Project
+void DrProject::deleteUI(long ui_key) {
+    DrUI *ui = findUIFromKey(ui_key);
+    if (ui == nullptr) return;
+    m_uis.erase(ui->getKey());
+    delete ui;
+}
+
 // Removes a World from the Project
 void DrProject::deleteWorld(long world_key) {
     DrWorld *world = findWorldFromKey(world_key);
@@ -288,13 +299,15 @@ DrWorld* DrProject::addWorld() {
     } while (findWorldWithName(new_name) != nullptr);
 
     long new_world_key = getNextKey();
-    m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name);
+    bool add_start_stage = true;
+    m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name, add_start_stage);
     return m_worlds[new_world_key];
 }
 
 // Adds a World to the map container, !!!!! DOES NOT CREATE Start Stage
 DrWorld* DrProject::addWorld(long key, long start_stage_key, long last_stage_in_editor_key) {
-    m_worlds[key] = new DrWorld(this, key, "TEMP", false);
+    bool add_start_stage = false;
+    m_worlds[key] = new DrWorld(this, key, "TEMP", add_start_stage);
     m_worlds[key]->setStartStageKey(start_stage_key);
     m_worlds[key]->setLastStageShownKey(last_stage_in_editor_key);
     return m_worlds[key];
@@ -326,6 +339,11 @@ DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world, std::string new_n
 //##                  (key's are generated from Project key generator upon item initialization)
 //##
 //####################################################################################
+// Searches all member variables / containers for the specified unique project key
+DrType DrProject::findChildTypeFromKey(long check_key) {
+    DrSettings *settings = findSettingsFromKey(check_key);
+    return ((settings == nullptr) ? DrType::NotFound : settings->getType());
+}
 
 // Returns a pointer to the Base DrSettings class of the item with the specified key
 DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, std::string custom_error) {
@@ -353,11 +371,10 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
     PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
     if (prefab_iter != m_prefabs.end())         return prefab_iter->second;
 
-    WorldMap &worlds = m_worlds;
-    WorldMap::iterator world_iter = worlds.find(check_key);
-    if (world_iter != worlds.end())             return world_iter->second;
-
-    for (auto &world_pair : worlds) {
+    // Search Worlds, Stages and Things
+    WorldMap::iterator world_iter = m_worlds.find(check_key);
+    if (world_iter != m_worlds.end())           return world_iter->second;
+    for (auto &world_pair : m_worlds) {
         StageMap &stages = world_pair.second->getStageMap();
         StageMap::iterator stage_iter = stages.find(check_key);
         if (stage_iter != stages.end())         return stage_iter->second;
@@ -369,6 +386,16 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
         }
     }
 
+    // Search UIs and Widgets
+    UIMap::iterator ui_iter = m_uis.find(check_key);
+    if (ui_iter != m_uis.end())                 return ui_iter->second;
+    for (auto &ui_pair : m_uis) {
+        WidgetMap &widgets = ui_pair.second->getWidgetMap();
+        WidgetMap::iterator widget_iter = widgets.find(check_key);
+        if (widget_iter != widgets.end())       return widget_iter->second;
+    }
+
+    // Couldnt find Entity with key value "check_key"
     if (show_warning) {
         if (custom_error == "") custom_error = "No more info available...";
         Dr::PrintDebug("WARNING: Did not find key (" + std::to_string(check_key) + ") in project! \n"
@@ -379,114 +406,45 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
     return nullptr;
 }
 
-// Searches all member variables / containers for the specified unique project key
-DrType DrProject::findChildTypeFromKey(long check_key) {
-    DrSettings *settings = findSettingsFromKey(check_key);
-    if (settings == nullptr) {
-        return DrType::NotFound;
-    } else {
-        return settings->getType();
-    }
-}
 
 DrAnimation* DrProject::findAnimationFromKey(long check_key) {
     AnimationMap::iterator animation_iter = m_animations.find(check_key);
-    if (animation_iter != m_animations.end())
-        return animation_iter->second;
-    else
-        return nullptr;
+    return ((animation_iter != m_animations.end()) ? animation_iter->second : nullptr);
 }
 
 DrAsset* DrProject::findAssetFromKey(long check_key) {
     AssetMap::iterator asset_iter = m_assets.find(check_key);
-    if (asset_iter != m_assets.end())
-        return asset_iter->second;
-    else
-        return nullptr;
+    return ((asset_iter != m_assets.end()) ? asset_iter->second : nullptr);
 }
 
 DrDevice* DrProject::findDeviceFromKey(long check_key) {
     DeviceMap::iterator device_iter = m_devices.find(check_key);
-    if (device_iter != m_devices.end())
-        return device_iter->second;
-    else
-        return nullptr;
-}
-
-DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
-    for (auto &device_pair : m_devices) {
-        if (device_pair.second->getDeviceType() == type) {
-            return device_pair.second;
-        }
-    }
-    return nullptr;
+    return ((device_iter != m_devices.end()) ? device_iter->second : nullptr);
 }
 
 DrEffect* DrProject::findEffectFromKey(long check_key) {
     EffectMap::iterator effect_iter = m_effects.find(check_key);
-    if (effect_iter != m_effects.end())
-        return effect_iter->second;
-    else
-        return nullptr;
-}
-
-DrEffect* DrProject::findEffectFromType(DrEffectType type) {
-    for (auto &effect_pair : m_effects) {
-        if (effect_pair.second->getEffectType() == type) {
-            return effect_pair.second;
-        }
-    }
-    return nullptr;
+    return ((effect_iter != m_effects.end()) ? effect_iter->second : nullptr);
 }
 
 DrFont* DrProject::findFontFromKey(long check_key) {
     FontMap::iterator font_iter = m_fonts.find(check_key);
-    if (font_iter != m_fonts.end())
-        return font_iter->second;
-    else
-        return nullptr;
+    return ((font_iter != m_fonts.end()) ? font_iter->second : nullptr);
 }
 
 DrImage* DrProject::findImageFromKey(long check_key) {
     ImageMap::iterator image_iter = m_images.find(check_key);
-    if (image_iter != m_images.end())
-        return image_iter->second;
-    else
-        return nullptr;
+    return ((image_iter != m_images.end()) ? image_iter->second : nullptr);
 }
 
 DrItem* DrProject::findItemFromKey(long check_key) {
     ItemMap::iterator item_iter = m_items.find(check_key);
-    if (item_iter != m_items.end())
-        return item_iter->second;
-    else
-        return nullptr;
-}
-
-DrItem* DrProject::findItemFromType(DrItemType type) {
-    for (auto &item_pair : m_items) {
-        if (item_pair.second->getItemType() == type) {
-            return item_pair.second;
-        }
-    }
-    return nullptr;
+    return ((item_iter != m_items.end()) ? item_iter->second : nullptr);
 }
 
 DrPrefab* DrProject::findPrefabFromKey(long check_key) {
     PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
-    if (prefab_iter != m_prefabs.end())
-        return prefab_iter->second;
-    else
-        return nullptr;
-}
-
-DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
-    for (auto &prefab_pair : m_prefabs) {
-        if (prefab_pair.second->getPrefabType() == type) {
-            return prefab_pair.second;
-        }
-    }
-    return nullptr;
+    return ((prefab_iter != m_prefabs.end()) ? prefab_iter->second : nullptr);
 }
 
 DrStage* DrProject::findStageFromKey(long check_key) {
@@ -512,12 +470,24 @@ DrThing* DrProject::findThingFromKey(long check_key) {
     return nullptr;
 }
 
+DrUI* DrProject::findUIFromKey(long check_key) {
+    UIMap::iterator ui_iter = m_uis.find(check_key);
+    return ((ui_iter != m_uis.end()) ? ui_iter->second : nullptr);
+}
+
+DrWidget* DrProject::findWidgetFromKey(long check_key) {
+    for (auto &ui_pair : m_uis) {
+        WidgetMap &widgets = ui_pair.second->getWidgetMap();
+        WidgetMap::iterator widget_iter = widgets.find(check_key);
+        if (widget_iter != widgets.end())
+            return widget_iter->second;
+    }
+    return nullptr;
+}
+
 DrWorld* DrProject::findWorldFromKey(long check_key) {
     WorldMap::iterator world_iter = m_worlds.find(check_key);
-    if (world_iter != m_worlds.end())
-        return world_iter->second;
-    else
-        return nullptr;
+    return ((world_iter != m_worlds.end()) ? world_iter->second : nullptr);
 }
 
 // Returns a pointer to the World with the mathcing name
@@ -531,6 +501,45 @@ DrWorld* DrProject::findWorldWithName(std::string world_name) {
 }
 
 
+//####################################################################################
+//##    Finding by Type
+//##        Specific Entity by Type for those entities that are singletons
+//####################################################################################
+DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
+    for (auto &device_pair : m_devices) {
+        if (device_pair.second->getDeviceType() == type) {
+            return device_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrEffect* DrProject::findEffectFromType(DrEffectType type) {
+    for (auto &effect_pair : m_effects) {
+        if (effect_pair.second->getEffectType() == type) {
+            return effect_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrItem* DrProject::findItemFromType(DrItemType type) {
+    for (auto &item_pair : m_items) {
+        if (item_pair.second->getItemType() == type) {
+            return item_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
+    for (auto &prefab_pair : m_prefabs) {
+        if (prefab_pair.second->getPrefabType() == type) {
+            return prefab_pair.second;
+        }
+    }
+    return nullptr;
+}
 
 
 

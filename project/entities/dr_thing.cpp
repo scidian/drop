@@ -25,29 +25,28 @@
 //####################################################################################
 DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *parent_stage,
                  long new_thing_key, std::string new_thing_name, DrThingType new_thing_type,
-                 long from_asset_key,
+                 DrSettings *from_entity,
                  double x, double y, double z,
-                 bool should_collide) : DrSettings(parent_project) {
+                 bool should_collide)
+    : DrSettings(parent_project) {
+
     m_parent_world = parent_world;                  // pointer to parent World
     m_parent_stage = parent_stage;                  // pointer to parent Stage
 
     this->setKey(new_thing_key);                    // assign key passed in from key generator, this key matches key in parent Stage map container
 
     m_thing_type = new_thing_type;                  // assign thing type
-    m_asset_key =  from_asset_key;                  // associated asset key
+    m_asset_key =  from_entity->getKey();           // associated asset key
 
     getComponentProperty(Comps::Entity_Settings, Props::Entity_Name)->setEditable(false);
     getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(true);
-    addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Asset_Key, Property_Type::Int, from_asset_key,
+    addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Asset_Key, Property_Type::Int, m_asset_key,
                            "Asset ID Key", "ID Key of Asset this Thing represents.", false, false);
-
-    DrSettings *entity = getParentProject()->findSettingsFromKey(from_asset_key);
-
 
     // ********** Call to load in all the Components / Properties for this Thing
     switch (new_thing_type) {
         case DrThingType::Character: {
-            DrAsset *asset = dynamic_cast<DrAsset*>(entity);
+            DrAsset *asset = dynamic_cast<DrAsset*>(from_entity);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(false);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setDisplayName("Character ID Key");
             addComponentSettingsCharacter(new_thing_name);
@@ -60,7 +59,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
         }
         case DrThingType::Object: {
-            DrAsset *asset = dynamic_cast<DrAsset*>(entity);
+            DrAsset *asset = dynamic_cast<DrAsset*>(from_entity);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(false);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setDisplayName("Object ID Key");
             addComponentSettingsObject(new_thing_name, should_collide);            
@@ -75,7 +74,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             break;
         }
         case DrThingType::Text: {
-            DrFont *font = dynamic_cast<DrFont*>(entity);
+            DrFont *font = dynamic_cast<DrFont*>(from_entity);
             DrRect rect = font->getCharRect('A');
             addComponentSettingsText(new_thing_name);
             addComponentTransform(rect.width * 4 /* "Test" */, rect.height, x, -y, DrThingType::Text);

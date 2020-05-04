@@ -24,10 +24,10 @@ class DrAsset : public DrSettings
 {
 private:
     // Local Variables
-    DrAssetType     m_asset_type;                           // Holds asset type (object, character, etc)
+    DrAssetType     m_asset_type;                               // Holds asset type (object, character, etc)
 
-    long            m_base_key          { c_no_key };       // Holds key to source (asset pulls from an DrAnimation, DrImage)
-                                                            // For more info, look at DrAsset Constructor
+    long            m_base_key          { c_no_key };           // Holds key to source (asset pulls from an DrAnimation, DrImage)
+                                                                // For more info, look at DrAsset Constructor
     long            m_width             { 0 };
     long            m_height            { 0 };
 

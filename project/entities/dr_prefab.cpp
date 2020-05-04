@@ -12,7 +12,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrPrefab::DrPrefab(DrProject *parent_project, long key, DrPrefabType prefab_type) : DrSettings(parent_project) {
     this->setKey(key);

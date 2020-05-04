@@ -92,6 +92,7 @@ namespace Comps {
     //  An = Animation
     //  Fr = Frame
     //  As = Asset
+    //  Ui = UI
     //  Wo = World
     //  St = Stage
     //  Th = Thing
@@ -122,6 +123,9 @@ namespace Comps {
     const std::string Asset_Settings_Object             = "AsSeObject";
     const std::string Asset_Settings_Font               = "AsSeFont";
 
+    // ***** DrUI Components
+    const std::string UI_Settings                       = "UiSe";
+
     // ***** DrWorld Components
     const std::string World_Settings                    = "WoSe";
     const std::string World_Physics                     = "WoPhysics";
@@ -134,7 +138,7 @@ namespace Comps {
     const std::string Stage_Settings                    = "StSe";
     const std::string Stage_Grid                        = "StGrid";
 
-    // ***** DrThing Components
+    // ***** DrThing Shared Components
     const std::string Thing_Transform                   = "Transform";
     const std::string Thing_Layering                    = "Layering";
     const std::string Thing_Movement                    = "Movement";

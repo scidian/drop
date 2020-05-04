@@ -22,7 +22,7 @@ class DrEffect : public DrSettings
 {
 private:
     // Local Variables
-    DrEffectType        m_effect_type;                     // Effect Type as DrEffectType
+    DrEffectType        m_effect_type;                      // Effect Type as DrEffectType
 
 public:
     // Constructor
@@ -32,7 +32,7 @@ public:
     virtual DrType      getType() override      { return DrType::Effect; }
 
     // Getters / Setters
-    DrEffectType        getEffectType() { return m_effect_type; }
+    DrEffectType        getEffectType()         { return m_effect_type; }
 
 };
 

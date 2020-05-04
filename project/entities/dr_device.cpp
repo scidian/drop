@@ -12,7 +12,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrDevice::DrDevice(DrProject *parent_project, long key, DrDeviceType device_type) : DrSettings(parent_project) {
     this->setKey(key);

@@ -261,8 +261,8 @@ bool OpenProjectFromFile(DrProject *project, std::string open_file) {
 
                 // Load Thing
                 QVariantMap thing_data =    settings.value("thing").value<QVariantMap>();
-                long thing_key =            checkMapHasKey(thing_data, "key")            ? thing_data["key"].toLongLong()        : c_no_key;
-                long asset_key =            checkMapHasKey(thing_data, "asset_key")      ? thing_data["asset_key"].toLongLong()  : c_no_key;
+                long        thing_key =     checkMapHasKey(thing_data, "key")            ? thing_data["key"].toLongLong()        : c_no_key;
+                long        asset_key =     checkMapHasKey(thing_data, "asset_key")      ? thing_data["asset_key"].toLongLong()  : c_no_key;
                 DrThingType thing_type =    checkMapHasKey(thing_data, "type")           ? static_cast<DrThingType>(thing_data["type"].toInt()) : DrThingType::Object;
 
                 // If key already exists, move on

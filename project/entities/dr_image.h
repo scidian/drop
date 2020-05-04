@@ -10,7 +10,7 @@
 
 #include "project/settings/settings.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 class IProgressBar;
 
@@ -44,18 +44,18 @@ public:
             Asset_Category category = Asset_Category::Image, bool force_outline = false, IProgressBar *progress = nullptr);
 
     // DrSettings Overrides
-    virtual DrType      getType() override  { return DrType::Image; }
-    virtual std::string getName() override  { return m_simple_name; }
+    virtual DrType          getType() override  { return DrType::Image; }
+    virtual std::string     getName() override  { return m_simple_name; }
 
     // Image Helper Functions
-    void            autoOutlinePoints(IProgressBar *progress = nullptr);
-    void            setSimpleBox();
+    void                autoOutlinePoints(IProgressBar *progress = nullptr);
+    void                setSimpleBox();
 
     // Getters / Setters
-    Asset_Category  getAssetCategory()      { return m_category; }
-    std::string     getSimplifiedName()     { return m_simple_name; }
+    Asset_Category      getAssetCategory()      { return m_category; }
+    std::string         getSimplifiedName()     { return m_simple_name; }
 
-    const DrBitmap& getBitmap() const       { return m_bitmap; }
+    const DrBitmap&     getBitmap() const       { return m_bitmap; }
 
 };
 

@@ -33,8 +33,10 @@ DrEngineThing::DrEngineThing(DrEngineWorld* world, long unique_key, long origina
 }
 
 DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long original_key, double x, double y, double z,
-                             DrPointF scale, double angle, float opacity, DrPointF size)
-    : DrEngineThing(world, unique_key, original_key) {
+                             DrPointF scale, double angle, float opacity, DrPointF size) {
+    m_world = world;
+    m_key = unique_key;
+    m_original_project_key = original_key;
 
     this->setAngle(angle);
     this->setOpacity(opacity);
@@ -119,7 +121,7 @@ void DrEngineThing::destroy() {
 // Returns name of this Entity (Thing)
 std::string DrEngineThing::name() {
     if (m_world == nullptr) return "";
-    DrSettings *entity = m_world->getProject()->findSettingsFromKey(m_original_project_key);
+    DrSettings *entity = world()->project()->findSettingsFromKey(m_original_project_key);
     if (entity == nullptr) return "";
     return (entity->getName());
 }

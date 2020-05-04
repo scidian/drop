@@ -17,9 +17,11 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
-DrFrame::DrFrame(DrProject *parent_project, std::list<long> image_keys) : DrSettings(parent_project) {
+DrFrame::DrFrame(DrProject *parent_project, DrAnimation *parent_animation, std::list<long> image_keys)
+    : DrSettings(parent_project), m_parent_animation(parent_animation) {
+
     this->setKey(image_keys.front());
     double width = 1, height = 1;
 

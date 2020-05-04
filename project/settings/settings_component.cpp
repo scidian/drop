@@ -13,7 +13,7 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrComponent::DrComponent(DrSettings    *parent_settings,
                          std::string    new_display_name,

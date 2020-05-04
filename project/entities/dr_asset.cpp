@@ -25,12 +25,15 @@
 
 
 //####################################################################################
-//##    Constructor, Destructor
+//##    Constructor / Destructor
 //####################################################################################
 DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type, long base_key) : DrSettings(parent_project) {
     this->setKey(key);
+    this->setBaseKey(base_key);
+    this->setWidth(0);
+    this->setHeight(0);
+
     m_asset_type = new_asset_type;
-    m_base_key =   base_key;
 
     // Base Key is Project Key of underyling source:
     //      DrAssetType::Character      Refers to DrAnimation object of Asset_Animation_Idle DrProperty
@@ -48,8 +51,8 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
 
             // Load temp box shape in case we can't pull from DrAnimation
             shape.addPolygon(my_starting_bitmap.polygon().points());
-            m_width =  my_starting_bitmap.width;
-            m_height = my_starting_bitmap.height;
+            setWidth( my_starting_bitmap.width);
+            setHeight(my_starting_bitmap.height);
 
             // Create new Animation in Project from Image Key if passed in an Image Key and not an Animation Key
             DrAnimation *animation = nullptr;
@@ -57,18 +60,18 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
                 if (source->getType() == DrType::Image) {
                     animation = parent_project->addAnimation({ base_key });
                     if (animation == nullptr) Dr::PrintDebug("Warning! In DrAsset constructor, could not create animation from image: " + std::to_string(base_key));
-                    m_base_key = animation->getKey();
+                    this->setBaseKey(animation->getKey());
                 } else if (source->getType() == DrType::Animation) {
                     animation = dynamic_cast<DrAnimation*>(source);
                     if (animation == nullptr) Dr::PrintDebug("Warning! In DrAsset constructor, could not find animation: " + std::to_string(base_key));
                 }
                 my_starting_bitmap = animation->getFirstFrameImage()->getBitmap();
                 my_starting_name =   animation->getName();
-                m_width =  my_starting_bitmap.width;
-                m_height = my_starting_bitmap.height;
+                setWidth( my_starting_bitmap.width);
+                setHeight(my_starting_bitmap.height);
                 shape = autoCollisionShape(animation->getFirstFrameImage());
             } else {
-                m_base_key = c_no_key;
+                this->setBaseKey(c_no_key);
             }
 
             // Load / Initialize Entity Settings
@@ -77,7 +80,7 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
             else if (new_asset_type == DrAssetType::Object)
                 initializeAssetSettingsObject(my_starting_name);
             initializeAssetSettingsCollision(getAssetType(), shape);
-            initializeAssetSettingsAnimation(getAssetType(), m_base_key );
+            initializeAssetSettingsAnimation(getAssetType(), getBaseKey() );
             initializeAssetSettingsPhysics(getAssetType());
             initializeAssetSettingsHealth(getAssetType());
             initializeAssetSettingsControls(getAssetType());

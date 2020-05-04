@@ -18,10 +18,10 @@
 #include "project/constants_comps_and_props.h"
 #include "project/enums_entity_types.h"
 
-// Forward declarations
-class DrThing;
+// Forward Declarations
 class DrProject;
 class DrSettings;
+class DrThing;
 class EditorView;
 class TreeAssets;
 class TreeInspector;

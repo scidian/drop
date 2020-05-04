@@ -12,7 +12,7 @@
 
 #include "editor/constants_advisor_info.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProperty;
 
 

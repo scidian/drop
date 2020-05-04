@@ -16,7 +16,7 @@
 class DrSettings;
 class DrProperty;
 
-// Type definitions
+// Type Definitions
 typedef std::map<std::string, DrProperty*> PropertyMap;
 
 
@@ -28,22 +28,22 @@ class DrComponent
 {
 private:
     // External Borrowed Pointers
-    DrSettings      *m_parent_settings;                                 // Point to the DrSettings class that holds this component
+    DrSettings      *m_parent_settings;                                     // Point to the DrSettings class that holds this component
 
     // Local Variables
-    PropertyMap     m_properties;                                       // Map of pointers to DrProperty classes
+    PropertyMap     m_properties;                                           // Map of pointers to DrProperty classes
 
     // The 6 Parts of Data for Every Component
-    std::string     m_display_name = "Unknown Component";
-    std::string     m_description = "No description.";
-    std::string     m_icon = "";
-    DrColor         m_color = DrColor(128, 128, 128, 255);
-    bool            m_turned_on = false;
-    std::string     m_component_key = "";
+    std::string     m_display_name      { "Unknown Component" };
+    std::string     m_description       { "No description." };
+    std::string     m_icon              { "" };
+    DrColor         m_color             { DrColor(128, 128, 128, 255) };
+    bool            m_turned_on         { false };
+    std::string     m_component_key     { "" };
 
     // For now this is not stored, assignined during creation in void DrStage::addComponent()
     // Used for sorting in Object Inspector
-    int             m_list_order = 0;
+    int             m_list_order        { 0 };
 
 public:
     // Constructor / Destructor

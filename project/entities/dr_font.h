@@ -14,7 +14,7 @@
 #include "core/types/dr_rect.h"
 #include "project/settings/settings.h"
 
-// Forward declarations
+// Forward Declarations
 class DrProject;
 
 
@@ -55,7 +55,7 @@ public:
     DrFont(DrProject *parent_project, long key, std::string font_name, DrBitmap font_pixmap, std::string font_family, int font_size, bool use_test_rects = false);
 
     // DrSettings Overrides
-    virtual DrType      getType() override      { return DrType::Font; }
+    virtual DrType      getType() override              { return DrType::Font; }
 
     // Getters / Setters
     DrBitmap            getBitmap()                     { return m_bitmap; }

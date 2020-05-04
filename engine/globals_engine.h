@@ -22,8 +22,7 @@
 #include "project/constants_signals.h"
 #include "project/enums_entity_types.h"
 
-
-// Forward declarations
+// Forward Declarations
 class DrAsset;
 class DrEngine;
 class DrEngineCamera;
@@ -40,7 +39,7 @@ class DrThingComponent;
 class FormEngine;
 class ThingCompPhysics;
 
-// Type definitions
+// Type Definitions
 typedef std::chrono::high_resolution_clock          Clock;
 
 typedef std::vector<   DrEngineCamera*>             EngineCameraList;

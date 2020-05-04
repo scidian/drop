@@ -11,13 +11,13 @@
 #include "core/types/dr_pointf.h"
 #include "project/settings/settings.h"
 
-// Forward declarations
-class DrProject;
+// Forward Declarations
 class DrAsset;
-class DrWorld;
+class DrProject;
 class DrThing;
+class DrWorld;
 
-// Type definitions
+// Type Definitions
 typedef std::map<long, DrThing*> ThingMap;
 
 
@@ -29,7 +29,7 @@ class DrStage : public DrSettings
 {
 private:
     // External Borrowed Pointers
-    DrWorld        *m_parent_world;                             // Holds reference to parent World class
+    DrWorld        *m_parent_world;                             // Holds reference to parent DrWorld class
 
     // Local variables
     ThingMap        m_things;                                   // Map of pointers to DrThing classes (holds the things for current stage)
@@ -50,6 +50,7 @@ public:
     virtual DrType  getType() override                      { return DrType::Stage; }
 
     // Getters / Setters
+    void            setParentWorld(DrWorld *world)          { m_parent_world = world; }
     DrWorld*        getParentWorld()                        { return m_parent_world; }
     ThingMap&       getThingMap()                           { return m_things; }
     DrThing*        getThing(long key)                      { return m_things[key]; }
