@@ -27,8 +27,10 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //##
 //############################
 enum class DrType {
+    // Entity Member Types
     Variable,                   // Entities contained within DrSettings::m_variables
 
+    // Physics World Types
     Animation,                  // Entities contained within DrProject::m_animations
         Frame,                  // Entities contained within DrProject::DrAnimation::m_frames
     Asset,                      // Entities contained within DrProject::m_assets
@@ -38,21 +40,25 @@ enum class DrType {
     Image,                      // Entities contained within DrProject::m_images
     Item,                       // Entities contained within DrProject::m_items
     Prefab,                     // Entities contained within DrProject::m_prefabs
-    UI,                         // Entities contained within DrProject::m_uis
-        Widget,                 // Entities contained within DrProject::DrUI::m_widgets
     World,                      // Entities contained within DrProject::m_worlds
         Stage,                  // Entities contained within DrProject::DrWorld::m_stages
             Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
+///         Background,
+///         Foreground,
+/// Logic,
 
-    //        Background,
-    //        Foreground,
+    // Gui Layer Types
+/// Buttons,                // button types
+/// Controls,               // joystick, etc?
+    UI,                         // Entities contained within DrProject::m_uis
+        Widget,                 // Entities contained within DrProject::DrUI::m_widgets
 
-    //Logic,
-
-    NotFound,
+    // Misc Types
+    NotFound,                   // For passing a value in functions that represents No Type Selected / Found
 };
 
-// ################## Sub Types ####################
+
+// ################## Physics Sub Types ####################
 // ***** Assets,    Entities contained within DrProject::m_assets
 enum class DrAssetType {
     Character,
@@ -128,6 +134,8 @@ enum class DrThingType {
     // Particle,
 };
 
+
+// ################## Gui Sub Types ####################
 // ***** Widgets,   Entities contained within DrProject::DrUI::m_widgets
 enum class DrWidgetType {
     None,
@@ -143,6 +151,7 @@ enum class DrWidgetType {
 //##    Categories for the Asset Tree
 //############################
 enum class Asset_Category {
+    // Physics
     Character,
     Object,
     Device,
@@ -152,6 +161,11 @@ enum class Asset_Category {
     Text,
     Image,
 
+    // Gui
+    Button,
+    Control,
+
+    // Images
     Basic,
     Outlines,
     Gradient,

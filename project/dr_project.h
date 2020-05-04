@@ -189,7 +189,8 @@ public:
     DrUI*           addUI();
     DrUI*           addUI(long key);
     DrUI*           addUICopyFromUI(DrUI* from_ui, std::string new_name);
-    DrWorld*        addWorld();    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
+    DrWorld*        addWorld();
+    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);
 
 

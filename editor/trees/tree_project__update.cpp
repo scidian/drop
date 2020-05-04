@@ -35,8 +35,9 @@ void TreeProject::updateItems(std::list<DrSettings*> changed_items, std::list<Co
 
             if (comp == Comps::Entity_Settings && prop == Props::Entity_Name) {
                 QString new_name = QString::fromStdString(entity->getName());
-                if (entity->getType() == DrType::World) new_name = "World: " + new_name;
                 if (entity->getType() == DrType::Stage) new_name = "Stage: " + new_name;
+                if (entity->getType() == DrType::UI)    new_name = "UI: " + new_name;
+                if (entity->getType() == DrType::World) new_name = "World: " + new_name;
                 item_in_tree->setText(COLUMN_TITLE, new_name);
             }
 
