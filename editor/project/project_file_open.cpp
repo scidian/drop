@@ -215,7 +215,7 @@ bool OpenProjectFromFile(DrProject *project, std::string open_file) {
 
         // If key doesnt already exist, initialize World
         if (project->findSettingsFromKey(world_key, false) != nullptr) continue;
-        project->addWorld(world_key, start_stage_key, editor_stage_key);
+        project->addWorld(DrWorldType::Physics_2D, world_key, start_stage_key, editor_stage_key);
 
         // Load World Settings, Variables
         DrWorld *world = project->findWorldFromKey(world_key);

@@ -26,21 +26,23 @@ class DrWorld : public DrSettings
 {
 private:
     // Local variables
-    StageMap        m_stages;                               // Map of pointers to DrStage classes (holds the stages for current world)
+    DrWorldType     m_world_type = DrWorldType::Physics_2D;         // Type of World (Physics, UI, Puzzle, Tower Defense, etc)
+    StageMap        m_stages;                                       // Map of pointers to DrStage classes (holds the stages for current world)
 
-    long            m_start_stage_key;                      // Stores key of StartStage for this World
-    long            m_last_stage_shown_in_editor;           // Last Stage shown in editor when this World was selected, set to StartStage on creation
-    bool            m_expanded = true;                      // Wether or not this is expanded in the Project Tree
+    long            m_start_stage_key;                              // Stores key of StartStage for this World
+    long            m_last_stage_shown_in_editor;                   // Last Stage shown in editor when this World was selected, set to StartStage on creation
+    bool            m_expanded = true;                              // Wether or not this is expanded in the Project Tree
 
 public:
     // Constructor / Destructor
-    DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage);
+    DrWorld(DrProject *parent_project, long key, DrWorldType world_type, std::string new_world_name, bool add_start_stage);
     virtual ~DrWorld() override;
 
     // DrSettings Overrides
     virtual DrType  getType() override                  { return DrType::World; }
 
     // Getters / Setters
+    DrWorldType     getWorldType()                      { return m_world_type; }
     StageMap&       getStageMap()                       { return m_stages; }
 
     long            getStartStageKey()                  { return m_start_stage_key; }
@@ -52,13 +54,17 @@ public:
     bool            getExpanded()                       { return m_expanded; }
     void            setExpanded(bool expanded)          { m_expanded = expanded; }
 
-    // Function Calls
+    // World Construction
     DrStage*    addStage(std::string new_stage_name = std::string(""));
     DrStage*    addStage(long stage_key, bool is_start_stage, DrPointF center_point, double zoom_scale);
     DrStage*    addStageCopyFromStage(DrStage *from_stage, std::string new_name, bool copy_into_start_stage = false);
     void        deleteStage(DrStage *stage);
-    void        initializeWorldSettings(std::string new_name);
 
+    void        initializeSettings(DrWorldType world_type, std::string new_name);
+    void        initializeWorldPhysics2D(std::string new_name);
+    void        initializeWorldUI(std::string new_name);
+
+    // World Info
     long        getFirstStageKey();
     DrStage*    getStageFromKey(long from_stage_key);
     DrStage*    getStageWithName(std::string stage_name);

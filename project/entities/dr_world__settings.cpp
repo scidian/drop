@@ -17,9 +17,22 @@
 
 
 //####################################################################################
-//##    Property loading - initializeWorldSettings
+//##    Initializer
 //####################################################################################
-void DrWorld::initializeWorldSettings(std::string new_name) {
+void DrWorld::initializeSettings(DrWorldType world_type, std::string new_name) {
+    m_world_type = world_type;
+    switch (world_type) {
+        case DrWorldType::Physics_2D:   initializeWorldPhysics2D(new_name);     break;
+        case DrWorldType::UI:           initializeWorldUI(new_name);            break;
+    }
+    return;
+}
+
+
+//####################################################################################
+//##    Property loading - 2D Physics World
+//####################################################################################
+void DrWorld::initializeWorldPhysics2D(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setDisplayName("World Name");
     property_name->setDescription("Name of this World.");
@@ -146,6 +159,20 @@ void DrWorld::initializeWorldSettings(std::string new_name) {
 
 
 
+//####################################################################################
+//##    Property loading - UI World
+//####################################################################################
+void DrWorld::initializeWorldUI(std::string new_name) {
+    DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
+    property_name->setDisplayName("UI Name");
+    property_name->setDescription("Name of this UI.");
+    property_name->setValue(new_name);
+
+    addComponent(Comps::UI_Settings, "UI Settings", "Settings for this UI.", Component_Colors::RGB_18_Gray, true);
+    getComponent(Comps::UI_Settings)->setIcon(Component_Icons::Settings);
+
+
+}
 
 
 

@@ -17,10 +17,11 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrWorld::DrWorld(DrProject *parent_project, long key, std::string new_world_name, bool add_start_stage) : DrSettings(parent_project) {
-    this->setKey(key);
+DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, std::string new_world_name, bool add_start_stage)
+    : DrSettings(parent_project) {
 
-    initializeWorldSettings(new_world_name);
+    this->setKey(key);
+    this->initializeSettings(world_type, new_world_name);
     this->addWorldVariables();
 
     // Adds the initial "Start Stage"

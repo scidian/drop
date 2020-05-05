@@ -75,7 +75,7 @@ void FormPopup::buildPopupAddEntity() {
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
                 editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
-                world = m_project->addWorld();
+                world = m_project->addWorld(DrWorldType::Physics_2D);
                 editor->buildProjectTree();
                 editor->buildInspector( { world->getKey() } );
                 editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );

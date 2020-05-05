@@ -281,8 +281,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
     for (auto component: components) {
         if (component->isTurnedOn() == false) {
             continue;
-        } else if (component->getComponentKey() == Comps::Hidden_Settings ||
-                   component->getComponentKey() == Comps::Size_Settings) {
+        } else if (component->getComponentKey() == Comps::Hidden_Settings   ||
+                   component->getComponentKey() == Comps::Size_Settings     ||
+                   component->getComponentKey() == Comps::Local_Variables   ||
+                   component->getComponentKey() == Comps::User_Variables) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 

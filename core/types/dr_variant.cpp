@@ -332,7 +332,15 @@ DrVec3 DrVariant::toVec3() {
         try { glm::vec3 vec3 = boost::any_cast<glm::vec3>(m_value);
               return DrVec3(vec3); }
         catch (const boost::bad_any_cast &) {
-            return DrVec3(0, 0, 0);
+            try {   std::vector<DrVariant> vector = boost::any_cast<std::vector<DrVariant>>(m_value);
+                    DrVec3 vec3;
+                    if (vector.size() >= 1) vec3.setX(vector[0].toDouble());
+                    if (vector.size() >= 2) vec3.setY(vector[1].toDouble());
+                    if (vector.size() >= 3) vec3.setZ(vector[2].toDouble());
+                    return vec3; }
+            catch (const boost::bad_any_cast &) {
+                return DrVec3(0, 0, 0);
+            }
         }
     }
 }

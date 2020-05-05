@@ -279,7 +279,7 @@ long DrProject::addPrefab(DrPrefabType prefab_type, long key) {
 }
 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World
-DrWorld* DrProject::addWorld() {
+DrWorld* DrProject::addWorld(DrWorldType world_type) {
     int test_num = static_cast<int>(m_worlds.size());
     std::string new_name;
     do {
@@ -289,14 +289,14 @@ DrWorld* DrProject::addWorld() {
 
     long new_world_key = getNextKey();
     bool add_start_stage = true;
-    m_worlds[new_world_key] = new DrWorld(this, new_world_key, new_name, add_start_stage);
+    m_worlds[new_world_key] = new DrWorld(this, new_world_key, world_type, new_name, add_start_stage);
     return m_worlds[new_world_key];
 }
 
 // Adds a World to the map container, !!!!! DOES NOT CREATE Start Stage
-DrWorld* DrProject::addWorld(long key, long start_stage_key, long last_stage_in_editor_key) {
+DrWorld* DrProject::addWorld(DrWorldType world_type, long key, long start_stage_key, long last_stage_in_editor_key) {
     bool add_start_stage = false;
-    m_worlds[key] = new DrWorld(this, key, "TEMP", add_start_stage);
+    m_worlds[key] = new DrWorld(this, key, world_type, "TEMP", add_start_stage);
     m_worlds[key]->setStartStageKey(start_stage_key);
     m_worlds[key]->setLastStageShownKey(last_stage_in_editor_key);
     return m_worlds[key];
@@ -304,7 +304,7 @@ DrWorld* DrProject::addWorld(long key, long start_stage_key, long last_stage_in_
 
 // Adds a new World, copied from another World
 DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world, std::string new_name) {
-    DrWorld *copy_world = addWorld();
+    DrWorld *copy_world = addWorld(from_world->getWorldType());
     copy_world->copyEntitySettings(from_world);
 
     // Set new name of copy World

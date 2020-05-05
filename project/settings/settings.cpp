@@ -347,12 +347,13 @@ Property_Type DrSettings::propertyTypeFromVariantType(Variant_Type type) {
 
 // Sets User Variable in Project
 void DrSettings::setVariable(std::string variable_name, DrVariant value, Variable_Info info) {
-    Property_Type   prop_type = DrSettings::propertyTypeFromVariantType(value.getType());
-    DrProperty     *property  = getComponentProperty(Comps::User_Variables, variable_name);
+    DrProperty *property  = getComponentProperty(Comps::User_Variables, variable_name);
     if (property == nullptr) {
         // ***** Stored as vector of 3 values in order:     "Current", "Best", "Total"
         std::vector<DrVariant> variable { value, value, value };
-        addPropertyToComponent(Comps::User_Variables, variable_name, prop_type, variable, variable_name, "User Variable: " + variable_name);
+        ///Property_Type prop_type = DrSettings::propertyTypeFromVariantType(value.getType());
+        ///addPropertyToComponent(Comps::User_Variables, variable_name, prop_type, variable, variable_name, "User Variable: " + variable_name);
+        addPropertyToComponent(Comps::User_Variables, variable_name, Property_Type::Point3D, variable, variable_name, "User Variable: " + variable_name);
     } else {
         std::vector<DrVariant> variable = getComponentPropertyValue(Comps::User_Variables, variable_name).toVector();
         switch (info) {

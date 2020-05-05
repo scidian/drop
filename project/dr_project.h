@@ -179,8 +179,8 @@ public:
                              long key = c_no_key, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
-    DrWorld*        addWorld();
-    DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
+    DrWorld*        addWorld(DrWorldType world_type);
+    DrWorld*        addWorld(DrWorldType world_type, long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);
 
 

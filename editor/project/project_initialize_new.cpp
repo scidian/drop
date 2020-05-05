@@ -37,7 +37,7 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
 
     // ***** Add Initial World
-    DrWorld *world_1 = project->addWorld();
+    DrWorld *world_1 = project->addWorld(DrWorldType::Physics_2D);
     DrWorld *current_world = world_1;
     project->setOption(Project_Options::Current_World, world_1->getKey());
     project->setOption(Project_Options::Current_Stage, current_world->getFirstStageKey());
@@ -90,7 +90,7 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
 
         // Add some Worlds and Stages
-        project->addWorld();                                                                            // "World 2"
+        project->addWorld(DrWorldType::Physics_2D);                                                     // "World 2"
         project->findWorldWithName("World 2")->addStage();                                              // Stage 2
         project->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");                 // Stage 3
         project->findWorldWithName("World 2")->addStage();                                              // Stage 4

@@ -124,13 +124,16 @@ namespace Comps {
     const std::string Asset_Settings_Object             = "AsSeObject";
     const std::string Asset_Settings_Font               = "AsSeFont";
 
-    // ***** DrWorld Components
+    // ***** DrWorld::Physics_2D Components
     const std::string World_Settings                    = "WoSe";
     const std::string World_Physics                     = "WoPhysics";
     const std::string World_Lighting                    = "WoLighting";
     const std::string World_Camera                      = "WoCamera";
     const std::string World_Appearance                  = "WoAppearance";
     const std::string World_Special_Effects             = "WoSpecialEffects";
+
+    //       DrWorld::UI Components
+    const std::string UI_Settings                       = "UiSe";
 
     // ***** DrStage Components
     const std::string Stage_Settings                    = "StSe";
