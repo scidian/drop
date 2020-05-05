@@ -14,10 +14,10 @@
 #include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_asset.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
 
 
 //####################################################################################

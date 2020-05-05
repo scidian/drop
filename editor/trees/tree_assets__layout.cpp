@@ -10,8 +10,8 @@
 #include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_asset.h"
 #include "project/entities/dr_font.h"
+#include "project/entities_physics_2d/dr_asset.h"
 
 
 //####################################################################################

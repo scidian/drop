@@ -7,7 +7,7 @@
 //
 #include "project/constants_component_info.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_prefab.h"
+#include "project/entities_physics_2d/dr_prefab.h"
 #include "project/settings/settings_component_property.h"
 
 

@@ -19,7 +19,7 @@
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
-#include "project/entities/dr_asset.h"
+#include "project/entities_physics_2d/dr_asset.h"
 
 
 //####################################################################################

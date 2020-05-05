@@ -20,15 +20,15 @@
 #include "editor/view/editor_view.h"
 #include "engine/enums_engine.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_asset.h"
-#include "project/entities/dr_device.h"
-#include "project/entities/dr_effect.h"
 #include "project/entities/dr_image.h"
-#include "project/entities/dr_item.h"
-#include "project/entities/dr_prefab.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_physics_2d/dr_device.h"
+#include "project/entities_physics_2d/dr_effect.h"
+#include "project/entities_physics_2d/dr_item.h"
+#include "project/entities_physics_2d/dr_prefab.h"
 
 
 //####################################################################################

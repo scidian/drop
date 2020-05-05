@@ -155,12 +155,12 @@ void LoadPreferences() {
 
     Dr::SetAssetExpanded(Asset_Category::Image,         true);
     Dr::SetAssetExpanded(Asset_Category::Basic,         true);
-    Dr::SetAssetExpanded(Asset_Category::Outlines,      true);
+    Dr::SetAssetExpanded(Asset_Category::Outline,       true);
     Dr::SetAssetExpanded(Asset_Category::Gradient,      true);
     Dr::SetAssetExpanded(Asset_Category::Decoration,    true);
     Dr::SetAssetExpanded(Asset_Category::Ground,        true);
-    Dr::SetAssetExpanded(Asset_Category::Polygons,      true);
-    Dr::SetAssetExpanded(Asset_Category::Shapes,        true);
+    Dr::SetAssetExpanded(Asset_Category::Polygon,       true);
+    Dr::SetAssetExpanded(Asset_Category::Shape,         true);
     Dr::SetAssetExpanded(Asset_Category::Isometric,     true);
 
 

@@ -26,16 +26,16 @@
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
-#include "project/entities/dr_asset.h"
-#include "project/entities/dr_device.h"
-#include "project/entities/dr_effect.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
-#include "project/entities/dr_item.h"
-#include "project/entities/dr_prefab.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_physics_2d/dr_device.h"
+#include "project/entities_physics_2d/dr_effect.h"
+#include "project/entities_physics_2d/dr_item.h"
+#include "project/entities_physics_2d/dr_prefab.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -171,21 +171,21 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Image)) {
         widget_items[Asset_Category::Image] =       new QTreeWidgetItem();
         widget_items[Asset_Category::Basic] =       new QTreeWidgetItem();
-        widget_items[Asset_Category::Outlines] =    new QTreeWidgetItem();
+        widget_items[Asset_Category::Outline] =     new QTreeWidgetItem();
         widget_items[Asset_Category::Gradient] =    new QTreeWidgetItem();
         widget_items[Asset_Category::Decoration] =  new QTreeWidgetItem();
         widget_items[Asset_Category::Ground] =      new QTreeWidgetItem();
-        widget_items[Asset_Category::Polygons] =    new QTreeWidgetItem();
-        widget_items[Asset_Category::Shapes] =      new QTreeWidgetItem();
+        widget_items[Asset_Category::Polygon] =     new QTreeWidgetItem();
+        widget_items[Asset_Category::Shape] =       new QTreeWidgetItem();
         widget_items[Asset_Category::Isometric] =   new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Image,           widget_items[Asset_Category::Image]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Basic,           widget_items[Asset_Category::Basic]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Outlines,        widget_items[Asset_Category::Outlines]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Outline,         widget_items[Asset_Category::Outline]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Gradient,        widget_items[Asset_Category::Gradient]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Decoration,      widget_items[Asset_Category::Decoration]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Ground,          widget_items[Asset_Category::Ground]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Polygons,        widget_items[Asset_Category::Polygons]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Shapes,          widget_items[Asset_Category::Shapes]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Polygon,         widget_items[Asset_Category::Polygon]) );
+        asset_categories.push_back( std::make_pair(Asset_Category::Shape,           widget_items[Asset_Category::Shape]) );
         asset_categories.push_back( std::make_pair(Asset_Category::Isometric,       widget_items[Asset_Category::Isometric]) );
     }
 
@@ -437,12 +437,12 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
 
         case Asset_Category::Image:         name = "Images";        icon = "comp_images.png";               info = Advisor_Info::Asset_Image;           break;
         case Asset_Category::Basic:         name = "Basic";         icon = "comp_images_basic.png";         info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Outlines:      name = "Outlines";      icon = "comp_images_outline.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Outline:       name = "Outlines";      icon = "comp_images_outline.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
         case Asset_Category::Gradient:      name = "Gradient";      icon = "comp_images_gradient.png";      info = Advisor_Info::Asset_Image_Built_In;  break;
         case Asset_Category::Decoration:    name = "Decoration";    icon = "comp_images_decoration.png";    info = Advisor_Info::Asset_Image_Built_In;  break;
         case Asset_Category::Ground:        name = "Ground";        icon = "comp_images_ground.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Polygons:      name = "Polygons";      icon = "comp_images_polygon.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Shapes:        name = "Shapes";        icon = "comp_images_shapes.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Polygon:       name = "Polygons";      icon = "comp_images_polygon.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Shape:         name = "Shapes";        icon = "comp_images_shapes.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
         case Asset_Category::Isometric:     name = "Isometric";     icon = "comp_object.png";               info = Advisor_Info::Asset_Image_Built_In;  break;
     }
     name = "  " + tr(name.toLatin1());                                      // Add spacing and translate

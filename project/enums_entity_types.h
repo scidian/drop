@@ -26,29 +26,34 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //##        - All Entities inherit DrSettings to use DrComponents which contain DrProperties compatible with the Inspector
 //##
 //############################
-enum class DrType {
-    // Physics World Types
+enum class DrType {    
+    // Shared Types
     Animation,                  // Entities contained within DrProject::m_animations
         Frame,                  // Entities contained within DrProject::DrAnimation::m_frames
-    Asset,                      // Entities contained within DrProject::m_assets
-    Device,                     // Entities contained within DrProject::m_devices
-    Effect,                     // Entities contained within DrProject::m_effects
     Font,                       // Entities contained within DrProject::m_fonts
     Image,                      // Entities contained within DrProject::m_images
-    Item,                       // Entities contained within DrProject::m_items
-    Prefab,                     // Entities contained within DrProject::m_prefabs
 
-    // Project Types
+    // Mapped Types
     Node,                       // Entities contained within DrProject::m_nodes
     World,                      // Entities contained within DrProject::m_worlds / DrProject::m_uis
         Stage,                  // Entities contained within DrProject::DrWorld::m_stages
             Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
 ///         Background,
 ///         Foreground,
-/// Logic,
 
-    // Gui Layer Types
-/// Buttons,                // button types
+    // Assets for World Map
+    Block,                      // Entities contained within DrProject::m_blocks
+
+    // Assets for Editor: World Physics 2D
+    Asset,                      // Entities contained within DrProject::m_assets
+    Device,                     // Entities contained within DrProject::m_devices
+    Effect,                     // Entities contained within DrProject::m_effects
+    Item,                       // Entities contained within DrProject::m_items
+    Prefab,                     // Entities contained within DrProject::m_prefabs
+/// Logic
+
+    // Assets for Editor: World UI
+/// Buttons,                    // button types
 /// Controls,               // joystick, etc?
 
     // Misc Types
@@ -56,22 +61,21 @@ enum class DrType {
 };
 
 
-// ################## Node Types ####################
+// ################## Project Mapped Types ####################
 // ***** Nodes,     Entities contained within DrProject::m_nodes
 enum class DrNodeType {
     // Logic
-    RandomOut,
+    Random_Out,
+    Timed_Pause,
+    World,
 };
 
-
-// ################## World Types ####################
 // ***** Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis
 enum class DrWorldType {
     Physics_2D,
     UI,
 };
 
-// ################## Thing Types ####################
 // ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
 enum class DrThingType {
     None,
@@ -98,17 +102,26 @@ enum class DrThingType {
 
     // Future Things...
 /// Action,
-/// Logic,
 /// Particle,
 
     // ***** UI World Sub Types
     Button,
     Joystick,
+    Label,
     Navigation,
 };
 
 
-// ################## 2D Physics World Sub Types ####################
+
+// ################## Assets for World Map Sub Types ####################
+// ***** Blocks,    Entities contained within DrProject::m_blocks
+enum class DrBlockType {
+    World,
+    Switch,
+};
+
+
+// ################## Assets for World Physics 2D Sub Types ####################
 // ***** Assets,    Entities contained within DrProject::m_assets
 enum class DrAssetType {
     Character,
@@ -158,7 +171,11 @@ enum class DrPrefabType {
 //##    Categories for the Asset Tree
 //############################
 enum class Asset_Category {
-    // Physics
+    // World Map
+    World,
+    Switch,
+
+    // World Physics 2D
     Character,
     Object,
     Device,
@@ -168,18 +185,18 @@ enum class Asset_Category {
     Text,
     Image,
 
-    // Gui
+    // World UI
     Button,
     Control,
 
     // Images
     Basic,
-    Outlines,
+    Outline,
     Gradient,
     Decoration,
     Ground,
-    Polygons,
-    Shapes,
+    Polygon,
+    Shape,
     Isometric,
 };
 

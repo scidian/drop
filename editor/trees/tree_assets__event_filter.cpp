@@ -21,9 +21,9 @@
 #include "editor/trees/tree_assets.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_asset.h"
-#include "project/entities/dr_effect.h"
 #include "project/entities/dr_font.h"
+#include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_physics_2d/dr_effect.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component_property.h"
 

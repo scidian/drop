@@ -14,11 +14,11 @@
 #include "core/interface/dr_progress.h"
 #include "editor/project/project.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_asset.h"
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
 #include "project/properties/property_collision.h"
 
 namespace Dr {
@@ -134,22 +134,22 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/basic/slope_right.png",               c_key_image_slope_right,            Asset_Category::Basic);
 
     //##    Built In Images - Outline       400-429
-    AddImage(project, ":/assets/dr_images/outlines/square_outline_1.png",       c_key_image_square_outline_1,       Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/square_outline_2.png",       c_key_image_square_outline_2,       Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/square_outline_3.png",       c_key_image_square_outline_3,       Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/rounded_outline_1.png",      c_key_image_rounded_outline_1,      Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/rounded_outline_2.png",      c_key_image_rounded_outline_2,      Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/rounded_outline_3.png",      c_key_image_rounded_outline_3,      Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/circle_outline_1.png",       c_key_image_circle_outline_1,       Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/circle_outline_2.png",       c_key_image_circle_outline_2,       Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/circle_outline_3.png",       c_key_image_circle_outline_3,       Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/triangle_outline_1.png",     c_key_image_triangle_outline_1,     Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/triangle_outline_2.png",     c_key_image_triangle_outline_2,     Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/triangle_outline_3.png",     c_key_image_triangle_outline_3,     Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/diamond_outline_1.png",      c_key_image_diamond_outline_1,      Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/diamond_outline_2.png",      c_key_image_diamond_outline_2,      Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/cross_outline_1.png",        c_key_image_cross_outline_1,        Asset_Category::Outlines);
-    AddImage(project, ":/assets/dr_images/outlines/cross_outline_2.png",        c_key_image_cross_outline_2,        Asset_Category::Outlines);
+    AddImage(project, ":/assets/dr_images/outlines/square_outline_1.png",       c_key_image_square_outline_1,       Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/square_outline_2.png",       c_key_image_square_outline_2,       Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/square_outline_3.png",       c_key_image_square_outline_3,       Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/rounded_outline_1.png",      c_key_image_rounded_outline_1,      Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/rounded_outline_2.png",      c_key_image_rounded_outline_2,      Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/rounded_outline_3.png",      c_key_image_rounded_outline_3,      Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/circle_outline_1.png",       c_key_image_circle_outline_1,       Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/circle_outline_2.png",       c_key_image_circle_outline_2,       Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/circle_outline_3.png",       c_key_image_circle_outline_3,       Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/triangle_outline_1.png",     c_key_image_triangle_outline_1,     Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/triangle_outline_2.png",     c_key_image_triangle_outline_2,     Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/triangle_outline_3.png",     c_key_image_triangle_outline_3,     Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/diamond_outline_1.png",      c_key_image_diamond_outline_1,      Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/diamond_outline_2.png",      c_key_image_diamond_outline_2,      Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/cross_outline_1.png",        c_key_image_cross_outline_1,        Asset_Category::Outline);
+    AddImage(project, ":/assets/dr_images/outlines/cross_outline_2.png",        c_key_image_cross_outline_2,        Asset_Category::Outline);
 
     //##    Built In Images - Gradient      430-469
     AddImage(project, ":/assets/dr_images/gradient/circle_linear_1.png",        c_key_image_circle_linear_1,        Asset_Category::Gradient);
@@ -172,15 +172,15 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/gradient/triangle_radial_3.png",      c_key_image_triangle_radial_3,      Asset_Category::Gradient);
 
     //##    Built In Images - Polygon       470-499
-    AddImage(project, ":/assets/dr_images/polygons/polygon_5_sides.png",        c_key_image_polygon_5_sides,        Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/polygon_6_sides.png",        c_key_image_polygon_6_sides,        Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/polygon_7_sides.png",        c_key_image_polygon_7_sides,        Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/polygon_8_sides.png",        c_key_image_polygon_8_sides,        Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/polygon_9_sides.png",        c_key_image_polygon_9_sides,        Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/polygon_10_sides.png",       c_key_image_polygon_10_sides,       Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/star_6_points.png",          c_key_image_star_6_points,          Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/star_12_points.png",         c_key_image_star_12_points,         Asset_Category::Polygons);
-    AddImage(project, ":/assets/dr_images/polygons/star_24_points.png",         c_key_image_star_24_points,         Asset_Category::Polygons);
+    AddImage(project, ":/assets/dr_images/polygons/polygon_5_sides.png",        c_key_image_polygon_5_sides,        Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/polygon_6_sides.png",        c_key_image_polygon_6_sides,        Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/polygon_7_sides.png",        c_key_image_polygon_7_sides,        Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/polygon_8_sides.png",        c_key_image_polygon_8_sides,        Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/polygon_9_sides.png",        c_key_image_polygon_9_sides,        Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/polygon_10_sides.png",       c_key_image_polygon_10_sides,       Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/star_6_points.png",          c_key_image_star_6_points,          Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/star_12_points.png",         c_key_image_star_12_points,         Asset_Category::Polygon);
+    AddImage(project, ":/assets/dr_images/polygons/star_24_points.png",         c_key_image_star_24_points,         Asset_Category::Polygon);
 
     //##    Built In Images - Isometric      500-549
     AddImage(project, ":/assets/dr_images/isometric/isometric_cube_1.png",      c_key_image_isometric_cube_1,       Asset_Category::Isometric);
@@ -208,27 +208,27 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/isometric/isometric_tree_2.png",      c_key_image_isometric_tree_2,       Asset_Category::Isometric);
 
     //##    Built In Images - Shapes        550-599
-    AddImage(project, ":/assets/dr_images/shapes/star_1.png",                   c_key_image_star_1,                 Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/star_2.png",                   c_key_image_star_2,                 Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/star_3.png",                   c_key_image_star_3,                 Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/star_4.png",                   c_key_image_star_4,                 Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/heart_1.png",                  c_key_image_heart_1,                Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/heart_2.png",                  c_key_image_heart_2,                Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/heart_half.png",               c_key_image_heart_half,             Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/pie.png",                      c_key_image_pie,                    Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/ghost.png",                    c_key_image_ghost,                  Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/gear_1.png",                   c_key_image_gear_1,                 Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/gear_2.png",                   c_key_image_gear_2,                 Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/thought_bubble_1.png",         c_key_image_thought_bubble_1,       Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/thought_bubble_2.png",         c_key_image_thought_bubble_2,       Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/thought_bubble_3.png",         c_key_image_thought_bubble_3,       Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/exclamation_point.png",        c_key_image_exclamation_point,      Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/question_mark.png",            c_key_image_question_mark,          Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/arrow_1.png",                  c_key_image_arrow_1,                Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/arrow_2.png",                  c_key_image_arrow_2,                Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/arrow_3.png",                  c_key_image_arrow_3,                Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/reset.png",                    c_key_image_reset,                  Asset_Category::Shapes);
-    AddImage(project, ":/assets/dr_images/shapes/fish.png",                     c_key_image_fish,                   Asset_Category::Shapes);
+    AddImage(project, ":/assets/dr_images/shapes/star_1.png",                   c_key_image_star_1,                 Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/star_2.png",                   c_key_image_star_2,                 Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/star_3.png",                   c_key_image_star_3,                 Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/star_4.png",                   c_key_image_star_4,                 Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/heart_1.png",                  c_key_image_heart_1,                Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/heart_2.png",                  c_key_image_heart_2,                Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/heart_half.png",               c_key_image_heart_half,             Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/pie.png",                      c_key_image_pie,                    Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/ghost.png",                    c_key_image_ghost,                  Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/gear_1.png",                   c_key_image_gear_1,                 Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/gear_2.png",                   c_key_image_gear_2,                 Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/thought_bubble_1.png",         c_key_image_thought_bubble_1,       Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/thought_bubble_2.png",         c_key_image_thought_bubble_2,       Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/thought_bubble_3.png",         c_key_image_thought_bubble_3,       Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/exclamation_point.png",        c_key_image_exclamation_point,      Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/question_mark.png",            c_key_image_question_mark,          Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/arrow_1.png",                  c_key_image_arrow_1,                Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/arrow_2.png",                  c_key_image_arrow_2,                Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/arrow_3.png",                  c_key_image_arrow_3,                Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/reset.png",                    c_key_image_reset,                  Asset_Category::Shape);
+    AddImage(project, ":/assets/dr_images/shapes/fish.png",                     c_key_image_fish,                   Asset_Category::Shape);
 
     //##    Built In Images - Ground        600-699
     AddImage(project, ":/assets/dr_images/ground/ground_top_1.png",             c_key_image_ground_top_1,           Asset_Category::Ground);

@@ -23,8 +23,8 @@
 #include "engine/thing/engine_thing.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
-#include "project/entities/dr_asset.h"
 #include "project/entities/dr_image.h"
+#include "project/entities_physics_2d/dr_asset.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component_property.h"
 

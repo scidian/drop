@@ -9,10 +9,10 @@
 
 #include "editor/helper_library.h"
 #include "editor/project/project.h"
-#include "project/entities/dr_asset.h"
-#include "project/entities/dr_device.h"
-#include "project/entities/dr_effect.h"
 #include "project/entities/dr_font.h"
+#include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_physics_2d/dr_device.h"
+#include "project/entities_physics_2d/dr_effect.h"
 
 namespace Dr {
 

@@ -18,6 +18,7 @@ std::string StringFromType(DrType type) {
     switch (type) {
         case DrType::Animation:             return "Animation";
         case DrType::Asset:                 return "Asset";
+        case DrType::Block:                 return "Block";
         case DrType::Device:                return "Device";
         case DrType::Effect:                return "Effect";
         case DrType::Font:                  return "Font";
@@ -88,7 +89,9 @@ std::string StringFromPrefabType(DrPrefabType type) {
 
 std::string StringFromNodeType(DrNodeType type) {
     switch (type) {
-        case DrNodeType::RandomOut:         return "Random Out";
+        case DrNodeType::Random_Out:        return "Random Out";
+        case DrNodeType::Timed_Pause:       return "Timed Pause";
+        case DrNodeType::World:             return "World";
     }
 }
 
@@ -116,15 +119,10 @@ std::string StringFromThingType(DrThingType type) {
         // Item Things
         case DrThingType::Tile:             return "Tile";
 
-        ///case DrThingType::Action:        return "Action";
-        ///case DrThingType::Camera:        return "Camera";
-        ///case DrThingType::Logic:         return "Logic";
-        ///case DrThingType::Particle:      return "Particle";
-
-
         // ***** UI World Sub Types
         case DrThingType::Button:           return "Button";
         case DrThingType::Joystick:         return "Joystick";
+        case DrThingType::Label:            return "Label";
         case DrThingType::Navigation:       return "Navigation";
     }
 }

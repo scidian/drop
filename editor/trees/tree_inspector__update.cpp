@@ -22,7 +22,7 @@
 #include "engine/enums_engine.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
-#include "project/entities/dr_asset.h"
+#include "project/entities_physics_2d/dr_asset.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"

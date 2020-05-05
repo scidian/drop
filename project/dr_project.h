@@ -37,11 +37,13 @@ enum class Orientation {
 // Forward Declarations
 class DrAnimation;
 class DrAsset;
+class DrBlock;
 class DrDevice;
 class DrEffect;
 class DrFont;
 class DrImage;
 class DrItem;
+class DrNode;
 class DrPrefab;
 class DrStage;
 class DrThing;
@@ -51,13 +53,16 @@ class IProgressBar;
 // Type Definitions
 typedef std::map<Project_Options,   DrVariant>      OptionMap;
 
+// Entity Type Definitions
 typedef std::map<long,              DrAnimation*>   AnimationMap;
 typedef std::map<long,              DrAsset*>       AssetMap;
+typedef std::map<long,              DrBlock*>       BlockMap;
 typedef std::map<long,              DrDevice*>      DeviceMap;
 typedef std::map<long,              DrEffect*>      EffectMap;
 typedef std::map<long,              DrFont*>        FontMap;
 typedef std::map<long,              DrImage*>       ImageMap;
 typedef std::map<long,              DrItem*>        ItemMap;
+typedef std::map<long,              DrNode*>        NodeMap;
 typedef std::map<long,              DrPrefab*>      PrefabMap;
 typedef std::map<long,              DrWorld*>       WorldMap;
 
@@ -88,15 +93,24 @@ private:
     //          - Inherit DrSettings for DrComponent / DrProperty usage
     //          - Is assigned an unique key upon creation from DrProject::getNextKey()
     //
-    AnimationMap    m_animations;                                   // Holds DrAnimations (which in turn hold DrFrames)
-    AssetMap        m_assets;                                       // Holds DrAssets
-    DeviceMap       m_devices;                                      // Holds DrDevices
-    EffectMap       m_effects;                                      // Holds DrEffects
-    FontMap         m_fonts;                                        // Holds DrFonts (currently custom bitmap fonts)
-    ImageMap        m_images;                                       // Holds DrImages (for use in DrFrames, loaded into DrEngineTextures)
-    ItemMap         m_items;                                        // Holds DrItems
-    PrefabMap       m_prefabs;                                      // Holds DrPrefabs
-    WorldMap        m_worlds;                                       // Holds DrWorlds (which in turn hold DrStages, which hold DrThings)
+    // Mapped Items
+    NodeMap         m_nodes;                                        // Holds DrNodes        (World Map items that are not Worlds)
+    WorldMap        m_worlds;                                       // Holds DrWorlds       (which in turn hold DrStages, which hold DrThings)
+
+    // Shared Items
+    AnimationMap    m_animations;                                   // Holds DrAnimations   (which in turn hold DrFrames)
+    FontMap         m_fonts;                                        // Holds DrFonts        (currently custom bitmap fonts)
+    ImageMap        m_images;                                       // Holds DrImages       (for use in DrFrames, loaded into DrEngineTextures)
+
+    // World Map Items
+    BlockMap        m_blocks;                                       // Holds DrBlocks       (used as building blocks for DrNodes)
+
+    // Physics World 2D Items
+    AssetMap        m_assets;                                       // Holds DrAssets       (used as building blocks for DrThings)
+    DeviceMap       m_devices;                                      // Holds DrDevices      (used as building blocks for DrThings)
+    EffectMap       m_effects;                                      // Holds DrEffects      (used as building blocks for DrThings)
+    ItemMap         m_items;                                        // Holds DrItems        (used as building blocks for DrThings)
+    PrefabMap       m_prefabs;                                      // Holds DrPrefabs      (used as blue prints for multiple types of pre-designed DrThings)
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################

@@ -7,13 +7,12 @@
 //
 #include "editor/helper_library.h"
 #include "editor/project/project.h"
-#include "project/entities/dr_asset.h"
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
 
 namespace Dr {
-
 
 
 //####################################################################################

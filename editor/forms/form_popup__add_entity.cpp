@@ -20,9 +20,9 @@
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_asset.h"
-#include "project/entities/dr_world.h"
 #include "project/entities/dr_stage.h"
+#include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
 #include "project/settings/settings.h"
 
 

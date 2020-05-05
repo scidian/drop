@@ -299,16 +299,10 @@ SOURCES += \
     project/dr_project.cpp \
     project/entities/dr_animation.cpp \
     project/entities/dr_animation_frame.cpp \
-    project/entities/dr_asset.cpp \
-    project/entities/dr_asset__settings.cpp \
-    project/entities/dr_asset__settings_shared.cpp \
-    project/entities/dr_device.cpp \
-    project/entities/dr_effect.cpp \
     project/entities/dr_font.cpp \
     project/entities/dr_image.cpp \
     project/entities/dr_image__outline_image.cpp \
-    project/entities/dr_item.cpp \
-    project/entities/dr_prefab.cpp \
+    project/entities/dr_node.cpp \
     project/entities/dr_stage.cpp \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \
@@ -320,6 +314,15 @@ SOURCES += \
     project/entities/dr_thing__z_order.cpp \
     project/entities/dr_world.cpp \
     project/entities/dr_world__settings.cpp \
+    project/entities_map/dr_block.cpp \
+    project/entities_physics_2d/dr_asset.cpp \
+    project/entities_physics_2d/dr_asset__settings.cpp \
+    project/entities_physics_2d/dr_asset__settings_shared.cpp \
+    project/entities_physics_2d/dr_device.cpp \
+    project/entities_physics_2d/dr_effect.cpp \
+    project/entities_physics_2d/dr_item.cpp \
+    project/entities_physics_2d/dr_prefab.cpp \
+    project/entities_ui/dr_button.cpp \
     project/enums_entity_types.cpp \
     project/properties/property_collision.cpp \
     project/settings/settings.cpp \
@@ -1024,16 +1027,19 @@ HEADERS += \
     project/constants_variables.h \
     project/dr_project.h \
     project/entities/dr_animation.h \
-    project/entities/dr_asset.h \
-    project/entities/dr_device.h \
-    project/entities/dr_effect.h \
     project/entities/dr_font.h \
     project/entities/dr_image.h \
-    project/entities/dr_item.h \
-    project/entities/dr_prefab.h \
+    project/entities/dr_node.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
     project/entities/dr_world.h \
+    project/entities_map/dr_block.h \
+    project/entities_physics_2d/dr_asset.h \
+    project/entities_physics_2d/dr_device.h \
+    project/entities_physics_2d/dr_effect.h \
+    project/entities_physics_2d/dr_item.h \
+    project/entities_physics_2d/dr_prefab.h \
+    project/entities_ui/dr_button.h \
     project/enums_entity_types.h \
     project/properties/property_collision.h \
     project/settings/settings.h \

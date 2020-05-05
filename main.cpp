@@ -72,10 +72,10 @@
 //
 //  Main Components
 //  ---------------
-//  FormMain                        Modes:  "World Map":    World / UI Layout
-//                                          "World Editor": Physics World Editor
-//                                          "UI Editor":    User Interface Editor
-//                                        FUTURE: Stage Map: Stage Layout??
+//  FormMain                        Modes:  "World Map":        Node Map for Worlds / UI
+//                                          "World Editor":     Physics World 2D Editor
+//                                          "UI Editor":        UI World Editor
+//                                        FUTURE: Stage Map:    Stage Layout??
 //                                        FUTURE: App Editor
 //                                        FUTURE: Puzzle World Editor
 //
