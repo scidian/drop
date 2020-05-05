@@ -14,7 +14,6 @@
 #include "project/entities/dr_asset.h"
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_thing.h"
-#include "project/entities/dr_variable.h"
 #include "project/properties/property_collision.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
@@ -30,13 +29,16 @@ DrSettings::DrSettings(DrProject *parent_project) : m_parent_project(parent_proj
     addComponentEntitySettings();
     addComponentHiddenSettings();
     addComponentSizeSettings();
+
+    addComponentLocalVariables();
+    addComponentUserVariables();
 }
 
 DrSettings::~DrSettings() {
+    // Mark parent DrProject as changed so we know to alert user before closing unsaved work
     getParentProject()->setHasSaved(false);
-
+    // Delete pointers from children containers
     for (auto it = m_components.begin();    it != m_components.end(); ) {   delete it->second; it = m_components.erase(it); }
-    for (auto it = m_variables.begin();     it != m_variables.end(); )  {   delete it->second; it = m_variables.erase(it); }
 }
 
 
@@ -72,6 +74,16 @@ void DrSettings::addComponentSizeSettings() {
                            "Max Size", "Maximum size of item while it's in the Editor. A value of zero signifies no maximum size.");
     addPropertyToComponent(Comps::Size_Settings, Props::Size_Min_Size, Property_Type::PointF, DrPointF(0, 0),
                            "Min Size", "Minimum size of item while it's in the Editor. A value of zero signifies  no minimum size.");
+}
+
+void DrSettings::addComponentLocalVariables() {
+    addComponent(Comps::Local_Variables, "Local Variables", "Local Variables", Component_Colors::RGB_19_Silver, true);
+    getComponent(Comps::Local_Variables)->setIcon(Component_Icons::Prefab);
+}
+
+void DrSettings::addComponentUserVariables() {
+    addComponent(Comps::User_Variables, "User Variables", "User Variables", Component_Colors::RGB_19_Silver, true);
+    getComponent(Comps::User_Variables)->setIcon(Component_Icons::Prefab);
 }
 
 
@@ -151,12 +163,10 @@ std::string DrSettings::getName() {
         case DrType::Font:
         case DrType::Image:
         case DrType::Item:
+        case DrType::Node:
         case DrType::Prefab:
         case DrType::Stage:
         case DrType::Thing:
-        case DrType::UI:
-        case DrType::Variable:
-        case DrType::Widget:
         case DrType::World:        
             name_component = getComponent(Comps::Entity_Settings);              if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Props::Entity_Name);   if (name_property ==  nullptr) return "No Name Property";
@@ -335,23 +345,35 @@ Property_Type DrSettings::propertyTypeFromVariantType(Variant_Type type) {
     return property_type;
 }
 
-// Sets DrVariable in Project
-void DrSettings::setVariable(std::string variable_name, DrVariant value) {
-    DrVariable *var = variable(variable_name);
-    if (var != nullptr) {
-        var->setCurrent(value);
+// Sets User Variable in Project
+void DrSettings::setVariable(std::string variable_name, DrVariant value, Variable_Info info) {
+    Property_Type   prop_type = DrSettings::propertyTypeFromVariantType(value.getType());
+    DrProperty     *property  = getComponentProperty(Comps::User_Variables, variable_name);
+    if (property == nullptr) {
+        // ***** Stored as vector of 3 values in order:     "Current", "Best", "Total"
+        std::vector<DrVariant> variable { value, value, value };
+        addPropertyToComponent(Comps::User_Variables, variable_name, prop_type, variable, variable_name, "User Variable: " + variable_name);
     } else {
-        m_variables[variable_name] = new DrVariable(this->getParentProject(), variable_name, value.getType(), value);
+        std::vector<DrVariant> variable = getComponentPropertyValue(Comps::User_Variables, variable_name).toVector();
+        switch (info) {
+            case Variable_Info::Current:    variable[0] = value;                    break;
+            case Variable_Info::Best:       variable[1] = value;                    break;
+            case Variable_Info::Total:      variable[2] = value;                    break;
+            case Variable_Info::All:        variable = { value, value, value };     break;
+        }
+        setComponentPropertyValue(Comps::User_Variables, variable_name, variable);
     }
 }
 
-// Gets a DrVariable
-DrVariable* DrSettings::variable(std::string variable_name) {
-    VariableMap::iterator variable_iter = m_variables.find(variable_name);
-    if (variable_iter != m_variables.end()) {
-        return variable_iter->second;
-    } else {
-        return nullptr;
+// Gets a User Variable
+DrVariant DrSettings::variable(std::string variable_name, Variable_Info info) {
+    DrProperty *property = getComponentProperty(Comps::User_Variables, variable_name);
+    if (property == nullptr) return 0;
+    switch (info) {
+        case Variable_Info::Current:    return property->getValue().toVector()[0];
+        case Variable_Info::Best:       return property->getValue().toVector()[1];
+        case Variable_Info::Total:      return property->getValue().toVector()[2];
+        case Variable_Info::All:        return property->getValue().toVector();
     }
 }
 

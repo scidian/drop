@@ -18,7 +18,6 @@
 #include "engine/world/engine_world.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
-#include "project/entities/dr_variable.h"
 #include "project/entities/dr_world.h"
 
 
@@ -98,11 +97,11 @@ void DrEngineWorld::updateWorld(double time_passed) {
         m_game_distance = rotated.x - m_game_start.x;
         m_max_game_distance = Dr::Max(m_game_distance, m_max_game_distance);
 
-        // Update local DrWorld::DrVariable that tracks Distance
+        // Update local DrWorld User Variable that tracks Distance
         DrWorld *world = getProject()->findWorldFromKey(getWorldKey());
-        world->variable(Variables::Distance)->setCurrent(m_max_game_distance);
-        if (m_max_game_distance > world->variable(Variables::Distance)->getBest().toDouble()) {
-            world->variable(Variables::Distance)->setBest(m_max_game_distance);
+        world->setVariable(Variables::Distance, m_max_game_distance, Variable_Info::Current);
+        if (m_max_game_distance > world->variable(Variables::Distance, Variable_Info::Best).toDouble()) {
+            world->setVariable(Variables::Distance, m_max_game_distance, Variable_Info::Best);
         }
 
 

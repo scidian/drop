@@ -27,9 +27,6 @@ constexpr int   c_same_key =    -100;               // Value signifying to use t
 //##
 //############################
 enum class DrType {
-    // Entity Member Types
-    Variable,                   // Entities contained within DrSettings::m_variables
-
     // Physics World Types
     Animation,                  // Entities contained within DrProject::m_animations
         Frame,                  // Entities contained within DrProject::DrAnimation::m_frames
@@ -40,7 +37,10 @@ enum class DrType {
     Image,                      // Entities contained within DrProject::m_images
     Item,                       // Entities contained within DrProject::m_items
     Prefab,                     // Entities contained within DrProject::m_prefabs
-    World,                      // Entities contained within DrProject::m_worlds
+
+    // Project Types
+    Node,                       // Entities contained within DrProject::m_nodes
+    World,                      // Entities contained within DrProject::m_worlds / DrProject::m_uis
         Stage,                  // Entities contained within DrProject::DrWorld::m_stages
             Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
 ///         Background,
@@ -50,22 +50,71 @@ enum class DrType {
     // Gui Layer Types
 /// Buttons,                // button types
 /// Controls,               // joystick, etc?
-    UI,                         // Entities contained within DrProject::m_uis
-        Widget,                 // Entities contained within DrProject::DrUI::m_widgets
 
     // Misc Types
     NotFound,                   // For passing a value in functions that represents No Type Selected / Found
 };
 
 
-// ################## Physics Sub Types ####################
+// ################## Node Types ####################
+// ***** Nodes,     Entities contained within DrProject::m_nodes
+enum class DrNodeType {
+    // Logic
+    RandomOut,
+};
+
+
+// ################## World Types ####################
+// ***** Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis
+enum class DrWorldType {
+    Physics_2D,
+    UI,
+};
+
+// ################## Thing Types ####################
+// ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
+enum class DrThingType {
+    None,
+
+    // ***** 2D Physics World Sub Types
+    // Asset Things
+    Character,
+    Object,
+    Text,
+
+    // Device Things
+    Camera,
+
+    // Effect Things
+    Fire,
+    Fisheye,
+    Light,
+    Mirror,
+    Swirl,
+    Water,
+
+    // Item Things
+    Tile,
+
+    // Future Things...
+/// Action,
+/// Logic,
+/// Particle,
+
+    // ***** UI World Sub Types
+    Button,
+    Joystick,
+    Navigation,
+};
+
+
+// ################## 2D Physics World Sub Types ####################
 // ***** Assets,    Entities contained within DrProject::m_assets
 enum class DrAssetType {
     Character,
     Object,
     // Action
 };
-
 
 // ***** Devices,   Entities contained within DrProject::m_devices
 enum class DrDeviceType {
@@ -102,48 +151,6 @@ enum class DrPrefabType {
     Object,
     Spike,
     Spring,
-};
-
-// ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
-enum class DrThingType {
-    None,
-
-    // Pure Things
-    Character,
-    Object,
-    Text,
-
-    // Device Things
-    Camera,
-
-    // Effect Things
-    Fire,
-    Fisheye,
-    Light,
-    Mirror,
-    Swirl,
-    Water,
-
-    // Item Things
-    Tile,
-
-
-    // ***** Future Things...
-    // Action,
-    // Logic,
-    // Particle,
-};
-
-
-// ################## Gui Sub Types ####################
-// ***** Widgets,   Entities contained within DrProject::DrUI::m_widgets
-enum class DrWidgetType {
-    None,
-
-    Button,
-    Joystick,
-    Navigation,
-    Text,
 };
 
 
@@ -201,8 +208,9 @@ namespace Dr {
     std::string         StringFromEffectType(DrEffectType type);
     std::string         StringFromItemType(DrItemType type);
     std::string         StringFromPrefabType(DrPrefabType type);
+    std::string         StringFromNodeType(DrNodeType type);
     std::string         StringFromThingType(DrThingType type);
-    std::string         StringFromWidgetType(DrWidgetType type);
+    std::string         StringFromWorldType(DrWorldType type);
 }
 
 

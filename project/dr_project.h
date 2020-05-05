@@ -45,8 +45,6 @@ class DrItem;
 class DrPrefab;
 class DrStage;
 class DrThing;
-class DrUI;
-class DrWidget;
 class DrWorld;
 class IProgressBar;
 
@@ -61,7 +59,6 @@ typedef std::map<long,              DrFont*>        FontMap;
 typedef std::map<long,              DrImage*>       ImageMap;
 typedef std::map<long,              DrItem*>        ItemMap;
 typedef std::map<long,              DrPrefab*>      PrefabMap;
-typedef std::map<long,              DrUI*>          UIMap;
 typedef std::map<long,              DrWorld*>       WorldMap;
 
 
@@ -99,7 +96,6 @@ private:
     ImageMap        m_images;                                       // Holds DrImages (for use in DrFrames, loaded into DrEngineTextures)
     ItemMap         m_items;                                        // Holds DrItems
     PrefabMap       m_prefabs;                                      // Holds DrPrefabs
-    UIMap           m_uis;                                          // Holds DrUIs (which in turn hold DrThings)
     WorldMap        m_worlds;                                       // Holds DrWorlds (which in turn hold DrStages, which hold DrThings)
 
 
@@ -137,7 +133,6 @@ public:
     ImageMap&       getImageMap()           { return m_images; }
     ItemMap&        getItemMap()            { return m_items; }
     PrefabMap&      getPrefabMap()          { return m_prefabs; }
-    UIMap&          getUIMap()              { return m_uis; }
     WorldMap&       getWorldMap()           { return m_worlds; }
 
     long            getNumberOfAnimations() { return static_cast<long>(m_animations.size()); }
@@ -162,8 +157,6 @@ public:
     DrPrefab*       findPrefabFromKey(long check_key);
     DrStage*        findStageFromKey(long check_key);
     DrThing*        findThingFromKey(long check_key);
-    DrUI*           findUIFromKey(long check_key);
-    DrWidget*       findWidgetFromKey(long check_key);
     DrWorld*        findWorldFromKey(long check_key);
 
     DrDevice*       findDeviceFromType(DrDeviceType type);
@@ -186,9 +179,6 @@ public:
                              long key = c_no_key, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
-    DrUI*           addUI();
-    DrUI*           addUI(long key);
-    DrUI*           addUICopyFromUI(DrUI* from_ui, std::string new_name);
     DrWorld*        addWorld();
     DrWorld*        addWorld(long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);
@@ -202,7 +192,6 @@ public:
     void            deleteEntity(long entity_key);
     void            deleteFont(long font_key);
     void            deleteImage(long image_key);
-    void            deleteUI(long ui_key);
     void            deleteWorld(long world_key);
 
 };

@@ -20,7 +20,7 @@ class IEditorRelay;
 
 //####################################################################################
 //##    WorldMapItem
-//##        A QGraphicsItem for a node (DrProject::DrWorld, DrProject::DrUI) for use with our custom QGraphicsScene (WorldMapScene)
+//##        A QGraphicsItem for a node (DrProject::DrNode) for use with our custom QGraphicsScene (WorldMapScene)
 //############################
 class WorldMapItem : public QGraphicsPixmapItem
 {

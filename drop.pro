@@ -318,10 +318,6 @@ SOURCES += \
     project/entities/dr_thing__settings_items.cpp \
     project/entities/dr_thing__settings_shared.cpp \
     project/entities/dr_thing__z_order.cpp \
-    project/entities/dr_ui.cpp \
-    project/entities/dr_variable.cpp \
-    project/entities/dr_widget.cpp \
-    project/entities/dr_widget__z_order.cpp \
     project/entities/dr_world.cpp \
     project/entities/dr_world__settings.cpp \
     project/enums_entity_types.cpp \
@@ -1037,9 +1033,6 @@ HEADERS += \
     project/entities/dr_prefab.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
-    project/entities/dr_ui.h \
-    project/entities/dr_variable.h \
-    project/entities/dr_widget.h \
     project/entities/dr_world.h \
     project/enums_entity_types.h \
     project/properties/property_collision.h \

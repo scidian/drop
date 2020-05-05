@@ -17,11 +17,16 @@
 class DrProject;
 class DrProperty;
 class DrComponent;
-class DrVariable;
+
+enum class Variable_Info {
+    Current,
+    Best,
+    Total,
+    All,
+};
 
 // Type Definitions
 typedef std::map<std::string, DrComponent*>     ComponentMap;       // Map of pointers to DrComponent classes, built in keys in file components_and_properties.h
-typedef std::map<std::string, DrVariable*>      VariableMap;        // Map of pointers to DrVariables for this Entity
 
 
 //####################################################################################
@@ -43,7 +48,6 @@ private:
 
     // Local Variables
     ComponentMap    m_components;                                   // Map of pointers to DrComponent classes
-    VariableMap     m_variables;                                    // Holds variables for this Entity
 
     long            m_is_visible = true;                            // Should this be visible in editor?
     long            m_is_locked = false;                            // Should this Entity be locked from editing?
@@ -52,9 +56,9 @@ private:
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
 public:
 
-    // Variables
-    DrVariable*     variable(std::string variable_name);                            // Returns variable by name
-    void            setVariable(std::string variable_name, DrVariant value);        // Sets variable by name
+    // User Variables
+    DrVariant       variable(std::string variable_name, Variable_Info info = Variable_Info::Current);                           // Returns variable by name
+    void            setVariable(std::string variable_name, DrVariant value, Variable_Info info = Variable_Info::Current);       // Sets variable by name
 
 
     // #################### INTERNAL FUNCTIONS ####################
@@ -99,15 +103,21 @@ public:
     DrComponent*    addComponent(std::string component_key, std::string display_name, std::string description, DrColor color, bool is_turned_on);
     DrProperty*     addPropertyToComponent(std::string component_key, std::string property_key, Property_Type type, DrVariant value,
                                            std::string display_name, std::string description, bool is_hidden = false, bool is_editable = true);
-    void            addComponentEntitySettings();
-    void            addComponentHiddenSettings();
-    void            addComponentSizeSettings();
-
 
     // Animation Functions
     std::list<long>         animationsUsedByEntity();
     void                    deleteAnimations();
     void                    updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key);
+
+
+    // Entity Settings
+    void            addComponentEntitySettings();
+    void            addComponentHiddenSettings();
+    void            addComponentSizeSettings();
+
+    // Entity Variables
+    void            addComponentLocalVariables();
+    void            addComponentUserVariables();
 
     // Setttings Helpers
     void                    copyEntitySettings(DrSettings *from_entity);
@@ -115,6 +125,8 @@ public:
     // Variable Functions
     void                    addWorldVariables();
     static Property_Type    propertyTypeFromVariantType(Variant_Type type);
+
+
 };
 
 

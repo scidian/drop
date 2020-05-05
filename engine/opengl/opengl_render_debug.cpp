@@ -15,7 +15,6 @@
 #include "engine/thing/components/thing_comp_physics.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
-#include "project/entities/dr_variable.h"
 #include "project/entities/dr_world.h"
 #include "project/dr_project.h"
 
@@ -88,8 +87,8 @@ void DrOpenGL::drawDebug() {
         // Get Distance
         long   world_key = getEngine()->getCurrentWorld()->getWorldKey();
         ///double distance_current = m_engine->getCurrentWorld()->getMaxDistance();
-        double distance_current = getEngine()->getProject()->findWorldFromKey(world_key)->variable(Variables::Distance)->getCurrent().toDouble();
-        double distance_best =    getEngine()->getProject()->findWorldFromKey(world_key)->variable(Variables::Distance)->getBest().toDouble();
+        double distance_current = getEngine()->getProject()->findWorldFromKey(world_key)->variable(Variables::Distance, Variable_Info::Current).toDouble();
+        double distance_best =    getEngine()->getProject()->findWorldFromKey(world_key)->variable(Variables::Distance, Variable_Info::Best).toDouble();
         std::string distance = Dr::RoundToDecimalPlace(distance_current, 2) + ", Best: " + Dr::RoundToDecimalPlace(distance_best, 2);
 
         fonsDrawText(fs, 570,  20, distance.c_str(), nullptr );                                                                             // Game Distance

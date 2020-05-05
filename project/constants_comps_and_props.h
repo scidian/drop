@@ -85,9 +85,10 @@ namespace Comps {
 
     // TWO LETTER CODES
     //  En = Entity
-    //  Lo = Local
     //  Hi = Hidden
     //  Si = Size
+    //  Va = Local
+    //  Us = User
 
     //  An = Animation
     //  Fr = Frame
@@ -99,18 +100,18 @@ namespace Comps {
 
     // ***** General Components
     const std::string Entity_Settings                   = "EnSe";
-    const std::string Local_Variables                   = "LoVariables";
     const std::string Hidden_Settings                   = "HiSe";
     const std::string Size_Settings                     = "SiSe";
+
+    const std::string Local_Variables                   = "LoVariables";
+    const std::string User_Variables                    = "UsVariables";
+
 
     // ***** DrAnimation Components
     const std::string Animation_Settings                = "AnSe";
 
     // ***** DrFrame Components
     const std::string Frame_Settings                    = "FrSe";
-
-    // ***** DrVariable Components
-    const std::string Variable_Data                     = "VaData";
 
     // ***** DrAsset Components
     const std::string Asset_Collision                   = "AsCollision";
@@ -122,9 +123,6 @@ namespace Comps {
     const std::string Asset_Settings_Character          = "AsSeCharacter";
     const std::string Asset_Settings_Object             = "AsSeObject";
     const std::string Asset_Settings_Font               = "AsSeFont";
-
-    // ***** DrUI Components
-    const std::string UI_Settings                       = "UiSe";
 
     // ***** DrWorld Components
     const std::string World_Settings                    = "WoSe";
@@ -222,12 +220,6 @@ namespace Props {
     const std::string Animation_Settings_Future_1           = "AnSeFuture1";
     const std::string Animation_Settings_Future_2           = "AnSeFuture2";
     const std::string Animation_Settings_Future_3           = "AnSeFuture3";
-
-
-    // ******************** DrVariable Properties
-    const std::string Variable_Data_Current                 = "VaDaCurrent";                // double
-    const std::string Variable_Data_Best                    = "VaDaBest";                   // double
-    const std::string Variable_Data_Total                   = "VaDaTotal";                  // double
 
 
     // ******************** DrAsset Component Properties

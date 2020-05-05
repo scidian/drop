@@ -17,7 +17,7 @@ class IEditorRelay;
 
 //####################################################################################
 //##    WorldMapScene
-//##        Holds nodes (WorldMapItem) representing layers (DrProject::DrWorld, DrProject::DrUI) of DrProject
+//##        Holds nodes (WorldMapItem) representing layers (DrProject::DrNode - Worlds, UI, etc) of DrProject
 //############################
 class WorldMapScene : public QGraphicsScene
 {

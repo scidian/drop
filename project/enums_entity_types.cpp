@@ -24,12 +24,10 @@ std::string StringFromType(DrType type) {
         case DrType::Frame:                 return "Frame";
         case DrType::Image:                 return "Image";
         case DrType::Item:                  return "Item";
+        case DrType::Node:                  return "Node";
         case DrType::Prefab:                return "Prefab";
         case DrType::Stage:                 return "Stage";
         case DrType::Thing:                 return "Thing";
-        case DrType::UI:                    return "UI";
-        case DrType::Variable:              return "Variable";
-        case DrType::Widget:                return "Widget";
         case DrType::World:                 return "World";
 
         case DrType::NotFound:              return "Not Found";
@@ -88,11 +86,18 @@ std::string StringFromPrefabType(DrPrefabType type) {
     }
 }
 
+std::string StringFromNodeType(DrNodeType type) {
+    switch (type) {
+        case DrNodeType::RandomOut:         return "Random Out";
+    }
+}
+
 std::string StringFromThingType(DrThingType type) {
     switch (type) {
         case DrThingType::None:             return "None";
 
-        // Pure Things
+        // ***** 2D Physics World Sub Types
+        // Asset Things
         case DrThingType::Character:        return "Character";
         case DrThingType::Object:           return "Object";
         case DrThingType::Text:             return "Text";
@@ -115,18 +120,22 @@ std::string StringFromThingType(DrThingType type) {
         ///case DrThingType::Camera:        return "Camera";
         ///case DrThingType::Logic:         return "Logic";
         ///case DrThingType::Particle:      return "Particle";
+
+
+        // ***** UI World Sub Types
+        case DrThingType::Button:           return "Button";
+        case DrThingType::Joystick:         return "Joystick";
+        case DrThingType::Navigation:       return "Navigation";
     }
 }
 
-std::string StringFromWidgetType(DrWidgetType type) {
+std::string StringFromWorldType(DrWorldType type) {
     switch (type) {
-        case DrWidgetType::None:            return "None";
-        case DrWidgetType::Button:          return "Button";
-        case DrWidgetType::Joystick:        return "Joystick";
-        case DrWidgetType::Navigation:      return "Navigation";
-        case DrWidgetType::Text:            return "Text";
+        case DrWorldType::Physics_2D:       return "2D Physics";
+        case DrWorldType::UI:               return "UI";
     }
 }
+
 
 }   // namespace Dr
 

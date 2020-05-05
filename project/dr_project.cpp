@@ -21,8 +21,6 @@
 #include "project/entities/dr_prefab.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
-#include "project/entities/dr_ui.h"
-#include "project/entities/dr_widget.h"
 #include "project/entities/dr_world.h"
 
 
@@ -51,7 +49,6 @@ void DrProject::clearProject(bool add_built_in_items) {
     for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_items.begin();         it != m_items.end(); )      {   delete it->second; it = m_items.erase(it);      }
     for (auto it = m_prefabs.begin();       it != m_prefabs.end(); )    {   delete it->second; it = m_prefabs.erase(it);    }
-    for (auto it = m_uis.begin();           it != m_uis.end(); )        {   delete it->second; it = m_uis.erase(it);        }
     for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
     // Add these Images to every project for use with New Assets
@@ -199,14 +196,6 @@ void DrProject::deleteImage(long image_key) {
     if (image == nullptr) return;
     m_images.erase(image_key);
     delete image;
-}
-
-// Removes a UI from the Project
-void DrProject::deleteUI(long ui_key) {
-    DrUI *ui = findUIFromKey(ui_key);
-    if (ui == nullptr) return;
-    m_uis.erase(ui->getKey());
-    delete ui;
 }
 
 // Removes a World from the Project
@@ -386,14 +375,14 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
         }
     }
 
-    // Search UIs and Widgets
-    UIMap::iterator ui_iter = m_uis.find(check_key);
-    if (ui_iter != m_uis.end())                 return ui_iter->second;
-    for (auto &ui_pair : m_uis) {
-        WidgetMap &widgets = ui_pair.second->getWidgetMap();
-        WidgetMap::iterator widget_iter = widgets.find(check_key);
-        if (widget_iter != widgets.end())       return widget_iter->second;
-    }
+//    // Search UIs and Widgets
+//    UIMap::iterator ui_iter = m_uis.find(check_key);
+//    if (ui_iter != m_uis.end())                 return ui_iter->second;
+//    for (auto &ui_pair : m_uis) {
+//        WidgetMap &widgets = ui_pair.second->getWidgetMap();
+//        WidgetMap::iterator widget_iter = widgets.find(check_key);
+//        if (widget_iter != widgets.end())       return widget_iter->second;
+//    }
 
     // Couldnt find Entity with key value "check_key"
     if (show_warning) {
@@ -466,21 +455,6 @@ DrThing* DrProject::findThingFromKey(long check_key) {
             if (thing_iter != things.end())
                 return thing_iter->second;
         }
-    }
-    return nullptr;
-}
-
-DrUI* DrProject::findUIFromKey(long check_key) {
-    UIMap::iterator ui_iter = m_uis.find(check_key);
-    return ((ui_iter != m_uis.end()) ? ui_iter->second : nullptr);
-}
-
-DrWidget* DrProject::findWidgetFromKey(long check_key) {
-    for (auto &ui_pair : m_uis) {
-        WidgetMap &widgets = ui_pair.second->getWidgetMap();
-        WidgetMap::iterator widget_iter = widgets.find(check_key);
-        if (widget_iter != widgets.end())
-            return widget_iter->second;
     }
     return nullptr;
 }
