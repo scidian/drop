@@ -44,9 +44,9 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, QList<DrType> types)
-    : QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay), m_show_types(types)
-{
+TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay)
+    : QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) {
+
     // Initialize hover handler
     setHoverHandler( new DrFilterHoverHandler(this) );
     connect(m_filter_hover, SIGNAL(signalMouseHover(QString, QString)), this, SLOT(setAdvisorInfo(QString, QString)));

@@ -208,6 +208,7 @@ enum class Buttons_Toggle {
 namespace Dr {
     QString     StringFromEditorWidget(Editor_Widgets widget);
     QString     StringFromPositionFlag(Position_Flags flag);
+    QString     StringFromViewMode(View_Mode mode);
 }
 
 

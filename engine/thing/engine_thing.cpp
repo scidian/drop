@@ -17,8 +17,9 @@
 #include "engine/thing/engine_thing.h"
 #include "engine/thing/engine_thing_component.h"
 #include "engine/world/engine_world.h"
-#include "project/entities_physics_2d/dr_asset.h"
 #include "project/dr_project.h"
+#include "project/entities/dr_thing.h"
+#include "project/entities_physics_2d/dr_asset.h"
 
 
 //####################################################################################
@@ -120,10 +121,15 @@ void DrEngineThing::destroy() {
 //####################################################################################
 // Returns name of this Entity (Thing)
 std::string DrEngineThing::name() {
-    if (m_world == nullptr) return "";
+    if (world() == nullptr) return "";
+    // Try to find thing
+    DrThing *thing = world()->project()->findThingFromKey(m_original_project_key);
+    if (thing != nullptr) return (thing->getName());
+    // Search whole Project as backup
     DrSettings *entity = world()->project()->findSettingsFromKey(m_original_project_key);
-    if (entity == nullptr) return "";
-    return (entity->getName());
+    if (entity != nullptr) return (entity->getName());
+    // Couldn't find
+    return "";
 }
 
 DrPointF DrEngineThing::mapPositionToScreen() {

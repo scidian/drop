@@ -158,6 +158,7 @@ public:
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getStageView() override     { return viewEditor; }
+    virtual WorldMapView*       getWorldMapView() override  { return viewWorldMap; }
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;

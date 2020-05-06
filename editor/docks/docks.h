@@ -27,8 +27,8 @@ namespace Dr {
 
 
     // ***** Building Shared Dock Widgets
-    QDockWidget*        BuildDockAdvisor(   DrProject *project, IEditorRelay *editor_relay, TreeAdvisor *&tree_advisor);
-    QDockWidget*        BuildDockAssets(    DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types);
+    QDockWidget*        BuildDockAdvisor(   DrProject *project, IEditorRelay *editor_relay, TreeAdvisor   *&tree_advisor);
+    QDockWidget*        BuildDockAssets(    DrProject *project, IEditorRelay *editor_relay, TreeAssets    *&tree_assets);
     QDockWidget*        BuildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) ;
 
     // ***** Handling Shared Dock Widgets

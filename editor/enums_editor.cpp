@@ -44,6 +44,22 @@ QString StringFromPositionFlag(Position_Flags flag) {
     }
 }
 
+QString StringFromViewMode(View_Mode mode) {
+    switch (mode) {
+        case View_Mode::None:               return "None";
+        case View_Mode::Disable_Update:     return "Disable Updates";
+        case View_Mode::Selecting:          return "Selecting";
+        case View_Mode::Resizing:           return "Resizing";
+        case View_Mode::Rotating:           return "Rotating";
+        case View_Mode::Translating:        return "Translating";
+        case View_Mode::Dragging:           return "Dragging";
+        case View_Mode::Zooming:            return "Zooming";
+        case View_Mode::Holding_Keys:       return "Holding Keys";
+        case View_Mode::Moving_Camera:      return "Moving Camera";
+        case View_Mode::Resizing_Stage:     return "Resizing Stage";
+    }
+    return "Mode not handled...";
+}
 
 
 

@@ -12,6 +12,7 @@
 #include "editor/forms/form_animation.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"
+#include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
@@ -49,9 +50,9 @@ void FormAnimation::initializeFormAnimation() {
     // ***** Build docks, widgets, etc
     buildCentralWidget();
 
-    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);                                       // Build Advisor Dock
-    dockAssetsEditor =  Dr::BuildDockAssets(   m_project, this, treeAssetEditor, "Images", { DrType::Image });      // Build Assets Dock
-    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);                                     // Build Inspector Dock
+    dockAdvisor =       Dr::BuildDockAdvisor(  m_project, this, treeAdvisor);
+    dockAssetsEditor =  Dr::BuildDockAssets(   m_project, this, treeAssetEditor);
+    dockInspector =     Dr::BuildDockInspector(m_project, this, treeInspector);
     Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 
     // ***** Set up FormAnimation for first time
@@ -60,6 +61,8 @@ void FormAnimation::initializeFormAnimation() {
     Dr::LockDockWidth( dockInspector, dockInspector->width() );
 
     this->setCentralWidget( widgetCentral );
+    dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Images").toUtf8()) );
+    treeAssetEditor->setShowTypes({ DrType::Image });
     buildAssetTree();
     dockAssetsEditor->show();
     buildProjectTree();

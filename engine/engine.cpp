@@ -28,9 +28,8 @@ DrEngine::DrEngine(DrProject *project, long stage_key) : m_project(project) {
     m_worlds[m_current_world] = new DrEngineWorld(this, project, this->getTextureMap(), m_current_world);
 }
 
-DrEngine::~DrEngine() {
-    clearSignals();
-}
+DrEngine::~DrEngine() { }
+
 
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::clearWorlds() {

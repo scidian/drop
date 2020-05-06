@@ -24,6 +24,8 @@
 #include "editor/trees/tree_project.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "editor/world_map/world_map_scene.h"
+#include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -62,8 +64,7 @@ void FormMain::initializeFormMain() {
 
     // Build Docks
     dockAdvisor =       Dr::BuildDockAdvisor(   m_project, this, treeAdvisor);
-    dockAssetsEditor =  Dr::BuildDockAssets(    m_project, this, treeAssetEditor, "Assets",
-                                                { DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
+    dockAssetsEditor =  Dr::BuildDockAssets(    m_project, this, treeAssetEditor);
     dockInspector =     Dr::BuildDockInspector( m_project, this, treeInspector);
     Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
 }
@@ -81,13 +82,14 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     Dr::LockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
     Dr::LockDockWidth( dockInspector, dockInspector->width() );
 
-    // ***** If we aren't loading for the first time, clear previous layout and save central widgets for future use
+    // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Form_Main_Mode::Program_Loading)) {
         clearToolbar();
         switch (old_mode) {
             case Form_Main_Mode::World_Map:
                 widgetCentralWorldMap = takeCentralWidget();
                 buildInspector( { } );
+                dockAssetsEditor->hide();
                 break;
             case Form_Main_Mode::World_Editor:
                 widgetCentralEditor = takeCentralWidget();
@@ -97,11 +99,13 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
             case Form_Main_Mode::Clear:
                 widgetCentralClear = takeCentralWidget();
                 break;
-
-            default:    Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known", QMessageBox::Icon::Warning, this);
+            default:
+                Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known", QMessageBox::Icon::Warning, this);
         }
     }
-    setToolbar(new_mode);           // Sets toolbar widgets for the new mode selected
+
+    // ***** Sets Toolbar Widgets ***** for the new mode selected
+    setToolbar(new_mode);
 
     // Wait for possible finish loading
     if (new_mode != Form_Main_Mode::World_Editor) {
@@ -109,16 +113,24 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     }
     Dr::SetDoneLoading(false);
 
-    // ***** Set up new layout
+    // ***** Set New Layout *****
     switch (new_mode) {
         case Form_Main_Mode::World_Map:
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             this->setCentralWidget( widgetCentralWorldMap );
+            dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
+            treeAssetEditor->setShowTypes({ DrType::Block });
+            buildAssetTree();
+            dockAssetsEditor->show();
+            sceneWorldMap->clear();
+            buildSceneAfterLoading( c_no_key );
             break;
 
         case Form_Main_Mode::World_Editor:
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             this->setCentralWidget( widgetCentralEditor );
+            dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
+            treeAssetEditor->setShowTypes({ DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
             buildAssetTree();
             dockAssetsEditor->show();
             buildProjectTree();
@@ -134,6 +146,7 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
         default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known", QMessageBox::Icon::Warning, this);
     }
 
+    // Wait until widgets are done being moved around
     QApplication::processEvents();
     Dr::SetDoneLoading(true);
 

@@ -42,26 +42,26 @@ class TreeAssets: public QTreeWidget
 
 private:
     // External Borrowed Pointers
-    DrProject            *m_project;                                // Pointer to currently loaded project
-    IEditorRelay         *m_editor_relay;                           // Pointer to IEditorRelay class of parent form
+    DrProject            *m_project;                                    // Pointer to currently loaded project
+    IEditorRelay         *m_editor_relay;                               // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    DrFilterHoverHandler *m_filter_hover;                           // Pointer to an event filter hover handler
+    DrFilterHoverHandler *m_filter_hover;                               // Pointer to an event filter hover handler
 
-    long                  m_selected_key = c_no_key;                // Unique Key of last clicked on Asset
+    long                  m_selected_key = c_no_key;                    // Unique Key of last clicked on Asset
 
-    std::map <Asset_Category, AssetFlowLayout*> m_grid_layouts;     // List of the layouts so that we can sort without rebuilding
-    QList<QFrame*>                              m_asset_frames;     // List of the single row frames that contain name and pixmap labels
+    std::map <Asset_Category, AssetFlowLayout*> m_grid_layouts;         // List of the layouts so that we can sort without rebuilding
+    QList<QFrame*>                              m_asset_frames;         // List of the single row frames that contain name and pixmap labels
 
-    QList<DrType>         m_show_types { };                         // Types to show for this TreeAssets
+    QList<DrType>         m_show_types { };                             // Types to show for this TreeAssets
 
     QWidget              *m_search_widget;
     QVBoxLayout          *m_search_layout;
-    QLineEdit            *m_search_bar;                             // Search bar at bottom of asset dock
+    QLineEdit            *m_search_bar;                                 // Search bar at bottom of asset dock
 
 public:
     // Constructor
-    explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, QList<DrType> show_types);
+    explicit        TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor_relay);
 
     // Event Overrides
     virtual void    focusInEvent(QFocusEvent *event) override;

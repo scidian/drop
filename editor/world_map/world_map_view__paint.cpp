@@ -73,6 +73,8 @@ void WorldMapView::paintGrid(QPainter &painter) {
         painter.drawLine(scene_rect.left(), y, scene_rect.right(), y);
     }
 
+    qDebug() << "Zoom: " << m_zoom;
+
 }
 
 

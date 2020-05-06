@@ -127,10 +127,10 @@ DrVariant DrSettings::getComponentPropertyValue(std::string component_key, std::
 DrProperty* DrSettings::getComponentProperty(ComponentProperty component_property_pair) {
     return getComponentProperty(component_property_pair.first, component_property_pair.second);
 }
-DrProperty* DrSettings::getComponentProperty(std::string component_key, std::string property_key) {
-    DrComponent *component = getComponent(component_key);
+DrProperty* DrSettings::getComponentProperty(std::string component_key, std::string property_key, bool show_error) {
+    DrComponent *component = getComponent(component_key, show_error);
     if (component == nullptr) return nullptr;
-    return component->getProperty(property_key);
+    return component->getProperty(property_key, show_error);
 }
 
 DrProperty* DrSettings::findPropertyFromPropertyKey(std::string property_key_to_find) {
@@ -347,7 +347,7 @@ Property_Type DrSettings::propertyTypeFromVariantType(Variant_Type type) {
 
 // Sets User Variable in Project
 void DrSettings::setVariable(std::string variable_name, DrVariant value, Variable_Info info) {
-    DrProperty *property  = getComponentProperty(Comps::User_Variables, variable_name);
+    DrProperty *property = getComponentProperty(Comps::User_Variables, variable_name, false);
     if (property == nullptr) {
         // ***** Stored as vector of 3 values in order:     "Current", "Best", "Total"
         std::vector<DrVariant> variable { value, value, value };

@@ -73,13 +73,13 @@ QDockWidget* BuildDockAdvisor(DrProject *project, IEditorRelay *editor_relay, Tr
 //####################################################################################
 //##    Builds Assets Dock
 //####################################################################################
-QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets, QString title, QList<DrType> types) {
+QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, TreeAssets *&tree_assets) {
     QSizePolicy size_policy_preferred_vertical(QSizePolicy::Preferred, QSizePolicy::Preferred);
     size_policy_preferred_vertical.setHorizontalStretch(0);
     size_policy_preferred_vertical.setVerticalStretch(1);
 
     QDockWidget *dockAssetsEditor = new QDockWidget();
-    dockAssetsEditor->setWindowTitle( QMainWindow::tr(title.toUtf8()) );
+    dockAssetsEditor->setWindowTitle( "" );
     dockAssetsEditor->setObjectName(QStringLiteral("dockAssetsEditor"));
     dockAssetsEditor->setFont(Dr::CustomFont());
     dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);  /// | QDockWidget::DockWidgetClosable);
@@ -93,7 +93,7 @@ QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, Tre
             verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeAssets for the Asset List
-                tree_assets = new TreeAssets(widgetAssestEditor, project, editor_relay, types);
+                tree_assets = new TreeAssets(widgetAssestEditor, project, editor_relay);
                 tree_assets->setObjectName(QStringLiteral("treeAssetEditor"));
                 tree_assets->setColumnCount(1);
                 tree_assets->setFont(Dr::CustomFont());

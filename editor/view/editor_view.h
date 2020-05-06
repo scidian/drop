@@ -121,14 +121,16 @@ private:
     bool                    m_flag_key_down_alt             { false };      // True when View has focus and alt (option)  is down
     bool                    m_flag_key_down_shift           { false };      // True when View has focus and shift         is down
 
+    // Mouse Variables
+    QPoint                  m_last_mouse_pos;                               // Tracks last known mouse position in view coordinates
+    QPoint                  m_origin;                                       // Stores mouse down position in view coordinates
+    QPointF                 m_origin_in_scene;                              // Stores mouse down position in scene coordinates
+    QGraphicsItem          *m_origin_item;                                  // Stores top item under mouse (if any) on mouse down event
+    Position_Flags          m_over_handle;                                  // Tracks if mouse is over a handle
+
     // Drag and Drop Variables
     bool                    m_drop_might_happen             { false };      // True when its possible we may get an asset drop and need to draw crosshairs
     QPointF                 m_drop_location;                                // Potential drop location of drag and drop operation
-
-    // Mouse event variables
-    QPoint                              m_origin;                           // Stores mouse down position in view coordinates
-    QPointF                             m_origin_in_scene;                  // Stores mouse down position in scene coordinates
-    QGraphicsItem                      *m_origin_item;                      // Stores top item under mouse (if any) on mouse down event
 
     // Tool Tip Variables
     EditorViewToolTip                  *m_tool_tip;                         // Holds our view's custom Tool Tip box
@@ -139,8 +141,6 @@ private:
     std::map<Position_Flags, QPointF>   m_handles_centers;                  // Stores QPointF center points of selection box handles
     std::map<Position_Flags, double>    m_handles_angles;                   // Stores angle used for mouse cursor of selection box handles
     Handle_Shapes                       m_handles_shape;                    // Stores which style handles should we draw
-    Position_Flags                      m_over_handle;                      // Tracks if mouse is over a handle
-    QPoint                              m_last_mouse_pos;                   // Tracks last known mouse position in view coordinates
 
     // View_Mode::Selecting Variables
     EditorViewRubberBand               *m_rubber_band;                      // Holds our view's RubberBand object
@@ -294,7 +294,6 @@ public:
 
     // Getters / Setters
     View_Mode       currentViewMode()                   { return m_view_mode; }
-    QString         currentViewModeAsString();
     double          currentZoomLevel()                  { return m_zoom_scale; }
     bool            hasShownAScene() const              { return m_flag_has_shown_a_scene_yet; }
     EditorScene*    getEditorScene()                    { return my_scene; }

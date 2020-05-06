@@ -39,16 +39,18 @@ DrComponent::~DrComponent() {
 //####################################################################################
 //##    Get Property
 //####################################################################################
-DrProperty* DrComponent::getProperty(std::string property_key) {
+DrProperty* DrComponent::getProperty(std::string property_key, bool show_error) {
     auto it = m_properties.find(property_key);
     if (it == m_properties.end()) {
-        Dr::PrintDebug("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
-                       "Property not found in object / component \n\n"
-                       "Property ID: \t" + property_key + "\n"
-                       "Component Name: \t" + this->getDisplayName() + "\n"
-                       "Component ID: \t" + this->getComponentKey() + "\n"
-                       "Object Name: \t" + this->m_parent_settings->getName() + "\n"
-                       "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + " - End Error.....");
+        if (show_error) {
+            Dr::PrintDebug("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
+                           "Property not found in object / component \n\n"
+                           "Property ID: \t" + property_key + "\n"
+                           "Component Name: \t" + this->getDisplayName() + "\n"
+                           "Component ID: \t" + this->getComponentKey() + "\n"
+                           "Object Name: \t" + this->m_parent_settings->getName() + "\n"
+                           "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + " - End Error.....");
+        }
         return nullptr;
     }
     return (*it).second;

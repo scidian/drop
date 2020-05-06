@@ -158,7 +158,10 @@ FormEngine::FormEngine(DrProject *project, long stage_key, QWidget *parent) : QM
     } );
 }
 
-FormEngine::~FormEngine() { }
+FormEngine::~FormEngine() {
+    delete m_opengl;
+    delete m_engine;
+}
 
 
 //####################################################################################

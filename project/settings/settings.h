@@ -88,7 +88,7 @@ public:
     bool            hasComponent(std::string component_key);
 
     DrComponent*    getComponent(std::string component_key, bool show_error = true);
-    DrProperty*     getComponentProperty(std::string component_key, std::string property);
+    DrProperty*     getComponentProperty(std::string component_key, std::string property, bool show_error = true);
     DrProperty*     getComponentProperty(ComponentProperty component_property_pair);
     DrVariant       getComponentPropertyValue(std::string component_key, std::string property_key);
 

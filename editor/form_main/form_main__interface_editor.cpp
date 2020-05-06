@@ -23,6 +23,7 @@
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
 #include "editor/world_map/world_map_scene.h"
+#include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
@@ -39,11 +40,18 @@
 //##    Editor Interface Relay Handlers
 //####################################################################################
 //enum class Editor_Widgets {
-//    Asset_Tree,
-//    Inspector_Tree,
-//    Project_Tree,
-//    Stage_View,
-//  Toolbar?
+// Universal Widgets
+//      ToolBar,
+//      Inspector_Tree,
+//
+// "World Editor" Widgets
+//      Asset_Tree,
+//      Project_Tree,
+//      Stage_View,
+//
+// "World Map" Widgets
+//      Map_View,
+//}
 
 void FormMain::buildAssetTree() {
     treeAssetEditor->buildAssetTree();
@@ -108,7 +116,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long update_count = 0;
     ///Dr::SetLabelText(Label_Names::Label_Bottom, "Update Editor Widgets: " + QString::number(update_count++) +
-    ///                                            ", Mode: " + viewEditor->currentViewModeAsString());
+    ///                                            ", Mode: " + Dr::StringFromViewMode(viewEditor->currentViewMode()) );
 }
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) {
@@ -160,13 +168,21 @@ QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEdit
 
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
-void FormMain::centerViewTimer(QPointF center_point) { viewEditor->centerOn(center_point); }
-void FormMain::viewCenterOnPoint(QPointF center_point) {
-    viewEditor->centerOn(center_point);
-    QTimer::singleShot(0, this, [this, center_point] {
-        this->centerViewTimer(center_point);
+void FormMain::centerViewTimer(QPointF center_point) {
+    if (m_current_mode == Form_Main_Mode::World_Editor) {
+        viewEditor->centerOn(center_point);
         viewEditor->setHasShownAScene(true);
-    } );
+    } else if (m_current_mode == Form_Main_Mode::World_Map) {
+        viewWorldMap->centerOn(center_point);
+    }
+}
+void FormMain::viewCenterOnPoint(QPointF center_point) {
+    if (m_current_mode == Form_Main_Mode::World_Editor) {
+        viewEditor->centerOn(center_point);
+    } else if (m_current_mode == Form_Main_Mode::World_Map) {
+        viewWorldMap->centerOn(center_point);
+    }
+    QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
 void FormMain::viewZoomToScale(double zoom_scale) { viewEditor->zoomToScale(zoom_scale); }
 

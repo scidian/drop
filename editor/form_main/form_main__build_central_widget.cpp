@@ -75,7 +75,7 @@ void FormMain::buildCentralWidgetWorldMap() {
         viewWorldMap->setDragMode(QGraphicsView::DragMode::NoDrag);
         viewWorldMap->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
         viewWorldMap->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
-        ///viewWorldMap->zoomInOut( 0 );
+        viewWorldMap->zoomInOut( 0 );
 
         ///// This setting means we will decide when to call update(), controls recurssive paint events
         ///viewWorldMap->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);

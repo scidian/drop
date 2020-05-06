@@ -16,17 +16,12 @@
 #include "core/colors/colors.h"
 #include "editor/interface_editor_relay.h"
 
-// Necessary forward declarations
+// Forward Declarations
 class DrFilterHoverHandler;
-class DrProject;
 class EditorScene;
 class EditorView;
 class EditorViewRubberBand;
 class FormPopup;
-class TreeAssets;
-class TreeAdvisor;
-class TreeInspector;
-class TreeProject;
 
 
 //####################################################################################
@@ -74,6 +69,7 @@ public:
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getStageView() override     { return viewEditor; }
+    virtual WorldMapView*       getWorldMapView() override  { return nullptr; }
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;

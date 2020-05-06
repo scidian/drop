@@ -172,20 +172,20 @@ EditorItem::EditorItem(DrProject *project, IEditorRelay *editor_relay, DrThing *
 
 
     // ***** Store some initial user data
-    setData(User_Roles::Name, QString::fromStdString(m_asset->getName()) );
-    std::string description = m_thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Advisor_Description).toString();
+    std::string            description = m_thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromThingType(m_thing->getThingType());
-    setData(User_Roles::Type, QString::fromStdString(description) );
-    setData(User_Roles::Key, QVariant::fromValue(m_thing_key));
+    setData(User_Roles::Name,       QString::fromStdString(m_asset->getName()) );
+    setData(User_Roles::Type,       QString::fromStdString(description) );
+    setData(User_Roles::Key,        QVariant::fromValue(m_thing_key));
 
     double   angle =   m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
     DrPointF scale =   m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();
     double   z_order = m_thing->getZOrderWithSub();
     double   opacity = m_thing->getComponentPropertyValue(Comps::Thing_Layering,  Props::Thing_Opacity).toDouble();
     setData(User_Roles::Rotation, angle);
-    setData(User_Roles::Scale,    QPointF(scale.x, scale.y) );
-    setData(User_Roles::Z_Order,  z_order);
-    setData(User_Roles::Opacity,  opacity);
+    setData(User_Roles::Scale,      QPointF(scale.x, scale.y) );
+    setData(User_Roles::Z_Order,    z_order);
+    setData(User_Roles::Opacity,    opacity);
     setZValue(  z_order );
 
     // Adjust item to proper transform
@@ -207,7 +207,7 @@ EditorItem::EditorItem(DrProject *project, IEditorRelay *editor_relay, DrThing *
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
         setTransformationMode(Qt::SmoothTransformation);                            // Turn on anti aliasing
 
-    // Set up initial item settings
+    // ***** Set up initial item settings
     if (!m_temp_only) {
         setAcceptHoverEvents(true);                                                 // Item tracks mouse movement
         setShapeMode(QGraphicsPixmapItem::ShapeMode::MaskShape);                    // Allows for selecting while ignoring transparent pixels
@@ -228,6 +228,7 @@ void EditorItem::enableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
     m_item_change_flags_enabled = true;
 }
+
 
 //####################################################################################
 //##    Item Property Overrides
@@ -293,23 +294,26 @@ void EditorItem::applyFilters() {
 //##    Input overrides
 //####################################################################################
 void EditorItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
-    if (settings == nullptr)  event->ignore();
-    if (settings->isLocked()) event->ignore();
+    DrSettings *settings = getThing();
+    if (settings == nullptr) settings = m_project->findSettingsFromKey(getThingKey());
+    if      (settings == nullptr)  event->ignore();
+    else if (settings->isLocked()) event->ignore();
     QGraphicsItem::mousePressEvent(event);
 }
 
 void EditorItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
-    if (settings == nullptr)  event->ignore();
-    if (settings->isLocked()) event->ignore();
+    DrSettings *settings = getThing();
+    if (settings == nullptr) settings = m_project->findSettingsFromKey(getThingKey());
+    if      (settings == nullptr)  event->ignore();
+    else if (settings->isLocked()) event->ignore();
     QGraphicsItem::mouseMoveEvent(event);
 }
 
 void EditorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    DrSettings *settings = m_project->findSettingsFromKey(getThingKey());
-    if (settings == nullptr)  event->ignore();
-    if (settings->isLocked()) event->ignore();
+    DrSettings *settings = getThing();
+    if (settings == nullptr) settings = m_project->findSettingsFromKey(getThingKey());
+    if      (settings == nullptr)  event->ignore();
+    else if (settings->isLocked()) event->ignore();
     QGraphicsItem::mouseReleaseEvent(event);
 }
 

@@ -251,7 +251,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
                                                  ", Scale Y: " +   QString::number(my_scale.y()) );
         Dr::SetLabelText(Label_Names::Label_Rotate, "Rotation: " + QString::number(my_angle) + ", Opacity: " + QString::number(item->opacity()));
         Dr::SetLabelText(Label_Names::Label_Z_Order, "Z-Order: " + QString::number(item->zValue()) + QString("\t") +
-                                                             "View Mode: " + currentViewModeAsString() );
+                                                             "View Mode: " + Dr::StringFromViewMode(currentViewMode()) );
     } else if (Dr::CheckDebugFlag(Debug_Flags::Label_Selected_Item_Data)) {
         if (m_view_mode == View_Mode::None && item_under_mouse == nullptr) {
             Dr::SetLabelText(Label_Names::Label_Position,   "Null");

@@ -123,7 +123,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
 
 
     // ***** Center the view on the new stage
-    double  new_zoom_scale = new_stage->getViewZoomLevel();
+    double   new_zoom_scale = new_stage->getViewZoomLevel();
     DrPointF new_center = new_stage->getViewCenterPoint();
     if (new_center == DrPointF(0, 0)) {
         double half_height;

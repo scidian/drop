@@ -54,7 +54,7 @@ public:
     DrSettings*         getParentSettings() { return m_parent_settings; }
 
     PropertyMap&        getPropertyMap() { return m_properties; }
-    DrProperty*         getProperty(std::string property_key);
+    DrProperty*         getProperty(std::string property_key, bool show_error = true);
 
     std::string     getDisplayName() { return m_display_name; }
     std::string     getDescription() { return m_description; }

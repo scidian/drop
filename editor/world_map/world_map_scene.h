@@ -37,6 +37,9 @@ public:
     // Construction
     void                    buildScene();                                   // Clears / builds node scene
 
+    // Getters / Setters
+    IEditorRelay*           getEditorRelay()        { return m_editor_relay; }
+
 };
 
 #endif // WORLD_MAP_SCENE_H

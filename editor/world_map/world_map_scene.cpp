@@ -7,6 +7,9 @@
 //
 #include <QWidget>
 
+#include "editor/helper_library.h"
+#include "editor/interface_editor_relay.h"
+#include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_scene.h"
 
 
@@ -32,5 +35,10 @@ WorldMapScene::~WorldMapScene() {
 void WorldMapScene::buildScene() {
 
     this->clear();
+    this->setSceneRect(-2500, -2500, 5000, 5000);
+
+    this->addItem(new WorldMapItem(m_project, m_editor_relay, 1001));
+
+    getEditorRelay()->viewCenterOnPoint( QPoint(0, 0) );
 
 }

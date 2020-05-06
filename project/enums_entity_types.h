@@ -11,7 +11,7 @@
 #include <list>
 #include <string>
 
-// Forward declarations
+// Forward Declarations
 class       DrSettings;
 enum class  Editor_Widgets;
 
