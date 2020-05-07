@@ -31,14 +31,7 @@
 void FormMain::buttonGroupModeClicked(int id) {
     Form_Main_Mode new_id = static_cast<Form_Main_Mode>(id);
     if (m_current_mode == new_id) return;
-
-    if (new_id == Form_Main_Mode::World_Map) {
-        this->setFormMainMode(Form_Main_Mode::World_Map);
-    } else if (new_id == Form_Main_Mode::World_Editor) {
-        this->setFormMainMode(Form_Main_Mode::World_Editor);
-    } else if (new_id == Form_Main_Mode::UI_Editor) {
-        this->setFormMainMode(Form_Main_Mode::Clear);
-    }
+    setEditorMode(new_id);
 }
 
 void FormMain::buttonGroupModeSetChecked(int id) {

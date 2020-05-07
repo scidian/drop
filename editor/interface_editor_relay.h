@@ -54,6 +54,8 @@ public:
     virtual WorldMapView*       getWorldMapView() = 0;
 
     // Editor Functions
+    virtual void        setEditorMode(Form_Main_Mode new_mode) = 0;
+
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) = 0;
     virtual void        buildProjectTree() = 0;

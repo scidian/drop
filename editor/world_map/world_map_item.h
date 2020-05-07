@@ -17,6 +17,11 @@
 class DrProject;
 class IEditorRelay;
 
+// Local Constants
+const   int     c_default_width =       128;                // Starting width of GraphicsItem
+const   int     c_row_height =          32;                 // Height of each row (title, input / output)
+const   int     c_corner_radius =       12;                 // Absolute size of round corners of Item
+
 
 //####################################################################################
 //##    WorldMapItem

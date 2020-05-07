@@ -154,12 +154,14 @@ public:
     virtual void        resizeEvent(QResizeEvent *event) override;                                          // Inherited from QWidget
 
 
-    //############################ START: Interface Relay Implementations
+    //############################ START: Interface Relay Implementations    
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getStageView() override     { return viewEditor; }
     virtual WorldMapView*       getWorldMapView() override  { return viewWorldMap; }
+
+    virtual void        setEditorMode(Form_Main_Mode new_mode) override;
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;

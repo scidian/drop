@@ -24,6 +24,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
@@ -119,8 +120,9 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
         buildAssetTree();
         treeProjectEditor->buildProjectTree(true);
         buildInspector( treeInspector->getSelectedKeys(), true );
-        viewEditor->updateGrid();
     }
+    if (viewEditor)     viewEditor->updateGrid();
+    if (viewWorldMap)   viewWorldMap->updateGrid();
 }
 
 

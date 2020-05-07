@@ -45,16 +45,13 @@ private:
     // Grid Style Variables (currently re-populated from EditorView::updateGrid
     Grid_Style              m_grid_style        { Grid_Style::Lines };      // Grid type to display
     QPointF                 m_grid_origin       { 0, 0 };                   // Origin point of grid in scene
-    QPointF                 m_grid_size         { 32, 32 };                 // Grid size
+    QPointF                 m_grid_size         { 16, 16 };                 // Grid size
     QPointF                 m_grid_scale        { 1, 1 };                   // X and Y scaling for after grid has been rotated
     double                  m_grid_rotate       { 0 };                      // Rotation of grid lines
     QColor                  m_grid_color;                                   // Grid color
-    bool                    m_back_color_use    { false };                  // Should we use background color?
-    QColor                  m_back_color;                                   // World background color
+    QColor                  m_back_color        { Qt::black };              // World Map background color
 
     bool                    m_grid_should_snap  { true };                   // Should snap to grid?
-    bool                    m_grid_resize_snap  { true };                   // Should snap while resizing?
-    bool                    m_grid_show_on_top  { false };                  // Paint grid on top?
 
     // Keyboard Flags
     bool                    m_flag_dont_check_keys          { false };      // True when we don't want mouseMoveEvent to update key flags
@@ -69,6 +66,7 @@ private:
     QPointF                 m_origin_in_scene;                              // Stores mouse down position in scene coordinates
     QGraphicsItem          *m_origin_item;                                  // Stores top item under mouse (if any) on mouse down event
     Position_Flags          m_over_handle;                                  // Tracks if mouse is over a handle
+    bool                    m_wants_double_click            { false };      // Used to forward double click from mouseDoubleClickEvent to mousePressEvent
 
     // View_Mode::Translating Variables
     QElapsedTimer           m_origin_timer;                                 // Tracks time since mouse down to help buffer movement while selecting

@@ -42,11 +42,8 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
     // ***** Make sure we have a scene to paint
     if (scene() == nullptr) return;
 
-
-
     // Initiate QPainter object
     QPainter painter(viewport());
-
 
 }
 
@@ -56,7 +53,8 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
 //##    PAINT: Draws grid lines
 //####################################################################################
 void WorldMapView::paintGrid(QPainter &painter) {
-    updateGrid();
+    bool aliasing = painter.renderHints() & QPainter::Antialiasing;
+    painter.setRenderHint(QPainter::Antialiasing, false);
 
     // Set up QPainter
     QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
@@ -86,6 +84,7 @@ void WorldMapView::paintGrid(QPainter &painter) {
         painter.drawLine(scene_rect.left(), y, scene_rect.right(), y);
     }
 
+    painter.setRenderHint(QPainter::Antialiasing, aliasing);
 }
 
 

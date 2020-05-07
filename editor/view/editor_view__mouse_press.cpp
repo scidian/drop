@@ -38,15 +38,15 @@
 void EditorView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
 
 void EditorView::mousePressEvent(QMouseEvent *event) {
-    // Test for scene, convert to our custom class and lock the scene
+    // ***** Test for scene, convert to our custom class and lock the scene
     if (scene() == nullptr) return;
     QMutexLocker lock_scene(&my_scene->scene_mutex);
 
-    // On initial mouse down, store mouse origin point
+    // ***** On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
 
-    // Get top most unlocked item
+    // ***** Get top most unlocked item
     long     origin_item_key = c_no_key;
     DrThing *origin_item_thing = nullptr;
     bool     origin_locked = false;
@@ -177,13 +177,13 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
                             m_view_mode = View_Mode::Translating;
                             m_origin_item_start_pos = m_origin_item->pos();
 
-                            // Pass on event to allow movement, store starting selection center for snapping calculations
-                            if (m_allow_movement) {
+                            // Pass on event to update Qt internal position, store starting selection center for snapping calculations
+                            ///if (m_allow_movement) {
                                 QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
                                 my_scene->setPreMoveSelectionCenter(pre_center);
                                 my_scene->setHasCalculatedAdjustment(false);
                                 QGraphicsView::mousePressEvent(event);
-                            }
+                            ///}
 
                             // Force itemChange signals on items
                             for (auto item : my_scene->getSelectionItems()) {

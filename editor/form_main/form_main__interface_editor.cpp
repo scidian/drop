@@ -53,6 +53,16 @@
 //      Map_View,
 //}
 
+void FormMain::setEditorMode(Form_Main_Mode new_mode) {
+    if (new_mode == Form_Main_Mode::World_Map) {
+        this->setFormMainMode(Form_Main_Mode::World_Map);
+    } else if (new_mode == Form_Main_Mode::World_Editor) {
+        this->setFormMainMode(Form_Main_Mode::World_Editor);
+    } else if (new_mode == Form_Main_Mode::UI_Editor) {
+        this->setFormMainMode(Form_Main_Mode::Clear);
+    }
+}
+
 void FormMain::buildAssetTree() {
     treeAssetEditor->buildAssetTree();
 }

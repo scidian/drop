@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QGraphicsItem>
+
 #include "core/colors/colors.h"
 #include "core/dr_math.h"
 #include "editor/helper_library.h"
@@ -20,10 +22,10 @@ void WorldMapView::updateGrid() {
     if (scene() == nullptr) return;
 
     // Update Grid Properties
-    m_grid_origin =     QPointF(0, 0);
-    m_grid_size =       QPointF(32, 32);
-    m_grid_scale =      QPointF(1.0, 1.0);
-    m_grid_rotate =     0;
+    ///m_grid_origin =     QPointF(0, 0);
+    ///m_grid_size =       QPointF(16, 16);
+    ///m_grid_scale =      QPointF(1.0, 1.0);
+    ///m_grid_rotate =     0;
     QColor scheme_bg_color;
     if (Dr::GetColorScheme() == Color_Scheme::Light) {
         scheme_bg_color =   Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light));
@@ -33,18 +35,19 @@ void WorldMapView::updateGrid() {
         m_grid_color =      Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
     }
     ///m_grid_color =       QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
-    m_back_color =          Qt::black;
-    m_back_color_use =      false;
+    ///m_grid_style =       Grid_Style::Lines;
 
-    m_grid_style =          Grid_Style::Lines;
     m_grid_should_snap =    Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool();
-    m_grid_resize_snap =    Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
-    m_grid_show_on_top =    Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
 
-    QColor background = (m_back_color_use) ? m_back_color : scheme_bg_color;
-    this->setStyleSheet(" QFrame { background-color: " + background.name() + "; } ");
+    if (m_back_color != scheme_bg_color) {
+        m_back_color = scheme_bg_color;
+        this->setStyleSheet(" QFrame { background-color: " + m_back_color.name() + "; } ");
+    }
 
-    scene()->update(this->sceneRect());         // Forces repaint of view
+    scene()->update(this->sceneRect());         // Forces repaint of GraphicsView
+    for (auto item : scene()->items()) {        // Forces repaint of all GraphicsItems
+        item->update();
+    }
 }
 
 

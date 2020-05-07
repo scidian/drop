@@ -59,10 +59,17 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
     m_start_x = start_pos.x;
     m_start_y = start_pos.y;
 
-    // ***** Set Item Properties
-    this->setPixmap(QPixmap(":/assets/asset_types/blob.png"));
-    this->m_width =  pixmap().width();
-    this->m_height = pixmap().height();
+    // ***** Calculate Size
+    int new_height = (2 * c_row_height);
+    this->m_width =  c_default_width;
+    this->m_height = new_height;
+
+    // ***** Apply Drop Shadow
+    QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
+    drop_shadow->setColor( Qt::black );
+    drop_shadow->setBlurRadius( c_corner_radius );
+    drop_shadow->setOffset( -3, 3 );
+    this->setGraphicsEffect(drop_shadow);
 
     // ***** Apply Initial Settings
     setAcceptHoverEvents(true);                                                 // Item tracks mouse movement
@@ -97,10 +104,10 @@ QRectF WorldMapItem::boundingRect() const {
 
 // Seems to define mouseOver events, and intersection events for Rubber Band Box
 QPainterPath WorldMapItem::shape() const {
-    ///QPainterPath path;
-    ///path.addRect(0, 0, m_width, m_height);
-    ///return path;
-    return QGraphicsPixmapItem::shape();
+    QPainterPath path;
+    path.addRoundedRect(boundingRect(), c_corner_radius, c_corner_radius);
+    return path;
+    ///return QGraphicsPixmapItem::shape();         // Returns QPixmap as path
 }
 
 

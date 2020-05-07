@@ -14,6 +14,7 @@
 #include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
 #include "project/dr_project.h"
+#include "project/entities/dr_world.h"
 
 
 //####################################################################################
@@ -21,18 +22,21 @@
 //##    Mouse Pressed
 //##
 //####################################################################################
-// Forwards a double click as just another mouse down
-void WorldMapView::mouseDoubleClickEvent(QMouseEvent *event) { mousePressEvent(event); }
+// Forwards a double click to mouse down
+void WorldMapView::mouseDoubleClickEvent(QMouseEvent *event) {
+    m_wants_double_click = true;
+    mousePressEvent(event);
+}
 
 void WorldMapView::mousePressEvent(QMouseEvent *event) {
-    // Test for GraphicsScene
+    // ***** Test for GraphicsScene
     if (scene() == nullptr) return;
 
-    // On initial mouse down, store mouse origin point
+    // ***** On initial mouse down, store mouse origin point
     m_origin =          event->pos();
     m_origin_in_scene = mapToScene(m_origin);
 
-    // Get top most unlocked item
+    // ***** Get top most unlocked item
     long        origin_item_key = c_no_key;
     DrSettings *origin_item_settings = nullptr;
     m_origin_item =  itemAt(event->pos());
@@ -47,6 +51,18 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
         }
     }
 
+    // ***** Handle double click
+    if (m_wants_double_click) {
+        if (origin_item_settings != nullptr) {
+            if (origin_item_settings->getType() == DrType::World) {
+                DrWorld *world = dynamic_cast<DrWorld*>(origin_item_settings);
+                m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
+                m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() });
+                m_editor_relay->setEditorMode(Form_Main_Mode::World_Editor);
+            }
+        }
+        m_wants_double_click = false;
+    }
 
     // ******************* Prcoess Pointer Mouse Mode: If space bar isn't down, process mouse down
     if (m_mouse_mode == Mouse_Mode::Pointer) {
@@ -99,9 +115,8 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                             m_view_mode = View_Mode::Translating;
                             m_origin_item_start_pos = m_origin_item->pos();
 
-                            // Pass on event to allow movement
-                            if (m_allow_movement)
-                                QGraphicsView::mousePressEvent(event);
+                            // Pass on event to update Qt internal position
+                            QGraphicsView::mousePressEvent(event);
 
                             // Force itemChange signals on items
                             for (auto item : scene()->selectedItems()) {

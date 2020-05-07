@@ -21,6 +21,9 @@
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
 
+// Local Constants
+const   double  c_transparent_not_selected =    0.60;
+const   double  c_transparent_is_selected =     0.80;
 
 //####################################################################################
 //##    Custom Paint Handling
@@ -49,13 +52,45 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     if (Dr::FuzzyCompare(painter->opacity(), transparency) == false) painter->setOpacity(transparency);
 
     // Our custom pixmap painting to draw slightly larger and reduce black lines between images
-    painter->setRenderHint(QPainter::SmoothPixmapTransform, (this->transformationMode() == Qt::SmoothTransformation));
-    QRectF dest = this->pixmap().rect();
-    painter->drawPixmap(dest, this->pixmap(), this->pixmap().rect());
-
+    ///painter->setRenderHint(QPainter::SmoothPixmapTransform, (this->transformationMode() == Qt::SmoothTransformation));
+    ///QRectF dest = this->pixmap().rect();
+    ///painter->drawPixmap(dest, this->pixmap(), this->pixmap().rect());
     // Original drawing using QtSource
     ///QGraphicsPixmapItem::paint(painter, my_option, widget);
 
+    // ***** Draw Node
+    painter->setFont(Dr::CustomFont());
+    painter->setPen(Qt::NoPen);
+    QColor back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+           back_color.setAlphaF(this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected);
+    painter->setBrush(back_color);
+    painter->drawRoundedRect(boundingRect(), c_corner_radius, c_corner_radius);
+
+    painter->setPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)));
+    painter->drawText(0, 0, m_width, m_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+
+    // ***** Selection Highlight
+    if (this->isSelected()) {
+        QPen pen = QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin );
+        painter->setPen(pen);
+        painter->setBrush(Qt::NoBrush);
+
+        // Maps Pixmap shape as outline
+        /**
+        QPainterPath outline = this->shape();
+        QPointF center = boundingRect().center();
+        double transform_scale_x = 1.0 + (1.0 / this->m_width);         // Add 2 pixels of width
+        double transform_scale_y = 1.0 + (1.0 / this->m_height);        // Add 2 pixels of height
+        QTransform t = QTransform()
+                .translate(center.x(), center.y())
+                .scale(transform_scale_x, transform_scale_y)
+                .translate(-center.x(), -center.y());
+        outline = t.map(this->shape());
+        painter->drawPath( outline );
+        */
+
+        painter->drawRoundedRect(boundingRect(), c_corner_radius, c_corner_radius);
+    }
 
 }
 

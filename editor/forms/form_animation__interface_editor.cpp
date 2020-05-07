@@ -18,11 +18,20 @@
 //##    Editor Interface Relay Handlers
 //####################################################################################
 //enum class Editor_Widgets {
-//    Asset_Tree,
-//    Inspector_Tree,
-//    Project_Tree,
-//    Stage_View,
-//  Toolbar?
+// Universal Widgets
+//      ToolBar,
+//      Asset_Tree,
+//      Inspector_Tree,
+//      Project_Tree,
+//
+// "World Editor" Widgets
+//      Stage_View,
+//
+// "World Map" Widgets
+//      Map_View,
+//}
+
+void FormAnimation::setEditorMode(Form_Main_Mode new_mode) { }
 
 void FormAnimation::buildAssetTree() {
     treeAssetEditor->buildAssetTree("");
