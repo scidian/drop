@@ -67,9 +67,10 @@ public:
 
     // Getters / Setters
     DrSettings*         getEntity()                         { return m_entity; }
-
     double              startX()                            { return m_start_x; }
     double              startY()                            { return m_start_y; }
+    void                setStartX(double x)                 { m_start_x = x; }
+    void                setStartY(double y)                 { m_start_y = y; }
 
 };
 

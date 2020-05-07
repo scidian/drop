@@ -93,6 +93,11 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                         if (origin_item_settings->isLocked() == false) {
                             // Disable item changes before messing with Z-Order
                             WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
+
+                            // Stores last known position
+                            graphics_item->setStartX(graphics_item->scenePos().x());
+                            graphics_item->setStartY(graphics_item->scenePos().y());
+
                             bool flags_enabled_before = false;
                             if (graphics_item) {
                                 flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
@@ -113,10 +118,7 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
                             m_hide_bounding = true;
                             m_view_mode = View_Mode::Translating;
-                            m_origin_item_start_pos = m_origin_item->pos();
-
-                            // Pass on event to update Qt internal position
-                            QGraphicsView::mousePressEvent(event);
+                            m_origin_item_start_pos = m_origin_item->scenePos();
 
                             // Force itemChange signals on items
                             for (auto item : scene()->selectedItems()) {

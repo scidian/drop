@@ -54,11 +54,6 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
             .translate(-center.x(), -center.y());
     setTransform(t);
 
-    // ***** Load starting position
-    DrPointF start_pos = DrPointF(0, 0) ;///m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
-    m_start_x = start_pos.x;
-    m_start_y = start_pos.y;
-
     // ***** Calculate Size
     int new_height = (2 * c_row_height);
     this->m_width =  c_default_width;

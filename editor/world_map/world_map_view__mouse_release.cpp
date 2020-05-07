@@ -77,7 +77,7 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
         for (auto &item : scene()->selectedItems())
             item_keys.append(item->data(User_Roles::Key).toLongLong());
         m_editor_relay->buildInspector( item_keys );
-        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::Map_View);
 
     // ***** Pass event to base class
     } else {

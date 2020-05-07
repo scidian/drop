@@ -87,7 +87,7 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
         // Not snapping to grid? Go ahead and return event position
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
-        // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos
+        // ***** Calculate new center based on SelectionBox starting center and difference between starting scenePos() and new passed in new_pos
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool() == true) {
             EditorScene *editor_scene = dynamic_cast<EditorScene*>(this->scene());
             QPointF old_select_center, new_select_center, rounded_select_center;
@@ -95,7 +95,7 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
 
             if (editor_scene->getHasCalculatedAdjustment() == false) {
                 old_select_center = editor_scene->getPreMoveSelectionCenter();
-                new_select_center = old_select_center - (pos() - new_pos);
+                new_select_center = old_select_center - (scenePos() - new_pos);
                 rounded_select_center = m_editor_relay->roundPointToGrid( new_select_center );
                 adjust_by = new_select_center - rounded_select_center;
                 editor_scene->setMoveAdjustment( adjust_by );
@@ -106,14 +106,14 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
             QPointF adjusted_pos = new_pos - adjust_by;
             return  adjusted_pos;
 
-        // ***** Calculate new center location based on starting center of item and difference between starting pos() and new passed in new_pos
+        // ***** Calculate new center location based on starting center of item and difference between starting scenePos() and new passed in new_pos
         } else {
             QPointF old_center = QPointF(0, 0);
             if (m_thing != nullptr) {
-                DrPointF oc = m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
-                old_center = QPointF(oc.x, oc.y);
+                DrPointF thing_pos = m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
+                old_center = QPointF(thing_pos.x, thing_pos.y);
             }
-            QPointF new_center = old_center - (pos() - new_pos);
+            QPointF new_center = old_center - (scenePos() - new_pos);
 
             // Align new desired center to grid
             QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );

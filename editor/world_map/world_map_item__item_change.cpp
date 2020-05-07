@@ -37,9 +37,9 @@ QVariant WorldMapItem::itemChange(GraphicsItemChange change, const QVariant &val
         // Not snapping to grid? Go ahead and return event position
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
-        // ***** Calculate new center location based on starting center of item and difference between starting pos() and new passed in new_pos
-        QPointF old_center = pos();///QPointF(0, 0);
-        QPointF new_center = old_center - (pos() - new_pos);
+        // ***** Calculate new center location based on starting center of item and difference between starting scenePos() and new passed in new_pos
+        QPointF old_center = QPointF(startX(), startY());
+        QPointF new_center = old_center - (scenePos() - new_pos);
 
         // Align new desired center to grid
         QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );

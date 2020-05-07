@@ -175,9 +175,9 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
 
                             m_hide_bounding = true;
                             m_view_mode = View_Mode::Translating;
-                            m_origin_item_start_pos = m_origin_item->pos();
+                            m_origin_item_start_pos = m_origin_item->scenePos();
 
-                            // Pass on event to update Qt internal position, store starting selection center for snapping calculations
+                            // Store starting selection center for snapping calculations
                             ///if (m_allow_movement) {
                                 QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
                                 my_scene->setPreMoveSelectionCenter(pre_center);

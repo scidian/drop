@@ -18,6 +18,7 @@
 #include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
+#include "project/constants_component_info.h"
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
 
@@ -58,16 +59,37 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     // Original drawing using QtSource
     ///QGraphicsPixmapItem::paint(painter, my_option, widget);
 
-    // ***** Draw Node
-    painter->setFont(Dr::CustomFont());
-    painter->setPen(Qt::NoPen);
-    QColor back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
-           back_color.setAlphaF(this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected);
-    painter->setBrush(back_color);
-    painter->drawRoundedRect(boundingRect(), c_corner_radius, c_corner_radius);
+    QColor back_color;
 
+    // ***** Draw Top Row of Node
+    back_color = Dr::ToQColor(Component_Colors::RGB_07_LightBlue);
+    back_color.setAlphaF(this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(back_color);
+
+    QPainterPath top, top1, top2;
+    top1.addRoundedRect(boundingRect().left(), boundingRect().top(), boundingRect().width(), c_row_height, c_corner_radius, c_corner_radius);
+    top2.addRect(boundingRect().left(), boundingRect().top()+c_row_height/2, boundingRect().width(), c_row_height/2);
+    top = top1.united(top2);
+    painter->drawPath(top);
+
+    painter->setFont(Dr::CustomFontLarger());
     painter->setPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)));
-    painter->drawText(0, 0, m_width, m_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+    painter->drawText(0, 0, m_width, c_row_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+
+
+    // ***** Draw Bottom of Node
+    back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+    back_color.setAlphaF(this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(back_color);
+
+    QPainterPath mid, mid1, mid2;
+    mid1.addRoundedRect(boundingRect().left(), boundingRect().top()+c_row_height, boundingRect().width(), boundingRect().height()-c_row_height, c_corner_radius, c_corner_radius);
+    mid2.addRect(boundingRect().left(), boundingRect().top()+c_row_height, boundingRect().width(), c_row_height/2);
+    mid = mid1.united(mid2);
+    painter->drawPath(mid);
+
 
     // ***** Selection Highlight
     if (this->isSelected()) {
