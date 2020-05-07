@@ -173,38 +173,57 @@ void FormMain::buildToolBar() {
 
 
     // ***** Mode "Editor" Add-On, Grid: Holds buttons that control Snap to Grid, Resize to Grid, Show Grid on Top
-    widgetGroupGrid = new QWidget(widgetToolbar);
-    widgetGroupGrid->hide();
-    widgetGroupGrid->setObjectName(QStringLiteral("widgetGroupGrid"));
-    widgetGroupGrid->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutGrid = new QHBoxLayout(widgetGroupGrid);
-        toolbarLayoutGrid->setSpacing(0);
-        toolbarLayoutGrid->setContentsMargins(0, 0, 0, 0);
+    widgetGroupGridFull = new QWidget(widgetToolbar);
+    widgetGroupGridFull->hide();
+    widgetGroupGridFull->setObjectName(QStringLiteral("widgetGroupGridFull"));
+    widgetGroupGridFull->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutGridFull = new QHBoxLayout(widgetGroupGridFull);
+        toolbarLayoutGridFull->setSpacing(0);
+        toolbarLayoutGridFull->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupGrid = new QButtonGroup();
-        buttonsGroupGrid->setExclusive(false);
-        connect(buttonsGroupGrid, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridClicked(int)));
+        buttonsGroupGridFull = new QButtonGroup();
+        buttonsGroupGridFull->setExclusive(false);
+        connect(buttonsGroupGridFull, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Grid_On_Top));
+        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Grid_On_Top));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool());
-        toolbarLayoutGrid->addWidget(tool);
-        toolbarLayoutGrid->addSpacing(1);
+        toolbarLayoutGridFull->addWidget(tool);
+        toolbarLayoutGridFull->addSpacing(1);
 
         tool = createToolbarButton(QStringLiteral("buttonResizeToGrid"), Advisor_Info::Resize_To_Grid, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
+        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool());
-        toolbarLayoutGrid->addWidget(tool);
-        toolbarLayoutGrid->addSpacing(1);
+        toolbarLayoutGridFull->addWidget(tool);
+        toolbarLayoutGridFull->addSpacing(1);
 
         tool = createToolbarButton(QStringLiteral("buttonSnapToGrid"), Advisor_Info::Grid_Snap_To_Grid, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
-        toolbarLayoutGrid->addWidget(tool);
+        toolbarLayoutGridFull->addWidget(tool);
 
         tool = createToolbarButton(QStringLiteral("buttonSnapOptions"), Advisor_Info::Grid_Snap_Options, 14, c_button_size_h, false, true);
-        buttonsGroupGrid->addButton(tool, int(Buttons_Grid::Snap_Options));
-        toolbarLayoutGrid->addWidget(tool);
+        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Snap_Options));
+        toolbarLayoutGridFull->addWidget(tool);
+
+    // ***** Mode "World Map" Add-On, Grid: Holds button that controls Snap to Grid
+    widgetGroupGridSimple = new QWidget(widgetToolbar);
+    widgetGroupGridSimple->hide();
+    widgetGroupGridSimple->setObjectName(QStringLiteral("widgetGroupGridSimple"));
+    widgetGroupGridSimple->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutGridSimple = new QHBoxLayout(widgetGroupGridSimple);
+        toolbarLayoutGridSimple->setSpacing(0);
+        toolbarLayoutGridSimple->setContentsMargins(0, 0, 0, 0);
+
+        buttonsGroupGridSimple = new QButtonGroup();
+        buttonsGroupGridSimple->setExclusive(false);
+        connect(buttonsGroupGridSimple, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
+
+        tool = createToolbarButton(QStringLiteral("buttonSnapToMap"), Advisor_Info::Grid_Snap_To_Grid, c_button_size_w, c_button_size_h, true);
+        buttonsGroupGridSimple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+        toolbarLayoutGridSimple->addWidget(tool);
+        toolbarLayoutGridSimple->addWidget(createToolbarSpacer(c_button_size_h - 2, 34, false));
 
 
     // ***** Mode "Editor" Add-On, Play: Holds buttons that starts game Engine window

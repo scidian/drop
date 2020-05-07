@@ -114,34 +114,35 @@ void FormMain::clearToolbar() {
 void FormMain::setToolbar(Form_Main_Mode new_mode) {
     switch (new_mode) {
         case Form_Main_Mode::World_Editor:
-            addToolbarGroup( widgetGroupEdit,       true );
-            addToolbarGroup( widgetGroupLayering,   true );
-            addToolbarGroup( widgetGroupTransform,  true );
-            addToolbarGroup( widgetGroupGrid,       true );
-            addToolbarGroup( widgetGroupPlay,       false );
-            addToolbarGroup( widgetGroupSettings,   false );
+            addToolbarGroup( widgetGroupEdit,           true );
+            addToolbarGroup( widgetGroupLayering,       true );
+            addToolbarGroup( widgetGroupTransform,      true );
+            addToolbarGroup( widgetGroupGridFull,       true );
+            addToolbarGroup( widgetGroupPlay,           false );
+            addToolbarGroup( widgetGroupSettings,       false );
             break;
 
         case Form_Main_Mode::Clear:
-            addToolbarGroup( widgetGroupPlay,       false );
-            addToolbarGroup( widgetGroupSettings,   false );
+            addToolbarGroup( widgetGroupPlay,           false );
+            addToolbarGroup( widgetGroupSettings,       false );
             break;
 
 
         // !!!!! #TODO:
         case Form_Main_Mode::World_Map:
-            addToolbarGroup( widgetGroupPlay,       false );
-            addToolbarGroup( widgetGroupSettings,   false );
+            addToolbarGroup( widgetGroupGridSimple,     false );
+            addToolbarGroup( widgetGroupPlay,           false );
+            addToolbarGroup( widgetGroupSettings,       false );
             break;
 
         case Form_Main_Mode::Stage_Map:
-            addToolbarGroup( widgetGroupPlay,       false );
-            addToolbarGroup( widgetGroupSettings,   false );
+            addToolbarGroup( widgetGroupPlay,           false );
+            addToolbarGroup( widgetGroupSettings,       false );
             break;
 
         case Form_Main_Mode::UI_Editor:
-            addToolbarGroup( widgetGroupPlay,       false );
-            addToolbarGroup( widgetGroupSettings,   false );
+            addToolbarGroup( widgetGroupPlay,           false );
+            addToolbarGroup( widgetGroupSettings,       false );
             break;
 
         case Form_Main_Mode::Program_Loading:

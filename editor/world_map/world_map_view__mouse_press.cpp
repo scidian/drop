@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include <QMouseEvent>
 #include <QTimer>
 
@@ -124,11 +125,10 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
                 // ******************* If theres no item under mouse, start selection box
                 if (m_origin_item == nullptr) {
-                    m_view_mode = View_Mode::Selecting;
+                    ///m_view_mode = View_Mode::Selecting;
                     scene()->clearSelection();
                     m_editor_relay->buildInspector( { } );
                     m_editor_relay->updateItemSelection(Editor_Widgets::Map_View, { } );
-                    update();
                 }
 
             }

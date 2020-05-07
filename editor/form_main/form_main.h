@@ -95,7 +95,8 @@ private:
     QWidget        *widgetGroupEdit;            QButtonGroup    *buttonsGroupEdit;              QToolButton *buttonAdd;
     QWidget        *widgetGroupLayering;        QButtonGroup    *buttonsGroupLayering;
     QWidget        *widgetGroupTransform;       QButtonGroup    *buttonsGroupTransform;
-    QWidget        *widgetGroupGrid;            QButtonGroup    *buttonsGroupGrid;
+    QWidget        *widgetGroupGridFull;        QButtonGroup    *buttonsGroupGridFull;
+    QWidget        *widgetGroupGridSimple;      QButtonGroup    *buttonsGroupGridSimple;
     QWidget        *widgetGroupPlay;            QButtonGroup    *buttonsGroupPlay;
     QWidget        *widgetGroupSettings;
 
@@ -228,7 +229,8 @@ private:
 private slots:
     // Main Toolbar
     void            buttonGroupEditClicked(int id);
-    void            buttonGroupGridClicked(int id);
+    void            buttonGroupGridFullClicked(int id);
+    void            buttonGroupGridSimpleClicked(int id);
     void            buttonGroupLayeringClicked(int id);
     void            buttonGroupModeClicked(int id);
     void            buttonGroupPlayClicked(int id);

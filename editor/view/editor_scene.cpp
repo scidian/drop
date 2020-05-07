@@ -102,15 +102,15 @@ void EditorScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_ori
     QPointF     item_pos;
 
     switch (by_origin) {
-        case Position_Flags::Top_Left:      item_pos = item_rect.topLeft();                  break;
-        case Position_Flags::Top_Right:     item_pos = item_rect.topRight();                 break;
-        case Position_Flags::Center:        item_pos = item_rect.center();                   break;
-        case Position_Flags::Bottom_Left:   item_pos = item_rect.bottomLeft();               break;
-        case Position_Flags::Bottom_Right:  item_pos = item_rect.bottomRight();              break;
-        case Position_Flags::Top:           item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.topRight()).pointAt(.5) );    break;
-        case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) ); break;
-        case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );  break;
-        case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) ); break;
+        case Position_Flags::Top_Left:      item_pos = item_rect.topLeft();         break;
+        case Position_Flags::Top_Right:     item_pos = item_rect.topRight();        break;
+        case Position_Flags::Center:        item_pos = item_rect.center();          break;
+        case Position_Flags::Bottom_Left:   item_pos = item_rect.bottomLeft();      break;
+        case Position_Flags::Bottom_Right:  item_pos = item_rect.bottomRight();     break;
+        case Position_Flags::Top:           item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.topRight()).pointAt(.5) );     break;
+        case Position_Flags::Bottom:        item_pos = QPointF( QLineF(item_rect.bottomLeft(), item_rect.bottomRight()).pointAt(.5) );  break;
+        case Position_Flags::Left:          item_pos = QPointF( QLineF(item_rect.topLeft(),    item_rect.bottomLeft()).pointAt(.5) );   break;
+        case Position_Flags::Right:         item_pos = QPointF( QLineF(item_rect.topRight(),   item_rect.bottomRight()).pointAt(.5) );  break;
 
         // We don't want to process any other options, use top left as position
         default:                            item_pos = item_rect.topLeft();

@@ -18,6 +18,7 @@
 #include "editor/view/editor_item.h"
 #include "editor/view/editor_scene.h"
 #include "editor/view/editor_view.h"
+#include "editor/world_map/world_map_view.h"
 #include "engine/form_engine.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -146,21 +147,21 @@ void FormMain::buttonGroupTransformClicked(int id) {
 }
 
 //####################################################################################
-//##    buttonGroupGrid SLOT and functions
+//##    buttonGroupGridFull SLOT and functions
 //####################################################################################
-void FormMain::buttonGroupGridClicked(int id) {
+void FormMain::buttonGroupGridFullClicked(int id) {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     if (clicked == Buttons_Grid::Snap_Options) {
-        FormPopup *popupGrid = new FormPopup(buttonsGroupGrid->button(id), m_project, widgetGroupGrid);
+        FormPopup *popupGrid = new FormPopup(buttonsGroupGridFull->button(id), m_project, widgetGroupGridFull);
         popupGrid->buildPopupGridSnap();
         popupGrid->show();
 
     } else {
         switch (clicked) {
-            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGrid->button(id)->isChecked());  break;
-            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGrid->button(id)->isChecked());  break;
-            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGrid->button(id)->isChecked());  break;
+            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGridFull->button(id)->isChecked());  break;
+            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGridFull->button(id)->isChecked());  break;
+            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGridFull->button(id)->isChecked());  break;
             case Buttons_Grid::Snap_Options:    ;
         }
         viewEditor->updateGrid();
@@ -168,7 +169,20 @@ void FormMain::buttonGroupGridClicked(int id) {
     }
 }
 
+//####################################################################################
+//##    buttonGroupGridSimple SLOT and functions
+//####################################################################################
+void FormMain::buttonGroupGridSimpleClicked(int id) {
+    Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
+    switch (clicked) {
+        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGridSimple->button(id)->isChecked());  break;
+        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGridSimple->button(id)->isChecked());  break;
+        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGridSimple->button(id)->isChecked());  break;
+        case Buttons_Grid::Snap_Options:    ;
+    }
+    viewWorldMap->updateGrid();
+}
 
 //####################################################################################
 //##    buttonGroupPlay SLOT and functions

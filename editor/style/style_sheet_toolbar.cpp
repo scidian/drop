@@ -88,6 +88,9 @@ std::string StyleSheetToolBar() {
             " QToolButton#buttonSnapOptions                 { padding-left:   2px; } "
             " QToolButton#buttonSnapOptions::menu-indicator { image: none; } " +
 
+    StyleSheetToolBarButtons("buttonSnapToMap",     "grid_snap_uncheck.png",    "grid_snap.png",      "toolbar_grid_snap_gray.png", 4, 4, 4, 4, 4, true)  +
+            " QToolButton#buttonSnapToMap:checked           { padding-bottom: 3px; } " +
+
     StyleSheetToolBarButtons("buttonPlay",              "play.png",             "play.png",             "play.png",                 4, 4, 4, 4, 4, false) +
     StyleSheetToolBarButtons("buttonPlayStage",         "play_stage.png",       "play_stage.png",       "play_stage.png",           4, 4, 4, 4, 4, false) +
             " QToolButton#buttonPlayStage                   { padding-left: 3px; padding-bottom: 2px; padding-top: 3px; } " +

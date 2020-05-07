@@ -144,6 +144,9 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
         // Code commented on purpose, Asset Tree gaining focus should not clear Project Tree / Stage View selection
         ///sceneEditor->updateSelectionFromKeyList( { } );
         ///treeProjectEditor->updateSelectionFromKeyList( { } );
+
+    } else if (selected_from == Editor_Widgets::Map_View) {
+
     }
 
     // Updates status bar, enables / disables toolbar buttons
@@ -211,11 +214,15 @@ void FormMain::viewZoomToScale(double zoom_scale) { viewEditor->zoomToScale(zoom
 // Call to change the Advisor
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
 void FormMain::setAdvisorInfo(QString header, QString body) {
+    // If Advisor not found, or Advisor dock was closed, cancel
     if (dockAdvisor == nullptr) return;
     if (treeAdvisor == nullptr) return;
-    if (dockAdvisor->isHidden()) return;                                    // If Advisor dock was closed, cancel
-    if (treeAdvisor->getAdvisorHeader() == header &&
-        treeAdvisor->getAdvisorBody() == body) return;                      // If Advisor header and body is already set to proper info, cancel
+    if (dockAdvisor->isHidden()) return;
+
+    // If Advisor header and body is already set to proper info, cancel
+    if (treeAdvisor->getAdvisorHeader() == header && treeAdvisor->getAdvisorBody() == body) return;
+
+    // Change Advisor text
     treeAdvisor->changeAdvisor(header, body);
 }
 void FormMain::setMousePosition(std::string x, std::string y) {
