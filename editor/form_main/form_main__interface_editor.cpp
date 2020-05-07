@@ -42,11 +42,11 @@
 //enum class Editor_Widgets {
 // Universal Widgets
 //      ToolBar,
+//      Asset_Tree,
 //      Inspector_Tree,
+//      Project_Tree,
 //
 // "World Editor" Widgets
-//      Asset_Tree,
-//      Project_Tree,
 //      Stage_View,
 //
 // "World Map" Widgets
@@ -107,8 +107,9 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
     if (currentViewMode() == View_Mode::Resizing)       return;
     if (currentViewMode() == View_Mode::Rotating)       return;
 
-    // !!!!! #NOTE: This order is semi important, best not to try and change it
+    // !!!!! #NOTE: This order is semi important, best NOT TO CHANGE IT !!!!!
     if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Map_View)           sceneWorldMap->updateChangesInScene(changed_items, property_keys);
     if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
     if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItems(changed_items, property_keys);
     if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys);
@@ -159,12 +160,32 @@ void FormMain::updateInspectorEnabledProperties() {
 
 
 
-DrProject*  FormMain::currentProject()                         { return m_project; }
-double      FormMain::currentViewGridAngle()                   { return viewEditor->currentGridAngle(); }
-QPointF     FormMain::currentViewGridScale()                   { return viewEditor->currentGridScale(); }
-View_Mode   FormMain::currentViewMode()                        { return viewEditor->currentViewMode(); }
-double      FormMain::currentViewZoom()                        { return viewEditor->currentZoomLevel(); }
-QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) { return viewEditor->roundToGrid(point_in_scene); }
+DrProject*  FormMain::currentProject()                          { return m_project; }
+double      FormMain::currentViewGridAngle() {
+    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentGridAngle(); }
+    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentGridAngle(); }
+    return 0;
+}
+QPointF     FormMain::currentViewGridScale() {
+    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentGridScale(); }
+    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentGridScale(); }
+    return QPointF(1.0, 1.0);
+}
+View_Mode   FormMain::currentViewMode() {
+    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentViewMode(); }
+    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentViewMode(); }
+    return View_Mode::None;
+}
+double      FormMain::currentViewZoom() {
+    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentZoomLevel(); }
+    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentZoomLevel(); }
+    return 1.0;
+}
+QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
+    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->roundToGrid(point_in_scene); }
+    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->roundToGrid(point_in_scene); }
+    return QPointF(0.0, 0.0);
+}
 
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop

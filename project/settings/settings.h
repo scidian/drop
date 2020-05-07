@@ -92,8 +92,8 @@ public:
     DrProperty*     getComponentProperty(ComponentProperty component_property_pair);
     DrVariant       getComponentPropertyValue(std::string component_key, std::string property_key);
 
-    void            setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value);
-    void            setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value);
+    void            setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value, bool show_error = true);
+    void            setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value, bool show_error = true);
 
     // Component / Property Searching
     DrComponent*    findComponentFromPropertyKey(std::string property_key_to_find);

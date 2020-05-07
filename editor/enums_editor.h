@@ -85,15 +85,38 @@ enum class Form_Main_Mode {
 enum class Editor_Widgets {
     // Universal Widgets
     ToolBar,
+    Asset_Tree,
     Inspector_Tree,
+    Project_Tree,
 
     // "World Editor" Widgets
-    Asset_Tree,
-    Project_Tree,
     Stage_View,
 
     // "World Map" Widgets
     Map_View,
+};
+
+
+//####################################################################################
+//##    QGraphicsView Enumerations
+//############################
+enum class Handle_Shapes {
+    Circles,
+    Squares,
+};
+enum class X_Axis {
+    Left,
+    Right,
+    None
+};
+enum class Y_Axis {
+    Top,
+    Bottom,
+    None
+};
+enum class Grid_Style {
+    Lines,
+    Dots,
 };
 
 

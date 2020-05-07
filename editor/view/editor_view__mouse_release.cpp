@@ -21,12 +21,12 @@
 //##    Extracts a list of DrSettings pointers from a list of
 //##    EditorItems (QGraphicsItems) representing DrThings in a QGraphicsScene
 //####################################################################################
-QList<DrSettings*> ConvertItemListToSettings(QList<QGraphicsItem*> list) {
+QList<DrSettings*> EditorView::convertItemListToSettings(QList<QGraphicsItem*> list) {
     QList<DrSettings*> new_list;
     for (auto item : list) {
         EditorItem *as_item = dynamic_cast<EditorItem*>(item);
-        DrThing *as_thing = as_item->getThing();
-        new_list.append(as_thing);
+        DrSettings *as_entity = as_item->getThing();
+        new_list.append(as_entity);
     }
     return new_list;
 }
@@ -82,7 +82,7 @@ void EditorView::mouseReleaseEvent(QMouseEvent *event) {
         // Now that mousue has been released, update Inspector property boxes
         if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
-            QList<DrSettings*> selected_entities = ConvertItemListToSettings(my_scene->getSelectionItems());
+            QList<DrSettings*> selected_entities = convertItemListToSettings(my_scene->getSelectionItems());
             m_editor_relay->updateEditorWidgetsAfterItemChange(
                         Editor_Widgets::Stage_View, { selected_entities.begin(), selected_entities.end() },
                         {   std::make_pair(Comps::Thing_Transform, Props::Thing_Position),

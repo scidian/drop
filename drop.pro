@@ -226,9 +226,13 @@ SOURCES += \
     editor/widgets/widgets_slider.cpp \
     editor/widgets/widgets_spin.cpp \
     editor/world_map/world_map_item.cpp \
+    editor/world_map/world_map_item__item_change.cpp \
     editor/world_map/world_map_item__paint.cpp \
     editor/world_map/world_map_scene.cpp \
+    editor/world_map/world_map_scene__build.cpp \
+    editor/world_map/world_map_scene__update.cpp \
     editor/world_map/world_map_view.cpp \
+    editor/world_map/world_map_view__grid.cpp \
     editor/world_map/world_map_view__key_press.cpp \
     editor/world_map/world_map_view__mouse_move.cpp \
     editor/world_map/world_map_view__mouse_press.cpp \

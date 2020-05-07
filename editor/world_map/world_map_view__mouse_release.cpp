@@ -16,6 +16,21 @@
 
 
 //####################################################################################
+//##    Extracts a list of DrSettings pointers from a list of
+//##    EditorItems (QGraphicsItems) representing DrThings in a QGraphicsScene
+//####################################################################################
+QList<DrSettings*> WorldMapView::convertItemListToSettings(QList<QGraphicsItem*> list) {
+    QList<DrSettings*> new_list;
+    for (auto item : list) {
+        WorldMapItem *as_item = dynamic_cast<WorldMapItem*>(item);
+        DrSettings *as_entity = as_item->getEntity();
+        new_list.append(as_entity);
+    }
+    return new_list;
+}
+
+
+//####################################################################################
 //##
 //##    Mouse Released
 //##
@@ -30,14 +45,12 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
     // Process left mouse button released
     if (event->button() & Qt::LeftButton) {
         m_hide_bounding = false;
-///        m_rubber_band->hide();
-
 
         // Inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...
         // Now that mousue has been released, update Inspector property boxes
         if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
-//            QList<DrSettings*> selected_entities = ConvertItemListToSettings(my_scene->getSelectionItems());
+            QList<DrSettings*> selected_entities = convertItemListToSettings(scene()->selectedItems());
 //            m_editor_relay->updateEditorWidgetsAfterItemChange(
 //                        Editor_Widgets::Map_View, { selected_entities.begin(), selected_entities.end() },
 //                        {   std::make_pair(Comps::Thing_Transform, Props::Thing_Position),
@@ -61,8 +74,8 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
         // not calling the base class event that clears the selection.
 
         QList<long> item_keys { };
-//        for (auto &item : my_scene->getSelectionItems())
-//            item_keys.append(item->data(User_Roles::Key).toLongLong());
+        for (auto &item : scene()->selectedItems())
+            item_keys.append(item->data(User_Roles::Key).toLongLong());
         m_editor_relay->buildInspector( item_keys );
         m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
 

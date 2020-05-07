@@ -89,19 +89,19 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
 
         // ***** Calculate new center based on SelectionBox starting center and difference between starting pos() and new passed in new_pos
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool() == true) {
-            EditorScene *drscene = dynamic_cast<EditorScene*>(this->scene());
+            EditorScene *editor_scene = dynamic_cast<EditorScene*>(this->scene());
             QPointF old_select_center, new_select_center, rounded_select_center;
             QPointF adjust_by;
 
-            if (drscene->getHasCalculatedAdjustment() == false) {
-                old_select_center = drscene->getPreMoveSelectionCenter();
+            if (editor_scene->getHasCalculatedAdjustment() == false) {
+                old_select_center = editor_scene->getPreMoveSelectionCenter();
                 new_select_center = old_select_center - (pos() - new_pos);
                 rounded_select_center = m_editor_relay->roundPointToGrid( new_select_center );
                 adjust_by = new_select_center - rounded_select_center;
-                drscene->setMoveAdjustment( adjust_by );
-                drscene->setHasCalculatedAdjustment(true);
+                editor_scene->setMoveAdjustment( adjust_by );
+                editor_scene->setHasCalculatedAdjustment(true);
             } else {
-                adjust_by = drscene->getMoveAdjustment();
+                adjust_by = editor_scene->getMoveAdjustment();
             }
             QPointF adjusted_pos = new_pos - adjust_by;
             return  adjusted_pos;
@@ -114,10 +114,13 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
                 old_center = QPointF(oc.x, oc.y);
             }
             QPointF new_center = old_center - (pos() - new_pos);
-            QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );                // Align new desired center to grid
 
-            QPointF adjust_by = new_center - rounded_center;                                        // Adjust new position based on adjustment
-            QPointF adjusted_pos = new_pos - adjust_by;                                             // to grid we just performed
+            // Align new desired center to grid
+            QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );
+
+            // Adjust new position based on adjustment to grid we just performed
+            QPointF adjust_by = new_center - rounded_center;
+            QPointF adjusted_pos = new_pos - adjust_by;
             return  adjusted_pos;
         }
     }

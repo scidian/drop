@@ -47,15 +47,15 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
     m_origin_in_scene = mapToScene(m_origin);
 
     // Get top most unlocked item
-    long        origin_item_key = c_no_key;
-    DrSettings *origin_item_settings = nullptr;
-    bool        origin_locked = false;
+    long     origin_item_key = c_no_key;
+    DrThing *origin_item_thing = nullptr;
+    bool     origin_locked = false;
     m_origin_item =  itemAt(event->pos());
     for (auto item : items(event->pos())) {
         origin_item_key = item->data(User_Roles::Key).toLongLong();
-        origin_item_settings = m_project->findSettingsFromKey(origin_item_key);
-        if (origin_item_settings != nullptr) {
-            if (origin_item_settings->isLocked() == false) {
+        origin_item_thing = m_project->findThingFromKey(origin_item_key);
+        if (origin_item_thing != nullptr) {
+            if (origin_item_thing->isLocked() == false) {
                 m_origin_item = item;
                 break;
             }
@@ -142,7 +142,7 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
                 //                    #NOTE: If object was not already selected the Inspector will be updated when the
                 //                           EditorScene::selectionChanged slot fires
                 if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                    if (m_origin_item != nullptr && origin_item_settings != nullptr) {
+                    if (origin_item_thing != nullptr) {
 
                         // ***** If we clicked clicked a new item, set selection group to that
                         if (my_scene->getSelectionItems().contains(m_origin_item) == false) {
@@ -151,7 +151,7 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
                         }
 
                         // ***** Process press event for item movement (Translation)
-                        if (origin_item_settings->isLocked() == false) {
+                        if (origin_item_thing->isLocked() == false) {
                             // Disable item changes before messing with Z-Order
                             EditorItem *graphics_item = dynamic_cast<EditorItem*>(m_origin_item);
                             bool flags_enabled_before = false;

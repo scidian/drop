@@ -28,27 +28,27 @@ class EditorItem : public QGraphicsPixmapItem
 
 private:
     // External Borrowed Pointers
-    DrProject      *m_project;                              // Pointer to the parent project
-    IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
+    DrProject      *m_project;                                  // Pointer to the parent project
+    IEditorRelay   *m_editor_relay;                             // Pointer to IEditorRelay class of parent form
 
-    DrThing        *m_thing = nullptr;                      // Pointer to the Thing for this item
-    long            m_thing_key;                            // Stores the Thing Project Key this item represents
+    DrThing        *m_thing = nullptr;                          // Pointer to the Thing for this item
+    long            m_thing_key;                                // Stores the Thing Project Key this item represents
 
-    DrSettings     *m_asset = nullptr;                      // Pointer to the base Entity (Asset, Effect, etc) for this item
-    long            m_asset_key;                            // Stores the     base Entity Project Key this item is drawn from
-    double          m_asset_width;                          // Width of       base Entity this item is drawn from
-    double          m_asset_height;                         // Height of      base Entity this item is drawn from
+    DrSettings     *m_asset = nullptr;                          // Pointer to the base Entity (Asset, Effect, etc) for this item
+    long            m_asset_key;                                // Stores the     base Entity Project Key this item is drawn from
+    double          m_asset_width;                              // Width of       base Entity this item is drawn from
+    double          m_asset_height;                             // Height of      base Entity this item is drawn from
 
     // Local Variables
-    QPixmap         m_pixmap;                               // Pixmap used to represent this Thing, filters are applied to this
+    QPixmap         m_pixmap;                                   // Pixmap used to represent this Thing, filters are applied to this
 
-    double          m_start_x;                              // Stores the item position the first time it was loaded
-    double          m_start_y;                              // Stores the item position the first time it was loaded
+    double          m_start_x       { 0 };                      // Stores the item position the first time it was loaded
+    double          m_start_y       { 0 };                      // Stores the item position the first time it was loaded
 
-    bool            m_temp_only = false;                    // If this is set to true when item is created, changes to this item are ignored
-                                                            // and not processed into the undo stack, nor do changes have an effect on the associated
-                                                            // Thing in the project data model
-    bool            m_item_change_flags_enabled = false;    // Lets us know if we've enabled or disabled ItemChangeFlags
+    bool            m_temp_only     { false };                  // If this is set to true when item is created, changes to this item are ignored
+                                                                // and not processed into the undo stack, nor do changes have an effect on the associated
+                                                                // Thing in the project data model
+    bool            m_item_change_flags_enabled = false;        // Lets us know if we've enabled or disabled ItemChangeFlags
 
 
 public:

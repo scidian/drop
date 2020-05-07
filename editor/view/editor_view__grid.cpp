@@ -73,9 +73,9 @@ void EditorView::updateGrid() {
 //####################################################################################
 QPointF EditorView::roundToGrid(QPointF point_in_scene) {
     // ***** Align new desired center to grid
-    QTransform remove_angle = QTransform().rotate(-m_grid_rotate);
-    QTransform add_angle =    QTransform().rotate( m_grid_rotate);
-    QPointF rounded_center = point_in_scene;
+    QTransform  remove_angle =      QTransform().rotate(-m_grid_rotate);
+    QTransform  add_angle =         QTransform().rotate( m_grid_rotate);
+    QPointF     rounded_center =    point_in_scene;
 
     // Divide by scale to equalize mouse position to scaling being applied after rounding
     rounded_center.setX( rounded_center.x() / m_grid_scale.x() );

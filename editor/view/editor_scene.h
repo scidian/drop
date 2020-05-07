@@ -34,25 +34,25 @@ class EditorScene : public QGraphicsScene
 
 private:
     // External Borrowed Pointers
-    DrProject      *m_project;                              // Pointer to currently loaded Project
-    IEditorRelay   *m_editor_relay;                         // Pointer to IEditorRelay class of parent form
+    DrProject      *m_project;                                  // Pointer to currently loaded Project
+    IEditorRelay   *m_editor_relay;                             // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    QUndoStack     *m_undo = nullptr;                       // Object that holds list of changes to QGraphicsScene for use with undo / redo
+    QUndoStack     *m_undo = nullptr;                           // Object that holds list of changes to QGraphicsScene for use with undo / redo
 
-    DrStage        *m_current_stage = nullptr;              // Holds a pointer to the current DrStage being shown
-    long            m_current_stage_key = c_no_key;         // Holds the Project Key of the currently shown DrStage, starts at c_no_key, i.e. "none"
+    DrStage        *m_current_stage = nullptr;                  // Holds a pointer to the current DrStage being shown
+    long            m_current_stage_key = c_no_key;             // Holds the Project Key of the currently shown DrStage, starts at c_no_key, i.e. "none"
 
     // Selection Variables
-    QList<QGraphicsItem*>   m_selection_items;              // List of selected items
-    double                  m_selection_angle;              // Angle current selection has been rotated to
-    QPointF                 m_selection_scale;              // Scaling applied to current selection
-    QRectF                  m_selection_box;                // Starting outline of selected items
+    QList<QGraphicsItem*>   m_selection_items;                  // List of selected items
+    double                  m_selection_angle;                  // Angle current selection has been rotated to
+    QPointF                 m_selection_scale;                  // Scaling applied to current selection
+    QRectF                  m_selection_box;                    // Starting outline of selected items
 
     // Selection Movement Variables
-    bool                    m_calculated_adjust;            // If an item has already recalculated new center, use that
-    QPointF                 m_pre_move_center;              // Stores a premove center for group grid snapping
-    QPointF                 m_move_adjustment;              // Amount to move items by during translation
+    bool                    m_calculated_adjust;                // If an item has already recalculated new center, use that
+    QPointF                 m_pre_move_center;                  // Stores a premove center for group grid snapping
+    QPointF                 m_move_adjustment;                  // Amount to move items by during translation
 
     // Timers for holding keys down
     QMap<Qt::Key, QElapsedTimer>    m_key_timers;
@@ -61,7 +61,7 @@ private:
 
 public:
     // Mutexes
-    QMutex       scene_mutex { QMutex::NonRecursive };      // Used to stop from changing scene items more than once at a time
+    QMutex       scene_mutex { QMutex::NonRecursive };          // Used to stop from changing scene items more than once at a time
 
 
 public:
@@ -101,7 +101,7 @@ public:
     void            clearStageShown();
 
 
-    // ********** Selection Functions
+    // ***** Selection Functions
     long                    getSelectionCount()         { return m_selection_items.count(); }
     QTransform              getSelectionTransform();
 
@@ -124,7 +124,7 @@ public:
     void                    updateSelectionBox();
 
 
-    // ********** Seelction Movement Functions
+    // ***** Selection Movement
     QPointF                 getPreMoveSelectionCenter()                     { return m_pre_move_center; }
     QPointF                 getMoveAdjustment()                             { return m_move_adjustment; }
     bool                    getHasCalculatedAdjustment()                    { return m_calculated_adjust; }

@@ -67,7 +67,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
     // Get current DrStage shown in view
     DrStage *stage = my_scene->getCurrentStageShown();
 
-    // Update keyboard modifiers in case a keyPressEvent snuck through while we didnt have focus
+    // ***** Update keyboard modifiers in case a keyPressEvent snuck through while we didnt have focus
     if (m_flag_dont_check_keys == false) {
         m_flag_key_down_control = event->modifiers() & Qt::KeyboardModifier::ControlModifier;
         m_flag_key_down_alt     = event->modifiers() & Qt::KeyboardModifier::AltModifier;
@@ -77,10 +77,10 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
         m_flag_dont_check_keys =  false;
     }
 
-    // Store event mouse position
+    // ***** Store event mouse position
     m_last_mouse_pos = event->pos();
 
-    // Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
+    // ***** Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
     if (m_allow_movement == false) {
         if (m_origin_timer.elapsed() > 250) {
             m_allow_movement = true;
@@ -89,7 +89,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
         }
     }
 
-    // Updates our tool tip position
+    // ***** Updates our tool tip position
     if (m_tool_tip->isHidden() == false) {
         m_tool_tip->updateToolTipPosition(m_last_mouse_pos);
     }
@@ -135,7 +135,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
         // Reset flag that holds which interactive mouse object we are over and has priority
         m_over_handle = Position_Flags::No_Position;
 
-        // Check selection handles to see if mouse is over one
+        // ********** Check selection handles to see if mouse is over one
         if (my_scene->getSelectionCount() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
             if      (m_handles[Position_Flags::Rotate       ].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Rotate;
             else if (m_handles[Position_Flags::Top_Left     ].containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) m_over_handle = Position_Flags::Top_Left;
@@ -158,7 +158,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
             }
         }
 
-        // Check if over camera when Debug Camera mode is activated
+        // ***** Check if over camera when Debug Camera mode is activated
         if (Dr::GetPreference(Preferences::World_Editor_Show_Camera_Boxes).toBool() && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
             if (m_cam_selected == nullptr) {
                 DrThing *before_check = m_cam_mouse_over;
@@ -178,7 +178,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
             }
         }
 
-        // Check if over Stage Size grabber box
+        // ***** Check if over Stage Size grabber box
         if (stage != nullptr) {
             if (m_stage_grab_handle.containsPoint(m_last_mouse_pos, Qt::FillRule::OddEvenFill)) {
                 m_over_handle = Position_Flags::Stage_Size;

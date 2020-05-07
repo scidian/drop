@@ -43,9 +43,26 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
         setTransformationMode(Qt::SmoothTransformation);
 
+    // Adjust item to proper transform
+    QPointF center = boundingRect().center();
+    double transform_scale_x = 1.0;
+    double transform_scale_y = 1.0;
+    QTransform t = QTransform()
+            .translate(center.x(), center.y())
+            .rotate(0)
+            .scale(transform_scale_x, transform_scale_y)
+            .translate(-center.x(), -center.y());
+    setTransform(t);
+
+    // ***** Load starting position
+    DrPointF start_pos = DrPointF(0, 0) ;///m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position).toPointF();
+    m_start_x = start_pos.x;
+    m_start_y = start_pos.y;
+
     // ***** Set Item Properties
-    this->setPos(0, 0);
     this->setPixmap(QPixmap(":/assets/asset_types/blob.png"));
+    this->m_width =  pixmap().width();
+    this->m_height = pixmap().height();
 
     // ***** Apply Initial Settings
     setAcceptHoverEvents(true);                                                 // Item tracks mouse movement
@@ -74,7 +91,7 @@ void WorldMapItem::enableItemChangeFlags() {
 //####################################################################################
 // Outline of entire item
 QRectF WorldMapItem::boundingRect() const {
-    QRectF my_rect = QRectF(0, 0, 256, 256);
+    QRectF my_rect = QRectF(0, 0, m_width, m_height);
     return my_rect;
 }
 

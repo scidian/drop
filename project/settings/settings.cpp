@@ -109,13 +109,13 @@ DrComponent* DrSettings::getComponent(std::string component_key, bool show_error
     return (*it).second;
 }
 
-void DrSettings::setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value) {
-    setComponentPropertyValue(component_property_pair.first, component_property_pair.second, value);
+void DrSettings::setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value, bool show_error) {
+    setComponentPropertyValue(component_property_pair.first, component_property_pair.second, value, show_error);
 }
 
-void DrSettings::setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value) {
-    DrComponent *component = getComponent(component_key);                       if (component == nullptr) return;
-    DrProperty *property = component->getProperty(property_key);                if (property == nullptr)  return;
+void DrSettings::setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value, bool show_error) {
+    DrComponent *component = getComponent(component_key, show_error);           if (component == nullptr) return;
+    DrProperty  *property =  component->getProperty(property_key, show_error);  if (property == nullptr)  return;
     property->setValue(value);
 }
 

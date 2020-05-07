@@ -38,9 +38,23 @@ private:
     View_Mode               m_view_mode         { View_Mode::None };        // Tracks current view interaction mode
 
     // Display Variables
-    int                     m_zoom              { 200 }; // (50%)           // Zoom level of current view, 200 is 50% - 250 is 100%
-    double                  m_zoom_scale        { 0.5 };                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
+    int                     m_zoom              { 250 }; // (100%)          // Zoom level of current view, 200 is 50% - 250 is 100%
+    double                  m_zoom_scale        { 1.0 };                    // Updated in zoomInOut for use during painting grid, DO NOT SET MANUALLY
     int                     m_rotate            { 0 };                      // NOT IMPLEMENTED: Rotation of current view
+
+    // Grid Style Variables (currently re-populated from EditorView::updateGrid
+    Grid_Style              m_grid_style        { Grid_Style::Lines };      // Grid type to display
+    QPointF                 m_grid_origin       { 0, 0 };                   // Origin point of grid in scene
+    QPointF                 m_grid_size         { 32, 32 };                 // Grid size
+    QPointF                 m_grid_scale        { 1, 1 };                   // X and Y scaling for after grid has been rotated
+    double                  m_grid_rotate       { 0 };                      // Rotation of grid lines
+    QColor                  m_grid_color;                                   // Grid color
+    bool                    m_back_color_use    { false };                  // Should we use background color?
+    QColor                  m_back_color;                                   // World background color
+
+    bool                    m_grid_should_snap  { true };                   // Should snap to grid?
+    bool                    m_grid_resize_snap  { true };                   // Should snap while resizing?
+    bool                    m_grid_show_on_top  { false };                  // Paint grid on top?
 
     // Keyboard Flags
     bool                    m_flag_dont_check_keys          { false };      // True when we don't want mouseMoveEvent to update key flags
@@ -85,20 +99,28 @@ public:
 #endif
 
     // View Display Functions
-    void            setViewRect(QRectF new_rect);
-    void            spaceBarDown();
-    void            spaceBarUp();
-    void            zoomInOut(int level);
-    void            zoomToPower(int level);
-    void            zoomToScale(double scale, bool recalculate_level = true);
+    void                setViewRect(QRectF new_rect);
+    void                spaceBarDown();
+    void                spaceBarUp();
+    void                zoomInOut(int level);
+    void                zoomToPower(int level);
+    void                zoomToScale(double scale, bool recalculate_level = true);
+
+    // Grid Functions
+    double              currentGridAngle()                  { return m_grid_rotate; }
+    QPointF             currentGridScale()                  { return m_grid_scale; }
+    QPointF             roundToGrid(QPointF point_in_scene);
+    void                updateGrid();
 
     // Paint Functions
-    void            paintGrid(QPainter &painter);
+    void                paintGrid(QPainter &painter);
 
+    // Selection Functions
+    QList<DrSettings*>  convertItemListToSettings(QList<QGraphicsItem*> list);
 
     // Getters / Setters
-    View_Mode       currentViewMode()                   { return m_view_mode; }
-    double          currentZoomLevel()                  { return m_zoom_scale; }
+    View_Mode           currentViewMode()                   { return m_view_mode; }
+    double              currentZoomLevel()                  { return m_zoom_scale; }
 
 };
 

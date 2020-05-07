@@ -56,6 +56,7 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
 //##    PAINT: Draws grid lines
 //####################################################################################
 void WorldMapView::paintGrid(QPainter &painter) {
+    updateGrid();
 
     // Set up QPainter
     QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
@@ -66,14 +67,24 @@ void WorldMapView::paintGrid(QPainter &painter) {
 
     // Paint Grid
     QRectF  scene_rect = mapToScene(this->geometry()).boundingRect();
-    for (int x = scene_rect.left(); x < scene_rect.right(); x += 50) {
+
+    // Right Lines
+    for (int x = 0; x < scene_rect.right(); x += m_grid_size.x()) {
         painter.drawLine(x, scene_rect.top(), x, scene_rect.bottom());
     }
-    for (int y = scene_rect.top(); y < scene_rect.bottom(); y += 50) {
-        painter.drawLine(scene_rect.left(), y, scene_rect.right(), y);
+    // Left Lines
+    for (int x = -m_grid_size.x(); x > scene_rect.left(); x -= m_grid_size.x()) {
+        painter.drawLine(x, scene_rect.top(), x, scene_rect.bottom());
     }
 
-    qDebug() << "Zoom: " << m_zoom;
+    // Bottom Lines
+    for (int y = 0; y < scene_rect.bottom(); y += m_grid_size.y()) {
+        painter.drawLine(scene_rect.left(), y, scene_rect.right(), y);
+    }
+    // Top Lines
+    for (int y = -m_grid_size.y(); y > scene_rect.top(); y -= m_grid_size.y()) {
+        painter.drawLine(scene_rect.left(), y, scene_rect.right(), y);
+    }
 
 }
 

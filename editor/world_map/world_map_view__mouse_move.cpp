@@ -25,7 +25,7 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
     // Test for GraphicsScene
     if (scene() == nullptr) return;
 
-    // Update keyboard modifiers in case a keyPressEvent snuck through while we didnt have focus
+    // ***** Update keyboard modifiers in case a keyPressEvent snuck through while we didnt have focus
     if (m_flag_dont_check_keys == false) {
         m_flag_key_down_control = event->modifiers() & Qt::KeyboardModifier::ControlModifier;
         m_flag_key_down_alt     = event->modifiers() & Qt::KeyboardModifier::AltModifier;
@@ -35,10 +35,10 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
         m_flag_dont_check_keys =  false;
     }
 
-    // Store event mouse position
+    // ***** Store event mouse position
     m_last_mouse_pos = event->pos();
 
-    // Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
+    // ***** Allow movement if it has been more than x milliseconds or mouse has moved more than 2 pixels
     if (m_allow_movement == false) {
         if (m_origin_timer.elapsed() > 250) {
             m_allow_movement = true;
@@ -48,7 +48,7 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
     }
 
 
-    // ********** Grab item under mouse
+    // ******************** Grab item under mouse
     QGraphicsItem *item_under_mouse = nullptr;/// = itemAt(m_last_mouse_pos);
     for (auto item : items(m_last_mouse_pos)) {
         long item_key = item->data(User_Roles::Key).toLongLong();
@@ -65,7 +65,19 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
     // ******************** Process Mouse Mode
     if (m_mouse_mode == Mouse_Mode::Pointer) {
 
-        // ********** If we are not doing anything (View_Mode::None), set cursor based on Position Flag
+        // Reset flag that holds which interactive mouse object we are over and has priority
+        m_over_handle = Position_Flags::No_Position;
+
+        // ***** Check selection handles to see if mouse is over one
+        if (scene()->selectedItems().count() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+
+            if (m_over_handle == Position_Flags::No_Position && scene()->selectedItems().contains(item_under_mouse)) {
+                m_over_handle = Position_Flags::Move_Item;
+            }
+
+        }
+
+        // ***** If we are not doing anything (View_Mode::None), set cursor based on Position Flag
         if (m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
 
             if (m_over_handle == Position_Flags::Move_Item) {

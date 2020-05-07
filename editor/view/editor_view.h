@@ -34,15 +34,6 @@ class SelectionGroup;
 //####################################################################################
 //##    Local Types
 //############################
-// Local Enumerations
-enum class Handle_Shapes {
-    Circles,
-    Squares,
-};
-enum class X_Axis {         Left,   Right,    None      };
-enum class Y_Axis {         Top,    Bottom,   None      };
-enum class Grid_Style {     Lines,  Dots,               };
-
 // Local Structs
 struct Transform_Data {
     double  rotation;
@@ -225,84 +216,83 @@ public:
     virtual void    focusInEvent(QFocusEvent *event) override;
     virtual void    leaveEvent(QEvent *event) override;
 
-
     // View Display Functions
-    void            setViewRect(QRectF new_rect);
-    void            spaceBarDown();
-    void            spaceBarUp();
-    void            zoomInOut(int level);
-    void            zoomToContents();
-    void            zoomToPower(int level);
-    void            zoomToScale(double scale, bool recalculate_level = true);
+    void                setViewRect(QRectF new_rect);
+    void                spaceBarDown();
+    void                spaceBarUp();
+    void                zoomInOut(int level);
+    void                zoomToContents();
+    void                zoomToPower(int level);
+    void                zoomToScale(double scale, bool recalculate_level = true);
 
     // Misc Functions
-    double          calculateCornerAngle(double angle1, double angle2);
-    Transform_Data  decomposeTransform(QTransform &from_transform, bool qr_type = true);
-    double          extractAngleFromTransform(QTransform &from_transform);
-    QRectF          rectAtCenterPoint(QPoint center, double rect_size);
-    void            updateSelectionBoundingBox(int called_from = 0);
+    double              calculateCornerAngle(double angle1, double angle2);
+    Transform_Data      decomposeTransform(QTransform &from_transform, bool qr_type = true);
+    double              extractAngleFromTransform(QTransform &from_transform);
+    QRectF              rectAtCenterPoint(QPoint center, double rect_size);
+    void                updateSelectionBoundingBox(int called_from = 0);
 
     // Grid Functions
-    double          currentGridAngle() { return m_grid_rotate; }
-    QPointF         currentGridScale() { return m_grid_scale; }
-    static QRectF   gameFrame(DrProject *project);
-    void            recalculateGrid();
-    QPointF         roundToGrid(QPointF point_in_scene);
-    static QRectF   stageBoundingRect(DrProject *project, DrStage *stage, double &half_height);
-    void            updateGrid();
+    double              currentGridAngle()                  { return m_grid_rotate; }
+    QPointF             currentGridScale()                  { return m_grid_scale; }
+    static QRectF       gameFrame(DrProject *project);
+    void                recalculateGrid();
+    QPointF             roundToGrid(QPointF point_in_scene);
+    static QRectF       stageBoundingRect(DrProject *project, DrStage *stage, double &half_height);
+    void                updateGrid();
 
     // Paint Functions
-    void            paintBoundingBox(QPainter &painter);
-    void            paintCameras(QPainter &painter, DrStage *stage);
-    void            paintCrossHairs(QPainter &painter, QPoint center);
-    void            paintCollisionShapes(QPainter &painter, DrStage *stage);
-    void            paintDebugHealth(QPainter &painter, DrStage *stage);
-    void            paintGameFrame(QPainter &painter);
-    void            paintGrid(QPainter &painter);
-    void            paintGroupAngle(QPainter &painter, double angle);
-    void            paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
-    void            paintItemOutlines(QPainter &painter);
-    void            paintItemCenters(QPainter &painter);
-    void            paintStageBounds(QPainter &painter, DrStage* stage);
-    void            paintToolTip(QPainter &painter);
+    void                paintBoundingBox(QPainter &painter);
+    void                paintCameras(QPainter &painter, DrStage *stage);
+    void                paintCrossHairs(QPainter &painter, QPoint center);
+    void                paintCollisionShapes(QPainter &painter, DrStage *stage);
+    void                paintDebugHealth(QPainter &painter, DrStage *stage);
+    void                paintGameFrame(QPainter &painter);
+    void                paintGrid(QPainter &painter);
+    void                paintGroupAngle(QPainter &painter, double angle);
+    void                paintHandles(QPainter &painter, Handle_Shapes shape_to_draw);
+    void                paintItemOutlines(QPainter &painter);
+    void                paintItemCenters(QPainter &painter);
+    void                paintStageBounds(QPainter &painter, DrStage* stage);
+    void                paintToolTip(QPainter &painter);
 
     // Selection Functions
-    QGraphicsItem*  setInspectorClearSelection(DrThing *thing);
-    void            startSelect(QMouseEvent *event);
-    void            processSelection(QPoint mouse_in_view);
+    QList<DrSettings*>  convertItemListToSettings(QList<QGraphicsItem*> list);
+    QGraphicsItem*      setInspectorClearSelection(DrThing *thing);
+    void                startSelect(QMouseEvent *event);
+    void                processSelection(QPoint mouse_in_view);
 
     // Rotation Functions
-    void            startRotateSelection(QPoint mouse_in_view, bool use_tool_tip = true);
-    void            rotateSelection(QPointF mouse_in_view, bool use_exact_angle = false, double angle_to_use = 0.0);
+    void                startRotateSelection(QPoint mouse_in_view, bool use_tool_tip = true);
+    void                rotateSelection(QPointF mouse_in_view, bool use_exact_angle = false, double angle_to_use = 0.0);
 
     // Resize functions
-    bool            containsSquareItem(QGraphicsItem *item);
-    void            startResizeSelection(QPoint mouse_in_view, bool use_tool_tip = true);
-    void            resizeSelection(QPointF mouse_in_scene, bool use_exact_scale = false, QPointF scale_to_use = QPointF(0, 0));
-    void            resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use);
-    Position_Flags  findOppositeSide(Position_Flags start_side);
-    void            removeShearing(QGraphicsItem *item, QPointF scale);
+    bool                containsSquareItem(QGraphicsItem *item);
+    void                startResizeSelection(QPoint mouse_in_view, bool use_tool_tip = true);
+    void                resizeSelection(QPointF mouse_in_scene, bool use_exact_scale = false, QPointF scale_to_use = QPointF(0, 0));
+    void                resizeSelectionWithRotate(QPointF mouse_in_scene, bool use_exact_scale, QPointF scale_to_use);
+    Position_Flags      findOppositeSide(Position_Flags start_side);
+    void                removeShearing(QGraphicsItem *item, QPointF scale);
 
     // Camera Move Functions
-    void            startRotateCamera(QPoint mouse_in_view);
-    void            rotateCamera(QPointF mouse_in_view);
+    void                startRotateCamera(QPoint mouse_in_view);
+    void                rotateCamera(QPointF mouse_in_view);
 
     // Resize Stage Functions
-    void            startResizeStage(QPoint mouse_in_view);
-    void            resizeStage(QPointF mouse_in_view);
-
+    void                startResizeStage(QPoint mouse_in_view);
+    void                resizeStage(QPointF mouse_in_view);
 
     // Getters / Setters
-    View_Mode       currentViewMode()                   { return m_view_mode; }
-    double          currentZoomLevel()                  { return m_zoom_scale; }
-    bool            hasShownAScene() const              { return m_flag_has_shown_a_scene_yet; }
-    EditorScene*    getEditorScene()                    { return my_scene; }
-    IEditorRelay*   getEditorRelay()                    { return m_editor_relay; }
-    Mouse_Mode      getMouseMode()                      { return m_mouse_mode; }
-    void            setHasShownAScene(bool has)         { m_flag_has_shown_a_scene_yet = has; }
-    void            setMouseCursorFromAngle(double angle_in_degrees);
-    void            setMouseMode(Mouse_Mode mode)       { m_mouse_mode = mode; }
-    void            setViewMode(View_Mode mode)         { m_view_mode = mode; }
+    View_Mode           currentViewMode()                   { return m_view_mode; }
+    double              currentZoomLevel()                  { return m_zoom_scale; }
+    bool                hasShownAScene() const              { return m_flag_has_shown_a_scene_yet; }
+    EditorScene*        getEditorScene()                    { return my_scene; }
+    IEditorRelay*       getEditorRelay()                    { return m_editor_relay; }
+    Mouse_Mode          getMouseMode()                      { return m_mouse_mode; }
+    void                setHasShownAScene(bool has)         { m_flag_has_shown_a_scene_yet = has; }
+    void                setMouseCursorFromAngle(double angle_in_degrees);
+    void                setMouseMode(Mouse_Mode mode)       { m_mouse_mode = mode; }
+    void                setViewMode(View_Mode mode)         { m_view_mode = mode; }
 
 
 public slots:

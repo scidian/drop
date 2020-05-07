@@ -10,6 +10,7 @@
 
 #include "editor/interface_editor_relay.h"
 #include "editor/world_map/world_map_item.h"
+#include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
 #include "project/dr_project.h"
 
@@ -63,51 +64,52 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                 //                    #NOTE: If object was not already selected the Inspector will be updated when the
                 //                           EditorScene::selectionChanged slot fires
                 if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                    if (m_origin_item != nullptr && origin_item_settings != nullptr) {
+                    if (origin_item_settings != nullptr) {
+
+                        // ***** If we clicked clicked a new item, set selection group to that
+                        if (scene()->selectedItems().contains(m_origin_item) == false) {
+                            scene()->clearSelection();
+                            m_origin_item->setSelected(true);
+                        }
 
                         // ***** Process press event for item movement (Translation)
+                        if (origin_item_settings->isLocked() == false) {
+                            // Disable item changes before messing with Z-Order
+                            WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
+                            bool flags_enabled_before = false;
+                            if (graphics_item) {
+                                flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
+                                graphics_item->disableItemChangeFlags();
+                            }
 
-                        // Disable item changes before messing with Z-Order
-                        WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
-                        bool flags_enabled_before = false;
-                        if (graphics_item) {
-///                            flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
-///                            graphics_item->disableItemChangeFlags();
-                        }
-
-                        // Make sure item is on top before firing QGraphicsView event so we start translating properly
-                        double original_z = m_origin_item->zValue();
-                        m_origin_item->setZValue(std::numeric_limits<double>::max());
-                        QGraphicsView::mousePressEvent(event);
-                        m_origin_item->setZValue(original_z);
-
-                        // Restore item changes
-///                        if (graphics_item && flags_enabled_before) graphics_item->enableItemChangeFlags();
-
-                        // Prep Translating start
-                        viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
-
-                        m_hide_bounding = true;
-                        m_view_mode = View_Mode::Translating;
-                        m_origin_item_start_pos = m_origin_item->pos();
-
-                        // Pass on event to allow movement, store starting selection center for snapping calculations
-                        if (m_allow_movement) {
-///                            QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
-///                            my_scene->setPreMoveSelectionCenter(pre_center);
-///                            my_scene->setHasCalculatedAdjustment(false);
+                            // Make sure item is on top before firing QGraphicsView event so we start translating properly
+                            double original_z = m_origin_item->zValue();
+                            m_origin_item->setZValue(std::numeric_limits<double>::max());
                             QGraphicsView::mousePressEvent(event);
+                            m_origin_item->setZValue(original_z);
+
+                            // Restore item changes
+                            if (graphics_item && flags_enabled_before) graphics_item->enableItemChangeFlags();
+
+                            // Prep Translating start
+                            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+
+                            m_hide_bounding = true;
+                            m_view_mode = View_Mode::Translating;
+                            m_origin_item_start_pos = m_origin_item->pos();
+
+                            // Pass on event to allow movement
+                            if (m_allow_movement)
+                                QGraphicsView::mousePressEvent(event);
+
+                            // Force itemChange signals on items
+                            for (auto item : scene()->selectedItems()) {
+                                item->moveBy(0, 0);
+                            }
                         }
 
-                        // Force itemChange signals on items
-///                        for (auto item : my_scene->getSelectionItems()) {
-///                            item->moveBy(0, 0);
-///                        }
-
-///                        if (my_scene->getSelectionItems().count() <= 1) {
-                            m_editor_relay->buildInspector( { origin_item_key } );
-                            m_editor_relay->updateItemSelection(Editor_Widgets::Map_View, { origin_item_key } );
-///                        }
+                        m_editor_relay->buildInspector( { origin_item_key } );
+                        m_editor_relay->updateItemSelection(Editor_Widgets::Map_View, { origin_item_key } );
                     }
 
                 // ******************** If clicked while control is down, add to selection group, or take out
@@ -123,9 +125,10 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                 // ******************* If theres no item under mouse, start selection box
                 if (m_origin_item == nullptr) {
                     m_view_mode = View_Mode::Selecting;
-///                    startSelect(event);
-///                    processSelection(event->pos());
-                    return;
+                    scene()->clearSelection();
+                    m_editor_relay->buildInspector( { } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Map_View, { } );
+                    update();
                 }
 
             }
@@ -140,6 +143,21 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
     update();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
