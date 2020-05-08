@@ -18,9 +18,12 @@ class DrProject;
 class IEditorRelay;
 
 // Local Constants
-const   int     c_default_width =       128;                // Starting width of GraphicsItem
+const   int     c_default_width =       192;                // Starting width of GraphicsItem
 const   int     c_row_height =          32;                 // Height of each row (title, input / output)
+const   int     c_slot_size =           10;                 // Size of little circle attached to each slot
+
 const   int     c_corner_radius =       12;                 // Absolute size of round corners of Item
+const   int     c_node_buffer =         16;                 // Buffer to add around QGraphicsItem to expand painting area
 
 
 //####################################################################################
@@ -41,9 +44,7 @@ private:
     // Local Variables
     int                 m_width             { 256 };                    // Width  of Item
     int                 m_height            { 256 };                    // Height of Item
-
     QPointF             m_start_position    { 0, 0 };                   // Desired starting position of Node
-    QPointF             m_last_position     { 0, 0 };                   // Stores the last known item position
 
     bool                m_item_change_flags_enabled     { false };      // Lets us know if we've enabled or disabled ItemChangeFlags
 
@@ -60,6 +61,7 @@ public:
 
     // Event Overrides
     virtual QVariant        itemChange(GraphicsItemChange change, const QVariant &value) override;
+    virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void            paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
 
     // Item Change Flags
@@ -69,8 +71,6 @@ public:
 
     // Getters / Setters
     DrSettings*         getEntity()                         { return m_entity; }
-    QPointF             lastPosition()                      { return m_last_position; }
-    void                setLastPosition(QPointF position)   { m_last_position = position; }
     QPointF             startPosition()                     { return m_start_position; }
     void                setStartPosition(QPointF position)  { m_start_position = position; }
 

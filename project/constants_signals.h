@@ -10,12 +10,11 @@
 
 #include <string>
 
+
 //####################################################################################
-//##    !!!!! #NOTE:    All uncommented Signals should be implmented. When adding uncommented
-//##                    Signals, make sure to implement them to some degree.
+//##    DrEngineSignal Signals      !!!!! #NOTE: All uncommented Signals should be implemented. When adding uncommented
+//##                                             Signals, make sure to implement them to some degree.
 //############################
-
-
 namespace Signals {
 
     // ############################ THING EVENTS
@@ -50,6 +49,22 @@ namespace Signals {
 
 
 }   // End namespace Signals
+
+
+//####################################################################################
+//##    DrNode Slots
+//##
+//############################
+namespace Input_Slots {
+    const std::string Start             = "_Start";
+    const std::string Load              = "_Load";
+}
+
+namespace Output_Slots {
+    const std::string UI                = "_UI";
+    const std::string Game_Over         = "_GameOver";
+}
+
 
 
 #endif // CONSTANTS_SIGNALS_H

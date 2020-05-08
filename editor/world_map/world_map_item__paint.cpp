@@ -20,11 +20,13 @@
 #include "engine/debug_flags.h"
 #include "project/constants_component_info.h"
 #include "project/dr_project.h"
+#include "project/entities/dr_node.h"
 #include "project/settings/settings.h"
 
 // Local Constants
-const   double  c_transparent_not_selected =    0.60;
-const   double  c_transparent_is_selected =     0.80;
+const   double  c_transparent_not_selected =    0.70;
+const   double  c_transparent_is_selected =     1.00;
+
 
 //####################################################################################
 //##    Custom Paint Handling
@@ -40,13 +42,18 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     }
 
     // Check item is not super duper tiny, this seems to crash paint function
-    QPolygonF   poly =   sceneTransform().map(boundingRect());
+    QRectF      box =    boundingRect();
+    QPolygonF   poly =   sceneTransform().map(box);
     QRectF      bounds = poly.boundingRect();
     if (bounds.width() < .5 || bounds.height() < .5) return;
+
+    // Decrease box size to allow for buffer
+    box.adjust(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer);
 
     // Set paint option to "not selected" or paint routine will draw dotted lines around item
     ///QStyleOptionGraphicsItem my_option(*option);
     ///my_option.state &= ~QStyle::State_Selected;
+
 
     // ***** Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
     double transparency = 1.0;
@@ -68,6 +75,10 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
            header_color_2.setAlphaF(alpha);
     QColor back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
            back_color.setAlphaF(alpha);
+    QColor slot_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator));
+           slot_color.setAlphaF(1.0);///alpha);
+    QColor slot_border = this->isSelected() ? Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) : Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+           slot_border.setAlphaF(1.0);///alpha);
 
 
     // ***** Draw Top Row of Node
@@ -78,14 +89,14 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     painter->setPen(Qt::NoPen);
 
     QPainterPath top, top1, top2;
-    top1.addRoundedRect(boundingRect().left(), boundingRect().top(), boundingRect().width(), c_row_height, c_corner_radius, c_corner_radius);
-    top2.addRect(boundingRect().left(), boundingRect().top()+c_row_height/2, boundingRect().width(), c_row_height/2);
+    top1.addRoundedRect(box.left(), box.top(), box.width(), c_row_height, c_corner_radius, c_corner_radius);
+    top2.addRect(box.left(), box.top()+c_row_height/2, box.width(), c_row_height/2);
     top = top1.united(top2);
     painter->drawPath(top);
 
     painter->setFont(Dr::CustomFontLarger());
-    painter->setPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)));
-    painter->drawText(0, 0, m_width, c_row_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+    painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
+    painter->drawText(box.left(), box.top(), box.width(), c_row_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
 
 
     // ***** Draw Bottom of Node
@@ -93,34 +104,63 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     painter->setPen(Qt::NoPen);
 
     QPainterPath mid, mid1, mid2;
-    mid1.addRoundedRect(boundingRect().left(), boundingRect().top()+c_row_height, boundingRect().width(), boundingRect().height()-c_row_height, c_corner_radius, c_corner_radius);
-    mid2.addRect(boundingRect().left(), boundingRect().top()+c_row_height, boundingRect().width(), c_row_height/2);
+    mid1.addRoundedRect(box.left(), box.top()+c_row_height, box.width(), box.height()-c_row_height, c_corner_radius, c_corner_radius);
+    mid2.addRect(box.left(), box.top()+c_row_height, box.width(), c_row_height/2);
     mid = mid1.united(mid2);
     painter->drawPath(mid);
 
 
     // ***** Selection Highlight
     if (this->isSelected()) {
-        QPen pen = QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin );
-        painter->setPen(pen);
+        QPen highlight_pen = QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
+        painter->setPen(highlight_pen);
         painter->setBrush(Qt::NoBrush);
 
-        // Maps Pixmap shape as outline
+        // The following maps pixmap() shape as outline
         /**
         QPainterPath outline = this->shape();
-        QPointF center = boundingRect().center();
-        double transform_scale_x = 1.0 + (1.0 / this->m_width);         // Add 2 pixels of width
-        double transform_scale_y = 1.0 + (1.0 / this->m_height);        // Add 2 pixels of height
-        QTransform t = QTransform()
-                .translate(center.x(), center.y())
-                .scale(transform_scale_x, transform_scale_y)
-                .translate(-center.x(), -center.y());
+        QPointF center = box.center();
+        double transform_scale_x = 1.0 + (1.0 / this->m_width);                 // Add 2 pixels of width
+        double transform_scale_y = 1.0 + (1.0 / this->m_height);                // Add 2 pixels of height
+        QTransform t = QTransform().translate(center.x(), center.y())
+                                   .scale(transform_scale_x, transform_scale_y)
+                                   .translate(-center.x(), -center.y());
         outline = t.map(this->shape());
         painter->drawPath( outline );
         */
 
-        painter->drawRoundedRect(boundingRect(), c_corner_radius, c_corner_radius);
+        painter->drawRoundedRect(box, c_corner_radius, c_corner_radius);
     }
+
+
+    // ********** Slots
+    DrNode* node = dynamic_cast<DrNode*>(m_entity);
+    if (node != nullptr) {
+        QPen slot_pen(slot_border, 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
+        painter->setPen( slot_pen );
+        painter->setBrush( slot_color );
+
+        // Input
+        int start_y = box.top() + (c_row_height * 2) - (c_row_height/2);
+        for (auto slot : node->getInputSlots()) {
+            painter->drawEllipse(box.left()-(c_slot_size*0.5), start_y - (c_slot_size/2), c_slot_size, c_slot_size);
+            start_y += c_row_height;
+        }
+
+        // Output
+        start_y = box.top() + (c_row_height * 2) - (c_row_height/2);
+        for (auto slot : node->getOutputSlots()) {
+            painter->drawEllipse(box.left() + box.width() - (c_slot_size*0.5), start_y - (c_slot_size/2), c_slot_size, c_slot_size);
+            start_y += c_row_height;
+        }
+    }
+
+
+
+
+
+
+
 
 }
 

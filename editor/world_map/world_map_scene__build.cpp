@@ -11,6 +11,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_scene.h"
+#include "editor/world_map/world_map_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
@@ -21,16 +22,24 @@
 //####################################################################################
 void WorldMapScene::buildScene() {
 
+    // Clear scene, set scene rect
     this->clear();
     this->setSceneRect(-2500, -2500, 5000, 5000);
 
+    // Add Nodes
     for (auto &world_pair : m_project->getWorldMap()) {
         this->addItemToSceneFromEntity(world_pair.second);
     }
 
     getEditorRelay()->viewCenterOnPoint( QPoint(0, 0) );
 
+    // Center the view on the new stage
+    double   new_zoom_scale =   m_project->getOption(Project_Options::World_Map_Zoom).toDouble();
+    DrPointF new_center =       m_project->getOption(Project_Options::World_Map_Center).toPointF();
+    getEditorRelay()->viewCenterOnPoint( Dr::ToQPointF(new_center) );
+    getEditorRelay()->viewZoomToScale( new_zoom_scale );
 }
+
 
 WorldMapItem* WorldMapScene::addItemToSceneFromEntity(DrSettings *entity) {
     // Create new item representing this Thing

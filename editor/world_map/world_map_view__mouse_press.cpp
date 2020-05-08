@@ -6,6 +6,7 @@
 //
 //
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 #include <QMouseEvent>
 #include <QTimer>
 
@@ -91,11 +92,8 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
                         // ***** Process press event for item movement (Translation)
                         if (origin_item_settings->isLocked() == false) {
-                            // Stores last known position
-                            WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
-                            graphics_item->setLastPosition(graphics_item->scenePos());
-
                             // Disable item changes before messing with Z-Order
+                            WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
                             bool flags_enabled_before = false;
                             if (graphics_item) {
                                 flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
@@ -103,7 +101,7 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                             }
 
                             // Make sure item is on top before firing QGraphicsView event so we start translating properly
-                            double original_z = m_origin_item->zValue();
+                            double  original_z =   m_origin_item->zValue();
                             m_origin_item->setZValue(std::numeric_limits<double>::max());
                             QGraphicsView::mousePressEvent(event);
                             m_origin_item->setZValue(original_z);
@@ -117,6 +115,9 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                             m_hide_bounding = true;
                             m_view_mode = View_Mode::Translating;
                             m_origin_item_start_pos = m_origin_item->scenePos();
+
+                            // Try to update mouseFirstPress Qt internal variables
+                            ///QGraphicsView::mousePressEvent(event);
 
                             // Force itemChange signals on items
                             for (auto item : scene()->selectedItems()) {

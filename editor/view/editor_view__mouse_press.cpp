@@ -177,6 +177,9 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
                             m_view_mode = View_Mode::Translating;
                             m_origin_item_start_pos = m_origin_item->scenePos();
 
+                            // Try to update mouseFirstPress Qt internal variables
+                            QGraphicsView::mousePressEvent(event);
+
                             // Force itemChange signals on items
                             for (auto item : my_scene->getSelectionItems()) {
                                 item->moveBy(0, 0);

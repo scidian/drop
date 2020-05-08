@@ -88,9 +88,9 @@ FormMain::~FormMain() {
 //####################################################################################
 void FormMain::buildSceneAfterLoading(long stage_key) {
     if (Dr::CheckDoneLoading() == false) {
-        QTimer::singleShot( 10, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
+        QTimer::singleShot( 5, this, [this, stage_key] { this->buildSceneAfterLoading(stage_key); } );
     } else {
-        QTimer::singleShot(  5, this, [this, stage_key] { this->buildSceneAfterWaiting(stage_key); } );
+        QTimer::singleShot( 1, this, [this, stage_key] { this->buildSceneAfterWaiting(stage_key); } );
     }
 }
 void FormMain::buildSceneAfterWaiting(long stage_key) {
@@ -133,19 +133,26 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
 bool FormMain::eventFilter(QObject *obj, QEvent *event) {
 
     // ********** Catch space bar for view to make sure we can drag even if view didnt have focus
-    if (event->type() == QEvent::KeyPress)
-    {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && m_current_mode == Form_Main_Mode::World_Editor)
-            if (viewEditor->hasFocus() == false)
-                viewEditor->spaceBarDown();
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
+        if (key_event->key() == Qt::Key::Key_Space) {
+            if (m_current_mode == Form_Main_Mode::World_Editor) {
+                if (viewEditor->hasFocus() == false) viewEditor->spaceBarDown();
+            } else if (m_current_mode == Form_Main_Mode::World_Map) {
+                if (viewWorldMap->hasFocus() == false) viewWorldMap->spaceBarDown();
+            }
+        }
     }
-    if (event->type() == QEvent::KeyRelease)
-    {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key::Key_Space && m_current_mode == Form_Main_Mode::World_Editor)
-            if (viewEditor->hasFocus() == false)
-                viewEditor->spaceBarUp();
+
+    if (event->type() == QEvent::KeyRelease) {
+        QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
+        if (key_event->key() == Qt::Key::Key_Space) {
+            if (m_current_mode == Form_Main_Mode::World_Editor) {
+                if (viewEditor->hasFocus() == false) viewEditor->spaceBarUp();
+            } else if (m_current_mode == Form_Main_Mode::World_Map) {
+                if (viewWorldMap->hasFocus() == false) viewWorldMap->spaceBarUp();
+            }
+        }
     }
 
     return QObject::eventFilter(obj, event);

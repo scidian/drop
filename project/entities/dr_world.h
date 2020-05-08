@@ -8,6 +8,7 @@
 #ifndef DRWORLD_H
 #define DRWORLD_H
 
+#include "project/entities/dr_node.h"
 #include "project/settings/settings.h"
 
 // Forward Declarations
@@ -22,7 +23,7 @@ typedef std::map<long, DrStage*> StageMap;
 //##    DrWorld
 //##        Class to hold Stages, variables and things for one World
 //############################
-class DrWorld : public DrSettings
+class DrWorld : public DrSettings, public DrNode
 {
 private:
     // Local variables

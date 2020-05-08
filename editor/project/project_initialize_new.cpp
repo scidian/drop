@@ -28,18 +28,23 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
     project->setTestOnly(test);
 
     // ***** Set Project Options
-    project->setOption(Project_Options::Name,           project_name);
-    project->setOption(Project_Options::File_Name_Path, std::string(""));
-    project->setOption(Project_Options::Orientation,    static_cast<int>(orientation));
-    project->setOption(Project_Options::Width,          width);
-    project->setOption(Project_Options::Height,         height);
+    project->setOption(Project_Options::Name,               project_name);
+    project->setOption(Project_Options::File_Name_Path,     std::string(""));
+    project->setOption(Project_Options::Orientation,        static_cast<int>(orientation));
+    project->setOption(Project_Options::Width,              width);
+    project->setOption(Project_Options::Height,             height);
 
 
     // ***** Add Initial World
     DrWorld *world_1 = project->addWorld(DrWorldType::Physics_2D);
     DrWorld *current_world = world_1;
-    project->setOption(Project_Options::Current_World, world_1->getKey());
-    project->setOption(Project_Options::Current_Stage, current_world->getFirstStageKey());
+    project->setOption(Project_Options::Current_World,      world_1->getKey());
+    project->setOption(Project_Options::Current_Stage,      current_world->getFirstStageKey());
+
+
+    // ***** Initialize Some User Variables
+    project->setOption(Project_Options::World_Map_Center,   DrPointF(0.0, 0.0));
+    project->setOption(Project_Options::World_Map_Zoom,     1.0);
 
 
     // ***** Build Test Project

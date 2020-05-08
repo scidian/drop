@@ -47,15 +47,15 @@ void WorldMapView::wheelEvent(QWheelEvent *event) {
 
 void WorldMapView::zoomInOut(int level) {
     m_zoom += level;
-    if (m_zoom > 500) m_zoom = 500;
+    if (m_zoom > 350) m_zoom = 350;
     if (m_zoom < -50) m_zoom = -50;
-    ///Dr::SetLabelText(Label_Names::Label_1, "Zoom: " + QString::number(m_zoom));
+    ///Dr::PrintDebug("Zoom: " + std::to_string(m_zoom));
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
 void WorldMapView::zoomToPower(int level) {
     m_zoom = level;
-    if (m_zoom > 500) m_zoom = 500;
+    if (m_zoom > 350) m_zoom = 350;
     if (m_zoom < -50) m_zoom = -50;
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }

@@ -5,6 +5,7 @@
 //      DrWorld Class Definitions
 //
 //
+#include "core/dr_random.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
@@ -18,11 +19,31 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, std::string new_world_name, bool add_start_stage)
-    : DrSettings(parent_project) {
+    : DrSettings(parent_project), DrNode(DrNodeType::World) {
 
     this->setKey(key);
     this->initializeSettings(world_type, new_world_name);
     this->addWorldVariables();
+
+    // Add initial Node Slots
+    switch(world_type) {
+        case DrWorldType::Physics_2D:
+            addInputSlot(Input_Slots::Start);
+            addOutputSlot(Output_Slots::UI);
+            break;
+        case DrWorldType::UI:
+            addInputSlot(Input_Slots::Load);
+            break;
+    }
+
+
+    // !!!!! #TEMP: Testing node building
+    int add_input =  Dr::RandomInt(0, 3);
+    int add_output = Dr::RandomInt(0, 4);
+    for (int i = 0; i < add_input; i++) {   addInputSlot("Test In " + std::to_string(i)); }
+    for (int i = 0; i < add_output; i++) {  addOutputSlot("Test Out " + std::to_string(i)); }
+    // !!!!!
+
 
     // Adds the initial "Start Stage"
     if (add_start_stage) {

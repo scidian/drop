@@ -9,11 +9,13 @@
 #include <QGraphicsItem>
 
 #include "core/dr_math.h"
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
+#include "project/entities/dr_node.h"
 #include "project/settings/settings.h"
 
 
@@ -47,11 +49,16 @@ QVariant WorldMapItem::itemChange(GraphicsItemChange change, const QVariant &val
         return  adjusted_pos;
     }
 
+
     // ********** If item position has changed, update it
     if (change == ItemScenePositionHasChanged) {
         // Value is new scene position (of upper left corner)
         QPointF new_pos = value.toPointF();
-
+        DrNode* node = dynamic_cast<DrNode*>(m_entity);
+        if (node != nullptr) {
+            QPointF new_center = mapToScene( boundingRect().center() );
+            node->setNodePosition( Dr::FromQPointF(new_center) );
+        }
         return new_pos;
     }
 

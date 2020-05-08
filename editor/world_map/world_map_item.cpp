@@ -10,6 +10,7 @@
 
 #include "core/colors/colors.h"
 #include "core/dr_debug.h"
+#include "core/dr_math.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
@@ -55,9 +56,22 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
     setTransform(t);
 
     // ***** Calculate Size
-    int new_height = (2 * c_row_height);
+    int slot_rows = 1;
+    DrNode* node = dynamic_cast<DrNode*>(m_entity);
+    if (node != nullptr) {
+        int input_count =  node->getInputSlots().size();
+        int output_count = node->getOutputSlots().size();
+        slot_rows = Dr::Max(slot_rows, input_count);
+        slot_rows = Dr::Max(slot_rows, output_count);
+    }
+    int new_height = ((1 + slot_rows) * c_row_height);
     this->m_width =  c_default_width;
     this->m_height = new_height;
+
+    // ***** Starting position
+    if (node != nullptr) {
+        this->setStartPosition( Dr::ToQPointF(node->getNodePosition()) );
+    }
 
     // ***** Apply Drop Shadow
     QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
@@ -93,19 +107,27 @@ void WorldMapItem::enableItemChangeFlags() {
 //####################################################################################
 // Outline of entire item
 QRectF WorldMapItem::boundingRect() const {
-    QRectF my_rect = QRectF(0, 0, m_width, m_height);
+    QRectF my_rect = QRectF(0, 0, m_width + c_node_buffer*2, m_height + c_node_buffer*2);
     return my_rect;
 }
 
 // Seems to define mouseOver events, and intersection events for Rubber Band Box
 QPainterPath WorldMapItem::shape() const {
     QPainterPath path;
-    path.addRoundedRect(boundingRect(), c_corner_radius, c_corner_radius);
+    path.addRoundedRect(boundingRect().adjusted(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer), c_corner_radius, c_corner_radius);
     return path;
     ///return QGraphicsPixmapItem::shape();         // Returns QPixmap as path
 }
 
 
+
+//####################################################################################
+//##    Event Overrides
+//####################################################################################
+// Force mouse press
+void WorldMapItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    QGraphicsItem::mousePressEvent(event);
+}
 
 
 

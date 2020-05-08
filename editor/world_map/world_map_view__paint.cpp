@@ -13,6 +13,7 @@
 #include "editor/preferences.h"
 #include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
+#include "project/dr_project.h"
 
 
 //####################################################################################
@@ -53,6 +54,14 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
 //##    PAINT: Draws grid lines
 //####################################################################################
 void WorldMapView::paintGrid(QPainter &painter) {
+    // Save current WorldMapView settings
+    QRect   viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
+    QRectF  visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
+    QPointF center_point = visible_scene_rect.center();
+    m_project->setOption(Project_Options::World_Map_Center,   DrPointF(center_point.x(), center_point.y()));
+    m_project->setOption(Project_Options::World_Map_Zoom,     m_zoom_scale);
+
+    // Turn off anti aliasing
     bool aliasing = painter.renderHints() & QPainter::Antialiasing;
     painter.setRenderHint(QPainter::Antialiasing, false);
 

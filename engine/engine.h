@@ -17,6 +17,7 @@ typedef std::map<std::string, EngineSignals>    SignalMapByName;
 typedef std::map<long,        EngineSignals>    SignalMapByThing;
 typedef std::map<long,        SignalMapByName>  SignalMapByThingName;
 
+
 //####################################################################################
 //##    DrEngine
 //##        Holds a project ready for use in an OpenGLWidget

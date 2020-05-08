@@ -17,16 +17,19 @@ const int   c_project_width =       800;            // Default Width  for Game
 const int   c_project_height =     1600;            // Default Height for Game
 
 
-enum class Project_Options {
-    Name                = 10,       // string,  Name of Current Project
-    File_Name_Path      = 11,       // string,  Full Path and File Name of Project, will save to this unless choose Save As
+enum class Project_Options {        //  Type    User Editable   Description
+    Name                = 10,       // string,  yes             Name of Current Project
+    File_Name_Path      = 11,       // string,  kind of         Full Path and File Name of Project, will save to this unless choose Save As
 
-    Current_World       = 20,       // long,    World currently displayed in editor
-    Current_Stage       = 21,       // long,    Scene currently displayed in editor
+    Current_World       = 20,       // long,    no              World currently displayed in editor
+    Current_Stage       = 21,       // long,    no              Scene currently displayed in editor
 
-    Orientation         = 30,       // int,     This Projects target device orientation (enum Orientation)
-    Width               = 31,       // long,    This Projects target device window width,  usually 800
-    Height              = 32,       // long,    This Projects target device window height, usually 1600
+    Orientation         = 30,       // int,     yes             This Projects target device orientation (enum Orientation)
+    Width               = 31,       // long,    yes             This Projects target device window width,  usually 800
+    Height              = 32,       // long,    yes             This Projects target device window height, usually 1600
+
+    World_Map_Center    = 40,       // pointf,  no              Saves center location of WorldMapView
+    World_Map_Zoom      = 41,       // double,  no              Saves zoom level of WorldMapView
 };
 
 enum class Orientation {

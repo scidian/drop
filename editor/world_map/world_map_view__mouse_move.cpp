@@ -113,19 +113,13 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
         }
     }
 
-    // ******************* If mouse moved while in translating mode, update tooltip
+    // ******************* If mouse moved while in translating mode, allow event to be passed to children
     if (m_view_mode == View_Mode::Translating) {
         if (m_allow_movement) {
-            // Stores last known item positions
-            for (auto item : scene()->selectedItems()) {
-                WorldMapItem *world_map_item = dynamic_cast<WorldMapItem*>(item);
-                if (world_map_item != nullptr)
-                    world_map_item->setLastPosition(world_map_item->scenePos());
-            }
             QGraphicsView::mouseMoveEvent(event);
         } else {
             // Event reset here is case we dont have persmission to move yet. This seems to help bug where
-            // QGraphicsItem::itemChange( ItemPositionChange ) will sometimes pass in (0, 0) to new_pos and reset items position
+            // QGraphicsItem::itemChange( ItemPositionChange ) will sometimes pass in (0, 0) to new_pos and screws with item position
             QGraphicsView::mouseReleaseEvent(event);
             QGraphicsView::mousePressEvent(event);
         }
@@ -138,7 +132,6 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
     if (m_view_mode != View_Mode::None) {
         update();
     }
-
 }
 
 

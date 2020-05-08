@@ -11,7 +11,9 @@
 #include <QScrollBar>
 #include <QTimer>
 
+#include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/preferences.h"
 #include "editor/view/editor_view.h"
 #include "project/entities/dr_thing.h"
 
