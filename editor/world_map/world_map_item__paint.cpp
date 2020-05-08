@@ -33,7 +33,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
     ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
 
-    // Turn off anti aliasing if necessary
+    // ***** Turn off anti aliasing if necessary
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
@@ -59,13 +59,23 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     // Original drawing using QtSource
     ///QGraphicsPixmapItem::paint(painter, my_option, widget);
 
-    QColor back_color;
+
+    // ***** Node Colors
+    double alpha = this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected;
+    QColor header_color_1 = Dr::ToQColor(Component_Colors::RGB_07_LightBlue);
+           header_color_1.setAlphaF(alpha);
+    QColor header_color_2 = Dr::ToQColor(Component_Colors::RGB_07_LightBlue).darker();
+           header_color_2.setAlphaF(alpha);
+    QColor back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+           back_color.setAlphaF(alpha);
+
 
     // ***** Draw Top Row of Node
-    back_color = Dr::ToQColor(Component_Colors::RGB_07_LightBlue);
-    back_color.setAlphaF(this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected);
+    QLinearGradient gradient(0, 0, 0, c_row_height);
+                    gradient.setColorAt(0.00, header_color_1);
+                    gradient.setColorAt(1.00, header_color_2);
+    painter->setBrush(gradient);
     painter->setPen(Qt::NoPen);
-    painter->setBrush(back_color);
 
     QPainterPath top, top1, top2;
     top1.addRoundedRect(boundingRect().left(), boundingRect().top(), boundingRect().width(), c_row_height, c_corner_radius, c_corner_radius);
@@ -79,10 +89,8 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
 
 
     // ***** Draw Bottom of Node
-    back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
-    back_color.setAlphaF(this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected);
-    painter->setPen(Qt::NoPen);
     painter->setBrush(back_color);
+    painter->setPen(Qt::NoPen);
 
     QPainterPath mid, mid1, mid2;
     mid1.addRoundedRect(boundingRect().left(), boundingRect().top()+c_row_height, boundingRect().width(), boundingRect().height()-c_row_height, c_corner_radius, c_corner_radius);

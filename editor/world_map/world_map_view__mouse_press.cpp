@@ -91,13 +91,11 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
                         // ***** Process press event for item movement (Translation)
                         if (origin_item_settings->isLocked() == false) {
-                            // Disable item changes before messing with Z-Order
-                            WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
-
                             // Stores last known position
-                            graphics_item->setStartX(graphics_item->scenePos().x());
-                            graphics_item->setStartY(graphics_item->scenePos().y());
+                            WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
+                            graphics_item->setLastPosition(graphics_item->scenePos());
 
+                            // Disable item changes before messing with Z-Order
                             bool flags_enabled_before = false;
                             if (graphics_item) {
                                 flags_enabled_before = graphics_item->itemChangeFlagsEnabled();

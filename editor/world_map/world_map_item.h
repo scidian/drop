@@ -36,16 +36,18 @@ private:
     IEditorRelay       *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
     DrSettings         *m_entity;                                       // Pointer to the base Entity (World, UI) in DrProject for this item (node)
-    long                m_entity_key    { c_no_key };                   // Project Key to the World / UI that this item (node) represents in DrProject
+    long                m_entity_key        { c_no_key };               // Project Key to the World / UI that this item (node) represents in DrProject
 
     // Local Variables
-    int                 m_width         { 256 };                        // Width  of Item
-    int                 m_height        { 256 };                        // Height of Item
+    int                 m_width             { 256 };                    // Width  of Item
+    int                 m_height            { 256 };                    // Height of Item
 
-    double              m_start_x       { 0 };                          // Stores the item position the first time it was loaded
-    double              m_start_y       { 0 };                          // Stores the item position the first time it was loaded
+    QPointF             m_start_position    { 0, 0 };                   // Desired starting position of Node
+    QPointF             m_last_position     { 0, 0 };                   // Stores the last known item position
 
-    bool                m_item_change_flags_enabled = false;            // Lets us know if we've enabled or disabled ItemChangeFlags
+    bool                m_item_change_flags_enabled     { false };      // Lets us know if we've enabled or disabled ItemChangeFlags
+
+
 
 public:
     // Constructor / Destructor
@@ -67,10 +69,10 @@ public:
 
     // Getters / Setters
     DrSettings*         getEntity()                         { return m_entity; }
-    double              startX()                            { return m_start_x; }
-    double              startY()                            { return m_start_y; }
-    void                setStartX(double x)                 { m_start_x = x; }
-    void                setStartY(double y)                 { m_start_y = y; }
+    QPointF             lastPosition()                      { return m_last_position; }
+    void                setLastPosition(QPointF position)   { m_last_position = position; }
+    QPointF             startPosition()                     { return m_start_position; }
+    void                setStartPosition(QPointF position)  { m_start_position = position; }
 
 };
 

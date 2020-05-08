@@ -38,11 +38,12 @@ QVariant WorldMapItem::itemChange(GraphicsItemChange change, const QVariant &val
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
         // Round new position to grid
-        QPointF rounded_center = m_editor_relay->roundPointToGrid( new_pos );
+        QPointF rounded_center = m_editor_relay->roundPointToGrid(new_pos);
 
         // Adjust new position based on rounding we just performed
         QPointF adjust_by =     new_pos - rounded_center;
         QPointF adjusted_pos =  new_pos - adjust_by;
+        ///qDebug() << "Last Pos: " << lastPosition() << ", New Pos: " << new_pos << ", Rounded: " << rounded_center << ", Adjusted: " << adjusted_pos;
         return  adjusted_pos;
     }
 

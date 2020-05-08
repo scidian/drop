@@ -12,6 +12,7 @@
 #include "core/dr_string.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
+#include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_view.h"
 #include "project/dr_project.h"
 
@@ -115,7 +116,18 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
     // ******************* If mouse moved while in translating mode, update tooltip
     if (m_view_mode == View_Mode::Translating) {
         if (m_allow_movement) {
+            // Stores last known item positions
+            for (auto item : scene()->selectedItems()) {
+                WorldMapItem *world_map_item = dynamic_cast<WorldMapItem*>(item);
+                if (world_map_item != nullptr)
+                    world_map_item->setLastPosition(world_map_item->scenePos());
+            }
             QGraphicsView::mouseMoveEvent(event);
+        } else {
+            // Event reset here is case we dont have persmission to move yet. This seems to help bug where
+            // QGraphicsItem::itemChange( ItemPositionChange ) will sometimes pass in (0, 0) to new_pos and reset items position
+            QGraphicsView::mouseReleaseEvent(event);
+            QGraphicsView::mousePressEvent(event);
         }
     } else {
         QGraphicsView::mouseMoveEvent(event);

@@ -327,6 +327,11 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
                 m_tool_tip->startToolTip(View_Mode::Translating, m_origin, my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
             else
                 m_tool_tip->updateToolTipData( my_scene->getSelectionTransform().map(my_scene->getSelectionBox().center()) );
+        } else {
+            // Event reset here is case we dont have persmission to move yet. This seems to help bug where
+            // QGraphicsItem::itemChange( ItemPositionChange ) will sometimes pass in (0, 0) to new_pos and reset items position
+            QGraphicsView::mouseReleaseEvent(event);
+            QGraphicsView::mousePressEvent(event);
         }
     } else {
         QGraphicsView::mouseMoveEvent(event);

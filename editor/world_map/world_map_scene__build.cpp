@@ -42,7 +42,7 @@ WorldMapItem* WorldMapScene::addItemToSceneFromEntity(DrSettings *entity) {
 
     // Add item to scene, set starting position
     this->addItem(graphics_item);
-    this->setPositionByOrigin(graphics_item, Position_Flags::Center, graphics_item->startX(), graphics_item->startY());
+    this->setPositionByOrigin(graphics_item, Position_Flags::Center, graphics_item->startPosition().x(), graphics_item->startPosition().y());
 
     // Create a temporary group and destroy it, this causes some unknown but importatnt changes to the items
     // sceneTransform that we really seem to need before we try to move a scaled item with View_Mode::Translating

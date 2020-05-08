@@ -197,7 +197,7 @@ double      FormMain::currentViewZoom() {
 QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
     if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->roundToGrid(point_in_scene); }
     else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->roundToGrid(point_in_scene); }
-    return QPointF(0.0, 0.0);
+    return point_in_scene;
 }
 
 // Fires a single shot timer to update view coordinates after event calls are done,
