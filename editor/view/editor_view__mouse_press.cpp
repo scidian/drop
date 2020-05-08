@@ -177,12 +177,12 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
                             m_view_mode = View_Mode::Translating;
                             m_origin_item_start_pos = m_origin_item->scenePos();
 
-                            // Store starting selection center for snapping calculations
+                            // Store starting selection center for snapping calculations, also set during mouseMoveEvent()
                             ///if (m_allow_movement) {
-                                QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
-                                my_scene->setPreMoveSelectionCenter(pre_center);
-                                my_scene->setHasCalculatedAdjustment(false);
-                                QGraphicsView::mousePressEvent(event);
+                                ///QPointF pre_center = my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center() );
+                                ///my_scene->setPreMoveSelectionCenter(pre_center);
+                                ///my_scene->setHasCalculatedAdjustment(false);
+                                ///QGraphicsView::mousePressEvent(event);
                             ///}
 
                             // Force itemChange signals on items

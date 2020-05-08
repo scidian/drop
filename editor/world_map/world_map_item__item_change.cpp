@@ -37,16 +37,12 @@ QVariant WorldMapItem::itemChange(GraphicsItemChange change, const QVariant &val
         // Not snapping to grid? Go ahead and return event position
         if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
-        // ***** Calculate new center location based on starting center of item and difference between starting scenePos() and new passed in new_pos
-        QPointF old_center = QPointF(startX(), startY());
-        QPointF new_center = old_center - (scenePos() - new_pos);
+        // Round new position to grid
+        QPointF rounded_center = m_editor_relay->roundPointToGrid( new_pos );
 
-        // Align new desired center to grid
-        QPointF rounded_center = m_editor_relay->roundPointToGrid( new_center );
-
-        // Adjust new position based on adjustment to grid we just performed
-        QPointF adjust_by = new_center - rounded_center;
-        QPointF adjusted_pos = new_pos - adjust_by;
+        // Adjust new position based on rounding we just performed
+        QPointF adjust_by =     new_pos - rounded_center;
+        QPointF adjusted_pos =  new_pos - adjust_by;
         return  adjusted_pos;
     }
 
@@ -62,11 +58,15 @@ QVariant WorldMapItem::itemChange(GraphicsItemChange change, const QVariant &val
     if (change == ItemSelectedHasChanged) {
         // Value is new scene position (of upper left corner)
         bool new_is_selected = value.toBool();
+
+        // Set selected item to top of z order
         if (new_is_selected) {
             setZValue(1);
-            ///for (auto item : this->collidingItems(Qt::IntersectsItemBoundingRect)) { item->stackBefore(this); }
+
+        // Return non selected item back to 0 with other nodes, ensure it stays on top of those around it
         } else {
             setZValue(0);
+            for (auto item : this->collidingItems(Qt::IntersectsItemBoundingRect)) { item->stackBefore(this); }
         }
         return new_is_selected;
     }
