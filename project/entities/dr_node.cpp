@@ -32,12 +32,30 @@ DrNode::~DrNode() { }
 //####################################################################################
 //##    Signals
 //####################################################################################
-void DrNode::addInputSlot(std::string signal_name, long from_key) {
-    m_input_slots[signal_name] = from_key;
+void DrNode::addInputSlot(std::string slot_name, long from_key) {
+    for (auto &slot : m_input_slots) {
+        if (slot.name == slot_name) {
+            slot.key = from_key;
+            return;
+        }
+    }
+    DrSlot slot;
+    slot.name = slot_name;
+    slot.key =  from_key;
+    m_input_slots.push_back(slot);
 }
 
-void DrNode::addOutputSlot(std::string signal_name, long to_key) {
-    m_output_slots[signal_name] = to_key;
+void DrNode::addOutputSlot(std::string slot_name, long to_key) {
+    for (auto &slot : m_output_slots) {
+        if (slot.name == slot_name) {
+            slot.key = to_key;
+            return;
+        }
+    }
+    DrSlot slot;
+    slot.name = slot_name;
+    slot.key =  to_key;
+    m_output_slots.push_back(slot);
 }
 
 

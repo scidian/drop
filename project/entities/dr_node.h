@@ -14,8 +14,14 @@
 #include "project/constants_signals.h"
 #include "project/enums_entity_types.h"
 
+// Local Struct
+struct DrSlot {
+    std::string     name        { "" };
+    long            key         { c_no_key };
+};
+
 // Type Definitions
-typedef std::map<std::string, long>    SlotMap;
+typedef std::list<DrSlot>       SlotMap;
 
 
 //####################################################################################
@@ -26,12 +32,12 @@ class DrNode
 {
 private:
     // Slot Variables
-    std::map<std::string, long>     m_input_slots;                              // List of input slots
-    std::map<std::string, long>     m_output_slots;                             // List of output slots
+    std::list<DrSlot>           m_input_slots;                              // List of input slots
+    std::list<DrSlot>           m_output_slots;                             // List of output slots
 
     // Node Variables
-    DrNodeType                      m_node_type;                                // Type of this DrNode
-    DrPointF                        m_node_position     { 0, 0 };               // Position of this DrNode
+    DrNodeType                  m_node_type;                                // Type of this DrNode
+    DrPointF                    m_node_position     { 0, 0 };               // Position of this DrNode
 
 public:
     // Constructor / Destructor
@@ -46,8 +52,8 @@ public:
     // Slots
     SlotMap&            getInputSlots()                 { return m_input_slots; }
     SlotMap&            getOutputSlots()                { return m_output_slots; }
-    void                addInputSlot( std::string signal_name, long from_key = c_no_key);
-    void                addOutputSlot(std::string signal_name, long to_key = c_no_key);
+    void                addInputSlot( std::string slot_name, long from_key = c_no_key);
+    void                addOutputSlot(std::string slot_name, long to_key = c_no_key);
 
 };
 

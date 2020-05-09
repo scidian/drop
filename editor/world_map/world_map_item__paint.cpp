@@ -136,28 +136,48 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     // ********** Slots
     DrNode* node = dynamic_cast<DrNode*>(m_entity);
     if (node != nullptr) {
+        // Slot Circles
         QPen slot_pen(slot_border, 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
         painter->setPen( slot_pen );
         painter->setBrush( slot_color );
 
-        // Input
+        // Input Slot Circles
         int start_y = box.top() + (c_row_height * 2) - (c_row_height/2);
-        for (auto slot : node->getInputSlots()) {
+        for (size_t count = 0; count < node->getInputSlots().size(); ++count) {
             painter->drawEllipse(box.left()-(c_slot_size*0.5), start_y - (c_slot_size/2), c_slot_size, c_slot_size);
             start_y += c_row_height;
         }
 
-        // Output
+        // Output Slot Circles
         start_y = box.top() + (c_row_height * 2) - (c_row_height/2);
-        for (auto slot : node->getOutputSlots()) {
+        for (size_t count = 0; count < node->getOutputSlots().size(); ++count) {
             painter->drawEllipse(box.left() + box.width() - (c_slot_size*0.5), start_y - (c_slot_size/2), c_slot_size, c_slot_size);
             start_y += c_row_height;
         }
+
+        // Slot Text
+        painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
+        int text_flags_in =  Qt::AlignVCenter | Qt::AlignLeft;
+        int text_flags_out = Qt::AlignVCenter | Qt::AlignRight;
+
+        // Input Slot Text
+        start_y = box.top() + (c_row_height * 1);
+        for (auto &slot : node->getInputSlots()) {
+            QString slot_text = QString::fromStdString(slot.name);
+                    slot_text.replace("_", "");
+            painter->drawText(box.left()+c_slot_size, start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_in, slot_text);
+            start_y += c_row_height;
+        }
+
+        // Output Slot Text
+        start_y = box.top() + (c_row_height * 1);
+        for (auto &slot : node->getOutputSlots()) {
+            QString slot_text = QString::fromStdString(slot.name);
+                    slot_text.replace("_", "");
+            painter->drawText(box.left()+(box.width()/2)+c_slot_size, start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_out, slot_text);
+            start_y += c_row_height;
+        }
     }
-
-
-
-
 
 
 
