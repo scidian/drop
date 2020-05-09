@@ -39,11 +39,11 @@ void FormMain::menuNew(bool test_project) {
     }
 
     // Set up new Project
-    setFormMainMode( Form_Main_Mode::Clear );
+    setEditorMode( Editor_Mode::Clear );
     Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, c_project_width, c_project_height, test_project);
     treeAssetEditor->clear();
     treeProjectEditor->clear();
-    setFormMainMode( Form_Main_Mode::World_Editor );            // Causes FormMain to rebuild itself
+    setEditorMode( Editor_Mode::World_Editor );                     // Causes FormMain to rebuild itself
 }
 
 
@@ -67,13 +67,13 @@ void FormMain::menuOpen() {
     QString open_file = QFileDialog::getOpenFileName(this, caption, directory, filter, &selected, dialog_options);
 
     if (!open_file.isEmpty()) {
-        setFormMainMode( Form_Main_Mode::Clear );
+        setEditorMode( Editor_Mode::Clear );
         m_project->clearProject();
         Dr::AddBuiltInImages(m_project);
         Dr::OpenProjectFromFile(m_project, open_file.toStdString());
         treeAssetEditor->clear();
         treeProjectEditor->clear();
-        setFormMainMode( Form_Main_Mode::World_Editor );
+        setEditorMode( Editor_Mode::World_Editor );
     }
 }
 

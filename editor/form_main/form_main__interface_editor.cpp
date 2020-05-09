@@ -53,13 +53,20 @@
 //      Map_View,
 //}
 
-void FormMain::setEditorMode(Form_Main_Mode new_mode) {
-    if (new_mode == Form_Main_Mode::World_Map) {
-        this->setFormMainMode(Form_Main_Mode::World_Map);
-    } else if (new_mode == Form_Main_Mode::World_Editor) {
-        this->setFormMainMode(Form_Main_Mode::World_Editor);
-    } else if (new_mode == Form_Main_Mode::UI_Editor) {
-        this->setFormMainMode(Form_Main_Mode::Clear);
+Editor_Mode FormMain::getEditorMode() { return m_current_mode; }
+void FormMain::setEditorMode(Editor_Mode new_mode) {
+    switch (new_mode) {
+        case Editor_Mode::World_Map:            this->rebuildFormMain(Editor_Mode::World_Map);          break;
+        case Editor_Mode::World_Editor:         this->rebuildFormMain(Editor_Mode::World_Editor);       break;
+        case Editor_Mode::Clear:                this->rebuildFormMain(Editor_Mode::Clear);              break;
+
+        case Editor_Mode::Animation_Editor:
+        case Editor_Mode::UI_Editor:
+        case Editor_Mode::Stage_Map:
+            this->rebuildFormMain(Editor_Mode::Clear);
+            break;
+        case Editor_Mode::Program_Loading:
+            break;
     }
 }
 
@@ -92,7 +99,7 @@ void FormMain::buildProjectTree() {
 
 // Fires an Undo stack command to change Stages within Scene
 void FormMain::buildScene(long stage_key) {
-    if (m_current_mode == Form_Main_Mode::World_Editor) {
+    if (m_current_mode == Editor_Mode::World_Editor) {
         // Rebuild existing Stage
         if (stage_key == c_same_key) {
             emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), sceneEditor->getCurrentStageKeyShown());
@@ -101,7 +108,7 @@ void FormMain::buildScene(long stage_key) {
             emit newStageSelected(m_project, sceneEditor, sceneEditor->getCurrentStageKeyShown(), stage_key);
         }
 
-    } else if (m_current_mode == Form_Main_Mode::World_Map) {
+    } else if (m_current_mode == Editor_Mode::World_Map) {
         sceneWorldMap->buildScene();
     }
 }
@@ -175,50 +182,50 @@ void FormMain::updateInspectorEnabledProperties() {
 
 DrProject*  FormMain::currentProject()                          { return m_project; }
 double      FormMain::currentViewGridAngle() {
-    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentGridAngle(); }
-    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentGridAngle(); }
+    if      (m_current_mode == Editor_Mode::World_Editor)       { return viewEditor->currentGridAngle(); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { return viewWorldMap->currentGridAngle(); }
     return 0;
 }
 QPointF     FormMain::currentViewGridScale() {
-    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentGridScale(); }
-    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentGridScale(); }
+    if      (m_current_mode == Editor_Mode::World_Editor)       { return viewEditor->currentGridScale(); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { return viewWorldMap->currentGridScale(); }
     return QPointF(1.0, 1.0);
 }
 View_Mode   FormMain::currentViewMode() {
-    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentViewMode(); }
-    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentViewMode(); }
+    if      (m_current_mode == Editor_Mode::World_Editor)       { return viewEditor->currentViewMode(); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { return viewWorldMap->currentViewMode(); }
     return View_Mode::None;
 }
 double      FormMain::currentViewZoom() {
-    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->currentZoomLevel(); }
-    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->currentZoomLevel(); }
+    if      (m_current_mode == Editor_Mode::World_Editor)       { return viewEditor->currentZoomLevel(); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { return viewWorldMap->currentZoomLevel(); }
     return 1.0;
 }
 QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
-    if      (m_current_mode == Form_Main_Mode::World_Editor)    { return viewEditor->roundToGrid(point_in_scene); }
-    else if (m_current_mode == Form_Main_Mode::World_Map)       { return viewWorldMap->roundToGrid(point_in_scene); }
+    if      (m_current_mode == Editor_Mode::World_Editor)       { return viewEditor->roundToGrid(point_in_scene); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { return viewWorldMap->roundToGrid(point_in_scene); }
     return point_in_scene;
 }
 
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewTimer(QPointF center_point) {
-    if (m_current_mode == Form_Main_Mode::World_Editor) {
+    if (m_current_mode == Editor_Mode::World_Editor) {
         viewEditor->centerOn(center_point);
         viewEditor->setHasShownAScene(true);
-    } else if (m_current_mode == Form_Main_Mode::World_Map) {
+    } else if (m_current_mode == Editor_Mode::World_Map) {
         viewWorldMap->centerOn(center_point);
     }
 }
 void FormMain::viewCenterOnPoint(QPointF center_point) {
-    if (m_current_mode == Form_Main_Mode::World_Editor) {
-        viewEditor->centerOn(center_point);
-    } else if (m_current_mode == Form_Main_Mode::World_Map) {
-        viewWorldMap->centerOn(center_point);
-    }
+    if      (m_current_mode == Editor_Mode::World_Editor)       { viewEditor->centerOn(center_point); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { viewWorldMap->centerOn(center_point); }
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
-void FormMain::viewZoomToScale(double zoom_scale) { viewEditor->zoomToScale(zoom_scale); }
+void FormMain::viewZoomToScale(double zoom_scale) {
+    if      (m_current_mode == Editor_Mode::World_Editor)       { viewEditor->zoomToScale(zoom_scale); }
+    else if (m_current_mode == Editor_Mode::World_Map)          { viewWorldMap->zoomToScale(zoom_scale); }
+}
 
 
 // Call to change the Advisor

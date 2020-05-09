@@ -62,7 +62,7 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
     initializeFormMain();
 
     // ********** Loads project into FormMain
-    setFormMainMode( Form_Main_Mode::World_Editor );
+    setEditorMode( Editor_Mode::World_Editor );
 }
 
 // Destructor Deletes all Widgets so that it can then safely delete Project
@@ -76,9 +76,9 @@ FormMain::~FormMain() {
     sceneEditor->deleteLater();
 
     // Delete widgets not currently attached to main form
-    if (m_current_mode != Form_Main_Mode::Clear)            widgetCentralClear->deleteLater();
-    if (m_current_mode != Form_Main_Mode::World_Editor)     widgetCentralEditor->deleteLater();
-    if (m_current_mode != Form_Main_Mode::World_Map)        widgetCentralWorldMap->deleteLater();
+    if (m_current_mode != Editor_Mode::Clear)           widgetCentralClear->deleteLater();
+    if (m_current_mode != Editor_Mode::World_Editor)    widgetCentralEditor->deleteLater();
+    if (m_current_mode != Editor_Mode::World_Map)       widgetCentralWorldMap->deleteLater();
     delete m_project;
 }
 
@@ -116,7 +116,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
     ///     }
     // !!!!! UPDATE: Fixed in Qt 5.14
 
-    if (m_current_mode == Form_Main_Mode::World_Editor) {
+    if (m_current_mode == Editor_Mode::World_Editor) {
         buildAssetTree();
         treeProjectEditor->buildProjectTree(true);
         buildInspector( treeInspector->getSelectedKeys(), true );
@@ -136,9 +136,9 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
         if (key_event->key() == Qt::Key::Key_Space) {
-            if (m_current_mode == Form_Main_Mode::World_Editor) {
+            if (m_current_mode == Editor_Mode::World_Editor) {
                 if (viewEditor->hasFocus() == false) viewEditor->spaceBarDown();
-            } else if (m_current_mode == Form_Main_Mode::World_Map) {
+            } else if (m_current_mode == Editor_Mode::World_Map) {
                 if (viewWorldMap->hasFocus() == false) viewWorldMap->spaceBarDown();
             }
         }
@@ -147,9 +147,9 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyRelease) {
         QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
         if (key_event->key() == Qt::Key::Key_Space) {
-            if (m_current_mode == Form_Main_Mode::World_Editor) {
+            if (m_current_mode == Editor_Mode::World_Editor) {
                 if (viewEditor->hasFocus() == false) viewEditor->spaceBarUp();
-            } else if (m_current_mode == Form_Main_Mode::World_Map) {
+            } else if (m_current_mode == Editor_Mode::World_Map) {
                 if (viewWorldMap->hasFocus() == false) viewWorldMap->spaceBarUp();
             }
         }

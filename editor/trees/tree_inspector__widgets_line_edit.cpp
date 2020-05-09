@@ -42,8 +42,12 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     getHoverHandler()->attachToHoverHandler(edit, property);
     addToWidgetList(edit);
 
-    connect (edit,  &QLineEdit::editingFinished,
-             this, [this, property, edit] () { updateSettingsFromNewValue( property->getCompPropPair(), edit->text().toStdString() ); });
+    connect (edit, &QLineEdit::editingFinished,
+            this, [this, property, edit] () {
+                if (property != nullptr && edit != nullptr) {
+                    updateSettingsFromNewValue( property->getCompPropPair(), edit->text().toStdString() );
+                }
+            });
 
     return edit;
 }

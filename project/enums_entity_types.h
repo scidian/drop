@@ -69,12 +69,15 @@ enum class DrNodeType {
     Timed_Pause,
     World,
 };
+enum class DrSlotType {     Input,  Output,     };
+
 
 // ***** Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis
 enum class DrWorldType {
     Physics_2D,
     UI,
 };
+
 
 // ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
 enum class DrThingType {

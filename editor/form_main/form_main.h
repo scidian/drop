@@ -76,7 +76,7 @@ private:
     DrProject              *m_project = nullptr;                                    // BASE DEFINITION of DrProject!!!!! Holds current open game project
     DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
 
-    Form_Main_Mode          m_current_mode = Form_Main_Mode::Program_Loading;       // Holds what state FormMain is in
+    Editor_Mode             m_current_mode = Editor_Mode::Program_Loading;          // Holds what state FormMain is in
 
 
     // ***** Menu Widgets
@@ -161,7 +161,8 @@ public:
     virtual EditorView*         getStageView() override     { return viewEditor; }
     virtual WorldMapView*       getWorldMapView() override  { return viewWorldMap; }
 
-    virtual void        setEditorMode(Form_Main_Mode new_mode) override;
+    virtual Editor_Mode         getEditorMode() override;
+    virtual void                setEditorMode(Editor_Mode new_mode) override;
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;
@@ -202,7 +203,7 @@ private:
     void        changePalette(Color_Scheme new_color_scheme);
     QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
     void        initializeFormMain();
-    void        setFormMainMode(Form_Main_Mode new_mode);
+    void        rebuildFormMain(Editor_Mode new_mode);
 
     // File Menu Functions
     bool        askShouldSave(QString before_what);
@@ -225,7 +226,7 @@ private:
     QToolButton*    createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h,
                                         bool checkable = false, bool enabled = true);
     QLabel*         createToolbarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);
-    void            setToolbar(Form_Main_Mode new_mode);
+    void            setToolbar(Editor_Mode new_mode);
     void            updateToolbar();
 
 private slots:

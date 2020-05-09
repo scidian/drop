@@ -11,9 +11,12 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
+#include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
+#include "engine/debug_flags.h"
 #include "project/dr_project.h"
+#include "project/entities/dr_node.h"
 
 
 //####################################################################################
@@ -46,6 +49,8 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
     // Initiate QPainter object
     QPainter painter(viewport());
 
+    // Paint Node Lines
+    paintNodeLines(painter);
 }
 
 
@@ -55,11 +60,15 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
 //####################################################################################
 void WorldMapView::paintGrid(QPainter &painter) {
     // Save current WorldMapView settings
-    QRect   viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
-    QRectF  visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
-    QPointF center_point = visible_scene_rect.center();
-    m_project->setOption(Project_Options::World_Map_Center,   DrPointF(center_point.x(), center_point.y()));
-    m_project->setOption(Project_Options::World_Map_Zoom,     m_zoom_scale);
+    if (my_scene && my_scene->needRebuild() == false) {
+        if (m_editor_relay->getEditorMode() == Editor_Mode::World_Map && Dr::CheckDoneLoading()) {
+            QRect   viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
+            QRectF  visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
+            QPointF center_point = visible_scene_rect.center();
+            m_project->setOption(Project_Options::World_Map_Center,   DrPointF(center_point.x(), center_point.y()));
+            m_project->setOption(Project_Options::World_Map_Zoom,     m_zoom_scale);
+        }
+    }
 
     // Turn off anti aliasing
     bool aliasing = painter.renderHints() & QPainter::Antialiasing;
@@ -95,6 +104,68 @@ void WorldMapView::paintGrid(QPainter &painter) {
 
     painter.setRenderHint(QPainter::Antialiasing, aliasing);
 }
+
+
+
+//####################################################################################
+//##    PAINT: Draws Node Lines
+//####################################################################################
+void WorldMapView::paintNodeLines(QPainter &painter) {
+    // ***** Turn on anti aliasing if necessary
+    if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    }
+
+    // ***** Set up QPainter
+    QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));
+    QPen    line_pen = QPen(line_color, 2 * m_zoom_scale);
+    painter.setBrush(line_color);
+    painter.setPen(line_pen);
+
+    // ***** Get WorldScene
+    WorldMapScene *world_scene = dynamic_cast<WorldMapScene*>(scene());
+    if (world_scene == nullptr) return;
+
+    // ***** Go through each Node and draw output lines
+    QList<WorldMapItem*> map_items = world_scene->worldMapItems();
+    for (auto map_item : map_items) {
+        DrNode *node = dynamic_cast<DrNode*>(map_item->getEntity());
+        if (node == nullptr) continue;
+
+        int slot_number = 0;
+        for (auto &node : node->getOutputSlots()) {
+            WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, node.connected_key);
+            if (connected == nullptr) continue;
+
+            QRectF  rect_out =  map_item->slotRect(DrSlotType::Output, slot_number);
+            QRectF  rect_in =   connected->slotRect(DrSlotType::Input, slot_number);
+            QPointF point_out = mapFromScene(map_item->pos()  + rect_out.center());
+            QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
+
+            double radius = c_slot_size * m_zoom_scale * 0.35;
+            painter.drawEllipse(point_out, radius, radius);
+            painter.drawEllipse(point_in,  radius, radius);
+            painter.drawLine(point_out, point_in );
+
+            slot_number++;
+        }
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

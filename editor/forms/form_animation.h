@@ -71,7 +71,8 @@ public:
     virtual EditorView*         getStageView() override     { return viewEditor; }
     virtual WorldMapView*       getWorldMapView() override  { return nullptr; }
 
-    virtual void        setEditorMode(Form_Main_Mode new_mode) override;
+    virtual Editor_Mode         getEditorMode() override;
+    virtual void                setEditorMode(Editor_Mode new_mode) override;
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;

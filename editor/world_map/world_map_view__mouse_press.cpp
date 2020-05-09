@@ -59,7 +59,7 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                 DrWorld *world = dynamic_cast<DrWorld*>(origin_item_settings);
                 m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
                 m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() });
-                m_editor_relay->setEditorMode(Form_Main_Mode::World_Editor);
+                m_editor_relay->setEditorMode(Editor_Mode::World_Editor);
             }
         }
         m_wants_double_click = false;

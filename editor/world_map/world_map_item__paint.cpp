@@ -6,6 +6,7 @@
 //
 //
 #include <QGraphicsPixmapItem>
+#include <QStyleOptionGraphicsItem>
 #include <QWidget>
 
 #include "core/colors/colors.h"
@@ -31,11 +32,9 @@ const   double  c_transparent_is_selected =     1.00;
 //####################################################################################
 //##    Custom Paint Handling
 //####################################################################################
-void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
-    ///if (option->state & QStyle::State_Selected)  { fillColor = QColor(Qt::red); } //m_color.dark(150); }              // If selected
-    ///if (option->state & QStyle::State_MouseOver) { fillColor = QColor(Qt::gray); } //fillColor.light(125); }          // If mouse is over
+void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
 
-    // ***** Turn off anti aliasing if necessary
+    // ***** Turn on anti aliasing if necessary
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
@@ -53,13 +52,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     // Set paint option to "not selected" or paint routine will draw dotted lines around item
     ///QStyleOptionGraphicsItem my_option(*option);
     ///my_option.state &= ~QStyle::State_Selected;
-
-
-    // ***** Apply the proper opacity to this item and either paint the pixmap, or paint a pattern representation of the item
-    double transparency = 1.0;
-    if (Dr::FuzzyCompare(painter->opacity(), transparency) == false) painter->setOpacity(transparency);
-
-    // Our custom pixmap painting to draw slightly larger and reduce black lines between images
+    // Custom pixmap painting
     ///painter->setRenderHint(QPainter::SmoothPixmapTransform, (this->transformationMode() == Qt::SmoothTransformation));
     ///QRectF dest = this->pixmap().rect();
     ///painter->drawPixmap(dest, this->pixmap(), this->pixmap().rect());
@@ -67,8 +60,12 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     ///QGraphicsPixmapItem::paint(painter, my_option, widget);
 
 
-    // ***** Node Colors
-    double alpha = this->isSelected() ? c_transparent_is_selected : c_transparent_not_selected;
+    // ***** Alpha based on selected / mouse over
+    double alpha = c_transparent_not_selected;
+    if (option->state & QStyle::State_Selected)  alpha = c_transparent_is_selected;             // If selected
+    if (option->state & QStyle::State_MouseOver) alpha = c_transparent_is_selected;             // If mouse is over
+
+    // Node Colors
     QColor header_color_1 = Dr::ToQColor(Component_Colors::RGB_07_LightBlue);
            header_color_1.setAlphaF(alpha);
     QColor header_color_2 = Dr::ToQColor(Component_Colors::RGB_07_LightBlue).darker();
@@ -95,7 +92,11 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     painter->drawPath(top);
 
     painter->setFont(Dr::CustomFontLarger());
-    painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
+    if (Dr::GetColorScheme() == Color_Scheme::Light) {
+        painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Header_Text) : Dr::GetColor(Window_Colors::Header_Text)));
+    } else {
+        painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
+    }
     painter->drawText(box.left(), box.top(), box.width(), c_row_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
 
 
@@ -142,17 +143,15 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         painter->setBrush( slot_color );
 
         // Input Slot Circles
-        int start_y = box.top() + (c_row_height * 2) - (c_row_height/2);
         for (size_t count = 0; count < node->getInputSlots().size(); ++count) {
-            painter->drawEllipse(box.left()-(c_slot_size*0.5), start_y - (c_slot_size/2), c_slot_size, c_slot_size);
-            start_y += c_row_height;
+            QRectF slot = slotRect(DrSlotType::Input, int(count));
+            painter->drawEllipse(slot);
         }
 
         // Output Slot Circles
-        start_y = box.top() + (c_row_height * 2) - (c_row_height/2);
         for (size_t count = 0; count < node->getOutputSlots().size(); ++count) {
-            painter->drawEllipse(box.left() + box.width() - (c_slot_size*0.5), start_y - (c_slot_size/2), c_slot_size, c_slot_size);
-            start_y += c_row_height;
+            QRectF slot = slotRect(DrSlotType::Output, int(count));
+            painter->drawEllipse(slot);
         }
 
         // Slot Text
@@ -161,28 +160,41 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         int text_flags_out = Qt::AlignVCenter | Qt::AlignRight;
 
         // Input Slot Text
-        start_y = box.top() + (c_row_height * 1);
+        int input_start_y = box.top() + (c_row_height * 1);
         for (auto &slot : node->getInputSlots()) {
-            QString slot_text = QString::fromStdString(slot.name);
+            QString slot_text = QString::fromStdString(slot.slot_name);
                     slot_text.replace("_", "");
-            painter->drawText(box.left()+c_slot_size, start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_in, slot_text);
-            start_y += c_row_height;
+            painter->drawText(box.left()+c_slot_size, input_start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_in, slot_text);
+            input_start_y += c_row_height;
         }
 
         // Output Slot Text
-        start_y = box.top() + (c_row_height * 1);
+        int output_start_y = box.top() + (c_row_height * 1);
         for (auto &slot : node->getOutputSlots()) {
-            QString slot_text = QString::fromStdString(slot.name);
+            QString slot_text = QString::fromStdString(slot.slot_name);
                     slot_text.replace("_", "");
-            painter->drawText(box.left()+(box.width()/2)+c_slot_size, start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_out, slot_text);
-            start_y += c_row_height;
+            painter->drawText(box.left()+(box.width()/2)+c_slot_size, output_start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_out, slot_text);
+            output_start_y += c_row_height;
         }
     }
 
+}   // End WorldMapItem::paint()
 
 
-
+//####################################################################################
+//##    Returns Slot Circle Rect for a particular slot, slot_number should start at 0
+//####################################################################################
+QRectF WorldMapItem::slotRect(DrSlotType slot_type, int slot_number) {
+    int left = 0;
+    int top  = (boundingRect().top() + c_node_buffer) + (c_row_height * (1.5 + static_cast<double>(slot_number)));
+        top -= (c_slot_size/2);
+    switch (slot_type) {
+        case DrSlotType::Input:     left = (boundingRect().top()   + c_node_buffer) - (c_slot_size*0.5);    break;
+        case DrSlotType::Output:    left = (boundingRect().width() - c_node_buffer) - (c_slot_size*0.5);    break;
+    }
+    return QRectF(left, top, c_slot_size, c_slot_size);
 }
+
 
 
 

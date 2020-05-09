@@ -69,17 +69,17 @@ void FormMain::buildToolBar() {
         connect(buttonsGroupMode, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
 
         tool = createToolbarButton(QStringLiteral("buttonModeWorldMap"), Advisor_Info::Mode_Map, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Form_Main_Mode::World_Map));
+        buttonsGroupMode->addButton(tool, int(Editor_Mode::World_Map));
         toolbarLayoutMode->addWidget(tool);
         toolbarLayoutMode->addWidget(createToolbarSpacer(c_button_size_h - 2));
 
         tool = createToolbarButton(QStringLiteral("buttonModeWorldEdit"), Advisor_Info::Mode_Editor, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Form_Main_Mode::World_Editor));
+        buttonsGroupMode->addButton(tool, int(Editor_Mode::World_Editor));
         toolbarLayoutMode->addWidget(tool);
         toolbarLayoutMode->addWidget(createToolbarSpacer(c_button_size_h - 2));
 
         tool = createToolbarButton(QStringLiteral("buttonModeUIEdit"), Advisor_Info::Mode_UI, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Form_Main_Mode::UI_Editor));
+        buttonsGroupMode->addButton(tool, int(Editor_Mode::UI_Editor));
         toolbarLayoutMode->addWidget(tool);
 
 

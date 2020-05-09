@@ -94,6 +94,33 @@ void WorldMapScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_poin
 }
 
 
+//####################################################################################
+//##    Return scene()->items() as list of WorldMapItems
+//####################################################################################
+QList<WorldMapItem*> WorldMapScene::worldMapItems() {
+    QList<WorldMapItem*> world_items;
+    world_items.clear();
+
+    for (auto item : items()) {
+        WorldMapItem *world_item = dynamic_cast<WorldMapItem*>(item);
+        if (world_item != nullptr) world_items.push_back(world_item);
+    }
+    return world_items;
+}
+
+//####################################################################################
+//##    Returns WorldMapItem from list with the designated key
+//####################################################################################
+WorldMapItem* WorldMapScene::worldMapItemWithKey(QList<WorldMapItem*> &world_items, long entity_key) {
+    if (entity_key == c_no_key) return nullptr;
+    for (auto world_item : world_items) {
+        if (world_item->getEntity()->getKey() == entity_key) return world_item;
+    }
+    return nullptr;
+}
+
+
+
 
 
 

@@ -69,6 +69,9 @@ public:
     void                    enableItemChangeFlags();
     bool                    itemChangeFlagsEnabled()        { return m_item_change_flags_enabled; }
 
+    // Slot Functions
+    QRectF                  slotRect(DrSlotType slot_type, int slot_number);
+
     // Getters / Setters
     DrSettings*         getEntity()                         { return m_entity; }
     QPointF             startPosition()                     { return m_start_position; }

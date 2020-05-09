@@ -41,7 +41,11 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
 //##    Returns a std::pair of this properties parent component key, and this properties key
 //####################################################################################
 ComponentProperty DrProperty::getCompPropPair() {
-    return std::make_pair(m_parent_component->getComponentKey(), m_property_key);
+    if (m_parent_component != nullptr) {
+        return std::make_pair(m_parent_component->getComponentKey(), m_property_key);
+    } else {
+        return std::make_pair("", "");
+    }
 }
 
 

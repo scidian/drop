@@ -30,9 +30,11 @@ class WorldMapScene : public QGraphicsScene
 
 private:
     // External Borrowed Pointers
-    DrProject              *m_project;                          // Pointer to currently loaded Project
-    IEditorRelay           *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
+    DrProject              *m_project;                                      // Pointer to currently loaded Project
+    IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
+    // Local Variables
+    bool                    m_need_rebuild_scene    { false };              // Flag to tell View to wait to update Options until scene has been rebuilt
 
 public:
     // Constructor / Destructor
@@ -46,10 +48,16 @@ public:
     WorldMapItem*           addItemToSceneFromEntity(DrSettings *entity);
     void                    setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void                    setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
+    QList<WorldMapItem*>    worldMapItems();
+    static WorldMapItem*    worldMapItemWithKey(QList<WorldMapItem*> &world_items, long entity_key);
 
     // Other Widget Update Calls
     IEditorRelay*           getEditorRelay() { return m_editor_relay; }
     void                    updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs);
+
+    // Getters / Setters
+    bool                    needRebuild()                   { return m_need_rebuild_scene; }
+    void                    setNeedRebuild(bool need)       { m_need_rebuild_scene = need; }
 
 
 public slots:

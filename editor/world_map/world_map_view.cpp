@@ -17,6 +17,8 @@ WorldMapView::WorldMapView(QWidget *parent, DrProject *project, WorldMapScene *s
     : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
 
     updateGrid();
+
+    my_scene = scene;
     setScene(scene);
 
 }

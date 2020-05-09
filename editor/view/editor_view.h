@@ -65,7 +65,7 @@ private:
     DrProject              *m_project;                                      // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
-    EditorScene            *my_scene;                                       // Holds the scene() this view is set to as a EditorScene Class
+    EditorScene            *my_scene;                                       // Holds the scene() this view is set to as a EditorScene class
 
     // Local Variables
     Mouse_Mode              m_mouse_mode        { Mouse_Mode::Pointer };    // Tracks current view mouse mode

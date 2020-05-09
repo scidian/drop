@@ -73,9 +73,9 @@ void FormMain::initializeFormMain() {
 //####################################################################################
 //##    Re-configures FormMain to new mode
 //####################################################################################
-void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
+void FormMain::rebuildFormMain(Editor_Mode new_mode) {
 
-    Form_Main_Mode old_mode = m_current_mode;
+    Editor_Mode old_mode = m_current_mode;
     m_current_mode = new_mode;
 
     Dr::LockDockWidth( dockAdvisor, dockAdvisor->width() );
@@ -83,24 +83,24 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     Dr::LockDockWidth( dockInspector, dockInspector->width() );
 
     // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
-    if ((old_mode != new_mode) && (old_mode != Form_Main_Mode::Program_Loading)) {
+    if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {
         clearToolbar();
         switch (old_mode) {
-            case Form_Main_Mode::World_Map:
+            case Editor_Mode::World_Map:
                 widgetCentralWorldMap = takeCentralWidget();
                 buildInspector( { } );
                 dockAssetsEditor->hide();
                 break;
-            case Form_Main_Mode::World_Editor:
+            case Editor_Mode::World_Editor:
                 widgetCentralEditor = takeCentralWidget();
                 buildInspector( { } );
                 dockAssetsEditor->hide();
                 break;
-            case Form_Main_Mode::Clear:
+            case Editor_Mode::Clear:
                 widgetCentralClear = takeCentralWidget();
                 break;
             default:
-                Dr::ShowMessageBox("setFormMainMode, clearing - Mode not known", QMessageBox::Icon::Warning, this);
+                Dr::ShowMessageBox("rebuildFormMain, clearing - Mode not known", QMessageBox::Icon::Warning, this);
         }
     }
 
@@ -108,25 +108,26 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
     setToolbar(new_mode);
 
     // Wait for possible finish loading
-    if (new_mode != Form_Main_Mode::World_Editor) {
+    if (new_mode != Editor_Mode::World_Editor) {
         while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
     }
     Dr::SetDoneLoading(false);
 
     // ***** Set New Layout *****
     switch (new_mode) {
-        case Form_Main_Mode::World_Map:
+        case Editor_Mode::World_Map:
+            sceneWorldMap->clear();
+            sceneWorldMap->setNeedRebuild(true);
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             this->setCentralWidget( widgetCentralWorldMap );
             dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
             treeAssetEditor->setShowTypes({ DrType::Block });
             buildAssetTree();
             dockAssetsEditor->show();
-            sceneWorldMap->clear();
             buildSceneAfterLoading( c_no_key );
             break;
 
-        case Form_Main_Mode::World_Editor:
+        case Editor_Mode::World_Editor:
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             this->setCentralWidget( widgetCentralEditor );
             dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
@@ -138,12 +139,12 @@ void FormMain::setFormMainMode(Form_Main_Mode new_mode) {
             buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
 
-        case Form_Main_Mode::Clear:
+        case Editor_Mode::Clear:
             setWindowTitle( tr("Drop") );
             this->setCentralWidget( widgetCentralClear );
             break;
 
-        default:    Dr::ShowMessageBox("setFormMainMode, setting - Mode not known", QMessageBox::Icon::Warning, this);
+        default:    Dr::ShowMessageBox("rebuildFormMain, setting - Mode not known", QMessageBox::Icon::Warning, this);
     }
 
     // Wait until widgets are done being moved around

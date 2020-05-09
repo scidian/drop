@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QDebug>
+
 #include "editor/helper_library.h"
 #include "editor/project/project.h"
 #include "project/entities/dr_image.h"
@@ -43,8 +45,10 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
 
     // ***** Initialize Some User Variables
-    project->setOption(Project_Options::World_Map_Center,   DrPointF(0.0, 0.0));
-    project->setOption(Project_Options::World_Map_Zoom,     1.0);
+    DrPointF new_center =   DrPointF(0.0, 0.0);
+    double   new_zoom =     1.0;
+    project->setOption(Project_Options::World_Map_Center,   new_center);
+    project->setOption(Project_Options::World_Map_Zoom,     new_zoom);
 
 
     // ***** Build Test Project
@@ -94,7 +98,7 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
 
         // Add some Worlds and Stages
-        project->addWorld(DrWorldType::Physics_2D);                                                     // "World 2"
+        DrWorld* world_2 = project->addWorld(DrWorldType::Physics_2D);                                  // "World 2"
         project->findWorldWithName("World 2")->addStage();                                              // Stage 2
         project->findWorldWithName("World 2")->addStage("asdfasdfasdfasdfasdfasdfasd");                 // Stage 3
         project->findWorldWithName("World 2")->addStage();                                              // Stage 4
@@ -151,6 +155,12 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
         DrStage* current_stage = project->findWorldWithName("World 2")->getStageFromKey(start_stage);
         project->setOption(Project_Options::Current_Stage, current_stage->getKey());
         project->setOption(Project_Options::Current_World, current_stage->getParentWorld()->getKey());
+
+
+        // Connect some Slots
+        world_1->addOutputSlot(Output_Slots::UI, world_2->getKey(), Input_Slots::Start);
+
+
     }   // End Test Project
 
 

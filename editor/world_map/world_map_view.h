@@ -33,6 +33,8 @@ private:
     DrProject              *m_project;                                      // Pointer to currently loaded Project
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
+    WorldMapScene          *my_scene;                                       // Holds the scene() this view is set to as a WorldMapScene class
+
     // Local Variables
     Mouse_Mode              m_mouse_mode        { Mouse_Mode::Pointer };    // Tracks current view mouse mode
     View_Mode               m_view_mode         { View_Mode::None };        // Tracks current view interaction mode
@@ -112,6 +114,7 @@ public:
 
     // Paint Functions
     void                paintGrid(QPainter &painter);
+    void                paintNodeLines(QPainter &painter);
 
     // Selection Functions
     QList<DrSettings*>  convertItemListToSettings(QList<QGraphicsItem*> list);

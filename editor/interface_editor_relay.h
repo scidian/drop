@@ -53,9 +53,15 @@ public:
     virtual EditorView*         getStageView() = 0;
     virtual WorldMapView*       getWorldMapView() = 0;
 
-    // Editor Functions
-    virtual void        setEditorMode(Form_Main_Mode new_mode) = 0;
+    // Local Getter / Setters
+    Editor_Widgets              getActiveWidget() { return m_active_widget; }
+    void                        setActiveWidget(Editor_Widgets widget);
 
+    // Virtual Getters / Setters
+    virtual Editor_Mode         getEditorMode() = 0;
+    virtual void                setEditorMode(Editor_Mode new_mode) = 0;
+
+    // Editor Functions
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) = 0;
     virtual void        buildProjectTree() = 0;
@@ -77,10 +83,6 @@ public:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
     virtual void        setMousePosition(std::string x, std::string y) = 0;
-
-    // Getter / Setters
-    Editor_Widgets      getActiveWidget() { return m_active_widget; }
-    void                setActiveWidget(Editor_Widgets widget);
 };
 
 

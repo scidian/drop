@@ -61,9 +61,9 @@ enum User_Roles {
 
 
 //####################################################################################
-//##    Types of modes for Form Main
+//##    Modes for Interface Editor Form
 //############################
-enum class Form_Main_Mode {
+enum class Editor_Mode {
     Clear                       = 0,
     Program_Loading             = 1,
 
@@ -71,9 +71,10 @@ enum class Form_Main_Mode {
     World_Editor                = 3,                        // "Editor" (Physics)
     UI_Editor                   = 4,                        // "UI"
 
-    Stage_Map                   = 5,
-    // App_Editor               = 6,
-    // Puzzle_World_Editor      = 7,
+    Animation_Editor            = 5,
+    Stage_Map                   = 6,
+    // App_Editor               = 7,
+    // Puzzle_World_Editor      = 8,
 
 };
 

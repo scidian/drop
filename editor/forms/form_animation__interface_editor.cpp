@@ -31,13 +31,12 @@
 //      Map_View,
 //}
 
-void FormAnimation::setEditorMode(Form_Main_Mode new_mode) { }
+Editor_Mode FormAnimation::getEditorMode() { return Editor_Mode::Animation_Editor; }
+void FormAnimation::setEditorMode(Editor_Mode new_mode) { }
 
 void FormAnimation::buildAssetTree() {
     treeAssetEditor->buildAssetTree("");
 }
-
-
 
 
 void FormAnimation::buildInspector(QList<long> entity_key_list, bool force_rebuild) { };

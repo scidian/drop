@@ -28,7 +28,7 @@
 //####################################################################################
 void FormMain::updateToolbar() {
 
-    if (m_current_mode == Form_Main_Mode::World_Editor) {
+    if (m_current_mode == Editor_Mode::World_Editor) {
         for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
         for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
         for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
@@ -111,9 +111,9 @@ void FormMain::clearToolbar() {
     }
 }
 
-void FormMain::setToolbar(Form_Main_Mode new_mode) {
+void FormMain::setToolbar(Editor_Mode new_mode) {
     switch (new_mode) {
-        case Form_Main_Mode::World_Editor:
+        case Editor_Mode::World_Editor:
             addToolbarGroup( widgetGroupEdit,           true );
             addToolbarGroup( widgetGroupLayering,       true );
             addToolbarGroup( widgetGroupTransform,      true );
@@ -122,30 +122,31 @@ void FormMain::setToolbar(Form_Main_Mode new_mode) {
             addToolbarGroup( widgetGroupSettings,       false );
             break;
 
-        case Form_Main_Mode::Clear:
+        case Editor_Mode::Clear:
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
 
 
         // !!!!! #TODO:
-        case Form_Main_Mode::World_Map:
+        case Editor_Mode::World_Map:
             addToolbarGroup( widgetGroupGridSimple,     false );
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
 
-        case Form_Main_Mode::Stage_Map:
+        case Editor_Mode::Stage_Map:
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
 
-        case Form_Main_Mode::UI_Editor:
+        case Editor_Mode::UI_Editor:
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
 
-        case Form_Main_Mode::Program_Loading:
+        case Editor_Mode::Animation_Editor:
+        case Editor_Mode::Program_Loading:
             break;
     }
 }
