@@ -113,8 +113,9 @@ public:
     void                updateGrid();
 
     // Paint Functions
-    void                paintGrid(QPainter &painter);
-    void                paintNodeLines(QPainter &painter);
+    void                        paintGrid(QPainter &painter);
+    void                        paintNodeLines(QPainter &painter);
+    std::pair<QPointF, QPointF> pointsC1C2(QPointF in, QPointF out);
 
     // Selection Functions
     QList<DrSettings*>  convertItemListToSettings(QList<QGraphicsItem*> list);
