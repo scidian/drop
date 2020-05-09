@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "core/colors/colors.h"
+#include "core/dr_math.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -119,6 +120,7 @@ std::pair<QPointF, QPointF> WorldMapView::pointsC1C2(QPointF in, QPointF out) {
     double y1 = out.y();
     double y2 = in.y();
     double percent_a = abs(rect.width() / c_min_offset);
+           percent_a = Dr::Clamp(percent_a, 0.1, 1.0);
     double percent_b = 1.0 - percent_a;
 
     // Smooth out to input from left to right
@@ -133,16 +135,15 @@ std::pair<QPointF, QPointF> WorldMapView::pointsC1C2(QPointF in, QPointF out) {
         double x1_a = ((in.x() * 1.0) + (out.x() * 4.0)) / 5.0; ///((in.x() * 1.0) + (out.x() * 1.0)) / 2.0
         double x2_a = ((in.x() * 4.0) + (out.x() * 1.0)) / 5.0; ///((in.x() * 1.0) + (out.x() * 1.0)) / 2.0
 
-        double x1_b = out.x() + abs(rect.width() * 0.2) + (c_min_offset * percent_a);
-        double x2_b = in.x()  - abs(rect.width() * 0.2) - (c_min_offset * percent_a);
+        double x1_b = out.x() + abs(rect.width() * 0.1) + (c_min_offset * percent_a);
+        double x2_b = in.x()  - abs(rect.width() * 0.1) - (c_min_offset * percent_a);
         x1 = (x1_a * percent_a) + (x1_b * percent_b);
         x2 = (x2_a * percent_a) + (x2_b * percent_b);
 
     // Combo going back, ease into it
     } else {
-        if (percent_a > 1.0) percent_a = 1.0;
-        double x1_b = out.x() + abs(rect.width() * 0.2) + (c_min_offset * percent_a);
-        double x2_b = in.x()  - abs(rect.width() * 0.2) - (c_min_offset * percent_a);
+        double x1_b = out.x() + abs(rect.width() * 0.1) + (c_min_offset * percent_a);
+        double x2_b = in.x()  - abs(rect.width() * 0.1) - (c_min_offset * percent_a);
         x1 = x1_b;
         x2 = x2_b;
     }
@@ -159,7 +160,6 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
     // ***** Turn on anti aliasing if necessary
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
         painter.setRenderHint(QPainter::Antialiasing, true);
-        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
     }
 
     // ***** Set up QPainter
@@ -171,12 +171,13 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
     WorldMapScene *world_scene = dynamic_cast<WorldMapScene*>(scene());
     if (world_scene == nullptr) return;
 
-    // ***** Go through each Node and draw output lines
+    // ***** Go through each GraphicsItem and check for Nodes
     QList<WorldMapItem*> map_items = world_scene->worldMapItems();
     for (auto map_item : map_items) {
         DrNode *node = dynamic_cast<DrNode*>(map_item->getEntity());
         if (node == nullptr) continue;
 
+        // Go through each Node and draw output lines
         int slot_number = 0;
         for (auto &node : node->getOutputSlots()) {
             WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, node.connected_key);
@@ -187,14 +188,16 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
             QPointF point_out = mapFromScene(map_item->pos()  + rect_out.center());
             QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
 
+            // Draw curve end point dots
             painter.setBrush(line_color);
             double radius = c_slot_size * m_zoom_scale * 0.35;
             painter.drawEllipse(point_out, radius, radius);
             painter.drawEllipse(point_in,  radius, radius);
 
-            // Cubic Bezier Curve
+            // Draw Cubic Bezier Curve
             painter.setBrush(Qt::NoBrush);
             auto c1c2 = pointsC1C2(point_in, point_out);
+
             QPainterPath cubic(point_out);
             cubic.cubicTo(c1c2.first, c1c2.second, point_in);
             painter.drawPath(cubic);
