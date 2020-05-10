@@ -194,13 +194,20 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
             painter.drawEllipse(point_out, radius, radius);
             painter.drawEllipse(point_in,  radius, radius);
 
-            // Draw Cubic Bezier Curve
+            // Calculate Cubic Bezier Curve
             painter.setBrush(Qt::NoBrush);
             auto c1c2 = pointsC1C2(point_in, point_out);
 
             QPainterPath cubic(point_out);
             cubic.cubicTo(c1c2.first, c1c2.second, point_in);
-            painter.drawPath(cubic);
+
+            // Draw Horizontal line if y values are the same
+            if (Dr::IsCloseTo(point_out.y(), point_in.y(), 0.001)) {
+                painter.drawLine(cubic.boundingRect().topLeft(), cubic.boundingRect().topRight());
+            // Draw Cubic Bezier Curve
+            } else {
+                painter.drawPath(cubic);
+            }
 
             slot_number++;
         }
