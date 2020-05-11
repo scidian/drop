@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include <QGraphicsPixmapItem>
 #include <QWidget>
 
@@ -56,6 +57,8 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
     setTransform(t);
 
     // ***** Calculate Size
+    this->m_width =  c_default_width;
+    this->m_height = c_row_height;
     int slot_rows = 1;
     DrNode* node = dynamic_cast<DrNode*>(m_entity);
     if (node != nullptr) {
@@ -63,10 +66,14 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
         int output_count = node->getOutputSlots().size();
         slot_rows = Dr::Max(slot_rows, input_count);
         slot_rows = Dr::Max(slot_rows, output_count);
+        this->m_height = ((1 + slot_rows) * c_row_height);
+
+        // ***** Store Slot Circle Rects
+        m_input_rects.clear();
+        m_output_rects.clear();
+        for (int slot = 0; slot < input_count;  ++slot) { m_input_rects[slot] =  this->slotRect(DrSlotType::Input,  slot); }
+        for (int slot = 0; slot < output_count; ++slot) { m_output_rects[slot] = this->slotRect(DrSlotType::Output, slot); }
     }
-    int new_height = ((1 + slot_rows) * c_row_height);
-    this->m_width =  c_default_width;
-    this->m_height = new_height;
 
     // ***** Starting position
     if (node != nullptr) {
@@ -105,16 +112,29 @@ void WorldMapItem::enableItemChangeFlags() {
 //####################################################################################
 //##    Item Property Overrides
 //####################################################################################
-// Outline of entire item
+// Outline of entire item including paint buffer
 QRectF WorldMapItem::boundingRect() const {
     QRectF my_rect = QRectF(0, 0, m_width + c_node_buffer*2, m_height + c_node_buffer*2);
     return my_rect;
 }
 
-// Seems to define mouseOver events, and intersection events for Rubber Band Box
+// Defines mouseOver events, and intersection events for Rubber Band Box
 QPainterPath WorldMapItem::shape() const {
+    // Add rounded rect w/ paint buffer
     QPainterPath path;
     path.addRoundedRect(boundingRect().adjusted(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer), c_corner_radius, c_corner_radius);
+
+    // Go through Node and add Slot Circles
+    for (auto &slot_pair : m_input_rects)  {
+        QPainterPath slot_circle;
+                     slot_circle.addEllipse( slot_pair.second );
+        path = path.united(slot_circle);
+    }
+    for (auto &slot_pair : m_output_rects) {
+        QPainterPath slot_circle;
+                     slot_circle.addEllipse( slot_pair.second );
+        path = path.united(slot_circle);
+    }
     return path;
     ///return QGraphicsPixmapItem::shape();         // Returns QPixmap as path
 }

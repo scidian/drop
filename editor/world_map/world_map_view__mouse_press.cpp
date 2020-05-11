@@ -90,38 +90,51 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
                             m_origin_item->setSelected(true);
                         }
 
-                        // ***** Process press event for item movement (Translation)
+                        // ***** Process press event for item movement (Translation)                        
                         if (origin_item_settings->isLocked() == false) {
-                            // Disable item changes before messing with Z-Order
                             WorldMapItem *graphics_item = dynamic_cast<WorldMapItem*>(m_origin_item);
-                            bool flags_enabled_before = false;
-                            if (graphics_item) {
-                                flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
-                                graphics_item->disableItemChangeFlags();
+
+                            // Mouse down on Slot Circle
+                            if (graphics_item != nullptr) {
+                                DrSlot over_slot = graphics_item->overSlotRect(m_origin_in_scene);
+                                if (over_slot.owner_key != c_no_key) {
+                                    m_view_mode = View_Mode::Node_Connect;
+                                    m_slot_start = over_slot;
+                                }
                             }
 
-                            // Make sure item is on top before firing QGraphicsView event so we start translating properly
-                            double  original_z =   m_origin_item->zValue();
-                            m_origin_item->setZValue(std::numeric_limits<double>::max());
-                            QGraphicsView::mousePressEvent(event);
-                            m_origin_item->setZValue(original_z);
+                            // Mouse down over Item, if wasnt over Node Circle, start Translating
+                            if (m_view_mode != View_Mode::Node_Connect) {
+                                // Disable item changes before messing with Z-Order
+                                bool flags_enabled_before = false;
+                                if (graphics_item) {
+                                    flags_enabled_before = graphics_item->itemChangeFlagsEnabled();
+                                    graphics_item->disableItemChangeFlags();
+                                }
 
-                            // Restore item changes
-                            if (graphics_item && flags_enabled_before) graphics_item->enableItemChangeFlags();
+                                // Make sure item is on top before firing QGraphicsView event so we start translating properly
+                                double  original_z =   m_origin_item->zValue();
+                                m_origin_item->setZValue(std::numeric_limits<double>::max());
+                                QGraphicsView::mousePressEvent(event);
+                                m_origin_item->setZValue(original_z);
 
-                            // Prep Translating start
-                            viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
+                                // Restore item changes
+                                if (graphics_item && flags_enabled_before) graphics_item->enableItemChangeFlags();
 
-                            m_hide_bounding = true;
-                            m_view_mode = View_Mode::Translating;
-                            m_origin_item_start_pos = m_origin_item->scenePos();
+                                // Prep Translating start
+                                viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
 
-                            // Try to update mouseFirstPress Qt internal variables
-                            ///QGraphicsView::mousePressEvent(event);
+                                m_hide_bounding = true;
+                                m_view_mode = View_Mode::Translating;
+                                m_origin_item_start_pos = m_origin_item->scenePos();
 
-                            // Force itemChange signals on items
-                            for (auto item : scene()->selectedItems()) {
-                                item->moveBy(0, 0);
+                                // Try to update mouseFirstPress Qt internal variables
+                                ///QGraphicsView::mousePressEvent(event);
+
+                                // Force itemChange signals on items
+                                for (auto item : scene()->selectedItems()) {
+                                    item->moveBy(0, 0);
+                                }
                             }
                         }
 

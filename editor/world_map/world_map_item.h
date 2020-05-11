@@ -12,6 +12,7 @@
 #include <QGraphicsView>
 
 #include "project/enums_entity_types.h"
+#include "project/entities/dr_node.h"
 
 // Forward Declarations
 class DrProject;
@@ -22,7 +23,7 @@ const   int     c_default_width =       192;                // Starting width of
 const   int     c_row_height =          32;                 // Height of each row (title, input / output)
 const   int     c_slot_size =           10;                 // Size of little circle attached to each slot
 
-const   int     c_corner_radius =       12;                 // Absolute size of round corners of Item
+const   int     c_corner_radius =       10;                 // Absolute size of round corners of Item
 const   int     c_node_buffer =         16;                 // Buffer to add around QGraphicsItem to expand painting area
 
 
@@ -41,13 +42,17 @@ private:
     DrSettings         *m_entity;                                       // Pointer to the base Entity (World, UI) in DrProject for this item (node)
     long                m_entity_key        { c_no_key };               // Project Key to the World / UI that this item (node) represents in DrProject
 
-    // Local Variables
+    // Size Info
     int                 m_width             { 256 };                    // Width  of Item
     int                 m_height            { 256 };                    // Height of Item
     QPointF             m_start_position    { 0, 0 };                   // Desired starting position of Node
 
+    // Flags
     bool                m_item_change_flags_enabled     { false };      // Lets us know if we've enabled or disabled ItemChangeFlags
 
+    // Layout Variables
+    std::map<long, QRectF>     m_input_rects;                           // Stores rects of input  slot circles
+    std::map<long, QRectF>     m_output_rects;                          // Stores rects of output slot circles
 
 
 public:
@@ -65,17 +70,20 @@ public:
     virtual void            paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) override;
 
     // Item Change Flags
-    void                    disableItemChangeFlags();
-    void                    enableItemChangeFlags();
-    bool                    itemChangeFlagsEnabled()        { return m_item_change_flags_enabled; }
+    void                        disableItemChangeFlags();
+    void                        enableItemChangeFlags();
+    bool                        itemChangeFlagsEnabled()        { return m_item_change_flags_enabled; }
 
     // Slot Functions
-    QRectF                  slotRect(DrSlotType slot_type, int slot_number);
+    std::map<long, QRectF>&     getInputRects()                 { return m_input_rects; }
+    std::map<long, QRectF>&     getOutputRects()                { return m_output_rects; }
+    QRectF                      slotRect(DrSlotType slot_type, int slot_number);
+    DrSlot                      overSlotRect(QPointF scene_point);
 
     // Getters / Setters
-    DrSettings*         getEntity()                         { return m_entity; }
-    QPointF             startPosition()                     { return m_start_position; }
-    void                setStartPosition(QPointF position)  { m_start_position = position; }
+    DrSettings*             getEntity()                         { return m_entity; }
+    QPointF                 startPosition()                     { return m_start_position; }
+    void                    setStartPosition(QPointF position)  { m_start_position = position; }
 
 };
 

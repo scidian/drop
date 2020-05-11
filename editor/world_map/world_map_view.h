@@ -13,6 +13,7 @@
 
 #include "editor/enums_editor.h"
 #include "project/enums_entity_types.h"
+#include "project/entities/dr_node.h"
 
 // Forward Declarations
 class DrProject;
@@ -76,6 +77,10 @@ private:
     bool                    m_hide_bounding                 { false };      // True when moving items to stop bounding box from updating and painting
     QPointF                 m_origin_item_start_pos         { 0, 0 };       // Tracks starting position of origin item when View_Mode::Translating started
 
+    // View_Mode::Node_Connect Variables
+    DrSlot                  m_slot_start;                                   // When Node connect starts, this contains the DrSlot info about the starting position
+
+
 
 public:
     // Constructor / Destructor
@@ -113,6 +118,7 @@ public:
     void                updateGrid();
 
     // Paint Functions
+    void                        paintCubicCurve(QPainter &painter, QColor line_color, QPointF point_in, QPointF point_out, bool paint_dots);
     void                        paintGrid(QPainter &painter);
     void                        paintNodeLines(QPainter &painter);
     std::pair<QPointF, QPointF> pointsC1C2(QPointF in, QPointF out);

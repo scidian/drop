@@ -168,6 +168,7 @@ enum class View_Mode {
     Holding_Keys,                   // Holding arrow keys to move or layering keys
     Moving_Camera,                  // Rotating a camera around its target
     Resizing_Stage,                 // Resizing Stage bounds
+    Node_Connect,                   // For drawing of lines between node slots
 };
 
 

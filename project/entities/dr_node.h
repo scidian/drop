@@ -16,9 +16,12 @@
 
 // Local Struct
 struct DrSlot {
+    long            owner_key           { c_no_key };
     std::string     slot_name           { "" };
     long            connected_key       { c_no_key };
     std::string     connected_name      { "" };
+    DrSlotType      slot_type           { DrSlotType::Input };
+    DrPointF        scene_position      { 0, 0 };
 };
 
 // Type Definitions
@@ -53,8 +56,8 @@ public:
     // Slots
     SlotMap&            getInputSlots()                 { return m_input_slots; }
     SlotMap&            getOutputSlots()                { return m_output_slots; }
-    void                addInputSlot( std::string new_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
-    void                addOutputSlot(std::string new_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
+    void                addInputSlot( long owner_key, std::string new_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
+    void                addOutputSlot(long owner_key, std::string new_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
 
 };
 

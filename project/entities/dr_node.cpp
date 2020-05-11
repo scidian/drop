@@ -32,33 +32,39 @@ DrNode::~DrNode() { }
 //####################################################################################
 //##    Signals
 //####################################################################################
-void DrNode::addInputSlot(std::string new_slot_name, long connected_slot_key, std::string connected_slot_name) {
+void DrNode::addInputSlot(long owner_key, std::string new_slot_name, long connected_slot_key, std::string connected_slot_name) {
     for (auto &slot : m_input_slots) {
         if (slot.slot_name == new_slot_name) {
             slot.connected_key =    connected_slot_key;
             slot.connected_name =   connected_slot_name;
+            slot.slot_type =        DrSlotType::Input;
             return;
         }
     }
     DrSlot slot;
+    slot.owner_key =        owner_key;
     slot.slot_name =        new_slot_name;
     slot.connected_key =    connected_slot_key;
     slot.connected_name =   connected_slot_name;
+    slot.slot_type =        DrSlotType::Input;
     m_input_slots.push_back(slot);
 }
 
-void DrNode::addOutputSlot(std::string new_slot_name, long connected_slot_key, std::string connected_slot_name) {
+void DrNode::addOutputSlot(long owner_key, std::string new_slot_name, long connected_slot_key, std::string connected_slot_name) {
     for (auto &slot : m_output_slots) {
         if (slot.slot_name == new_slot_name) {
             slot.connected_key =    connected_slot_key;
             slot.connected_name =   connected_slot_name;
+            slot.slot_type =        DrSlotType::Output;
             return;
         }
     }
     DrSlot slot;
+    slot.owner_key =        owner_key;
     slot.slot_name =        new_slot_name;
     slot.connected_key =    connected_slot_key;
     slot.connected_name =   connected_slot_name;
+    slot.slot_type =        DrSlotType::Output;
     m_output_slots.push_back(slot);
 }
 

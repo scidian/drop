@@ -42,9 +42,51 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
     // Store starting View_Mode in case we need it later
     View_Mode mode_at_start_of_function = m_view_mode;
 
+    // ***** Get top most unlocked item
+    QGraphicsItem  *mouse_item = itemAt(event->pos());
+    long            mouse_item_key = c_no_key;
+    DrSettings     *mouse_item_settings = nullptr;
+    for (auto item : items(event->pos())) {
+        mouse_item_key = item->data(User_Roles::Key).toLongLong();
+        mouse_item_settings = m_project->findSettingsFromKey(mouse_item_key);
+        if (mouse_item_settings != nullptr) {
+            if (mouse_item_settings->isLocked() == false) {
+                mouse_item = item;
+                break;
+            }
+        }
+    }
+
     // Process left mouse button released
     if (event->button() & Qt::LeftButton) {
         m_hide_bounding = false;
+
+        // Finished trying to connect two node slots
+        if (m_view_mode == View_Mode::Node_Connect) {
+            WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(mouse_item);
+            if (map_item != nullptr) {
+                QPointF mouse_in_scene = mapToScene(event->pos());
+                DrSlot connect_to_slot = map_item->overSlotRect(mouse_in_scene);
+
+                // Check slots types are different, connect appropriately
+                if (connect_to_slot.owner_key != c_no_key && connect_to_slot.slot_type != m_slot_start.slot_type) {
+                    if (connect_to_slot.slot_type == DrSlotType::Output) {
+                        DrNode *node = dynamic_cast<DrNode*>(map_item->getEntity());
+                        if (node != nullptr) {
+                            node->addOutputSlot(map_item->getEntity()->getKey(), connect_to_slot.slot_name, m_slot_start.owner_key, m_slot_start.slot_name);
+                        }
+                    } else {
+                        DrSettings *original_settings = m_project->findSettingsFromKey(m_slot_start.owner_key);
+                        if (original_settings != nullptr) {
+                            DrNode *node = dynamic_cast<DrNode*>(original_settings);
+                            if (node != nullptr) {
+                                node->addOutputSlot(original_settings->getKey(), m_slot_start.slot_name, connect_to_slot.owner_key, connect_to_slot.slot_name);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // Inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...
         // Now that mousue has been released, update Inspector property boxes

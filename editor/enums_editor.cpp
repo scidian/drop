@@ -57,6 +57,7 @@ QString StringFromViewMode(View_Mode mode) {
         case View_Mode::Holding_Keys:       return "Holding Keys";
         case View_Mode::Moving_Camera:      return "Moving Camera";
         case View_Mode::Resizing_Stage:     return "Resizing Stage";
+        case View_Mode::Node_Connect:       return "Connecting_Node";
     }
     return "Mode not handled...";
 }

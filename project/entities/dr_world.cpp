@@ -28,11 +28,11 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
     // Add initial Node Slots
     switch(world_type) {
         case DrWorldType::Physics_2D:
-            addInputSlot(Input_Slots::Start);
-            addOutputSlot(Output_Slots::UI);
+            addInputSlot( this->getKey(), Input_Slots::Start);
+            addOutputSlot(this->getKey(), Output_Slots::UI);
             break;
         case DrWorldType::UI:
-            addInputSlot(Input_Slots::Load);
+            addInputSlot(this->getKey(), Input_Slots::Load);
             break;
     }
 
@@ -40,8 +40,8 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
     // !!!!! #TEMP: Testing node building
     int add_input =  Dr::RandomInt(0, 3);
     int add_output = Dr::RandomInt(0, 4);
-    for (int i = 0; i < add_input;  i++) { addInputSlot( "Test In "  + std::to_string(i)); }
-    for (int i = 0; i < add_output; i++) { addOutputSlot("Test Out " + std::to_string(i)); }
+    for (int i = 0; i < add_input;  i++) { addInputSlot( this->getKey(), "Test In "  + std::to_string(i)); }
+    for (int i = 0; i < add_output; i++) { addOutputSlot(this->getKey(), "Test Out " + std::to_string(i)); }
     // !!!!!
 
 

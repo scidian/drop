@@ -36,7 +36,6 @@ void WorldMapView::drawForeground(QPainter *painter, const QRectF &rect) {
 }
 
 
-
 //####################################################################################
 //##    PAINT: Main Paint Event for QGraphicsView (WorldMapView)
 //####################################################################################
@@ -53,7 +52,6 @@ void WorldMapView::paintEvent(QPaintEvent *event) {
     // Paint Node Lines
     paintNodeLines(painter);
 }
-
 
 
 //####################################################################################
@@ -108,52 +106,6 @@ void WorldMapView::paintGrid(QPainter &painter) {
 
 
 //####################################################################################
-//##    Cubic Bezier Curve Control Points
-//##        Calculations are designed for left to right node lines
-//####################################################################################
-std::pair<QPointF, QPointF> WorldMapView::pointsC1C2(QPointF in, QPointF out) {
-
-    const double c_min_offset = 200 * m_zoom_scale;
-
-    QRectF rect = QRectF(out, in);
-    double x1, x2;
-    double y1 = out.y();
-    double y2 = in.y();
-    double percent_a = abs(rect.width() / c_min_offset);
-           percent_a = Dr::Clamp(percent_a, 0.1, 1.0);
-    double percent_b = 1.0 - percent_a;
-
-    // Smooth out to input from left to right
-    if (in.x() > out.x() + c_min_offset) {
-        double x1_a = ((in.x() * 1.0) + (out.x() * 4.0)) / 5.0; ///((in.x() * 1.0) + (out.x() * 1.0)) / 2.0
-        double x2_a = ((in.x() * 4.0) + (out.x() * 1.0)) / 5.0; ///((in.x() * 1.0) + (out.x() * 1.0)) / 2.0
-        x1 = x1_a;
-        x2 = x2_a;
-
-    // Combo from front, ease into it
-    } else if (in.x() > out.x()) {
-        double x1_a = ((in.x() * 1.0) + (out.x() * 4.0)) / 5.0; ///((in.x() * 1.0) + (out.x() * 1.0)) / 2.0
-        double x2_a = ((in.x() * 4.0) + (out.x() * 1.0)) / 5.0; ///((in.x() * 1.0) + (out.x() * 1.0)) / 2.0
-
-        double x1_b = out.x() + abs(rect.width() * 0.1) + (c_min_offset * percent_a);
-        double x2_b = in.x()  - abs(rect.width() * 0.1) - (c_min_offset * percent_a);
-        x1 = (x1_a * percent_a) + (x1_b * percent_b);
-        x2 = (x2_a * percent_a) + (x2_b * percent_b);
-
-    // Combo going back, ease into it
-    } else {
-        double x1_b = out.x() + abs(rect.width() * 0.1) + (c_min_offset * percent_a);
-        double x2_b = in.x()  - abs(rect.width() * 0.1) - (c_min_offset * percent_a);
-        x1 = x1_b;
-        x2 = x2_b;
-    }
-
-    // Returns cubic bezier points C1, C2 in order x1, y2 = upper right, x2,y2 = lower left
-    return std::make_pair(QPointF(x1, y1), QPointF(x2, y2));
-}
-
-
-//####################################################################################
 //##    PAINT: Draws Node Lines
 //####################################################################################
 void WorldMapView::paintNodeLines(QPainter &painter) {
@@ -188,34 +140,98 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
             QPointF point_out = mapFromScene(map_item->pos()  + rect_out.center());
             QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
 
-            // Draw curve end point dots
-            painter.setBrush(line_color);
-            double radius = c_slot_size * m_zoom_scale * 0.35;
-            painter.drawEllipse(point_out, radius, radius);
-            painter.drawEllipse(point_in,  radius, radius);
-
-            // Calculate Cubic Bezier Curve
-            painter.setBrush(Qt::NoBrush);
-            auto c1c2 = pointsC1C2(point_in, point_out);
-
-            QPainterPath cubic(point_out);
-            cubic.cubicTo(c1c2.first, c1c2.second, point_in);
-
-            // Draw Horizontal line if y values are the same
-            if (Dr::IsCloseTo(point_out.y(), point_in.y(), 0.001)) {
-                painter.drawLine(cubic.boundingRect().topLeft(), cubic.boundingRect().topRight());
-            // Draw Cubic Bezier Curve
-            } else {
-                painter.drawPath(cubic);
-            }
+            paintCubicCurve(painter, line_color, point_in, point_out, true);
 
             slot_number++;
         }
     }
 
+    // If mouse is dragging a node line, paint it
+    if (m_view_mode == View_Mode::Node_Connect) {
+        QPointF slot_point = mapFromScene( Dr::ToQPointF(m_slot_start.scene_position) );
+        if (m_slot_start.slot_type == DrSlotType::Input) {
+            paintCubicCurve(painter, line_color, slot_point, m_last_mouse_pos, true);
+        } else {
+            paintCubicCurve(painter, line_color, m_last_mouse_pos, slot_point, true);
+        }
+    }
 
 }   // End paintNodeLines()
 
+
+//####################################################################################
+//##    Cubic Bezier Curve Control Points
+//##        Calculations are designed for left to right node lines
+//####################################################################################
+std::pair<QPointF, QPointF> WorldMapView::pointsC1C2(QPointF in, QPointF out) {
+
+    const double c_min_offset = 150 * m_zoom_scale;
+
+    QRectF rect = QRectF(out, in);
+    double x1, x2;
+    double y1 = out.y();
+    double y2 = in.y();
+    double percent_a =  abs(rect.width() / c_min_offset);
+    double percent_b =  1.0 - percent_a;
+
+    // Calculate control point x values based on midpoint
+    double x1_a = (in.x() + out.x()) / 2.0; ///((in.x() * 1.0) + (out.x() * 5.0)) / 6.0;
+    double x2_a = (in.x() + out.x()) / 2.0; ///((in.x() * 5.0) + (out.x() * 1.0)) / 6.0;
+
+    // When wrapping behind, calculate control point x values with a wrap around curve width included
+    double curve_percent = Dr::Clamp(percent_a * 0.5, 0.2, 1.0);
+    double curve = abs(rect.width() * 0.15) + (c_min_offset * curve_percent);
+    double x1_b = out.x() + curve;
+    double x2_b = in.x()  - curve;
+
+    // INPUT FAR RIGHT - Smooth out to input from left to right
+    if (in.x() > out.x() + c_min_offset) {
+        x1 = x1_a;
+        x2 = x2_a;
+
+    // INPUT TO THE RIGHT AT ALL - Combo from front, ease into it
+    } else if (in.x() > out.x()) {
+        x1 = (x1_a * percent_a) + (x1_b * percent_b);
+        x2 = (x2_a * percent_a) + (x2_b * percent_b);
+
+    // INPUT TO THE LEFT - Combo going back, ease into it
+    } else {
+        x1 = x1_b;
+        x2 = x2_b;
+    }
+
+    // Returns cubic bezier points C1, C2 in order x1, y2 = upper right, x2,y2 = lower left
+    return std::make_pair(QPointF(x1, y1), QPointF(x2, y2));
+}
+
+
+//####################################################################################
+//##    PAINT: Draws Node Lines
+//####################################################################################
+void WorldMapView::paintCubicCurve(QPainter &painter, QColor line_color, QPointF point_in, QPointF point_out, bool paint_dots) {
+    // Calculate Cubic Bezier Curve
+    painter.setBrush(Qt::NoBrush);
+    auto c1c2 = pointsC1C2(point_in, point_out);
+
+    QPainterPath cubic(point_out);
+    cubic.cubicTo(c1c2.first, c1c2.second, point_in);
+
+    // Draw Horizontal line if y values are the same
+    if (Dr::IsCloseTo(point_out.y(), point_in.y(), 0.001)) {
+        painter.drawLine(cubic.boundingRect().topLeft(), cubic.boundingRect().topRight());
+    // Draw Cubic Bezier Curve
+    } else {
+        painter.drawPath(cubic);
+    }
+
+    // Draw curve end point dots
+    if (paint_dots) {
+        painter.setBrush(line_color);
+        double radius = c_slot_size * m_zoom_scale * 0.35;
+        painter.drawEllipse(point_out, radius, radius);
+        painter.drawEllipse(point_in,  radius, radius);
+    }
+}
 
 
 

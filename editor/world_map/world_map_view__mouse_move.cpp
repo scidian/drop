@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QDebug>
 #include <QGraphicsItem>
 #include <QMouseEvent>
 
@@ -73,7 +74,18 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
         if (scene()->selectedItems().count() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
 
             if (m_over_handle == Position_Flags::No_Position && scene()->selectedItems().contains(item_under_mouse)) {
-                m_over_handle = Position_Flags::Move_Item;
+                // If over Node, check that we're not over a slot circle
+                bool point_over_slot = false;
+                WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(item_under_mouse);
+                if (map_item != nullptr) {
+                    QPointF scene_point = this->mapToScene(m_last_mouse_pos);
+                    point_over_slot = (map_item->overSlotRect(scene_point).owner_key != c_no_key);
+                }
+
+                // If not over Node Circle, set cursor to Move_Item cursor
+                if (point_over_slot == false) {
+                    m_over_handle = Position_Flags::Move_Item;
+                }
             }
 
         }

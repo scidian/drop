@@ -158,7 +158,7 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
 
         // Connect some Slots
-        world_1->addOutputSlot(Output_Slots::UI, world_2->getKey(), Input_Slots::Start);
+        world_1->addOutputSlot(world_1->getKey(), Output_Slots::UI, world_2->getKey(), Input_Slots::Start);
 
 
     }   // End Test Project

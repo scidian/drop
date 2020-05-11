@@ -239,7 +239,7 @@ QRectF EditorItem::boundingRect() const {
     return my_rect;
 }
 
-// Seems to define mouseOver events, and intersection events for Rubber Band Box
+// Defines mouseOver events, and intersection events for Rubber Band Box
 QPainterPath EditorItem::shape() const {
     ///QPainterPath path;
     ///path.addRect(0, 0, m_width, m_height);
