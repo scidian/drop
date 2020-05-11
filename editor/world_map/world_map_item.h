@@ -51,8 +51,8 @@ private:
     bool                m_item_change_flags_enabled     { false };      // Lets us know if we've enabled or disabled ItemChangeFlags
 
     // Layout Variables
-    std::map<long, QRectF>     m_input_rects;                           // Stores rects of input  slot circles
-    std::map<long, QRectF>     m_output_rects;                          // Stores rects of output slot circles
+    std::vector<QRectF>     m_input_rects;                              // Stores rects of input  slot circles
+    std::vector<QRectF>     m_output_rects;                             // Stores rects of output slot circles
 
 
 public:
@@ -75,10 +75,10 @@ public:
     bool                        itemChangeFlagsEnabled()        { return m_item_change_flags_enabled; }
 
     // Slot Functions
-    std::map<long, QRectF>&     getInputRects()                 { return m_input_rects; }
-    std::map<long, QRectF>&     getOutputRects()                { return m_output_rects; }
+    std::vector<QRectF>&        getInputRects()                 { return m_input_rects; }
+    std::vector<QRectF>&        getOutputRects()                { return m_output_rects; }
     QRectF                      slotRect(DrSlotType slot_type, int slot_number);
-    DrSlot                      overSlotRect(QPointF scene_point);
+    DrSlot                      slotAtPoint(QPointF scene_point);
 
     // Getters / Setters
     DrSettings*             getEntity()                         { return m_entity; }

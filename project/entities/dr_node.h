@@ -16,16 +16,16 @@
 
 // Local Struct
 struct DrSlot {
-    long            owner_key           { c_no_key };
-    std::string     slot_name           { "" };
-    long            connected_key       { c_no_key };
-    std::string     connected_name      { "" };
-    DrSlotType      slot_type           { DrSlotType::Input };
-    DrPointF        scene_position      { 0, 0 };
+    DrSlotType      owner_slot_type         { DrSlotType::Input };
+    long            owner_key               { c_no_key };
+    std::string     owner_slot_name         { "" };
+    long            connected_key           { c_no_key };
+    std::string     connected_slot_name     { "" };
+    DrPointF        scene_position          { 0, 0 };
 };
 
 // Type Definitions
-typedef std::list<DrSlot>       SlotMap;
+typedef std::list<DrSlot>       SlotList;
 
 
 //####################################################################################
@@ -35,6 +35,9 @@ typedef std::list<DrSlot>       SlotMap;
 class DrNode
 {
 private:
+    // Parent Variables
+    long                        m_entity_key        { c_no_key };           // Key of parent DrSettings
+
     // Slot Variables
     std::list<DrSlot>           m_input_slots;                              // List of input slots
     std::list<DrSlot>           m_output_slots;                             // List of output slots
@@ -45,7 +48,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrNode(DrNodeType node_type);
+    DrNode(DrNodeType node_type, long parent_key);
     virtual ~DrNode();
 
     // Node Info
@@ -54,10 +57,10 @@ public:
     void                setNodePosition(DrPointF pos)   { m_node_position = pos; }
 
     // Slots
-    SlotMap&            getInputSlots()                 { return m_input_slots; }
-    SlotMap&            getOutputSlots()                { return m_output_slots; }
-    void                addInputSlot( long owner_key, std::string new_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
-    void                addOutputSlot(long owner_key, std::string new_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
+    SlotList&            getInputSlots()                { return m_input_slots; }
+    SlotList&            getOutputSlots()               { return m_output_slots; }
+    void                addInputSlot( long parent_key, std::string parent_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
+    void                addOutputSlot(long parent_key, std::string parent_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
 
 };
 

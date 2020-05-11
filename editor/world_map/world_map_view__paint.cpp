@@ -130,26 +130,37 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
         if (node == nullptr) continue;
 
         // Go through each Node and draw output lines
-        int slot_number = 0;
-        for (auto &node : node->getOutputSlots()) {
-            WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, node.connected_key);
-            if (connected == nullptr) continue;
+        int output_slot_number = 0;
+        for (auto &slot : node->getOutputSlots()) {
 
-            QRectF  rect_out =  map_item->slotRect(DrSlotType::Output, slot_number);
-            QRectF  rect_in =   connected->slotRect(DrSlotType::Input, slot_number);
+            // Find input slot to connect to
+            WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, slot.connected_key);
+            if (connected == nullptr) continue;
+            DrNode *connected_node = dynamic_cast<DrNode*>(connected->getEntity());
+            if (connected_node == nullptr) continue;
+            int slot_number_to_connect_to = 0;
+            for (auto &input_slot : connected_node->getInputSlots()) {
+                if (input_slot.owner_slot_name == slot.connected_slot_name) break;
+                ++slot_number_to_connect_to;
+            }
+
+            // Get Slot Locations
+            QRectF  rect_out =  map_item->slotRect(DrSlotType::Output, output_slot_number);
+            QRectF  rect_in =   connected->slotRect(DrSlotType::Input, slot_number_to_connect_to);
             QPointF point_out = mapFromScene(map_item->pos()  + rect_out.center());
             QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
 
+            // Paint Curve
             paintCubicCurve(painter, line_color, point_in, point_out, true);
 
-            slot_number++;
+            output_slot_number++;
         }
     }
 
     // If mouse is dragging a node line, paint it
     if (m_view_mode == View_Mode::Node_Connect) {
         QPointF slot_point = mapFromScene( Dr::ToQPointF(m_slot_start.scene_position) );
-        if (m_slot_start.slot_type == DrSlotType::Input) {
+        if (m_slot_start.owner_slot_type == DrSlotType::Input) {
             paintCubicCurve(painter, line_color, slot_point, m_last_mouse_pos, true);
         } else {
             paintCubicCurve(painter, line_color, m_last_mouse_pos, slot_point, true);

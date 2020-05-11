@@ -144,8 +144,8 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->setBrush( slot_color );
 
         // Input / Output Slot Circles
-        for (auto &slot_pair : getInputRects())  { painter->drawEllipse(slot_pair.second); }
-        for (auto &slot_pair : getOutputRects()) { painter->drawEllipse(slot_pair.second); }
+        for (auto &input_rect :  getInputRects())  { painter->drawEllipse(input_rect); }
+        for (auto &output_rect : getOutputRects()) { painter->drawEllipse(output_rect); }
 
         // Slot Text
         painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
@@ -155,7 +155,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         // Input Slot Text
         int input_start_y = box.top() + (c_row_height * 1);
         for (auto &slot : node->getInputSlots()) {
-            QString slot_text = QString::fromStdString(slot.slot_name);
+            QString slot_text = QString::fromStdString(slot.owner_slot_name);
                     slot_text.replace("_", "");
             painter->drawText(box.left()+c_slot_size, input_start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_in, slot_text);
             input_start_y += c_row_height;
@@ -164,7 +164,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         // Output Slot Text
         int output_start_y = box.top() + (c_row_height * 1);
         for (auto &slot : node->getOutputSlots()) {
-            QString slot_text = QString::fromStdString(slot.slot_name);
+            QString slot_text = QString::fromStdString(slot.owner_slot_name);
                     slot_text.replace("_", "");
             painter->drawText(box.left()+(box.width()/2)+c_slot_size, output_start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_out, slot_text);
             output_start_y += c_row_height;
@@ -188,36 +188,32 @@ QRectF WorldMapItem::slotRect(DrSlotType slot_type, int slot_number) {
     return QRectF(left, top, c_slot_size, c_slot_size);
 }
 
-// Returns true if scene position is over a slot circle rect
-DrSlot WorldMapItem::overSlotRect(QPointF scene_point) {
+// Returns DrSlot under scene_point
+DrSlot WorldMapItem::slotAtPoint(QPointF scene_point) {
     DrSlot over_slot;
     DrNode* node = dynamic_cast<DrNode*>(m_entity);
     if (node == nullptr) return over_slot;
 
-    int slot_number = 0;
-    for (auto &slot_pair : this->getInputRects() ) {
-        QPolygonF scene_rect = this->mapToScene(slot_pair.second);
+    for (size_t i = 0; i < this->getInputRects().size(); ++i) {
+        QPolygonF scene_rect = this->mapToScene(this->getInputRects()[i]);
         if (scene_rect.containsPoint(scene_point, Qt::FillRule::OddEvenFill)) {
             auto it = node->getInputSlots().begin();
-            std::advance(it, slot_number);
+            std::advance(it, i);
             over_slot = (*it);
             over_slot.scene_position = Dr::FromQPointF(scene_rect.boundingRect().center());
             return over_slot;
         }
-        slot_number++;
     }
 
-    slot_number = 0;
-    for (auto &slot_pair : this->getOutputRects() ) {
-        QPolygonF scene_rect = this->mapToScene(slot_pair.second);
+    for (size_t i = 0; i < this->getOutputRects().size(); ++i) {
+        QPolygonF scene_rect = this->mapToScene(this->getOutputRects()[i]);
         if (scene_rect.containsPoint(scene_point, Qt::FillRule::OddEvenFill)) {
             auto it = node->getOutputSlots().begin();
-            std::advance(it, slot_number);
+            std::advance(it, i);
             over_slot = (*it);
             over_slot.scene_position = Dr::FromQPointF(scene_rect.boundingRect().center());
             return over_slot;
         }
-        slot_number++;
     }
     return over_slot;
 }

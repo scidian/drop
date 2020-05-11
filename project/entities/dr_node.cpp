@@ -12,7 +12,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrNode::DrNode(DrNodeType node_type) {
+DrNode::DrNode(DrNodeType node_type, long parent_key) {
+    m_entity_key = parent_key;
     m_node_type = node_type;
 
     switch (node_type) {
@@ -32,39 +33,41 @@ DrNode::~DrNode() { }
 //####################################################################################
 //##    Signals
 //####################################################################################
-void DrNode::addInputSlot(long owner_key, std::string new_slot_name, long connected_slot_key, std::string connected_slot_name) {
+void DrNode::addInputSlot(long owner_key, std::string parent_slot_name, long connected_slot_key, std::string connected_slot_name) {
     for (auto &slot : m_input_slots) {
-        if (slot.slot_name == new_slot_name) {
-            slot.connected_key =    connected_slot_key;
-            slot.connected_name =   connected_slot_name;
-            slot.slot_type =        DrSlotType::Input;
+        if (slot.owner_slot_name == parent_slot_name) {
+            slot.owner_slot_type =      DrSlotType::Input;
+            slot.connected_key =        connected_slot_key;
+            slot.connected_slot_name =  connected_slot_name;
             return;
         }
     }
     DrSlot slot;
-    slot.owner_key =        owner_key;
-    slot.slot_name =        new_slot_name;
-    slot.connected_key =    connected_slot_key;
-    slot.connected_name =   connected_slot_name;
-    slot.slot_type =        DrSlotType::Input;
+    slot.owner_slot_type =      DrSlotType::Input;
+    slot.owner_key =            owner_key;
+    slot.owner_slot_name =      parent_slot_name;
+    slot.connected_key =        connected_slot_key;
+    slot.connected_slot_name =  connected_slot_name;
+
     m_input_slots.push_back(slot);
 }
 
-void DrNode::addOutputSlot(long owner_key, std::string new_slot_name, long connected_slot_key, std::string connected_slot_name) {
+void DrNode::addOutputSlot(long owner_key, std::string parent_slot_name, long connected_slot_key, std::string connected_slot_name) {
     for (auto &slot : m_output_slots) {
-        if (slot.slot_name == new_slot_name) {
-            slot.connected_key =    connected_slot_key;
-            slot.connected_name =   connected_slot_name;
-            slot.slot_type =        DrSlotType::Output;
+        if (slot.owner_slot_name == parent_slot_name) {
+            slot.owner_slot_type =      DrSlotType::Output;
+            slot.connected_key =        connected_slot_key;
+            slot.connected_slot_name =  connected_slot_name;
             return;
         }
     }
     DrSlot slot;
-    slot.owner_key =        owner_key;
-    slot.slot_name =        new_slot_name;
-    slot.connected_key =    connected_slot_key;
-    slot.connected_name =   connected_slot_name;
-    slot.slot_type =        DrSlotType::Output;
+    slot.owner_slot_type =      DrSlotType::Output;
+    slot.owner_key =            owner_key;
+    slot.owner_slot_name =      parent_slot_name;
+    slot.connected_key =        connected_slot_key;
+    slot.connected_slot_name =  connected_slot_name;
+
     m_output_slots.push_back(slot);
 }
 

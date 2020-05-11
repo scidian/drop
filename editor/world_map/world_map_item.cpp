@@ -71,8 +71,8 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
         // ***** Store Slot Circle Rects
         m_input_rects.clear();
         m_output_rects.clear();
-        for (int slot = 0; slot < input_count;  ++slot) { m_input_rects[slot] =  this->slotRect(DrSlotType::Input,  slot); }
-        for (int slot = 0; slot < output_count; ++slot) { m_output_rects[slot] = this->slotRect(DrSlotType::Output, slot); }
+        for (int slot = 0; slot < input_count;  ++slot) { m_input_rects.push_back( this->slotRect(DrSlotType::Input,  slot)); }
+        for (int slot = 0; slot < output_count; ++slot) { m_output_rects.push_back(this->slotRect(DrSlotType::Output, slot)); }
     }
 
     // ***** Starting position
@@ -125,14 +125,14 @@ QPainterPath WorldMapItem::shape() const {
     path.addRoundedRect(boundingRect().adjusted(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer), c_corner_radius, c_corner_radius);
 
     // Go through Node and add Slot Circles
-    for (auto &slot_pair : m_input_rects)  {
+    for (auto &input_rect : m_input_rects)  {
         QPainterPath slot_circle;
-                     slot_circle.addEllipse( slot_pair.second );
+                     slot_circle.addEllipse( input_rect );
         path = path.united(slot_circle);
     }
-    for (auto &slot_pair : m_output_rects) {
+    for (auto &output_rect : m_output_rects) {
         QPainterPath slot_circle;
-                     slot_circle.addEllipse( slot_pair.second );
+                     slot_circle.addEllipse( output_rect );
         path = path.united(slot_circle);
     }
     return path;

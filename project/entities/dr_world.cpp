@@ -19,7 +19,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, std::string new_world_name, bool add_start_stage)
-    : DrSettings(parent_project), DrNode(DrNodeType::World) {
+    : DrSettings(parent_project), DrNode(DrNodeType::World, key) {
 
     this->setKey(key);
     this->initializeSettings(world_type, new_world_name);
