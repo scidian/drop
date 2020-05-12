@@ -78,7 +78,7 @@ public:
     std::vector<QRectF>&        getInputRects()                 { return m_input_rects; }
     std::vector<QRectF>&        getOutputRects()                { return m_output_rects; }
     QRectF                      slotRect(DrSlotType slot_type, int slot_number);
-    DrSlot                      slotAtPoint(QPointF scene_point);
+    OldSlot                      slotAtPoint(QPointF scene_point);
 
     // Getters / Setters
     DrSettings*             getEntity()                         { return m_entity; }

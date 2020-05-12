@@ -27,10 +27,14 @@ class DrSettings;
 
 
 // Local Struct
-struct Slot_Info {
-    long            connected_key;
+struct Slot_Connection {
+    long            connected_entity_key        { c_no_key };
     std::string     connected_component;
+    long            connected_slot_key          { c_no_key };
 };
+
+// Type Definitions
+typedef std::list<Slot_Connection>  Connections;
 
 
 class DrSlot
@@ -41,15 +45,11 @@ private:
     DrComponent        *m_parent_component;                                         // Points to the DrComponent that holds this DrSlot
 
     // Slot Properties
+    long                m_slot_key              { c_no_key };                       // Unique ID key (unique to owner component only), assigned by Dr Component
     DrSlotType          m_slot_type             { DrSlotType::Input };              // Input or Output??
     std::string         m_display_name          { "Untitled" };                     // Name of this slot, used to pass as Signal, also to be displayed in Editor
-
-    std::list<long>     m_connected_key         { c_no_key };
-    std::string         connected_slot_name     { "" };
-    DrPointF            scene_position          { 0, 0 };
-
-    bool                m_is_hidden             { false };                          // Should this appear in the Inspector
-    bool                m_is_editable           { true };                           // Should this be editable in the Inspector
+    Connections         m_connections;                                              // Holds connections if this is a DrSlotType::Output slot
+    bool                m_is_deletable          { false };                          // Should this be deletable in the Node Editor
 
 
 public:

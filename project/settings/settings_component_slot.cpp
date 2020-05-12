@@ -7,7 +7,6 @@
 //
 #include "settings_component_slot.h"
 
-DrSlot::DrSlot()
-{
-
-}
+//DrSlot::DrSlot() {
+//
+//}

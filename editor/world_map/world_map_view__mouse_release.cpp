@@ -73,7 +73,7 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
 
             // We found an item under mouse and we have a start DrNode, see if we have a new slot to connect to
             if (mouse_map_item != nullptr && slot_start_entity != nullptr) {
-                DrSlot      connect_to_slot =       mouse_map_item->slotAtPoint(mouse_in_scene);
+                OldSlot      connect_to_slot =       mouse_map_item->slotAtPoint(mouse_in_scene);
 
                 // Check that we're over a Slot, that Slots are different types, and then connect appropriately
                 if (connect_to_slot.owner_key != c_no_key && connect_to_slot.owner_slot_type != m_slot_start.owner_slot_type) {

@@ -15,7 +15,7 @@
 #include "project/enums_entity_types.h"
 
 // Local Struct
-struct DrSlot {
+struct OldSlot {
     DrSlotType      owner_slot_type         { DrSlotType::Input };
     long            owner_key               { c_no_key };
     std::string     owner_slot_name         { "" };
@@ -25,7 +25,7 @@ struct DrSlot {
 };
 
 // Type Definitions
-typedef std::list<DrSlot>       SlotList;
+typedef std::list<OldSlot>       SlotList;
 
 
 //####################################################################################
@@ -39,8 +39,8 @@ private:
     long                        m_entity_key        { c_no_key };           // Key of parent DrSettings
 
     // Slot Variables
-    std::list<DrSlot>           m_input_slots;                              // List of input slots
-    std::list<DrSlot>           m_output_slots;                             // List of output slots
+    std::list<OldSlot>           m_input_slots;                              // List of input slots
+    std::list<OldSlot>           m_output_slots;                             // List of output slots
 
     // Node Variables
     DrNodeType                  m_node_type;                                // Type of this DrNode

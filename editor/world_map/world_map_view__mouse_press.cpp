@@ -97,7 +97,7 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
                             // Mouse down on Slot Circle
                             if (graphics_item != nullptr) {
-                                DrSlot over_slot = graphics_item->slotAtPoint(m_origin_in_scene);
+                                OldSlot over_slot = graphics_item->slotAtPoint(m_origin_in_scene);
                                 if (over_slot.owner_key != c_no_key) {
                                     m_view_mode = View_Mode::Node_Connect;
                                     m_slot_start = over_slot;

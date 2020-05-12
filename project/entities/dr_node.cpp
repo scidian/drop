@@ -42,7 +42,7 @@ void DrNode::addInputSlot(long owner_key, std::string parent_slot_name, long con
             return;
         }
     }
-    DrSlot slot;
+    OldSlot slot;
     slot.owner_slot_type =      DrSlotType::Input;
     slot.owner_key =            owner_key;
     slot.owner_slot_name =      parent_slot_name;
@@ -61,7 +61,7 @@ void DrNode::addOutputSlot(long owner_key, std::string parent_slot_name, long co
             return;
         }
     }
-    DrSlot slot;
+    OldSlot slot;
     slot.owner_slot_type =      DrSlotType::Output;
     slot.owner_key =            owner_key;
     slot.owner_slot_name =      parent_slot_name;
