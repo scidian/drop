@@ -25,21 +25,21 @@ class DrProperty
 {
 private:
     // External Borrowed Pointers
-    DrSettings     *m_parent_settings;
-    DrComponent    *m_parent_component;
+    DrSettings         *m_parent_settings;                                          // Points to the DrSettings entity that holds the component that holds this property
+    DrComponent        *m_parent_component;                                         // Points to the DrComponent that holds this DrProperty
 
     // The 7 Parts of Data for Every Property
-    std::string     m_display_name      { "Unknown Property" };             // Name to be displayed in Editor
-    std::string     m_description       { "No description." };              // Description to be displayed in Editor
-    Property_Type   m_property_type     { Property_Type::String };          // Variable type of 'm_value'
-    DrVariant       m_value             { std::string("0") };               // The stored data this property represents
-    std::string     m_property_key      { "" };                             // The unique id of this property within the parent object
-    bool            m_is_hidden         { false };                          // Should this appear in the Inspector
-    bool            m_is_editable       { true };                           // Should this be editable in the Inspector
+    std::string         m_display_name      { "Unknown Property" };                 // Name to be displayed in Editor
+    std::string         m_description       { "No description." };                  // Description to be displayed in Editor
+    Property_Type       m_property_type     { Property_Type::String };              // Variable type of 'm_value'
+    DrVariant           m_value             { std::string("0") };                   // The stored data this property represents
+    std::string         m_property_key      { "" };                                 // The unique id of this property within the parent object
+    bool                m_is_hidden         { false };                              // Should this appear in the Inspector
+    bool                m_is_editable       { true };                               // Should this be editable in the Inspector
 
     // For now this is not stored, assignined during creation in void DrComponent::addProperty()
     // Used for sorting in Object Inspector
-    int             m_list_order        { 0 };
+    int                 m_list_order        { 0 };
 
 public:
     // Constructor / Destructor
@@ -53,25 +53,25 @@ public:
                bool             is_hidden = false,
                bool             is_editable = true);
 
-    // Getters / setters
-    DrSettings*     getParentSettings() { return m_parent_settings; }
-    DrComponent*    getParentComponent() { return m_parent_component; }
+    // Getters / Setters
+    DrSettings*         getParentSettings() { return m_parent_settings; }
+    DrComponent*        getParentComponent() { return m_parent_component; }
 
     ComponentProperty   getCompPropPair();
 
-    std::string     getDisplayName() { return m_display_name; }
-    std::string     getDescription() { return m_description; }
-    Property_Type   getPropertyType() { return m_property_type; }
-    DrVariant       getValue() { return m_value; }
-    std::string     getPropertyKey() { return m_property_key; }
-    bool            isHidden() { return m_is_hidden; }
-    bool            isEditable() { return m_is_editable; }
+    std::string         getDisplayName() { return m_display_name; }
+    std::string         getDescription() { return m_description; }
+    Property_Type       getPropertyType() { return m_property_type; }
+    DrVariant           getValue() { return m_value; }
+    std::string         getPropertyKey() { return m_property_key; }
+    bool                isHidden() { return m_is_hidden; }
+    bool                isEditable() { return m_is_editable; }
 
-    void            setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
-    void            setDescription(std::string new_description) { m_description = new_description; }
-    void            setPropertyType(Property_Type new_type) { m_property_type = new_type; }
-    void            setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
-    void            setEditable(bool is_editable) { m_is_editable = is_editable; }
+    void                setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
+    void                setDescription(std::string new_description) { m_description = new_description; }
+    void                setPropertyType(Property_Type new_type) { m_property_type = new_type; }
+    void                setHidden(bool is_hidden) { m_is_hidden = is_hidden; }
+    void                setEditable(bool is_editable) { m_is_editable = is_editable; }
 
     // Inspector Sorting Variable
     int             getListOrder() { return m_list_order; }

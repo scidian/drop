@@ -18,6 +18,7 @@ class DrProperty;
 
 // Type Definitions
 typedef std::map<std::string, DrProperty*> PropertyMap;
+typedef std::map<std::string, DrProperty*> PropertyMap;
 
 
 //####################################################################################
@@ -28,22 +29,22 @@ class DrComponent
 {
 private:
     // External Borrowed Pointers
-    DrSettings      *m_parent_settings;                                     // Point to the DrSettings class that holds this component
+    DrSettings         *m_parent_settings;                                          // Points to the DrSettings entity that holds this component
 
     // Local Variables
-    PropertyMap     m_properties;                                           // Map of pointers to DrProperty classes
+    PropertyMap         m_properties;                                               // Map of pointers to DrProperty classes
 
     // The 6 Parts of Data for Every Component
-    std::string     m_display_name      { "Unknown Component" };
-    std::string     m_description       { "No description." };
-    std::string     m_icon              { "" };
-    DrColor         m_color             { DrColor(128, 128, 128, 255) };
-    bool            m_turned_on         { false };
-    std::string     m_component_key     { "" };
+    std::string         m_display_name      { "Unknown Component" };
+    std::string         m_description       { "No description." };
+    std::string         m_icon              { "" };
+    DrColor             m_color             { DrColor(128, 128, 128, 255) };
+    bool                m_turned_on         { false };
+    std::string         m_component_key     { "" };
 
     // For now this is not stored, assignined during creation in void DrStage::addComponent()
     // Used for sorting in Object Inspector
-    int             m_list_order        { 0 };
+    int                 m_list_order        { 0 };
 
 public:
     // Constructor / Destructor
@@ -56,20 +57,20 @@ public:
     PropertyMap&        getPropertyMap() { return m_properties; }
     DrProperty*         getProperty(std::string property_key, bool show_error = true);
 
-    std::string     getDisplayName() { return m_display_name; }
-    std::string     getDescription() { return m_description; }
-    std::string     getIcon() { return m_icon; }
-    DrColor         getColor() { return m_color; }
-    bool            isTurnedOn() { return m_turned_on; }
-    std::string     getComponentKey() { return m_component_key; }
+    std::string         getDisplayName() { return m_display_name; }
+    std::string         getDescription() { return m_description; }
+    std::string         getIcon() { return m_icon; }
+    DrColor             getColor() { return m_color; }
+    bool                isTurnedOn() { return m_turned_on; }
+    std::string         getComponentKey() { return m_component_key; }
 
-    void            setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
-    void            setDescription(std::string new_description) { m_description = new_description; }
-    void            setIcon(std::string new_icon) { m_icon = new_icon; }
-    void            setColor(DrColor new_color) { m_color = new_color; }
-    void            setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
-    void            turnOn() { m_turned_on = true; }
-    void            turnOff() { m_turned_on = false; }
+    void                setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
+    void                setDescription(std::string new_description) { m_description = new_description; }
+    void                setIcon(std::string new_icon) { m_icon = new_icon; }
+    void                setColor(DrColor new_color) { m_color = new_color; }
+    void                setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
+    void                turnOn() { m_turned_on = true; }
+    void                turnOff() { m_turned_on = false; }
 
     // Inspector Sorting Variable
     int             getListOrder() { return m_list_order; }

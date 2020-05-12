@@ -335,7 +335,8 @@ SOURCES += \
     project/properties/property_collision.cpp \
     project/settings/settings.cpp \
     project/settings/settings_component.cpp \
-    project/settings/settings_component_property.cpp
+    project/settings/settings_component_property.cpp \
+    project/settings/settings_component_slot.cpp
 
 
 HEADERS += \
@@ -1052,6 +1053,7 @@ HEADERS += \
     project/properties/property_collision.h \
     project/settings/settings.h \
     project/settings/settings_component.h \
-    project/settings/settings_component_property.h
+    project/settings/settings_component_property.h \
+    project/settings/settings_component_slot.h
 
 
