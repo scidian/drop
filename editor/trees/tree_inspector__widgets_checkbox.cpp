@@ -29,7 +29,6 @@
 //##    Checkbox
 //####################################################################################
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type check_type) {
-    std::string property_key = property->getPropertyKey();
 
     DrQCheckBox *check = new DrQCheckBox();
     check->setObjectName("checkInspector");
@@ -40,8 +39,11 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
     check->setTristate(false);
     check->setProperty(User_Property::Mouse_Over, false);               // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));         // Used to track when the mouse is within the indicator area for custom paint event
-    check->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    check->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    check->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    check->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    check->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    check->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
+
 
     if (check_type == Property_Type::BoolEnabled) {
         std::vector<DrVariant> prop_list = property->getValue().toVector();
@@ -64,7 +66,6 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 //##        std::vector<DrVariant> of 6 values: bool, double value, min, max, double step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
-    std::string property_key = property->getPropertyKey();
 
     QFrame *spin_pair = new QFrame();
     spin_pair->setFixedHeight(25);
@@ -84,8 +85,10 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     check_left->setTristate(false);
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
-    check_left->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    check_left->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    check_left->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    check_left->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    check_left->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    check_left->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
@@ -95,8 +98,10 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
     spin_right->setRange(property->getValue().toVector()[2].toDouble(), property->getValue().toVector()[3].toDouble());
     spin_right->setSingleStep(property->getValue().toVector()[4].toDouble());
-    spin_right->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    spin_right->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    spin_right->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_right->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    spin_right->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_right->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     spin_right->setEnabled(property->getValue().toVector()[0].toBool());
 
     horizontal_split->addWidget(check_left);
@@ -127,7 +132,6 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 //##        std::vector<DrVariant> of 6 values: bool, int value, min, max, int step size, string spinText
 //####################################################################################
 QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
-    std::string property_key = property->getPropertyKey();
 
     QFrame *spin_pair = new QFrame();
     spin_pair->setFixedHeight(25);
@@ -148,8 +152,10 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     check_left->setTristate(false);
     check_left->setProperty(User_Property::Mouse_Over, false);              // Initialize some mouse user data, DrFilterHoverHandler updates this info,
     check_left->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));        // Used to track when the mouse is within the indicator area for custom paint event
-    check_left->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    check_left->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    check_left->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    check_left->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    check_left->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    check_left->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
@@ -164,8 +170,10 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     spin_right->setRange(property->getValue().toVector()[2].toInt(), property->getValue().toVector()[3].toInt());
     spin_right->setSingleStep(property->getValue().toVector()[4].toInt());
     spin_right->setValue(property->getValue().toVector()[1].toInt());
-    spin_right->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    spin_right->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    spin_right->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_right->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    spin_right->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_right->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     spin_right->setEnabled(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(spin_right, property);
 

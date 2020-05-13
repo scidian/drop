@@ -45,7 +45,7 @@ private:
     DrComponent        *m_parent_component;                                         // Points to the DrComponent that holds this DrSlot
 
     // Slot Properties
-    long                m_slot_key              { c_no_key };                       // Unique ID key (unique to owner component only), assigned by Dr Component
+    long                m_slot_key              { c_no_key };                       // Unique ID key (unique to owner component only), assigned by DrComponent
     DrSlotType          m_slot_type             { DrSlotType::Input };              // Input or Output??
     std::string         m_display_name          { "Untitled" };                     // Name of this slot, used to pass as Signal, also to be displayed in Editor
     Connections         m_connections;                                              // Holds connections if this is a DrSlotType::Output slot

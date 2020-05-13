@@ -124,14 +124,15 @@ public:
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Local Variable Functions
-    long        checkCurrentKey()                               { return m_key_generator; }
-    long        getNextKey()                                    { return m_key_generator++; }
-    void        setKeyGeneratorStartNumber(long initial_key)    { m_key_generator = initial_key; }
-
     bool        hasSaved()                  { return m_has_saved; }
     bool        isTestOnly()                { return m_test_only; }
     void        setHasSaved(bool saved)     { m_has_saved = saved; }
     void        setTestOnly(bool test)      { m_test_only = test; }
+
+    // Entity Key Generator
+    long            checkCurrentGeneratorKey()                      { return m_key_generator; }
+    long            getNextKey()                                    { return m_key_generator++; }
+    void            setGeneratorKeyStartNumber(long initial_key)    { m_key_generator = initial_key; }
 
 
     // Options Calls

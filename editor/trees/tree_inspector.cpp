@@ -281,16 +281,17 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
     for (auto component: components) {
         if (component->isTurnedOn() == false) {
             continue;
-        } else if (component->getComponentKey() == Comps::Hidden_Settings   ||
-                   component->getComponentKey() == Comps::Size_Settings     ||
-                   component->getComponentKey() == Comps::Local_Variables   ||
-                   component->getComponentKey() == Comps::User_Variables) {
+        } else if (component->getComponentName() == Comps::Hidden_Settings   ||
+                   component->getComponentName() == Comps::Size_Settings     ||
+                   component->getComponentName() == Comps::Local_Variables   ||
+                   component->getComponentName() == Comps::User_Variables) {
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
         }
 
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
-        category_item->setData(0, User_Roles::CompKey, QString::fromStdString(component->getComponentKey()));       // Stores component key
+        category_item->setData(0, User_Roles::CompKee,  QVariant::fromValue(    component->getComponentKee()));         // Stores component key
+        category_item->setData(0, User_Roles::CompName, QString::fromStdString( component->getComponentName()));        // Stores component name
         this->addTopLevelItem(category_item);
 
         // Create and style a button to be used as a header item for the category
@@ -298,7 +299,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         QGridLayout *grid = new QGridLayout(button_frame);
         grid->setContentsMargins(0, 0, 0, 0);
 
-        if (component->getComponentKey() == Comps::Entity_Settings) {
+        if (component->getComponentName() == Comps::Entity_Settings) {
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
@@ -365,8 +366,10 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
 
             QFrame *single_row = new QFrame(properties_frame);
             single_row->setObjectName("propertyRow");
-            single_row->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-            single_row->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+            single_row->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+            single_row->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+            single_row->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+            single_row->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
 
             QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
             horizontal_split->setSpacing(6);
@@ -382,8 +385,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
                 property_name->setSizePolicy(sp_left);
                 getHoverHandler()->attachToHoverHandler(property_name, property);
 
-                if (property->getPropertyKey() == Props::Thing_Filter_Convert_3D ||
-                    property->getPropertyKey() == Props::World_Filter_Convert_3D) {
+                if (property->getPropertyName() == Props::Thing_Filter_Convert_3D ||
+                    property->getPropertyName() == Props::World_Filter_Convert_3D) {
                     // 3Dish Shadow Effect
                     ///QGraphicsDropShadowEffect *text_effect_3d_b = new QGraphicsDropShadowEffect();
                     ///text_effect_3d_b->setBlurRadius(2.0);

@@ -66,11 +66,13 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
         image_frame->setProperty(User_Property::Body,    QString::fromStdString(property->getDescription()));
     }
 
-    std::string property_key = property->getPropertyKey();
+    std::string property_name = property->getPropertyName();
     image_frame->setProperty(User_Property::Mouse_Over, false);                             // Initialize mouse user data, event filter updates this info
     image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                       // Used to track when the mouse
-    image_frame->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    image_frame->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    image_frame->setProperty(User_Property::CompKee,    QVariant::fromValue(    property->getParentComponent()->getComponentKee()) );
+    image_frame->setProperty(User_Property::CompName,   QString::fromStdString( property->getParentComponent()->getComponentName()) );
+    image_frame->setProperty(User_Property::PropKee,    QVariant::fromValue(    property->getPropertyKee()) );
+    image_frame->setProperty(User_Property::PropName,   QString::fromStdString( property->getPropertyName()) );
     if (rebuilding == false) addToWidgetList(image_frame);
 
     // ***** Create the label that will display the image
@@ -172,10 +174,10 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
     DrImageHolder *frame = dynamic_cast<DrImageHolder*>(object);
     if (frame == nullptr) return QObject::eventFilter(object, event);
     long settings_key = getEditorRelay()->getInspector()->getShownKey();
-    std::string component_key = frame->property(User_Property::CompKey).toString().toStdString();
-    std::string property_key =  frame->property(User_Property::PropKey).toString().toStdString();
+    std::string component_name = frame->property(User_Property::CompName).toString().toStdString();
+    std::string property_name =  frame->property(User_Property::PropName).toString().toStdString();
 
-    if (settings_key <= 0 || property_key == "") return QObject::eventFilter(object, event);
+    if (settings_key <= 0 || property_name == "") return QObject::eventFilter(object, event);
     DrProject  *project =   m_editor_relay->currentProject();               if (project == nullptr)  return QObject::eventFilter(object, event);
     DrSettings *settings =  project->findSettingsFromKey(settings_key);     if (settings == nullptr) return QObject::eventFilter(object, event);
 
@@ -254,7 +256,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
                 count++;
             }
         }
-        DrProperty *property = settings->findPropertyFromPropertyKey(property_key);
+        DrProperty *property = settings->findPropertyFromPropertyName(property_name);
         if (file_paths.isEmpty() || property == nullptr) {
             event->ignore();
             return QObject::eventFilter(object, event);

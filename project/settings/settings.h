@@ -26,7 +26,10 @@ enum class Variable_Info {
 };
 
 // Type Definitions
-typedef std::map<std::string, DrComponent*>     ComponentMap;       // Map of pointers to DrComponent classes, built in keys in file components_and_properties.h
+typedef std::map<std::string, DrComponent*>     ComponentMap;               // Map of pointers to DrComponent classes, built in names in file components_and_properties.h
+
+// Local Constants
+const   long    c_component_starting_number =   1;
 
 
 //####################################################################################
@@ -44,13 +47,14 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrProject      *m_parent_project;                               // Holds reference to parent Project
+    DrProject      *m_parent_project;                                       // Holds reference to parent Project
 
     // Local Variables
-    ComponentMap    m_components;                                   // Map of pointers to DrComponent classes
+    long            m_key_generator     { c_component_starting_number };    // Variable to hand out unique id key's to all child objects (in this case DrComponents)
+    ComponentMap    m_components;                                           // Map of pointers to DrComponent classes
 
-    long            m_is_visible = true;                            // Should this be visible in editor?
-    long            m_is_locked = false;                            // Should this Entity be locked from editing?
+    long            m_is_visible        { true };                           // Should this be visible in editor?
+    long            m_is_locked         { false };                          // Should this Entity be locked from editing?
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -81,33 +85,39 @@ public:
     void            setVisible(bool visible)    { m_is_visible = visible; }
 
 
+    // Component Key Generator
+    long            checkCurrentGeneratorKey()                      { return m_key_generator; }
+    long            getNextKey()                                    { return m_key_generator++; }
+    void            setGeneratorKeyStartNumber(long initial_key)    { m_key_generator = initial_key; }
+
+
     // Component Handling
     ComponentMap&   getComponentMap()           { return m_components; }
     long            getComponentCount()         { return static_cast<int>(m_components.size()); }
 
-    bool            hasComponent(std::string component_key);
+    bool            hasComponent(std::string component_name);
 
-    DrComponent*    getComponent(std::string component_key, bool show_error = true);
-    DrProperty*     getComponentProperty(std::string component_key, std::string property, bool show_error = true);
+    DrComponent*    getComponent(std::string component_name, bool show_error = true);
+    DrProperty*     getComponentProperty(std::string component_name, std::string property, bool show_error = true);
     DrProperty*     getComponentProperty(ComponentProperty component_property_pair);
-    DrVariant       getComponentPropertyValue(std::string component_key, std::string property_key);
+    DrVariant       getComponentPropertyValue(std::string component_name, std::string property_name);
 
     void            setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value, bool show_error = true);
-    void            setComponentPropertyValue(std::string component_key, std::string property_key, DrVariant value, bool show_error = true);
+    void            setComponentPropertyValue(std::string component_name, std::string property_name, DrVariant value, bool show_error = true);
 
     // Component / Property Searching
-    DrComponent*    findComponentFromPropertyKey(std::string property_key_to_find);
-    DrProperty*     findPropertyFromPropertyKey(std::string property_key_to_find);
+    DrComponent*    findComponentFromPropertyName(std::string property_name_to_find);
+    DrProperty*     findPropertyFromPropertyName(std::string property_name_to_find);
 
     // Component / Property Building
-    DrComponent*    addComponent(std::string component_key, std::string display_name, std::string description, DrColor color, bool is_turned_on);
-    DrProperty*     addPropertyToComponent(std::string component_key, std::string property_key, Property_Type type, DrVariant value,
+    DrComponent*    addComponent(std::string component_name, std::string display_name, std::string description, DrColor color, bool is_turned_on);
+    DrProperty*     addPropertyToComponent(std::string component_name, std::string property_name, Property_Type type, DrVariant value,
                                            std::string display_name, std::string description, bool is_hidden = false, bool is_editable = true);
 
     // Animation Functions
     std::list<long>         animationsUsedByEntity();
     void                    deleteAnimations();
-    void                    updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_key);
+    void                    updateAnimationProperty(std::list<long> image_keys, ComponentProperty animation_component_property_name);
 
 
     // Entity Settings

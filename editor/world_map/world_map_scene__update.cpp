@@ -40,8 +40,11 @@ void WorldMapScene::updateChangesInScene(std::list<DrSettings*> changed_items, s
         //################ !!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    // Try to redraw in case items have changed
-    update();
+    // ***** Try to redraw in case items have changed
+    this->update();
+    for (auto item : this->items()) {           // Forces repaint of all GraphicsItems
+        item->update();
+    }
 }
 
 

@@ -33,10 +33,10 @@ QLineEdit* TreeInspector::createLineEdit(DrProperty *property, QFont &font, QSiz
     edit->setSizePolicy(size_policy);
     edit->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-    std::string property_key = property->getPropertyKey();
-
-    edit->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    edit->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    edit->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    edit->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    edit->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    edit->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     edit->setText(QString::fromStdString(property->getValue().toString()));
 
     getHoverHandler()->attachToHoverHandler(edit, property);
@@ -62,10 +62,10 @@ QTextEdit* TreeInspector::createTextEdit(DrProperty *property, QFont &font, QSiz
     edit->setLineWrapMode(QTextEdit::LineWrapMode::WidgetWidth);
     edit->setFixedHeight(90);
 
-    std::string property_key = property->getPropertyKey();
-
-    edit->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    edit->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    edit->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    edit->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    edit->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    edit->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     edit->setText(QString::fromStdString(property->getValue().toString()));
 
     getHoverHandler()->attachToHoverHandler(edit, property);

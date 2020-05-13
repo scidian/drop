@@ -12,7 +12,7 @@
 #include <string>
 
 // Type Definitions
-typedef std::pair<std::string, std::string>     ComponentProperty;      // Component / Property key set, first string is Component, second is Property
+typedef std::pair<std::string, std::string>     ComponentProperty;      // Component / Property name set, first string is Component, second is Property
 
 
 //####################################################################################

@@ -63,7 +63,7 @@ bool OpenProjectFromFile(DrProject *project, std::string open_file) {
     QString version_minor = options["version_minor"].toString();
     QString version_build = options["version_build"].toString();
     long    key_generator = options["key_generator"].toLongLong();
-    project->setKeyGeneratorStartNumber( key_generator );
+    project->setGeneratorKeyStartNumber( key_generator );
 
     // ***** Test for a basic property, if doesnt have this probably not a valid save file, return false
     if (checkMapHasKey(options, "name") == false) return false;
@@ -299,7 +299,7 @@ bool OpenProjectFromFile(DrProject *project, std::string open_file) {
 
 
     // ***** Set Key Generator from Save file
-    if (project->checkCurrentKey() != key_generator) {
+    if (project->checkCurrentGeneratorKey() != key_generator) {
         ///Dr::ShowMessageBox("Warning, key generator was changed during File Open! \n "
         ///                   "Before: " + QString::number(key_generator) + ", After: " + QString::number(m_key_generator));
         ///m_key_generator = key_generator;
@@ -325,7 +325,7 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
     // ***** Go through and load Components
     for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
-        QString map_key = QString::fromStdString(component->getComponentKey()) + ":";
+        QString map_key = QString::fromStdString(component->getComponentName()) + ":";
         QString k;
         ///k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString().toStdString()   );
         k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString().toStdString()   );
@@ -341,15 +341,15 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
 
             // !!!!! #TEMP: Don't try to load collision shape for now, need to implement QDataStream overloads for DrPropertyCollision class
-            if (property->getPropertyKey() == Props::Asset_Collision_Image_Shape) continue;
+            if (property->getPropertyName() == Props::Asset_Collision_Image_Shape) continue;
 
             // !!!!! #NOTE: Base Key / Idle Animation is set upon Asset Creation
-            if (property->getPropertyKey() == Props::Asset_Animation_Idle) continue;
+            if (property->getPropertyName() == Props::Asset_Animation_Idle) continue;
 
 
 
             // ***** Check data type is the same as we were expecting
-            QString map_key = QString::fromStdString(component->getComponentKey()) + ":" + QString::fromStdString(property->getPropertyKey()) + ":";
+            QString map_key = QString::fromStdString(component->getComponentName()) + ":" + QString::fromStdString(property->getPropertyName()) + ":";
             Property_Type check_property_type;
             k = map_key + "data_type";
             if (checkMapHasKey(map, k)) {
@@ -378,16 +378,16 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
 
                 }
 
-                if (property->getPropertyKey() != Props::Entity_Key) {
+                if (property->getPropertyName() != Props::Entity_Key) {
                     k = map_key + "is_hidden";      if (checkMapHasKey(map, k)) property->setHidden(        map[k].toBool() );
                     k = map_key + "is_editable";    if (checkMapHasKey(map, k)) property->setEditable(      map[k].toBool() );
                 }
 
                 // Check that name is disabled for Things
-                if (entity->getType() == DrType::Thing && property->getPropertyKey() == Props::Entity_Name) {
+                if (entity->getType() == DrType::Thing && property->getPropertyName() == Props::Entity_Name) {
                     property->setEditable( false );
                 // Keep Sub Order hidden
-                } else if (property->getPropertyKey() == Props::Thing_Sub_Z_Order) {
+                } else if (property->getPropertyName() == Props::Thing_Sub_Z_Order) {
                     property->setEditable( false );
                     property->setHidden( true );
                 }

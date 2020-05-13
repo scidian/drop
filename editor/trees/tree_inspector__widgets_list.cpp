@@ -34,80 +34,80 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     button->setFont(font);
     button->setSizePolicy(size_policy);
 
-    std::string property_key = property->getPropertyKey();
+    std::string property_name = property->getPropertyName();
 
     QStringList options;
-    if          (property_key == Props::Thing_Object_Damage) {
+    if          (property_name == Props::Thing_Object_Damage) {
         options << tr("No Damage")
                 << tr("Damage Player")
                 << tr("Damage Enemy")
                 << tr("Damage All");
-    } else if   (property_key == Props::Thing_Object_Physics_Type) {
+    } else if   (property_name == Props::Thing_Object_Physics_Type) {
         options << tr("Static")
                 << tr("Kinematic")
                 << tr("Dynamic");
-    } else if   (property_key == Props::Stage_Grid_Style) {
+    } else if   (property_name == Props::Stage_Grid_Style) {
         options << tr("Lines")
                 << tr("Dots");
-    } else if   (property_key == Props::Thing_Light_Type) {
+    } else if   (property_name == Props::Thing_Light_Type) {
         options << tr("Opaque")
                 << tr("Glow");
-    } else if   (property_key == Props::World_Light_Blend) {
+    } else if   (property_name == Props::World_Light_Blend) {
         options << tr("Default")
                 << tr("Multiply")
                 << tr("Overlay")
                 << tr("Hard Light");
-    } else if   (property_key == Props::Thing_Water_Texture) {
+    } else if   (property_name == Props::Thing_Water_Texture) {
         options << tr("None")
                 << tr("Ripples")
                 << tr("Cells")
                 << tr("Caustic")
                 << tr("Liquid");
-    } else if   (property_key == Props::Thing_Fire_Shape) {
+    } else if   (property_name == Props::Thing_Fire_Shape) {
         options << tr("Torch")
                 << tr("Candle")
                 << tr("Square")
                 << tr("Triangle");
-    } else if   (property_key == Props::Thing_3D_Type) {
+    } else if   (property_name == Props::Thing_3D_Type) {
         options << tr("None")
                 << tr("Extruded")
                 << tr("Wrapped Cube")
                 << tr("Pyramid");
-    } else if   (property_key == Props::Asset_Collision_One_Way_Type) {
+    } else if   (property_name == Props::Asset_Collision_One_Way_Type) {
         options << tr("None")
                 << tr("Pass Through")
                 << tr("Weak Spot");
-    } else if   (property_key == Props::Asset_Collision_Shape) {
+    } else if   (property_name == Props::Asset_Collision_Shape) {
         options << tr("Image Shape")
                 << tr("Circle")
                 << tr("Square")
                 << tr("Triangle");
-    } else if   (property_key == Props::Asset_Health_Death_Animation) {
+    } else if   (property_name == Props::Asset_Health_Death_Animation) {
         options << tr("None")
                 << tr("Fade")
                 << tr("Shrink");
-    } else if   (property_key == Props::World_Camera_Type) {
+    } else if   (property_name == Props::World_Camera_Type) {
         options << tr("Perspective")
                 << tr("Orthographic");
-    } else if   (property_key == Props::Thing_Character_Camera_Up_Vector ||
-                 property_key == Props::Thing_Camera_Up_Vector) {
+    } else if   (property_name == Props::Thing_Character_Camera_Up_Vector ||
+                 property_name == Props::Thing_Camera_Up_Vector) {
         options << tr("Y Axis (Default)")
                 << tr("Z Axis (First Person)");
-    } else if   (property_key == Props::Thing_Object_Collision_Group) {
+    } else if   (property_name == Props::Thing_Object_Collision_Group) {
         options << tr("None")
                 << tr("All")
                 << tr("Active Players Only")
                 << tr("Players")
                 << tr("Enemies");
-    } else if   (property_key == Props::Thing_Spawn_Type) {
+    } else if   (property_name == Props::Thing_Spawn_Type) {
         options << tr("Permanent")
                 << tr("Shoot Button")
                 << tr("Jump Button")
                 << tr("Object Death");
-    } else if   (property_key == Props::World_Camera_Zoom_In_Or_Out) {
+    } else if   (property_name == Props::World_Camera_Zoom_In_Or_Out) {
         options << tr("Zoom Out")
                 << tr("Zoom In");
-    } else if   (property_key == Props::World_Filter_PixelType || property_key == Props::Thing_Filter_PixelType) {
+    } else if   (property_name == Props::World_Filter_PixelType || property_name == Props::Thing_Filter_PixelType) {
         options << tr("None")
                 << tr("Ascii Text")
                 << tr("Brick Wall")
@@ -118,11 +118,11 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
                 << tr("Knitted Stitch")
                 << tr("Woven Cloth")
                 << tr("Wood Blocks");
-    } else if   (property_key == Props::Thing_Lighting_Blend_Object) {
+    } else if   (property_name == Props::Thing_Lighting_Blend_Object) {
         options << tr("Standard")
                 << tr("Additive")
                 << tr("Subtractive");
-    } else if   (property_key == Props::Asset_Physics_Body_Style) {
+    } else if   (property_name == Props::Asset_Physics_Body_Style) {
         options << tr("Rigid Body")
                 << tr("Circular Blob")
                 << tr("Square Blob")
@@ -160,7 +160,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             this->updateSettingsFromNewValue(property->getCompPropPair(), action->property(User_Property::Order).toInt());
         });
 
-        if (property_key == Props::Thing_Object_Damage) {
+        if (property_name == Props::Thing_Object_Damage) {
             connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Damage_None[0],     Advisor_Info::Damage_None[1]);          break;
@@ -171,7 +171,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             });
         }
 
-        if (property_key == Props::Thing_Object_Physics_Type) {
+        if (property_name == Props::Thing_Object_Physics_Type) {
             connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Object_Static[0],    Advisor_Info::Object_Static[1]);       break;
@@ -181,7 +181,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
             });
         }
 
-        if (property_key == Props::Thing_Light_Type) {
+        if (property_name == Props::Thing_Light_Type) {
             connect(action, &QAction::hovered, [this, string_count]() {
                 switch (string_count) {
                     case 0: this->setAdvisorInfo( Advisor_Info::Light_Opaque[0],    Advisor_Info::Light_Opaque[1]);          break;
@@ -194,8 +194,10 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     }
 
     button->setMenu(menu);
-    button->setProperty(User_Property::CompKey, QString::fromStdString(property->getParentComponent()->getComponentKey()) );
-    button->setProperty(User_Property::PropKey, QString::fromStdString(property->getPropertyKey()) );
+    button->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    button->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
+    button->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    button->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     menu->installEventFilter(new DrFilterPopUpMenuRelocater(menu, 2, 0));
     getHoverHandler()->attachToHoverHandler(button, property);
     addToWidgetList(button);

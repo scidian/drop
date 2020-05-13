@@ -67,7 +67,7 @@ void SaveProjectToFile(DrProject *project) {
     options["version_major"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Major).toString());
     options["version_minor"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Minor).toString());
     options["version_build"] =  QString::fromStdString( Dr::GetPreference(Preferences::Version_Build).toString());
-    options["key_generator"] =  QVariant::fromValue(project->checkCurrentKey());
+    options["key_generator"] =  QVariant::fromValue(project->checkCurrentGeneratorKey());
     options["name"] =           QString::fromStdString( project->getOption(Project_Options::Name).toString());
     options["file_path"] =      QString::fromStdString( project->getOption(Project_Options::File_Name_Path).toString());
     options["current_world"] =  QVariant::fromValue(project->getOption(Project_Options::Current_World).toInt());
@@ -247,17 +247,17 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
     map["visible"] = QVariant::fromValue(entity->isVisible());
     for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
-        QString map_key = QString::fromStdString(component->getComponentKey()) + ":";
+        QString map_key = QString::fromStdString(component->getComponentName()) + ":";
         map[map_key + "display_name"] = QString::fromStdString(component->getDisplayName());
         map[map_key + "description"] =  QString::fromStdString(component->getDescription());
         map[map_key + "icon"] =         QString::fromStdString(component->getIcon());
         map[map_key + "color"] =        QVariant::fromValue(component->getColor().rgba());
         map[map_key + "turned_on"] =    QVariant::fromValue(component->isTurnedOn());
-        map[map_key + "comp_key"] =     QString::fromStdString(component->getComponentKey());
+        map[map_key + "comp_key"] =     QString::fromStdString(component->getComponentName());
 
         for (auto property_pair : component->getPropertyMap()) {
             DrProperty *property = property_pair.second;
-            QString map_key = QString::fromStdString(component->getComponentKey()) + ":" + QString::fromStdString(property->getPropertyKey()) + ":";
+            QString map_key = QString::fromStdString(component->getComponentName()) + ":" + QString::fromStdString(property->getPropertyName()) + ":";
             map[map_key + "display_name"] = QString::fromStdString(property->getDisplayName());
             map[map_key + "description"] =  QString::fromStdString(property->getDescription());
             map[map_key + "data_type"] =    QVariant::fromValue(static_cast<int>(property->getPropertyType()));
@@ -265,7 +265,7 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
 // !!!!! #NEED_FIX_VARIANT_UPDATE
 //            map[map_key + "value"] =      property->getValue();
 
-            map[map_key + "prop_key"] =     QString::fromStdString(property->getPropertyKey());
+            map[map_key + "prop_key"] =     QString::fromStdString(property->getPropertyName());
             map[map_key + "is_hidden"] =    QVariant::fromValue(property->isHidden());
             map[map_key + "is_editable"] =  QVariant::fromValue(property->isEditable());
         }

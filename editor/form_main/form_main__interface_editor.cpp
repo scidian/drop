@@ -113,10 +113,10 @@ void FormMain::buildScene(long stage_key) {
     }
 }
 
-void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_keys) {
+void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_names) {
     // If theres notthing to update, go ahead and get out now
-    if (changed_items.empty()) return;
-    if (property_keys.empty()) return;
+    if (changed_items.empty())  return;
+    if (property_names.empty()) return;
 
     // Don't update Inspector constantly while objects are being moved around, very slow
     if (currentViewMode() == View_Mode::Disable_Update) return;
@@ -125,11 +125,11 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
     if (currentViewMode() == View_Mode::Rotating)       return;
 
     // !!!!! #NOTE: This order is semi important, best NOT TO CHANGE IT !!!!!
-    if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Map_View)           sceneWorldMap->updateChangesInScene(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItems(changed_items, property_keys);
-    if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_keys);
+    if (changed_from != Editor_Widgets::Stage_View)         sceneEditor->updateChangesInScene(changed_items, property_names);
+    if (changed_from != Editor_Widgets::Map_View)           sceneWorldMap->updateChangesInScene(changed_items, property_names);
+    if (changed_from != Editor_Widgets::Inspector_Tree)     treeInspector->updateInspectorPropertyBoxes(changed_items, property_names);
+    if (changed_from != Editor_Widgets::Project_Tree)       treeProjectEditor->updateItems(changed_items, property_names);
+    if (changed_from != Editor_Widgets::Asset_Tree)         treeAssetEditor->updateAssetList(changed_items, property_names);
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long update_count = 0;

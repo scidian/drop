@@ -103,8 +103,8 @@ void FormMain::buttonGroupTransformClicked(int id) {
 
     if (clicked == Buttons_Transform::Reset_Object) {
         std::list<DrSettings*> settings;
-        std::list<ComponentProperty> properties { std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
-                                                  std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) };
+        std::list<ComponentProperty> properties_to_update { std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
+                                                            std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) };
 
         for (auto item : sceneEditor->getSelectionItems()) {
             EditorItem *graphics_item = dynamic_cast<EditorItem*>(item);
@@ -117,7 +117,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
             thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation, 0);
         }
         sceneEditor->resetSelectionGroup();
-        updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties );
+        updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties_to_update );
 
     } else if (clicked == Buttons_Transform::Flip_H || clicked == Buttons_Transform::Flip_V) {
         QPointF scale = (clicked == Buttons_Transform::Flip_H) ? QPointF(-1, 1) : QPointF(1, -1);
