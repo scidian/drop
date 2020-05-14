@@ -48,7 +48,7 @@ DrProperty* DrComponent::getProperty(std::string property_name, bool show_error)
             Dr::PrintDebug("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
                            "Property not found by name in object / component \n\n"
                            "Property Name: \t" + property_name + "\n"
-                           "Component Key: \t" + std::to_string(this->getComponentKee()) + "\n"
+                           "Component Key: \t" + std::to_string(this->getComponentKey()) + "\n"
                            "Component Name: \t" + this->getComponentName() + "\n"
                            "Display Name: \t" + this->getDisplayName() + "\n"
                            "Object Name: \t" + this->m_parent_settings->getName() + "\n"

@@ -194,9 +194,9 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     }
 
     button->setMenu(menu);
-    button->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    button->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
     button->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-    button->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    button->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
     button->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
     menu->installEventFilter(new DrFilterPopUpMenuRelocater(menu, 2, 0));
     getHoverHandler()->attachToHoverHandler(button, property);

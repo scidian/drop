@@ -47,9 +47,9 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         color_button->setObjectName(QStringLiteral("buttonColorBox"));
         color_button->setFont(font);
         color_button->setSizePolicy(size_policy);
-        color_button->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+        color_button->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
         color_button->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-        color_button->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+        color_button->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
         color_button->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
 
         this->updateColorButton(color_button, color);

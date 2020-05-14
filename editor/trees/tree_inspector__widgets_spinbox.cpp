@@ -54,9 +54,9 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
         default:                            spin->setRange(-100000000, 100000000);
     }
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
-    spin->setProperty(User_Property::CompKee,  QVariant::fromValue(     property->getParentComponent()->getComponentKee()) );
+    spin->setProperty(User_Property::CompKey,  QVariant::fromValue(     property->getParentComponent()->getComponentKey()) );
     spin->setProperty(User_Property::CompName, QString::fromStdString(  property->getParentComponent()->getComponentName()) );
-    spin->setProperty(User_Property::PropKee,  QVariant::fromValue(     property->getPropertyKee()) );
+    spin->setProperty(User_Property::PropKey,  QVariant::fromValue(     property->getPropertyKey()) );
     spin->setProperty(User_Property::PropName, QString::fromStdString(  property->getPropertyName()) );
     spin->setValue( property_value );
 
@@ -108,9 +108,9 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);     // Hides little up / down buttons
 
     // Store property key within item, set initial starting value of spin box
-    spin->setProperty(User_Property::CompKee,  QVariant::fromValue(     property->getParentComponent()->getComponentKee()) );
+    spin->setProperty(User_Property::CompKey,  QVariant::fromValue(     property->getParentComponent()->getComponentKey()) );
     spin->setProperty(User_Property::CompName, QString::fromStdString(  property->getParentComponent()->getComponentName()) );
-    spin->setProperty(User_Property::PropKee,  QVariant::fromValue(     property->getPropertyKee()) );
+    spin->setProperty(User_Property::PropKey,  QVariant::fromValue(     property->getPropertyKey()) );
     spin->setProperty(User_Property::PropName, QString::fromStdString(  property->getPropertyName()) );
     spin->setValue( property_value );
 
@@ -204,13 +204,13 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     horizontal_split->addWidget(spin_left);
     horizontal_split->addWidget(spin_right);
 
-    spin_left->setProperty(User_Property::CompKee,  QVariant::fromValue(        property->getParentComponent()->getComponentKee()) );
+    spin_left->setProperty(User_Property::CompKey,  QVariant::fromValue(        property->getParentComponent()->getComponentKey()) );
     spin_left->setProperty(User_Property::CompName, QString::fromStdString(     property->getParentComponent()->getComponentName()) );
-    spin_left->setProperty(User_Property::PropKee,  QVariant::fromValue(        property->getPropertyKee()) );
+    spin_left->setProperty(User_Property::PropKey,  QVariant::fromValue(        property->getPropertyKey()) );
     spin_left->setProperty(User_Property::PropName, QString::fromStdString(     property->getPropertyName()) );
-    spin_right->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_right->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
     spin_right->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-    spin_right->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_right->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
     spin_right->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
 
     spin_left->setProperty(User_Property::Order, 0);
@@ -274,17 +274,17 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
     horizontal_split->addWidget(spin_y);
     horizontal_split->addWidget(spin_z);
 
-    spin_x->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_x->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
     spin_x->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-    spin_x->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_x->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
     spin_x->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
-    spin_y->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_y->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
     spin_y->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-    spin_y->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_y->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
     spin_y->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
-    spin_z->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_z->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
     spin_z->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-    spin_z->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_z->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
     spin_z->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
 
     spin_x->setProperty(User_Property::Order, 0);
@@ -346,13 +346,13 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->addWidget(variable_sign);
     horizontal_split->addWidget(spin_right);
 
-    spin_left->setProperty(User_Property::CompKee,  QVariant::fromValue(        property->getParentComponent()->getComponentKee()) );
+    spin_left->setProperty(User_Property::CompKey,  QVariant::fromValue(        property->getParentComponent()->getComponentKey()) );
     spin_left->setProperty(User_Property::CompName, QString::fromStdString(     property->getParentComponent()->getComponentName()) );
-    spin_left->setProperty(User_Property::PropKee,  QVariant::fromValue(        property->getPropertyKee()) );
+    spin_left->setProperty(User_Property::PropKey,  QVariant::fromValue(        property->getPropertyKey()) );
     spin_left->setProperty(User_Property::PropName, QString::fromStdString(     property->getPropertyName()) );
-    spin_right->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+    spin_right->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
     spin_right->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-    spin_right->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+    spin_right->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
     spin_right->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
 
     spin_left->setProperty( User_Property::Order, 0);
@@ -433,9 +433,9 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
             default:                            spin->setRange(-100000000, 100000000);
         }
         spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);                 // Hides little up / down buttons
-        spin->setProperty(User_Property::CompKee,  QVariant::fromValue(         property->getParentComponent()->getComponentKee()) );
+        spin->setProperty(User_Property::CompKey,  QVariant::fromValue(         property->getParentComponent()->getComponentKey()) );
         spin->setProperty(User_Property::CompName, QString::fromStdString(      property->getParentComponent()->getComponentName()) );
-        spin->setProperty(User_Property::PropKee,  QVariant::fromValue(         property->getPropertyKee()) );
+        spin->setProperty(User_Property::PropKey,  QVariant::fromValue(         property->getPropertyKey()) );
         spin->setProperty(User_Property::PropName, QString::fromStdString(      property->getPropertyName()) );
         spin->setProperty(User_Property::Order, 0);
         spin->setValue(property_value);                                                     // Set initial starting value of spin box
@@ -452,9 +452,9 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         slider->setTickPosition(QSlider::TickPosition::NoTicks);
         slider->setRange( static_cast<int>(spin->minimum()), static_cast<int>(spin->maximum()) );
         slider->setValue( static_cast<int>(property_value));
-        slider->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+        slider->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
         slider->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-        slider->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+        slider->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
         slider->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
         slider->setProperty(User_Property::Order, 2);
         this->addToWidgetList(slider);

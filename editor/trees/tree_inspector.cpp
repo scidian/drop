@@ -290,7 +290,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
 
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree
         QTreeWidgetItem *category_item = new QTreeWidgetItem();
-        category_item->setData(0, User_Roles::CompKee,  QVariant::fromValue(    component->getComponentKee()));         // Stores component key
+        category_item->setData(0, User_Roles::CompKey,  QVariant::fromValue(    component->getComponentKey()));         // Stores component key
         category_item->setData(0, User_Roles::CompName, QString::fromStdString( component->getComponentName()));        // Stores component name
         this->addTopLevelItem(category_item);
 
@@ -303,9 +303,16 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             // Make it really small but not zero to hide category button for Name, zero causes scroll bar to stop working for some reason
             category_item->setSizeHint(0, QSize(1, 1));
         } else {
+            // Get Component display name, if Show_Hidden_Component is enabled, include Component key
+            QString component_title = QString(" ");
+            if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) {
+                component_title += QString::fromStdString(component->getDisplayName());
+            } else {
+                component_title += QString::number(component->getComponentKey()) + ": " + QString::fromStdString(component->getDisplayName());
+            }
+
             // Build category button
-            AssetCategoryButton *category_button = new AssetCategoryButton(QString(" ") + QString::fromStdString(component->getDisplayName()),
-                                                                           Qt::black, Qt::black, nullptr, category_item);
+            AssetCategoryButton *category_button = new AssetCategoryButton(component_title, Qt::black, Qt::black, nullptr, category_item);
             std::string button_style =
                         " QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                         " padding-left: 2px;"
@@ -366,9 +373,9 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
 
             QFrame *single_row = new QFrame(properties_frame);
             single_row->setObjectName("propertyRow");
-            single_row->setProperty(User_Property::CompKee,  QVariant::fromValue(       property->getParentComponent()->getComponentKee()) );
+            single_row->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
             single_row->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-            single_row->setProperty(User_Property::PropKee,  QVariant::fromValue(       property->getPropertyKee()) );
+            single_row->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
             single_row->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
 
             QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
@@ -376,9 +383,15 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(4,2,4,2);
 
-            QFont fp = Dr::CustomFont();
+            // Load Property name, include property key if Show_Hidden_Component is enabled
+            QString property_title = QString::fromStdString(property->getDisplayName());
+            if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == true) {
+                property_title = QString::number(property->getPropertyKey()) + ": " + property_title;
+            }
 
-            QLabel *property_name = new QLabel(QString::fromStdString(property->getDisplayName()));
+            // Property Name Label
+            QLabel *property_name = new QLabel(property_title);
+            QFont fp = Dr::CustomFont();
             property_name->setFont(fp);
                 QSizePolicy sp_left(QSizePolicy::Preferred, QSizePolicy::Preferred);    sp_left.setHorizontalStretch(c_inspector_size_left);
                 QSizePolicy sp_right(QSizePolicy::Preferred, QSizePolicy::Preferred);   sp_right.setHorizontalStretch(c_inspector_size_right);

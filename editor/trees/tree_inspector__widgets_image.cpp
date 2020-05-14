@@ -69,9 +69,9 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     std::string property_name = property->getPropertyName();
     image_frame->setProperty(User_Property::Mouse_Over, false);                             // Initialize mouse user data, event filter updates this info
     image_frame->setProperty(User_Property::Mouse_Pos, QPoint(0, 0));                       // Used to track when the mouse
-    image_frame->setProperty(User_Property::CompKee,    QVariant::fromValue(    property->getParentComponent()->getComponentKee()) );
+    image_frame->setProperty(User_Property::CompKey,    QVariant::fromValue(    property->getParentComponent()->getComponentKey()) );
     image_frame->setProperty(User_Property::CompName,   QString::fromStdString( property->getParentComponent()->getComponentName()) );
-    image_frame->setProperty(User_Property::PropKee,    QVariant::fromValue(    property->getPropertyKee()) );
+    image_frame->setProperty(User_Property::PropKey,    QVariant::fromValue(    property->getPropertyKey()) );
     image_frame->setProperty(User_Property::PropName,   QString::fromStdString( property->getPropertyName()) );
     if (rebuilding == false) addToWidgetList(image_frame);
 

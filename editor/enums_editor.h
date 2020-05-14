@@ -19,9 +19,9 @@ namespace User_Property {
 
     const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
 
-    const char CompKee[12] =        "dr_comp_key";          // Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
+    const char CompKey[12] =        "dr_comp_key";          // Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
     const char CompName[13] =       "dr_comp_name";         // Stores Component Name of a Property in a widget
-    const char PropKee[12] =        "dr_prop_key";          // Stores Property  Key (sub key assigned to unique Property from owning DrComponent)
+    const char PropKey[12] =        "dr_prop_key";          // Stores Property  Key (sub key assigned to unique Property from owning DrComponent)
     const char PropName[13] =       "dr_prop_name";         // Stores Property  Name of a Property in a widget
 
     const char Color[9] =           "dr_color";             // Stores a color value (QColor.rgba())
@@ -44,9 +44,9 @@ namespace User_Property {
 enum User_Roles {
     Key = 0x0100,                                           // Stores Object Key in User Data of widget / graphicsitem
                                                             // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
-    CompKee,                                                // Stores Component Key
+    CompKey,                                                // Stores Component Key
     CompName,                                               // Stores Component Name
-    PropKee,                                                // Stores Property  Key
+    PropKey,                                                // Stores Property  Key
     PropName,                                               // Stores Property  Name
 
     Scale,      Pre_Resize_Scale,

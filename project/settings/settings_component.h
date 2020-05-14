@@ -69,7 +69,7 @@ public:
     PropertyMap&        getPropertyMap() { return m_properties; }
     DrProperty*         getProperty(std::string property_key, bool show_error = true);
 
-    long                getComponentKee()   { return m_component_kee; }
+    long                getComponentKey()   { return m_component_kee; }
     std::string         getComponentName()  { return m_component_name; }
     std::string         getDisplayName()    { return m_display_name; }
     std::string         getDescription()    { return m_description; }

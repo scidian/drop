@@ -62,7 +62,7 @@ public:
 
     ComponentProperty   getCompPropPair();
 
-    long                getPropertyKee()        { return m_property_kee; }
+    long                getPropertyKey()        { return m_property_kee; }
     std::string         getPropertyName()       { return m_property_name; }
     std::string         getDisplayName()        { return m_display_name; }
     std::string         getDescription()        { return m_description; }
