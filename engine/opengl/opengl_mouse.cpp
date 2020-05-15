@@ -41,13 +41,13 @@ void DrOpenGL::mousePressEvent(QMouseEvent *event) {
     // ***** If not running, don't process mousePressEvent
     if (m_form_engine->isTimerActive() == false) return;
 
-    // ***** Push Signals onto Signal Stack
+    // ***** Push Messages onto Signal Stack
     if        (event->button() & Qt::LeftButton) {
-        m_engine->pushSignal(Signals::MouseLeftDown, screen_position);
+        m_engine->pushMessage(Messages::MouseLeftDown, screen_position);
     } else if (event->button() & Qt::RightButton) {
-        m_engine->pushSignal(Signals::MouseRightDown, screen_position);
+        m_engine->pushMessage(Messages::MouseRightDown, screen_position);
     } else if (event->button() & Qt::MiddleButton) {
-        m_engine->pushSignal(Signals::MouseMiddleDown, screen_position);
+        m_engine->pushMessage(Messages::MouseMiddleDown, screen_position);
     }
 
     // ***** Handle Demo Specific functions
@@ -256,13 +256,13 @@ void DrOpenGL::mouseReleaseEvent(QMouseEvent *event) {
     DrEngineWorld *world = m_engine->getCurrentWorld();
     DrPointF screen_position = DrPointF(event->pos().x(), event->pos().y());
 
-    // ***** Push Signals onto Signal Stack
+    // ***** Push Messages onto Signal Stack
     if        (event->button() & Qt::LeftButton) {
-        m_engine->pushSignal(Signals::MouseLeftUp, screen_position);
+        m_engine->pushMessage(Messages::MouseLeftUp, screen_position);
     } else if (event->button() & Qt::RightButton) {
-        m_engine->pushSignal(Signals::MouseRightUp, screen_position);
+        m_engine->pushMessage(Messages::MouseRightUp, screen_position);
     } else if (event->button() & Qt::MiddleButton) {
-        m_engine->pushSignal(Signals::MouseMiddleUp, screen_position);
+        m_engine->pushMessage(Messages::MouseMiddleUp, screen_position);
     }
 
     // ***** Process mouse up for current demo mode
@@ -301,8 +301,8 @@ void DrOpenGL::mouseMoveEvent(QMouseEvent *event) {
     double y = static_cast<double>(vec.y);
     ///double z = static_cast<double>(vec.z());
 
-    // ***** Push Signals onto Signal Stack
-    m_engine->pushSignal(Signals::MouseMove, screen_position);
+    // ***** Push Messages onto Signal Stack
+    m_engine->pushMessage(Messages::MouseMove, screen_position);
 
     // Store mouse position as global for convienience
     g_mouse_position = DrPointF(event->pos().x() * devicePixelRatio(), event->pos().y() * devicePixelRatio());
@@ -331,8 +331,8 @@ void DrOpenGL::wheelEvent(QWheelEvent *event) {
         return;
     }
 
-    // ***** Push Signals onto Signal Stack
-    m_engine->pushSignal(Signals::MouseScroll, event->delta());
+    // ***** Push Messages onto Signal Stack
+    m_engine->pushMessage(Messages::MouseScroll, event->delta());
 
     if (event->delta() > 0) { zoomInOut( 10); }
     else                    { zoomInOut(-10); }

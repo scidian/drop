@@ -11,10 +11,10 @@
 #include "engine/globals_engine.h"
 
 
-//  Future signals:
-//      When "emit"ing signal, add to world signal stack.
-//      When building signal attach calling component / entity as owner.
-//      When all other objects have processed signal, and we're back at emitting entity, delete signal from stack.
+//  Future messages:
+//      When "emit"ing messages, add to world message stack.
+//      When building message attach calling component / entity as owner.
+//      When all other objects have processed message, and we're back at emitting entity, delete message from stack.
 //
 
 // Type Definitions
@@ -57,9 +57,9 @@ public:
     virtual bool        update(double time_passed, double time_warp);                               // Called during DrEngineWorld->updateWorld() step, return true to remove m_thing
     virtual void        destroy();                                                                  // Called when component is destroyed
 
-    // Signals
-    virtual void        emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b);      // Adds signal to stack
-    EngineSignals       signalList(std::string name, long thing_key = c_no_key);                    // Returns list of signals with name, optional attached to thing
+    // Messages
+    virtual void        emitMessage(std::string name, DrVariant value, DrEngineThing *thing_b);     // Adds message to stack
+    EngineMessages      messageList(std::string name, long thing_key = c_no_key);                   // Returns list of messages with name, optional attached to thing
 
     // Getters
     std::string         name()      { return m_name; }                                              // Returns name of this Component

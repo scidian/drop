@@ -6,7 +6,7 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing/components/thing_comp_3d.h"
 #include "engine/thing/components/thing_comp_camera.h"
@@ -203,16 +203,16 @@ void DrEngineThing::setComponentFoliage(ThingCompFoliage *component)    { m_comp
 
 
 //####################################################################################
-//##    Signals
+//##    Messages
 //####################################################################################
-// Adds signal to stack
-void DrEngineThing::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr) {
-    m_world->getEngine()->pushSignal(name, value, this, thing_b);
+// Adds message to stack
+void DrEngineThing::emitMessage(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr) {
+    m_world->getEngine()->pushMessage(name, value, this, thing_b);
 }
 
-// Returns list of signals with name
-EngineSignals DrEngineThing::signalList(std::string name, long thing_key) {
-    return m_world->engine()->signalList(name, thing_key);
+// Returns list of messages with name
+EngineMessages DrEngineThing::messageList(std::string name, long thing_key) {
+    return m_world->engine()->messageList(name, thing_key);
 }
 
 

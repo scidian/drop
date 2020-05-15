@@ -19,14 +19,14 @@
 #include "engine/enums_engine.h"
 #include "project/constants_comps_and_props.h"
 #include "project/constants_entity_keys.h"
-#include "project/constants_signals.h"
+#include "project/constants_messages.h"
 #include "project/enums_entity_types.h"
 
 // Forward Declarations
 class DrAsset;
 class DrEngine;
 class DrEngineCamera;
-class DrEngineSignal;
+class DrEngineMessage;
 class DrEngineSpawner;
 class DrEngineThing;
 class DrEngineTexture;
@@ -44,7 +44,7 @@ typedef std::chrono::high_resolution_clock          Clock;
 
 typedef std::vector<   DrEngineCamera*>             EngineCameraList;
 typedef std::map<long, DrEngineCamera*>             EngineCameraMap;
-typedef std::list<     DrEngineSignal*>             EngineSignals;
+typedef std::list<     DrEngineMessage*>            EngineMessages;
 typedef std::vector<   DrEngineSpawner*>            EngineSpawners;
 typedef std::map<long, DrEngineTexture*>            EngineTextureMap;
 typedef std::vector<   DrEngineThing*>              EngineThings;

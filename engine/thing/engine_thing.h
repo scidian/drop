@@ -120,9 +120,9 @@ public:
     void                removeComponent(std::string component_name);
     void                setComponent(std::string component_name, DrThingComponent *component);
 
-    // Signals
-    void                emitSignal(std::string name, DrVariant value, DrEngineThing* thing_b);      // Adds signal to stack
-    EngineSignals       signalList(std::string name, long thing_key = c_no_key);                    // Returns list of signals with name, optional attached to thing
+    // Messages
+    void                emitMessage(std::string name, DrVariant value, DrEngineThing* thing_b);     // Adds message to stack
+    EngineMessages      messageList(std::string name, long thing_key = c_no_key);                   // Returns list of messages with name, optional attached to thing
 
     // Helper Functions
     DrPointF            mapPositionToScreen();

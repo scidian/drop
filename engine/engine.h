@@ -13,9 +13,9 @@
 #include "engine/globals_engine.h"
 
 // Local Type Definitions
-typedef std::map<std::string, EngineSignals>    SignalMapByName;
-typedef std::map<long,        EngineSignals>    SignalMapByThing;
-typedef std::map<long,        SignalMapByName>  SignalMapByThingName;
+typedef std::map<std::string, EngineMessages>       MessageMapByName;
+typedef std::map<long,        EngineMessages>       MessageMapByThing;
+typedef std::map<long,        MessageMapByName>     MessageMapByThingName;
 
 
 //####################################################################################
@@ -36,12 +36,12 @@ private:
     DrOpenGL               *m_opengl                        { nullptr };            // Pointer to QOpenGLWidget instance
     DrProject              *m_project                       { nullptr };            // Pointer to Project to load into Engine
 
-    // Signals
-    EngineSignals           m_signals;                                              // List of all Signals
-    EngineSignals               m_signal_list;                                      // List of active Signals
-    SignalMapByName             m_signal_map_by_name;                               // Map  of active Signals, grouped into lists by Signal Name
-    SignalMapByThing            m_signal_map_by_thing;                              // Map  of active Signals, grouped into lists by Thing Key
-    SignalMapByThingName        m_signal_map_by_thing_name;                         // Map  of active Signals, grouped into lists by Thing Key, then grouped by Signal Name
+    // Messages
+    EngineMessages          m_messages;                                             // List of all Messages
+    EngineMessages          m_message_list;                                         // List of active Messages
+    MessageMapByName        m_message_map_by_name;                                  // Map  of active Messages, grouped into lists by Message Name
+    MessageMapByThing       m_message_map_by_thing;                                 // Map  of active Messages, grouped into lists by Thing Key
+    MessageMapByThingName   m_message_map_by_thing_name;                            // Map  of active SMessages, grouped into lists by Thing Key, then grouped by Message Name
 
     // Textures
     EngineTextureMap        m_textures;                                             // Map of Textures used for this Engine
@@ -69,11 +69,11 @@ public:
     DrEngineTexture*        getTexture(long texture_id) { return m_textures[texture_id]; }
     EngineTextureMap&       getTextureMap() { return m_textures; }
 
-    // Signals
-    void                    clearSignals();
-    void                    pushSignal(std::string name, DrVariant value, DrEngineThing *thing_a = nullptr, DrEngineThing *thing_b = nullptr);
-    EngineSignals           signalList(std::string name = "", long thing_key = c_no_key);
-    void                    updateSignalList();
+    // Messages
+    void                    clearMessages();
+    void                    pushMessage(std::string name, DrVariant value, DrEngineThing *thing_a = nullptr, DrEngineThing *thing_b = nullptr);
+    EngineMessages          messageList(std::string name = "", long thing_key = c_no_key);
+    void                    updateMessageList();
 
     // Getter and Setters    
     DrOpenGL*               getOpenGL()                 { return m_opengl; }

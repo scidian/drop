@@ -218,7 +218,7 @@ std::list<long> DrSettings::animationsUsedByEntity() {
         for (auto &property_pair : component_pair.second->getPropertyMap()) {
             DrProperty *property = property_pair.second;
             if (property->getPropertyType() == Property_Type::Image) {
-                if (property->getValue().toLong() >= c_key_starting_number)
+                if (property->getValue().toLong() >= c_starting_key_entity)
                     animation_keys_used.push_back(property->getValue().toLong());
             }
         }

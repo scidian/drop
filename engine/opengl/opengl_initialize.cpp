@@ -89,7 +89,7 @@ void DrOpenGL::importTexture(long texture_id, DrImage *image) {
     m_texture_data[texture_id] = new DrEngineVertexData();
 
     // If using built in texture, need to trace outline
-    if (texture_id > c_no_key && texture_id < c_key_starting_number) {
+    if (texture_id > c_no_key && texture_id < c_starting_key_entity) {
         DrBitmap bitmap = image->getBitmap();
         DrImage  image(m_engine->getProject(), texture_id, "temp", bitmap, Asset_Category::Image, true);
         m_texture_data[texture_id]->initializeExtrudedImage( &image, wireframe );

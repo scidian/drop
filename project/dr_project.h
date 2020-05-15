@@ -81,15 +81,17 @@ public:
     DrProject();
     ~DrProject();
 
+
     // #################### VARIABLES ####################
 private:
     // Usage Variables
-    bool            m_has_saved = false;                            // If project is edited at all, turns to false until user saves
-    bool            m_test_only = false;                            // For debugging purposes, stops Drop from asking to save when exiting
+    bool            m_has_saved = false;                                    // If project is edited at all, turns to false until user saves
+    bool            m_test_only = false;                                    // For debugging purposes, stops Drop from asking to save when exiting
 
     // Project Variables
-    long            m_key_generator = c_key_starting_number;        // Variable to hand out unique id key's to all children entities
-    OptionMap       m_options;                                      // Map holding DrProject Wide options
+    long            m_key_generator = c_starting_key_entity;         // Variable to hand out unique id key's to all children entities
+    OptionMap       m_options;                                              // Map holding DrProject Wide options
+
 
     // **********
     //      Every Item In These Project Maps is called an Entity and:

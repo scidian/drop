@@ -29,7 +29,7 @@ private:
     DrComponent        *m_parent_component;                                         // Points to the DrComponent that holds this DrProperty
 
     // The 8 Parts of Data for Every Property
-    long                m_property_kee      { c_no_key };                           // The unique id of this property within the parent Component
+    long                m_property_key      { c_no_key };                           // The unique id of this property within the parent Component
     std::string         m_property_name     { "" };                                 // The name of this property within the parent (common Properties are in "namespace Props")
     std::string         m_display_name      { "Unknown Property" };                 // Name to be displayed in Editor
     std::string         m_description       { "No description." };                  // Description to be displayed in Editor
@@ -62,7 +62,7 @@ public:
 
     ComponentProperty   getCompPropPair();
 
-    long                getPropertyKey()        { return m_property_kee; }
+    long                getPropertyKey()        { return m_property_key; }
     std::string         getPropertyName()       { return m_property_name; }
     std::string         getDisplayName()        { return m_display_name; }
     std::string         getDescription()        { return m_description; }

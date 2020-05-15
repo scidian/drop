@@ -242,7 +242,7 @@ SOURCES += \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
-    engine/engine_signal.cpp \
+    engine/engine_message.cpp \
     engine/engine_spawner.cpp \
     engine/engine_texture.cpp \
     engine/enums_engine.cpp \
@@ -335,8 +335,9 @@ SOURCES += \
     project/properties/property_collision.cpp \
     project/settings/settings.cpp \
     project/settings/settings_component.cpp \
+    project/settings/settings_component_output.cpp \
     project/settings/settings_component_property.cpp \
-    project/settings/settings_component_slot.cpp
+    project/settings/settings_component_signal.cpp
 
 
 HEADERS += \
@@ -1003,7 +1004,7 @@ HEADERS += \
     engine/debug_flags.h \
     engine/engine.h \
     engine/engine_camera.h \
-    engine/engine_signal.h \
+    engine/engine_message.h \
     engine/engine_spawner.h \
     engine/engine_texture.h \
     engine/enums_engine.h \
@@ -1032,7 +1033,7 @@ HEADERS += \
     project/constants_component_info.h \
     project/constants_comps_and_props.h \
     project/constants_entity_keys.h \
-    project/constants_signals.h \
+    project/constants_messages.h \
     project/constants_variables.h \
     project/dr_project.h \
     project/entities/dr_animation.h \
@@ -1053,7 +1054,8 @@ HEADERS += \
     project/properties/property_collision.h \
     project/settings/settings.h \
     project/settings/settings_component.h \
+    project/settings/settings_component_output.h \
     project/settings/settings_component_property.h \
-    project/settings/settings_component_slot.h
+    project/settings/settings_component_signal.h
 
 

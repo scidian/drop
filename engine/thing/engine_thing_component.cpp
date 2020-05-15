@@ -60,14 +60,14 @@ void DrThingComponent::destroy() {
 //####################################################################################
 //##    Component Functions
 //####################################################################################
-// Adds signal to stack
-void DrThingComponent::emitSignal(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr) {
-    m_world->getEngine()->pushSignal(name, value, m_thing, thing_b);
+// Adds message to stack
+void DrThingComponent::emitMessage(std::string name, DrVariant value, DrEngineThing *thing_b = nullptr) {
+    m_world->getEngine()->pushMessage(name, value, m_thing, thing_b);
 }
 
-// Returns list of signals with name
-EngineSignals DrThingComponent::signalList(std::string name, long thing_key) {
-    return m_world->engine()->signalList(name, thing_key);
+// Returns list of messages with name
+EngineMessages DrThingComponent::messageList(std::string name, long thing_key) {
+    return m_world->engine()->messageList(name, thing_key);
 }
 
 

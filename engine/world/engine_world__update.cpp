@@ -86,8 +86,8 @@ void DrEngineWorld::updateWorld(double time_passed) {
     updateSpawners(time_passed, m_time_warp, threshold);
 
 
-///    g_size_t = Dr::Max(engine()->signalList().size(), g_size_t);
-///    g_info = "Signal Qty: " + std::to_string(engine()->signalList().size()) + ", Max: " + std::to_string(g_size_t);
+///    g_size_t = Dr::Max(engine()->messageList().size(), g_size_t);
+///    g_info = "Message Qty: " + std::to_string(engine()->messageList().size()) + ", Max: " + std::to_string(g_size_t);
 
 
 

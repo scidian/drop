@@ -10,6 +10,7 @@
 
 #include "core/types/dr_variant.h"
 #include "project/constants_comps_and_props.h"
+#include "project/constants_entity_keys.h"
 #include "project/constants_variables.h"
 #include "project/enums_entity_types.h"
 
@@ -28,9 +29,6 @@ enum class Variable_Info {
 // Type Definitions
 typedef std::map<std::string, DrComponent*>     ComponentMap;               // Map of pointers to DrComponent classes, built in names in file components_and_properties.h
 
-// Local Constants
-const   long    c_component_starting_number =   1;
-
 
 //####################################################################################
 //##    DrComponent
@@ -47,14 +45,14 @@ public:
     // #################### VARIABLES ####################
 private:
     // External Borrowed Pointers
-    DrProject      *m_parent_project;                                       // Holds reference to parent Project
+    DrProject      *m_parent_project;                                               // Holds reference to parent Project
 
     // Local Variables
-    long            m_key_generator     { c_component_starting_number };    // Variable to hand out unique id key's to all child objects (in this case DrComponents)
-    ComponentMap    m_components;                                           // Map of pointers to DrComponent classes
+    long            m_component_key_generator   { c_starting_key_component };       // Variable to hand out unique id key's to all child objects (in this case DrComponents)
+    ComponentMap    m_components;                                                   // Map of pointers to DrComponent classes
 
-    long            m_is_visible        { true };                           // Should this be visible in editor?
-    long            m_is_locked         { false };                          // Should this Entity be locked from editing?
+    long            m_is_visible                { true };                           // Should this be visible in editor?
+    long            m_is_locked                 { false };                          // Should this Entity be locked from editing?
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -86,9 +84,9 @@ public:
 
 
     // Component Key Generator
-    long            checkCurrentGeneratorKey()                      { return m_key_generator; }
-    long            getNextKey()                                    { return m_key_generator++; }
-    void            setGeneratorKeyStartNumber(long initial_key)    { m_key_generator = initial_key; }
+    long            checkCurrentGeneratorKey()                      { return m_component_key_generator; }
+    long            getNextKey()                                    { return m_component_key_generator++; }
+    void            setGeneratorKeyStartNumber(long initial_key)    { m_component_key_generator = initial_key; }
 
 
     // Component Handling

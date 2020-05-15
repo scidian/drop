@@ -10,7 +10,7 @@
 #include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/thing/components/thing_comp_foliage.h"
 #include "engine/thing/components/thing_comp_physics.h"
@@ -96,13 +96,13 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
     (void) time_passed;
     (void) time_warp;
 
-    // If signal exists with this Foliage that is started colliding with something, apply collision force
-    for (auto &signal : signalList(Signals::ThingCollide, thing()->getKey())) {
+    // If message exists with this Foliage that is started colliding with something, apply collision force
+    for (auto &message : messageList(Messages::ThingCollide, thing()->getKey())) {
         DrEngineThing *thing_a = thing();
-        DrEngineThing *thing_b = signal->thingB();
+        DrEngineThing *thing_b = message->thingB();
         ThingCompPhysics *physics_a = thing_a->physics();
         ThingCompPhysics *physics_b = thing_b->physics();
-        Collision_Info info = boost::any_cast<Collision_Info>(signal->value().value());
+        Collision_Info info = boost::any_cast<Collision_Info>(message->value().value());
 
         // Only react to an objects first shape that collides (i.e. collision_count == 0)
         if (info.collision_count == 0) {
@@ -113,7 +113,7 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
                        v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
                        v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
                 cpBodyApplyImpulseAtWorldPoint(physics_a->body, v, info.point_a);
-                emitSignal(Signals::ThingCancelCollision, info, thing_b);
+                emitMessage(Messages::ThingCancelCollision, info, thing_b);
             }
         }
     }

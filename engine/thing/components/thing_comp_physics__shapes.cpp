@@ -11,7 +11,7 @@
 #include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/thing/components/thing_comp_physics.h"

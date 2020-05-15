@@ -188,7 +188,7 @@ QRectF WorldMapItem::slotRect(DrSlotType slot_type, int slot_number) {
     return QRectF(left, top, c_slot_size, c_slot_size);
 }
 
-// Returns DrSlot under scene_point
+// Returns OldSlot under scene_point
 OldSlot WorldMapItem::slotAtPoint(QPointF scene_point) {
     OldSlot over_slot;
     DrNode* node = dynamic_cast<DrNode*>(m_entity);

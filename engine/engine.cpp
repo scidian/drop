@@ -7,7 +7,7 @@
 //
 #include "engine/engine.h"
 #include "engine/engine_camera.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/engine_texture.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
@@ -33,7 +33,7 @@ DrEngine::~DrEngine() { }
 
 // Needs to be explicitly called by OpenGLWidget
 void DrEngine::clearWorlds() {
-    clearSignals();
+    clearMessages();
     for (auto &world_pair : m_worlds) { delete world_pair.second; }
 }
 
@@ -58,63 +58,63 @@ DrEngineTexture* DrEngine::addTexture(long texture_id, QPixmap &pixmap) {
 
 
 //####################################################################################
-//##    Signal Processing
+//##    Message Processing
 //####################################################################################
-void DrEngine::clearSignals() {
-    for (auto it = m_signals.begin(); it != m_signals.end(); ) {
+void DrEngine::clearMessages() {
+    for (auto it = m_messages.begin(); it != m_messages.end(); ) {
         delete (*it);
-        it = m_signals.erase(it);
+        it = m_messages.erase(it);
     }
 }
 
-// Returns list of signals by name, by key, or by both.
-//      Passing value of "" for name returns all signals with any name
-//      Passing default optional value of c_no_key for thing_key includes all signals with name
-EngineSignals DrEngine::signalList(std::string name, long thing_key) {
+// Returns list of messages by name, by key, or by both.
+//      Passing value of "" for name returns all messages with any name
+//      Passing default optional value of c_no_key for thing_key includes all messages with name
+EngineMessages DrEngine::messageList(std::string name, long thing_key) {
     if (thing_key == c_no_key) {
         if (name == "")
-            return m_signal_list;
+            return m_message_list;
         else
-            return m_signal_map_by_name[name];
+            return m_message_map_by_name[name];
     } else {
         if (name == "") {
-            return m_signal_map_by_thing[thing_key];
+            return m_message_map_by_thing[thing_key];
         } else {
-            return m_signal_map_by_thing_name[thing_key][name];
+            return m_message_map_by_thing_name[thing_key][name];
         }
     }
 }
 
-// Add signal to stack
-void DrEngine::pushSignal(std::string name, DrVariant value, DrEngineThing *thing_a, DrEngineThing *thing_b) {
-    m_signals.push_back(new DrEngineSignal(name, value, thing_a, thing_b));
+// Add message to stack
+void DrEngine::pushMessage(std::string name, DrVariant value, DrEngineThing *thing_a, DrEngineThing *thing_b) {
+    m_messages.push_back(new DrEngineMessage(name, value, thing_a, thing_b));
 }
 
-// Sets new signals to active, kills old signals
-void DrEngine::updateSignalList() {
-    m_signal_list.clear();
-    m_signal_map_by_name.clear();
-    m_signal_map_by_thing.clear();
-    m_signal_map_by_thing_name.clear();
+// Sets new messages to active, kills old messages
+void DrEngine::updateMessageList() {
+    m_message_list.clear();
+    m_message_map_by_name.clear();
+    m_message_map_by_thing.clear();
+    m_message_map_by_thing_name.clear();
 
-    for (auto it = m_signals.begin(); it != m_signals.end(); ) {
-        if ((*it)->getLife() == Signal_Life::Active) {
+    for (auto it = m_messages.begin(); it != m_messages.end(); ) {
+        if ((*it)->getLife() == Message_Life::Active) {
             delete (*it);
-            it = m_signals.erase(it);
+            it = m_messages.erase(it);
             continue;
-        } else if ((*it)->getLife() == Signal_Life::Born) {
-            (*it)->setLife(Signal_Life::Active);
+        } else if ((*it)->getLife() == Message_Life::Born) {
+            (*it)->setLife(Message_Life::Active);
 
             // Push to full list of active things
-            m_signal_list.push_back(*it);
+            m_message_list.push_back(*it);
 
-            // Push to map sorted by Signal Names
-            m_signal_map_by_name[(*it)->name()].push_back(*it);
+            // Push to map sorted by Message Names
+            m_message_map_by_name[(*it)->name()].push_back(*it);
 
-            // If signal is associated with a Thing, push onto list for each Thing
+            // If message is associated with a Thing, push onto list for each Thing
             if ((*it)->thingA() != nullptr) {
-                m_signal_map_by_thing[(*it)->thingA()->getKey()].push_back(*it);
-                m_signal_map_by_thing_name[(*it)->thingA()->getKey()][(*it)->name()].push_back(*it);
+                m_message_map_by_thing[(*it)->thingA()->getKey()].push_back(*it);
+                m_message_map_by_thing_name[(*it)->thingA()->getKey()][(*it)->name()].push_back(*it);
             }
         }
         it++;

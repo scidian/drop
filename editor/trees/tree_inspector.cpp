@@ -383,7 +383,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(4,2,4,2);
 
-            // Load Property name, include property key if Show_Hidden_Component is enabled
+            // Load Property name, include Property Key if debug flag Show_Hidden_Component is enabled
             QString property_title = QString::fromStdString(property->getDisplayName());
             if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == true) {
                 property_title = QString::number(property->getPropertyKey()) + ": " + property_title;

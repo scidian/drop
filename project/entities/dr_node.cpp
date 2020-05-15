@@ -12,18 +12,8 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-DrNode::DrNode(DrNodeType node_type, long parent_key) {
+DrNode::DrNode(long parent_key) {
     m_entity_key = parent_key;
-    m_node_type = node_type;
-
-    switch (node_type) {
-        case DrNodeType::Random_Out:
-            break;
-        case DrNodeType::Timed_Pause:
-            break;
-        case DrNodeType::World:
-            break;
-    }
 }
 
 DrNode::~DrNode() { }
@@ -31,7 +21,7 @@ DrNode::~DrNode() { }
 
 
 //####################################################################################
-//##    Signals
+//##    Signals / Slots
 //####################################################################################
 void DrNode::addInputSlot(long owner_key, std::string parent_slot_name, long connected_slot_key, std::string connected_slot_name) {
     for (auto &slot : m_input_slots) {

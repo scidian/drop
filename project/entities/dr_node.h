@@ -11,7 +11,7 @@
 #include "core/dr_containers.h"
 #include "core/dr_string.h"
 #include "core/types/dr_pointf.h"
-#include "project/constants_signals.h"
+#include "project/constants_messages.h"
 #include "project/enums_entity_types.h"
 
 // Local Struct
@@ -39,26 +39,24 @@ private:
     long                        m_entity_key        { c_no_key };           // Key of parent DrSettings
 
     // Slot Variables
-    std::list<OldSlot>           m_input_slots;                              // List of input slots
-    std::list<OldSlot>           m_output_slots;                             // List of output slots
+    std::list<OldSlot>          m_input_slots;                              // List of input slots
+    std::list<OldSlot>          m_output_slots;                             // List of output slots
 
     // Node Variables
-    DrNodeType                  m_node_type;                                // Type of this DrNode
     DrPointF                    m_node_position     { 0, 0 };               // Position of this DrNode
 
 public:
     // Constructor / Destructor
-    DrNode(DrNodeType node_type, long parent_key);
+    DrNode(long parent_key);
     virtual ~DrNode();
 
     // Node Info
-    DrNodeType          getDrNodeType()                 { return m_node_type; }
     DrPointF            getNodePosition()               { return m_node_position; }
     void                setNodePosition(DrPointF pos)   { m_node_position = pos; }
 
     // Slots
-    SlotList&            getInputSlots()                { return m_input_slots; }
-    SlotList&            getOutputSlots()               { return m_output_slots; }
+    SlotList&           getInputSlots()                { return m_input_slots; }
+    SlotList&           getOutputSlots()               { return m_output_slots; }
     void                addInputSlot( long parent_key, std::string parent_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
     void                addOutputSlot(long parent_key, std::string parent_slot_name, long connected_slot_key = c_no_key, std::string connected_slot_name = "");
 

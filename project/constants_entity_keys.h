@@ -11,11 +11,20 @@
 
 //####################################################################################
 //##    Project Key Constants
-//##        Starting Key
 //####################################################################################
 
-constexpr long c_key_starting_number =              1001;       // First 1001 keys are reserved for built in Entities in DrProject
-                                                                // ....."1001" is an easily searchable number
+//####################################################################################
+//##        Starting Keys       !!!!! #NOTE: Don't allow keys to start at less than 1, having an item
+//##                                         with key 0 (or less) could conflict with nullptr results
+//############################
+
+constexpr long c_starting_key_entity =              1001;       // First 1001 keys are currently reserved for built in Entities in DrProject
+                                                                // ....."1001" is a relatively easily searchable number
+constexpr long c_starting_key_component =           1;
+constexpr long c_starting_key_property =            1;
+constexpr long c_starting_key_signal =              1;
+constexpr long c_starting_key_output =              1;
+
 
 //####################################################################################
 //##    Basic Images                    001-099

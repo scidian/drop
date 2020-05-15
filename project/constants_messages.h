@@ -1,21 +1,21 @@
 //
-//      Created by Stephens Nunnally on 2/3/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/15/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#ifndef CONSTANTS_SIGNALS_H
-#define CONSTANTS_SIGNALS_H
+#ifndef CONSTANTS_MESSAGES_H
+#define CONSTANTS_MESSAGES_H
 
 #include <string>
 
 
 //####################################################################################
-//##    DrEngineSignal Signals      !!!!! #NOTE: All uncommented Signals should be implemented. When adding uncommented
-//##                                             Signals, make sure to implement them to some degree.
+//##    DrEngineMessages Messages   !!!!! #NOTE: All uncommented Messages should be implemented. When adding uncommented
+//##                                             Messages, make sure to implement them to some degree.
 //############################
-namespace Signals {
+namespace Messages {
 
     // ############################ THING EVENTS
     const std::string ThingCollide              = "Thing Collide";              // struct:      Collision_Info
@@ -48,7 +48,7 @@ namespace Signals {
     ///const std::string TouchMove                 = "Touch Move";                 // int:     touch number
 
 
-}   // End namespace Signals
+}   // End namespace Messages
 
 
 //####################################################################################
@@ -67,12 +67,7 @@ namespace Output_Slots {
 
 
 
-#endif // CONSTANTS_SIGNALS_H
-
-
-
-
-
+#endif // CONSTANTS_MESSAGES_H
 
 
 

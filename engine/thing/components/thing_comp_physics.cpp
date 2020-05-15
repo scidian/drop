@@ -10,7 +10,7 @@
 #include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/engine_texture.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/thing/components/thing_comp_3d.h"
@@ -96,7 +96,7 @@ ThingCompPhysics::ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *p
 }
 
 ThingCompPhysics::~ThingCompPhysics() {
-    // ***** Signal physics children to remove themselves
+    // ***** Alert physics children to remove themselves
     if (thing()->compSoftBody() != nullptr) {
         for (auto &child : thing()->compSoftBody()->soft_balls) {
             if (child != nullptr) {
@@ -342,8 +342,8 @@ void ThingCompPhysics::setHealth(double new_health, long damaged_by_key) {
     m_health = new_health;
     if (isPhysicsChild() == false) {
         DrEngineThing *damaged_by = world()->findThingByKey(damaged_by_key);
-        if      (Dr::FuzzyCompare(m_health,      0.0) == true)  emitSignal(Signals::ThingDied,    m_health,      damaged_by);
-        else if (Dr::FuzzyCompare(health_change, 0.0) == false) emitSignal(Signals::ThingDamaged, health_change, damaged_by);
+        if      (Dr::FuzzyCompare(m_health,      0.0) == true)  emitMessage(Messages::ThingDied,    m_health,      damaged_by);
+        else if (Dr::FuzzyCompare(health_change, 0.0) == false) emitMessage(Messages::ThingDamaged, health_change, damaged_by);
     }
 }
 

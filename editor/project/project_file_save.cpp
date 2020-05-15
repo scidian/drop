@@ -85,7 +85,7 @@ void SaveProjectToFile(DrProject *project) {
     /**
     int effect_count = 0;
     for (auto effect_pair : m_effects) {
-        if (effect_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
+        if (effect_pair.first < c_key_entity_starting_number) continue;                 // Don't save reserved items, keys / items handled by editor
         DrEffect *effect = effect_pair.second;
         QVariantMap effect_data;
         effect_data["key"] =        QVariant::fromValue(effect->getKey());
@@ -101,7 +101,7 @@ void SaveProjectToFile(DrProject *project) {
     // ***** Write Images
     int image_count = 0;
     for (auto image_pair : project->getImageMap()) {
-        if (image_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
+        if (image_pair.first < c_starting_key_entity) continue;                  // Don't save reserved items, keys / items handled by editor
         DrImage *image = image_pair.second;
         QVariantMap image_data;
         image_data["key"] =         QVariant::fromValue(image->getKey());
@@ -116,7 +116,7 @@ void SaveProjectToFile(DrProject *project) {
     // ***** Write Animations
     int animation_count = 0;
     for (auto animation_pair : project->getAnimationMap()) {
-        if (animation_pair.first < c_key_starting_number) continue;                     // Don't save reserved items, keys / items handled by editor
+        if (animation_pair.first < c_starting_key_entity) continue;              // Don't save reserved items, keys / items handled by editor
         DrAnimation *animation = animation_pair.second;
         QVariantMap animation_data;
         animation_data["key"] =     QVariant::fromValue(animation->getKey());
@@ -143,7 +143,7 @@ void SaveProjectToFile(DrProject *project) {
     // ***** Write Fonts
     int font_count = 0;
     for (auto font_pair : project->getFontMap()) {
-        if (font_pair.first < c_key_starting_number) continue;                          // Don't save reserved items, keys / items handled by editor
+        if (font_pair.first < c_starting_key_entity) continue;                   // Don't save reserved items, keys / items handled by editor
         DrFont *font = font_pair.second;
         QVariantMap font_data;
         font_data["key"] =          QVariant::fromValue(font->getKey());
@@ -161,7 +161,7 @@ void SaveProjectToFile(DrProject *project) {
     // ***** Write Assets
     int asset_count = 0;
     for (auto asset_pair : project->getAssetMap()) {
-        if (asset_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
+        if (asset_pair.first < c_starting_key_entity) continue;                  // Don't save reserved items, keys / items handled by editor
         DrAsset *asset = asset_pair.second;
         QVariantMap asset_data;
         asset_data["key"] =         QVariant::fromValue(asset->getKey());
@@ -178,7 +178,7 @@ void SaveProjectToFile(DrProject *project) {
     // ***** Write Worlds
     int world_count = 0;
     for (auto world_pair : project->getWorldMap()) {
-        if (world_pair.first < c_key_starting_number) continue;                        // Don't save reserved items, keys / items handled by editor
+        if (world_pair.first < c_starting_key_entity) continue;                  // Don't save reserved items, keys / items handled by editor
         DrWorld *world = world_pair.second;
         QVariantMap world_data;
         world_data["key"] =             QVariant::fromValue(world->getKey());
@@ -195,7 +195,7 @@ void SaveProjectToFile(DrProject *project) {
         QString world_array = "stages_in_world:" + world_data["key"].toString();
         int stage_count = 0;
         for (auto stage_pair : world->getStageMap()) {
-            if (stage_pair.first < c_key_starting_number) continue;                     // Don't save reserved items, keys / items handled by editor
+            if (stage_pair.first < c_starting_key_entity) continue;              // Don't save reserved items, keys / items handled by editor
             DrStage *stage = stage_pair.second;
             QVariantMap stage_data;
             stage_data["key"] =             QVariant::fromValue(stage->getKey());
@@ -213,7 +213,7 @@ void SaveProjectToFile(DrProject *project) {
             QString stage_array = "things_in_stage:" + stage_data["key"].toString();
             int thing_count = 0;
             for (auto thing_pair : stage->getThingMap()) {
-                if (thing_pair.first < c_key_starting_number) continue;                 // Don't save reserved items, keys / items handled by editor
+                if (thing_pair.first < c_starting_key_entity) continue;          // Don't save reserved items, keys / items handled by editor
                 DrThing *thing = thing_pair.second;
                 QVariantMap thing_data;
                 thing_data["key"] =         QVariant::fromValue(thing->getKey());

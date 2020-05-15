@@ -25,7 +25,7 @@ DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, Dr
     m_simple_name = image_name;
     m_bitmap = bitmap;
 
-    if (key == c_no_key || key > c_key_starting_number || force_outline) {
+    if (key == c_no_key || key > c_starting_key_entity || force_outline) {
         autoOutlinePoints(progress);
     } else {
         m_poly_list.push_back( bitmap.polygon().points() );

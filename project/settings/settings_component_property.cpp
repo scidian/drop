@@ -26,7 +26,7 @@ DrProperty::DrProperty(DrSettings      *parent_settings,
     m_parent_settings =     parent_settings;
     m_parent_component =    parent_component;
 
-    m_property_kee =    property_key;
+    m_property_key =    property_key;
     m_property_name =   property_name;
     m_display_name =    display_name;
     m_description =     description;

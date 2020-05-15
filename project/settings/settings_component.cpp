@@ -9,7 +9,9 @@
 #include "project/constants_component_info.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
+#include "project/settings/settings_component_output.h"
 #include "project/settings/settings_component_property.h"
+#include "project/settings/settings_component_signal.h"
 
 
 //####################################################################################
@@ -24,7 +26,7 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
                          bool           is_turned_on) {
     m_parent_settings = parent_settings;
 
-    m_component_kee =   component_key;
+    m_component_key =   component_key;
     m_component_name =  component_name;
     m_display_name =    display_name;
     m_description =     description;
@@ -33,7 +35,9 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
 }
 
 DrComponent::~DrComponent() {
-    for (auto &property_pair: m_properties) { delete property_pair.second; }
+    for (auto &property_pair:   m_properties)   { delete property_pair.second; }
+    for (auto &signal_pair:     m_signals)      { delete signal_pair.second; }
+    for (auto &output_pair:     m_outputs)      { delete output_pair.second; }
 }
 
 
@@ -61,7 +65,7 @@ DrProperty* DrComponent::getProperty(std::string property_name, bool show_error)
 
 
 //####################################################################################
-//##    addProperty functions
+//##    Building Functions
 //####################################################################################
 DrProperty* DrComponent::addProperty(std::string    property_name,
                                      Property_Type  type,
@@ -70,10 +74,22 @@ DrProperty* DrComponent::addProperty(std::string    property_name,
                                      std::string    description,
                                      bool is_hidden,
                                      bool is_editable) {
-    DrProperty *prop = new DrProperty(m_parent_settings, this, this->getNextKey(), property_name, display_name, description, type, value, is_hidden, is_editable);
-    prop->setListOrder( static_cast<int>(m_properties.size()) );
+    DrProperty *prop = new DrProperty(m_parent_settings, this, this->getNextPropertyKey(), property_name, display_name, description, type, value, is_hidden, is_editable);
+    prop->setListOrder(static_cast<int>(m_properties.size()));
     m_properties.insert(std::make_pair(property_name, prop));
     return prop;
+}
+
+DrSignal* DrComponent::addSignal(std::string signal_name, bool is_deletable) {
+    DrSignal *signal = new DrSignal(this, this->getNextSignalKey(), signal_name, is_deletable);
+    m_signals.insert(std::make_pair(signal->getSignalKey(), signal));
+    return signal;
+}
+
+DrOutput* DrComponent::addOutput(std::string output_name, bool is_deletable) {
+    DrOutput *output = new DrOutput(this, this->getNextSignalKey(), output_name, is_deletable);
+    m_outputs.insert(std::make_pair(output->getOutputKey(), output));
+    return output;
 }
 
 

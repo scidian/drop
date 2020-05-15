@@ -10,17 +10,19 @@
 
 #include "core/types/dr_variant.h"
 #include "project/constants_comps_and_props.h"
+#include "project/constants_entity_keys.h"
 #include "project/enums_entity_types.h"
 
 // Forward Declarations
 class DrSettings;
 class DrProperty;
+class DrSignal;
+class DrOutput;
 
 // Type Definitions
-typedef std::map<std::string, DrProperty*> PropertyMap;
-
-// Local Constants
-const   long    c_property_starting_number =    1;
+typedef std::map<std::string, DrProperty*>  PropertyMap;            // Properties are stored Attributes/Variables for this DrComponent
+typedef std::map<long,        DrSignal*>    SignalMap;              // Signals are INPUTS that receive signals from DrOutput
+typedef std::map<long,        DrOutput*>    OutputMap;              // Outputs are OUTPUTS that send signals to activate DrSignals
 
 
 //####################################################################################
@@ -31,14 +33,18 @@ class DrComponent
 {
 private:
     // External Borrowed Pointers
-    DrSettings         *m_parent_settings;                                          // Points to the DrSettings entity that holds this component
+    DrSettings         *m_parent_settings;                                              // Points to the DrSettings entity that holds this component
 
-    // Local Variables
-    long                m_key_generator     { c_property_starting_number };         // Variable to hand out unique id key's to all child objects (in this case DrProperties)
-    PropertyMap         m_properties;                                               // Map of pointers to DrProperty classes
+    // Child Object Containers
+    long                m_property_key_generator    { c_starting_key_property };        // Variable to hand out unique id key's to all child DrProperties
+    long                m_signal_key_generator      { c_starting_key_signal };          // Variable to hand out unique id key's to all child DrSignals
+    long                m_output_key_generator      { c_starting_key_output };          // Variable to hand out unique id key's to all child DrOutputs
+    PropertyMap         m_properties;                                                   // Map of pointers to DrProperty classes    (Variables)
+    SignalMap           m_signals;                                                      // Map of pointers to DrSignal classes      (Input Slots)
+    OutputMap           m_outputs;                                                      // Map of pointers to DrOutput classes      (Output Slots)
 
     // The 7 Parts of Data for Every Component
-    long                m_component_kee     { c_no_key };
+    long                m_component_key     { c_no_key };
     std::string         m_component_name    { "" };
     std::string         m_display_name      { "Unknown Component" };
     std::string         m_description       { "No description." };
@@ -69,7 +75,13 @@ public:
     PropertyMap&        getPropertyMap() { return m_properties; }
     DrProperty*         getProperty(std::string property_key, bool show_error = true);
 
-    long                getComponentKey()   { return m_component_kee; }
+    SignalMap&          getSignalMap() { return m_signals; }
+    DrSignal*           getSignal(std::string property_key, bool show_error = true);
+
+    OutputMap&          getOutputMap() { return m_outputs; }
+    DrOutput*           getOutput(std::string property_key, bool show_error = true);
+
+    long                getComponentKey()   { return m_component_key; }
     std::string         getComponentName()  { return m_component_name; }
     std::string         getDisplayName()    { return m_display_name; }
     std::string         getDescription()    { return m_description; }
@@ -86,15 +98,21 @@ public:
     void                turnOff() { m_turned_on = false; }
 
     // Component Key Generator
-    long            checkCurrentGeneratorKey()                      { return m_key_generator; }
-    long            getNextKey()                                    { return m_key_generator++; }
-    void            setGeneratorKeyStartNumber(long initial_key)    { m_key_generator = initial_key; }
+    long            checkCurrentPropertyGeneratorKey()      { return m_property_key_generator; }
+    long            checkCurrentSignalGeneratorKey()        { return m_signal_key_generator; }
+    long            checkCurrentOutputGeneratorKey()        { return m_output_key_generator; }
+    long            getNextPropertyKey()                    { return m_property_key_generator++; }
+    long            getNextSignalKey()                      { return m_signal_key_generator++; }
+    long            getNextOutputKey()                      { return m_output_key_generator++; }
+    void            setStartNumberPropertyGeneratorKey(long initial_key)    { m_property_key_generator = initial_key; }
+    void            setStartNumberSignalGeneratorKey(long initial_key)      { m_signal_key_generator = initial_key; }
+    void            setStartNumberOutputGeneratorKey(long initial_key)      { m_output_key_generator = initial_key; }
 
     // Inspector Sorting Variable
     int             getListOrder() { return m_list_order; }
     void            setListOrder(int order) { m_list_order = order; }
 
-    // Building Calls
+    // Building Functions
     DrProperty*     addProperty(std::string     property_name,
                                 Property_Type   type,
                                 DrVariant       value,
@@ -102,10 +120,23 @@ public:
                                 std::string     description,
                                 bool            is_hidden = false,
                                 bool            is_editable = true);
+    DrSignal*       addSignal(std::string signal_name, bool is_deletable = false);
+    DrOutput*       addOutput(std::string output_name, bool is_deletable = false);
 
 };
 
 #endif // DRCOMPONENT_H
+
+
+
+
+
+
+
+
+
+
+
 
 
 

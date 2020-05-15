@@ -77,7 +77,7 @@ private:
     EngineTextureMap   &m_textures;                             // Reference to map of Textures used for Rendering
 
     // Local Variables
-    long                m_key_generator     { 100 };            // Variable to hand out unique id key's to all children items, keys start at 100
+    long                m_key_generator     { 100 };            // Variable to hand out unique id key's to children (DrEngineThing and DrEngineCamera), keys start at 100
     long                m_world_key;                            // Key of world from Project that is loaded into this instance of DrEngineWorld
 
 
@@ -324,7 +324,7 @@ public:
     void                updateCameras();
 
 
-    // Getter and Setters - Simplified
+    // ***** Getter and Setters - Simplified
     DrEngine*           engine()                    { return m_engine; }
     DrProject*          project()                   { return m_project; }
     cpSpace*            space()                     { return m_space; }

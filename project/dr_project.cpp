@@ -57,8 +57,8 @@ void DrProject::clearProject(bool add_built_in_items) {
     }
 
     // !!!!! #NOTE: Don't allow key to start at less than 1, having an item with key 0 (or less) could conflict with nullptr results
-    //             (c_key_starting_number currently starts at 1001)
-    m_key_generator = c_key_starting_number;
+    //             (c_key_entity_starting_number currently starts at 1001)
+    m_key_generator = c_starting_key_entity;
 }
 
 
@@ -99,7 +99,7 @@ void DrProject::addDefaultAssets() {
 //####################################################################################
 // Removes an Animation from the Project if not used by another Asset
 void DrProject::deleteAnimation(long animation_key_to_delete, long ignore_asset_key) {
-    if (animation_key_to_delete < c_key_starting_number) return;
+    if (animation_key_to_delete < c_starting_key_entity) return;
     DrAnimation *animation = findAnimationFromKey(animation_key_to_delete);
     if (animation == nullptr) return;
 
@@ -133,7 +133,7 @@ void DrProject::deleteAnimation(long animation_key_to_delete, long ignore_asset_
     // Delete all Images in Animation
     for (auto frame : animation->getFrames()) {
         long image_key = frame->getKey();
-        if  (image_key < c_key_starting_number) continue;
+        if  (image_key < c_starting_key_entity) continue;
 
         // See if Image is used by any other Animaiton
         bool another_is_using_image = false;
@@ -191,7 +191,7 @@ void DrProject::deleteFont(long font_key) {
 
 // Removes an Image from the Project
 void DrProject::deleteImage(long image_key) {
-    if (image_key < c_key_starting_number) return;
+    if (image_key < c_starting_key_entity) return;
     DrImage *image = findImageFromKey(image_key);
     if (image == nullptr) return;
     m_images.erase(image_key);
@@ -248,7 +248,7 @@ DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Cat
     // Check if copy of this Bitmap already exists in DrImage map, if so return that DrImage
     for (auto &image_pair : getImageMap()) {
         DrImage *dr_image = image_pair.second;
-        if (dr_image->getSimplifiedName() == image_name && dr_image->getKey() >= c_key_starting_number) {
+        if (dr_image->getSimplifiedName() == image_name && dr_image->getKey() >= c_starting_key_entity) {
             if (Dr::CompareBitmaps(bitmap, dr_image->getBitmap())) {
                 if (progress != nullptr) {
                     progress->unlockProgress();

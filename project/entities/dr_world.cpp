@@ -19,7 +19,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, std::string new_world_name, bool add_start_stage)
-    : DrSettings(parent_project), DrNode(DrNodeType::World, key) {
+    : DrSettings(parent_project), DrNode(key) {
 
     this->setKey(key);
     this->initializeSettings(world_type, new_world_name);
@@ -28,11 +28,11 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
     // Add initial Node Slots
     switch(world_type) {
         case DrWorldType::Physics_2D:
-            addInputSlot( this->getKey(), Input_Slots::Start);
-            addOutputSlot(this->getKey(), Output_Slots::UI);
+            addInputSlot( this->getKey(),   Input_Slots::Start);
+            addOutputSlot(this->getKey(),   Output_Slots::UI);
             break;
         case DrWorldType::UI:
-            addInputSlot(this->getKey(), Input_Slots::Load);
+            addInputSlot(this->getKey(),    Input_Slots::Load);
             break;
     }
 

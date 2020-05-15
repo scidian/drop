@@ -62,20 +62,26 @@ enum class DrType {
 
 
 // ################## Project Mapped Types ####################
-// ***** Nodes,     Entities contained within DrProject::m_nodes
-enum class DrNodeType {
-    // Logic
-    Random_Out,
-    Timed_Pause,
-    World,
+
+
+
+enum class DrSlotType {
+    Input,
+    Output,
 };
-enum class DrSlotType {     Input,  Output,     };
+
+
 
 
 // ***** Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis
 enum class DrWorldType {
+    // Editor Worlds
     Physics_2D,
     UI,
+
+    // Worlds Used As Nodes in World Map
+    Random_Out,
+    Timed_Pause,
 };
 
 
@@ -119,8 +125,8 @@ enum class DrThingType {
 // ################## Assets for World Map Sub Types ####################
 // ***** Blocks,    Entities contained within DrProject::m_blocks
 enum class DrBlockType {
-    World,
-    Switch,
+    World,                  // Physics 2D, UI, future 3D, Cards, Tower, etc
+    Logic,                  // Random, Timer, etc
 };
 
 
@@ -228,7 +234,6 @@ namespace Dr {
     std::string         StringFromEffectType(DrEffectType type);
     std::string         StringFromItemType(DrItemType type);
     std::string         StringFromPrefabType(DrPrefabType type);
-    std::string         StringFromNodeType(DrNodeType type);
     std::string         StringFromThingType(DrThingType type);
     std::string         StringFromWorldType(DrWorldType type);
 }

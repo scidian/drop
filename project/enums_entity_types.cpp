@@ -87,14 +87,6 @@ std::string StringFromPrefabType(DrPrefabType type) {
     }
 }
 
-std::string StringFromNodeType(DrNodeType type) {
-    switch (type) {
-        case DrNodeType::Random_Out:        return "Random Out";
-        case DrNodeType::Timed_Pause:       return "Timed Pause";
-        case DrNodeType::World:             return "World";
-    }
-}
-
 std::string StringFromThingType(DrThingType type) {
     switch (type) {
         case DrThingType::None:             return "None";
@@ -131,6 +123,8 @@ std::string StringFromWorldType(DrWorldType type) {
     switch (type) {
         case DrWorldType::Physics_2D:       return "2D Physics";
         case DrWorldType::UI:               return "UI";
+        case DrWorldType::Random_Out:       return "Random Out";
+        case DrWorldType::Timed_Pause:      return "Timed Pause";
     }
 }
 

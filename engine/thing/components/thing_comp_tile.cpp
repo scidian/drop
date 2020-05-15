@@ -7,7 +7,7 @@
 //
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing/components/thing_comp_tile.h"
 #include "engine/thing/engine_thing.h"

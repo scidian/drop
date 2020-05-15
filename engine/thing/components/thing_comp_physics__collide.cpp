@@ -6,7 +6,7 @@
 //
 //
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/engine_texture.h"
 #include "engine/thing/components/thing_comp_foliage.h"
 #include "engine/thing/components/thing_comp_physics.h"
@@ -18,7 +18,7 @@ static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineThing *engine_
 
 
 //####################################################################################
-//##    Gets Arbiter Info for Signals
+//##    Gets Arbiter Info for Messages
 //####################################################################################
 Collision_Info GetCollisionInfo(cpArbiter *arb, ThingCompPhysics *physics_a, ThingCompPhysics *physics_b, bool get_points) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
@@ -68,9 +68,9 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
     }
 
 
-    // ***** Emit collision as signal
+    // ***** Emit collision as message
     if (collide_info.collision_count == 0) {
-        emitSignal(Signals::ThingCollide, collide_info, thing_b);
+        emitMessage(Messages::ThingCollide, collide_info, thing_b);
     }
 
     // ***** Keeps track number of shape collisions between objects
@@ -98,7 +98,7 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
     ThingCompPhysics *physics_b = thing_b->physics();
 
     // ***** Check if something has tried to cancel this collision elsewhere in game
-    if (signalList(Signals::ThingCancelCollision, thing()->getKey()).size() > 0) {
+    if (messageList(Messages::ThingCancelCollision, thing()->getKey()).size() > 0) {
         return cpArbiterIgnore(arb);
     }
 
@@ -174,9 +174,9 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         BodyAddRecoil(world()->getSpace(), arb, thing_b);
     }
 
-    // ***** Emit ThingCollideStep Signal
+    // ***** Emit ThingCollideStep Message
     ///Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
-    ///emitSignal(Signals::ThingCollideStep, collide_info, thing_b);
+    ///emitMessage(Messages::ThingCollideStep, collide_info, thing_b);
 
     // ***** Normal collision
     return cpTrue;
@@ -205,9 +205,9 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
         }
     }
 
-    // ***** Emit ThingCollideEnd Signal
+    // ***** Emit ThingCollideEnd Message
     ///Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
-    ///emitSignal(Signals::ThingCollideEnd, collide_info, thing_b);
+    ///emitMessage(Messages::ThingCollideEnd, collide_info, thing_b);
 
     // ***** End collision, return value for this function has no effect
     return cpTrue;
@@ -233,10 +233,10 @@ bool ThingCompPhysics::collideSeperate(cpArbiter *arb, DrEngineThing *thing_b) {
     }
 
 
-    // ***** Emit seperation signal
+    // ***** Emit seperation message
     Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, false);
     if (collide_info.collision_count == 0) {
-        emitSignal(Signals::ThingSeperate, collide_info, thing_b);
+        emitMessage(Messages::ThingSeperate, collide_info, thing_b);
     }
 
     // !!!!! #TEMP: Player collision tracking

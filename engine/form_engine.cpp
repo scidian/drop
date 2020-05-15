@@ -320,7 +320,7 @@ void FormEngine::processFrame(double milliseconds) {
     m_engine->getCurrentWorld()->updateCameras();                                   // Update Camera Targets
     moveCameras();                                                                  // Move Cameras
     m_opengl->update();                                                             // Pushes render update
-    m_engine->updateSignalList();                                                   // Iterates DrEngineSignal messaging
+    m_engine->updateMessageList();                                                  // Iterates DrEngineMessage messaging
 }
 
 // Emitted by QOpenGLWidget when back buffer is swapped to screen

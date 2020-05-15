@@ -6,7 +6,7 @@
 //
 //
 #include "core/dr_random.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/thing/components/thing_comp_player.h"
 #include "engine/thing/engine_thing.h"
 #include "engine/world/engine_world.h"
@@ -90,12 +90,12 @@ bool ThingCompPlayer::update(double time_passed, double time_warp) {
     //##
     //###########################################
     /**
-    for (auto &signal : signalList(Signals::ThingCollide, thing()->getKey())) {
+    for (auto &message : messageList(Messages::ThingCollide, thing()->getKey())) {
         DrEngineThing *thing_a = thing();
-        DrEngineThing *thing_b = signal->thingB();
+        DrEngineThing *thing_b = message->thingB();
         ThingCompPhysics *physics_a = thing_a->physics();
         ThingCompPhysics *physics_b = thing_b->physics();
-        Collision_Info info = boost::any_cast<Collision_Info>(signal->value().value());
+        Collision_Info info = boost::any_cast<Collision_Info>(message->value().value());
 
     }
     */
@@ -107,23 +107,23 @@ bool ThingCompPlayer::update(double time_passed, double time_warp) {
     //##
     //###########################################
     /**
-    if (signalList(Signals::MouseLeftDown).size() > 0) {
+    if (messageList(Messages::MouseLeftDown).size() > 0) {
         thing()->hue = static_cast<float>(Dr::RandomDouble(0, 360));
     }
 
-    if (signalList(Signals::MouseScroll).size() > 0) {
-        g_info = "Mouse Scroll: " + std::to_string( signalList(Signals::MouseScroll).front()->value().toInt() );
+    if (messageList(Messages::MouseScroll).size() > 0) {
+        g_info = "Mouse Scroll: " + std::to_string( messageList(Messages::MouseScroll).front()->value().toInt() );
     }
 
-    if (signalList(Signals::ThingDied).size() > 0) {
-        g_info = "Thing Died: " + signalList(Signals::ThingDied).front()->thingNameA() +
-               ", Engine Key: " + std::to_string(signalList(Signals::ThingDied).front()->thingEngineKeyA()) +
-                ", Asset Key: " + std::to_string(signalList(Signals::ThingDied).front()->thingAssetKeyA()) +
-                ", Killed by: " + signalList(Signals::ThingDied).front()->thingNameB();
+    if (messageList(Messages::ThingDied).size() > 0) {
+        g_info = "Thing Died: " + messageList(Messages::ThingDied).front()->thingNameA() +
+               ", Engine Key: " + std::to_string(messageList(Messages::ThingDied).front()->thingEngineKeyA()) +
+                ", Asset Key: " + std::to_string(messageList(Messages::ThingDied).front()->thingAssetKeyA()) +
+                ", Killed by: " + messageList(Messages::ThingDied).front()->thingNameB();
     }
 
-    for (auto &signal : signalList(Signals::ThingDied)) {
-        if (signal->thingEngineKeyA() == thing()->getKey()) {
+    for (auto &message : messageList(Messages::ThingDied)) {
+        if (message->thingEngineKeyA() == thing()->getKey()) {
             world()->setBackgroundColor( DrColor(Dr::RandomInt(0, 255), Dr::RandomInt(0, 255), Dr::RandomInt(0, 255)) );
         }
     }

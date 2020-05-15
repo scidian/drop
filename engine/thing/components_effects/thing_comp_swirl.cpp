@@ -9,7 +9,7 @@
 #include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "engine/engine.h"
-#include "engine/engine_signal.h"
+#include "engine/engine_message.h"
 #include "engine/mesh/engine_mesh.h"
 #include "engine/opengl/opengl.h"
 #include "engine/thing/components_effects/thing_comp_swirl.h"
