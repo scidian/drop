@@ -47,6 +47,21 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
     if (physics_b->shouldCollide(physics_a) == false) return cpArbiterIgnore(arb);
     Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
 
+    // Interactive foliage
+    if (thing_a->compFoliage() != nullptr) {
+        if (physics_a->checkCollisionCountWithObject(thing_b) == 0) {                           // Only react to an objects first shape that collides
+            if (physics_b->body_type != Body_Type::Static) {
+                double mass =  cpBodyGetMass(physics_a->body) * 2.0;
+                double force = mass * thing_a->compFoliage()->getSpringiness();
+                cpVect v = cpvmult(cpBodyGetVelocity(physics_b->body), force);
+                       v.x = Dr::Clamp(v.x, -(mass * 500.0), (mass * 500.0));
+                       v.y = Dr::Clamp(v.y, -(mass * 500.0), (mass * 500.0));
+                cpBodyApplyImpulseAtWorldPoint(physics_a->body, v, cpArbiterGetPointA(arb, 0));
+            }
+            ///return cpArbiterIgnore(arb);
+        }
+    }
+
     // Some special Player collsion processing
     if (thing_a->compPlayer() != nullptr) {
         // Ledge Grabbing
@@ -102,11 +117,10 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         return cpArbiterIgnore(arb);
     }
 
-
     // Check health
     if ( physics_a->isAlive() && physics_a->isDying()) return cpTrue;                           // Don't deal damage while dying
     if (!physics_a->isAlive()) return cpFalse;                                                  // If object a is dead, cancel collision
-    if (!physics_b->isAlive()) return cpFalse;                                                  // If object b is dead, cancel collision
+    if (!physics_b->isAlive()) return cpFalse;                                                  // If object b is dead, cancel collision   
 
     // Some special Player collision processing
     if (thing_a->compPlayer() != nullptr) {

@@ -96,7 +96,10 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
     (void) time_passed;
     (void) time_warp;
 
-    // If message exists with this Foliage that is started colliding with something, apply collision force
+    // Foliage is processed specialy through compPhysics() for speed, however...
+    //      This is an example of processing through messaging system.
+    //      If message exists with this Foliage that is started colliding with something, apply collision force
+    /**
     for (auto &message : messageList(Messages::ThingCollide, thing()->getKey())) {
         DrEngineThing *thing_a = thing();
         DrEngineThing *thing_b = message->thingB();
@@ -117,6 +120,7 @@ bool ThingCompFoliage::update(double time_passed, double time_warp) {
             }
         }
     }
+    */
 
     return false;
 }
