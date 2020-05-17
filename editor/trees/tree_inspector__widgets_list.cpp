@@ -76,7 +76,8 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     } else if   (property_name == Props::Asset_Collision_One_Way_Type) {
         options << tr("None")
                 << tr("Pass Through")
-                << tr("Weak Spot");
+                << tr("Weak Spot")
+                << tr("Directional Spring");
     } else if   (property_name == Props::Asset_Collision_Shape) {
         options << tr("Image Shape")
                 << tr("Circle")

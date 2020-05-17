@@ -48,12 +48,13 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
     if (asset_type == DrAssetType::Object) {
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Type, Property_Type::List, static_cast<int>(One_Way::None),
                                "One Way Type", "Type of One Way collision for this Object. <br>"
-                                               "<b>Pass_Through</b> - Objects / Characters can pass through in one direction. <br>"
-                                               "<b>Weak_Spot</b> - Only takes damage from one direction.");
+                                               "<b>Pass Through</b> - Objects / Characters can pass through in one direction. <br>"
+                                               "<b>Weak Spot</b> - Only takes damage from one direction. <br>"
+                                               "<b>Directional Spring</b> - Repulse Force applied toward One Way Angle only.");
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Direction, Property_Type::Angle, 0,
                                "One Way Angle", "Direction that affects <b>One Way Type</b>. 0° is Up, 90° is Left, 180° is Down, 270° is Right.");
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Drop_Down, Property_Type::Bool, false,
-                               "Drop Down?", "When true, movement force towards gravity will cancel collision with this Thing.");
+                               "Drop Down?", "When true, movement force towards direction of gravity will cancel collision with this Thing.");
         addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Surface_Velocity, Property_Type::PointF, DrPointF(0.0, 0.0),
                                "Surface Velocity", "Speed given to other Things when touching. Useful for making stuff like conveyor belts. Works better with "
                                                    "higher friction.");

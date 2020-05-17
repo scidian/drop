@@ -47,7 +47,8 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
 
     // Adds the initial "Start Stage"
     if (add_start_stage) {
-        m_start_stage_key = addStage()->getKey();
+        DrStage *start_stage = addStage();
+        m_start_stage_key = start_stage->getKey();
     }
 
     m_last_stage_shown_in_editor = m_start_stage_key;

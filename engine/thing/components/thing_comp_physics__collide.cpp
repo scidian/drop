@@ -184,8 +184,14 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
 
     // Repulse force
     if (Dr::FuzzyCompare(physics_a->getRepulseForce(), 0.0) == false) {
-        physics_b->setReflectForce(physics_a->getRepulseForce());
-        BodyAddRecoil(world()->getSpace(), arb, thing_b);
+        if (physics_a->getOneWay() == One_Way::Directinal_Spring) {
+            cpVect velocity = cpv(physics_a->getRepulseForce() * physics_a->getOneWayDirection().x, physics_a->getRepulseForce() * physics_a->getOneWayDirection().y);
+            //cpBodySetVelocity(physics_b->body, velocity);
+            cpBodyApplyImpulseAtLocalPoint(physics_b->body, velocity * 20.0, cpvzero);
+        } else {
+            physics_b->setReflectForce(physics_a->getRepulseForce());
+            BodyAddRecoil(world()->getSpace(), arb, thing_b);
+        }
     }
 
     // ***** Emit ThingCollideStep Message
@@ -279,7 +285,7 @@ static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineThing *engine_
         return;
     }
 
-    // METHOD: Apply damage_recoil opposite velocity
+    // METHOD: Apply recoil opposite velocity
     cpVect n = cpArbiterGetNormal(arb);                                 // Get Normal of contact point
     cpVect velocity = cpBodyGetVelocity(physics->body);                 // Get current velocity of body
     if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0) {               // If object isnt moving, give it the velocity towards the collision

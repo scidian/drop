@@ -35,7 +35,7 @@ void DrStage::initializeStageSettings(std::string new_name) {
     addPropertyToComponent(Comps::Stage_Settings, Props::Stage_End, Property_Type::Int, -1,
                            "End", "Stop randomly showing this Stage at this distance. Use a value of <= 0 (i.e. -1) for an infinite end distance. Does not apply to the "
                                   "Start Stage (Start Stage is always only shown exactly once).");
-    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Size, Property_Type::Positive, 1200,
+    addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Size, Property_Type::Positive, 1024,
                            "Size", "Length of stage.");
     addPropertyToComponent(Comps::Stage_Settings, Props::Stage_Cooldown, Property_Type::Positive, 0,
                            "Cooldown", "Distance to wait after stage plays before it is possible to start showing again.");
