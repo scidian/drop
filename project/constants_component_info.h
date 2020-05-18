@@ -12,15 +12,6 @@
 
 
 //####################################################################################
-//##    Local Error Codes
-//############################
-namespace Error_Code {
-    const std::string   NoComponent         { "S001" };
-    const std::string   NoProperty          { "S002" };
-
-}
-
-//####################################################################################
 //##    Possible background colors for Component Categories
 //############################
 namespace Component_Colors {

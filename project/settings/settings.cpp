@@ -98,11 +98,11 @@ DrComponent* DrSettings::getComponent(std::string component_name, bool show_erro
     auto it = m_components.find(component_name);
     if (it == m_components.end()) {
         if (show_error) {
-            Dr::PrintDebug("Error Code: " + Error_Code::NoComponent + "\n\n"
-                           "Component not found by name in current object \n\n"
+            Dr::PrintDebug("Error! Component not found by name in current entity! \n"
                            "Component Name: \t" + component_name + "\n"
-                           "Object Name: \t" + this->getName() + ". \n"
-                           "Object Type: \t" + Dr::StringFromType(this->getType()) + "\n");
+                           "Entity Name: \t" + this->getName() + "\n"
+                           "Entity Type: \t" + Dr::StringFromType(this->getType()) + "\n"
+                           "End Error...");
         }
         return nullptr;
     }

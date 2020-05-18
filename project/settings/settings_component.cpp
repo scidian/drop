@@ -49,14 +49,14 @@ DrProperty* DrComponent::getProperty(std::string property_name, bool show_error)
     auto it = m_properties.find(property_name);
     if (it == m_properties.end()) {
         if (show_error) {
-            Dr::PrintDebug("ERROR! CODE: " + Error_Code::NoProperty + "\n\n"
-                           "Property not found by name in object / component \n\n"
+            Dr::PrintDebug("Error! Property not found by name in component! \n"
                            "Property Name: \t" + property_name + "\n"
                            "Component Key: \t" + std::to_string(this->getComponentKey()) + "\n"
                            "Component Name: \t" + this->getComponentName() + "\n"
-                           "Display Name: \t" + this->getDisplayName() + "\n"
-                           "Object Name: \t" + this->m_parent_settings->getName() + "\n"
-                           "Object Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + " - End Error.....");
+                           "Component Display Name: \t" + this->getDisplayName() + "\n"
+                           "Entity Name: \t" + this->m_parent_settings->getName() + "\n"
+                           "Entity Type: \t" + Dr::StringFromType(this->m_parent_settings->getType()) + "\n"
+                           "End Error...");
         }
         return nullptr;
     }
