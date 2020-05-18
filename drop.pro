@@ -44,10 +44,14 @@ RESOURCES += \
     shaders.qrc
 
 
-##### Other Included Files
+##### Some Distribution Files
 DISTFILES += \
     drop_icon.ico \
-    drop_icons.icns \
+    drop_icons.icns
+
+
+##### Other Included Files
+OTHER_FILES += \
     images/basic/*.* \
     images/decoration/*.* \
     images/gradient/*.* \

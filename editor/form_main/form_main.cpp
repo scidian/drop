@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 #include <QDockWidget>
 #include <QKeyEvent>
 #include <QTimer>
@@ -57,6 +58,11 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
                                  Dr::CheckDebugFlag(Debug_Flags::Load_Test_Project));
     }
 
+    // ********** Load External Image Assets into a Project
+    m_external_images = new DrProject();
+    Dr::AddExternalImages(m_external_images);
+    qDebug() << "External Image Project Image Count: " << m_external_images->getImageMap().size();
+
     // ********* Initialize form and customize colors and styles
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
     initializeFormMain();
@@ -80,6 +86,7 @@ FormMain::~FormMain() {
     if (m_current_mode != Editor_Mode::World_Editor)    widgetCentralEditor->deleteLater();
     if (m_current_mode != Editor_Mode::World_Map)       widgetCentralWorldMap->deleteLater();
     delete m_project;
+    delete m_external_images;
 }
 
 

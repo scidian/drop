@@ -67,10 +67,10 @@ void DrOpenGL::initializeGL() {
 //##    Adds texture to Engine and creates 3D Extruded VBO for texture
 //####################################################################################
 void DrOpenGL::importTexture(long texture_id, std::string from_asset_string) {
-    bool     force_outline = (texture_id > 0 || texture_id < -99);
+    bool     should_outline = (texture_id > 0 || texture_id < -99);                             // Don't outline shader textures
     QImage   image = QImage(QString::fromStdString(from_asset_string)).convertToFormat(QImage::Format::Format_ARGB32);
     DrBitmap bitmap = DrBitmap(image.constBits(), static_cast<int>(image.sizeInBytes()), false, image.width(), image.height());
-    DrImage  dr_image(m_engine->getProject(), 0, "temp", bitmap, force_outline);
+    DrImage  dr_image(m_engine->getProject(), 0, "temp", bitmap, should_outline, nullptr);
     importTexture(texture_id, &dr_image);
 }
 
@@ -87,17 +87,7 @@ void DrOpenGL::importTexture(long texture_id, DrImage *image) {
     //      Run with 'true' for better looking models in wireframe
     bool wireframe = false;
     m_texture_data[texture_id] = new DrEngineVertexData();
-
-    // If using built in texture, need to trace outline
-    if (texture_id > c_no_key && texture_id < c_starting_key_entity) {
-        DrBitmap bitmap = image->getBitmap();
-        DrImage  image(m_engine->getProject(), texture_id, "temp", bitmap, true);
-        m_texture_data[texture_id]->initializeExtrudedImage( &image, wireframe );
-
-    // Otherwise already traced, use original DrImage
-    } else {
-        m_texture_data[texture_id]->initializeExtrudedImage( image, wireframe );
-    }
+    m_texture_data[texture_id]->initializeExtrudedImage( image, wireframe );
 
     // Allocate mesh into vbo for use with OpenGL (could delete m_texture_data after this)
     m_texture_vbos[texture_id] = new QOpenGLBuffer();

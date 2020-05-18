@@ -244,7 +244,7 @@ long DrProject::addFont(std::string font_name, DrBitmap font_bitmap, std::string
     return new_font_key;
 }
 
-DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, long key, IProgressBar *progress) {
+DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, long key, bool outline, IProgressBar *progress) {
     // Check if copy of this Bitmap already exists in DrImage map, if so return that DrImage
     for (auto &image_pair : getImageMap()) {
         DrImage *dr_image = image_pair.second;
@@ -262,7 +262,7 @@ DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, long key,
 
     // Create new DrImage with Bitmap and add to Project
     long new_image_key = (key == c_no_key) ? getNextKey() : key;
-    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, false, progress);
+    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, outline, progress);
     return m_images[new_image_key];
 }
 

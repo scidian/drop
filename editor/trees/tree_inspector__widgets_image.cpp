@@ -267,7 +267,7 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
         progress->setPrefix(" Importing Images: \n");
         std::list<long> image_keys;
         for (auto file_path : file_paths) {
-            DrImage *image = Dr::AddImage(project, file_path, c_no_key, progress);
+            DrImage *image = Dr::AddImage(project, file_path, c_no_key, true, progress);
             image_keys.push_back(image->getKey());
         }
         progress->stopProgress();

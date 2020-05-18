@@ -96,7 +96,7 @@ FormEngine::FormEngine(DrProject *project, long stage_key, QWidget *parent) : QM
         pushCamera->setText(QApplication::translate( "MainWindow", "Cam Switch",        nullptr));
 
         QLabel *debug1_label_image = new QLabel(pushDebug1);
-            debug1_label_image->setPixmap(QPixmap(":/assets/form_engine_icons/debug_shape.png").scaled(25, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            debug1_label_image->setPixmap(QPixmap(":/assets/engine/debug_shape.png").scaled(25, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             debug1_label_image->setGeometry(0, 3, 140, 28);
             debug1_label_image->setAlignment(Qt::AlignCenter);
         QLabel *debug1_label_text = new QLabel(pushDebug1);
@@ -105,7 +105,7 @@ FormEngine::FormEngine(DrProject *project, long stage_key, QWidget *parent) : QM
             debug1_label_text->setAlignment(Qt::AlignCenter);
 
         QLabel *debug2_label_image = new QLabel(pushDebug2);
-            debug2_label_image->setPixmap(QPixmap(":/assets/form_engine_icons/debug_collide.png").scaled(30, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            debug2_label_image->setPixmap(QPixmap(":/assets/engine/debug_collide.png").scaled(30, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             debug2_label_image->setGeometry(0, 1, 140, 30);
             debug2_label_image->setAlignment(Qt::AlignCenter);
         QLabel *debug2_label_text = new QLabel(pushDebug2);

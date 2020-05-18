@@ -196,7 +196,7 @@ public:
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
-    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, long key = c_no_key, IProgressBar *progress = nullptr);
+    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, long key = c_no_key, bool outline = true, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
     DrWorld*        addWorld(DrWorldType world_type);

@@ -6,6 +6,7 @@
 //
 //
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include <QImage>
 #include <QPixmap>
@@ -29,7 +30,7 @@ namespace Dr {
 //##        During project->addImage, if exact image is already found within
 //##        project, that existing image is returned
 //####################################################################################
-DrImage* AddImage(DrProject *project, QString filename, long key, IProgressBar *progress) {
+DrImage* AddImage(DrProject *project, QString filename, long key, bool outline, IProgressBar *progress) {
 
     QFileInfo file_info(filename);
         QString full_path =     file_info.path();
@@ -40,12 +41,13 @@ DrImage* AddImage(DrProject *project, QString filename, long key, IProgressBar *
 
     QImage image = QImage(filename).convertToFormat(QImage::Format::Format_ARGB32);
     if (image.isNull()) {
-        image = QImage(1, 1, QImage::Format::Format_ARGB32);
+        ///image = QImage(1, 1, QImage::Format::Format_ARGB32);
+        return nullptr;
     }
     DrBitmap bitmap = DrBitmap(image.constBits(), static_cast<int>(image.sizeInBytes()), false, image.width(), image.height());
     ///qDebug() << "Bitmap - from size: " << image.sizeInBytes() << ", Width: " << bitmap.width << ", Height: " << bitmap.height;
 
-    DrImage *dr_image = project->addImage(simple_name.toStdString(), bitmap, key, progress);
+    DrImage *dr_image = project->addImage(simple_name.toStdString(), bitmap, key, outline, progress);
     return dr_image;
 }
 
@@ -67,6 +69,50 @@ void AddBuiltInImages(DrProject *project) {
     AddImage(project, ":/assets/dr_images/spring.png",              c_key_image_spring);
 
 }   // End AddBuiltInImages()
+
+
+//####################################################################################
+//##    Adds Built In Images to Project
+//####################################################################################
+void AddExternalImages(DrProject *project) {
+
+    // Create directory object at current directory, filter for folders
+    QDir dir("", "*", QDir::SortFlag::Name, QDir::Filter::Dirs | QDir::Filter::NoDotAndDotDot);
+    ///qDebug() << "Directory: " << dir.path();
+    ///qDebug() << "Image folder exists? " << dir.exists("images");
+
+    // If "images" folder is with executable (windows) or in Drop.app/Contents/macOS/images (mac)
+    if (dir.exists("images")) {
+        dir.cd("images");
+
+        // Go through each folder and add Images
+        for (auto sub_directory : dir.entryList()) {
+            QString folder_name = sub_directory;
+            QDir folder = dir;
+                 folder.cd(folder_name);
+                 folder.setFilter(QDir::Filter::Files);
+            ///qDebug() << "Directory: " << folder.absolutePath();
+
+            // Create category name from folder name
+            if (folder_name.length() < 1) continue;
+            QString category = folder_name;
+                    category.replace("_", " ");
+                    category[0] = category[0].toUpper();
+
+            // Go through each file and load image
+            for (auto image_file : folder.entryInfoList()) {
+                ///qDebug() << "Image: " << image_file.absoluteFilePath();
+                DrImage *image = AddImage(project, image_file.absoluteFilePath(), c_no_key, false);
+                if (image != nullptr) {
+                    image->setFolderName(folder_name.toStdString());
+                }
+            }
+
+        }
+
+    }
+}   // End AddExternalImages()
+
 
 
 }   // End namespace Dr

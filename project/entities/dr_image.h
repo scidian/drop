@@ -36,10 +36,14 @@ public:
     bool                        m_use_simple_square     { false };                          // True when Image Outline has been canceled, when true extrudes in 3D as simple square
     bool                        m_outline_processed     { false };                          // Turns true when autoOutlinePoints() has completed successfully
 
+private:
+    // Internal Variables
+    std::string                 m_folder_name           { "" };                             // Used for External Images to belong to a category
+
+
 public:
     // Constructors
-    DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap,
-            bool force_outline = false, IProgressBar *progress = nullptr);
+    DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap, bool outline, IProgressBar *progress);
 
     // DrSettings Overrides
     virtual DrType          getType() override  { return DrType::Image; }
@@ -47,13 +51,18 @@ public:
 
     // Image Helper Functions
     void                autoOutlinePoints(IProgressBar *progress = nullptr);
-    bool                outlineProcessed()      { return m_outline_processed; }
-    bool                useSimpleSquare()       { return m_use_simple_square; }
+    bool                outlineProcessed()                  { return m_outline_processed; }
+    bool                useSimpleSquare()                   { return m_use_simple_square; }
     void                setSimpleBox();
 
     // Getters / Setters
-    std::string         getSimplifiedName()     { return m_simple_name; }
-    const DrBitmap&     getBitmap() const       { return m_bitmap; }
+    std::string         getSimplifiedName()                 { return m_simple_name; }
+    const DrBitmap&     getBitmap() const                   { return m_bitmap; }
+
+
+    // Internal Variable Functions
+    std::string         getFolderName()                     { return m_folder_name; }
+    void                setFolderName(std::string folder)   { m_folder_name = folder; }
 
 };
 

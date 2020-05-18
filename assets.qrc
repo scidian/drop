@@ -172,8 +172,6 @@
         <file>assets/inspector_icons/comp_health.png</file>
         <file>assets/inspector_icons/comp_collide.png</file>
         <file>assets/icon/icon256_play.png</file>
-        <file>assets/form_engine_icons/debug_collide.png</file>
-        <file>assets/form_engine_icons/debug_shape.png</file>
         <file>assets/icon/expired.png</file>
         <file>assets/asset_types/camera.png</file>
         <file>assets/inspector_icons/comp_spawn.png</file>
@@ -227,10 +225,10 @@
         <file>assets/asset_types/spike.png</file>
         <file>assets/asset_types/object.png</file>
         <file>assets/asset_types/ground.png</file>
-	<file>assets/asset_types/ladder.png</file>        
-	<file>assets/asset_types/character.png</file>
-        <file>assets/asset_types/spring.png</file>	
-	<file>assets/dr_images/character.png</file>
+        <file>assets/asset_types/ladder.png</file>
+        <file>assets/asset_types/character.png</file>
+        <file>assets/asset_types/spring.png</file>
+        <file>assets/dr_images/character.png</file>
         <file>assets/dr_images/empty.png</file>
         <file>assets/dr_images/ground.png</file>
         <file>assets/dr_images/object.png</file>
@@ -239,5 +237,7 @@
         <file>assets/dr_images/foliage.png</file>
         <file>assets/dr_images/spike.png</file>
         <file>assets/dr_images/spring.png</file>
+        <file>assets/engine/debug_collide.png</file>
+        <file>assets/engine/debug_shape.png</file>
     </qresource>
 </RCC>

@@ -74,6 +74,7 @@ public:
 private:
     // ***** Local Variables
     DrProject              *m_project = nullptr;                                    // BASE DEFINITION of DrProject!!!!! Holds current open game project
+    DrProject              *m_external_images = nullptr;                            // Project that loads included images
     DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
 
     Editor_Mode             m_current_mode = Editor_Mode::Program_Loading;          // Holds what state FormMain is in

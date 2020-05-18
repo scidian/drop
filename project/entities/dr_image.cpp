@@ -15,16 +15,17 @@
 //####################################################################################
 //##    Constructors
 //####################################################################################
-DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap, bool force_outline, IProgressBar *progress)
+DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap, bool outline, IProgressBar *progress)
     : DrSettings(parent_project) {
 
     this->setKey(key);
     this->m_simple_name = image_name;
     this->m_bitmap = bitmap;
 
-    if (key == c_no_key || key > c_starting_key_entity || force_outline) {
+    if (outline) {
         autoOutlinePoints(progress);
     } else {
+        m_use_simple_square = true;
         m_poly_list.push_back( bitmap.polygon().points() );
         m_hole_list.push_back( { } );
     }

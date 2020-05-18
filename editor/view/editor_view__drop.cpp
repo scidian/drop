@@ -238,7 +238,7 @@ void EditorView::dropEvent(QDropEvent *event) {
         progress->setPrefix(" Importing Images: \n");
         std::vector<DrAsset*> assets;
         for (auto file_path : file_paths) {
-            DrImage *image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, progress);
+            DrImage *image = Dr::AddImage(m_editor_relay->currentProject(), file_path, c_no_key, true, progress);
             assets.push_back(m_editor_relay->currentProject()->addAsset(DrAssetType::Object, image->getKey()));
         }
         progress->stopProgress();
