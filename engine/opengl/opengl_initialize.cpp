@@ -70,7 +70,7 @@ void DrOpenGL::importTexture(long texture_id, std::string from_asset_string) {
     bool     force_outline = (texture_id > 0 || texture_id < -99);
     QImage   image = QImage(QString::fromStdString(from_asset_string)).convertToFormat(QImage::Format::Format_ARGB32);
     DrBitmap bitmap = DrBitmap(image.constBits(), static_cast<int>(image.sizeInBytes()), false, image.width(), image.height());
-    DrImage  dr_image(m_engine->getProject(), 0, "temp", bitmap, Asset_Category::Image, force_outline);
+    DrImage  dr_image(m_engine->getProject(), 0, "temp", bitmap, force_outline);
     importTexture(texture_id, &dr_image);
 }
 
@@ -91,7 +91,7 @@ void DrOpenGL::importTexture(long texture_id, DrImage *image) {
     // If using built in texture, need to trace outline
     if (texture_id > c_no_key && texture_id < c_starting_key_entity) {
         DrBitmap bitmap = image->getBitmap();
-        DrImage  image(m_engine->getProject(), texture_id, "temp", bitmap, Asset_Category::Image, true);
+        DrImage  image(m_engine->getProject(), texture_id, "temp", bitmap, true);
         m_texture_data[texture_id]->initializeExtrudedImage( &image, wireframe );
 
     // Otherwise already traced, use original DrImage
@@ -155,17 +155,8 @@ void DrOpenGL::loadBuiltInTextures() {
 //##    Load resources from project
 //####################################################################################
 void DrOpenGL::loadProjectTextures() {
-    // Build list of DrImage keys used by Project, using std::set to ensure no duplicates
-    std::set<long> image_keys_used;
-    image_keys_used.insert(c_key_image_empty);
-    for (auto &animation_pair : m_engine->getProject()->getAnimationMap()) {
-        for (auto &frame : animation_pair.second->getFrames()) {
-            long image_key = frame->getKey();
-            if (image_keys_used.find(image_key) == image_keys_used.end()) {
-                image_keys_used.insert(image_key);
-            }
-        }
-    }
+    // Build list of DrImage keys used by Project
+    std::set<long> image_keys_used = m_engine->getProject()->getImageKeysUsedByProject();
 
     // Go through Project Images and load Images being used by Project
     for (auto &image_key : image_keys_used) {

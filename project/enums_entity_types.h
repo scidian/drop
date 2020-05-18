@@ -180,11 +180,11 @@ enum class DrPrefabType {
 //##    Categories for the Asset Tree
 //############################
 enum class Asset_Category {
-    // World Map
+    // World Map Node Editor
     World,
     Switch,
 
-    // World Physics 2D
+    // World Physics 2D Editor
     Character,
     Object,
     Device,
@@ -194,19 +194,9 @@ enum class Asset_Category {
     Text,
     Image,
 
-    // World UI
+    // World UI Editor
     Button,
     Control,
-
-    // Images
-    Basic,
-    Outline,
-    Gradient,
-    Decoration,
-    Ground,
-    Polygon,
-    Shape,
-    Isometric,
 };
 
 

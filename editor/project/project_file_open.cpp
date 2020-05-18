@@ -109,7 +109,7 @@ bool OpenProjectFromFile(DrProject *project, std::string open_file) {
 
         // If key doesnt already exist, initialize Image
         if (project->findSettingsFromKey(image_key, false) != nullptr) continue;
-        project->addImage(simple_name, bitmap, Asset_Category::Image, image_key);
+        project->addImage(simple_name, bitmap, image_key);
     }
     settings.endArray();
 

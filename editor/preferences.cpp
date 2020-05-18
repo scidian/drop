@@ -154,16 +154,8 @@ void LoadPreferences() {
     Dr::SetAssetExpanded(Asset_Category::Item,          true);
     Dr::SetAssetExpanded(Asset_Category::Prefab,        true);
     Dr::SetAssetExpanded(Asset_Category::Text,          true);
-
     Dr::SetAssetExpanded(Asset_Category::Image,         true);
-    Dr::SetAssetExpanded(Asset_Category::Basic,         true);
-    Dr::SetAssetExpanded(Asset_Category::Outline,       true);
-    Dr::SetAssetExpanded(Asset_Category::Gradient,      true);
-    Dr::SetAssetExpanded(Asset_Category::Decoration,    true);
-    Dr::SetAssetExpanded(Asset_Category::Ground,        true);
-    Dr::SetAssetExpanded(Asset_Category::Polygon,       true);
-    Dr::SetAssetExpanded(Asset_Category::Shape,         true);
-    Dr::SetAssetExpanded(Asset_Category::Isometric,     true);
+
 
 
     // ***** List of Inspector Component Categories Being Expanded

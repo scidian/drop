@@ -141,7 +141,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     // Create and add Categories, !!!!! #NOTE: This code sets the Order of the Categories as well
     std::vector<std::pair <Asset_Category, QTreeWidgetItem*>> asset_categories;
-    QList<DrType> show_types = getShowTypes();
+    QList<DrType>   show_types = getShowTypes();
+    std::set<long>  image_keys_used;
     if (show_types.contains(DrType::Asset))  {
         widget_items[Asset_Category::Character] =   new QTreeWidgetItem();
         widget_items[Asset_Category::Object] =      new QTreeWidgetItem();
@@ -170,23 +171,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
     }
     if (show_types.contains(DrType::Image)) {
         widget_items[Asset_Category::Image] =       new QTreeWidgetItem();
-        widget_items[Asset_Category::Basic] =       new QTreeWidgetItem();
-        widget_items[Asset_Category::Outline] =     new QTreeWidgetItem();
-        widget_items[Asset_Category::Gradient] =    new QTreeWidgetItem();
-        widget_items[Asset_Category::Decoration] =  new QTreeWidgetItem();
-        widget_items[Asset_Category::Ground] =      new QTreeWidgetItem();
-        widget_items[Asset_Category::Polygon] =     new QTreeWidgetItem();
-        widget_items[Asset_Category::Shape] =       new QTreeWidgetItem();
-        widget_items[Asset_Category::Isometric] =   new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Image,           widget_items[Asset_Category::Image]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Basic,           widget_items[Asset_Category::Basic]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Outline,         widget_items[Asset_Category::Outline]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Gradient,        widget_items[Asset_Category::Gradient]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Decoration,      widget_items[Asset_Category::Decoration]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Ground,          widget_items[Asset_Category::Ground]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Polygon,         widget_items[Asset_Category::Polygon]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Shape,           widget_items[Asset_Category::Shape]) );
-        asset_categories.push_back( std::make_pair(Asset_Category::Isometric,       widget_items[Asset_Category::Isometric]) );
+        image_keys_used = getParentProject()->getImageKeysUsedByProject();
     }
 
 
@@ -217,9 +203,16 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Device)) { for (auto device_pair : list_devices) { if (device_pair.first > c_no_key) entities.push_back(device_pair.second); } }
     if (show_types.contains(DrType::Effect)) { for (auto effect_pair : list_effects) { if (effect_pair.first > c_no_key) entities.push_back(effect_pair.second); } }
     if (show_types.contains(DrType::Font))   { for (auto font_pair :   list_fonts)   { if (font_pair.first > c_no_key)   entities.push_back(font_pair.second); } }
-    if (show_types.contains(DrType::Image))  { for (auto image_pair :  list_images)  { if (image_pair.first > c_no_key)  entities.push_back(image_pair.second); } }
     if (show_types.contains(DrType::Item))   { for (auto item_pair :   list_items)   { if (item_pair.first > c_no_key)   entities.push_back(item_pair.second); } }
     if (show_types.contains(DrType::Prefab)) { for (auto prefab_pair : list_prefabs) { if (prefab_pair.first > c_no_key) entities.push_back(prefab_pair.second); } }
+    if (show_types.contains(DrType::Image))  {
+        // Add images to be shown, only add built in images to list if they're being used in current DrProject
+        for (auto image_pair : list_images) {
+            if (image_pair.first > c_no_key) {
+                if (image_keys_used.find(image_pair.first) != image_keys_used.end()) entities.push_back(image_pair.second);
+            }
+        }
+    }
 
     std::sort(entities.begin(), entities.end(), [](DrSettings *a, DrSettings *b) {
         return QString::fromStdString(a->getName()).toLower() < QString::fromStdString(b->getName()).toLower();
@@ -312,11 +305,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
             } else if (entity->getType() == DrType::Image) {
                 DrImage *image = dynamic_cast<DrImage*>(entity);
                 pix = Dr::ToQPixmap(image->getBitmap());
-                if (entity->getKey() < c_starting_key_entity) {
-                    description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image_Built_In[1];
-                } else {
-                    description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image[1];
-                }
+                description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Image[1];
 
             } else if (entity->getType() == DrType::Item) {
                 DrItem *item = dynamic_cast<DrItem*>(entity);
@@ -356,8 +345,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
         } else if (entity->getType() == DrType::Device) {               asset_type = Asset_Category::Device;
         } else if (entity->getType() == DrType::Effect) {               asset_type = Asset_Category::Effect;
         } else if (entity->getType() == DrType::Font) {                 asset_type = Asset_Category::Text;
-        } else if (entity->getType() == DrType::Image) {
-            DrImage *image = dynamic_cast<DrImage*>(entity);            asset_type = image->getAssetCategory();
+        } else if (entity->getType() == DrType::Image) {                asset_type = Asset_Category::Image;
         } else if (entity->getType() == DrType::Item) {                 asset_type = Asset_Category::Item;
         } else if (entity->getType() == DrType::Prefab) {               asset_type = Asset_Category::Prefab;
         } else { continue; }
@@ -434,16 +422,7 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, Ass
         case Asset_Category::Item:          name = "Items";         icon = "comp_item.png";         info = Advisor_Info::Asset_Item;            break;
         case Asset_Category::Prefab:        name = "Prefabs";       icon = "comp_foliage.png";      info = Advisor_Info::Asset_Prefab;          break;
         case Asset_Category::Text:          name = "Text";          icon = "comp_font.png";         info = Advisor_Info::Asset_Text;            break;
-
-        case Asset_Category::Image:         name = "Images";        icon = "comp_images.png";               info = Advisor_Info::Asset_Image;           break;
-        case Asset_Category::Basic:         name = "Basic";         icon = "comp_images_basic.png";         info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Outline:       name = "Outlines";      icon = "comp_images_outline.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Gradient:      name = "Gradient";      icon = "comp_images_gradient.png";      info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Decoration:    name = "Decoration";    icon = "comp_images_decoration.png";    info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Ground:        name = "Ground";        icon = "comp_images_ground.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Polygon:       name = "Polygons";      icon = "comp_images_polygon.png";       info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Shape:         name = "Shapes";        icon = "comp_images_shapes.png";        info = Advisor_Info::Asset_Image_Built_In;  break;
-        case Asset_Category::Isometric:     name = "Isometric";     icon = "comp_object.png";               info = Advisor_Info::Asset_Image_Built_In;  break;
+        case Asset_Category::Image:         name = "Images";        icon = "comp_images.png";       info = Advisor_Info::Asset_Image;           break;
     }
     name = "  " + tr(name.toLatin1());                                      // Add spacing and translate
 

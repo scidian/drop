@@ -163,6 +163,7 @@ public:
     long            getNumberOfImages()     { return static_cast<long>(m_images.size()); }
     long            getNumberOfItems()      { return static_cast<long>(m_items.size()); }
     long            getNumberOfPrefabs()    { return static_cast<long>(m_prefabs.size()); }
+    std::set<long>  getImageKeysUsedByProject();
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
     DrType          findChildTypeFromKey(long check_key);
@@ -195,8 +196,7 @@ public:
     long            addDevice(DrDeviceType device_type, long key = c_no_key);
     long            addEffect(DrEffectType effect_type, long key = c_no_key);
     long            addFont(std::string font_name, DrBitmap font_bitmap, std::string font_family, int font_size, bool use_test_rects = false, long key = c_no_key);
-    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category = Asset_Category::Image,
-                             long key = c_no_key, IProgressBar *progress = nullptr);
+    DrImage*        addImage(std::string image_name, DrBitmap &bitmap, long key = c_no_key, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
     DrWorld*        addWorld(DrWorldType world_type);

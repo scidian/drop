@@ -26,8 +26,7 @@ namespace Dr {
     // ***** Project Building
     DrAsset*    AddAsset(DrProject *project, DrAssetType asset_type, long source_key, QString base_name = "");
     void        AddBuiltInImages(DrProject *project);
-    DrImage*    AddImage(DrProject *project, QString filename,
-                         long key = c_no_key, Asset_Category category = Asset_Category::Image, IProgressBar *progress = nullptr);
+    DrImage*    AddImage(DrProject *project, QString filename, long key = c_no_key, IProgressBar *progress = nullptr);
     DrAsset*    AddPrefab(DrProject *project, DrPrefabType prefab_type);
     QString     FindEmptyAssetName(AssetMap &asset_map, DrAssetType asset_type, QString base_name);
     void        InitializeNewProject(DrProject *project, std::string project_name, Orientation orientation, int width, int height, bool test = false);

@@ -27,7 +27,6 @@ class DrImage : public DrSettings
 {
 private:
     // Local Variables
-    Asset_Category              m_category              { Asset_Category::Image };          // Category for Image in Asset Tree
     std::string                 m_simple_name;                                              // Simple name, i.e. "pretty tree 1"
     DrBitmap                    m_bitmap;                                                   // Stored image as DrBitmap
 
@@ -40,7 +39,7 @@ public:
 public:
     // Constructors
     DrImage(DrProject *parent_project, long key, std::string image_name, DrBitmap &bitmap,
-            Asset_Category category = Asset_Category::Image, bool force_outline = false, IProgressBar *progress = nullptr);
+            bool force_outline = false, IProgressBar *progress = nullptr);
 
     // DrSettings Overrides
     virtual DrType          getType() override  { return DrType::Image; }
@@ -53,9 +52,7 @@ public:
     void                setSimpleBox();
 
     // Getters / Setters
-    Asset_Category      getAssetCategory()      { return m_category; }
     std::string         getSimplifiedName()     { return m_simple_name; }
-
     const DrBitmap&     getBitmap() const       { return m_bitmap; }
 
 };

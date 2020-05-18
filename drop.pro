@@ -40,14 +40,22 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 ##### Resource Files
 RESOURCES += \
-    images.qrc \
+    assets.qrc \
     shaders.qrc
 
 
 ##### Other Included Files
 DISTFILES += \
     drop_icon.ico \
-    drop_icons.icns
+    drop_icons.icns \
+    images/basic/*.* \
+    images/decoration/*.* \
+    images/gradient/*.* \
+    images/ground/*.* \
+    images/isometric/*.* \
+    images/outlines/*.* \
+    images/polygons/*.* \
+    images/shapes/*.*
 
 
 ##### Icon Files for Project

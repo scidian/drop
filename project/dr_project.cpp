@@ -244,7 +244,7 @@ long DrProject::addFont(std::string font_name, DrBitmap font_bitmap, std::string
     return new_font_key;
 }
 
-DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Category category, long key, IProgressBar *progress) {
+DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, long key, IProgressBar *progress) {
     // Check if copy of this Bitmap already exists in DrImage map, if so return that DrImage
     for (auto &image_pair : getImageMap()) {
         DrImage *dr_image = image_pair.second;
@@ -262,7 +262,7 @@ DrImage* DrProject::addImage(std::string image_name, DrBitmap &bitmap, Asset_Cat
 
     // Create new DrImage with Bitmap and add to Project
     long new_image_key = (key == c_no_key) ? getNextKey() : key;
-    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, category, false, progress);
+    m_images[new_image_key] = new DrImage(this, new_image_key, image_name, bitmap, false, progress);
     return m_images[new_image_key];
 }
 
@@ -514,6 +514,27 @@ DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
     }
     return nullptr;
 }
+
+
+//####################################################################################
+//##    Image Functions
+//####################################################################################
+// Build list of DrImage keys used by Project, using std::set to ensure no duplicates
+std::set<long> DrProject::getImageKeysUsedByProject() {
+    std::set<long> image_keys_used;
+    image_keys_used.insert(c_key_image_empty);
+    for (auto &animation_pair : getAnimationMap()) {
+        for (auto &frame : animation_pair.second->getFrames()) {
+            long image_key = frame->getKey();
+            if (image_keys_used.find(image_key) == image_keys_used.end()) {
+                image_keys_used.insert(image_key);
+            }
+        }
+    }
+    return image_keys_used;
+}
+
+
 
 
 
