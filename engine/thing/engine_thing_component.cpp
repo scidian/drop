@@ -66,7 +66,7 @@ void DrThingComponent::emitMessage(std::string name, DrVariant value, DrEngineTh
 }
 
 // Returns list of messages with name
-EngineMessages DrThingComponent::messageList(std::string name, long thing_key) {
+EngineMessages& DrThingComponent::messageList(std::string name, long thing_key) {
     return m_world->engine()->messageList(name, thing_key);
 }
 

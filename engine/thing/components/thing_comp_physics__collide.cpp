@@ -13,9 +13,6 @@
 #include "engine/thing/components/thing_comp_player.h"
 #include "engine/world/engine_world.h"
 
-// Internal Linkage (File Scope) Forward Declarations
-static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineThing *engine_thing);
-
 
 //####################################################################################
 //##    Gets Arbiter Info for Messages
@@ -26,6 +23,8 @@ Collision_Info GetCollisionInfo(cpArbiter *arb, ThingCompPhysics *physics_a, Thi
     info.shape_a =              a;
     info.shape_b =              b;
     info.collision_count =      physics_a->checkCollisionCountWithObject(physics_b->thing());
+    info.velocity_a =           cpBodyGetVelocity(physics_a->body);
+    info.velocity_b =           cpBodyGetVelocity(physics_b->body);
     if (get_points) {
         info.point_a =          cpArbiterGetPointA(arb, 0);
         info.point_b =          cpArbiterGetPointB(arb, 0);
@@ -48,11 +47,11 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
     if (physics_b->shouldCollide(physics_a) == false) return cpArbiterIgnore(arb);
     Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
 
-    // ******************** Process ********************
 
+    // ******************** Process ********************
     // Interactive foliage
     if (thing_a->compFoliage() != nullptr) {
-        if (physics_a->checkCollisionCountWithObject(thing_b) == 0) {                           // Only react to an objects first shape that collides
+        if (collide_info.collision_count == 0) {                                                // Only react to an objects first shape that collides
             if (physics_b->body_type != Body_Type::Static) {
                 double mass =  cpBodyGetMass(physics_a->body) * 2.0;
                 double force = mass * thing_a->compFoliage()->getSpringiness();
@@ -77,49 +76,24 @@ bool ThingCompPhysics::collideBegin(cpArbiter *arb, DrEngineThing *thing_b) {
 
     // Check for one way platform
     if (physics_a->getOneWay() == One_Way::Pass_Through) {                                      // Don't collide with something trying to pass through you
-        if (cpvdot(cpArbiterGetNormal(arb), physics_a->getOneWayDirection()) <= 0.0)
+        if (cpvdot(collide_info.normal, physics_a->getOneWayDirection()) <= 0.0)
             return cpArbiterIgnore(arb);
     }
     if (physics_b->getOneWay() == One_Way::Pass_Through) {                                      // Don't collide with something you want to pass through
-        if (cpvdot(cpArbiterGetNormal(arb), physics_b->getOneWayDirection()) >= 0.0)
+        if (cpvdot(collide_info.normal, physics_b->getOneWayDirection()) >= 0.0)
             return cpArbiterIgnore(arb);
     }
 
-    // Repulse force
-    if (physics_a->checkCollisionCountWithObject(thing_b) == 0) {                               // Only react to an objects first shape that collides
-        if (Dr::FuzzyCompare(physics_a->getRepulseForce(), 0.0) == false) {
-            if (physics_a->getOneWay() == One_Way::Directinal_Spring) {
-                cpVect velocity = cpv(physics_a->getRepulseForce() * physics_a->getOneWayDirection().x, physics_a->getRepulseForce() * physics_a->getOneWayDirection().y);
-
-                ///cpBodySetVelocity(physics_b->body, velocity);
-
-                cpBodyApplyImpulseAtLocalPoint(physics_b->body, velocity * 20.0, cpvzero);
-
-                ///ApplyJumpForce(thing_b, cpBodyGetVelocity(physics_b->body), velocity, true);
-
-            } else {
-                physics_b->setUseForce(physics_a->getRepulseForce());
-                BodyAddRecoil(world()->getSpace(), arb, thing_b);
-            }
-        }
-    }
 
     // ******************** Wrap up ********************
-
     // ***** Emit collision as message
-    if (collide_info.collision_count == 0) {
-        emitMessage(Messages::ThingCollide, collide_info, thing_b);
-    }
+    if (collide_info.collision_count == 0)      emitMessage(Messages::ThingCollide, collide_info, thing_b);
 
     // ***** Keeps track number of shape collisions between objects
-    if (cpArbiterIsFirstContact(arb)) {
-        physics_a->increaseCollisionCountWithObject(thing_b);
-    }
+    if (cpArbiterIsFirstContact(arb))           physics_a->increaseCollisionCountWithObject(thing_b);
 
     // !!!!! #TEMP: Player collision tracking
-    if (thing_a->compPlayer() != nullptr) {
-///        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
-    }
+    if (thing_a->compPlayer() != nullptr)       { ;} ///g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
 
     return cpTrue;
 }
@@ -136,8 +110,8 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
     ThingCompPhysics *physics_a = thing_a->physics();
     ThingCompPhysics *physics_b = thing_b->physics();
 
-    // ******************** Process ********************
 
+    // ******************** Process ********************
     // ***** Check if something has tried to cancel this collision elsewhere in game
     if (messageList(Messages::ThingCancelCollision, thing()->getKey()).size() > 0) {
         return cpArbiterIgnore(arb);
@@ -165,10 +139,10 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
             // Apply temp gravity multiplier if button pressed away from gravity
             if (but_dot < 0.0 || but_dot > 0.0) thing_a->compPlayer()->setTempGravityMultiplier( physics_b->getGravityMultiplier() );
         }
-
     }
 
-    if (!physics_a->doesDamage()) return cpTrue;                                                    // Object does no damage, exit
+    // Object does no damage, exit
+    if (!physics_a->doesDamage()) return cpTrue;
 
     // Check for dealing damage
     bool should_damage = physics_a->shouldDamage(physics_b->getCollisionType());
@@ -199,7 +173,7 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         // Recoil force - if has and not invincible
         if ((Dr::FuzzyCompare(physics_b->getDamageRecoil(), 0.0) == false) && (physics_b->isInvincible() == false)) {
             physics_b->setUseForce(physics_b->getDamageRecoil());
-            BodyAddRecoil(world()->getSpace(), arb, thing_b);
+            physics_b->bodyAddRecoil( GetCollisionInfo(arb, physics_a, physics_b, true) );
         }
     }
 
@@ -208,8 +182,8 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         return cpFalse;
     }
 
-    // ******************** Wrap Up ********************
 
+    // ******************** Wrap Up ********************
     // ***** Emit ThingCollideStep Message
     ///Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
     ///emitMessage(Messages::ThingCollideStep, collide_info, thing_b);
@@ -229,10 +203,11 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
     DrEngineThing    *thing_a =   thing();
     ThingCompPhysics *physics_a = thing_a->physics();
     ThingCompPhysics *physics_b = thing_b->physics();
-
     (void) physics_a;
     (void) physics_b;
 
+
+    // ******************** Process ********************
     // We can react to collision force here, such as show an explosion based on impact force
     if (cpArbiterIsFirstContact(arb)) {
         // Divide the impulse by the timestep to get the collision force
@@ -242,8 +217,8 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
         }
     }
 
-    // ******************** Wrap Up ********************
 
+    // ******************** Wrap Up ********************
     // ***** Emit ThingCollideEnd Message
     ///Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, true);
     ///emitMessage(Messages::ThingCollideEnd, collide_info, thing_b);
@@ -267,25 +242,21 @@ bool ThingCompPhysics::collideSeperate(cpArbiter *arb, DrEngineThing *thing_b) {
     // Keeps track number of shape collisions between objects
     physics_a->decreaseCollisionCountWithObject(thing_b);
 
-    // ******************** Process ********************
 
+    // ******************** Process ********************
     // Stop canceling gravity when seperates
     if (thing_a->compPlayer() != nullptr) {
         thing_a->compPlayer()->setTempGravityMultiplier( 1.0 );
     }
 
-    // ******************** Wrap Up ********************
 
+    // ******************** Wrap Up ********************
     // ***** Emit seperation message
     Collision_Info collide_info = GetCollisionInfo(arb, physics_a, physics_b, false);
-    if (collide_info.collision_count == 0) {
-        emitMessage(Messages::ThingSeperate, collide_info, thing_b);
-    }
+    if (collide_info.collision_count == 0)      emitMessage(Messages::ThingSeperate, collide_info, thing_b);
 
     // !!!!! #TEMP: Player collision tracking
-    if (thing_a->compPlayer() != nullptr) {
-///        g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
-    }
+    if (thing_a->compPlayer() != nullptr)       { ;} ///g_info = "Touching Shapes: " + std::to_string(physics_a->checkCollisionCountWithObject(thing_b));
 
     // ***** End collision, return value for this function has no effect
     return cpTrue;
@@ -293,37 +264,32 @@ bool ThingCompPhysics::collideSeperate(cpArbiter *arb, DrEngineThing *thing_b) {
 
 
 
-
 //####################################################################################
 //##    Applies Recoil Force after being damaged another object
 //####################################################################################
-static void BodyAddRecoil(cpSpace *space, cpArbiter *arb, DrEngineThing *engine_thing) {
-    ThingCompPhysics *physics = engine_thing->physics();
-    if (physics == nullptr) return;
-    if (physics->getPhysicsParent() != nullptr) { engine_thing = physics->getPhysicsParent(); physics = engine_thing->physics(); }
+void ThingCompPhysics::bodyAddRecoil(Collision_Info info) {
+    if (this->body_type != Body_Type::Dynamic) return;
+    cpVect normal =   info.normal;                                      // Get normal of contact point
+    cpVect velocity = info.velocity_b;                                  // Get velocity of body on impact
 
-    if (physics->body_type != Body_Type::Dynamic) return;
-    if (cpBodyIsSleeping(physics->body)) {
-        cpSpaceAddPostStepCallback(space, cpPostStepFunc(BodyAddRecoil), arb, engine_thing);
-        return;
+    // If object isnt moving, give it the velocity towards the collision
+    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0) {
+        velocity = cpvneg(info.normal);
     }
 
-    // METHOD: Apply recoil opposite velocity
-    cpVect n = cpArbiterGetNormal(arb);                                 // Get Normal of contact point
-    cpVect velocity = cpBodyGetVelocity(physics->body);                 // Get current velocity of body
-    if (abs(velocity.x) < 1.0 && abs(velocity.y) < 1.0) {               // If object isnt moving, give it the velocity towards the collision
-        velocity = cpvneg(cpArbiterGetNormal(arb));
-    }
-    double dot = cpvdot(velocity, n);                                   // Calculate dot product (difference of angle from collision normal)
+    // Reflect velocity
+    double dot = cpvdot(velocity, normal);                              // Calculate dot product (difference of angle from collision normal)
     if (dot < 0.0) {                                                    // If objects velocity if goings towards collision point, reflect it
         DrPointF v { velocity.x, velocity.y };                          // Convert to DrPointF for better vector math operators than cpVect
-        v = v - (DrPointF(n.x, n.y) * 2.0 * dot);                       // Reflect velocity normal across the plane of the collision normal
+        v = v - (DrPointF(normal.x, normal.y) * 2.0 * dot);             // Reflect velocity normal across the plane of the collision normal
         velocity = cpv(v.x, v.y);                                       // Convert back to cpVect
     }
+
+    // Set velocity to new directional Force velocity
     velocity = cpvnormalize(velocity);                                  // Normalize body velocity
-    velocity.x *= physics->getUseForce();                               // Apply reflect force x to new direction vector
-    velocity.y *= physics->getUseForce();                               // Apply reflect force y to new direction vector
-    cpBodySetVelocity(physics->body, velocity);                         // Set body to new velocity
+    velocity.x *= this->getUseForce();                                  // Apply reflect force x to new direction vector
+    velocity.y *= this->getUseForce();                                  // Apply reflect force y to new direction vector
+    cpBodySetVelocity(this->body, velocity);                            // Set body to new velocity
 }
 
 

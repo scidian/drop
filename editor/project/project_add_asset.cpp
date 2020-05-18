@@ -107,7 +107,7 @@ DrAsset* AddPrefab(DrProject *project, DrPrefabType prefab_type) {
         case DrPrefabType::Spring:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_spring, "Spring");
             asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Repulse_Force)->setValue(1000.0);
-            asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Type)->setValue(static_cast<int>(One_Way::Directinal_Spring));
+            asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_One_Way_Type)->setValue(static_cast<int>(One_Way::Directional_Spring));
             break;
     }
     return asset;

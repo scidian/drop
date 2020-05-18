@@ -50,8 +50,8 @@ void DrOpenGL::drawSpace() {
 
     // ***** Reset Frame Variables
     bool has_rendered_glow_lights = false;                                              // Keeps track of if we have rendered the lights yet
-    long thing_count =  0;
-    m_triangles =  0;                                                                   // Reset frame triangle count
+    long thing_count = 0;
+    m_triangles = 0;                                                                    // Reset frame triangle count
 
     // ***** Used to stop z fighting (a.k.a z-fighting, stitching)
     double z_divisor = (combinedZoomScale() < 0.001f) ? 0.001 : static_cast<double>(combinedZoomScale());

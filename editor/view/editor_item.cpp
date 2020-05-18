@@ -254,10 +254,10 @@ QPainterPath EditorItem::shape() const {
 //##    Pixmap Filters
 //####################################################################################
 void EditorItem::applyFilters() {
-    QImage new_image = m_pixmap.toImage().copy();
-
     if (m_thing == nullptr) return;
+    if (m_thing->getComponent(Comps::Thing_Appearance, false) == nullptr) return;
 
+    QImage new_image = m_pixmap.toImage().copy();
     int      brightness = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Brightness).toVector()[0].toInt();
     int      contrast   = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Contrast).toVector()[0].toInt();
     int      hue        = m_thing->getComponentPropertyValue(Comps::Thing_Appearance, Props::Thing_Filter_Hue).toVector()[0].toInt();

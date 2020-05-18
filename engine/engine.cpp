@@ -70,7 +70,7 @@ void DrEngine::clearMessages() {
 // Returns list of messages by name, by key, or by both.
 //      Passing value of "" for name returns all messages with any name
 //      Passing default optional value of c_no_key for thing_key includes all messages with name
-EngineMessages DrEngine::messageList(std::string name, long thing_key) {
+EngineMessages& DrEngine::messageList(std::string name, long thing_key) {
     if (thing_key == c_no_key) {
         if (name == "")
             return m_message_list;

@@ -136,7 +136,7 @@ private:
     bool            m_flipped_x                 { false };                  // True when image is flipped (going left) over the x axis
     bool            m_flipped_y                 { false };                  // True when image is flipped (going down) over the y axis
 
-    double          m_use_force                 { 0.0 };                    // Used by BodyAddRecoil callback to reflect m_repulse_force or m_damage_recoil
+    double          m_use_force                 { 0.0 };                    // Used by bodyAddRecoil callback to reflect m_repulse_force or m_damage_recoil
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -175,14 +175,12 @@ public:
     void                decreaseCollisionCountWithObject(DrEngineThing *object);
     std::vector<long>   listOfCollidingObjectKeys();
 
-
     // Object Basic Settings
     const bool&         doesCollide()           { return m_does_collide; }
     Collision_Groups    getCollidesWith()       { return m_collide_with; }
     const long&         getTextureNumber()      { return m_texture_number; }
     const long&         getAssetKey()           { return m_texture_number; }
 
-    DrPointF            mapPositionToScreen();
     void                setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void                setCollidesWith(Collision_Groups groups) { m_collide_with = groups; }
     void                setTextureNumber(long texture_number) { m_texture_number = texture_number; }
@@ -258,7 +256,9 @@ public:
     bool            shouldDamage(Collision_Type check_can_damage);
     bool            takeDamage(double damage_to_take, bool reset_damage_timer = true, bool death_touch = false, bool force_death = false, long damaged_by_key = c_no_key);
 
+    void            bodyAddRecoil(Collision_Info info);
     bool            shouldCollide(ThingCompPhysics *with_object_physics);
+
 
     // Object Movement
     const double&   getRotateSpeedZ()           { return m_rotate_speed; }

@@ -72,7 +72,7 @@ public:
     // Messages
     void                    clearMessages();
     void                    pushMessage(std::string name, DrVariant value, DrEngineThing *thing_a = nullptr, DrEngineThing *thing_b = nullptr);
-    EngineMessages          messageList(std::string name = "", long thing_key = c_no_key);
+    EngineMessages&         messageList(std::string name = "", long thing_key = c_no_key);
     void                    updateMessageList();
 
     // Getter and Setters    

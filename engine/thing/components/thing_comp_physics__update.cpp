@@ -6,6 +6,7 @@
 //
 //
 #include "engine/engine.h"
+#include "engine/engine_message.h"
 #include "engine/engine_texture.h"
 #include "engine/thing/components/thing_comp_physics.h"
 #include "engine/world/engine_world.h"
@@ -106,6 +107,36 @@ bool ThingCompPhysics::update(double time_passed, double time_warp) {
             }
         }
     }
+
+
+    // ********** Check for Messages
+    for (auto &message : messageList(Messages::ThingCollide, thing()->getKey())) {
+        DrEngineThing *thing_a = thing();
+        DrEngineThing *thing_b = message->thingB();
+        ThingCompPhysics *physics_a = thing_a->physics();
+        ThingCompPhysics *physics_b = thing_b->physics();
+        Collision_Info info = boost::any_cast<Collision_Info>(message->value().value());
+
+        // ***** Repulse force
+        if (Dr::FuzzyCompare(physics_a->getRepulseForce(), 0.0) == false) {
+            if (physics_a->getOneWay() == One_Way::Directional_Spring) {
+                double mass =  cpBodyGetMass(physics_b->body);
+                double force = mass * physics_a->getRepulseForce();
+                cpVect velocity = cpvmult(cpv(physics_a->getOneWayDirection().x, physics_a->getOneWayDirection().y), force);
+
+                // Some different Force applying techniques
+                cpBodyApplyImpulseAtLocalPoint(physics_b->body, velocity, info.point_b);
+                ///cpBodyApplyImpulseAtLocalPoint(physics_b->body, velocity * 20.0, cpvzero);
+                ///cpBodySetVelocity(physics_b->body, velocity);
+                ///ApplyJumpForce(thing_b, cpBodyGetVelocity(physics_b->body), velocity, true);
+            } else {
+                physics_b->setUseForce(physics_a->getRepulseForce());
+                physics_b->bodyAddRecoil(info);
+            }
+            emitMessage(Messages::ThingCancelCollision, info, thing_b);
+        }
+    }   // End messages
+
 
     return remove;
 };

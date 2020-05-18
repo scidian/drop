@@ -33,7 +33,7 @@ void DrEngineWorld::loadTileToWorld(DrThing *thing, double offset_x, double offs
     addThing( tile );
 
     // ***** Apply additional settings
-    loadThingAppearanceSettings(thing, tile, true);             // Appearance settings
+    ///loadThingAppearanceSettings(thing, tile, true);             // Appearance settings
 }
 
 

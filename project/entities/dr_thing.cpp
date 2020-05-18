@@ -144,7 +144,6 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentSettingsTile("Tile");
             addComponentTransform(c_device_size, c_device_size, x, -y, DrThingType::Tile);
             addComponentLayering(z, 100.0);
-            addComponentAppearance(true);
             break;
 
         default:

@@ -74,8 +74,30 @@ extern long          g_long;                            // Global long   to use 
 extern size_t        g_size_t;                          // Global size_t to use for debugging
 
 
+// Structs
+struct Collision_Info {
+    cpShape *shape_a            { nullptr };            // Pointer to cpShape of Thing A
+    cpShape *shape_b            { nullptr };            // Pointer to cpShape of Thing A
+    cpVect   point_a            { 0, 0 };               // Collision point on Shape A
+    cpVect   point_b            { 0, 0 };               // Collision point on Shape B
+    cpVect   velocity_a         { 0, 0 };               // Velocity of Body A
+    cpVect   velocity_b         { 0, 0 };               // Velocity of Body B
+    cpVect   normal             { 0, 0 };               // Angle of colliding Shape surfaces
+    long     collision_count    { 0 };                  // How many collision points exist between Thing A and Thing B
+};
+
 
 #endif // GLOBALS_ENGINE_H
+
+
+
+
+
+
+
+
+
+
 
 
 

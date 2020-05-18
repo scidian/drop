@@ -59,7 +59,7 @@ public:
 
     // Messages
     virtual void        emitMessage(std::string name, DrVariant value, DrEngineThing *thing_b);     // Adds message to stack
-    EngineMessages      messageList(std::string name, long thing_key = c_no_key);                   // Returns list of messages with name, optional attached to thing
+    EngineMessages&     messageList(std::string name, long thing_key = c_no_key);                   // Returns list of messages with name, optional attached to thing
 
     // Getters
     std::string         name()      { return m_name; }                                              // Returns name of this Component
