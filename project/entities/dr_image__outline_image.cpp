@@ -34,6 +34,7 @@ void DrImage::setSimpleBox() {
     m_poly_list.push_back(one_poly);
     m_hole_list.push_back(hole_list);
     m_use_simple_square = true;
+    m_outline_processed = false;
 }
 
 
@@ -41,6 +42,8 @@ void DrImage::setSimpleBox() {
 //##    Loads list of points for Image and Image Holes
 //####################################################################################        
 void DrImage::autoOutlinePoints(IProgressBar *progress) {
+    m_poly_list.clear();
+    m_hole_list.clear();
 
     // ***** Initialize Progress Bar
     if (progress != nullptr) {
@@ -57,8 +60,8 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
     // ***** Break pixmap into seperate images for each object in image
     std::vector<DrBitmap>   bitmaps;
     std::vector<DrRect>     rects;
-    bool cancel = Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance, true, progress);
-    m_number_of_objects = static_cast<int>(bitmaps.size());
+    bool    cancel = Dr::FindObjectsInBitmap(m_bitmap, bitmaps, rects, c_alpha_tolerance, true, progress);
+    int     number_of_objects = static_cast<int>(bitmaps.size());
 
     // ***** If Find Objects In Bitmap never finished, just add simple box shape
     if (cancel) { setSimpleBox(); return; }
@@ -67,12 +70,12 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
     if (progress != nullptr) {
         progress->moveToNextItem();
         progress->setDisplayText("Tracing image outlines...");
-        progress->setMultiplier(1.0 / static_cast<double>(m_number_of_objects));
+        progress->setMultiplier(1.0 / static_cast<double>(number_of_objects));
         progress->lockProgress();
     }
 
     // ******************** Go through each image (object) and Polygon for it
-    for (int image_number = 0; image_number < m_number_of_objects; image_number++) {
+    for (int image_number = 0; image_number < number_of_objects; image_number++) {
         // Grab next image, check if its valid
         DrBitmap &image = bitmaps[image_number];
         if (image.width < 1 || image.height < 1) continue;
@@ -128,7 +131,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
 
         // Update progress bar
         if (progress != nullptr) {
-            progress->setAddIn(static_cast<double>(image_number) / static_cast<double>(m_number_of_objects) * 100.0);
+            progress->setAddIn(static_cast<double>(image_number) / static_cast<double>(number_of_objects) * 100.0);
             progress->unlockProgress();
             if (progress->isCanceled()) { setSimpleBox(); return; }
         }
@@ -174,6 +177,13 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
         m_hole_list.push_back(hole_list);
 
     }   // End for each bitmap
+
+
+    // ***** Mark this DrImage as having traced the image outline
+    m_use_simple_square = false;
+    m_outline_processed = true;
+
+
 }   // End autoOutlinePoints()
 
 

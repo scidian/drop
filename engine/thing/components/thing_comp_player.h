@@ -53,7 +53,7 @@ private:
     bool            m_mouse_rotate      { false };          // If turned to true, player rotates to mouse position
 
 
-    // ***** Local Variables Updated by Engine
+    // ***** Internal Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
     int         m_remaining_jumps               { 0 };          // How many jumps player has left before it must hit ground before it can jump again

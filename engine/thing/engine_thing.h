@@ -91,7 +91,7 @@ public:
     bool            cast_shadows            { true };                       // Will cast shadows when in front of a Light
 
 
-    // ********** Local Variables Updated by Engine
+    // ********** Internal Variables Updated by Engine
     //                NOT TO BE SET BY USER
     bool        m_remove_me                 { false };                      // Set to true for forced removal next update cycle
     double      time_since_last_update      { 0.0 };                        // Milliseconds since update() was called last

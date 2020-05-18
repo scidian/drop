@@ -122,7 +122,7 @@ private:
                                                                             //      (players are cpBody* that have been assigned the cpBodyUpdateVelocityFunc PlayerUpdateVelocity callback)
     bool                m_lost_control          { false };                  // Set to true when players should not have button control but have been assigned key_controls
 
-    // ***** Local Variables Updated by Engine
+    // ***** Internal Variables Updated by Engine
     //              NOT TO BE SET BY USER
     //
     bool            m_dying                     { false };                  // When health turns to zero, dying becomes true for death_delay time, then alive becomes false
@@ -136,7 +136,7 @@ private:
     bool            m_flipped_x                 { false };                  // True when image is flipped (going left) over the x axis
     bool            m_flipped_y                 { false };                  // True when image is flipped (going down) over the y axis
 
-    double          m_reflect_force             { 0.0 };                    // Used by BodyAddRecoil callback to reflect m_repulse_force or m_damage_recoil
+    double          m_use_force                 { 0.0 };                    // Used by BodyAddRecoil callback to reflect m_repulse_force or m_damage_recoil
 
 
     // #################### FUNCTIONS TO BE EXPOSED TO API ####################
@@ -285,7 +285,7 @@ public:
     void            setTouchDamagePoints(double damage);
 
 
-    // #################### FUNCTIONS UPDATED BY ENGINE ####################
+    // #################### INTERNAL VARIABLES UPDATED BY ENGINE ####################
     // Player Control
     const bool&     hasKeyControls()                { return m_key_controls; }
     const bool&     hasLostControl()                { return m_lost_control; }
@@ -311,8 +311,8 @@ public:
     void            setFlipY(bool flipped)          { m_flipped_y = flipped; }
 
     // Recoil / Reflection Force
-    const double&   getReflectForce()               { return m_reflect_force; }
-    void            setReflectForce(double force)   { m_reflect_force = force;}
+    const double&   getUseForce()                   { return m_use_force; }
+    void            setUseForce(double force)       { m_use_force = force;}
 
     // Object->Body Data - Updated every frame by updateWorld()
     DrVec3          getPreviousPosition()           { return m_previous_position; }

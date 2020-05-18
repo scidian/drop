@@ -35,7 +35,7 @@ void DrEngineVertexData::initializeExtrudedImage(DrImage *image, bool wireframe)
         std::vector<DrPointF>              &points =    image->m_poly_list[poly_number];
         std::vector<std::vector<DrPointF>> &hole_list = image->m_hole_list[poly_number];
 
-        double alpha_tolerance = (image->m_use_simple_square) ? 0.0 : c_alpha_tolerance;
+        double alpha_tolerance = (image->m_outline_processed) ? c_alpha_tolerance : 0.0;
         ///triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Ear_Clipping, alpha_tolerance);
         ///triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Optimal_Polygon, alpha_tolerance);
         ///triangulateFace(points, hole_list, image->getBitmap(), wireframe, Trianglulation::Monotone, alpha_tolerance);

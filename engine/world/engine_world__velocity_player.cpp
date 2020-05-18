@@ -68,23 +68,23 @@ static void SelectPlayerGroundNormal(cpBody *body, cpArbiter *arb, Ground_Data *
 //####################################################################################
 //##    Applies Jump Force
 //####################################################################################
-void ApplyJumpForce(DrEngineThing *thing, cpVect player_vel, cpVect jump_vel, bool initial_jump) {
+extern void ApplyJumpForce(DrEngineThing *thing, cpVect current_vel, cpVect add_vel, bool initial_jump) {
     if (thing->compPhysics() == nullptr) return;
 
-    player_vel = cpvadd(player_vel, jump_vel);
+    current_vel = cpvadd(current_vel, add_vel);
 
     // Soft Body Jump
     if ((thing->compPhysics()->body_style != Body_Style::Rigid_Body) && (thing->compSoftBody() != nullptr)) {
         // Adjust initial velocity for soft bodies
-        player_vel = player_vel * 0.85;
+        current_vel = current_vel * 0.85;
 
         // Apply force to Parent Object
         double body_r = cpBodyGetAngularVelocity( thing->compPhysics()->body );
         if (initial_jump) {
-            cpBodySetVelocity( thing->compPhysics()->body, player_vel );
+            cpBodySetVelocity( thing->compPhysics()->body, current_vel );
             cpBodySetAngularVelocity(thing->compPhysics()->body, body_r * 2.5);
         } else {
-            cpBodyApplyForceAtWorldPoint( thing->compPhysics()->body, jump_vel * cpBodyGetMass(thing->compPhysics()->body) * 50.0,
+            cpBodyApplyForceAtWorldPoint( thing->compPhysics()->body, add_vel * cpBodyGetMass(thing->compPhysics()->body) * 50.0,
                                           cpBodyGetPosition(thing->compPhysics()->body) );
         }
 
@@ -93,16 +93,16 @@ void ApplyJumpForce(DrEngineThing *thing, cpVect player_vel, cpVect jump_vel, bo
             if (child == nullptr) return;
             if (child->physics() == nullptr) return;
             if (initial_jump) {
-                cpBodySetVelocity( child->physics()->body, player_vel );
+                cpBodySetVelocity( child->physics()->body, current_vel );
             } else {
-                cpBodyApplyForceAtWorldPoint( child->physics()->body, jump_vel * cpBodyGetMass(child->physics()->body) * 50.0,
+                cpBodyApplyForceAtWorldPoint( child->physics()->body, add_vel * cpBodyGetMass(child->physics()->body) * 50.0,
                                               cpBodyGetPosition(child->physics()->body) );
             }
         }
 
     // Normal Body Jump
     } else {
-        cpBodySetVelocity( thing->compPhysics()->body, player_vel );
+        cpBodySetVelocity( thing->compPhysics()->body, current_vel );
     }
 }
 
