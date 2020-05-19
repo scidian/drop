@@ -12,8 +12,13 @@
 #include <string>
 
 // Forward Declarations
-class       DrSettings;
-enum class  Editor_Widgets;
+class DrComponent;
+class DrProject;
+class DrProperty;
+class DrSettings;
+class DrSlot;
+class IEditorRelay;
+enum class Editor_Widgets;
 
 // Global Enum Constants
 constexpr int   c_no_key =        -1;               // Value that represents no item selected
@@ -62,15 +67,11 @@ enum class DrType {
 
 
 // ################## Project Mapped Types ####################
-
-
-
+// ***** Slots
 enum class DrSlotType {
-    Input,
+    Signal,
     Output,
 };
-
-
 
 
 // ***** Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis

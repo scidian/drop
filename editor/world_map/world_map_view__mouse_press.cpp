@@ -17,6 +17,7 @@
 #include "editor/world_map/world_map_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
+#include "project/settings/settings_component_slot.h"
 
 
 //####################################################################################
@@ -97,10 +98,16 @@ void WorldMapView::mousePressEvent(QMouseEvent *event) {
 
                             // Mouse down on Slot Circle
                             if (graphics_item != nullptr) {
-                                OldSlot over_slot = graphics_item->slotAtPoint(m_origin_in_scene);
-                                if (over_slot.owner_key != c_no_key) {
+                                DrSlot *over_slot = graphics_item->slotAtPoint(m_origin_in_scene);
+                                if (over_slot != nullptr) {
                                     m_view_mode = View_Mode::Node_Connect;
-                                    m_slot_start = over_slot;
+
+                                    if (over_slot->getSlotType() == DrSlotType::Signal && over_slot->recentLineSlotCount() > 0) {
+                                        m_slot_start = (*over_slot->recentLineSlots().begin());
+                                        m_slot_start->removeConnection(over_slot);
+                                    } else {
+                                        m_slot_start = over_slot;
+                                    }
                                 }
                             }
 

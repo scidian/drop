@@ -25,7 +25,7 @@ void DrAsset::initializeAssetSettingsCharacter(std::string new_name) {
     property_name->setDescription("Name of this Character Asset.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::RGB_20_Tan, true);
+    addComponent(Comps::Asset_Settings_Character, "Character Settings", "Settings for this Character.", Component_Colors::RGB_20_Tan, false);
     getComponent(Comps::Asset_Settings_Character)->setIcon(Component_Icons::Character);
 
     addPropertyToComponent(Comps::Asset_Settings_Character, Props::Asset_Character_Max_Speed, Property_Type::PointF, DrPointF(2000, 2000),

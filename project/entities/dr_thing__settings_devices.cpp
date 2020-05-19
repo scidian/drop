@@ -27,7 +27,7 @@ void DrThing::addComponentSettingsCamera(std::string new_name) {
     property_name->setDescription("Name of this Device.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::RGB_08_SeaFoam, true);
+    addComponent(Comps::Thing_Settings_Camera, "Camera Settings", "Settings for this Camera.", Component_Colors::RGB_08_SeaFoam, false);
     getComponent(Comps::Thing_Settings_Camera)->setIcon(Component_Icons::Camera);
 
     addPropertyToComponent(Comps::Thing_Settings_Camera, Props::Thing_Camera_Set_As_Active, Property_Type::Bool, true,

@@ -44,7 +44,7 @@ DrFrame::~DrFrame() { }
 //##    Transform Components
 //####################################################################################
 void DrFrame::addComponentTransform(double width, double height, double x, double y) {
-    addComponent(Comps::Thing_Transform, "Transform", "Sets the size and angle of the Image in the current Frame.", Component_Colors::RGB_19_Silver, true);
+    addComponent(Comps::Thing_Transform, "Transform", "Sets the size and angle of the Image in the current Frame.", Component_Colors::RGB_19_Silver, false);
     getComponent(Comps::Thing_Transform)->setIcon(Component_Icons::Transform);
 
     std::string position_text = "Location of Image within the current Frame.";

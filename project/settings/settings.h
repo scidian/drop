@@ -90,12 +90,14 @@ public:
 
 
     // Component Handling
+    void            clearComponents();
     ComponentMap&   getComponentMap()           { return m_components; }
     long            getComponentCount()         { return static_cast<int>(m_components.size()); }
 
     bool            hasComponent(std::string component_name);
 
     DrComponent*    getComponent(std::string component_name, bool show_error = true);
+    DrComponent*    getComponent(long component_key);
     DrProperty*     getComponentProperty(std::string component_name, std::string property, bool show_error = true);
     DrProperty*     getComponentProperty(ComponentProperty component_property_pair);
     DrVariant       getComponentPropertyValue(std::string component_name, std::string property_name);
@@ -108,7 +110,7 @@ public:
     DrProperty*     findPropertyFromPropertyName(std::string property_name_to_find);
 
     // Component / Property Building
-    DrComponent*    addComponent(std::string component_name, std::string display_name, std::string description, DrColor color, bool is_turned_on);
+    DrComponent*    addComponent(std::string component_name, std::string display_name, std::string description, DrColor color, bool is_hidden);
     DrProperty*     addPropertyToComponent(std::string component_name, std::string property_name, Property_Type type, DrVariant value,
                                            std::string display_name, std::string description, bool is_hidden = false, bool is_editable = true);
 

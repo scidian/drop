@@ -54,17 +54,22 @@ namespace Component_Icons {
     const std::string Name          { std::string(":/assets/inspector_icons/comp_name.png") };
     const std::string Hidden        { std::string(":/assets/inspector_icons/comp_hidden.png") };
     const std::string Settings      { std::string(":/assets/inspector_icons/comp_settings.png") };
-    const std::string Physics       { std::string(":/assets/inspector_icons/comp_physics.png") };
-    const std::string Transform     { std::string(":/assets/inspector_icons/comp_transform.png") };
-    const std::string Layering      { std::string(":/assets/inspector_icons/comp_layering.png") };
-    const std::string Movement      { std::string(":/assets/inspector_icons/comp_movement.png") };
-    const std::string Spawn         { std::string(":/assets/inspector_icons/comp_spawn.png") };
+
+    const std::string Animation     { std::string(":/assets/inspector_icons/comp_animation.png") };
     const std::string Appearance    { std::string(":/assets/inspector_icons/comp_appearance.png") };
     const std::string Collide       { std::string(":/assets/inspector_icons/comp_collide.png") };
-    const std::string Animation     { std::string(":/assets/inspector_icons/comp_animation.png") };
+    const std::string Controls      { std::string(":/assets/inspector_icons/comp_controls.png") };
     const std::string Effects       { std::string(":/assets/inspector_icons/comp_effects.png") };
     const std::string Health        { std::string(":/assets/inspector_icons/comp_health.png") };
-    const std::string Controls      { std::string(":/assets/inspector_icons/comp_controls.png") };
+    const std::string Layering      { std::string(":/assets/inspector_icons/comp_layering.png") };
+    const std::string Movement      { std::string(":/assets/inspector_icons/comp_movement.png") };
+    const std::string Physics       { std::string(":/assets/inspector_icons/comp_physics.png") };
+    const std::string Random        { std::string(":/assets/inspector_icons/comp_random.png") };
+    const std::string Spawn         { std::string(":/assets/inspector_icons/comp_spawn.png") };
+    const std::string Timer         { std::string(":/assets/inspector_icons/comp_timer.png") };
+    const std::string Transform     { std::string(":/assets/inspector_icons/comp_transform.png") };
+    const std::string UI            { std::string(":/assets/inspector_icons/comp_ui.png") };
+    const std::string World         { std::string(":/assets/inspector_icons/comp_world.png") };
 
     // Thing Components
     const std::string Character     { std::string(":/assets/inspector_icons/comp_character.png") };

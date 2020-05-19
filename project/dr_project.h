@@ -167,6 +167,7 @@ public:
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
     DrType          findChildTypeFromKey(long check_key);
+    DrSlot*         findSlotFromKeys(long entity_key, long component_key, long slot_key);
 
     DrAnimation*    findAnimationFromKey(long check_key);
     DrAsset*        findAssetFromKey(long check_key);

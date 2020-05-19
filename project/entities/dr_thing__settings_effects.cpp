@@ -26,7 +26,7 @@ void DrThing::addComponentSettingsFire() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fire");
 
-    addComponent(Comps::Thing_Settings_Fire, "Fire Settings", "Settings for this Fire.", Component_Colors::RGB_16_Orange, true);
+    addComponent(Comps::Thing_Settings_Fire, "Fire Settings", "Settings for this Fire.", Component_Colors::RGB_16_Orange, false);
     getComponent(Comps::Thing_Settings_Fire)->setIcon(Component_Icons::Fire);
 
     addPropertyToComponent(Comps::Thing_Settings_Fire, Props::Thing_Fire_Shape, Property_Type::List, static_cast<int>(Fire_Mask::Torch),
@@ -57,7 +57,7 @@ void DrThing::addComponentSettingsFisheye() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Fisheye");
 
-    addComponent(Comps::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::RGB_02_Pink, true);
+    addComponent(Comps::Thing_Settings_Fisheye, "Fisheye Lens Settings", "Settings for this Fisheye Lens.", Component_Colors::RGB_02_Pink, false);
     getComponent(Comps::Thing_Settings_Fisheye)->setIcon(Component_Icons::Fisheye);
 
     addPropertyToComponent(Comps::Thing_Settings_Fisheye, Props::Thing_Fisheye_Color, Property_Type::Color, DrColor(128, 128, 128, 255).rgba(),
@@ -77,7 +77,7 @@ void DrThing::addComponentSettingsLight(DrColor color) {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Light");
 
-    addComponent(Comps::Thing_Settings_Light, "Light Settings", "Settings for this Light.", Component_Colors::RGB_13_Yellow, true);
+    addComponent(Comps::Thing_Settings_Light, "Light Settings", "Settings for this Light.", Component_Colors::RGB_13_Yellow, false);
     getComponent(Comps::Thing_Settings_Light)->setIcon(Component_Icons::Light);
 
     addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Type, Property_Type::List, static_cast<int>(Light_Type::Opaque),
@@ -114,7 +114,7 @@ void DrThing::addComponentSettingsMirror() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Mirror");
 
-    addComponent(Comps::Thing_Settings_Mirror, "Mirror Settings", "Settings for this Mirror.", Component_Colors::RGB_18_Gray, true);
+    addComponent(Comps::Thing_Settings_Mirror, "Mirror Settings", "Settings for this Mirror.", Component_Colors::RGB_18_Gray, false);
     getComponent(Comps::Thing_Settings_Mirror)->setIcon(Component_Icons::Mirror);
 
     addPropertyToComponent(Comps::Thing_Settings_Mirror, Props::Thing_Mirror_Start_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),
@@ -141,7 +141,7 @@ void DrThing::addComponentSettingsSwirl() {
     property_name->setDescription("Name of this Effect.");
     property_name->setValue("Swirl");
 
-    addComponent(Comps::Thing_Settings_Swirl, "Swirl Settings", "Settings for this Swirl.", Component_Colors::RGB_03_Violet, true);
+    addComponent(Comps::Thing_Settings_Swirl, "Swirl Settings", "Settings for this Swirl.", Component_Colors::RGB_03_Violet, false);
     getComponent(Comps::Thing_Settings_Swirl)->setIcon(Component_Icons::Swirl);
 
     addPropertyToComponent(Comps::Thing_Settings_Swirl, Props::Thing_Swirl_Start_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),
@@ -163,7 +163,7 @@ void DrThing::addComponentSettingsWater() {
     property_name->setValue("Water");
 
 
-    addComponent(Comps::Thing_Settings_Water, "Water Settings", "Settings for this Water.", Component_Colors::Blue_Drop_1, true);
+    addComponent(Comps::Thing_Settings_Water, "Water Settings", "Settings for this Water.", Component_Colors::Blue_Drop_1, false);
     getComponent(Comps::Thing_Settings_Water)->setIcon(Component_Icons::Water);
 
     addPropertyToComponent(Comps::Thing_Settings_Water, Props::Thing_Water_Texture, Property_Type::List, static_cast<int>(Water_Texture::Ripples),
@@ -180,7 +180,7 @@ void DrThing::addComponentSettingsWater() {
                            "Movement", "This value will cause the Water Texture to move left / right.");
 
 
-    addComponent(Comps::Thing_Settings_Water_Ripple, "Ripple Settings", "Settings for this Water's Ripple effect.", Component_Colors::Blue_Drop_2, true);
+    addComponent(Comps::Thing_Settings_Water_Ripple, "Ripple Settings", "Settings for this Water's Ripple effect.", Component_Colors::Blue_Drop_2, false);
     getComponent(Comps::Thing_Settings_Water_Ripple)->setIcon(Component_Icons::Water_Ripple);
 
     addPropertyToComponent(Comps::Thing_Settings_Water_Ripple, Props::Thing_Water_Ripple_Frequency, Property_Type::Double, 100.0,
@@ -195,7 +195,7 @@ void DrThing::addComponentSettingsWater() {
                                       "the same, a negative value will decrease Ripple Amplitude.");
 
 
-    addComponent(Comps::Thing_Settings_Water_Wave, "Wave Settings", "Settings that this Water's Wave effect.", Component_Colors::Blue_Drop_3, true);
+    addComponent(Comps::Thing_Settings_Water_Wave, "Wave Settings", "Settings that this Water's Wave effect.", Component_Colors::Blue_Drop_3, false);
     getComponent(Comps::Thing_Settings_Water_Wave)->setIcon(Component_Icons::Water_Wave);
 
     addPropertyToComponent(Comps::Thing_Settings_Water_Wave, Props::Thing_Water_Wave_Frequency, Property_Type::Double, 10.0,
@@ -208,7 +208,7 @@ void DrThing::addComponentSettingsWater() {
 
 
     addComponent(Comps::Thing_Settings_Water_Refract, "Refraction Settings", "Settings that effect refraction (randomness) of different parts of "
-                                                                                  "this Water.", Component_Colors::Blue_Drop_4, true);
+                                                                                  "this Water.", Component_Colors::Blue_Drop_4, false);
     getComponent(Comps::Thing_Settings_Water_Refract)->setIcon(Component_Icons::Water_Refract);
 
     addPropertyToComponent(Comps::Thing_Settings_Water_Refract, Props::Thing_Water_Refract_Reflection, Property_Type::Percent, 20.0,
@@ -221,7 +221,7 @@ void DrThing::addComponentSettingsWater() {
                            "Surface", "How much refraction to apply to the top of the Water.");
 
 
-    addComponent(Comps::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of this Water.", Component_Colors::Blue_Drop_5, true);
+    addComponent(Comps::Thing_Settings_Water_Foam, "Foam Settings", "Settings for top of this Water.", Component_Colors::Blue_Drop_5, false);
     getComponent(Comps::Thing_Settings_Water_Foam)->setIcon(Component_Icons::Water_Foam);
 
     addPropertyToComponent(Comps::Thing_Settings_Water_Foam, Props::Thing_Water_Surface_Color, Property_Type::Color, DrColor(255, 255, 255, 255).rgba(),

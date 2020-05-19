@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_random.h"
+#include "project/constants_messages.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
@@ -19,7 +20,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, std::string new_world_name, bool add_start_stage)
-    : DrSettings(parent_project), DrNode(key) {
+    : DrSettings(parent_project) {
 
     this->setKey(key);
     this->initializeSettings(world_type, new_world_name);
@@ -28,11 +29,11 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
     // Add initial Node Slots
     switch(world_type) {
         case DrWorldType::Physics_2D:
-            addInputSlot( this->getKey(),   Input_Slots::Start);
-            addOutputSlot(this->getKey(),   Output_Slots::UI);
+            getComponent(Comps::World_Connections)->addSignal(Signal_Slots::Start);
+            getComponent(Comps::World_Connections)->addOutput(Output_Slots::UI);
             break;
         case DrWorldType::UI:
-            addInputSlot(this->getKey(),    Input_Slots::Load);
+            getComponent(Comps::World_Connections)->addSignal(Signal_Slots::Load);
             break;
     }
 
@@ -40,8 +41,8 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
     // !!!!! #TEMP: Testing node building
     int add_input =  Dr::RandomInt(0, 3);
     int add_output = Dr::RandomInt(0, 4);
-    for (int i = 0; i < add_input;  i++) { addInputSlot( this->getKey(), "Test In "  + std::to_string(i)); }
-    for (int i = 0; i < add_output; i++) { addOutputSlot(this->getKey(), "Test Out " + std::to_string(i)); }
+    for (int i = 0; i < add_input;  i++) { getComponent(Comps::World_Connections)->addSignal("Test In "  + std::to_string(i)); }
+    for (int i = 0; i < add_output; i++) { getComponent(Comps::World_Connections)->addOutput("Test Out " + std::to_string(i)); }
     // !!!!!
 
 

@@ -15,8 +15,8 @@
 #include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
-#include "project/entities/dr_node.h"
 #include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
 
 
 //####################################################################################
@@ -54,11 +54,8 @@ QVariant WorldMapItem::itemChange(GraphicsItemChange change, const QVariant &val
     if (change == ItemScenePositionHasChanged) {
         // Value is new scene position (of upper left corner)
         QPointF new_pos = value.toPointF();
-        DrNode* node = dynamic_cast<DrNode*>(m_entity);
-        if (node != nullptr) {
-            QPointF new_center = mapToScene( boundingRect().center() );
-            node->setNodePosition( Dr::FromQPointF(new_center) );
-        }
+        QPointF new_center = mapToScene( boundingRect().center() );
+        m_component->setNodePosition( Dr::FromQPointF(new_center) );
         return new_pos;
     }
 

@@ -79,7 +79,7 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
                 WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(item_under_mouse);
                 if (map_item != nullptr) {
                     QPointF scene_point = this->mapToScene(m_last_mouse_pos);
-                    point_over_slot = (map_item->slotAtPoint(scene_point).owner_key != c_no_key);
+                    point_over_slot = map_item->slotAtPoint(scene_point);
                 }
 
                 // If not over Node Circle, set cursor to Move_Item cursor

@@ -7,11 +7,11 @@
 //
 #include "core/dr_debug.h"
 #include "project/constants_component_info.h"
+#include "project/constants_messages.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
-#include "project/settings/settings_component_output.h"
+#include "project/settings/settings_component_slot.h"
 #include "project/settings/settings_component_property.h"
-#include "project/settings/settings_component_signal.h"
 
 
 //####################################################################################
@@ -23,7 +23,7 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
                          std::string    display_name,
                          std::string    description,
                          DrColor        color,
-                         bool           is_turned_on) {
+                         bool           is_hidden) {
     m_parent_settings = parent_settings;
 
     m_component_key =   component_key;
@@ -31,7 +31,7 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
     m_display_name =    display_name;
     m_description =     description;
     m_color =           color;
-    m_turned_on =       is_turned_on;
+    m_is_hidden =       is_hidden;
 }
 
 DrComponent::~DrComponent() {
@@ -43,7 +43,7 @@ DrComponent::~DrComponent() {
 
 
 //####################################################################################
-//##    Get Property
+//##    Get Children
 //####################################################################################
 DrProperty* DrComponent::getProperty(std::string property_name, bool show_error) {
     auto it = m_properties.find(property_name);
@@ -60,7 +60,29 @@ DrProperty* DrComponent::getProperty(std::string property_name, bool show_error)
         }
         return nullptr;
     }
-    return (*it).second;
+    return it->second;
+}
+
+DrSlot* DrComponent::getSignal(long signal_key) {
+    auto it = m_signals.find(signal_key);
+    if (it != m_signals.end()) return it->second; else return nullptr;
+}
+DrSlot* DrComponent::getSignal(std::string signal_name) {
+    for (auto &signal_pair : getSignalMap()) {
+        if (signal_pair.second->getSlotName() == signal_name) return signal_pair.second;
+    }
+    return nullptr;
+}
+
+DrSlot* DrComponent::getOutput(long output_key) {
+    auto it = m_outputs.find(output_key);
+    if (it != m_outputs.end()) return it->second; else return nullptr;
+}
+DrSlot* DrComponent::getOutput(std::string output_name) {
+    for (auto &output_pair : getOutputMap()) {
+        if (output_pair.second->getSlotName() == output_name) return output_pair.second;
+    }
+    return nullptr;
 }
 
 
@@ -80,18 +102,34 @@ DrProperty* DrComponent::addProperty(std::string    property_name,
     return prop;
 }
 
-DrSignal* DrComponent::addSignal(std::string signal_name, bool is_deletable) {
-    DrSignal *signal = new DrSignal(this, this->getNextSignalKey(), signal_name, is_deletable);
-    m_signals.insert(std::make_pair(signal->getSignalKey(), signal));
+DrSlot* DrComponent::addSignal(std::string signal_name, bool is_deletable) {
+    DrSlot *signal = new DrSlot(this, DrSlotType::Signal, this->getNextSlotKey(), signal_name, is_deletable);
+    m_signals.insert(std::make_pair(signal->getSlotKey(), signal));
     return signal;
 }
 
-DrOutput* DrComponent::addOutput(std::string output_name, bool is_deletable) {
-    DrOutput *output = new DrOutput(this, this->getNextSignalKey(), output_name, is_deletable);
-    m_outputs.insert(std::make_pair(output->getOutputKey(), output));
+DrSlot* DrComponent::addOutput(std::string output_name, bool multiple_connections, bool is_deletable) {
+    DrSlot *output = new DrSlot(this, DrSlotType::Output, this->getNextSlotKey(), output_name, is_deletable);
+    output->setMultipleConnections(multiple_connections);
+    m_outputs.insert(std::make_pair(output->getSlotKey(), output));
     return output;
 }
 
+
+//####################################################################################
+//##    Connects Output Slot to Signal Slot, returns true if successful
+//####################################################################################
+bool DrComponent::connectOutput(std::string output_name, DrSlot *signal) {
+    DrSlot *output = getOutput(output_name);
+        if (output == nullptr) return false;
+    return output->addConnection(signal);
+}
+
+bool DrComponent::connectOutput(long output_key, DrSlot *signal) {
+    DrSlot *output = getOutput(output_key);
+        if (output == nullptr) return false;
+    return output->addConnection(signal);
+}
 
 
 

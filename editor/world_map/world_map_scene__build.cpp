@@ -16,6 +16,7 @@
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
 
 
 //####################################################################################
@@ -29,7 +30,8 @@ void WorldMapScene::buildScene() {
 
     // Add Nodes
     for (auto &world_pair : m_project->getWorldMap()) {
-        this->addItemToSceneFromEntity(world_pair.second);
+        DrComponent *connections = world_pair.second->getComponent(Comps::World_Connections);
+        if (connections != nullptr) this->addItemToSceneFromComponent(connections);
     }
 
     // Center the view on the new stage, set zoom level
@@ -43,9 +45,9 @@ void WorldMapScene::buildScene() {
 }
 
 
-WorldMapItem* WorldMapScene::addItemToSceneFromEntity(DrSettings *entity) {
+WorldMapItem* WorldMapScene::addItemToSceneFromComponent(DrComponent *component) {
     // Create new item representing this Thing
-    WorldMapItem *graphics_item = new WorldMapItem(m_project, this->getEditorRelay(), entity->getKey());
+    WorldMapItem *graphics_item = new WorldMapItem(m_project, this->getEditorRelay(), component);
 
     // Temporarily disable geometry signal itemChange updates
     bool flags_enabled_before = graphics_item->itemChangeFlagsEnabled();

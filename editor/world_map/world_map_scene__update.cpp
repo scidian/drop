@@ -24,6 +24,8 @@
 void WorldMapScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs) {
     if (changed_items.empty()) return;
 
+    (void) component_property_pairs;
+
     for (auto settings_item : changed_items) {
         DrType my_type = settings_item->getType();
 

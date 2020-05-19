@@ -14,6 +14,8 @@
 #include "editor/world_map/world_map_item.h"
 #include "editor/world_map/world_map_view.h"
 #include "project/dr_project.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_slot.h"
 
 
 //####################################################################################
@@ -67,50 +69,21 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
 
         // ***** Finished trying to connect two node slots
         if (m_view_mode == View_Mode::Node_Connect) {
-            bool remove_connection = true;
-            WorldMapItem   *mouse_map_item =       dynamic_cast<WorldMapItem*>(mouse_item);
-            DrSettings     *slot_start_entity =    m_project->findSettingsFromKey(m_slot_start.owner_key);
+            WorldMapItem   *mouse_map_item =    dynamic_cast<WorldMapItem*>(mouse_item);
 
-            // We found an item under mouse and we have a start DrNode, see if we have a new slot to connect to
-            if (mouse_map_item != nullptr && slot_start_entity != nullptr) {
-                OldSlot      connect_to_slot =       mouse_map_item->slotAtPoint(mouse_in_scene);
+            // We found an item under mouse and we have a start DrDlot, try to conenct
+            if (mouse_map_item != nullptr && m_slot_start != nullptr) {
+                DrSlot     *connect_to_slot =   mouse_map_item->slotAtPoint(mouse_in_scene);
 
-                // Check that we're over a Slot, that Slots are different types, and then connect appropriately
-                if (connect_to_slot.owner_key != c_no_key && connect_to_slot.owner_slot_type != m_slot_start.owner_slot_type) {
-                    if (connect_to_slot.owner_slot_type == DrSlotType::Output) {
-                        DrNode *node = dynamic_cast<DrNode*>(mouse_map_item->getEntity());
-                        if (node != nullptr) {
-                            node->addOutputSlot(mouse_map_item->getEntity()->getKey(), connect_to_slot.owner_slot_name, m_slot_start.owner_key, m_slot_start.owner_slot_name);
-                            remove_connection = false;
-//                            Dr::PrintDebug("Output Entity: " +      map_item->getEntity()->getName() + ", Slot Name: " +          connect_to_slot.owner_slot_name);
-//                            Dr::PrintDebug("Input Entity Key: " +   std::to_string(m_slot_start.owner_key) + ", Slot Name: " +    m_slot_start.owner_slot_name);
-                        }
-
-                    } else if (connect_to_slot.owner_slot_type == DrSlotType::Input) {
-                        DrNode *node = dynamic_cast<DrNode*>(slot_start_entity);
-                        if (node != nullptr) {
-                            node->addOutputSlot(slot_start_entity->getKey(), m_slot_start.owner_slot_name, connect_to_slot.owner_key, connect_to_slot.owner_slot_name);
-                            remove_connection = false;
-                        }
+                // Check that we're over a Slot, that Slots are different types
+                if (connect_to_slot != nullptr && connect_to_slot->getSlotType() != m_slot_start->getSlotType()) {
+                    if (connect_to_slot->getSlotType() == DrSlotType::Output) {
+                        connect_to_slot->addConnection(m_slot_start);
+                    } else if (m_slot_start->getSlotType() == DrSlotType::Output) {
+                        m_slot_start->addConnection(connect_to_slot);
                     }
                 }
             }
-
-
-            // ***** Remove connection if mouse release over nothing, or no new slot of the proper type
-            if (remove_connection) {
-                if (m_slot_start.owner_slot_type == DrSlotType::Output) {
-                    DrNode *node = dynamic_cast<DrNode*>(slot_start_entity);
-                    if (node != nullptr) node->addOutputSlot(slot_start_entity->getKey(), m_slot_start.owner_slot_name, c_no_key, "");
-
-                } else if (m_slot_start.owner_slot_type == DrSlotType::Input) {
-                    DrSettings *output_start = m_project->findSettingsFromKey(m_slot_start.connected_key);
-                    if (output_start != nullptr) {
-                        DrNode *node = dynamic_cast<DrNode*>(output_start);
-                        if (node != nullptr) node->addOutputSlot(output_start->getKey(), m_slot_start.connected_slot_name, c_no_key, "");
-                    }
-                }
-            } // End remove_connection
         }
 
         // ***** Inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...

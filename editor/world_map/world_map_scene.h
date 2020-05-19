@@ -45,7 +45,7 @@ public:
     void                    buildScene();                                   // Clears / builds node scene
 
     // Scene Functions
-    WorldMapItem*           addItemToSceneFromEntity(DrSettings *entity);
+    WorldMapItem*           addItemToSceneFromComponent(DrComponent *component);
     void                    setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void                    setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
     QList<WorldMapItem*>    worldMapItems();

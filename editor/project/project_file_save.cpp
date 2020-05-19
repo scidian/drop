@@ -252,7 +252,7 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
         map[map_key + "description"] =  QString::fromStdString(component->getDescription());
         map[map_key + "icon"] =         QString::fromStdString(component->getIcon());
         map[map_key + "color"] =        QVariant::fromValue(component->getColor().rgba());
-        map[map_key + "turned_on"] =    QVariant::fromValue(component->isTurnedOn());
+        map[map_key + "is_hidden"] =    QVariant::fromValue(component->isHidden());
         map[map_key + "comp_key"] =     QString::fromStdString(component->getComponentName());
 
         for (auto property_pair : component->getPropertyMap()) {

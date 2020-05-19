@@ -17,7 +17,8 @@
 #include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
-#include "project/entities/dr_node.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_slot.h"
 
 
 //####################################################################################
@@ -123,44 +124,72 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
     WorldMapScene *world_scene = dynamic_cast<WorldMapScene*>(scene());
     if (world_scene == nullptr) return;
 
-    // ***** Go through each GraphicsItem and check for Nodes
-    QList<WorldMapItem*> map_items = world_scene->worldMapItems();
+    // **** Get Items, make sure they have DrComponents
+    QList<WorldMapItem*> map_items;
+    for (auto map_item : world_scene->worldMapItems()) {
+        if (map_item->getComponent() == nullptr) continue;
+        map_items.push_back(map_item);
+    }
+
+    // ***** Reset Signal Slot connection counts
     for (auto map_item : map_items) {
-        DrNode *node = dynamic_cast<DrNode*>(map_item->getEntity());
-        if (node == nullptr) continue;
-
-        // Go through each Node and draw output lines
-        int output_slot_number = 0;
-        for (auto &slot : node->getOutputSlots()) {
-
-            // Find input slot to connect to
-            WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, slot.connected_key);
-            if (connected == nullptr) continue;
-            DrNode *connected_node = dynamic_cast<DrNode*>(connected->getEntity());
-            if (connected_node == nullptr) continue;
-            int slot_number_to_connect_to = 0;
-            for (auto &input_slot : connected_node->getInputSlots()) {
-                if (input_slot.owner_slot_name == slot.connected_slot_name) break;
-                ++slot_number_to_connect_to;
-            }
-
-            // Get Slot Locations
-            QRectF  rect_out =  map_item->slotRect(DrSlotType::Output, output_slot_number);
-            QRectF  rect_in =   connected->slotRect(DrSlotType::Input, slot_number_to_connect_to);
-            QPointF point_out = mapFromScene(map_item->pos()  + rect_out.center());
-            QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
-
-            // Paint Curve
-            paintCubicCurve(painter, line_color, point_in, point_out, true);
-
-            output_slot_number++;
+        for (auto &signal_pair : map_item->getComponent()->getSignalMap()) {
+            signal_pair.second->clearRecentLineSlots();
         }
     }
 
-    // If mouse is dragging a node line, paint it
+    // ***** Go through each GraphicsItem and draw output lines
+    for (auto map_item : map_items) {
+        // Go through each Output Slot
+        int output_slot_number = 0;
+        for (auto &output_pair : map_item->getComponent()->getOutputMap()) {
+            DrSlot *slot = output_pair.second;
+                    slot->clearRecentLineSlots();
+
+            // Go through each connection of Output Slot
+            for (auto connection : slot->connections()) {
+
+                // Find input slot to connect to
+                WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, connection.connected_entity_key);
+                          if (connected == nullptr) continue;
+                DrComponent  *connected_component = connected->getComponent();
+                          if (connected_component == nullptr) continue;
+                DrSlot       *connected_slot = nullptr;
+                int slot_number_to_connect_to = 0;
+                for (auto &signal_pair : connected_component->getSignalMap()) {
+                    if (signal_pair.second->getSlotKey() == connection.connected_signal_key) {
+                        connected_slot = signal_pair.second;
+                        break;
+                    }
+                    ++slot_number_to_connect_to;
+                }
+                if (connected_slot == nullptr) continue;
+
+                // Get Slot Locations
+                QRectF  rect_out =  map_item->slotRect(DrSlotType::Output,  output_slot_number);
+                QRectF  rect_in =   connected->slotRect(DrSlotType::Signal, slot_number_to_connect_to);
+                QPointF point_out = mapFromScene(map_item->pos()  + rect_out.center());
+                QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
+
+                // Paint Curve
+                paintCubicCurve(painter, line_color, point_in, point_out, true);
+
+                slot->addRecentLineSlot(connected_slot);
+                connected_slot->addRecentLineSlot(slot);
+            }
+            ++output_slot_number;
+        }
+    }
+
+
+    // ***** If mouse is dragging a node line, paint it
     if (m_view_mode == View_Mode::Node_Connect) {
-        QPointF slot_point = mapFromScene( Dr::ToQPointF(m_slot_start.scene_position) );
-        if (m_slot_start.owner_slot_type == DrSlotType::Input) {
+        // Find start slot scene position
+        QPointF slot_point(0, 0);
+        WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
+        if (connected != nullptr) slot_point = mapFromScene( connected->slotLocationInScene(m_slot_start) );
+
+        if (m_slot_start->getSlotType() == DrSlotType::Signal) {
             paintCubicCurve(painter, line_color, slot_point, m_last_mouse_pos, true);
         } else {
             paintCubicCurve(painter, line_color, m_last_mouse_pos, slot_point, true);

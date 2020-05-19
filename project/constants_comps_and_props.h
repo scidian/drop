@@ -126,6 +126,7 @@ namespace Comps {
 
     // ***** DrWorld::Physics_2D Components
     const std::string World_Settings                    = "WoSe";
+    const std::string World_Connections                 = "WoConnections";
     const std::string World_Physics                     = "WoPhysics";
     const std::string World_Lighting                    = "WoLighting";
     const std::string World_Camera                      = "WoCamera";

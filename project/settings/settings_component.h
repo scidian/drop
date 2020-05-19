@@ -14,15 +14,14 @@
 #include "project/enums_entity_types.h"
 
 // Forward Declarations
-class DrSettings;
 class DrProperty;
-class DrSignal;
-class DrOutput;
+class DrSettings;
+class DrSlot;
 
 // Type Definitions
 typedef std::map<std::string, DrProperty*>  PropertyMap;            // Properties are stored Attributes/Variables for this DrComponent
-typedef std::map<long,        DrSignal*>    SignalMap;              // Signals are INPUTS that receive signals from DrOutput
-typedef std::map<long,        DrOutput*>    OutputMap;              // Outputs are OUTPUTS that send signals to activate DrSignals
+typedef std::map<long,        DrSlot*>      SignalMap;              // Signals are INPUTS that receive signals from DrOutput
+typedef std::map<long,        DrSlot*>      OutputMap;              // Outputs are OUTPUTS that send signals to activate DrSignals
 
 
 //####################################################################################
@@ -37,25 +36,25 @@ private:
 
     // Child Object Containers
     long                m_property_key_generator    { c_starting_key_property };        // Variable to hand out unique id key's to all child DrProperties
-    long                m_signal_key_generator      { c_starting_key_signal };          // Variable to hand out unique id key's to all child DrSignals
-    long                m_output_key_generator      { c_starting_key_output };          // Variable to hand out unique id key's to all child DrOutputs
+    long                m_slot_key_generator        { c_starting_key_slot };            // Variable to hand out unique id key's to all child DrSlots (Signals / Outputs)
     PropertyMap         m_properties;                                                   // Map of pointers to DrProperty classes    (Variables)
     SignalMap           m_signals;                                                      // Map of pointers to DrSignal classes      (Input Slots)
     OutputMap           m_outputs;                                                      // Map of pointers to DrOutput classes      (Output Slots)
 
-    // The 7 Parts of Data for Every Component
-    long                m_component_key     { c_no_key };
-    std::string         m_component_name    { "" };
-    std::string         m_display_name      { "Unknown Component" };
-    std::string         m_description       { "No description." };
-    std::string         m_icon              { "" };
-    DrColor             m_color             { DrColor(128, 128, 128, 255) };
-    bool                m_turned_on         { false };
+    // The 8 Parts of Data for Every Component
+    long                m_component_key             { c_no_key };                       // ID Key of Component, unique to and assigned from Parent DrSettings
+    std::string         m_component_name            { "" };                             // Type name of Component
+    std::string         m_display_name              { "Unknown Component" };            // Display Name of Component in Object Inspector and TreeAdvisor
+    std::string         m_description               { "No description." };              // Description of Component in TreeAdvisor
+    std::string         m_icon                      { "" };                             // Icon string
+    DrColor             m_color                     { DrColor(128, 128, 128, 255) };    // Object Inspector / Node Box header color
+    bool                m_is_hidden                 { false };                          // Should this Component be hidden from Object Insepctor?
+    DrPointF            m_node_position             { 0, 0 };                           // Node Map position of this Component
 
 
     // For now this is not saved, assigned during creation in DrStage::addComponent()
     // Used for sorting in Object Inspector
-    int                 m_list_order        { 0 };
+    int                 m_list_order                { 0 };
 
 
 public:
@@ -66,7 +65,7 @@ public:
                          std::string    display_name,
                          std::string    description,
                          DrColor        color,
-                         bool           is_turned_on);
+                         bool           is_hidden);
     ~DrComponent();
 
     // Getters / Setters
@@ -76,10 +75,12 @@ public:
     DrProperty*         getProperty(std::string property_key, bool show_error = true);
 
     SignalMap&          getSignalMap() { return m_signals; }
-    DrSignal*           getSignal(std::string property_key, bool show_error = true);
+    DrSlot*             getSignal(long signal_key);
+    DrSlot*             getSignal(std::string signal_name);
 
     OutputMap&          getOutputMap() { return m_outputs; }
-    DrOutput*           getOutput(std::string property_key, bool show_error = true);
+    DrSlot*             getOutput(long output_key);
+    DrSlot*             getOutput(std::string output_name);
 
     long                getComponentKey()   { return m_component_key; }
     std::string         getComponentName()  { return m_component_name; }
@@ -87,26 +88,26 @@ public:
     std::string         getDescription()    { return m_description; }
     std::string         getIcon()           { return m_icon; }
     DrColor             getColor()          { return m_color; }
-    bool                isTurnedOn()        { return m_turned_on; }
+    bool                isHidden()          { return m_is_hidden; }
+    DrPointF            getNodePosition()   { return m_node_position; }
 
+    void                setComponentKey(long key)       { m_component_key = key; }
     void                setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
     void                setDescription(std::string new_description) { m_description = new_description; }
-    void                setIcon(std::string new_icon) { m_icon = new_icon; }
-    void                setColor(DrColor new_color) { m_color = new_color; }
-    void                setOnOrOff(bool new_turned_on) { m_turned_on = new_turned_on; }
-    void                turnOn() { m_turned_on = true; }
-    void                turnOff() { m_turned_on = false; }
+    void                setIcon(std::string new_icon)   { m_icon = new_icon; }
+    void                setColor(DrColor new_color)     { m_color = new_color; }
+    void                setHidden(bool hidden)          { m_is_hidden = hidden; }
+    void                hide()                          { m_is_hidden = true; }
+    void                show()                          { m_is_hidden = false; }
+    void                setNodePosition(DrPointF pos)   { m_node_position = pos; }
 
     // Component Key Generator
     long            checkCurrentPropertyGeneratorKey()      { return m_property_key_generator; }
-    long            checkCurrentSignalGeneratorKey()        { return m_signal_key_generator; }
-    long            checkCurrentOutputGeneratorKey()        { return m_output_key_generator; }
+    long            checkCurrentSlotGeneratorKey()          { return m_slot_key_generator; }
     long            getNextPropertyKey()                    { return m_property_key_generator++; }
-    long            getNextSignalKey()                      { return m_signal_key_generator++; }
-    long            getNextOutputKey()                      { return m_output_key_generator++; }
+    long            getNextSlotKey()                        { return m_slot_key_generator++; }
     void            setStartNumberPropertyGeneratorKey(long initial_key)    { m_property_key_generator = initial_key; }
-    void            setStartNumberSignalGeneratorKey(long initial_key)      { m_signal_key_generator = initial_key; }
-    void            setStartNumberOutputGeneratorKey(long initial_key)      { m_output_key_generator = initial_key; }
+    void            setStartNumberSlotGeneratorKey(long initial_key)        { m_slot_key_generator = initial_key; }
 
     // Inspector Sorting Variable
     int             getListOrder() { return m_list_order; }
@@ -120,8 +121,10 @@ public:
                                 std::string     description,
                                 bool            is_hidden = false,
                                 bool            is_editable = true);
-    DrSignal*       addSignal(std::string signal_name, bool is_deletable = false);
-    DrOutput*       addOutput(std::string output_name, bool is_deletable = false);
+    DrSlot*         addSignal(std::string signal_name, bool is_deletable = false);
+    DrSlot*         addOutput(std::string output_name, bool multiple_connections = false, bool is_deletable = false);
+    bool            connectOutput(std::string output_name, DrSlot *signal);
+    bool            connectOutput(long output_key, DrSlot *signal);
 
 };
 

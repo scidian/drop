@@ -225,7 +225,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Prefab)) { for (auto prefab_pair : list_prefabs) { if (prefab_pair.first > c_no_key) entities.push_back(prefab_pair.second); } }
     if (show_types.contains(DrType::Image))  {
         // Add Images to be shown, only add built in images to list if they're being used in current DrProject
-        for (auto image_pair : list_images) {
+        for (auto &image_pair : list_images) {
             if (image_pair.first > c_no_key) {
                 if (image_keys_used.find(image_pair.first) != image_keys_used.end()) entities.push_back(image_pair.second);
             }

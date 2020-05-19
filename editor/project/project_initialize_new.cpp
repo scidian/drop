@@ -9,10 +9,12 @@
 
 #include "editor/helper_library.h"
 #include "editor/project/project.h"
+#include "project/constants_messages.h"
 #include "project/entities/dr_image.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/settings/settings_component.h"
 
 namespace Dr {
 
@@ -158,7 +160,8 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
 
         // Connect some Slots
-        world_1->addOutputSlot(world_1->getKey(), Output_Slots::UI, world_2->getKey(), Input_Slots::Start);
+        DrSlot *signal = world_2->getComponent(Comps::World_Connections)->getSignal(Signal_Slots::Start);
+        world_1->getComponent(Comps::World_Connections)->connectOutput(Output_Slots::UI, signal);
 
 
     }   // End Test Project

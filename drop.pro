@@ -240,6 +240,7 @@ SOURCES += \
     editor/world_map/world_map_item.cpp \
     editor/world_map/world_map_item__item_change.cpp \
     editor/world_map/world_map_item__paint.cpp \
+    editor/world_map/world_map_item__slot_info.cpp \
     editor/world_map/world_map_scene.cpp \
     editor/world_map/world_map_scene__build.cpp \
     editor/world_map/world_map_scene__update.cpp \
@@ -322,7 +323,6 @@ SOURCES += \
     project/entities/dr_font.cpp \
     project/entities/dr_image.cpp \
     project/entities/dr_image__outline_image.cpp \
-    project/entities/dr_node.cpp \
     project/entities/dr_stage.cpp \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \
@@ -347,9 +347,8 @@ SOURCES += \
     project/properties/property_collision.cpp \
     project/settings/settings.cpp \
     project/settings/settings_component.cpp \
-    project/settings/settings_component_output.cpp \
     project/settings/settings_component_property.cpp \
-    project/settings/settings_component_signal.cpp
+    project/settings/settings_component_slot.cpp
 
 
 HEADERS += \
@@ -1051,7 +1050,6 @@ HEADERS += \
     project/entities/dr_animation.h \
     project/entities/dr_font.h \
     project/entities/dr_image.h \
-    project/entities/dr_node.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
     project/entities/dr_world.h \
@@ -1066,8 +1064,7 @@ HEADERS += \
     project/properties/property_collision.h \
     project/settings/settings.h \
     project/settings/settings_component.h \
-    project/settings/settings_component_output.h \
     project/settings/settings_component_property.h \
-    project/settings/settings_component_signal.h
+    project/settings/settings_component_slot.h
 
 

@@ -22,8 +22,7 @@ constexpr long c_starting_key_entity =              1001;       // First 1001 ke
                                                                 // ....."1001" is a relatively easily searchable number
 constexpr long c_starting_key_component =           1;
 constexpr long c_starting_key_property =            1;
-constexpr long c_starting_key_signal =              1;
-constexpr long c_starting_key_output =              1;
+constexpr long c_starting_key_slot =                1;
 
 
 //####################################################################################

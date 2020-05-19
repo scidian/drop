@@ -58,16 +58,16 @@ DrImage* AddImage(DrProject *project, QString filename, long key, bool outline, 
 //####################################################################################
 void AddBuiltInImages(DrProject *project) {
 
-    AddImage(project, ":/assets/dr_images/empty.png",               c_key_image_empty);
+    AddImage(project, ":/assets/dr_images/empty.png",           c_key_image_empty);
 
-    AddImage(project, ":/assets/dr_images/blob.png",                c_key_image_blob);
-    AddImage(project, ":/assets/dr_images/character.png",           c_key_image_character);
-    AddImage(project, ":/assets/dr_images/foliage.png",             c_key_image_foliage);
-    AddImage(project, ":/assets/dr_images/ground.png",              c_key_image_ground);
-    AddImage(project, ":/assets/dr_images/ladder.png",              c_key_image_ladder);
-    AddImage(project, ":/assets/dr_images/object.png",              c_key_image_object);
-    AddImage(project, ":/assets/dr_images/spike.png",               c_key_image_spike);
-    AddImage(project, ":/assets/dr_images/spring.png",              c_key_image_spring);
+    AddImage(project, ":/assets/dr_images/blob.png",            c_key_image_blob);
+    AddImage(project, ":/assets/dr_images/character.png",       c_key_image_character);
+    AddImage(project, ":/assets/dr_images/foliage.png",         c_key_image_foliage);
+    AddImage(project, ":/assets/dr_images/ground.png",          c_key_image_ground);
+    AddImage(project, ":/assets/dr_images/ladder.png",          c_key_image_ladder);
+    AddImage(project, ":/assets/dr_images/object.png",          c_key_image_object);
+    AddImage(project, ":/assets/dr_images/spike.png",           c_key_image_spike);
+    AddImage(project, ":/assets/dr_images/spring.png",          c_key_image_spring);
 
 }   // End AddBuiltInImages()
 
@@ -107,7 +107,8 @@ void AddExternalImages(DrProject *project) {
                     QPixmap pix(image_file.absoluteFilePath());
                     Dr::SetAssetCategoryIcon(folder_name.toStdString(), pix);
                 } else {
-                    DrImage *image = AddImage(project, image_file.absoluteFilePath(), c_no_key, false);
+                    bool trace_outline = false;
+                    DrImage *image = AddImage(project, image_file.absoluteFilePath(), c_no_key, trace_outline);
                     if (image != nullptr) image->setFolderName(folder_name.toStdString());
                 }
             }

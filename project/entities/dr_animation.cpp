@@ -89,7 +89,7 @@ void DrAnimation::initializeAnimationSettings(std::string new_name) {
     property_name->setDescription("Name of this Animation.");
     property_name->setValue(new_name);
 
-    addComponent(Comps::Animation_Settings, "Animation Settings", "Settings for this Animation.", Component_Colors::RGB_18_Gray, true);
+    addComponent(Comps::Animation_Settings, "Animation Settings", "Settings for this Animation.", Component_Colors::RGB_18_Gray, false);
     getComponent(Comps::Animation_Settings)->setIcon(Component_Icons::Animation);
 
     addPropertyToComponent(Comps::Animation_Settings, Props::Animation_Settings_Speed, Property_Type::Double, 10.0,

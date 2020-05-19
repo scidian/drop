@@ -33,7 +33,7 @@ private:
 public:
     vec<vec<DrPointF>>          m_poly_list;                                                // Stores list of image outline points
     vec<vec<vec<DrPointF>>>     m_hole_list;                                                // Stores list of hole  outline points
-    bool                        m_use_simple_square     { false };                          // True when Image Outline has been canceled, when true extrudes in 3D as simple square
+    bool                        m_outline_canceled      { false };                          // True when Image Outline has been canceled, when true extrudes in 3D as simple square
     bool                        m_outline_processed     { false };                          // Turns true when autoOutlinePoints() has completed successfully
 
 private:
@@ -51,8 +51,8 @@ public:
 
     // Image Helper Functions
     void                autoOutlinePoints(IProgressBar *progress = nullptr);
+    bool                outlineCanceled()                   { return m_outline_canceled; }
     bool                outlineProcessed()                  { return m_outline_processed; }
-    bool                useSimpleSquare()                   { return m_use_simple_square; }
     void                setSimpleBox();
 
     // Getters / Setters

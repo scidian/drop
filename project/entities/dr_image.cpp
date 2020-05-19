@@ -25,7 +25,6 @@ DrImage::DrImage(DrProject *parent_project, long key, std::string image_name, Dr
     if (outline) {
         autoOutlinePoints(progress);
     } else {
-        m_use_simple_square = true;
         m_poly_list.push_back( bitmap.polygon().points() );
         m_hole_list.push_back( { } );
     }

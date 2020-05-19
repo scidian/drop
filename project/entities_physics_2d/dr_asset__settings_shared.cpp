@@ -34,7 +34,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
         type = "Object";
     }
 
-    addComponent(Comps::Asset_Collision, "Collision", "Collision settings for this " + type + ".", Component_Colors::RGB_19_Silver, true);
+    addComponent(Comps::Asset_Collision, "Collision", "Collision settings for this " + type + ".", Component_Colors::RGB_19_Silver, false);
     getComponent(Comps::Asset_Collision)->setIcon(Component_Icons::Collide);
 
     addPropertyToComponent(Comps::Asset_Collision, Props::Asset_Collision_Shape, Property_Type::List, static_cast<int>(start_shape_type),
@@ -72,7 +72,7 @@ void DrAsset::initializeAssetSettingsCollision(DrAssetType asset_type, DrPropert
 void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle_animation_key) {
     std::string type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Comps::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::RGB_12_Olive, true);
+    addComponent(Comps::Asset_Animation, "Animation", "Images to show for this " + type + ".", Component_Colors::RGB_12_Olive, false);
     getComponent(Comps::Asset_Animation)->setIcon(Component_Icons::Animation);
 
     addPropertyToComponent(Comps::Asset_Animation, Props::Asset_Animation_Idle, Property_Type::Image, idle_animation_key,
@@ -91,7 +91,7 @@ void DrAsset::initializeAssetSettingsAnimation(DrAssetType asset_type, long idle
 void DrAsset::initializeAssetSettingsPhysics(DrAssetType asset_type) {
     std::string type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Comps::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::RGB_15_Sunset, true);
+    addComponent(Comps::Asset_Physics, "Physics", "Physics settings for this " + type + ".", Component_Colors::RGB_15_Sunset, false);
     getComponent(Comps::Asset_Physics)->setIcon(Component_Icons::Physics);
 
     addPropertyToComponent(Comps::Asset_Physics, Props::Asset_Physics_Body_Style, Property_Type::List, static_cast<int>(Body_Style::Rigid_Body),
@@ -126,7 +126,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
     if (asset_type == DrAssetType::Character)   type = "Character";
     if (asset_type == DrAssetType::Object)      type = "Object";
 
-    addComponent(Comps::Asset_Health, "Health / Damage", "Health and Damage settings for this " + type + ".", Component_Colors::RGB_02_Pink, true);
+    addComponent(Comps::Asset_Health, "Health / Damage", "Health and Damage settings for this " + type + ".", Component_Colors::RGB_02_Pink, false);
     getComponent(Comps::Asset_Health)->setIcon(Component_Icons::Health);
 
     addPropertyToComponent(Comps::Asset_Health, Props::Asset_Health_Max_Health,       Property_Type::Double,  10.0,
@@ -166,7 +166,7 @@ void DrAsset::initializeAssetSettingsHealth(DrAssetType asset_type, int hit_poin
 void DrAsset::initializeAssetSettingsControls(DrAssetType asset_type) {
     std::string type = Dr::StringFromAssetType(asset_type);
 
-    addComponent(Comps::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::RGB_04_Purple, true);
+    addComponent(Comps::Asset_Controls, "Controls", "Control settings for this " + type + ".", Component_Colors::RGB_04_Purple, false);
     getComponent(Comps::Asset_Controls)->setIcon(Component_Icons::Controls);
 
     addPropertyToComponent(Comps::Asset_Controls, Props::Asset_Controls_Rotate_Speed, Property_Type::Double, 0.0,

@@ -18,6 +18,7 @@
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
+#include "project/settings/settings_component_slot.h"
 
 
 //####################################################################################
@@ -37,8 +38,17 @@ DrSettings::DrSettings(DrProject *parent_project) : m_parent_project(parent_proj
 DrSettings::~DrSettings() {
     // Mark parent DrProject as changed so we know to alert user before closing unsaved work
     getParentProject()->setHasSaved(false);
+
     // Delete pointers from children containers
-    for (auto it = m_components.begin();    it != m_components.end(); ) {   delete it->second; it = m_components.erase(it); }
+    clearComponents();
+}
+
+// Deletes all Components
+void DrSettings::clearComponents() {
+    for (auto it = m_components.begin(); it != m_components.end(); ) {
+        delete it->second;
+        it = m_components.erase(it);
+    }
 }
 
 
@@ -46,7 +56,7 @@ DrSettings::~DrSettings() {
 //##    Initial Properties of all DrSettings
 //####################################################################################
 void DrSettings::addComponentEntitySettings() {
-    addComponent(Comps::Entity_Settings, "Name", "Name of selected item.", Component_Colors::RGB_20_Tan, true);
+    addComponent(Comps::Entity_Settings, "Name", "Name of selected item.", Component_Colors::RGB_20_Tan, false);
     getComponent(Comps::Entity_Settings)->setIcon(Component_Icons::Name);
     addPropertyToComponent(Comps::Entity_Settings, Props::Entity_Name, Property_Type::String, "",
                            "Name", "Name of the current item.");
@@ -109,6 +119,13 @@ DrComponent* DrSettings::getComponent(std::string component_name, bool show_erro
     return (*it).second;
 }
 
+DrComponent* DrSettings::getComponent(long component_key) {
+    for (auto &component_pair : m_components) {
+        if (component_pair.second->getComponentKey() == component_key) return component_pair.second;
+    }
+    return nullptr;
+}
+
 void DrSettings::setComponentPropertyValue(ComponentProperty component_property_pair, DrVariant value, bool show_error) {
     setComponentPropertyValue(component_property_pair.first, component_property_pair.second, value, show_error);
 }
@@ -158,6 +175,7 @@ std::string DrSettings::getName() {
     switch (getType()) {
         case DrType::Animation:
         case DrType::Asset:
+        case DrType::Block:
         case DrType::Device:
         case DrType::Effect:
         case DrType::Font:
@@ -192,8 +210,8 @@ bool DrSettings::setName(std::string new_name) {
 //####################################################################################
 //##    Component Loading - addComponent / addComponentProperty
 //####################################################################################
-DrComponent* DrSettings::addComponent(std::string component_name, std::string display_name, std::string description, DrColor color, bool is_turned_on) {
-    DrComponent *comp = new DrComponent(this, this->getNextKey(), component_name, display_name, description, color, is_turned_on);
+DrComponent* DrSettings::addComponent(std::string component_name, std::string display_name, std::string description, DrColor color, bool is_hidden) {
+    DrComponent *comp = new DrComponent(this, this->getNextKey(), component_name, display_name, description, color, is_hidden);
     comp->setListOrder( static_cast<int>(m_components.size()) );
     m_components.insert(std::make_pair(component_name, comp));
     return comp;
@@ -269,7 +287,8 @@ void DrSettings::updateAnimationProperty(std::list<long> image_keys, ComponentPr
 
 
 //####################################################################################
-//##    Copies all component / property settings from one Entity to another Entity of the same type
+//##    CopyEntity - Copies all component / property settings from one Entity
+//##                 to another Entity of the same type
 //####################################################################################
 void DrSettings::copyEntitySettings(DrSettings *from_entity) {
     // Check same Type
@@ -289,25 +308,61 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
         if (from_thing->getThingType() != to_thing->getThingType()) return;
     }
 
+    // Keep track of newly assigned Project key
+    long new_key = this->getKey();
+
+    // Clear all Components and rebuild from original copy source
+    this->clearComponents();
+
+    // ********** Go through and add all Components and copy other Variables
     for (auto &component_pair : from_entity->getComponentMap()) {
+        DrComponent *from_component =   component_pair.second;
+        DrComponent *to_component =     this->addComponent(from_component->getComponentName(), from_component->getDisplayName(), from_component->getDescription(),
+                                                           from_component->getColor(), from_component->isHidden());
+        to_component->setComponentKey(      from_component->getComponentKey());
+        to_component->setIcon(              from_component->getIcon());
+        to_component->setNodePosition(      from_component->getNodePosition());
+        to_component->setStartNumberPropertyGeneratorKey(   from_component->checkCurrentPropertyGeneratorKey());
+        to_component->setStartNumberSlotGeneratorKey(       from_component->checkCurrentSlotGeneratorKey());
+        to_component->setListOrder(         from_component->getListOrder());
+
+        // Go through and add all Properties and copy other Variables
         for (auto &property_pair : component_pair.second->getPropertyMap()) {
             DrProperty *from_property = property_pair.second;
-            DrProperty *to_property =   getComponentProperty(component_pair.first, property_pair.first);
+            DrProperty *to_property =   to_component->addProperty(from_property->getPropertyName(), from_property->getPropertyType(), from_property->getValue(),
+                                                                  from_property->getDisplayName(), from_property->getDescription(),
+                                                                  from_property->isHidden(), from_property->isEditable());
+            to_property->setPropertyKey(        from_property->getPropertyKey());
+            to_property->setListOrder(          from_property->getListOrder());
+        }
 
-            // !!! DO NOT COPY UNIQUE ID KEY !!!
-            if (to_property->getPropertyName() == Props::Entity_Key) continue;
+        // Go through and add all Signals and copy other Variables
+        for (auto &signal_pair : component_pair.second->getSignalMap()) {
+            DrSlot *from_signal =   signal_pair.second;
+            DrSlot *to_signal =     to_component->addSignal(from_signal->getSlotName(), from_signal->isEditable());
+            to_signal->setSlotKey(              from_signal->getSlotKey());
+            to_signal->setSlotType(             from_signal->getSlotType());
+        }
 
-            // Copy all other properties
-            to_property->setValue(      from_property->getValue());
-            to_property->setEditable(   from_property->isEditable());
-            to_property->setHidden(     from_property->isHidden());
-            to_property->setDisplayName(from_property->getDisplayName());
-            to_property->setDescription(from_property->getDescription());
+        // Go through and add all Outputs and copy other Variables
+        for (auto &output_pair : component_pair.second->getOutputMap()) {
+            DrSlot *from_output =   output_pair.second;
+            DrSlot *to_output =     to_component->addOutput(from_output->getSlotName(), from_output->multipleConnections(), from_output->isEditable());
+            to_output->setSlotKey(              from_output->getSlotKey());
+            to_output->setSlotType(             from_output->getSlotType());
+
+            // Add Output Connections
+            for (auto &connection : from_output->connections()) {
+                to_output->addConnection(connection.connected_entity_key, connection.connected_component_key, connection.connected_signal_key);
+            }
         }
     }
 
-    m_is_visible = from_entity->isVisible();
-    m_is_locked =  from_entity->isLocked();
+    // ***** Set Entity Variables
+    this->setKey(new_key);
+    m_component_key_generator = from_entity->checkCurrentGeneratorKey();
+    m_is_visible =              from_entity->isVisible();
+    m_is_locked =               from_entity->isLocked();
 }
 
 

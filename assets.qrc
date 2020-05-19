@@ -232,5 +232,9 @@
         <file>assets/dr_images/spring.png</file>
         <file>assets/engine/debug_collide.png</file>
         <file>assets/engine/debug_shape.png</file>
+        <file>assets/inspector_icons/comp_world.png</file>
+        <file>assets/inspector_icons/comp_ui.png</file>
+        <file>assets/inspector_icons/comp_random.png</file>
+        <file>assets/inspector_icons/comp_timer.png</file>
     </qresource>
 </RCC>

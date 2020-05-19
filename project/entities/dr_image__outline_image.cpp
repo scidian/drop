@@ -33,7 +33,7 @@ void DrImage::setSimpleBox() {
     m_hole_list.clear();
     m_poly_list.push_back(one_poly);
     m_hole_list.push_back(hole_list);
-    m_use_simple_square = true;
+    m_outline_canceled =  true;
     m_outline_processed = false;
 }
 
@@ -180,7 +180,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
 
 
     // ***** Mark this DrImage as having traced the image outline
-    m_use_simple_square = false;
+    m_outline_canceled = false;
     m_outline_processed = true;
 
 

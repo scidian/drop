@@ -55,7 +55,7 @@ namespace Messages {
 //##    DrNode Slots
 //##
 //############################
-namespace Input_Slots {
+namespace Signal_Slots {                // aka Input_Slots
     const std::string Start             = "_Start";
     const std::string Load              = "_Load";
 }

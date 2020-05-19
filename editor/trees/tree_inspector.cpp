@@ -279,13 +279,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
     m_widgets.clear();
 
     for (auto component: components) {
-        if (component->isTurnedOn() == false) {
-            continue;
-        } else if (component->getComponentName() == Comps::Hidden_Settings   ||
-                   component->getComponentName() == Comps::Size_Settings     ||
-                   component->getComponentName() == Comps::Local_Variables   ||
-                   component->getComponentName() == Comps::User_Variables) {
-            if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) continue;
+        if (Dr::CheckDebugFlag(Debug_Flags::Show_Hidden_Component) == false) {
+            if (component->isHidden()) continue;
         }
 
         // *****Create new item in list to hold component and add the TreeWidgetItem to the tree

@@ -21,31 +21,39 @@
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long project_key) {
+WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *component) {
+    // ***** Check for DrComponent
+    if (component == nullptr) {
+        Dr::PrintDebug("Error in WorldMapItem() contructor! Argument component is nullptr!");
+        return;
+    }
 
     // ***** Store relevant Project data for use later
     m_editor_relay  = editor_relay;
     m_project       = project;
-    m_entity_key    = project_key;
-    m_entity        = project->findSettingsFromKey(project_key);
+    m_entity        = component->getParentSettings();
+    m_entity_key    = m_entity->getKey();
+    m_component     = component;
+    m_component_key = component->getComponentKey();
 
     // ***** Store some initial user data
     std::string            description = m_entity->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromType(m_entity->getType());
     setData(User_Roles::Name,       QString::fromStdString(m_entity->getName()));
-    setData(User_Roles::Type,       QString::fromStdString(description) );
+    setData(User_Roles::Type,       QString::fromStdString(description));
     setData(User_Roles::Key,        QVariant::fromValue(m_entity_key));
 
     // ***** Turn on anti aliasing
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
         setTransformationMode(Qt::SmoothTransformation);
 
-    // Adjust item to proper transform
+    // ***** Adjust item to proper transform
     QPointF center = boundingRect().center();
     double transform_scale_x = 1.0;
     double transform_scale_y = 1.0;
@@ -56,29 +64,25 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, long 
             .translate(-center.x(), -center.y());
     setTransform(t);
 
+
     // ***** Calculate Size
     this->m_width =  c_default_width;
     this->m_height = c_row_height;
     int slot_rows = 1;
-    DrNode* node = dynamic_cast<DrNode*>(m_entity);
-    if (node != nullptr) {
-        int input_count =  node->getInputSlots().size();
-        int output_count = node->getOutputSlots().size();
-        slot_rows = Dr::Max(slot_rows, input_count);
-        slot_rows = Dr::Max(slot_rows, output_count);
-        this->m_height = ((1 + slot_rows) * c_row_height);
+    int input_count =  component->getSignalMap().size();
+    int output_count = component->getOutputMap().size();
+    slot_rows = Dr::Max(slot_rows, input_count);
+    slot_rows = Dr::Max(slot_rows, output_count);
+    this->m_height = ((1 + slot_rows) * c_row_height);
 
-        // ***** Store Slot Circle Rects
-        m_input_rects.clear();
-        m_output_rects.clear();
-        for (int slot = 0; slot < input_count;  ++slot) { m_input_rects.push_back( this->slotRect(DrSlotType::Input,  slot)); }
-        for (int slot = 0; slot < output_count; ++slot) { m_output_rects.push_back(this->slotRect(DrSlotType::Output, slot)); }
-    }
+
+    // ***** Store Slot Circle Rects
+    updateSlotRects();
+
 
     // ***** Starting position
-    if (node != nullptr) {
-        this->setStartPosition( Dr::ToQPointF(node->getNodePosition()) );
-    }
+    this->setStartPosition( Dr::ToQPointF(m_component->getNodePosition()) );
+
 
     // ***** Apply Drop Shadow
     QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
@@ -108,6 +112,15 @@ void WorldMapItem::enableItemChangeFlags() {
     m_item_change_flags_enabled = true;
 }
 
+void WorldMapItem::updateSlotRects() {
+    int input_count =  m_component->getSignalMap().size();
+    int output_count = m_component->getOutputMap().size();
+    m_signal_rects.clear();
+    m_output_rects.clear();
+    for (int slot = 0; slot < input_count;  ++slot) { m_signal_rects.push_back(this->slotRect(DrSlotType::Signal, slot)); }
+    for (int slot = 0; slot < output_count; ++slot) { m_output_rects.push_back(this->slotRect(DrSlotType::Output, slot)); }
+}
+
 
 //####################################################################################
 //##    Item Property Overrides
@@ -125,7 +138,7 @@ QPainterPath WorldMapItem::shape() const {
     path.addRoundedRect(boundingRect().adjusted(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer), c_corner_radius, c_corner_radius);
 
     // Go through Node and add Slot Circles
-    for (auto &input_rect : m_input_rects)  {
+    for (auto &input_rect : m_signal_rects)  {
         QPainterPath slot_circle;
                      slot_circle.addEllipse( input_rect );
         path = path.united(slot_circle);

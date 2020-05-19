@@ -22,6 +22,8 @@
 #include "project/entities_physics_2d/dr_effect.h"
 #include "project/entities_physics_2d/dr_item.h"
 #include "project/entities_physics_2d/dr_prefab.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_slot.h"
 
 
 //####################################################################################
@@ -330,8 +332,25 @@ DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world, std::string new_n
 //####################################################################################
 // Searches all member variables / containers for the specified unique project key
 DrType DrProject::findChildTypeFromKey(long check_key) {
-    DrSettings *settings = findSettingsFromKey(check_key);
-    return ((settings == nullptr) ? DrType::NotFound : settings->getType());
+    DrSettings *entity = findSettingsFromKey(check_key);
+    return ((entity == nullptr) ? DrType::NotFound : entity->getType());
+}
+
+// Searches for DrSlot
+DrSlot* DrProject::findSlotFromKeys(long entity_key, long component_key, long slot_key) {
+    DrSettings *entity = findSettingsFromKey(entity_key);
+    if (entity != nullptr) {
+        DrComponent *component = entity->getComponent(component_key);
+        if (component != nullptr) {
+            for (auto &signal_pair : component->getSignalMap()) {
+                if (signal_pair.second->getSlotKey() == slot_key) return signal_pair.second;
+            }
+            for (auto &output_pair : component->getOutputMap()) {
+                if (output_pair.second->getSlotKey() == slot_key) return output_pair.second;
+            }
+        }
+    }
+    return nullptr;
 }
 
 // Returns a pointer to the Base DrSettings class of the item with the specified key

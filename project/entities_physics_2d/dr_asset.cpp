@@ -47,7 +47,7 @@ DrAsset::DrAsset(DrProject *parent_project, long key, DrAssetType new_asset_type
     // ***** If we're using a built in Image, make sure we've traced image outline
     if (source->getType() == DrType::Image) {
         DrImage *dr_image = dynamic_cast<DrImage*>(source);
-        if (dr_image->m_use_simple_square == false && dr_image->outlineProcessed() == false) {
+        if (dr_image->outlineCanceled() == false && dr_image->outlineProcessed() == false) {
             dr_image->autoOutlinePoints();
         }
     }

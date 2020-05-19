@@ -331,7 +331,7 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString().toStdString()   );
         ///k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString().toStdString()   );
         ///k = map_key + "color";              if (checkMapHasKey(map, k)) component->setColor(        DrColor(map[k].toUInt())   );
-        k = map_key + "turned_on";          if (checkMapHasKey(map, k)) component->setOnOrOff(      map[k].toBool()     );
+        k = map_key + "is_hidden";          if (checkMapHasKey(map, k)) component->setHidden(       map[k].toBool()     );
         ///k = map_key + "comp_key";           if (checkMapHasKey(map, k)) component->setComponentKey( map[k].toLongLong() );
 
         // ***** Go through and load Properties of each Component
