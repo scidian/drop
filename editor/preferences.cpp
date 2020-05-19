@@ -19,7 +19,8 @@
 #include "editor/preferences.h"
 
 // Type Definitions
-typedef std::map<Asset_Category, bool>      AssetCategoryMap;
+typedef std::map<std::string, bool>         AssetCategoryMap;
+typedef std::map<std::string, QPixmap>      CategoryIconMap;
 typedef std::map<std::string, bool>         ComponentMap;
 typedef std::map<Preferences, DrVariant>    PreferenceMap;
 
@@ -30,13 +31,14 @@ namespace Dr {
 //####################################################################################
 //##    Local Static Variables
 //####################################################################################
-static AssetCategoryMap l_asset_categories;                 // Map holding if Asset Tree Category was last Expanded
-static ComponentMap     l_components;                       // Map holding if Inspector Component was last Expanded
-static PreferenceMap    l_options;                          // Map holding PROGRAM WIDE options (PreferenceMap type defined in globals.h)
-static FormMain        *l_active_form_main;                 // Stores active FormMain reference
-static IEditorRelay    *l_active_editor;                    // Stores active IEditorRelay reference
+static AssetCategoryMap l_asset_categories;                     // Map holding if Asset Tree Category was last Expanded
+static CategoryIconMap  l_category_icons;                       // Map holding icons for Asset Tree of external image categories
+static ComponentMap     l_components;                           // Map holding if Inspector Component was last Expanded
+static PreferenceMap    l_options;                              // Map holding PROGRAM WIDE options (PreferenceMap type defined in globals.h)
+static FormMain        *l_active_form_main  { nullptr };        // Stores active FormMain reference
+static IEditorRelay    *l_active_editor     { nullptr };        // Stores active IEditorRelay reference
 
-static bool             l_done_loading = false;             // True after initial startup of FormMain, ensures done loading before any calls to SetLabelText
+static bool             l_done_loading      { false };          // True after initial startup of FormMain, ensures done loading before any calls to SetLabelText
 
 
 //####################################################################################
@@ -81,13 +83,25 @@ void AddToColorHistory(DrColor color) {
 //####################################################################################
 //##    Tree Tracking
 //####################################################################################
-bool        GetAssetExpanded(Asset_Category asset_type)                                 { return l_asset_categories[asset_type]; }
-void        SetAssetExpanded(Asset_Category asset_type, bool expanded)                  { l_asset_categories[asset_type] = expanded; }
+bool        GetAssetExpanded(std::string category_name) {
+    auto it = l_asset_categories.find(category_name);
+    if (it != l_asset_categories.end()) return it->second; else return true;
+}
+void        SetAssetExpanded(std::string category_name, bool expanded)                  { l_asset_categories[category_name] = expanded; }
+
 
 bool        GetInspectorExpanded(std::string component_name_to_check) {
-                auto it = l_components.find(component_name_to_check);
-                if (it != l_components.end()) return it->second; else return false; }
+    auto it = l_components.find(component_name_to_check);
+    if (it != l_components.end()) return it->second; else return false;
+}
 void        SetInspectorExpanded(std::string component_name_to_set, bool expanded)      { l_components[component_name_to_set] = expanded; }
+
+
+QPixmap     GetAssetCategoryIcon(std::string category_name) {
+    auto it = l_category_icons.find(category_name);
+    if (it != l_category_icons.end()) return it->second; else return QPixmap();
+}
+void        SetAssetCategoryIcon(std::string category_name, QPixmap pixmap)             { l_category_icons[category_name] = pixmap; }
 
 
 //####################################################################################
@@ -146,16 +160,17 @@ void LoadPreferences() {
     Dr::SetPreference(Preferences::Color_Popup_Tab, 0);                 // int - 0 = Palette, 1 = History
 
 
-    // ***** List of Asset Categories Being Expanded
-    Dr::SetAssetExpanded(Asset_Category::Character,     true);
-    Dr::SetAssetExpanded(Asset_Category::Object,        true);
-    Dr::SetAssetExpanded(Asset_Category::Device,        true);
-    Dr::SetAssetExpanded(Asset_Category::Effect,        true);
-    Dr::SetAssetExpanded(Asset_Category::Item,          true);
-    Dr::SetAssetExpanded(Asset_Category::Prefab,        true);
+    // ***** List of Asset Categories Being Expanded, defaults to true if not found in l_asset_categories
+    /**
+    Dr::SetAssetExpanded(Asset_Category::Characters,    true);
+    Dr::SetAssetExpanded(Asset_Category::Objects,       true);
+    Dr::SetAssetExpanded(Asset_Category::Devices,       true);
+    Dr::SetAssetExpanded(Asset_Category::Effects,       true);
+    Dr::SetAssetExpanded(Asset_Category::Items,         true);
+    Dr::SetAssetExpanded(Asset_Category::Prefabs,       true);
     Dr::SetAssetExpanded(Asset_Category::Text,          true);
-    Dr::SetAssetExpanded(Asset_Category::Image,         true);
-
+    Dr::SetAssetExpanded(Asset_Category::Images,        true);
+    */
 
 
     // ***** List of Inspector Component Categories Being Expanded

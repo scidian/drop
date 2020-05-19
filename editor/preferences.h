@@ -69,11 +69,14 @@ namespace Dr {
 
 
     // ***** Tree Tracking
-    bool            GetAssetExpanded(Asset_Category asset_type);
-    void            SetAssetExpanded(Asset_Category asset_type, bool expanded);
+    bool            GetAssetExpanded(std::string category_name);
+    void            SetAssetExpanded(std::string category_name, bool expanded);
 
     bool            GetInspectorExpanded(std::string component_name_to_check);
     void            SetInspectorExpanded(std::string component_name_to_set, bool expanded);
+
+    QPixmap         GetAssetCategoryIcon(std::string category_name);
+    void            SetAssetCategoryIcon(std::string category_name, QPixmap pixmap);
 
 
     // ***** Global Forms

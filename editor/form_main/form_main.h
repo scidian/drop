@@ -73,9 +73,9 @@ public:
 
 private:
     // ***** Local Variables
-    DrProject              *m_project = nullptr;                                    // BASE DEFINITION of DrProject!!!!! Holds current open game project
-    DrProject              *m_external_images = nullptr;                            // Project that loads included images
-    DrFilterHoverHandler   *m_filter_hover = nullptr;                               // Pointer to an event filter hover handler
+    DrProject              *m_project           { nullptr };                        // BASE DEFINITION of DrProject!!!!! Holds current open game project
+    DrProject              *m_external_images   { nullptr };                        // Project that loads included images
+    DrFilterHoverHandler   *m_filter_hover      { nullptr };                        // Pointer to an event filter hover handler
 
     Editor_Mode             m_current_mode = Editor_Mode::Program_Loading;          // Holds what state FormMain is in
 
@@ -146,6 +146,10 @@ private:
 
 
 public:
+    // Getters
+    DrProject*          getProject()                { return m_project; }
+    DrProject*          getExternalImageProject()   { return m_external_images; }
+
     // Misc functions
     void                setLabelText(Label_Names label_name, QString new_text);
 
@@ -194,30 +198,30 @@ public slots:
 
 private:
     // Form Building / Setup
-    void        buildMenu();
-    void        buildSceneAfterLoading(long stage_key);
-    void        buildToolBar();
-    void        buildViewToolBar(QWidget *parent);
-    void        buildCentralWidgetClear();
-    void        buildCentralWidgetEditor();
-    void        buildCentralWidgetWorldMap();
-    void        changePalette(Color_Scheme new_color_scheme);
-    QLabel*     createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
-    void        initializeFormMain();
-    void        rebuildFormMain(Editor_Mode new_mode);
+    void            buildMenu();
+    void            buildSceneAfterLoading(long stage_key);
+    void            buildToolBar();
+    void            buildViewToolBar(QWidget *parent);
+    void            buildCentralWidgetClear();
+    void            buildCentralWidgetEditor();
+    void            buildCentralWidgetWorldMap();
+    void            changePalette(Color_Scheme new_color_scheme);
+    QLabel*         createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
+    void            initializeFormMain();
+    void            rebuildFormMain(Editor_Mode new_mode);
 
     // File Menu Functions
-    bool        askShouldSave(QString before_what);
-    void        menuNew(bool test_project = false);
-    void        menuOpen();
-    void        menuSave(bool save_as = false);
+    bool            askShouldSave(QString before_what);
+    void            menuNew(bool test_project = false);
+    void            menuOpen();
+    void            menuSave(bool save_as = false);
     // Edit Menu Functions
-    void        menuUndo();
-    void        menuRedo();
+    void            menuUndo();
+    void            menuRedo();
     // Debug Menu Functions
-    void        menuListChildren();
+    void            menuListChildren();
     // Help Menu Functions
-    void        menuAbout();
+    void            menuAbout();
 
     // Toolbar Functions
     void            addToolbarGroup(QWidget *group, bool add_spacer = true);

@@ -16,8 +16,8 @@
 //############################
 namespace User_Property {
     const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
-
     const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
+    const char External[12] =       "dr_external";          // Set to true if DrEntity (DrImage) is in external image DrProject
 
     const char CompKey[12] =        "dr_comp_key";          // Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
     const char CompName[13] =       "dr_comp_name";         // Stores Component Name of a Property in a widget
@@ -56,6 +56,7 @@ enum User_Roles {
 
     Name,
     Type,
+    Category_Name,
 
     Toy,
     Color,

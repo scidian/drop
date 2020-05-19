@@ -179,24 +179,24 @@ enum class DrPrefabType {
 //####################################################################################
 //##    Categories for the Asset Tree
 //############################
-enum class Asset_Category {
+namespace Asset_Category {
     // World Map Node Editor
-    World,
-    Switch,
+    const std::string   Worlds          = "Worlds";
+    const std::string   Logic           = "Logic";
 
     // World Physics 2D Editor
-    Character,
-    Object,
-    Device,
-    Effect,
-    Item,
-    Prefab,
-    Text,
-    Image,
+    const std::string   Characters      = "Characters";
+    const std::string   Objects         = "Objects";
+    const std::string   Devices         = "Devices";
+    const std::string   Effects         = "Effects";
+    const std::string   Items           = "Items";
+    const std::string   Prefabs         = "Prefabs";
+    const std::string   Text            = "Text";
+    const std::string   Images          = "Images";
 
     // World UI Editor
-    Button,
-    Control,
+    const std::string   Buttons         = "Buttons";
+    const std::string   Controls        = "Controls";
 };
 
 

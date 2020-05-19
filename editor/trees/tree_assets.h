@@ -50,8 +50,8 @@ private:
 
     long                  m_selected_key = c_no_key;                    // Unique Key of last clicked on Asset
 
-    std::map <Asset_Category, AssetFlowLayout*> m_grid_layouts;         // List of the layouts so that we can sort without rebuilding
-    QList<QFrame*>                              m_asset_frames;         // List of the single row frames that contain name and pixmap labels
+    std::map<std::string, AssetFlowLayout*> m_grid_layouts;             // List of the layouts so that we can sort without rebuilding
+    QList<QFrame*>                          m_asset_frames;             // List of the single row frames that contain name and pixmap labels
 
     QList<DrType>         m_show_types { };                             // Types to show for this TreeAssets
 
@@ -70,7 +70,7 @@ public:
 
     // Tree Building Functions
     void                    buildAssetTree(QString search_text = "");
-    AssetCategoryButton*    createCategoryButton(QTreeWidgetItem *item, Asset_Category asset_type);
+    AssetCategoryButton*    createCategoryButton(QTreeWidgetItem *item, std::string category_name);
     void                    expandCollapseComponents();
     QList<QTreeWidgetItem*> getListOfTopLevelItems();
     void                    removeAsset(long entity_key);

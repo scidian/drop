@@ -13,6 +13,7 @@
 
 #include "core/dr_debug.h"
 #include "core/interface/dr_progress.h"
+#include "editor/preferences.h"
 #include "editor/project/project.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_image.h"
@@ -97,14 +98,17 @@ void AddExternalImages(DrProject *project) {
             if (folder_name.length() < 1) continue;
             QString category = folder_name;
                     category.replace("_", " ");
-                    category[0] = category[0].toUpper();
+                    category.replace(0, 1, category.at(0).toUpper());
 
             // Go through each file and load image
             for (auto image_file : folder.entryInfoList()) {
                 ///qDebug() << "Image: " << image_file.absoluteFilePath();
-                DrImage *image = AddImage(project, image_file.absoluteFilePath(), c_no_key, false);
-                if (image != nullptr) {
-                    image->setFolderName(folder_name.toStdString());
+                if (image_file.baseName() == "_icon") {
+                    QPixmap pix(image_file.absoluteFilePath());
+                    Dr::SetAssetCategoryIcon(folder_name.toStdString(), pix);
+                } else {
+                    DrImage *image = AddImage(project, image_file.absoluteFilePath(), c_no_key, false);
+                    if (image != nullptr) image->setFolderName(folder_name.toStdString());
                 }
             }
 

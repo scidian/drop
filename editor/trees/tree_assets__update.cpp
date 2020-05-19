@@ -135,15 +135,13 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
 //##    SLOTS: Handles Expand / Collapse of QTreeWidgetItems
 //####################################################################################
 void TreeAssets::handleCollapsed(QTreeWidgetItem *item) {
-    long type = item->data(0, User_Roles::Type).toLongLong();
-    Asset_Category asset_type = static_cast<Asset_Category>(type);
-    Dr::SetAssetExpanded(asset_type, false);
+    QString type = item->data(0, User_Roles::Category_Name).toString();
+    Dr::SetAssetExpanded(type.toStdString(), false);
 }
 
 void TreeAssets::handleExpanded(QTreeWidgetItem *item) {
-    long type = item->data(0, User_Roles::Type).toLongLong();
-    Asset_Category asset_type = static_cast<Asset_Category>(type);
-    Dr::SetAssetExpanded(asset_type, true);
+    QString type = item->data(0, User_Roles::Category_Name).toString();
+    Dr::SetAssetExpanded(type.toStdString(), true);
 }
 
 
@@ -152,10 +150,9 @@ void TreeAssets::handleExpanded(QTreeWidgetItem *item) {
 //####################################################################################
 void TreeAssets::expandCollapseComponents() {
     for (auto &item : getListOfTopLevelItems()) {
-        long type = item->data(0, User_Roles::Type).toLongLong();
-        Asset_Category asset_type = static_cast<Asset_Category>(type);
+        QString type = item->data(0, User_Roles::Category_Name).toString();
 
-        if (Dr::GetAssetExpanded(asset_type)) {
+        if (Dr::GetAssetExpanded(type.toStdString())) {
             if (item->isExpanded() == false) {
                 this->expandItem( item );
             }

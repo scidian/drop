@@ -180,14 +180,7 @@
         <file>assets/gui_misc/empty_image.png</file>
         <file>assets/gui_misc/image_delete.png</file>
         <file>assets/gui_misc/image_edit.png</file>
-        <file>assets/inspector_icons/comp_images_basic.png</file>
-        <file>assets/inspector_icons/comp_images_gradient.png</file>
-        <file>assets/inspector_icons/comp_images_outline.png</file>
         <file>assets/inspector_icons/comp_images.png</file>
-        <file>assets/inspector_icons/comp_images_ground.png</file>
-        <file>assets/inspector_icons/comp_images_polygon.png</file>
-        <file>assets/inspector_icons/comp_images_shapes.png</file>
-        <file>assets/inspector_icons/comp_images_decoration.png</file>
         <file>assets/toolbar_icons/toolbar_mouse_hand.png</file>
         <file>assets/toolbar_icons/toolbar_mouse_magnify.png</file>
         <file>assets/toolbar_icons/toolbar_mouse_pointer.png</file>
