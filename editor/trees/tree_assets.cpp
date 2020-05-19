@@ -463,10 +463,10 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std
     }
 
     // Add spacing and translate
-    name = "  " + tr(name.toLatin1());
+    name = " " + tr(name.toLatin1());
 
-    QString icon_size =     "20px 18px";
-    QString padding_left =  "7px";
+    QString icon_size =     "20px 16px";
+    QString padding_left =  "9px";
 
     // ***** Create Category Button
     QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
