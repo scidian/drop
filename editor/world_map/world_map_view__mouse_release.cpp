@@ -84,6 +84,7 @@ void WorldMapView::mouseReleaseEvent(QMouseEvent *event) {
                     }
                 }
             }
+            m_slot_start = nullptr;
         }
 
         // ***** Inspector ignores changes during Translating and Resizing and Rotating, it's much, much faster this way...

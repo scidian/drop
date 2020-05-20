@@ -115,13 +115,8 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
         painter.setRenderHint(QPainter::Antialiasing, true);
     }
 
-    // ***** Set up QPainter
-    QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));
-    QPen    line_pen =   QPen(line_color, 2 * m_zoom_scale);
-    painter.setPen(line_pen);
-
     // ***** Get WorldScene
-    WorldMapScene *world_scene = dynamic_cast<WorldMapScene*>(scene());
+    WorldMapScene *world_scene = my_scene;
     if (world_scene == nullptr) return;
 
     // **** Get Items, make sure they have DrComponents
@@ -137,6 +132,38 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
             signal_pair.second->clearRecentLineSlots();
         }
     }
+
+
+    // ***** Highlight Mouse Slot
+    QColor  text_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Text));
+    QPen    slot_pen(text_color, 2.5 * m_zoom_scale, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
+    painter.setPen( slot_pen );
+    painter.setBrush( Qt::NoBrush );
+    if (m_last_mouse_item != nullptr) {
+        WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(m_last_mouse_item);
+        if (map_item != nullptr && m_last_mouse_slot != nullptr) {
+            // If m_view_mode == View_Mode::Node_Connect, make sure highlight Slot is compatible with mouse down slot
+            bool should_draw = true;
+            if (m_slot_start != nullptr) {
+                if (m_slot_start->getParentComponent() == m_last_mouse_slot->getParentComponent()) should_draw = false;
+                if (m_slot_start->getSlotType() == m_last_mouse_slot->getSlotType()) should_draw = false;
+                if (m_slot_start == m_last_mouse_slot) should_draw = true;
+            }
+            // Highlight mouse over slot
+            if (should_draw) {
+                QRectF scene_rect = map_item->slotSceneRect(m_last_mouse_slot);
+                       scene_rect.adjust(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce);
+                painter.drawEllipse( mapFromScene(scene_rect).boundingRect() );
+            }
+        }
+    }
+
+
+    // ***** Set up QPainter for Node Lines
+    QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));
+    QPen    line_pen =   QPen(line_color, 2 * m_zoom_scale);
+    painter.setPen(line_pen);
+    painter.setBrush( Qt::NoBrush );
 
     // ***** Go through each GraphicsItem and draw output lines
     for (auto map_item : map_items) {
@@ -174,6 +201,7 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
                 // Paint Curve
                 paintCubicCurve(painter, line_color, point_in, point_out, true);
 
+                // Each slot has a list of other slots it was drawn to each frame for reference elsewhere
                 slot->addRecentLineSlot(connected_slot);
                 connected_slot->addRecentLineSlot(slot);
             }
@@ -187,7 +215,7 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
         // Find start slot scene position
         QPointF slot_point(0, 0);
         WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
-        if (connected != nullptr) slot_point = mapFromScene( connected->slotLocationInScene(m_slot_start) );
+        if (connected != nullptr) slot_point = mapFromScene( connected->slotSceneRect(m_slot_start).center() );
 
         if (m_slot_start->getSlotType() == DrSlotType::Signal) {
             paintCubicCurve(painter, line_color, slot_point, m_last_mouse_pos, true);
@@ -267,7 +295,7 @@ void WorldMapView::paintCubicCurve(QPainter &painter, QColor line_color, QPointF
     // Draw curve end point dots
     if (paint_dots) {
         painter.setBrush(line_color);
-        double radius = c_slot_size * m_zoom_scale * 0.35;
+        double radius = c_slot_size * m_zoom_scale * 0.1;
         painter.drawEllipse(point_out, radius, radius);
         painter.drawEllipse(point_in,  radius, radius);
     }

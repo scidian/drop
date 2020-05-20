@@ -33,7 +33,7 @@ private:
     DrProject              *m_project;                                      // Pointer to currently loaded Project
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
-    WorldMapScene          *my_scene;                                       // Holds the scene() this view is set to as a WorldMapScene class
+    WorldMapScene          *my_scene            { nullptr };                // Holds the scene() this view is set to as a WorldMapScene class
 
     // Local Variables
     Mouse_Mode              m_mouse_mode        { Mouse_Mode::Pointer };    // Tracks current view mouse mode
@@ -64,9 +64,10 @@ private:
 
     // Mouse Variables
     QPoint                  m_last_mouse_pos;                               // Tracks last known mouse position in view coordinates
+    QGraphicsItem          *m_last_mouse_item               { nullptr };    // Stores top item under mouse (if any) on mouseMoveEvent()
     QPoint                  m_origin;                                       // Stores mouse down position in view coordinates
     QPointF                 m_origin_in_scene;                              // Stores mouse down position in scene coordinates
-    QGraphicsItem          *m_origin_item;                                  // Stores top item under mouse (if any) on mouse down event
+    QGraphicsItem          *m_origin_item                   { nullptr };    // Stores top item under mouse (if any) on mouseDownEvent()
     Position_Flags          m_over_handle;                                  // Tracks if mouse is over a handle
     bool                    m_wants_double_click            { false };      // Used to forward double click from mouseDoubleClickEvent to mousePressEvent
 
@@ -77,7 +78,8 @@ private:
     QPointF                 m_origin_item_start_pos         { 0, 0 };       // Tracks starting position of origin item when View_Mode::Translating started
 
     // View_Mode::Node_Connect Variables
-    DrSlot                 *m_slot_start;                                   // When Node connect starts, this contains the DrSlot that was clicked
+    DrSlot                 *m_last_mouse_slot               { nullptr };    // Last known Slot under mouse during mouseMoveEvent()
+    DrSlot                 *m_slot_start                    { nullptr };    // When Node connect starts, this contains the DrSlot that was clicked
 
 
 

@@ -34,7 +34,7 @@ private:
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    bool                    m_need_rebuild_scene    { false };              // Flag to tell View to wait to update Options until scene has been rebuilt
+    bool                    m_need_rebuild_scene        { false };          // Flag to tell View to wait to update Options until scene has been rebuilt
 
 public:
     // Constructor / Destructor
@@ -56,8 +56,8 @@ public:
     void                    updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs);
 
     // Getters / Setters
-    bool                    needRebuild()                   { return m_need_rebuild_scene; }
-    void                    setNeedRebuild(bool need)       { m_need_rebuild_scene = need; }
+    bool                    needRebuild()                           { return m_need_rebuild_scene; }
+    void                    setNeedRebuild(bool need)               { m_need_rebuild_scene = need; }
 
 
 public slots:

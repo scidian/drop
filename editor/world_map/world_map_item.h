@@ -16,7 +16,8 @@
 // Local Constants
 const   int     c_default_width =       192;                // Starting width of GraphicsItem
 const   int     c_row_height =          32;                 // Height of each row (title, input / output)
-const   int     c_slot_size =           10;                 // Size of little circle attached to each slot
+const   int     c_slot_size =           18;                 // Mouse area around little circle attached to each slot
+const   int     c_circle_reduce =        3;                 // How much to reduce the radius of the slot circle down from c_slot_size
 
 const   int     c_corner_radius =       10;                 // Absolute size of round corners of Item
 const   int     c_node_buffer =         16;                 // Buffer to add around QGraphicsItem to expand painting area
@@ -75,9 +76,10 @@ public:
     void                    updateSlotRects();
     std::vector<QRectF>&    getSignalRects()                { return m_signal_rects; }
     std::vector<QRectF>&    getOutputRects()                { return m_output_rects; }
-    QRectF                  slotRect(DrSlotType slot_type, int slot_number);
     DrSlot*                 slotAtPoint(QPointF scene_point);
-    QPointF                 slotLocationInScene(DrSlot *slot);
+    QRectF                  slotRect(DrSlotType slot_type, int slot_number);
+    QRectF                  slotRect(DrSlot *slot);
+    QRectF                  slotSceneRect(DrSlot *slot);
 
     // Getters / Setters
     DrSettings*             getEntity()                         { return m_entity; }

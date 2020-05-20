@@ -18,6 +18,7 @@
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
 #include "editor/world_map/world_map_item.h"
+#include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
 #include "engine/debug_flags.h"
 #include "project/constants_component_info.h"
@@ -29,6 +30,8 @@
 // Local Constants
 const   double  c_transparent_not_selected =    0.70;
 const   double  c_transparent_is_selected =     1.00;
+
+const   double  c_seperator_height =            3;
 
 
 //####################################################################################
@@ -71,17 +74,25 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     if (option->state & QStyle::State_MouseOver) alpha = c_transparent_is_selected;             // If mouse is over
 
     // Node Colors
-    QColor header_color_1 = Dr::ToQColor(Component_Colors::RGB_07_LightBlue);
+    QColor header_color_1 = Dr::ToQColor(Component_Colors::RGB_19_Silver);
+    if (m_component) header_color_1 = Dr::ToQColor(m_component->getColor());
            header_color_1.setAlphaF(alpha);
-    QColor header_color_2 = Dr::ToQColor(Component_Colors::RGB_07_LightBlue).darker();
+    QColor header_color_2 = header_color_1.darker();
            header_color_2.setAlphaF(alpha);
     QColor back_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
            back_color.setAlphaF(alpha);
+    QColor dark_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark));
+           dark_color.setAlphaF(alpha);
     QColor slot_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator));
            slot_color.setAlphaF(1.0);///alpha);
-    QColor slot_border = this->isSelected() ? Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) : Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light));
+    QColor slot_border = Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Icon_Light) : Dr::GetColor(Window_Colors::Button_Light));
            slot_border.setAlphaF(1.0);///alpha);
-
+    QColor text_color;
+    if (Dr::GetColorScheme() == Color_Scheme::Light) {
+        text_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Header_Text));
+    } else {
+        text_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light));
+    }
 
     // ***** Draw Top Row of Node
     QLinearGradient gradient(0, 0, 0, c_row_height);
@@ -90,19 +101,27 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->setBrush(gradient);
     painter->setPen(Qt::NoPen);
 
+    // Top Gradient
     QPainterPath top, top1, top2;
-    top1.addRoundedRect(box.left(), box.top(), box.width(), c_row_height, c_corner_radius, c_corner_radius);
-    top2.addRect(box.left(), box.top()+c_row_height/2, box.width(), c_row_height/2);
+    top1.addRoundedRect(box.left(), box.top(), box.width(), c_row_height - c_seperator_height, c_corner_radius, c_corner_radius);
+    top2.addRect(box.left(), box.top() + (c_row_height/2), box.width(), ((c_row_height/2) - c_seperator_height));
     top = top1.united(top2);
     painter->drawPath(top);
 
-    painter->setFont(Dr::CustomFontLarger());
-    if (Dr::GetColorScheme() == Color_Scheme::Light) {
-        painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Header_Text) : Dr::GetColor(Window_Colors::Header_Text)));
-    } else {
-        painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
-    }
-    painter->drawText(box.left(), box.top(), box.width(), c_row_height, Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+    // Seperator Line
+    painter->setBrush(dark_color);
+    painter->drawRect(box.left(), box.top() + (c_row_height - c_seperator_height), box.width(), c_seperator_height);
+
+    // Header
+    QFont header_font = Dr::CustomFont(2);
+          //header_font.setBold(true);
+    painter->setFont(header_font);
+    // Draw drop shadow for header
+    ///painter->setPen(Qt::black);
+    ///painter->drawText(box.left()-1, box.top()+1, box.width(), c_row_height - (c_seperator_height/2), Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+    // Draw Header
+    painter->setPen(text_color);
+    painter->drawText(box.left(), box.top(), box.width(), c_row_height - (c_seperator_height/2), Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
 
 
     // ***** Draw Bottom of Node
@@ -141,16 +160,15 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
     // ********** Slots
     // Slot Circles
-    QPen slot_pen(slot_border, 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
+    QPen    slot_pen(slot_border, 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
     painter->setPen( slot_pen );
     painter->setBrush( slot_color );
-
-    // Input / Output Slot Circles
-    for (auto &signal_rect : getSignalRects()) { painter->drawEllipse(signal_rect); }
-    for (auto &output_rect : getOutputRects()) { painter->drawEllipse(output_rect); }
+    for (auto &signal_rect : getSignalRects()) { painter->drawEllipse(signal_rect.adjusted(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce)); }
+    for (auto &output_rect : getOutputRects()) { painter->drawEllipse(output_rect.adjusted(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce)); }
 
     // Slot Text
-    painter->setPen(Dr::ToQColor(this->isSelected() ? Dr::GetColor(Window_Colors::Text_Light) : Dr::GetColor(Window_Colors::Text)));
+    painter->setFont(Dr::CustomFont(1));
+    painter->setPen(text_color);
     int text_flags_in =  Qt::AlignVCenter | Qt::AlignLeft;
     int text_flags_out = Qt::AlignVCenter | Qt::AlignRight;
 
@@ -159,7 +177,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     for (auto &signal_pair : m_component->getSignalMap()) {
         QString slot_text = QString::fromStdString(signal_pair.second->getSlotName());
                 slot_text.replace("_", "");
-        painter->drawText(box.left()+c_slot_size, input_start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_in, slot_text);
+        painter->drawText(box.left()+(c_slot_size/1.5), input_start_y, box.width()/2, c_row_height, text_flags_in, slot_text);
         input_start_y += c_row_height;
     }
 
@@ -168,7 +186,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     for (auto &output_pair : m_component->getOutputMap()) {
         QString slot_text = QString::fromStdString(output_pair.second->getSlotName());
                 slot_text.replace("_", "");
-        painter->drawText(box.left()+(box.width()/2)+c_slot_size, output_start_y, (box.width()/2)-(c_slot_size*2), c_row_height, text_flags_out, slot_text);
+        painter->drawText(box.left()+(box.width()/2), output_start_y, (box.width()/2)-(c_slot_size/1.5), c_row_height, text_flags_out, slot_text);
         output_start_y += c_row_height;
     }
 

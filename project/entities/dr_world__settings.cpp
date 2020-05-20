@@ -46,6 +46,7 @@ void DrWorld::initializeWorldPhysics2D(std::string new_name) {
     addPropertyToComponent(Comps::World_Settings, Props::World_Score_Multiplier, Property_Type::Double, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
 
+    // Holds connections for Node Map / UI Loading
     addComponent(Comps::World_Connections, "World Connections", "Connections for this World.", Component_Colors::RGB_08_SeaFoam, true);
     getComponent(Comps::World_Connections)->setIcon(Component_Icons::World);
 

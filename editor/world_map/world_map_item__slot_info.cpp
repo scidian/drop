@@ -26,8 +26,9 @@
 
 
 //####################################################################################
-//##    Returns Slot Circle Rect for a particular slot, slot_number should start at 0
+//##    Returns Slot Circle Rect for a particular slot
 //####################################################################################
+// Calculates Slot rect by slot number, slot_number should start at 0
 QRectF WorldMapItem::slotRect(DrSlotType slot_type, int slot_number) {
     int left = 0;
     int top  = (boundingRect().top() + c_node_buffer) + (c_row_height * (1.5 + static_cast<double>(slot_number)));
@@ -37,6 +38,33 @@ QRectF WorldMapItem::slotRect(DrSlotType slot_type, int slot_number) {
         case DrSlotType::Output:    left = (boundingRect().width() - c_node_buffer) - (c_slot_size*0.5);    break;
     }
     return QRectF(left, top, c_slot_size, c_slot_size);
+}
+
+// Slot rect by DrSlot*
+QRectF WorldMapItem::slotRect(DrSlot *slot) {
+    if (slot == nullptr) return QRectF();
+
+    if (slot->getSlotType() == DrSlotType::Signal) {
+        int signal = 0;
+        for (auto &signal_pair : m_component->getSignalMap()) {
+            if (signal_pair.second == slot) return this->slotRect(DrSlotType::Signal, signal);
+            ++signal;
+        }
+    } else if (slot->getSlotType() == DrSlotType::Output) {
+        int output = 0;
+        for (auto &output_pair : m_component->getOutputMap()) {
+            if (output_pair.second == slot) return this->slotRect(DrSlotType::Output, output);
+            ++output;
+        }
+    }
+    return QRectF();
+}
+
+QRectF WorldMapItem::slotSceneRect(DrSlot *slot) {
+    if (slot == nullptr) return QRectF();
+    QRectF    signal_rect = this->slotRect(slot);
+    QPolygonF scene_rect =  this->mapToScene(signal_rect);
+    return scene_rect.boundingRect();
 }
 
 
@@ -64,34 +92,6 @@ DrSlot* WorldMapItem::slotAtPoint(QPointF scene_point) {
     return nullptr;
 }
 
-
-//####################################################################################
-//##    Returns center point of DrSlot in Scene
-//####################################################################################
-QPointF WorldMapItem::slotLocationInScene(DrSlot *slot) {
-    if (slot == nullptr) return QPointF(0, 0);
-
-    int signal = 0;
-    for (auto &signal_pair : m_component->getSignalMap()) {
-        if (signal_pair.second == slot) {
-            QRectF    signal_rect = this->slotRect(DrSlotType::Signal, signal);
-            QPolygonF scene_rect =  this->mapToScene(signal_rect);
-            return scene_rect.boundingRect().center();
-        }
-        ++signal;
-    }
-
-    int output = 0;
-    for (auto &output_pair : m_component->getOutputMap()) {
-        if (output_pair.second == slot) {
-            QRectF    output_rect = this->slotRect(DrSlotType::Output, output);
-            QPolygonF scene_rect =  this->mapToScene(output_rect);
-            return scene_rect.boundingRect().center();
-        }
-        ++output;
-    }
-    return QPointF(0, 0);
-}
 
 
 

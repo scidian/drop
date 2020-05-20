@@ -82,6 +82,8 @@ public:
     DrSlot*             getOutput(long output_key);
     DrSlot*             getOutput(std::string output_name);
 
+    std::list<DrSlot*>  getAllSlots();
+
     long                getComponentKey()   { return m_component_key; }
     std::string         getComponentName()  { return m_component_name; }
     std::string         getDisplayName()    { return m_display_name; }

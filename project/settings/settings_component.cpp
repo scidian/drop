@@ -85,6 +85,13 @@ DrSlot* DrComponent::getOutput(std::string output_name) {
     return nullptr;
 }
 
+std::list<DrSlot*> DrComponent::getAllSlots() {
+    std::list<DrSlot*> slot_list;
+    for (auto &signal_pair : getSignalMap()) slot_list.push_back(signal_pair.second);
+    for (auto &output_pair : getOutputMap()) slot_list.push_back(output_pair.second);
+    return slot_list;
+}
+
 
 //####################################################################################
 //##    Building Functions
