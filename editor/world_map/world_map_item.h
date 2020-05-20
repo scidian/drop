@@ -14,13 +14,14 @@
 #include "project/enums_entity_types.h"
 
 // Local Constants
-const   int     c_default_width =       192;                // Starting width of GraphicsItem
-const   int     c_row_height =          32;                 // Height of each row (title, input / output)
-const   int     c_slot_size =           18;                 // Mouse area around little circle attached to each slot
-const   int     c_circle_reduce =        3;                 // How much to reduce the radius of the slot circle down from c_slot_size
+const   double      c_default_width =       192;                // Starting width of GraphicsItem
+const   double      c_row_height =          32;                 // Height of each row (title, input / output)
+const   double      c_slot_size =           18;                 // Mouse area around little circle attached to each slot
+const   double      c_circle_reduce =        3;                 // How much to reduce the radius of the slot circle down from c_slot_size
+const   double      c_icon_reduce =          6;                 // How much to reduce the size of the component icon
 
-const   int     c_corner_radius =       10;                 // Absolute size of round corners of Item
-const   int     c_node_buffer =         16;                 // Buffer to add around QGraphicsItem to expand painting area
+const   double      c_corner_radius =       10;                 // Absolute size of round corners of Item
+const   double      c_node_buffer =         16;                 // Buffer to add around QGraphicsItem to expand painting area
 
 
 //####################################################################################

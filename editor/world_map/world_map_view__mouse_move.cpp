@@ -69,7 +69,6 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
             }
         }
     }
-    if (old_slot != m_last_mouse_slot) update();
 
 
     // ******************** Process Mouse Mode
@@ -149,7 +148,7 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
 
 
     // ***** Update
-    if (m_view_mode != View_Mode::None) {
+    if ((m_view_mode != View_Mode::None) || (old_slot != m_last_mouse_slot)) {
         update();
     }
 }

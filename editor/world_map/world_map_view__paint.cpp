@@ -139,18 +139,18 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
     QPen    slot_pen(text_color, 2.5 * m_zoom_scale, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
     painter.setPen( slot_pen );
     painter.setBrush( Qt::NoBrush );
-    if (m_last_mouse_item != nullptr) {
-        WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(m_last_mouse_item);
-        if (map_item != nullptr && m_last_mouse_slot != nullptr) {
-            // If m_view_mode == View_Mode::Node_Connect, make sure highlight Slot is compatible with mouse down slot
-            bool should_draw = true;
-            if (m_slot_start != nullptr) {
-                if (m_slot_start->getParentComponent() == m_last_mouse_slot->getParentComponent()) should_draw = false;
-                if (m_slot_start->getSlotType() == m_last_mouse_slot->getSlotType()) should_draw = false;
-                if (m_slot_start == m_last_mouse_slot) should_draw = true;
-            }
-            // Highlight mouse over slot
-            if (should_draw) {
+    if (m_last_mouse_slot != nullptr && m_last_mouse_item != nullptr) {
+        // If m_view_mode == View_Mode::Node_Connect, make sure highlight Slot is compatible with mouse down slot
+        bool should_draw = true;
+        if (m_slot_start != nullptr) {
+            if (m_slot_start->getParentComponent() == m_last_mouse_slot->getParentComponent()) should_draw = false;
+            if (m_slot_start->getSlotType() == m_last_mouse_slot->getSlotType()) should_draw = false;
+            if (m_slot_start == m_last_mouse_slot) should_draw = true;
+        }
+        // Highlight mouse over slot
+        if (should_draw) {
+            WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(m_last_mouse_item);
+            if (map_item != nullptr) {
                 QRectF scene_rect = map_item->slotSceneRect(m_last_mouse_slot);
                        scene_rect.adjust(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce);
                 painter.drawEllipse( mapFromScene(scene_rect).boundingRect() );
@@ -176,7 +176,7 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
             // Go through each connection of Output Slot
             for (auto connection : slot->connections()) {
 
-                // Find input slot to connect to
+                // Find signal (input) slot to connect to
                 WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, connection.connected_entity_key);
                           if (connected == nullptr) continue;
                 DrComponent  *connected_component = connected->getComponent();

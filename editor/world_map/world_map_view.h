@@ -65,7 +65,7 @@ private:
     // Mouse Variables
     QPoint                  m_last_mouse_pos;                               // Tracks last known mouse position in view coordinates
     QGraphicsItem          *m_last_mouse_item               { nullptr };    // Stores top item under mouse (if any) on mouseMoveEvent()
-    QPoint                  m_origin;                                       // Stores mouse down position in view coordinates
+    QPoint                  m_origin;                                       // Stores mouse down position in view  coordinates
     QPointF                 m_origin_in_scene;                              // Stores mouse down position in scene coordinates
     QGraphicsItem          *m_origin_item                   { nullptr };    // Stores top item under mouse (if any) on mouseDownEvent()
     Position_Flags          m_over_handle;                                  // Tracks if mouse is over a handle
@@ -130,6 +130,7 @@ public:
     // Getters / Setters
     View_Mode           currentViewMode()                   { return m_view_mode; }
     double              currentZoomLevel()                  { return m_zoom_scale; }
+    void                resetPointerVariables();
 
 };
 

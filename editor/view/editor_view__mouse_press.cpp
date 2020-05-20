@@ -142,7 +142,7 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
                 //                    #NOTE: If object was not already selected the Inspector will be updated when the
                 //                           EditorScene::selectionChanged slot fires
                 if (event->modifiers() == Qt::KeyboardModifier::NoModifier) {
-                    if (origin_item_thing != nullptr) {
+                    if (m_origin_item != nullptr && origin_item_thing != nullptr) {
 
                         // ***** If we clicked clicked a new item, set selection group to that
                         if (my_scene->getSelectionItems().contains(m_origin_item) == false) {

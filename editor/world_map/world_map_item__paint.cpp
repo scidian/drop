@@ -38,6 +38,7 @@ const   double  c_seperator_height =            3;
 //##    Custom Paint Handling
 //####################################################################################
 void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+    if (m_component == nullptr) return;
 
     // ***** Turn on anti aliasing if necessary
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
@@ -74,8 +75,7 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     if (option->state & QStyle::State_MouseOver) alpha = c_transparent_is_selected;             // If mouse is over
 
     // Node Colors
-    QColor header_color_1 = Dr::ToQColor(Component_Colors::RGB_19_Silver);
-    if (m_component) header_color_1 = Dr::ToQColor(m_component->getColor());
+    QColor header_color_1 = Dr::ToQColor(m_component->getColor());
            header_color_1.setAlphaF(alpha);
     QColor header_color_2 = header_color_1.darker();
            header_color_2.setAlphaF(alpha);
@@ -94,7 +94,8 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         text_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light));
     }
 
-    // ***** Draw Top Row of Node
+
+    // ********** Draw Top Row of Node
     QLinearGradient gradient(0, 0, 0, c_row_height);
                     gradient.setColorAt(0.00, header_color_1);
                     gradient.setColorAt(1.00, header_color_2);
@@ -112,9 +113,20 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->setBrush(dark_color);
     painter->drawRect(box.left(), box.top() + (c_row_height - c_seperator_height), box.width(), c_seperator_height);
 
-    // Header
+    // Component Icon
+    QPixmap cat_icon(QString::fromStdString(m_component->getIcon()));
+    double  hw_ratio = static_cast<double>(cat_icon.width()) / static_cast<double>(cat_icon.height());
+    QRectF  dest_rect(box.left(), box.top() - (c_seperator_height/2), c_row_height * hw_ratio, c_row_height);
+            dest_rect.adjust(c_icon_reduce * hw_ratio, c_icon_reduce, -c_icon_reduce * hw_ratio, -c_icon_reduce);
+    painter->setOpacity(0.4);
+    painter->drawPixmap(dest_rect, cat_icon, cat_icon.rect());
+    painter->setOpacity(1.0);
+
+    // Header Text
+    QString header_text = QString::fromStdString(m_component->getDisplayName());
+    if (m_entity->getType() == DrType::World) header_text = QString::fromStdString(m_entity->getName());
     QFont header_font = Dr::CustomFont(2);
-          //header_font.setBold(true);
+          ///header_font.setBold(true);
     painter->setFont(header_font);
     // Draw drop shadow for header
     ///painter->setPen(Qt::black);
@@ -124,18 +136,18 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->drawText(box.left(), box.top(), box.width(), c_row_height - (c_seperator_height/2), Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
 
 
-    // ***** Draw Bottom of Node
+    // ********** Draw Bottom of Node
     painter->setBrush(back_color);
     painter->setPen(Qt::NoPen);
 
     QPainterPath mid, mid1, mid2;
-    mid1.addRoundedRect(box.left(), box.top()+c_row_height, box.width(), box.height()-c_row_height, c_corner_radius, c_corner_radius);
-    mid2.addRect(box.left(), box.top()+c_row_height, box.width(), c_row_height/2);
+    mid1.addRoundedRect(box.left(), box.top() + c_row_height, box.width(), box.height() - c_row_height, c_corner_radius, c_corner_radius);
+    mid2.addRect(box.left(), box.top() + c_row_height, box.width(), c_row_height/2);
     mid = mid1.united(mid2);
     painter->drawPath(mid);
 
 
-    // ***** Selection Highlight
+    // ********** Selection Highlight
     if (this->isSelected()) {
         QPen highlight_pen = QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
         painter->setPen(highlight_pen);
@@ -172,13 +184,13 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     int text_flags_in =  Qt::AlignVCenter | Qt::AlignLeft;
     int text_flags_out = Qt::AlignVCenter | Qt::AlignRight;
 
-    // Input Slot Text
-    int input_start_y = box.top() + (c_row_height * 1);
+    // Signal Slot Text
+    int signal_start_y = box.top() + (c_row_height * 1);
     for (auto &signal_pair : m_component->getSignalMap()) {
         QString slot_text = QString::fromStdString(signal_pair.second->getSlotName());
                 slot_text.replace("_", "");
-        painter->drawText(box.left()+(c_slot_size/1.5), input_start_y, box.width()/2, c_row_height, text_flags_in, slot_text);
-        input_start_y += c_row_height;
+        painter->drawText(box.left()+(c_slot_size/1.5), signal_start_y, box.width()/2, c_row_height, text_flags_in, slot_text);
+        signal_start_y += c_row_height;
     }
 
     // Output Slot Text

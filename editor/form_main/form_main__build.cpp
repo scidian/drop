@@ -116,6 +116,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     // ***** Set New Layout *****
     switch (new_mode) {
         case Editor_Mode::World_Map:
+            viewWorldMap->resetPointerVariables();
             sceneWorldMap->clear();
             sceneWorldMap->setNeedRebuild(true);
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
@@ -128,6 +129,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             break;
 
         case Editor_Mode::World_Editor:
+            sceneEditor->clearStageShown();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             this->setCentralWidget( widgetCentralEditor );
             dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
@@ -135,7 +137,6 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             buildAssetTree();
             dockAssetsEditor->show();
             buildProjectTree();
-            sceneEditor->clearStageShown();
             buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
 

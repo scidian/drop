@@ -75,7 +75,6 @@ void EditorView::focusInEvent(QFocusEvent *event) {
 }
 
 
-
 //####################################################################################
 //##    Scene Change SLOTs / Events to update selection box when scene / selection changes
 //####################################################################################

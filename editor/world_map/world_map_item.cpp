@@ -69,9 +69,9 @@ WorldMapItem::WorldMapItem(DrProject *project, IEditorRelay *editor_relay, DrCom
     this->m_width =  c_default_width;
     this->m_height = c_row_height;
     int slot_rows = 1;
-    int input_count =  component->getSignalMap().size();
+    int signal_count = component->getSignalMap().size();
     int output_count = component->getOutputMap().size();
-    slot_rows = Dr::Max(slot_rows, input_count);
+    slot_rows = Dr::Max(slot_rows, signal_count);
     slot_rows = Dr::Max(slot_rows, output_count);
     this->m_height = ((1 + slot_rows) * c_row_height);
 
@@ -113,11 +113,11 @@ void WorldMapItem::enableItemChangeFlags() {
 }
 
 void WorldMapItem::updateSlotRects() {
-    int input_count =  m_component->getSignalMap().size();
+    int signal_count = m_component->getSignalMap().size();
     int output_count = m_component->getOutputMap().size();
     m_signal_rects.clear();
     m_output_rects.clear();
-    for (int slot = 0; slot < input_count;  ++slot) { m_signal_rects.push_back(this->slotRect(DrSlotType::Signal, slot)); }
+    for (int slot = 0; slot < signal_count; ++slot) { m_signal_rects.push_back(this->slotRect(DrSlotType::Signal, slot)); }
     for (int slot = 0; slot < output_count; ++slot) { m_output_rects.push_back(this->slotRect(DrSlotType::Output, slot)); }
 }
 
@@ -138,9 +138,9 @@ QPainterPath WorldMapItem::shape() const {
     path.addRoundedRect(boundingRect().adjusted(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer), c_corner_radius, c_corner_radius);
 
     // Go through Node and add Slot Circles
-    for (auto &input_rect : m_signal_rects)  {
+    for (auto &signal_rect : m_signal_rects)  {
         QPainterPath slot_circle;
-                     slot_circle.addEllipse( input_rect );
+                     slot_circle.addEllipse( signal_rect );
         path = path.united(slot_circle);
     }
     for (auto &output_rect : m_output_rects) {

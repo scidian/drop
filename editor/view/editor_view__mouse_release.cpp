@@ -110,7 +110,7 @@ void EditorView::mouseReleaseEvent(QMouseEvent *event) {
 
 
     // ***** Don't pass event to base class
-    if (mode_at_start_of_function == View_Mode::Translating &&
+    if (mode_at_start_of_function == View_Mode::Translating && m_origin_item != nullptr &&
             Dr::IsCloseTo(m_origin_item->pos().x(), m_origin_item_start_pos.x(), 0.001) &&
             Dr::IsCloseTo(m_origin_item->pos().y(), m_origin_item_start_pos.y(), 0.001) &&
             m_origin_timer.elapsed() > 500) {

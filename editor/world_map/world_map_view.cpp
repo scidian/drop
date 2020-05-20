@@ -27,5 +27,8 @@ WorldMapView::~WorldMapView() {
 
 }
 
-
-
+// Resets local pointer variables when View is hidden (when switching Editor_Mode)
+// ...After Scene is rebuilt these pointers will be invalid
+void WorldMapView::resetPointerVariables() {
+    m_last_mouse_item = nullptr;
+}
