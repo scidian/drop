@@ -85,12 +85,12 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                         asset_text = QString::fromStdString(entity->getName());
 
                         // Update all Things in the project that use this asset name
-                        for (auto world : getParentProject()->getWorldMap()) {
-                            for (auto stage : world.second->getStageMap()) {
-                                for (auto thing : stage.second->getThingMap()) {
-                                    if (thing.second->getAssetKey() == entity->getKey()) {
-                                        thing.second->setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Name, asset_text.toStdString());
-                                        newly_changed_items.push_back(thing.second);
+                        for (auto &world_pair : getParentProject()->getWorldMap()) {
+                            for (auto &stage_pair : world_pair.second->getStageMap()) {
+                                for (auto &thing_pair : stage_pair.second->getThingMap()) {
+                                    if (thing_pair.second->getAssetKey() == entity->getKey()) {
+                                        thing_pair.second->setComponentPropertyValue(Comps::Entity_Settings, Props::Entity_Name, asset_text.toStdString());
+                                        newly_changed_items.push_back(thing_pair.second);
                                         if (Dr::ListContains(newly_changed_properties, component_property_pair) == false) {
                                             newly_changed_properties.push_back(component_property_pair);
                                         }

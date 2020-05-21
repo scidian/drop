@@ -51,7 +51,7 @@ private:
 
     // Internal Variables - UPDATED INTERNALLY BY EDITOR
     //                      DO NOT NEED TO BE SAVED
-    std::set<DrSlot*>       m_recent_line_slots;                                    // Slots that were connected to this Slot last time WorldMapView::paintEvent() executed
+    std::set<DrSlot*>       m_recent_line_slots;                                    // Slots that were connected to this Slot last time NodeMapView::paintEvent() executed
 
 
 public:

@@ -69,7 +69,7 @@ public:
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getStageView() override     { return viewEditor; }
-    virtual WorldMapView*       getWorldMapView() override  { return nullptr; }
+    virtual NodeMapView*        getWorldMapView() override  { return nullptr; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;

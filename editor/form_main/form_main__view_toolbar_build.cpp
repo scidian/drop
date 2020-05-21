@@ -17,7 +17,7 @@
 #include "editor/preferences.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_view.h"
 #include "editor/widgets/widgets.h"
 
 // Local Constants

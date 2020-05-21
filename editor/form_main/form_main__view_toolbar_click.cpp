@@ -9,7 +9,7 @@
 
 #include "editor/form_main/form_main.h"
 #include "editor/preferences.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_view.h"
 
 
 //####################################################################################

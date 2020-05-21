@@ -15,8 +15,8 @@
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
-#include "editor/view/editor_scene.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_scene.h"
+#include "editor/view_editor/editor_view.h"
 #include "engine/debug_flags.h"
 
 

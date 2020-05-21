@@ -49,12 +49,12 @@ class EditorScene;
 class EditorView;
 class EditorViewRubberBand;
 class FormPopup;
+class NodeMapScene;
+class NodeMapView;
 class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
 class TreeProject;
-class WorldMapScene;
-class WorldMapView;
 
 
 //####################################################################################
@@ -103,9 +103,9 @@ private:
 
 
     // ***** Shared FormMain Widgets
-    TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
-    TreeInspector  *treeInspector;                          // Custom classes for Inspector Window
-    QDockWidget    *dockAdvisor, *dockInspector;
+    QDockWidget    *dockAdvisor;            TreeAdvisor    *treeAdvisor;
+    QDockWidget    *dockAssetsEditor;       TreeAssets     *treeAssetEditor;
+    QDockWidget    *dockInspector;          TreeInspector  *treeInspector;
 
 
     // ***** "Empty" Main Widget
@@ -113,11 +113,9 @@ private:
 
 
     // ***** "Editor" (World Editor) Widgets
-    TreeAssets     *treeAssetEditor;                        // Shows Project Assets
     TreeProject    *treeProjectEditor;                      // Shows Project Entities
     EditorScene    *sceneEditor;                            // Holds the currently selected Stage
     EditorView     *viewEditor;                             // Renders the StageView
-    QDockWidget    *dockAssetsEditor;
     QWidget        *widgetCentralEditor;
     QScrollArea    *areaBottom;
     QFrame         *statusBar,      *viewToolBar;
@@ -140,8 +138,8 @@ private:
 
     // ***** "WorldMap" Widgets
     QWidget        *widgetCentralWorldMap;
-    WorldMapScene  *sceneWorldMap;
-    WorldMapView   *viewWorldMap;
+    NodeMapScene   *sceneWorldMap;
+    NodeMapView    *viewWorldMap;
 
 
 
@@ -164,7 +162,7 @@ public:
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getStageView() override     { return viewEditor; }
-    virtual WorldMapView*       getWorldMapView() override  { return viewWorldMap; }
+    virtual NodeMapView*        getWorldMapView() override  { return viewWorldMap; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;

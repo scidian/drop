@@ -181,7 +181,6 @@ std::string DrSettings::getName() {
         case DrType::Font:
         case DrType::Image:
         case DrType::Item:
-        case DrType::Node:
         case DrType::Prefab:
         case DrType::Stage:
         case DrType::Thing:

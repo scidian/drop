@@ -14,9 +14,9 @@
 #include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_project.h"
-#include "editor/view/editor_item.h"
-#include "editor/view/editor_scene.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_item.h"
+#include "editor/view_editor/editor_scene.h"
+#include "editor/view_editor/editor_view.h"
 #include "editor/enums_editor.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_thing.h"
@@ -113,6 +113,11 @@ void FormMain::clearToolbar() {
 
 void FormMain::setToolbar(Editor_Mode new_mode) {
     switch (new_mode) {
+        case Editor_Mode::World_Map:
+            addToolbarGroup( widgetGroupGridSimple,     false );
+            addToolbarGroup( widgetGroupPlay,           false );
+            addToolbarGroup( widgetGroupSettings,       false );
+            break;
         case Editor_Mode::World_Editor:
             addToolbarGroup( widgetGroupEdit,           true );
             addToolbarGroup( widgetGroupLayering,       true );
@@ -121,7 +126,6 @@ void FormMain::setToolbar(Editor_Mode new_mode) {
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
-
         case Editor_Mode::Clear:
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
@@ -129,22 +133,14 @@ void FormMain::setToolbar(Editor_Mode new_mode) {
 
 
         // !!!!! #TODO:
-        case Editor_Mode::World_Map:
-            addToolbarGroup( widgetGroupGridSimple,     false );
-            addToolbarGroup( widgetGroupPlay,           false );
-            addToolbarGroup( widgetGroupSettings,       false );
-            break;
-
         case Editor_Mode::Stage_Map:
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
-
         case Editor_Mode::UI_Editor:
             addToolbarGroup( widgetGroupPlay,           false );
             addToolbarGroup( widgetGroupSettings,       false );
             break;
-
         case Editor_Mode::Animation_Editor:
         case Editor_Mode::Program_Loading:
             break;

@@ -29,7 +29,7 @@ class TreeInspector;
 class TreeProject;
 
 class EditorView;
-class WorldMapView;
+class NodeMapView;
 
 
 //####################################################################################
@@ -51,7 +51,7 @@ public:
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
     virtual EditorView*         getStageView() = 0;
-    virtual WorldMapView*       getWorldMapView() = 0;
+    virtual NodeMapView*        getWorldMapView() = 0;
 
     // Local Getter / Setters
     Editor_Widgets              getActiveWidget() { return m_active_widget; }

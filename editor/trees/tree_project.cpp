@@ -17,7 +17,7 @@
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_project.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -101,7 +101,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
     QColor icon_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark));
     QImage icon_image;
 
-    for (auto world_pair: getParentProject()->getWorldMap()) {
+    for (auto &world_pair: getParentProject()->getWorldMap()) {
 
         // ***** Create new Item for World if necessary
         DrWorld         *world =        world_pair.second;
@@ -118,7 +118,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
             this->addTopLevelItem(world_item);
         }
 
-        for (auto stage_pair: world->getStageMap()) {
+        for (auto &stage_pair: world->getStageMap()) {
 
             // ***** Create new Item for Stage if necessary
             DrStage         *stage =        stage_pair.second;
@@ -138,7 +138,7 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
             ThingMap &things = stage->getThingMap();
             std::vector<long> keys = stage->thingKeysSortedByZOrder(Sort_Order::DescendingOrder);
 
-            for (auto key: keys) {
+            for (auto &key: keys) {
                 DrThing         *thing =        things[key];
                              if (thing == nullptr) continue;
                 long             thing_key =    thing->getKey();

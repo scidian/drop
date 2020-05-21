@@ -39,7 +39,6 @@ enum class DrType {
     Image,                      // Entities contained within DrProject::m_images
 
     // Mapped Types
-    Node,                       // Entities contained within DrProject::m_nodes
     World,                      // Entities contained within DrProject::m_worlds / DrProject::m_uis
         Stage,                  // Entities contained within DrProject::DrWorld::m_stages
             Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things

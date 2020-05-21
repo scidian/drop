@@ -112,7 +112,7 @@ public:
     void            setStartNumberSlotGeneratorKey(long initial_key)        { m_slot_key_generator = initial_key; }
 
     // Inspector Sorting Variable
-    int             getListOrder() { return m_list_order; }
+    int             getListOrder()          { return m_list_order; }
     void            setListOrder(int order) { m_list_order = order; }
 
     // Building Functions

@@ -19,11 +19,11 @@
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
-#include "editor/view/editor_item.h"
-#include "editor/view/editor_scene.h"
-#include "editor/view/editor_view.h"
-#include "editor/world_map/world_map_scene.h"
-#include "editor/world_map/world_map_view.h"
+#include "editor/view_editor/editor_item.h"
+#include "editor/view_editor/editor_scene.h"
+#include "editor/view_editor/editor_view.h"
+#include "editor/view_node_map/node_map_scene.h"
+#include "editor/view_node_map/node_map_view.h"
 #include "engine/debug_flags.h"
 
 
@@ -55,7 +55,7 @@ void FormMain::buildCentralWidgetWorldMap() {
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);      sizePolicyPreferredHorizontal.setVerticalStretch(0);
 
     // ***** Initialize scene used for showing stages World Editor Mode viewEditor widget
-    sceneWorldMap = new WorldMapScene(this, m_project, this);
+    sceneWorldMap = new NodeMapScene(this, m_project, this);
 
     // ***** Build central widgets
     widgetCentralWorldMap = new QWidget();
@@ -68,7 +68,7 @@ void FormMain::buildCentralWidgetWorldMap() {
         verticalLayoutWorldMap->setContentsMargins(0, 0, 0, 0);
 
         // ***** Load our EditorView to display our EditorScene collection of items
-        viewWorldMap = new WorldMapView(widgetCentralWorldMap, m_project, sceneWorldMap, this);
+        viewWorldMap = new NodeMapView(widgetCentralWorldMap, m_project, sceneWorldMap, this);
         viewWorldMap->setObjectName(QStringLiteral("viewWorldMap"));
         viewWorldMap->setAcceptDrops(true);
         viewWorldMap->setFrameShape(QFrame::NoFrame);

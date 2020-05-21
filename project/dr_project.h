@@ -28,8 +28,8 @@ enum class Project_Options {        //  Type    User Editable   Description
     Width               = 31,       // long,    yes             This Projects target device window width,  usually 800
     Height              = 32,       // long,    yes             This Projects target device window height, usually 1600
 
-    World_Map_Center    = 40,       // pointf,  no              Saves center location of WorldMapView
-    World_Map_Zoom      = 41,       // double,  no              Saves zoom level of WorldMapView
+    World_Map_Center    = 40,       // pointf,  no              Saves center location of World Map view
+    World_Map_Zoom      = 41,       // double,  no              Saves zoom level of World Map view
 };
 
 enum class Orientation {

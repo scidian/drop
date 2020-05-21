@@ -16,8 +16,8 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
-#include "editor/view/editor_scene.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_scene.h"
+#include "editor/view_editor/editor_view.h"
 #include "project/enums_entity_types.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_font.h"
@@ -178,7 +178,7 @@ void TreeAssets::removeAsset(long entity_key) {
     if (entity == nullptr) return;
 
     // ***** Delete all instances in project
-    for (auto world_pair : getParentProject()->getWorldMap()) {
+    for (auto &world_pair : getParentProject()->getWorldMap()) {
         DrWorld *world = world_pair.second;
         for (auto stage_pair : world->getStageMap()) {
             DrStage *stage = stage_pair.second;

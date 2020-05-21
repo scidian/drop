@@ -11,7 +11,7 @@
 #include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_view.h"
 
 
 //####################################################################################

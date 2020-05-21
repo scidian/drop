@@ -206,52 +206,52 @@ SOURCES += \
     editor/trees/tree_project__lock_box.cpp \
     editor/trees/tree_project__selection.cpp \
     editor/trees/tree_project__update.cpp \
-    editor/view/editor_item.cpp \
-    editor/view/editor_item__item_change.cpp \
-    editor/view/editor_item__paint.cpp \
-    editor/view/editor_scene.cpp \
-    editor/view/editor_scene__key_press.cpp \
-    editor/view/editor_scene__select.cpp \
-    editor/view/editor_scene__update.cpp \
-    editor/view/editor_scene_undo_commands.cpp \
-    editor/view/editor_view.cpp \
-    editor/view/editor_view__drop.cpp \
-    editor/view/editor_view__grid.cpp \
-    editor/view/editor_view__key_press.cpp \
-    editor/view/editor_view__mouse_move.cpp \
-    editor/view/editor_view__mouse_press.cpp \
-    editor/view/editor_view__mouse_release.cpp \
-    editor/view/editor_view__mouse_wheel.cpp \
-    editor/view/editor_view__paint.cpp \
-    editor/view/editor_view__paint_cameras.cpp \
-    editor/view/editor_view__paint_collision.cpp \
-    editor/view/editor_view__paint_items.cpp \
-    editor/view/editor_view__resize.cpp \
-    editor/view/editor_view__resize_stage.cpp \
-    editor/view/editor_view__rotate.cpp \
-    editor/view/editor_view__rotate_camera.cpp \
-    editor/view/editor_view__select.cpp \
-    editor/view/editor_view__tooltip.cpp \
+    editor/view_editor/editor_item.cpp \
+    editor/view_editor/editor_item__item_change.cpp \
+    editor/view_editor/editor_item__paint.cpp \
+    editor/view_editor/editor_scene.cpp \
+    editor/view_editor/editor_scene__key_press.cpp \
+    editor/view_editor/editor_scene__select.cpp \
+    editor/view_editor/editor_scene__update.cpp \
+    editor/view_editor/editor_scene_undo_commands.cpp \
+    editor/view_editor/editor_view.cpp \
+    editor/view_editor/editor_view__drop.cpp \
+    editor/view_editor/editor_view__grid.cpp \
+    editor/view_editor/editor_view__key_press.cpp \
+    editor/view_editor/editor_view__mouse_move.cpp \
+    editor/view_editor/editor_view__mouse_press.cpp \
+    editor/view_editor/editor_view__mouse_release.cpp \
+    editor/view_editor/editor_view__mouse_wheel.cpp \
+    editor/view_editor/editor_view__paint.cpp \
+    editor/view_editor/editor_view__paint_cameras.cpp \
+    editor/view_editor/editor_view__paint_collision.cpp \
+    editor/view_editor/editor_view__paint_items.cpp \
+    editor/view_editor/editor_view__resize.cpp \
+    editor/view_editor/editor_view__resize_stage.cpp \
+    editor/view_editor/editor_view__rotate.cpp \
+    editor/view_editor/editor_view__rotate_camera.cpp \
+    editor/view_editor/editor_view__select.cpp \
+    editor/view_editor/editor_view__tooltip.cpp \
+    editor/view_node_map/node_map_item.cpp \
+    editor/view_node_map/node_map_item__item_change.cpp \
+    editor/view_node_map/node_map_item__paint.cpp \
+    editor/view_node_map/node_map_item__slot_info.cpp \
+    editor/view_node_map/node_map_scene.cpp \
+    editor/view_node_map/node_map_scene__build.cpp \
+    editor/view_node_map/node_map_scene__update.cpp \
+    editor/view_node_map/node_map_view.cpp \
+    editor/view_node_map/node_map_view__grid.cpp \
+    editor/view_node_map/node_map_view__key_press.cpp \
+    editor/view_node_map/node_map_view__mouse_move.cpp \
+    editor/view_node_map/node_map_view__mouse_press.cpp \
+    editor/view_node_map/node_map_view__mouse_release.cpp \
+    editor/view_node_map/node_map_view__mouse_wheel.cpp \
     editor/interface_editor_relay.cpp \
+    editor/view_node_map/node_map_view__paint.cpp \
     editor/widgets/widgets_checkbox.cpp \
     editor/widgets/widgets_combobox.cpp \
     editor/widgets/widgets_slider.cpp \
     editor/widgets/widgets_spin.cpp \
-    editor/world_map/world_map_item.cpp \
-    editor/world_map/world_map_item__item_change.cpp \
-    editor/world_map/world_map_item__paint.cpp \
-    editor/world_map/world_map_item__slot_info.cpp \
-    editor/world_map/world_map_scene.cpp \
-    editor/world_map/world_map_scene__build.cpp \
-    editor/world_map/world_map_scene__update.cpp \
-    editor/world_map/world_map_view.cpp \
-    editor/world_map/world_map_view__grid.cpp \
-    editor/world_map/world_map_view__key_press.cpp \
-    editor/world_map/world_map_view__mouse_move.cpp \
-    editor/world_map/world_map_view__mouse_press.cpp \
-    editor/world_map/world_map_view__mouse_release.cpp \
-    editor/world_map/world_map_view__mouse_wheel.cpp \
-    editor/world_map/world_map_view__paint.cpp \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
@@ -994,6 +994,7 @@ HEADERS += \
     editor/forms/form_progress_box.h \
     editor/forms/form_settings.h \
     editor/helper_library.h \
+    editor/interface_editor_relay.h \
     editor/pixmap/pixmap.h \
     editor/preferences.h \
     editor/project/project.h \
@@ -1002,15 +1003,14 @@ HEADERS += \
     editor/trees/tree_assets.h \
     editor/trees/tree_inspector.h \
     editor/trees/tree_project.h \
-    editor/view/editor_item.h \
-    editor/view/editor_scene.h \
-    editor/view/editor_scene_undo_commands.h \
-    editor/view/editor_view.h \
-    editor/interface_editor_relay.h \
+    editor/view_editor/editor_item.h \
+    editor/view_editor/editor_scene.h \
+    editor/view_editor/editor_scene_undo_commands.h \
+    editor/view_editor/editor_view.h \
+    editor/view_node_map/node_map_item.h \
+    editor/view_node_map/node_map_scene.h \
+    editor/view_node_map/node_map_view.h \
     editor/widgets/widgets.h \
-    editor/world_map/world_map_item.h \
-    editor/world_map/world_map_scene.h \
-    editor/world_map/world_map_view.h \
     engine/constants_engine.h \
     engine/debug_flags.h \
     engine/engine.h \

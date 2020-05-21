@@ -23,8 +23,8 @@
 #include "editor/project/project.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
-#include "editor/view/editor_scene.h"
-#include "editor/view/editor_view.h"
+#include "editor/view_editor/editor_scene.h"
+#include "editor/view_editor/editor_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_image.h"
@@ -274,9 +274,9 @@ bool DrFilterInspectorImage::eventFilter(QObject *object, QEvent *event) {
         settings->updateAnimationProperty( image_keys, property->getCompPropPair() );
 
         // ***** Update all Things, Thing_Size that use Asset
-        for (auto world_pair : project->getWorldMap()) {
-            for (auto stage_pair : world_pair.second->getStageMap()) {
-                for (auto thing_pair : stage_pair.second->getThingMap()) {
+        for (auto &world_pair : project->getWorldMap()) {
+            for (auto &stage_pair : world_pair.second->getStageMap()) {
+                for (auto &thing_pair : stage_pair.second->getThingMap()) {
                     DrThing *thing = thing_pair.second;
                     if (thing->getAssetKey() == settings_key) {
                         DrPointF scale = thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();

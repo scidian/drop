@@ -95,11 +95,11 @@ enum class Editor_Widgets {
     Inspector_Tree,
     Project_Tree,
 
-    // "World Editor" Widgets
-    Stage_View,
-
     // "World Map" Widgets
     Map_View,
+
+    // "World Editor" Widgets
+    Stage_View,
 };
 
 
