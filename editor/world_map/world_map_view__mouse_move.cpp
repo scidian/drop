@@ -52,9 +52,9 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
 
 
     // ******************** Grab top most GraphicsItem under mouse, and Slot under mouse if there is one
+    QGraphicsItem *last_mouse_item = nullptr;/// = itemAt(m_last_mouse_pos);
     DrSlot *old_slot = m_last_mouse_slot;
     m_last_mouse_slot = nullptr;
-    m_last_mouse_item = nullptr;/// = itemAt(m_last_mouse_pos);
     for (auto item : items(m_last_mouse_pos)) {
         long item_key = item->data(User_Roles::Key).toLongLong();
         DrSettings *settings = m_project->findSettingsFromKey(item_key);
@@ -62,13 +62,14 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
             if (settings->isLocked() == false) {
                 WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(item);
                 if (map_item != nullptr) {
-                    m_last_mouse_item = item;
+                    last_mouse_item = item;
                     m_last_mouse_slot = map_item->slotAtPoint( mapToScene(m_last_mouse_pos) );
                 }
                 break;
             }
         }
     }
+    if (old_slot != m_last_mouse_slot) update();
 
 
     // ******************** Process Mouse Mode
@@ -80,10 +81,10 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
         // ***** Check selection handles to see if mouse is over one
         if (scene()->selectedItems().count() > 0 && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
 
-            if (m_over_handle == Position_Flags::No_Position && scene()->selectedItems().contains(m_last_mouse_item)) {
+            if (m_over_handle == Position_Flags::No_Position && scene()->selectedItems().contains(last_mouse_item)) {
                 // If over Node, check that we're not over a slot circle
                 bool point_over_slot = false;
-                WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(m_last_mouse_item);
+                WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(last_mouse_item);
                 if (map_item != nullptr) {
                     QPointF scene_point = this->mapToScene(m_last_mouse_pos);
                     point_over_slot = map_item->slotAtPoint(scene_point);
@@ -118,13 +119,13 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
 
     // ***** If we're not doing anything, update the advisor based on item under the mouse
     if (m_view_mode == View_Mode::None) {
-        if (m_last_mouse_item != nullptr && m_project != nullptr) {
+        if (last_mouse_item != nullptr && m_project != nullptr) {
             QString header, body;
-            long item_key = m_last_mouse_item->data(User_Roles::Key).toLongLong();
+            long item_key = last_mouse_item->data(User_Roles::Key).toLongLong();
             DrSettings *entity = m_project->findSettingsFromKey(item_key);
             if (entity != nullptr) {
                 header =    QString::fromStdString(entity->getName());
-                body =      m_last_mouse_item->data(User_Roles::Type).toString();
+                body =      last_mouse_item->data(User_Roles::Type).toString();
                 m_editor_relay->setAdvisorInfo(header, body);
             }
         } else {
@@ -148,7 +149,7 @@ void WorldMapView::mouseMoveEvent(QMouseEvent *event) {
 
 
     // ***** Update
-    if ((m_view_mode != View_Mode::None) || (old_slot != m_last_mouse_slot)) {
+    if (m_view_mode != View_Mode::None) {
         update();
     }
 }

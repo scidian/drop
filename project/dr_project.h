@@ -46,7 +46,6 @@ class DrEffect;
 class DrFont;
 class DrImage;
 class DrItem;
-class DrNode;
 class DrPrefab;
 class DrStage;
 class DrThing;
@@ -65,7 +64,6 @@ typedef std::map<long,              DrEffect*>      EffectMap;
 typedef std::map<long,              DrFont*>        FontMap;
 typedef std::map<long,              DrImage*>       ImageMap;
 typedef std::map<long,              DrItem*>        ItemMap;
-typedef std::map<long,              DrNode*>        NodeMap;
 typedef std::map<long,              DrPrefab*>      PrefabMap;
 typedef std::map<long,              DrWorld*>       WorldMap;
 
@@ -98,8 +96,7 @@ private:
     //          - Inherit DrSettings for DrComponent / DrProperty usage
     //          - Is assigned an unique key upon creation from DrProject::getNextKey()
     //
-    // Mapped Items
-    NodeMap         m_nodes;                                        // Holds DrNodes        (World Map items that are not Worlds)
+    // World Items
     WorldMap        m_worlds;                                       // Holds DrWorlds       (which in turn hold DrStages, which hold DrThings)
 
     // Shared Items
@@ -108,7 +105,7 @@ private:
     ImageMap        m_images;                                       // Holds DrImages       (for use in DrFrames, loaded into DrEngineTextures)
 
     // World Map Items
-    BlockMap        m_blocks;                                       // Holds DrBlocks       (used as building blocks for DrNodes)
+    BlockMap        m_blocks;                                       // Holds DrBlocks       (used as building blocks for World Map nodes)
 
     // Physics World 2D Items
     AssetMap        m_assets;                                       // Holds DrAssets       (used as building blocks for DrThings)

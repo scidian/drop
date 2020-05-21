@@ -64,7 +64,6 @@ private:
 
     // Mouse Variables
     QPoint                  m_last_mouse_pos;                               // Tracks last known mouse position in view coordinates
-    QGraphicsItem          *m_last_mouse_item               { nullptr };    // Stores top item under mouse (if any) on mouseMoveEvent()
     QPoint                  m_origin;                                       // Stores mouse down position in view  coordinates
     QPointF                 m_origin_in_scene;                              // Stores mouse down position in scene coordinates
     QGraphicsItem          *m_origin_item                   { nullptr };    // Stores top item under mouse (if any) on mouseDownEvent()
@@ -119,7 +118,7 @@ public:
     void                updateGrid();
 
     // Paint Functions
-    void                        paintCubicCurve(QPainter &painter, QColor line_color, QPointF point_in, QPointF point_out, bool paint_dots);
+    void                        paintCubicCurve(QPainter &painter, QPen &line_pen, QPointF point_in, QPointF point_out, bool paint_dots);
     void                        paintGrid(QPainter &painter);
     void                        paintNodeLines(QPainter &painter);
     std::pair<QPointF, QPointF> pointsC1C2(QPointF in, QPointF out);
@@ -130,7 +129,10 @@ public:
     // Getters / Setters
     View_Mode           currentViewMode()                   { return m_view_mode; }
     double              currentZoomLevel()                  { return m_zoom_scale; }
-    void                resetPointerVariables();
+
+
+public slots:
+    void                sceneIsAboutToClear();                                              // Good chance to delete reference pointers
 
 };
 

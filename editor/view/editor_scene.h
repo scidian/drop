@@ -90,26 +90,26 @@ public:
     // Undo / Redo Functions
     void            undoAction();
     void            redoAction();
-    QString         getCurrentUndo() { return m_undo->undoText(); }
-    QString         getCurrentRedo() { return m_undo->redoText(); }
+    QString         getCurrentUndo()                        { return m_undo->undoText(); }
+    QString         getCurrentRedo()                        { return m_undo->redoText(); }
 
     // Stage Handling
-    DrStage*        getCurrentStageShown() { return m_current_stage; }
-    void            setCurrentStageShown(DrStage *stage) { m_current_stage = stage; }
-    long            getCurrentStageKeyShown() { return m_current_stage_key; }
+    void            clearSceneOverride();
+    DrStage*        getCurrentStageShown()                  { return m_current_stage; }
+    void            setCurrentStageShown(DrStage *stage)    { m_current_stage = stage; }
+    long            getCurrentStageKeyShown()               { return m_current_stage_key; }
     void            setCurrentStageKeyShown(long stage_key) { m_current_stage_key = stage_key; }
-    void            clearStageShown();
 
 
     // ***** Selection Functions
-    long                    getSelectionCount()         { return m_selection_items.count(); }
+    long                    getSelectionCount()             { return m_selection_items.count(); }
     QTransform              getSelectionTransform();
 
-    QList<QGraphicsItem*>   getSelectionItems()         { return m_selection_items; }
+    QList<QGraphicsItem*>   getSelectionItems()             { return m_selection_items; }
     QList<DrThing*>         getSelectionItemsAsThings();
-    double                  getSelectionAngle()         { return m_selection_angle; }
-    QPointF                 getSelectionScale()         { return m_selection_scale; }
-    QRectF                  getSelectionBox()           { return m_selection_box; }
+    double                  getSelectionAngle()             { return m_selection_angle; }
+    QPointF                 getSelectionScale()             { return m_selection_scale; }
+    QRectF                  getSelectionBox()               { return m_selection_box; }
 
     void                    setSelectionItems(QList<QGraphicsItem*> list)   { m_selection_items = list; }
     void                    setSelectionAngle(double angle)                 { m_selection_angle = angle; }

@@ -20,12 +20,12 @@
 
 
 //####################################################################################
-//##    Clear / Build
+//##    Builds Scene from DrProject Worlds
 //####################################################################################
 void WorldMapScene::buildScene() {
 
     // Clear scene, set scene rect
-    this->clear();
+    this->clearSceneOverride();
     this->setSceneRect(-2500, -2500, 5000, 5000);
 
     // Add Nodes
@@ -45,6 +45,9 @@ void WorldMapScene::buildScene() {
 }
 
 
+//####################################################################################
+//##    Builds Scene from DrProject Worlds
+//####################################################################################
 WorldMapItem* WorldMapScene::addItemToSceneFromComponent(DrComponent *component) {
     // Create new item representing this Thing
     WorldMapItem *graphics_item = new WorldMapItem(m_project, this->getEditorRelay(), component);

@@ -26,8 +26,12 @@ WorldMapScene::WorldMapScene(QWidget *parent, DrProject *project, IEditorRelay *
 
 }
 
-WorldMapScene::~WorldMapScene() {
+WorldMapScene::~WorldMapScene() { }
 
+void WorldMapScene::clearSceneOverride() {
+    emit aboutToClear();                                // WorldMapView::sceneIsAboutToClear() is connected to this signal, prevents dangling pointers
+    this->setNeedRebuild(true);
+    this->clear();
 }
 
 

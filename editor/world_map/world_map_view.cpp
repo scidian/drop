@@ -5,9 +5,11 @@
 //
 //
 //
+#include <QDebug>
+#include "editor/helper_library.h"
+#include "editor/interface_editor_relay.h"
 #include "editor/world_map/world_map_scene.h"
 #include "editor/world_map/world_map_view.h"
-#include "editor/interface_editor_relay.h"
 
 
 //####################################################################################
@@ -21,14 +23,33 @@ WorldMapView::WorldMapView(QWidget *parent, DrProject *project, WorldMapScene *s
     my_scene = scene;
     setScene(scene);
 
+    connect(my_scene, SIGNAL(aboutToClear()),   this, SLOT(sceneIsAboutToClear()));
+
 }
 
 WorldMapView::~WorldMapView() {
 
 }
 
-// Resets local pointer variables when View is hidden (when switching Editor_Mode)
-// ...After Scene is rebuilt these pointers will be invalid
-void WorldMapView::resetPointerVariables() {
-    m_last_mouse_item = nullptr;
+// SLOT:    Chance to reset local pointer variables when Scene is about to clear() (like when switching Editor_Mode)
+//       ...After Scene is rebuilt local reference pointers will be dangling
+void WorldMapView::sceneIsAboutToClear() {
+    ///m_origin_item = nullptr;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

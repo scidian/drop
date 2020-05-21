@@ -139,7 +139,7 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
     QPen    slot_pen(text_color, 2.5 * m_zoom_scale, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap, Qt::PenJoinStyle::BevelJoin);
     painter.setPen( slot_pen );
     painter.setBrush( Qt::NoBrush );
-    if (m_last_mouse_slot != nullptr && m_last_mouse_item != nullptr) {
+    if (m_last_mouse_slot != nullptr) {
         // If m_view_mode == View_Mode::Node_Connect, make sure highlight Slot is compatible with mouse down slot
         bool should_draw = true;
         if (m_slot_start != nullptr) {
@@ -149,9 +149,9 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
         }
         // Highlight mouse over slot
         if (should_draw) {
-            WorldMapItem *map_item = dynamic_cast<WorldMapItem*>(m_last_mouse_item);
-            if (map_item != nullptr) {
-                QRectF scene_rect = map_item->slotSceneRect(m_last_mouse_slot);
+            WorldMapItem *mouse_item = WorldMapScene::worldMapItemWithKey(map_items, m_last_mouse_slot->getParentSettings()->getKey());
+            if (mouse_item != nullptr) {
+                QRectF scene_rect = mouse_item->slotSceneRect(m_last_mouse_slot);
                        scene_rect.adjust(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce);
                 painter.drawEllipse( mapFromScene(scene_rect).boundingRect() );
             }
@@ -162,8 +162,6 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
     // ***** Set up QPainter for Node Lines
     QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));
     QPen    line_pen =   QPen(line_color, 2 * m_zoom_scale);
-    painter.setPen(line_pen);
-    painter.setBrush( Qt::NoBrush );
 
     // ***** Go through each GraphicsItem and draw output lines
     for (auto map_item : map_items) {
@@ -199,7 +197,7 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
                 QPointF point_in =  mapFromScene(connected->pos() + rect_in.center());
 
                 // Paint Curve
-                paintCubicCurve(painter, line_color, point_in, point_out, true);
+                paintCubicCurve(painter, line_pen, point_in, point_out, true);
 
                 // Each slot has a list of other slots it was drawn to each frame for reference elsewhere
                 slot->addRecentLineSlot(connected_slot);
@@ -215,12 +213,22 @@ void WorldMapView::paintNodeLines(QPainter &painter) {
         // Find start slot scene position
         QPointF slot_point(0, 0);
         WorldMapItem *connected = WorldMapScene::worldMapItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
-        if (connected != nullptr) slot_point = mapFromScene( connected->slotSceneRect(m_slot_start).center() );
+        if (connected != nullptr) {
+            slot_point = mapFromScene( connected->slotSceneRect(m_slot_start).center() );
 
-        if (m_slot_start->getSlotType() == DrSlotType::Signal) {
-            paintCubicCurve(painter, line_color, slot_point, m_last_mouse_pos, true);
-        } else {
-            paintCubicCurve(painter, line_color, m_last_mouse_pos, slot_point, true);
+            // Highlight mouse down Slot
+            painter.setPen( slot_pen );
+            painter.setBrush( Qt::NoBrush );
+            QRectF scene_rect = connected->slotSceneRect(m_slot_start);
+                   scene_rect.adjust(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce);
+            painter.drawEllipse( mapFromScene(scene_rect).boundingRect() );
+
+            // Draw curve from mouse down Slot to mouse position
+            if (m_slot_start->getSlotType() == DrSlotType::Signal) {
+                paintCubicCurve(painter, line_pen, slot_point, m_last_mouse_pos, true);
+            } else {
+                paintCubicCurve(painter, line_pen, m_last_mouse_pos, slot_point, true);
+            }
         }
     }
 
@@ -276,8 +284,9 @@ std::pair<QPointF, QPointF> WorldMapView::pointsC1C2(QPointF in, QPointF out) {
 //####################################################################################
 //##    PAINT: Draws Node Lines
 //####################################################################################
-void WorldMapView::paintCubicCurve(QPainter &painter, QColor line_color, QPointF point_in, QPointF point_out, bool paint_dots) {
+void WorldMapView::paintCubicCurve(QPainter &painter, QPen &line_pen, QPointF point_in, QPointF point_out, bool paint_dots) {
     // Calculate Cubic Bezier Curve
+    painter.setPen(line_pen);
     painter.setBrush(Qt::NoBrush);
     auto c1c2 = pointsC1C2(point_in, point_out);
 
@@ -294,7 +303,7 @@ void WorldMapView::paintCubicCurve(QPainter &painter, QColor line_color, QPointF
 
     // Draw curve end point dots
     if (paint_dots) {
-        painter.setBrush(line_color);
+        painter.setBrush(line_pen.color());
         double radius = c_slot_size * m_zoom_scale * 0.1;
         painter.drawEllipse(point_out, radius, radius);
         painter.drawEllipse(point_in,  radius, radius);

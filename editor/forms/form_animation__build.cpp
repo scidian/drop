@@ -66,7 +66,7 @@ void FormAnimation::initializeFormAnimation() {
     buildAssetTree();
     dockAssetsEditor->show();
     buildProjectTree();
-    sceneEditor->clearStageShown();
+    sceneEditor->clearSceneOverride();
 
     //buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
 

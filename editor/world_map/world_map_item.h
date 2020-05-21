@@ -26,7 +26,7 @@ const   double      c_node_buffer =         16;                 // Buffer to add
 
 //####################################################################################
 //##    WorldMapItem
-//##        A QGraphicsItem for a node (DrProject::DrNode) for use with our custom QGraphicsScene (WorldMapScene)
+//##        A QGraphicsItem for a node (DrComponent) for use with our custom QGraphicsScene (WorldMapScene)
 //############################
 class WorldMapItem : public QGraphicsPixmapItem
 {

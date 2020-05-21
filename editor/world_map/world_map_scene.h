@@ -22,7 +22,7 @@ class WorldMapItem;
 
 //####################################################################################
 //##    WorldMapScene
-//##        Holds nodes (WorldMapItem) representing layers (DrProject::DrNode - Worlds, UI, etc) of DrProject
+//##        Holds nodes (WorldMapItem) representing DrComponents
 //############################
 class WorldMapScene : public QGraphicsScene
 {
@@ -43,6 +43,7 @@ public:
 
     // Construction
     void                    buildScene();                                   // Clears / builds node scene
+    void                    clearSceneOverride();                           // Should call this instead of "clear()", prevents dangling pointers and resets local variables
 
     // Scene Functions
     WorldMapItem*           addItemToSceneFromComponent(DrComponent *component);
@@ -62,6 +63,9 @@ public:
 
 public slots:
     void            sceneChanged(QList<QRectF>);                            // Used to resize scene area to fit contents
+
+signals:
+    void            aboutToClear();
 
 };
 

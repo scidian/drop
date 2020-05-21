@@ -116,11 +116,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     // ***** Set New Layout *****
     switch (new_mode) {
         case Editor_Mode::World_Map:
-            viewWorldMap->resetPointerVariables();
-            sceneWorldMap->clear();
-            sceneWorldMap->setNeedRebuild(true);
+            sceneWorldMap->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
-            this->setCentralWidget( widgetCentralWorldMap );
+            setCentralWidget( widgetCentralWorldMap );
             dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
             treeAssetEditor->setShowTypes({ DrType::Block });
             buildAssetTree();
@@ -129,9 +127,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             break;
 
         case Editor_Mode::World_Editor:
-            sceneEditor->clearStageShown();
+            sceneEditor->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
-            this->setCentralWidget( widgetCentralEditor );
+            setCentralWidget( widgetCentralEditor );
             dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
             treeAssetEditor->setShowTypes({ DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
             buildAssetTree();
@@ -142,7 +140,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
 
         case Editor_Mode::Clear:
             setWindowTitle( tr("Drop") );
-            this->setCentralWidget( widgetCentralClear );
+            setCentralWidget( widgetCentralClear );
             break;
 
         default:    Dr::ShowMessageBox("rebuildFormMain, setting - Mode not known", QMessageBox::Icon::Warning, this);

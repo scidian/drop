@@ -105,7 +105,7 @@ QString UndoCommandChangeStage::changeStage(long old_stage_key, long new_stage_k
     QRectF new_scene_rect = EditorView::stageBoundingRect(m_project, new_stage, half_height).adjusted(-500, -500, 500, 500);
     QRectF new_view_rect = new_scene_rect.adjusted(-5000, -5000, 5000, 5000);
 
-    m_scene->clear();
+    m_scene->clearSceneOverride();
     m_scene->setSceneRect(new_scene_rect);
 
     m_scene->setCurrentStageShown(new_stage);

@@ -77,7 +77,7 @@ FormMain::~FormMain() {
     qApp->blockSignals(true);
     while (sceneEditor->scene_mutex.tryLock() == false)
         qApp->processEvents();
-    sceneEditor->clearStageShown();
+    sceneEditor->clearSceneOverride();
     sceneEditor->scene_mutex.unlock();
     sceneEditor->deleteLater();
 

@@ -52,7 +52,7 @@ namespace Messages {
 
 
 //####################################################################################
-//##    DrNode Slots
+//##    Component Node Slots
 //##
 //############################
 namespace Signal_Slots {                // aka Input_Slots
