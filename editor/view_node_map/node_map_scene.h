@@ -50,8 +50,8 @@ public:
     NodeMapItem*           addItemToSceneFromComponent(DrComponent *component);
     void                    setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void                    setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
-    QList<NodeMapItem*>    NodeMapItems();
-    static NodeMapItem*    NodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key);
+    QList<NodeMapItem*>    nodeMapItems();
+    static NodeMapItem*    nodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key);
 
     // Other Widget Update Calls
     IEditorRelay*           getEditorRelay() { return m_editor_relay; }

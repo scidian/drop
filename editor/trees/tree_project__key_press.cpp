@@ -94,7 +94,9 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                 }
                 QString new_name = Dr::FindCopyName(QString::fromStdString(world->getName()), world_names);
 
-                DrWorld *copy_world = getParentProject()->addWorldCopyFromWorld(world, new_name.toStdString());
+                DrWorld *copy_world = getParentProject()->addWorldCopyFromWorld(world, new_name.toStdString());     // Copy World
+                getParentProject()->setNewWorldPositionFromWorld(world, copy_world, Direction::Right);              // Set Node Position
+
                 if (world_count == 0) new_selected_world = copy_world;
                 world_count++;
             }

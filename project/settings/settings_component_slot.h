@@ -30,6 +30,8 @@ typedef std::list<Output_Connection> Output_Connections;
 //####################################################################################
 //##    DrSlot
 //##        Class to hold an Output Slot for a DrComponent
+//##
+//##    !!!!! #NOTE: Make sure all DrSlot variables are copied during DrSettings::copyEntitySettings()
 //############################
 class DrSlot
 {

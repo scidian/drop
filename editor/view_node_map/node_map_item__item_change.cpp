@@ -80,7 +80,7 @@ QVariant NodeMapItem::itemChange(GraphicsItemChange change, const QVariant &valu
     if (change == ItemTransformHasChanged) {
         // Value is new item QTransform
         QTransform new_transform = value.value<QTransform>();
-
+        m_component->setNodeSize( DrPointF(m_width, m_height) );
         return new_transform;
     }
 

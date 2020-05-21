@@ -1,0 +1,320 @@
+//
+//      Created by Stephens Nunnally on 5/21/2020, (c) 2020 Scidian Software, All Rights Reserved
+//
+//  File:
+//
+//
+//
+#include "core/dr_containers.h"
+#include "core/dr_debug.h"
+#include "core/imaging/imaging.h"
+#include "core/interface/dr_progress.h"
+#include "project/constants_component_info.h"
+#include "project/dr_project.h"
+#include "project/entities/dr_animation.h"
+#include "project/entities/dr_font.h"
+#include "project/entities/dr_image.h"
+#include "project/entities/dr_stage.h"
+#include "project/entities/dr_thing.h"
+#include "project/entities/dr_world.h"
+#include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_physics_2d/dr_device.h"
+#include "project/entities_physics_2d/dr_effect.h"
+#include "project/entities_physics_2d/dr_item.h"
+#include "project/entities_physics_2d/dr_prefab.h"
+#include "project/settings/settings.h"
+#include "project/settings/settings_component.h"
+#include "project/settings/settings_component_slot.h"
+
+
+//####################################################################################
+//##
+//##    Key Finding - These functions search the current project for the specified Key and return the requested info
+//##                  (key's are generated from Project key generator upon item initialization)
+//##
+//####################################################################################
+// Searches all member variables / containers for the specified unique project key
+DrType DrProject::findChildTypeFromKey(long check_key) {
+    DrSettings *entity = findSettingsFromKey(check_key);
+    return ((entity == nullptr) ? DrType::NotFound : entity->getType());
+}
+
+// Searches for DrSlot
+DrSlot* DrProject::findSlotFromKeys(long entity_key, long component_key, long slot_key) {
+    DrSettings *entity = findSettingsFromKey(entity_key);
+    if (entity != nullptr) {
+        DrComponent *component = entity->getComponent(component_key);
+        if (component != nullptr) {
+            for (auto &signal_pair : component->getSignalMap()) {
+                if (signal_pair.second->getSlotKey() == slot_key) return signal_pair.second;
+            }
+            for (auto &output_pair : component->getOutputMap()) {
+                if (output_pair.second->getSlotKey() == slot_key) return output_pair.second;
+            }
+        }
+    }
+    return nullptr;
+}
+
+// Returns a pointer to the Base DrSettings class of the item with the specified key
+DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, std::string custom_error) {
+    AnimationMap::iterator animation_iter = m_animations.find(check_key);
+    if (animation_iter != m_animations.end())   return animation_iter->second;
+
+    AssetMap::iterator asset_iter = m_assets.find(check_key);
+    if (asset_iter != m_assets.end())           return asset_iter->second;
+
+    ImageMap::iterator image_iter = m_images.find(check_key);
+    if (image_iter != m_images.end())           return image_iter->second;
+
+    DeviceMap::iterator device_iter = m_devices.find(check_key);
+    if (device_iter != m_devices.end())         return device_iter->second;
+
+    EffectMap::iterator effect_iter = m_effects.find(check_key);
+    if (effect_iter != m_effects.end())         return effect_iter->second;
+
+    FontMap::iterator font_iter = m_fonts.find(check_key);
+    if (font_iter != m_fonts.end())             return font_iter->second;
+
+    ItemMap::iterator item_iter = m_items.find(check_key);
+    if (item_iter != m_items.end())             return item_iter->second;
+
+    PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
+    if (prefab_iter != m_prefabs.end())         return prefab_iter->second;
+
+    // Search Worlds, Stages and Things
+    WorldMap::iterator world_iter = m_worlds.find(check_key);
+    if (world_iter != m_worlds.end())           return world_iter->second;
+    for (auto &world_pair : m_worlds) {
+        StageMap &stages = world_pair.second->getStageMap();
+        StageMap::iterator stage_iter = stages.find(check_key);
+        if (stage_iter != stages.end())         return stage_iter->second;
+
+        for (auto &stage_pair : stages) {
+            ThingMap &things = stage_pair.second->getThingMap();
+            ThingMap::iterator thing_iter = things.find(check_key);
+            if (thing_iter != things.end())     return thing_iter->second;
+        }
+    }
+
+//    // Search UIs and Widgets
+//    UIMap::iterator ui_iter = m_uis.find(check_key);
+//    if (ui_iter != m_uis.end())                 return ui_iter->second;
+//    for (auto &ui_pair : m_uis) {
+//        WidgetMap &widgets = ui_pair.second->getWidgetMap();
+//        WidgetMap::iterator widget_iter = widgets.find(check_key);
+//        if (widget_iter != widgets.end())       return widget_iter->second;
+//    }
+
+    // Couldnt find Entity with key value "check_key"
+    if (show_warning) {
+        if (custom_error == "") custom_error = "No more info available...";
+        Dr::PrintDebug("WARNING: Did not find key (" + std::to_string(check_key) + ") in project! \n"
+                       "Last key used in project: " + std::to_string(m_key_generator - 1) + "!\n"
+                       "This warning called from \"DrProject::findChildSettingsFromKey\"" + "\n" +
+                       custom_error + " - End Error.....");
+    }
+    return nullptr;
+}
+
+
+DrAnimation* DrProject::findAnimationFromKey(long check_key) {
+    AnimationMap::iterator animation_iter = m_animations.find(check_key);
+    return ((animation_iter != m_animations.end()) ? animation_iter->second : nullptr);
+}
+
+DrAsset* DrProject::findAssetFromKey(long check_key) {
+    AssetMap::iterator asset_iter = m_assets.find(check_key);
+    return ((asset_iter != m_assets.end()) ? asset_iter->second : nullptr);
+}
+
+DrDevice* DrProject::findDeviceFromKey(long check_key) {
+    DeviceMap::iterator device_iter = m_devices.find(check_key);
+    return ((device_iter != m_devices.end()) ? device_iter->second : nullptr);
+}
+
+DrEffect* DrProject::findEffectFromKey(long check_key) {
+    EffectMap::iterator effect_iter = m_effects.find(check_key);
+    return ((effect_iter != m_effects.end()) ? effect_iter->second : nullptr);
+}
+
+DrFont* DrProject::findFontFromKey(long check_key) {
+    FontMap::iterator font_iter = m_fonts.find(check_key);
+    return ((font_iter != m_fonts.end()) ? font_iter->second : nullptr);
+}
+
+DrImage* DrProject::findImageFromKey(long check_key) {
+    ImageMap::iterator image_iter = m_images.find(check_key);
+    return ((image_iter != m_images.end()) ? image_iter->second : nullptr);
+}
+
+DrItem* DrProject::findItemFromKey(long check_key) {
+    ItemMap::iterator item_iter = m_items.find(check_key);
+    return ((item_iter != m_items.end()) ? item_iter->second : nullptr);
+}
+
+DrPrefab* DrProject::findPrefabFromKey(long check_key) {
+    PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
+    return ((prefab_iter != m_prefabs.end()) ? prefab_iter->second : nullptr);
+}
+
+DrStage* DrProject::findStageFromKey(long check_key) {
+    for (auto &world_pair : m_worlds) {
+        StageMap &stages = world_pair.second->getStageMap();
+        StageMap::iterator stage_iter = stages.find(check_key);
+
+        if (stage_iter != stages.end())
+            return stage_iter->second;
+    }
+    return nullptr;
+}
+
+DrThing* DrProject::findThingFromKey(long check_key) {
+    for (auto &world_pair : m_worlds) {
+        for (auto &stage_pair : world_pair.second->getStageMap()) {
+            ThingMap &things = stage_pair.second->getThingMap();
+            ThingMap::iterator thing_iter = things.find(check_key);
+            if (thing_iter != things.end())
+                return thing_iter->second;
+        }
+    }
+    return nullptr;
+}
+
+DrWorld* DrProject::findWorldFromKey(long check_key) {
+    WorldMap::iterator world_iter = m_worlds.find(check_key);
+    return ((world_iter != m_worlds.end()) ? world_iter->second : nullptr);
+}
+
+// Returns a pointer to the World with the mathcing name
+DrWorld* DrProject::findWorldWithName(std::string world_name) {
+    std::string compare_name;
+    for (auto &world_pair: m_worlds) {
+        compare_name = world_pair.second->getName();
+        if (compare_name == world_name) { return world_pair.second; }
+    }
+    return nullptr;
+}
+
+
+//####################################################################################
+//##    Finding by Type
+//##        Specific Entity by Type for those entities that are singletons
+//####################################################################################
+DrDevice* DrProject::findDeviceFromType(DrDeviceType type) {
+    for (auto &device_pair : m_devices) {
+        if (device_pair.second->getDeviceType() == type) {
+            return device_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrEffect* DrProject::findEffectFromType(DrEffectType type) {
+    for (auto &effect_pair : m_effects) {
+        if (effect_pair.second->getEffectType() == type) {
+            return effect_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrItem* DrProject::findItemFromType(DrItemType type) {
+    for (auto &item_pair : m_items) {
+        if (item_pair.second->getItemType() == type) {
+            return item_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+DrPrefab* DrProject::findPrefabFromType(DrPrefabType type) {
+    for (auto &prefab_pair : m_prefabs) {
+        if (prefab_pair.second->getPrefabType() == type) {
+            return prefab_pair.second;
+        }
+    }
+    return nullptr;
+}
+
+
+//####################################################################################
+//##    Image Functions
+//####################################################################################
+// Build list of DrImage keys used by Project, using std::set to ensure no duplicates
+std::set<long> DrProject::getImageKeysUsedByProject() {
+    std::set<long> image_keys_used;
+    image_keys_used.insert(c_key_image_empty);
+    for (auto &animation_pair : getAnimationMap()) {
+        for (auto &frame : animation_pair.second->getFrames()) {
+            long image_key = frame->getKey();
+            if (image_keys_used.find(image_key) == image_keys_used.end()) {
+                image_keys_used.insert(image_key);
+            }
+        }
+    }
+    return image_keys_used;
+}
+
+
+//####################################################################################
+//##    World Node Functions
+//####################################################################################
+// Finds a location for an additional World in the Node World Map
+DrPointF DrProject::getNewWorldMapPosition() {
+    double left = 0, right = 0, top = 0, bottom = 0;
+
+    for (auto &world_pair : getWorldMap()) {
+        DrComponent *world_connections = world_pair.second->getComponent(Comps::World_Connections);
+        if (world_connections != nullptr) {
+            DrPointF top_left =  world_connections->getNodePosition();
+            DrPointF node_size = world_connections->getNodeSize();
+            DrPointF bottom_right = DrPointF(top_left.x + node_size.x, top_left.y + node_size.y);
+
+            if (top_left.x < left)          left =   top_left.x;
+            if (top_left.y < top)           top =    top_left.y;
+            if (bottom_right.x > right)     right =  bottom_right.x;
+            if (bottom_right.y > bottom)    bottom = bottom_right.y;
+        }
+    }
+    return DrPointF(right + c_node_spacing, top);
+}
+
+// Finds a location for an additional World to the side of an existing World Node
+void DrProject::setNewWorldPositionFromWorld(DrWorld *from_world, DrWorld *to_world, Direction direction) {
+    DrComponent *world_connections_from = from_world->getComponent(Comps::World_Connections);
+    DrComponent *world_connections_to =   to_world->getComponent(Comps::World_Connections);
+
+    if (world_connections_from != nullptr && world_connections_to != nullptr) {
+        DrPointF pos =   world_connections_from->getNodePosition();
+        if (direction == Direction::Right) {
+            pos.x = pos.x + world_connections_from->getNodeSize().x + c_node_spacing;
+        } else if (direction == Direction::Left) {
+            pos.x = pos.x - world_connections_to->getNodeSize().x - c_node_spacing;
+        } else if (direction == Direction::Down) {
+            pos.y = pos.y + world_connections_from->getNodeSize().y + c_node_spacing;
+        } else if (direction == Direction::Up) {
+            pos.y = pos.y - world_connections_to->getNodeSize().y - c_node_spacing;
+        }
+        world_connections_to->setNodePosition(pos);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

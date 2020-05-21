@@ -31,8 +31,10 @@ typedef std::map<std::string, DrComponent*>     ComponentMap;               // M
 
 
 //####################################################################################
-//##    DrComponent
-//##        Class to hold a component for all Project Entities
+//##    DrSettings
+//##        Class to hold one Entity
+//##
+//##    !!!!! #NOTE: Make sure all DrSettings variables are copied during DrSettings::copyEntitySettings()
 //############################
 class DrSettings
 {

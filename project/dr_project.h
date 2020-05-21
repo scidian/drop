@@ -83,12 +83,13 @@ public:
     // #################### VARIABLES ####################
 private:
     // Usage Variables
-    bool            m_has_saved = false;                                    // If project is edited at all, turns to false until user saves
-    bool            m_test_only = false;                                    // For debugging purposes, stops Drop from asking to save when exiting
+    bool            m_has_saved         { false };                  // If project is edited at all, turns to false until user saves
+    bool            m_test_only         { false };                  // For debugging purposes, stops Drop from asking to save when exiting
+    bool            m_map_shown         { false };                  // When a new project is loaded, this flag tells World Map to recenter the first time it is shown
 
     // Project Variables
-    long            m_key_generator = c_starting_key_entity;         // Variable to hand out unique id key's to all children entities
-    OptionMap       m_options;                                              // Map holding DrProject Wide options
+    long            m_key_generator     { c_starting_key_entity };  // Variable to hand out unique id key's to all children entities
+    OptionMap       m_options;                                      // Map holding DrProject Wide options
 
 
     // **********
@@ -125,8 +126,11 @@ public:
     // Local Variable Functions
     bool        hasSaved()                  { return m_has_saved; }
     bool        isTestOnly()                { return m_test_only; }
+    bool        mapShown()                  { return m_map_shown; }
     void        setHasSaved(bool saved)     { m_has_saved = saved; }
-    void        setTestOnly(bool test)      { m_test_only = test; }
+    void        setIsTestOnly(bool test)    { m_test_only = test; }
+    void        setMapShown(bool loaded)    { m_map_shown = loaded; }
+
 
     // Entity Key Generator
     long            checkCurrentGeneratorKey()                      { return m_key_generator; }
@@ -161,6 +165,8 @@ public:
     long            getNumberOfItems()      { return static_cast<long>(m_items.size()); }
     long            getNumberOfPrefabs()    { return static_cast<long>(m_prefabs.size()); }
     std::set<long>  getImageKeysUsedByProject();
+    DrPointF        getNewWorldMapPosition();
+    void            setNewWorldPositionFromWorld(DrWorld *from_world, DrWorld *to_world, Direction direction);
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
     DrType          findChildTypeFromKey(long check_key);

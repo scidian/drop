@@ -37,6 +37,9 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
             break;
     }
 
+    // Set initial Node Position
+    getComponent(Comps::World_Connections)->setNodePosition( parent_project->getNewWorldMapPosition() );
+
 
     // !!!!! #TEMP: Testing node building
     int add_input =  Dr::RandomInt(0, 3);

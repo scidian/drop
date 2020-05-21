@@ -32,6 +32,9 @@ DrComponent::DrComponent(DrSettings    *parent_settings,
     m_description =     description;
     m_color =           color;
     m_is_hidden =       is_hidden;
+
+    m_node_size.x =     c_node_default_width;
+    m_node_size.y =     c_node_row_height * 4;
 }
 
 DrComponent::~DrComponent() {

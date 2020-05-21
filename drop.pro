@@ -318,6 +318,9 @@ SOURCES += \
     header_builds.cpp \
     main.cpp \
     project/dr_project.cpp \
+    project/dr_project__add_entity.cpp \
+    project/dr_project__delete_entity.cpp \
+    project/dr_project__find_entity.cpp \
     project/entities/dr_animation.cpp \
     project/entities/dr_animation_frame.cpp \
     project/entities/dr_font.cpp \

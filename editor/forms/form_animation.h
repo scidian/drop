@@ -91,6 +91,7 @@ public:
     virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
     virtual void        viewCenterOnPoint(QPointF center_point) override;
+    virtual void        viewFitToContents() override;
     virtual void        viewZoomToScale(double zoom_scale) override;
 
 public slots:

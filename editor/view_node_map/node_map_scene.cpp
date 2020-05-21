@@ -100,9 +100,9 @@ void NodeMapScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point
 
 
 //####################################################################################
-//##    Return scene()->items() as list of NodeMapItems
+//##    Return scene()->items() as list of NodeMapItem pointers
 //####################################################################################
-QList<NodeMapItem*> NodeMapScene::NodeMapItems() {
+QList<NodeMapItem*> NodeMapScene::nodeMapItems() {
     QList<NodeMapItem*> world_items;
     world_items.clear();
 
@@ -116,7 +116,7 @@ QList<NodeMapItem*> NodeMapScene::NodeMapItems() {
 //####################################################################################
 //##    Returns NodeMapItem from list with the designated key
 //####################################################################################
-NodeMapItem* NodeMapScene::NodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key) {
+NodeMapItem* NodeMapScene::nodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key) {
     if (entity_key == c_no_key) return nullptr;
     for (auto world_item : world_items) {
         if (world_item->getEntity()->getKey() == entity_key) return world_item;

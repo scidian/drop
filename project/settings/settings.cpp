@@ -321,6 +321,7 @@ void DrSettings::copyEntitySettings(DrSettings *from_entity) {
         to_component->setComponentKey(      from_component->getComponentKey());
         to_component->setIcon(              from_component->getIcon());
         to_component->setNodePosition(      from_component->getNodePosition());
+        to_component->setNodeSize(          from_component->getNodeSize());
         to_component->setStartNumberPropertyGeneratorKey(   from_component->checkCurrentPropertyGeneratorKey());
         to_component->setStartNumberSlotGeneratorKey(       from_component->checkCurrentSlotGeneratorKey());
         to_component->setListOrder(         from_component->getListOrder());

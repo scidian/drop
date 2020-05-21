@@ -38,18 +38,13 @@ void DrWorld::initializeWorldPhysics2D(std::string new_name) {
     property_name->setDescription("Name of this World.");
     property_name->setValue(new_name);
 
-
+    // World Settings
     addComponent(Comps::World_Settings, "World Settings", "Settings for this World.", Component_Colors::RGB_18_Gray, false);
     getComponent(Comps::World_Settings)->setIcon(Component_Icons::Settings);
     addPropertyToComponent(Comps::World_Settings, Props::World_Game_Direction, Property_Type::Angle, 0.0,
                            "Game Direction", "Default direction, in degrees, to load new stages, 0 - right, 90 - down, 180 - left, 270 - up, etc.");
     addPropertyToComponent(Comps::World_Settings, Props::World_Score_Multiplier, Property_Type::Double, 1.0,
                            "Score Multiplier", "Value used as multiplier to adjust speed at which distance scoring is calculated.");
-
-    // Holds connections for Node Map / UI Loading
-    addComponent(Comps::World_Connections, "World Connections", "Connections for this World.", Component_Colors::RGB_08_SeaFoam, true);
-    getComponent(Comps::World_Connections)->setIcon(Component_Icons::World);
-
     std::vector<DrVariant> background_color_properties { Props::World_Background_Color };
     addPropertyToComponent(Comps::World_Settings, Props::World_Use_Background_Color, Property_Type::BoolEnabled,
                            std::vector<DrVariant>({false, background_color_properties }),
@@ -61,7 +56,12 @@ void DrWorld::initializeWorldPhysics2D(std::string new_name) {
                            "Deletion Threshold", "Distance (in World units) away from active camera that Things are removed from the World. Keeps game "
                                                  "running smoothly.");
 
+    // Holds connections for Node Map / UI Loading
+    addComponent(Comps::World_Connections, "World Connections", "Connections for this World.", Component_Colors::RGB_08_SeaFoam, true);
+    getComponent(Comps::World_Connections)->setIcon(Component_Icons::World);
 
+
+    // Camera Settings
     addComponent(Comps::World_Camera, "Camera", "Camera settings for this World.", Component_Colors::RGB_08_SeaFoam, false);
     getComponent(Comps::World_Camera)->setIcon(Component_Icons::Camera);
     addPropertyToComponent(Comps::World_Camera, Props::World_Camera_Type, Property_Type::List, static_cast<int>(Render_Type::Orthographic),

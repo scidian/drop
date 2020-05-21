@@ -20,6 +20,8 @@ class DrSettings;
 //####################################################################################
 //##    DrProperty
 //##        Class to hold one property of any Project object component
+//##
+//##    !!!!! #NOTE: Make sure all DrProperty variables are copied during DrSettings::copyEntitySettings()
 //############################
 class DrProperty
 {

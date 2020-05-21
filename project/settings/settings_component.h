@@ -27,6 +27,8 @@ typedef std::map<long,        DrSlot*>      OutputMap;              // Outputs a
 //####################################################################################
 //##    DrComponent
 //##        Class to hold a component for all Project objects
+//##
+//##    !!!!! #NOTE: Make sure all DrComponent variables are copied during DrSettings::copyEntitySettings()
 //############################
 class DrComponent
 {
@@ -41,7 +43,7 @@ private:
     SignalMap           m_signals;                                                      // Map of pointers to DrSignal classes      (Input Slots)
     OutputMap           m_outputs;                                                      // Map of pointers to DrOutput classes      (Output Slots)
 
-    // The 8 Parts of Data for Every Component
+    // The 9 Parts of Data for Every Component
     long                m_component_key             { c_no_key };                       // ID Key of Component, unique to and assigned from Parent DrSettings
     std::string         m_component_name            { "" };                             // Type name of Component
     std::string         m_display_name              { "Unknown Component" };            // Display Name of Component in Object Inspector and TreeAdvisor
@@ -50,6 +52,7 @@ private:
     DrColor             m_color                     { DrColor(128, 128, 128, 255) };    // Object Inspector / Node Box header color
     bool                m_is_hidden                 { false };                          // Should this Component be hidden from Object Insepctor?
     DrPointF            m_node_position             { 0, 0 };                           // Node Map position of this Component
+    DrPointF            m_node_size                 { 0, 0 };                           // Node Map size of this Component
 
 
     // For now this is not saved, assigned during creation in DrStage::addComponent()
@@ -92,6 +95,7 @@ public:
     DrColor             getColor()          { return m_color; }
     bool                isHidden()          { return m_is_hidden; }
     DrPointF            getNodePosition()   { return m_node_position; }
+    DrPointF            getNodeSize()       { return m_node_size; }
 
     void                setComponentKey(long key)       { m_component_key = key; }
     void                setDisplayName(std::string new_display_name) { m_display_name = new_display_name; }
@@ -102,6 +106,7 @@ public:
     void                hide()                          { m_is_hidden = true; }
     void                show()                          { m_is_hidden = false; }
     void                setNodePosition(DrPointF pos)   { m_node_position = pos; }
+    void                setNodeSize(DrPointF size)      { m_node_size = size; }
 
     // Component Key Generator
     long            checkCurrentPropertyGeneratorKey()      { return m_property_key_generator; }

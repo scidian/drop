@@ -21,8 +21,13 @@ class IEditorRelay;
 enum class Editor_Widgets;
 
 // Global Enum Constants
-constexpr int   c_no_key =        -1;               // Value that represents no item selected
-constexpr int   c_same_key =    -100;               // Value signifying to use the value already obtained
+constexpr int       c_no_key =                  -1;                 // Value that represents no item selected
+constexpr int       c_same_key =                -100;               // Value signifying to use the value already obtained
+
+// DrProject Constants
+constexpr double    c_node_default_width =      192;                // Starting width of GraphicsItem
+constexpr double    c_node_row_height =         32;                 // Height of each row (title, input / output)
+constexpr double    c_node_spacing =            32;                 // Default seperation between new Nodes
 
 
 //####################################################################################
@@ -201,8 +206,9 @@ namespace Asset_Category {
 
 
 //####################################################################################
-//##    Misc Model Enums (Numerically equivalent to Qt::SortOrder)
+//##    Misc Model Enums
 //############################
+// Numerically equivalent to Qt::SortOrder
 enum class Sort_Order {
     AscendingOrder   = 0,
     DescendingOrder  = 1,
@@ -213,6 +219,11 @@ enum class Z_Insert {
     Front,
     At_Position,
 };
+
+enum class Direction {
+    Up, Down, Left, Right
+};
+
 
 //####################################################################################
 //##    Some public forward function declarations for some enum functions

@@ -120,7 +120,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
 
     // **** Get Items, make sure they have DrComponents
     QList<NodeMapItem*> map_items;
-    for (auto map_item : my_scene->NodeMapItems()) {
+    for (auto map_item : my_scene->nodeMapItems()) {
         if (map_item->getComponent() == nullptr) continue;
         map_items.push_back(map_item);
     }
@@ -148,7 +148,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
         }
         // Highlight mouse over slot
         if (should_draw) {
-            NodeMapItem *mouse_item = NodeMapScene::NodeMapItemWithKey(map_items, m_last_mouse_slot->getParentSettings()->getKey());
+            NodeMapItem *mouse_item = NodeMapScene::nodeMapItemWithKey(map_items, m_last_mouse_slot->getParentSettings()->getKey());
             if (mouse_item != nullptr) {
                 QRectF scene_rect = mouse_item->slotSceneRect(m_last_mouse_slot);
                        scene_rect.adjust(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce);
@@ -174,7 +174,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
             for (auto connection : slot->connections()) {
 
                 // Find signal (input) slot to connect to
-                NodeMapItem *connected = NodeMapScene::NodeMapItemWithKey(map_items, connection.connected_entity_key);
+                NodeMapItem *connected = NodeMapScene::nodeMapItemWithKey(map_items, connection.connected_entity_key);
                           if (connected == nullptr) continue;
                 DrComponent  *connected_component = connected->getComponent();
                           if (connected_component == nullptr) continue;
@@ -211,7 +211,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
     if (m_view_mode == View_Mode::Node_Connect) {
         // Find start slot scene position
         QPointF slot_point(0, 0);
-        NodeMapItem *connected = NodeMapScene::NodeMapItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
+        NodeMapItem *connected = NodeMapScene::nodeMapItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
         if (connected != nullptr) {
             slot_point = mapFromScene( connected->slotSceneRect(m_slot_start).center() );
 

@@ -108,6 +108,7 @@ public:
     void                spaceBarDown();
     void                spaceBarUp();
     void                zoomInOut(int level);
+    void                zoomToContents();
     void                zoomToPower(int level);
     void                zoomToScale(double scale, bool recalculate_level = true);
 

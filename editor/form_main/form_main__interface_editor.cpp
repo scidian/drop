@@ -222,6 +222,10 @@ void FormMain::viewCenterOnPoint(QPointF center_point) {
     else if (m_current_mode == Editor_Mode::World_Editor)       { viewEditor->centerOn(center_point); }
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
+void FormMain::viewFitToContents() {
+    if      (m_current_mode == Editor_Mode::World_Map)          { viewWorldMap->zoomToContents(); }
+    else if (m_current_mode == Editor_Mode::World_Editor)       { viewEditor->zoomToContents(); }
+}
 void FormMain::viewZoomToScale(double zoom_scale) {
     if      (m_current_mode == Editor_Mode::World_Map)          { viewWorldMap->zoomToScale(zoom_scale); }
     else if (m_current_mode == Editor_Mode::World_Editor)       { viewEditor->zoomToScale(zoom_scale); }

@@ -327,6 +327,9 @@ void loadSettingsFromMap(DrSettings *entity, QVariantMap &map) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::fromStdString(component->getComponentName()) + ":";
         QString k;
+
+        // !!!!! NEED TO UPDATE WITH LATEST VARIABLES !!!!!
+
         ///k = map_key + "display_name";       if (checkMapHasKey(map, k)) component->setDisplayName(  map[k].toString().toStdString()   );
         k = map_key + "description";        if (checkMapHasKey(map, k)) component->setDescription(  map[k].toString().toStdString()   );
         ///k = map_key + "icon";               if (checkMapHasKey(map, k)) component->setIcon(         map[k].toString().toStdString()   );

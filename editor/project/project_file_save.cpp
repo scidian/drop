@@ -248,6 +248,9 @@ void addSettingsToMap(DrSettings *entity, QVariantMap &map) {
     for (auto component_pair : entity->getComponentMap()) {
         DrComponent *component = component_pair.second;
         QString map_key = QString::fromStdString(component->getComponentName()) + ":";
+
+        // !!!!! NEED TO UPDATE WITH LATEST VARIABLES !!!!!
+
         map[map_key + "display_name"] = QString::fromStdString(component->getDisplayName());
         map[map_key + "description"] =  QString::fromStdString(component->getDescription());
         map[map_key + "icon"] =         QString::fromStdString(component->getIcon());

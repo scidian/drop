@@ -29,7 +29,7 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
     Dr::AddBuiltInImages(project);                                      // Adds Embedded Images
 
     // Set if Project is debugging test file or not (test files dont ask to be saved when closed)
-    project->setTestOnly(test);
+    project->setIsTestOnly(test);
 
     // ***** Set Project Options
     project->setOption(Project_Options::Name,               project_name);

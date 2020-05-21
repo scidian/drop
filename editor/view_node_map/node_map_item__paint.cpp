@@ -96,7 +96,7 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
 
     // ********** Draw Top Row of Node
-    QLinearGradient gradient(0, 0, 0, c_row_height);
+    QLinearGradient gradient(0, 0, 0, c_node_row_height);
                     gradient.setColorAt(0.00, header_color_1);
                     gradient.setColorAt(1.00, header_color_2);
     painter->setBrush(gradient);
@@ -104,14 +104,14 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     // Top Gradient
     QPainterPath top, top1, top2;
-    top1.addRoundedRect(box.left(), box.top(), box.width(), c_row_height - c_seperator_height, c_corner_radius, c_corner_radius);
-    top2.addRect(box.left(), box.top() + (c_row_height/2), box.width(), ((c_row_height/2) - c_seperator_height));
+    top1.addRoundedRect(box.left(), box.top(), box.width(), c_node_row_height - c_seperator_height, c_corner_radius, c_corner_radius);
+    top2.addRect(box.left(), box.top() + (c_node_row_height/2), box.width(), ((c_node_row_height/2) - c_seperator_height));
     top = top1.united(top2);
     painter->drawPath(top);
 
     // Seperator Line
     painter->setBrush(dark_color);
-    painter->drawRect(box.left(), box.top() + (c_row_height - c_seperator_height), box.width(), c_seperator_height);
+    painter->drawRect(box.left(), box.top() + (c_node_row_height - c_seperator_height), box.width(), c_seperator_height);
 
     // Component Icon
     QPixmap cat_icon(QString::fromStdString(m_component->getIcon()));
@@ -120,12 +120,12 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         // If we are zoomed in, allow QPainter to paint a larger version of the icon. Results is a smoother transformation to large scale.
         if (m_editor_relay && m_editor_relay->currentViewZoom() > 1.0) {
             double  hw_ratio = static_cast<double>(cat_icon.width()) / static_cast<double>(cat_icon.height());
-            QRectF  dest_rect(box.left(), box.top() - (c_seperator_height/2), c_row_height * hw_ratio, c_row_height);
+            QRectF  dest_rect(box.left(), box.top() - (c_seperator_height/2), c_node_row_height * hw_ratio, c_node_row_height);
                     dest_rect.adjust(c_icon_reduce, c_icon_reduce / hw_ratio, -c_icon_reduce, -c_icon_reduce / hw_ratio);
             painter->drawPixmap(dest_rect, cat_icon, cat_icon.rect());
         // Else if we are zoomed out allow QPixmap.scaledToHeight to do the resizing. Results is a smoother transformation to small scale.
         } else {
-            cat_icon = cat_icon.scaledToHeight(c_row_height - (c_icon_reduce*2), Qt::TransformationMode::SmoothTransformation);
+            cat_icon = cat_icon.scaledToHeight(c_node_row_height - (c_icon_reduce*2), Qt::TransformationMode::SmoothTransformation);
             QPointF dest_point(box.left() + c_icon_reduce, box.top() - (c_seperator_height/2) + c_icon_reduce);
             painter->drawPixmap(dest_point, cat_icon);
         }
@@ -143,7 +143,7 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     ///painter->drawText(box.left()-1, box.top()+1, box.width(), c_row_height - (c_seperator_height/2), Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
     // Draw Header
     painter->setPen(text_color);
-    painter->drawText(box.left(), box.top(), box.width(), c_row_height - (c_seperator_height/2), Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
+    painter->drawText(box.left(), box.top(), box.width(), c_node_row_height - (c_seperator_height/2), Qt::AlignmentFlag::AlignCenter, QString::fromStdString(m_entity->getName()));
 
 
     // ********** Draw Bottom of Node
@@ -151,8 +151,8 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->setPen(Qt::NoPen);
 
     QPainterPath mid, mid1, mid2;
-    mid1.addRoundedRect(box.left(), box.top() + c_row_height, box.width(), box.height() - c_row_height, c_corner_radius, c_corner_radius);
-    mid2.addRect(box.left(), box.top() + c_row_height, box.width(), c_row_height/2);
+    mid1.addRoundedRect(box.left(), box.top() + c_node_row_height, box.width(), box.height() - c_node_row_height, c_corner_radius, c_corner_radius);
+    mid2.addRect(box.left(), box.top() + c_node_row_height, box.width(), c_node_row_height/2);
     mid = mid1.united(mid2);
     painter->drawPath(mid);
 
@@ -195,21 +195,21 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     int text_flags_out = Qt::AlignVCenter | Qt::AlignRight;
 
     // Signal Slot Text
-    int signal_start_y = box.top() + (c_row_height * 1);
+    int signal_start_y = box.top() + (c_node_row_height * 1);
     for (auto &signal_pair : m_component->getSignalMap()) {
         QString slot_text = QString::fromStdString(signal_pair.second->getSlotName());
                 slot_text.replace("_", "");
-        painter->drawText(box.left()+(c_slot_size/1.5), signal_start_y, box.width()/2, c_row_height, text_flags_in, slot_text);
-        signal_start_y += c_row_height;
+        painter->drawText(box.left()+(c_slot_size/1.5), signal_start_y, box.width()/2, c_node_row_height, text_flags_in, slot_text);
+        signal_start_y += c_node_row_height;
     }
 
     // Output Slot Text
-    int output_start_y = box.top() + (c_row_height * 1);
+    int output_start_y = box.top() + (c_node_row_height * 1);
     for (auto &output_pair : m_component->getOutputMap()) {
         QString slot_text = QString::fromStdString(output_pair.second->getSlotName());
                 slot_text.replace("_", "");
-        painter->drawText(box.left()+(box.width()/2), output_start_y, (box.width()/2)-(c_slot_size/1.5), c_row_height, text_flags_out, slot_text);
-        output_start_y += c_row_height;
+        painter->drawText(box.left()+(box.width()/2), output_start_y, (box.width()/2)-(c_slot_size/1.5), c_node_row_height, text_flags_out, slot_text);
+        output_start_y += c_node_row_height;
     }
 
 

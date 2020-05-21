@@ -32,7 +32,7 @@
 // Calculates Slot rect by slot number, slot_number should start at 0
 QRectF NodeMapItem::slotRect(DrSlotType slot_type, int slot_number) {
     int left = 0;
-    int top  = (boundingRect().top() + c_node_buffer) + (c_row_height * (1.5 + static_cast<double>(slot_number)));
+    int top  = (boundingRect().top() + c_node_buffer) + (c_node_row_height * (1.5 + static_cast<double>(slot_number)));
         top -= (c_slot_size/2);
     switch (slot_type) {
         case DrSlotType::Signal:    left = (boundingRect().top()   + c_node_buffer) - (c_slot_size*0.5);    break;

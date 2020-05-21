@@ -41,10 +41,15 @@ void NodeMapScene::buildScene() {
     }
 
     // Center the view on the new stage, set zoom level
-    DrPointF new_center =       m_project->getOption(Project_Options::World_Map_Center).toPointF();
-    double   new_zoom_scale =   m_project->getOption(Project_Options::World_Map_Zoom).toDouble();
-    getEditorRelay()->viewCenterOnPoint( Dr::ToQPointF(new_center) );
-    getEditorRelay()->viewZoomToScale( new_zoom_scale );
+    if (getEditorRelay()->currentProject()->mapShown() == false) {
+        getEditorRelay()->viewFitToContents();
+        getEditorRelay()->currentProject()->setMapShown(true);
+    } else {
+        DrPointF new_center =       m_project->getOption(Project_Options::World_Map_Center).toPointF();
+        double   new_zoom_scale =   m_project->getOption(Project_Options::World_Map_Zoom).toDouble();
+        getEditorRelay()->viewCenterOnPoint( Dr::ToQPointF(new_center) );
+        getEditorRelay()->viewZoomToScale( new_zoom_scale );
+    }
 
     // Mark scene as rebuilt
     this->setNeedRebuild(false);
