@@ -115,12 +115,22 @@ void WorldMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
     // Component Icon
     QPixmap cat_icon(QString::fromStdString(m_component->getIcon()));
-    double  hw_ratio = static_cast<double>(cat_icon.width()) / static_cast<double>(cat_icon.height());
-    QRectF  dest_rect(box.left(), box.top() - (c_seperator_height/2), c_row_height * hw_ratio, c_row_height);
-            dest_rect.adjust(c_icon_reduce * hw_ratio, c_icon_reduce, -c_icon_reduce * hw_ratio, -c_icon_reduce);
-    painter->setOpacity(0.4);
-    painter->drawPixmap(dest_rect, cat_icon, cat_icon.rect());
-    painter->setOpacity(1.0);
+    if (cat_icon.isNull() == false && cat_icon.width() > 0 && cat_icon.height() > 0) {
+        painter->setOpacity(0.4);
+        // If we are zoomed in, allow QPainter to paint a larger version of the icon. Results is a smoother transformation to large scale.
+        if (m_editor_relay && m_editor_relay->currentViewZoom() > 1.0) {
+            double  hw_ratio = static_cast<double>(cat_icon.width()) / static_cast<double>(cat_icon.height());
+            QRectF  dest_rect(box.left(), box.top() - (c_seperator_height/2), c_row_height * hw_ratio, c_row_height);
+                    dest_rect.adjust(c_icon_reduce, c_icon_reduce / hw_ratio, -c_icon_reduce, -c_icon_reduce / hw_ratio);
+            painter->drawPixmap(dest_rect, cat_icon, cat_icon.rect());
+        // Else if we are zoomed out allow QPixmap.scaledToHeight to do the resizing. Results is a smoother transformation to small scale.
+        } else {
+            cat_icon = cat_icon.scaledToHeight(c_row_height - (c_icon_reduce*2), Qt::TransformationMode::SmoothTransformation);
+            QPointF dest_point(box.left() + c_icon_reduce, box.top() - (c_seperator_height/2) + c_icon_reduce);
+            painter->drawPixmap(dest_point, cat_icon);
+        }
+        painter->setOpacity(1.0);
+    }
 
     // Header Text
     QString header_text = QString::fromStdString(m_component->getDisplayName());

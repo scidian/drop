@@ -131,6 +131,7 @@ void EditorView::mouseReleaseEvent(QMouseEvent *event) {
     }
 
     // ***** Update
+    m_origin_item = nullptr;
     this->viewport()->repaint(this->viewport()->rect());
     update();
 }

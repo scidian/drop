@@ -83,6 +83,7 @@ public:
     QRectF                  slotSceneRect(DrSlot *slot);
 
     // Getters / Setters
+    IEditorRelay*           getEditorRelay()                    { return m_editor_relay; }
     DrSettings*             getEntity()                         { return m_entity; }
     DrComponent*            getComponent()                      { return m_component; }
     QPointF                 startPosition()                     { return m_start_position; }
