@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/22/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -12,6 +12,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/widgets/widgets_editor.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -147,6 +148,13 @@ void EditorViewToolTip::drawText(QPainter &painter, int left_offset, int top_off
             painter.drawText( left_offset, top_offset, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
     }
 }
+
+
+
+
+
+
+
 
 
 

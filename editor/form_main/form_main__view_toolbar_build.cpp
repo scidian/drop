@@ -18,7 +18,7 @@
 #include "editor/pixmap/pixmap.h"
 #include "editor/style/style.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 
 // Local Constants
 const int   c_toolbar_height =  36;
@@ -84,8 +84,8 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             center_point->setText("Center Point: ");
             toolbarLayoutHand->addWidget(center_point);
 
-            DrQDoubleSpinSlot *point_x = new DrQDoubleSpinSlot();
-            DrQDoubleSpinSlot *point_y = new DrQDoubleSpinSlot();
+            InspectorDoubleSpinSlot *point_x = new InspectorDoubleSpinSlot();
+            InspectorDoubleSpinSlot *point_y = new InspectorDoubleSpinSlot();
 
             // Point X Box
             point_x->setToolTip("Center X Coordinate");
@@ -169,9 +169,9 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             toolbarLayoutZoom->setContentsMargins(3, 0, 0, 0);
             toolbarLayoutZoom->setAlignment(Qt::AlignmentFlag::AlignVCenter);
 
-            DrQSpinSlot *zoom_spin =   new DrQSpinSlot();
-            QPushButton *drop_button = new QPushButton();
-            DrQSlider   *zoom_slider = new DrQSlider();
+            InspectorSpinSlot   *zoom_spin =   new InspectorSpinSlot();
+            QPushButton         *drop_button = new QPushButton();
+            InspectorSlider     *zoom_slider = new InspectorSlider();
 
             // Zoom Spin Box
             zoom_spin->setObjectName(QStringLiteral("zoomSpin"));

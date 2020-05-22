@@ -10,13 +10,13 @@
 #include "core/colors/colors.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 
 
 //####################################################################################
 //##    Check Box Paint Event
 //####################################################################################
-void DrQCheckBox::paintEvent(QPaintEvent *) {
+void InspectorCheckBox::paintEvent(QPaintEvent *) {
     /// default: m_draw_left = 6, m_draw_top = 1
     QRect  checkbox_indicator(m_draw_left - 1, m_draw_top - 1, 22, 26);
     QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();

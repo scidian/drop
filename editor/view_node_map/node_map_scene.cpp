@@ -24,6 +24,7 @@ NodeMapScene::NodeMapScene(QWidget *parent, DrProject *project, IEditorRelay *ed
     : QGraphicsScene(parent), m_project(project), m_editor_relay(editor_relay), m_node_map_entity(node_map_entity) {
 
     connect(this, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
+    connect(this, SIGNAL(selectionChanged()),       this, SLOT(selectionChanged()));
 
 }
 

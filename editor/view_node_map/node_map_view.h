@@ -16,6 +16,7 @@
 
 // Forward Declarations
 class DrProject;
+class EditorViewRubberBand;
 class IEditorRelay;
 class NodeMapScene;
 
@@ -70,15 +71,19 @@ private:
     Position_Flags          m_over_handle;                                  // Tracks if mouse is over a handle
     bool                    m_wants_double_click            { false };      // Used to forward double click from mouseDoubleClickEvent to mousePressEvent
 
+    // View_Mode::Selecting Variables
+    EditorViewRubberBand       *m_rubber_band               { nullptr };    // Holds our view's RubberBand object
+    QList<QGraphicsItem*>       m_items_start;                              // Stores items selected at start of new rubber band box
+    QList<QGraphicsItem*>       m_items_keep;                               // Stores list of items to keep on top of rubber band items (with control key)
+
     // View_Mode::Translating Variables
-    QElapsedTimer           m_origin_timer;                                 // Tracks time since mouse down to help buffer movement while selecting
-    bool                    m_allow_movement                { false };      // Used along with m_origin_timer to help buffer movement while selecting
-    bool                    m_hide_bounding                 { false };      // True when moving items to stop bounding box from updating and painting
-    QPointF                 m_origin_item_start_pos         { 0, 0 };       // Tracks starting position of origin item when View_Mode::Translating started
+    QElapsedTimer               m_origin_timer;                             // Tracks time since mouse down to help buffer movement while selecting
+    bool                        m_allow_movement            { false };      // Used along with m_origin_timer to help buffer movement while selecting
+    QPointF                     m_origin_item_start_pos     { 0, 0 };       // Tracks starting position of origin item when View_Mode::Translating started
 
     // View_Mode::Node_Connect Variables
-    DrSlot                 *m_last_mouse_slot               { nullptr };    // Last known Slot under mouse during mouseMoveEvent()
-    DrSlot                 *m_slot_start                    { nullptr };    // When Node connect starts, this contains the DrSlot that was clicked
+    DrSlot                     *m_last_mouse_slot           { nullptr };    // Last known Slot under mouse during mouseMoveEvent()
+    DrSlot                     *m_slot_start                { nullptr };    // When Node connect starts, this contains the DrSlot that was clicked
 
 
 
@@ -126,6 +131,8 @@ public:
 
     // Selection Functions
     QList<DrSettings*>  convertItemListToSettings(QList<QGraphicsItem*> list);
+    void                startSelect(QMouseEvent *event);
+    void                processSelection(QPoint mouse_in_view);
 
     // Getters / Setters
     View_Mode           currentViewMode()                   { return m_view_mode; }

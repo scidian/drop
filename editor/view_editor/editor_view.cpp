@@ -14,6 +14,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_editor/editor_scene.h"
+#include "editor/widgets/widgets_editor.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -63,11 +64,7 @@ EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_sc
 
 }
 
-
-EditorView::~EditorView() {
-    delete m_rubber_band;
-    delete m_tool_tip;
-}
+EditorView::~EditorView() { }
 
 void EditorView::focusInEvent(QFocusEvent *event) {
     m_editor_relay->setActiveWidget(Editor_Widgets::Stage_View);

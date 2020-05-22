@@ -19,7 +19,9 @@
 //##    Constructor
 //####################################################################################
 FormPopupColor::FormPopupColor(DrProject *project, QWidget *widget_to_use_for_mapToGlobal, QWidget *parent, int x_offset, int y_offset)
-    : FormPopup(parent, project, widget_to_use_for_mapToGlobal, x_offset, y_offset) { }
+    : FormPopup(parent, project, widget_to_use_for_mapToGlobal, x_offset, y_offset) {
+
+}
 
 
 //####################################################################################
@@ -35,13 +37,13 @@ void FormPopupColor::buildPopupColors(QWidget *wants_color, DrColor start_color)
     this->setFixedSize(210, 310);    
 
     // ********* Buttons for changing pages in the QStackWidget
-    DrQPushButtonPageSelect *change0 = new DrQPushButtonPageSelect(getInnerWidget(), this, tr("Color Palette") );
+    PopupPushButtonPageSelect *change0 = new PopupPushButtonPageSelect(getInnerWidget(), this, tr("Color Palette") );
     change0->setObjectName("buttonColorPalette");
     change0->setToolTip(tr("Color Palette"));
     change0->setGeometry( 159, 7, 41, 28);
     change0->setCheckable(true);
 
-    DrQPushButtonPageSelect *change1 = new DrQPushButtonPageSelect(getInnerWidget(), this, tr("Color History") );
+    PopupPushButtonPageSelect *change1 = new PopupPushButtonPageSelect(getInnerWidget(), this, tr("Color History") );
     change1->setObjectName("buttonColorHistory");
     change1->setToolTip(tr("Color History"));
     change1->setGeometry(159, 35, 41, 28);
@@ -171,7 +173,7 @@ QWidget* FormPopupColor::createColorBlock(Colors type, int start_index, int colu
             if (color == Qt::transparent) continue;
 
             // Otherwise create a new color button
-            DrQPushButtonColorSelect *button = new DrQPushButtonColorSelect(color_block, this, color, block_width, block_height);
+            PopupPushButtonColorSelect *button = new PopupPushButtonColorSelect(color_block, this, color, block_width, block_height);
             if (!horizontal) button->setGeometry(i * (block_width + x_spacing) + 2, j * (block_height + y_spacing) + 2, block_width, block_height);
             else             button->setGeometry(j * (block_width + x_spacing) + 2, i * (block_height + y_spacing) + 2, block_width, block_height);
 
@@ -248,17 +250,17 @@ void FormPopupColor::closeEvent(QCloseEvent *event) {
 //####################################################################################
 //##    ColorLabel Class Functions
 //####################################################################################
-DrQPushButtonPageSelect::DrQPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description) :
+PopupPushButtonPageSelect::PopupPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description) :
     QPushButton(parent), m_popup(popup), m_description(description) {
     setAttribute(Qt::WA_Hover);
 }
-DrQPushButtonPageSelect::~DrQPushButtonPageSelect() { }
+PopupPushButtonPageSelect::~PopupPushButtonPageSelect() { }
 
-void DrQPushButtonPageSelect::enterEvent(QEvent *) {
+void PopupPushButtonPageSelect::enterEvent(QEvent *) {
     m_text_before = m_popup->getColorLabel()->text();
     m_popup->getColorLabel()->setText( m_description );
 }
-void DrQPushButtonPageSelect::leaveEvent(QEvent *) {
+void PopupPushButtonPageSelect::leaveEvent(QEvent *) {
     m_popup->getColorLabel()->setText( m_text_before );
 }
 
@@ -266,14 +268,14 @@ void DrQPushButtonPageSelect::leaveEvent(QEvent *) {
 //####################################################################################
 //##    ColorLabel Class Functions
 //####################################################################################
-DrQPushButtonColorSelect::DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, DrColor my_color, int width, int height) :
+PopupPushButtonColorSelect::PopupPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, DrColor my_color, int width, int height) :
     QPushButton(parent), m_popup(popup), m_color(my_color), m_width(width), m_height(height) {
     setAttribute(Qt::WA_Hover);
     ///setToolTip("R: " + QString::number(m_color.red()) + ", B: " + QString::number(m_color.blue()) + ", G: " + QString::number(m_color.green()));
 }
-DrQPushButtonColorSelect::~DrQPushButtonColorSelect() { }
+PopupPushButtonColorSelect::~PopupPushButtonColorSelect() { }
 
-void DrQPushButtonColorSelect::enterEvent(QEvent *) {
+void PopupPushButtonColorSelect::enterEvent(QEvent *) {
     if (m_color == m_popup->getStartColor()) {
         this->move( this->pos() - QPoint(1, 1) );
     } else {
@@ -286,7 +288,7 @@ void DrQPushButtonColorSelect::enterEvent(QEvent *) {
     m_popup->setInfoLabelColor(m_color);
 }
 
-void DrQPushButtonColorSelect::leaveEvent(QEvent *) {
+void PopupPushButtonColorSelect::leaveEvent(QEvent *) {
     if (m_color == m_popup->getStartColor()) {
         this->setFixedSize(m_width + 2, m_height + 2);
         this->move( this->pos() + QPoint(1, 1) );
@@ -296,7 +298,7 @@ void DrQPushButtonColorSelect::leaveEvent(QEvent *) {
     }
 }
 
-void DrQPushButtonColorSelect::mouseReleaseEvent(QMouseEvent *) {
+void PopupPushButtonColorSelect::mouseReleaseEvent(QMouseEvent *) {
     emit m_popup->colorGrabbed( m_popup->getReturnWidget(), m_color );
     m_popup->close();
 }

@@ -15,6 +15,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/widgets/widgets_editor.h"
 #include "project/entities/dr_thing.h"
 
 

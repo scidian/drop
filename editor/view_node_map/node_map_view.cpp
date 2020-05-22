@@ -11,6 +11,7 @@
 #include "editor/view_node_map/node_map_item.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
+#include "editor/widgets/widgets_editor.h"
 
 
 //####################################################################################
@@ -19,18 +20,19 @@
 NodeMapView::NodeMapView(QWidget *parent, DrProject *project, NodeMapScene *scene, IEditorRelay *editor_relay)
     : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
 
-    updateGrid();
+    // ***** Initialize rubber band object used as a selection box
+    m_rubber_band = new EditorViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
+    // ***** Initialize variables
+    updateGrid();
     my_scene = scene;
     setScene(scene);
 
+    // ***** Connect Signals
     connect(my_scene, SIGNAL(aboutToClear()),   this, SLOT(sceneIsAboutToClear()));
-
 }
 
-NodeMapView::~NodeMapView() {
-
-}
+NodeMapView::~NodeMapView() { }
 
 // SLOT:    Chance to reset local pointer variables when Scene is about to clear() (like when switching Editor_Mode)
 //       ...After Scene is rebuilt local reference pointers will be dangling

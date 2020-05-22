@@ -11,14 +11,14 @@
 
 #include "core/dr_math.h"
 #include "editor/helper_library.h"
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 
 
 //####################################################################################
 //##    Catches event that Qt fires when value has changed,
 //##    trims any excess zeros from the right side
 //####################################################################################
-QString DrQTripleSpinBox::textFromValue(double value) const {
+QString InspectorTripleSpinBox::textFromValue(double value) const {
     return Dr::RemoveTrailingDecimals(value, decimals());
 }
 
@@ -27,7 +27,7 @@ QString DrQTripleSpinBox::textFromValue(double value) const {
 //##    Integer Spin Box
 //####################################################################################
 // Non signal activating setValue
-void DrQSpinSlot::updateValue(int value) {
+void InspectorSpinSlot::updateValue(int value) {
     bool before_block = this->signalsBlocked();
     this->blockSignals(true);
     this->setValue( value );
@@ -35,7 +35,7 @@ void DrQSpinSlot::updateValue(int value) {
 }
 
 // Context Menu Override, allows for us to show ContextMenu without "Step Up", "Step Down" for disabled boxes
-void DrQSpinSlot::contextMenuEvent(QContextMenuEvent *event) {
+void InspectorSpinSlot::contextMenuEvent(QContextMenuEvent *event) {
     if (m_show_menu_step) {
         QAbstractSpinBox::contextMenuEvent(event);
         return;
@@ -53,7 +53,7 @@ void DrQSpinSlot::contextMenuEvent(QContextMenuEvent *event) {
 //####################################################################################
 //##    Floating Point Spin Box, Non signal activating setValue
 //####################################################################################
-void DrQDoubleSpinSlot::updateValue(double value) {
+void InspectorDoubleSpinSlot::updateValue(double value) {
     bool before_block = this->signalsBlocked();
     this->blockSignals(true);
     if ( Dr::IsCloseTo(value, this->value(), m_update_tolerance) == false) {

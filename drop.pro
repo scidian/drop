@@ -231,13 +231,13 @@ SOURCES += \
     editor/view_editor/editor_view__rotate.cpp \
     editor/view_editor/editor_view__rotate_camera.cpp \
     editor/view_editor/editor_view__select.cpp \
-    editor/view_editor/editor_view__tooltip.cpp \
     editor/view_node_map/node_map_item.cpp \
     editor/view_node_map/node_map_item__item_change.cpp \
     editor/view_node_map/node_map_item__paint.cpp \
     editor/view_node_map/node_map_item__slot_info.cpp \
     editor/view_node_map/node_map_scene.cpp \
     editor/view_node_map/node_map_scene__build.cpp \
+    editor/view_node_map/node_map_scene__select.cpp \
     editor/view_node_map/node_map_scene__update.cpp \
     editor/view_node_map/node_map_view.cpp \
     editor/view_node_map/node_map_view__grid.cpp \
@@ -248,10 +248,13 @@ SOURCES += \
     editor/view_node_map/node_map_view__mouse_wheel.cpp \
     editor/interface_editor_relay.cpp \
     editor/view_node_map/node_map_view__paint.cpp \
-    editor/widgets/widgets_checkbox.cpp \
-    editor/widgets/widgets_combobox.cpp \
-    editor/widgets/widgets_slider.cpp \
-    editor/widgets/widgets_spin.cpp \
+    editor/view_node_map/node_map_view__select.cpp \
+    editor/widgets/widgets_editor_rubber_band.cpp \
+    editor/widgets/widgets_editor_tooltip.cpp \
+    editor/widgets/widgets_inspector_checkbox.cpp \
+    editor/widgets/widgets_inspector_combobox.cpp \
+    editor/widgets/widgets_inspector_slider.cpp \
+    editor/widgets/widgets_inspector_spin.cpp \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
@@ -1014,7 +1017,8 @@ HEADERS += \
     editor/view_node_map/node_map_item.h \
     editor/view_node_map/node_map_scene.h \
     editor/view_node_map/node_map_view.h \
-    editor/widgets/widgets.h \
+    editor/widgets/widgets_editor.h \
+    editor/widgets/widgets_inspector.h \
     engine/constants_engine.h \
     engine/debug_flags.h \
     engine/engine.h \

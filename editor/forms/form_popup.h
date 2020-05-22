@@ -119,18 +119,18 @@ signals:
 
 
 //####################################################################################
-//##    DrQPushButtonPageSelect
+//##    PopupPushButtonPageSelect
 //##        Button to select between color box pages
 //############################
-class DrQPushButtonPageSelect : public QPushButton
+class PopupPushButtonPageSelect : public QPushButton
 {
     FormPopupColor *m_popup;                // FormPopupColor form this button is installed on
     QString         m_description;          // What to show I am in the info label
     QString         m_text_before;          // Text info color box had before we changed it
 
 public:
-    explicit DrQPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description);
-    virtual ~DrQPushButtonPageSelect() override;
+    explicit PopupPushButtonPageSelect(QWidget *parent, FormPopupColor *popup, QString description);
+    virtual ~PopupPushButtonPageSelect() override;
 
     // Event Overrides
     virtual void enterEvent(QEvent *event) override;
@@ -139,10 +139,10 @@ public:
 
 
 //####################################################################################
-//##    DrQPushButtonColorSelect
+//##    PopupPushButtonColorSelect
 //##        A little color box label that shows a color to pick
 //############################
-class DrQPushButtonColorSelect : public QPushButton
+class PopupPushButtonColorSelect : public QPushButton
 {
     FormPopupColor *m_popup;                // FormPopupColor form this button is installed on
     DrColor         m_color;                // This label's color
@@ -151,8 +151,8 @@ class DrQPushButtonColorSelect : public QPushButton
     int             m_height;               // This blocks height
 
 public:
-    explicit DrQPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, DrColor my_color, int width, int height);
-    virtual ~DrQPushButtonColorSelect() override;
+    explicit PopupPushButtonColorSelect(QWidget *parent, FormPopupColor *popup, DrColor my_color, int width, int height);
+    virtual ~PopupPushButtonColorSelect() override;
 
     // Event Overrides
     virtual void enterEvent(QEvent *event) override;

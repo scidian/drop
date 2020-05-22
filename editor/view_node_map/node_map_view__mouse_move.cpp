@@ -133,6 +133,12 @@ void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
         }
     }
 
+
+    // ******************* If we're in selection mode, process mouse movement and resize box as needed
+    if (m_view_mode == View_Mode::Selecting) {
+        processSelection(event->pos());
+    }
+
     // ******************* If mouse moved while in translating mode, allow event to be passed to children
     if (m_view_mode == View_Mode::Translating) {
         if (m_allow_movement) {

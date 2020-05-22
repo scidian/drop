@@ -18,7 +18,7 @@
 #include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 #include "project/dr_project.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
@@ -30,7 +30,7 @@
 //####################################################################################
 QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type check_type) {
 
-    DrQCheckBox *check = new DrQCheckBox();
+    InspectorCheckBox *check = new InspectorCheckBox();
     check->setObjectName("checkInspector");
     check->setFont(font);
     check->setDrawTop(3);
@@ -76,7 +76,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->setSpacing(2);
     horizontal_split->setContentsMargins(0,0,0,2);
 
-    DrQCheckBox *check_left = new DrQCheckBox();
+    InspectorCheckBox *check_left = new InspectorCheckBox();
     check_left->setFixedWidth(36);
     check_left->setObjectName("checkInspector");
     check_left->setFont(font);
@@ -92,7 +92,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     check_left->setChecked(property->getValue().toVector()[0].toBool());
     getHoverHandler()->attachToHoverHandler(check_left, property);
 
-    DrQTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toVector()[1].toDouble());
+    InspectorTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toVector()[1].toDouble());
     spin_right->setObjectName("spinBool");
     spin_right->setFixedHeight(22);
     spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
@@ -120,7 +120,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
         updateSettingsFromNewValue( property->getCompPropPair(), checked );
         spin_right->setEnabled( checked );
     });
-    connect (spin_right, QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin_right, QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
          this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 1); });
 
     return spin_pair;
@@ -142,7 +142,7 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     horizontal_split->setSpacing(2);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    DrQCheckBox *check_left = new DrQCheckBox();
+    InspectorCheckBox *check_left = new InspectorCheckBox();
     check_left->setFixedWidth(36);
     check_left->setFixedHeight(22);
     check_left->setObjectName("checkInspector");

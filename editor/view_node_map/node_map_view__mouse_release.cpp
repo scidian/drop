@@ -14,6 +14,7 @@
 #include "editor/view_node_map/node_map_item.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
+#include "editor/widgets/widgets_editor.h"
 #include "project/dr_project.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_slot.h"
@@ -26,9 +27,11 @@
 QList<DrSettings*> NodeMapView::convertItemListToSettings(QList<QGraphicsItem*> list) {
     QList<DrSettings*> new_list;
     for (auto item : list) {
-        NodeMapItem *as_item = dynamic_cast<NodeMapItem*>(item);
-        DrSettings *as_entity = as_item->getEntity();
-        new_list.append(as_entity);
+        NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);
+        if (map_item != nullptr) {
+            DrSettings *as_entity = map_item->getEntity();
+            new_list.append(as_entity);
+        }
     }
     return new_list;
 }
@@ -66,10 +69,29 @@ void NodeMapView::mouseReleaseEvent(QMouseEvent *event) {
 
     // Process left mouse button released
     if (event->button() & Qt::LeftButton) {
-        m_hide_bounding = false;
+        m_rubber_band->hide();
+
+        // We have it so that Inspector only completely changes itself based on selection from scene view on mouse up
+        // (i.e. after rubber band box mode is over so it's not trying to change a ton and slow things down)
+        if (m_view_mode == View_Mode::Selecting) {
+            m_view_mode = View_Mode::None;
+            if (my_scene->selectedItems().size() > 0) {
+                QList<long> item_keys { };
+                for (auto &item : my_scene->selectedItems())
+                    item_keys.append(item->data(User_Roles::Key).toLongLong());
+                m_editor_relay->buildInspector( item_keys );
+                m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+            } else {
+                if (itemAt(event->pos()) == nullptr) {
+                    m_editor_relay->buildInspector( { } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+                }
+            }
+        }
 
         // ***** Finished trying to connect two node slots
         if (m_view_mode == View_Mode::Node_Connect) {
+            m_view_mode = View_Mode::None;
             NodeMapItem   *mouse_map_item =    dynamic_cast<NodeMapItem*>(mouse_item);
 
             // We found an item under mouse and we have a start DrDlot, try to conenct
@@ -93,12 +115,6 @@ void NodeMapView::mouseReleaseEvent(QMouseEvent *event) {
         if (m_view_mode == View_Mode::Translating || m_view_mode == View_Mode::Resizing || m_view_mode == View_Mode::Rotating) {
             m_view_mode = View_Mode::None;
             QList<DrSettings*> selected_entities = convertItemListToSettings(scene()->selectedItems());
-//            m_editor_relay->updateEditorWidgetsAfterItemChange(
-//                        Editor_Widgets::Map_View, { selected_entities.begin(), selected_entities.end() },
-//                        {   std::make_pair(Comps::Thing_Transform, Props::Thing_Position),
-//                            std::make_pair(Comps::Thing_Transform, Props::Thing_Size),
-//                            std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
-//                            std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) });
         }
 
         m_view_mode = View_Mode::None;

@@ -18,7 +18,7 @@
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/preferences.h"
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
@@ -34,7 +34,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
     else
         property_value = property->getValue().toInt();
 
-    DrQSpinSlot *spin = new DrQSpinSlot();
+    InspectorSpinSlot *spin = new InspectorSpinSlot();
     spin->setFixedHeight(22);
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
@@ -88,7 +88,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     else
         property_value = property->getValue().toDouble();
 
-    DrQTripleSpinBox *spin = new DrQTripleSpinBox();
+    InspectorTripleSpinBox *spin = new InspectorTripleSpinBox();
     spin->setFixedHeight(22);
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
@@ -123,7 +123,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
     spin->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin));
 
     // Connect value changed to our handler function
-    connect (spin,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
              this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d); });
 
     return spin;
@@ -142,8 +142,8 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    DrQTripleSpinBox *spin_left  =  initializeEmptySpinBox(property, font, property->getValue().toPointF().x);
-    DrQTripleSpinBox *spin_right;
+    InspectorTripleSpinBox *spin_left  = initializeEmptySpinBox(property, font, property->getValue().toPointF().x);
+    InspectorTripleSpinBox *spin_right;
 
     if (spin_type == Property_Type::PositionF)
         spin_right  = initializeEmptySpinBox(property, font, -1 * property->getValue().toPointF().y);
@@ -224,9 +224,9 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     spin_left->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_left));
     spin_right->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_right));
 
-    connect (spin_left,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin_left,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
          this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 0); });
-    connect (spin_right, QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin_right, QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
          this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 1); });
 
     return spin_pair;
@@ -247,9 +247,9 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
     horizontal_split->setContentsMargins(0,0,0,0);
 
     DrVec3 point3D = property->getValue().toVec3();
-    DrQTripleSpinBox *spin_x = initializeEmptySpinBox(property, font, static_cast<double>(point3D.x));
-    DrQTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, static_cast<double>(point3D.y));
-    DrQTripleSpinBox *spin_z = initializeEmptySpinBox(property, font, static_cast<double>(point3D.z));
+    InspectorTripleSpinBox *spin_x = initializeEmptySpinBox(property, font, static_cast<double>(point3D.x));
+    InspectorTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, static_cast<double>(point3D.y));
+    InspectorTripleSpinBox *spin_z = initializeEmptySpinBox(property, font, static_cast<double>(point3D.z));
 
     spin_x->setFixedHeight(22);
     spin_y->setFixedHeight(22);
@@ -302,11 +302,11 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
     spin_y->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_y));
     spin_z->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_z));
 
-    connect (spin_x,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin_x,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
          this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 0); });
-    connect (spin_y,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin_y,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
          this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 1); });
-    connect (spin_z, QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect (spin_z, QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
          this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 2); });
 
     return spin_trio;
@@ -325,7 +325,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-    DrQTripleSpinBox *spin_left  = initializeEmptySpinBox(property, font, property->getValue().toPointF().x);
+    InspectorTripleSpinBox *spin_left = initializeEmptySpinBox(property, font, property->getValue().toPointF().x);
     size_policy.setHorizontalStretch(4);
     spin_left->setSizePolicy(size_policy);
 
@@ -334,7 +334,7 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     size_policy.setHorizontalStretch(1);
     variable_sign->setSizePolicy(size_policy);
     getHoverHandler()->attachToHoverHandler(variable_sign, Advisor_Info::Variable_Widget);
-    DrQTripleSpinBox *spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y);
+    InspectorTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toPointF().y);
     spin_right->setMinimum(0);
     size_policy.setHorizontalStretch(3);
     spin_right->setSizePolicy(size_policy);
@@ -366,9 +366,9 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     spin_left->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_left));
     spin_right->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin_right));
 
-    connect(spin_left,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect(spin_left,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
             this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 0); });
-    connect(spin_right, QOverload<double>::of(&DrQTripleSpinBox::valueChanged),
+    connect(spin_right, QOverload<double>::of(&InspectorTripleSpinBox::valueChanged),
             this, [this, property] (double d) { updateSettingsFromNewValue(property->getCompPropPair(), d, 1); });
 
     return spin_pair;
@@ -378,8 +378,8 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
 //####################################################################################
 //##    Spin Box Helper Functions
 //####################################################################################
-DrQTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value) {
-    DrQTripleSpinBox *new_spin  = new DrQTripleSpinBox();
+InspectorTripleSpinBox* TreeInspector::initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value) {
+    InspectorTripleSpinBox *new_spin  = new InspectorTripleSpinBox();
     new_spin->setFont(font);
     new_spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
     new_spin->setMinimumWidth(50);
@@ -411,7 +411,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
     horizontal_split->setSpacing(6);
     horizontal_split->setContentsMargins(0,0,0,0);
 
-        DrQTripleSpinBox *spin = new DrQTripleSpinBox();
+        InspectorTripleSpinBox *spin = new InspectorTripleSpinBox();
         spin->setFont(font);
         spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
         spin->setFixedHeight(22);
@@ -460,7 +460,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         this->addToWidgetList(slider);
 
     // Connect value changed to our handler function
-    connect (spin,  QOverload<double>::of(&DrQTripleSpinBox::valueChanged), this, [this, property, slider] (double d) {
+    connect (spin,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged), this, [this, property, slider] (double d) {
         slider->blockSignals(true);
         slider->setValue( static_cast<int>(d) );
         updateSettingsFromNewValue(property->getCompPropPair(), d);

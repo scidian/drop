@@ -18,6 +18,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/widgets/widgets_editor.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -393,25 +394,6 @@ void EditorView::paintToolTip(QPainter &painter) {
     // this way the tool tip text is drawn directly onto the OpenGL surface and not a seperate QWidget tool tip window
     m_tool_tip->drawText(painter, left_offset, top_offset);
 }
-
-
-//####################################################################################
-//##    PAINT: Draw our Rubber Band selection box with custom colors
-//####################################################################################
-void EditorViewRubberBand::paintEvent(QPaintEvent *) {
-    QStylePainter painter(this);
-
-    QColor bg = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));
-    bg.setAlpha(48);
-    QBrush brush;
-    brush.setStyle(Qt::BrushStyle::SolidPattern);
-    brush.setColor(bg);
-
-    painter.setBrush(brush);
-    painter.setPen(QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light))), 2, Qt::PenStyle::SolidLine));
-    painter.drawRect(this->rect());
-}
-
 
 
 

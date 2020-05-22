@@ -7,14 +7,14 @@
 //
 #include <QApplication>
 
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 
 
 //####################################################################################
-//##    Shows the QPushButton popupMenu,
-//##    Disables animation while we move it to the position we desire
+//##    Shows the QComboBox popupMenu,
+//##        Disables animation while we move it to the position we desire
 //####################################################################################
-void DrQComboBoxDropDown::showPopup() {
+void InspectorComboBoxDropDown::showPopup() {
     bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, false);
 

@@ -9,14 +9,14 @@
 #include <QStyleOptionSlider>
 #include <QStylePainter>
 
-#include "editor/widgets/widgets.h"
+#include "editor/widgets/widgets_inspector.h"
 
 
 //####################################################################################
 //##    Custom Paint Event
 //####################################################################################
-void DrQSlider::paintEvent(QPaintEvent *event) {
-    (void)event;
+void InspectorSlider::paintEvent(QPaintEvent *event) {
+    (void) event;
 
     QStylePainter painter(this);
     QStyleOptionSlider opt;
@@ -62,7 +62,7 @@ void DrQSlider::paintEvent(QPaintEvent *event) {
 //####################################################################################
 //##    Non signal activating setValue
 //####################################################################################
-void DrQSlider::updateValue(int value) {
+void InspectorSlider::updateValue(int value) {
     bool before_block = this->signalsBlocked();
     this->blockSignals(true);
     this->setValue( value );

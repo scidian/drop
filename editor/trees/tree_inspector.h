@@ -27,8 +27,8 @@ class DrSettings;
 class DrProperty;
 
 class IEditorRelay;
+class InspectorTripleSpinBox;
 class DrImageHolder;
-class DrQTripleSpinBox;
 class DrFilterHoverHandler;
 
 // Class Constants
@@ -109,7 +109,7 @@ public:
     QTextEdit*              createTextEdit(DrProperty *property, QFont &font, QSizePolicy size_policy);
     QWidget*                createSlider(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type);
     QFrame*                 createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy);
-    DrQTripleSpinBox*       initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
+    InspectorTripleSpinBox* initializeEmptySpinBox(DrProperty *property, QFont &font, double start_value);
     void                    setButtonColorFromSystemDialog(QPushButton *button);
     void                    updateColorButton(QPushButton *button, QColor color);
 

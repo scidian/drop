@@ -132,7 +132,6 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
                                 // Prep Translating start
                                 viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
 
-                                m_hide_bounding = true;
                                 m_view_mode = View_Mode::Translating;
                                 m_origin_item_start_pos = m_origin_item->scenePos();
 
@@ -162,10 +161,10 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
 
                 // ******************* If theres no item under mouse, start selection box
                 if (m_origin_item == nullptr) {
-                    ///m_view_mode = View_Mode::Selecting;
-                    scene()->clearSelection();
-                    m_editor_relay->buildInspector( { } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Map_View, { } );
+                    m_view_mode = View_Mode::Selecting;
+                    startSelect(event);
+                    processSelection(event->pos());
+                    return;
                 }
 
             }
