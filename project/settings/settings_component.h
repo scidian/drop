@@ -132,6 +132,8 @@ public:
     DrSlot*         addOutput(std::string output_name, bool multiple_connections = false, bool is_deletable = false);
     bool            connectOutput(std::string output_name, DrSlot *signal);
     bool            connectOutput(long output_key, DrSlot *signal);
+    void            setNodePositionFromOtherComponent(DrComponent *from_component, Direction direction);
+    void            updateNodeSize();
 
 };
 

@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_debug.h"
+#include "core/dr_math.h"
 #include "project/constants_component_info.h"
 #include "project/constants_messages.h"
 #include "project/settings/settings.h"
@@ -140,6 +141,41 @@ bool DrComponent::connectOutput(long output_key, DrSlot *signal) {
         if (output == nullptr) return false;
     return output->addConnection(signal);
 }
+
+
+
+//####################################################################################
+//##    Node Placement
+//##        Finds a location for this Component Node to the side of an existing Component Node
+//####################################################################################
+// Recalculates Node size based on number of Signals and Outputs
+void DrComponent::updateNodeSize() {
+    double max_rows = Dr::Max(this->getSignalMap().size(), this->getOutputMap().size());
+           max_rows = Dr::Max(max_rows + 1.0, 2.0);
+    m_node_size.x =     c_node_default_width;
+    m_node_size.y =     c_node_row_height * max_rows;
+}
+
+void DrComponent::setNodePositionFromOtherComponent(DrComponent *from_component, Direction direction) {
+    if (from_component == nullptr) return;
+
+    updateNodeSize();
+    DrPointF pos = from_component->getNodePosition();
+    if        (direction == Direction::Right) {
+        pos.x = pos.x + c_node_spacing + from_component->getNodeSize().x;
+    } else if (direction == Direction::Left) {
+        pos.x = pos.x - c_node_spacing - this->getNodeSize().x;
+    } else if (direction == Direction::Down) {
+        pos.y = pos.y + c_node_spacing + from_component->getNodeSize().y;
+    } else if (direction == Direction::Up) {
+        pos.y = pos.y - c_node_spacing - this->getNodeSize().y;
+    }
+    this->setNodePosition(pos);
+}
+
+
+
+
 
 
 

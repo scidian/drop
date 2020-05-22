@@ -166,7 +166,6 @@ public:
     long            getNumberOfPrefabs()    { return static_cast<long>(m_prefabs.size()); }
     std::set<long>  getImageKeysUsedByProject();
     DrPointF        getNewWorldMapPosition();
-    void            setNewWorldPositionFromWorld(DrWorld *from_world, DrWorld *to_world, Direction direction);
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
     DrType          findChildTypeFromKey(long check_key);

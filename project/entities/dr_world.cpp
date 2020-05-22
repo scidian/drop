@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_random.h"
+#include "core/dr_math.h"
 #include "project/constants_messages.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -144,6 +145,17 @@ DrStage* DrWorld::getStageWithName(std::string stage_name) {
 }
 
 
+//####################################################################################
+//##    Node Placement
+//##        Finds a location for this World Node to the side of an existing World Node
+//####################################################################################
+void DrWorld::setNodePositionFromOtherWorld(DrWorld *from_world, Direction direction) {
+    if (from_world == nullptr) return;
+    DrComponent *world_connections_from = from_world->getComponent(Comps::World_Connections);
+    DrComponent *world_connections_this = this->getComponent(Comps::World_Connections);
+    if (world_connections_this == nullptr || world_connections_from == nullptr) return;
+    world_connections_this->setNodePositionFromOtherComponent(world_connections_from, direction);
+}
 
 
 

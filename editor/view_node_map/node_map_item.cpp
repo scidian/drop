@@ -68,15 +68,10 @@ NodeMapItem::NodeMapItem(DrProject *project, IEditorRelay *editor_relay, DrCompo
 
 
     // ***** Calculate Size
-    this->m_width =  c_node_default_width;
-    this->m_height = c_node_row_height;
-    int slot_rows = 1;
-    int signal_count = component->getSignalMap().size();
-    int output_count = component->getOutputMap().size();
-    slot_rows = Dr::Max(slot_rows, signal_count);
-    slot_rows = Dr::Max(slot_rows, output_count);
-    this->m_height = ((1 + slot_rows) * c_node_row_height);
-    m_component->setNodeSize( DrPointF(m_width, m_height) );                    // Update size in project DrComponent
+    m_component->updateNodeSize();
+    this->m_width =  m_component->getNodeSize().x;
+    this->m_height = m_component->getNodeSize().y;
+
 
     // ***** Store Slot Circle Rects
     updateSlotRects();

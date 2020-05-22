@@ -64,6 +64,8 @@ public:
     void        initializeWorldPhysics2D(std::string new_name);
     void        initializeWorldUI(std::string new_name);
 
+    void        setNodePositionFromOtherWorld(DrWorld *from_world, Direction direction);
+
     // World Info
     long        getFirstStageKey();
     DrStage*    getStageFromKey(long from_stage_key);

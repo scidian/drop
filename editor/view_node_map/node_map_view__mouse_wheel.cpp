@@ -79,16 +79,17 @@ void NodeMapView::zoomToScale(double scale, bool recalculate_level) {
 }
 
 // Fits contents of NodeMapScene into View, called first time World Map is shown and DrProject::m_just_loaded is true
-void NodeMapView::zoomToContents() {
-    this->fitInView( this->scene()->sceneRect() );
+void NodeMapView::zoomToContents() {    
+    this->fitInView( scene()->itemsBoundingRect() );
 
     QMatrix fit_matrix = this->matrix();
     double  scale_x = fit_matrix.m11();
     double  scale_y = fit_matrix.m22();
     double  min = (scale_x < scale_y) ? scale_x : scale_y;
+            min = (min > 1.0) ? 1.0 : min;
     zoomToScale(min);
 
-    m_editor_relay->viewCenterOnPoint( this->scene()->sceneRect().center() );
+    m_editor_relay->viewCenterOnPoint( scene()->itemsBoundingRect().center() );
 }
 
 

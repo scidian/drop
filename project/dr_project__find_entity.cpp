@@ -257,50 +257,6 @@ std::set<long> DrProject::getImageKeysUsedByProject() {
 }
 
 
-//####################################################################################
-//##    World Node Functions
-//####################################################################################
-// Finds a location for an additional World in the Node World Map
-DrPointF DrProject::getNewWorldMapPosition() {
-    double left = 0, right = 0, top = 0, bottom = 0;
-
-    for (auto &world_pair : getWorldMap()) {
-        DrComponent *world_connections = world_pair.second->getComponent(Comps::World_Connections);
-        if (world_connections != nullptr) {
-            DrPointF top_left =  world_connections->getNodePosition();
-            DrPointF node_size = world_connections->getNodeSize();
-            DrPointF bottom_right = DrPointF(top_left.x + node_size.x, top_left.y + node_size.y);
-
-            if (top_left.x < left)          left =   top_left.x;
-            if (top_left.y < top)           top =    top_left.y;
-            if (bottom_right.x > right)     right =  bottom_right.x;
-            if (bottom_right.y > bottom)    bottom = bottom_right.y;
-        }
-    }
-    return DrPointF(right + c_node_spacing, top);
-}
-
-// Finds a location for an additional World to the side of an existing World Node
-void DrProject::setNewWorldPositionFromWorld(DrWorld *from_world, DrWorld *to_world, Direction direction) {
-    DrComponent *world_connections_from = from_world->getComponent(Comps::World_Connections);
-    DrComponent *world_connections_to =   to_world->getComponent(Comps::World_Connections);
-
-    if (world_connections_from != nullptr && world_connections_to != nullptr) {
-        DrPointF pos =   world_connections_from->getNodePosition();
-        if (direction == Direction::Right) {
-            pos.x = pos.x + world_connections_from->getNodeSize().x + c_node_spacing;
-        } else if (direction == Direction::Left) {
-            pos.x = pos.x - world_connections_to->getNodeSize().x - c_node_spacing;
-        } else if (direction == Direction::Down) {
-            pos.y = pos.y + world_connections_from->getNodeSize().y + c_node_spacing;
-        } else if (direction == Direction::Up) {
-            pos.y = pos.y - world_connections_to->getNodeSize().y - c_node_spacing;
-        }
-        world_connections_to->setNodePosition(pos);
-    }
-}
-
-
 
 
 
