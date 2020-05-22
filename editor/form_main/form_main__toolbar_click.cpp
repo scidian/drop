@@ -30,7 +30,7 @@
 //####################################################################################
 void FormMain::buttonGroupModeClicked(int id) {
     Editor_Mode new_id = static_cast<Editor_Mode>(id);
-    if (m_current_mode == new_id) return;
+    if (getEditorMode() == new_id) return;
     setEditorMode(new_id);
 }
 
@@ -79,18 +79,13 @@ void FormMain::buttonGroupEditClicked(int id) {
         if (clicked == Buttons_Edit::Delete)    event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
         if (clicked == Buttons_Edit::Duplicate) event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_D,      { Qt::KeyboardModifier::NoModifier });
 
-        if (getActiveWidget() == Editor_Widgets::Project_Tree) {
-            treeProjectEditor->keyPressEvent(event);
-            delete event;
-
-        } else if (getActiveWidget() == Editor_Widgets::Stage_View) {
-            sceneEditor->keyPressEvent(event);
-            delete event;
-
-        } else if (getActiveWidget() == Editor_Widgets::Asset_Tree) {
-            treeAssetEditor->keyPressEvent(event);
-            delete event;
+        if (getEditorMode() == Editor_Mode::World_Editor) {
+            if      (getActiveWidget() == Editor_Widgets::Project_Tree)     { treeProjectEditor->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::Editor_View)      { sceneEditor->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::Asset_Tree)       { treeAssetEditor->keyPressEvent(event); }
         }
+
+        if (event != nullptr) { delete event; event = nullptr; }
     }
 }
 
@@ -117,7 +112,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
             thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation, 0);
         }
         sceneEditor->resetSelectionGroup();
-        updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties_to_update );
+        updateEditorWidgetsAfterItemChange(Editor_Widgets::Tool_Bar, settings, properties_to_update );
 
     } else if (clicked == Buttons_Transform::Flip_H || clicked == Buttons_Transform::Flip_V) {
         QPointF scale = (clicked == Buttons_Transform::Flip_H) ? QPointF(-1, 1) : QPointF(1, -1);
@@ -188,7 +183,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
         engine->show();
 
     } else if (clicked == Buttons_Play::Play_Stage) {
-        long only_stage_key = this->getStageView()->getEditorScene()->getCurrentStageKeyShown();
+        long only_stage_key = this->getWorldEditor()->getEditorScene()->getCurrentStageKeyShown();
 
         DrStage *stage = m_project->findStageFromKey(only_stage_key);
         if (stage != nullptr) {

@@ -51,7 +51,7 @@ private:
 
     // ***** "Editor" (Animation Editor) Widgets
     EditorScene    *sceneEditor;                            // Holds the currently selected Stage
-    EditorView     *viewEditor;                             // Renders the StageView
+    EditorView     *viewEditor;                             // Renders the EditorView
     QScrollArea    *areaBottom;
 
 
@@ -68,7 +68,7 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getStageView() override     { return viewEditor; }
+    virtual EditorView*         getWorldEditor() override   { return viewEditor; }
     virtual NodeMapView*        getWorldMapView() override  { return nullptr; }
 
     virtual Editor_Mode         getEditorMode() override;

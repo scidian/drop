@@ -23,7 +23,7 @@ enum class Debug_Flags {
 
     Show_Secret_Menu,                   // Add special menu to menu bar containing some hidden test functions
     Show_Undo_View,                     // Shows a window with all undo / redo commands from current EditorScene
-    Show_Bottom_Debug_Labels,           // Shows QGraphicsScene Stage View Debug labels
+    Show_Bottom_Debug_Labels,           // Shows QGraphicsScene World Editor Debug labels
     Show_Hidden_Component,              // Shows hidden custom Entity Advisor component / properties
 
     Turn_On_Antialiasing_in_Editor,     // Turns on antialiasing in the World Editor GraphicsView

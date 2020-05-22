@@ -137,7 +137,7 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
         QPointF new_center = mapToScene( boundingRect().center() );
         m_thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Position, DrPointF(new_center.x(), new_center.y()));
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { std::make_pair(Comps::Thing_Transform, Props::Thing_Position) });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { m_thing }, { std::make_pair(Comps::Thing_Transform, Props::Thing_Position) });
 
         return new_pos;
     }
@@ -154,7 +154,7 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
         m_thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale, DrPointF(scale.x(), scale.y()) );
         m_thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size, DrPointF(size_x, size_y));
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing },
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { m_thing },
                         {   std::make_pair(Comps::Thing_Transform, Props::Thing_Size),
                             std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
                             std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) });
@@ -167,7 +167,7 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
         double new_z = value.toDouble();
         m_thing->setZOrderWithSub(new_z, Z_Insert::Front);
 
-        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { m_thing }, { std::make_pair(Comps::Thing_Layering, Props::Thing_Z_Order) });
+        m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { m_thing }, { std::make_pair(Comps::Thing_Layering, Props::Thing_Z_Order) });
         return new_z;
     }
 

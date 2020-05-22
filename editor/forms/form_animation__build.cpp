@@ -167,18 +167,18 @@ void FormAnimation::buildCentralWidget() {
                 splitterHorizontal->addWidget(treeProjectEditor);
 
 
-                    QWidget *widgetStageView = new QWidget(splitterHorizontal);
-                    widgetStageView->setObjectName(QStringLiteral("widgetStageView"));
-                    widgetStageView->setSizePolicy(sizePolicyView);
-                    widgetStageView->setMinimumSize(QSize(100, 0));
-                    widgetStageView->setFont(font);
-                        QVBoxLayout *verticalLayoutView = new QVBoxLayout(widgetStageView);
+                    QWidget *widgetEditorView = new QWidget(splitterHorizontal);
+                    widgetEditorView->setObjectName(QStringLiteral("widgetEditorView"));
+                    widgetEditorView->setSizePolicy(sizePolicyView);
+                    widgetEditorView->setMinimumSize(QSize(100, 0));
+                    widgetEditorView->setFont(font);
+                        QVBoxLayout *verticalLayoutView = new QVBoxLayout(widgetEditorView);
                         verticalLayoutView->setObjectName(QStringLiteral("verticalLayoutView"));
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
                         // ***** Load our EditorView to display our EditorScene collection of items
-                        viewEditor = new EditorView(widgetStageView, m_project, sceneEditor, this);
+                        viewEditor = new EditorView(widgetEditorView, m_project, sceneEditor, this);
                         viewEditor->setObjectName(QStringLiteral("viewEditor"));
                         viewEditor->setAcceptDrops(true);
                         viewEditor->setFrameShape(QFrame::NoFrame);
@@ -198,7 +198,7 @@ void FormAnimation::buildCentralWidget() {
 
                     verticalLayoutView->addWidget(viewEditor);
 
-                splitterHorizontal->addWidget(widgetStageView);
+                splitterHorizontal->addWidget(widgetEditorView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150
                                                                             // #NOTE: You can save and restore the sizes of the widgets from a QByteArray
                                                                             //        using QSplitter.saveState() and QSplitter.restoreState() respectively

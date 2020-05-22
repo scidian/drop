@@ -20,12 +20,12 @@ typedef std::vector<QString> HeaderBodyList;
 namespace Advisor_Info {
 
     // Toolbar Buttons
-    const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your Project and how the worlds and "
-                                                               "user interfaces in your Project connect to each other." };
-    const HeaderBodyList Mode_Editor            { "World Editor Mode", "This mode will allow you to edit the contents of each physics world. It is where "
-                                                                       "you can design each Stage and lay out your worlds / levels." };
-    const HeaderBodyList Mode_UI                { "UI Editor Mode",     "This mode will allow you to edit the user interface layer of your Project." };
-    const HeaderBodyList Settings_Playground    { "Physics Playground", "Play with the physics engine to learn more about physics properties." };
+    const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your Project and how the Worlds and "
+                                                               "User Interfaces in your Project connect to each other." };
+    const HeaderBodyList Mode_Editor            { "World Editor", "This mode will allow you to edit the contents of each Physics World. It is where "
+                                                                  "you can design each Stage and lay out your worlds / levels." };
+    const HeaderBodyList Mode_UI                { "UI Editor", "This mode will allow you to edit the user interface layer of your Project." };
+
     const HeaderBodyList Settings_Image_Viewer  { "Image Viewer",       "View / manage Images used in this Project." };
     const HeaderBodyList Settings_Font_Builder  { "Font Builder",       "Create and edit fonts used for Text Boxes." };
     const HeaderBodyList Settings_Manager       { "Project Settings",   "View and edit Project settings." };
@@ -50,7 +50,7 @@ namespace Advisor_Info {
     const HeaderBodyList Resize_To_Grid         { "Resize to Grid?", "Snaps corners and edges of Things to grid while resizing. Only works if the angle "
                                                                      "of the Thing matches the angle of the grid, and the Grid Scale X and Y are the same. "
                                                                      "Selection handles will change to square shape to signify snapping is possible."};
-    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?",   "Snaps Things to grid lines when moving Things around with the mouse." };
+    const HeaderBodyList Grid_Snap_To_Grid      { "Snap to Grid?",   "Snaps Items to grid lines when moving Items around with the mouse." };
     const HeaderBodyList Grid_Snap_Options      { "Snap Options",    "Choose how Things snap to grid while multiple Things are selected, and Things are moved "
                                                                      "with mouse. Either have the center of the selection group snap to the grid, or have each "
                                                                      "Thing within the group snap to grid individually." };
@@ -71,23 +71,23 @@ namespace Advisor_Info {
                                                                                "physics / event collisions within your game. "
                                                                                "<b>Blue:</b> Player, <b>Red:</b> Enemy, "
                                                                                "<b>Purple:</b> Damage All, <b>Green:</b> Damage None" };
-
-    // Form Main Widgets
-    const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of editor Items." };
-    const HeaderBodyList Inspector_Window       { "Inspector", "Displays components / properties of currently selected Item." };
-
-    const HeaderBodyList ColorButton            { "Color Button", "Click this to open a color popup that has a convenient color selection." };
-    const HeaderBodyList ColorPicker            { "Color Picker", "Press and hold this button to use a magnifying lens to pick a color off of the screen." };
-    const HeaderBodyList ColorDialog            { "Color Dialog", "Opens the system color dialog toolbox." };
-
     // Editor Widgets
+    const HeaderBodyList Inspector_Window       { "Inspector", "Displays components / properties of currently selected Item." };
+    const HeaderBodyList Advisor_Window         { "Advisor Window", "Shows a brief description of currently highlighted / selected item(s)." };
     const HeaderBodyList Asset_List             { "Asset List", "These are Things that can be dragged into your Project. Changing the properties "
                                                                 "of these Things will affect all instances of those Things Project wide." };
     const HeaderBodyList Asset_Search           { "Asset Search", "Type the name of an asset here to help find it in the Asset List." };
-    const HeaderBodyList Stage_View             { "Stage View", "Shows Things and layout of currently selected Stage. Drop assets into Stage "
-                                                                "View to add to Stage." };
+    const HeaderBodyList World_Editor           { "World Editor", "Shows Things and layout of currently selected World / Stage. Drop assets into World "
+                                                                  "Editor to add them to current Stage." };
     const HeaderBodyList Project_Tree           { "Project Tree", "Lists the Things contained within the currently displayed Stage. Select Things "
                                                                   "to view / adjust properties for each Thing." };
+    const HeaderBodyList World_Map              { "World Map", "Shows project Worlds and User Interfaces. Allows you to control the flow of your game "
+                                                               "between Worlds and UIs." };
+
+    // Form Main Widgets
+    const HeaderBodyList ColorButton            { "Color Button", "Click this to open a color popup that has a convenient color selection." };
+    const HeaderBodyList ColorPicker            { "Color Picker", "Press and hold this button to use a magnifying lens to pick a color off of the screen." };
+    const HeaderBodyList ColorDialog            { "Color Dialog", "Opens the system color dialog toolbox." };
 
     // Project Types
     const HeaderBodyList Asset_Description      { "Asset", "This is an Thing that can be dragged into your Project. Changing the properties "

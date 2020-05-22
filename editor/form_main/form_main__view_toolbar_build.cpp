@@ -29,12 +29,12 @@ const int   c_button_size_h =   26;
 //####################################################################################
 //##    Builds FormMain View Toolbar
 //####################################################################################
-void FormMain::buildViewToolBar(QWidget *parent) {
+void FormMain::buildViewToolBar(QWidget *parent, QFrame *&load_into_widget, Editor_Mode view_type) {
 
-    viewToolBar = new QFrame(parent);
-    viewToolBar->setObjectName("viewToolBar");
-    viewToolBar->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *view_toolbar_layout = new QHBoxLayout(viewToolBar);
+    load_into_widget = new QFrame(parent);
+    load_into_widget->setObjectName("viewToolBar");
+    load_into_widget->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *view_toolbar_layout = new QHBoxLayout(load_into_widget);
         view_toolbar_layout->setObjectName(QStringLiteral("viewToolBarLayout"));
         view_toolbar_layout->setSpacing(4);
         view_toolbar_layout->setContentsMargins(6, 0, 6, 0);
@@ -104,11 +104,11 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             m_filter_hover->attachToHoverHandler(point_x, "Center X Coordinate", "Current X coordinate location of the center of the view.");
             toolbarLayoutHand->addSpacing(5);
             toolbarLayoutHand->addWidget(point_x);
-            if (this->getStageView() != nullptr) {
+            if (this->getWorldEditor() != nullptr) {
                 connect (point_x, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [this, point_y] (double d) {
-                        this->getStageView()->centerOn(QPointF(d, -point_y->value()));
+                        this->getWorldEditor()->centerOn(QPointF(d, -point_y->value()));
                 });
-                connect(this->getStageView(), SIGNAL(updateCenterPointX(double)), point_x, SLOT(updateValue(double)));
+                connect(this->getWorldEditor(), SIGNAL(updateCenterPointX(double)), point_x, SLOT(updateValue(double)));
             }
 
             // Point Y Box
@@ -127,11 +127,11 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             m_filter_hover->attachToHoverHandler(point_y, "Center Y Coordinate", "Current Y coordinate location of the center of the view.");
             toolbarLayoutHand->addSpacing(6);
             toolbarLayoutHand->addWidget(point_y);
-            if (this->getStageView() != nullptr) {
+            if (this->getWorldEditor() != nullptr) {
                 connect (point_y, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [this, point_x] (double d) {
-                        this->getStageView()->centerOn(QPointF(point_x->value(), -d));
+                        this->getWorldEditor()->centerOn(QPointF(point_x->value(), -d));
                 });
-                connect(this->getStageView(), SIGNAL(updateCenterPointY(double)), point_y, SLOT(updateValue(double)));
+                connect(this->getWorldEditor(), SIGNAL(updateCenterPointY(double)), point_y, SLOT(updateValue(double)));
             }
 
             // Reset to Center
@@ -143,14 +143,14 @@ void FormMain::buildViewToolBar(QWidget *parent) {
                 QPixmap center_icon(":/assets/toolbar_icons/toolbar_reset_center.png");
                 center_icon = QPixmap::fromImage( Dr::ColorizeImage(center_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 move_to_center->setIcon( QIcon(center_icon.scaled(QSize(15, 15), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-            if (this->getStageView() != nullptr) {
+            if (this->getWorldEditor() != nullptr) {
                 connect(move_to_center, &QPushButton::pressed, [this, point_x, point_y]() {
                     point_x->updateValue(0.0);
                     point_y->updateValue(0.0);
-                    this->getStageView()->centerOn(0, 0);
+                    this->getWorldEditor()->centerOn(0, 0);
                 });
             }
-            m_filter_hover->attachToHoverHandler(move_to_center, "Center View to Zero", "Moves the centers of the Stage View to coordinate (0, 0).");
+            m_filter_hover->attachToHoverHandler(move_to_center, "Center View to Zero", "Moves the centers of the World Editor to coordinate (0, 0).");
             toolbarLayoutHand->addSpacing(6);
             toolbarLayoutHand->addWidget(move_to_center);
 
@@ -186,11 +186,11 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             int max_zoom_width = Dr::CheckFontWidth(Dr::CustomFont(), "3200%") + 20;
             zoom_spin->setFixedWidth(max_zoom_width);
             zoom_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
-            if (this->getStageView() != nullptr) {
+            if (this->getWorldEditor() != nullptr) {
                 connect (zoom_spin, QOverload<int>::of(&QSpinBox::valueChanged), this, [this] (int i) {
-                        this->getStageView()->zoomToScale(static_cast<double>(i / 100.0));
+                        this->getWorldEditor()->zoomToScale(static_cast<double>(i / 100.0));
                 });
-                connect(this->getStageView(), SIGNAL(updateZoomSpin(int)), zoom_spin, SLOT(updateValue(int)));
+                connect(this->getWorldEditor(), SIGNAL(updateZoomSpin(int)), zoom_spin, SLOT(updateValue(int)));
             }
             m_filter_hover->attachToHoverHandler(zoom_spin, "Zoom Level", "Set zoom level. <b>Min:</b> 1% - <b>Max:</b> 3200%");
             toolbarLayoutZoom->addWidget(zoom_spin);
@@ -220,9 +220,9 @@ void FormMain::buildViewToolBar(QWidget *parent) {
                         action->setProperty(User_Property::Integer, QVariant::fromValue(string.toInt()));
                         group->addAction(action);
                         menu->addAction(action);
-                        if (this->getStageView() != nullptr) {
+                        if (this->getWorldEditor() != nullptr) {
                             connect(action, &QAction::triggered, [this, action]() {
-                                this->getStageView()->zoomToScale(static_cast<double>(action->property(User_Property::Integer).toInt()) / 100.0);
+                                this->getWorldEditor()->zoomToScale(static_cast<double>(action->property(User_Property::Integer).toInt()) / 100.0);
                             });
                         }
                     }
@@ -240,12 +240,12 @@ void FormMain::buildViewToolBar(QWidget *parent) {
                 QPixmap fit_icon(":/assets/toolbar_icons/toolbar_fit_to_view.png");
                 fit_icon = QPixmap::fromImage( Dr::ColorizeImage(fit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 fit_to_view->setIcon( QIcon(fit_icon.scaled(QSize(10, 10), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-            if (this->getStageView() != nullptr) {
+            if (this->getWorldEditor() != nullptr) {
                 connect(fit_to_view, &QPushButton::pressed, [this]() {
-                    this->getStageView()->zoomToContents();
+                    this->getWorldEditor()->zoomToContents();
                 });
             }
-            m_filter_hover->attachToHoverHandler(fit_to_view, "Fit to View", "Fits entire contents into Stage View.");
+            m_filter_hover->attachToHoverHandler(fit_to_view, "Fit to View", "Fits entire contents into World Editor.");
             toolbarLayoutZoom->addSpacing(8);
             toolbarLayoutZoom->addWidget(fit_to_view);
 
@@ -260,11 +260,11 @@ void FormMain::buildViewToolBar(QWidget *parent) {
             zoom_slider->setTickPosition(QSlider::TickPosition::TicksAbove);
             zoom_slider->setTickColor(QColor("#505050"));
             zoom_slider->setOrientation(Qt::Orientation::Horizontal);
-            if (this->getStageView() != nullptr) {
+            if (this->getWorldEditor() != nullptr) {
                 connect(zoom_slider, &QSlider::valueChanged, this, [this, zoom_slider] () {
-                    this->getStageView()->zoomToPower(zoom_slider->value() * 10);
+                    this->getWorldEditor()->zoomToPower(zoom_slider->value() * 10);
                 });
-                connect(this->getStageView(), SIGNAL(updateZoomSlider(int)), zoom_slider, SLOT(updateValue(int)));
+                connect(this->getWorldEditor(), SIGNAL(updateZoomSlider(int)), zoom_slider, SLOT(updateValue(int)));
             }
             m_filter_hover->attachToHoverHandler(zoom_slider, "Select Zoom Level", "Slide to select zoom level.");
             toolbarLayoutZoom->addSpacing(8);
@@ -277,31 +277,33 @@ void FormMain::buildViewToolBar(QWidget *parent) {
 
 
         // ***** Toggled View Options, Debug On/Off, etc
-        view_toolbar_layout->addStretch();
-        widgetGroupToggle = new QWidget(widgetToolbar);
-        widgetGroupToggle->setObjectName(QStringLiteral("widgetGroupToggle"));
-        widgetGroupToggle->setFixedHeight(c_toolbar_height);
-            QHBoxLayout *toolbarLayoutToggle = new QHBoxLayout(widgetGroupToggle);
-            toolbarLayoutToggle->setSpacing(3);
-            toolbarLayoutToggle->setContentsMargins(0, 0, 0, 0);
+        if (view_type == Editor_Mode::World_Editor) {
+            view_toolbar_layout->addStretch();
+            widgetGroupToggle = new QWidget(widgetToolbar);
+            widgetGroupToggle->setObjectName(QStringLiteral("widgetGroupToggle"));
+            widgetGroupToggle->setFixedHeight(c_toolbar_height);
+                QHBoxLayout *toolbarLayoutToggle = new QHBoxLayout(widgetGroupToggle);
+                toolbarLayoutToggle->setSpacing(3);
+                toolbarLayoutToggle->setContentsMargins(0, 0, 0, 0);
 
-            buttonsGroupToggle = new QButtonGroup();
-            buttonsGroupToggle->setExclusive(false);
-            connect(buttonsGroupToggle, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
+                buttonsGroupToggle = new QButtonGroup();
+                buttonsGroupToggle->setExclusive(false);
+                connect(buttonsGroupToggle, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
 
-            QToolButton *camera_on_off = createToolbarButton("cameraOnOff", Advisor_Info::Camera_On_Off, c_button_size_w, c_button_size_h, true);
-            buttonsGroupToggle->addButton(camera_on_off, int(Buttons_Toggle::CameraOnOff));
-            camera_on_off->setChecked(false);
-            toolbarLayoutToggle->addWidget(camera_on_off);
+                QToolButton *camera_on_off = createToolbarButton("cameraOnOff", Advisor_Info::Camera_On_Off, c_button_size_w, c_button_size_h, true);
+                buttonsGroupToggle->addButton(camera_on_off, int(Buttons_Toggle::CameraOnOff));
+                camera_on_off->setChecked(false);
+                toolbarLayoutToggle->addWidget(camera_on_off);
 
-            QToolButton *debug_on_off = createToolbarButton("debugOnOff", Advisor_Info::Debug_On_Off, c_button_size_w, c_button_size_h, true);
-            buttonsGroupToggle->addButton(debug_on_off, int(Buttons_Toggle::DebugOnOff));
-            debug_on_off->setChecked(false);
-            toolbarLayoutToggle->addWidget(debug_on_off);
+                QToolButton *debug_on_off = createToolbarButton("debugOnOff", Advisor_Info::Debug_On_Off, c_button_size_w, c_button_size_h, true);
+                buttonsGroupToggle->addButton(debug_on_off, int(Buttons_Toggle::DebugOnOff));
+                debug_on_off->setChecked(false);
+                toolbarLayoutToggle->addWidget(debug_on_off);
 
-        view_toolbar_layout->addWidget(createToolbarSpacer(c_button_size_h - 2));
-        view_toolbar_layout->addSpacing(2);
-        view_toolbar_layout->addWidget(widgetGroupToggle);
+            view_toolbar_layout->addWidget(createToolbarSpacer(c_button_size_h - 2));
+            view_toolbar_layout->addSpacing(2);
+            view_toolbar_layout->addWidget(widgetGroupToggle);
+        }
 
 }
 

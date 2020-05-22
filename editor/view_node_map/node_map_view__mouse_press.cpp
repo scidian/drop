@@ -60,7 +60,7 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
             if (origin_item_settings->getType() == DrType::World) {
                 DrWorld *world = dynamic_cast<DrWorld*>(origin_item_settings);
                 m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
-                m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() });
+                m_editor_relay->updateItemSelection(Editor_Widgets::Node_View, { world->getKey() });
                 m_editor_relay->setEditorMode(Editor_Mode::World_Editor);
             }
         }
@@ -146,7 +146,7 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
                         }
 
                         m_editor_relay->buildInspector( { origin_item_key } );
-                        m_editor_relay->updateItemSelection(Editor_Widgets::Map_View, { origin_item_key } );
+                        m_editor_relay->updateItemSelection(Editor_Widgets::Node_View, { origin_item_key } );
                     }
 
                 // ******************** If clicked while control is down, add to selection group, or take out

@@ -16,12 +16,12 @@ namespace Dr {
 //####################################################################################
 QString StringFromEditorWidget(Editor_Widgets widget) {
     switch (widget) {
-        case Editor_Widgets::ToolBar:           return "Toolbar";
+        case Editor_Widgets::Tool_Bar:          return "Toolbar";
         case Editor_Widgets::Inspector_Tree:    return "Inspector Tree";
         case Editor_Widgets::Asset_Tree:        return "Asset Tree";
         case Editor_Widgets::Project_Tree:      return "Project Tree";
-        case Editor_Widgets::Stage_View:        return "Stage View";
-        case Editor_Widgets::Map_View:          return "World Map View";
+        case Editor_Widgets::Editor_View:       return "Editor View";
+        case Editor_Widgets::Node_View:         return "Node View";
     }
 }
 

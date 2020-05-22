@@ -43,12 +43,8 @@ void NodeMapScene::selectionChanged() {
         }
 
         m_editor_relay->buildInspector(item_keys);
-        m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::Node_View);
     }
-
-    // !!!!! #TEMP: Testing to make sure not running non stop
-    static long change_count = 0;
-    Dr::SetLabelText(Label_Names::Label_Bottom, "Selection Changed: " + QString::number(change_count++));
 }
 
 

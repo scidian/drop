@@ -280,7 +280,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
                 m_editor_relay->setAdvisorInfo(header, body);
             }
         } else {
-            m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_View);
+            m_editor_relay->setAdvisorInfo(Advisor_Info::World_Editor);
         }
     }
 

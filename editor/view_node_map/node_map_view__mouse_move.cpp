@@ -129,7 +129,9 @@ void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
                 m_editor_relay->setAdvisorInfo(header, body);
             }
         } else {
-            m_editor_relay->setAdvisorInfo(Advisor_Info::Stage_View);
+            if (m_editor_relay->getEditorMode() == Editor_Mode::World_Map) {
+                m_editor_relay->setAdvisorInfo(Advisor_Info::World_Map);
+            }
         }
     }
 

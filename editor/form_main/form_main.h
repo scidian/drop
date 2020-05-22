@@ -5,9 +5,9 @@
 //      FormMain - Class that holds our main form window
 //
 //      FormMain Modes:                         Handle / Nickname
-//          World Map: World / UI Layout            Map
-//          World Editor                            Editor
-//          UI Editor                               UI
+//          World Map: World / UI Layout            World Map
+//          World Editor                            World Editor
+//          UI Editor                               UI Editor
 //          Stage Map: Stage Layout
 //
 //      Main Components of FormMain while in normal "World Editor" mode:
@@ -77,7 +77,7 @@ private:
     DrProject              *m_external_images   { nullptr };                        // Project that loads included images
     DrFilterHoverHandler   *m_filter_hover      { nullptr };                        // Pointer to an event filter hover handler
 
-    Editor_Mode             m_current_mode = Editor_Mode::Program_Loading;          // Holds what state FormMain is in
+    Editor_Mode             m_current_mode      { Editor_Mode::Program_Loading };   // Holds what state FormMain is in
 
 
     // ***** Menu Widgets
@@ -115,10 +115,10 @@ private:
     // ***** "Editor" (World Editor) Widgets
     TreeProject    *treeProjectEditor;                      // Shows Project Entities
     EditorScene    *sceneEditor;                            // Holds the currently selected Stage
-    EditorView     *viewEditor;                             // Renders the StageView
+    EditorView     *viewEditor;                             // Renders the World Editor View
     QWidget        *widgetCentralEditor;
     QScrollArea    *areaBottom;
-    QFrame         *statusBar,      *viewToolBar;
+    QFrame         *toolbarEditor,          *statusBar;
 
     //       "Editor" Tool Bar Widgets
     QWidget        *widgetGroupMouse;       QButtonGroup   *buttonsGroupMouse;
@@ -140,7 +140,7 @@ private:
     QWidget        *widgetCentralWorldMap;
     NodeMapScene   *sceneWorldMap;
     NodeMapView    *viewWorldMap;
-
+    QFrame         *toolbarWorldMap;
 
 
 public:
@@ -161,7 +161,7 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getStageView() override     { return viewEditor; }
+    virtual EditorView*         getWorldEditor() override   { return viewEditor; }
     virtual NodeMapView*        getWorldMapView() override  { return viewWorldMap; }
 
     virtual Editor_Mode         getEditorMode() override;
@@ -200,7 +200,7 @@ private:
     void            buildMenu();
     void            buildSceneAfterLoading(long stage_key);
     void            buildToolBar();
-    void            buildViewToolBar(QWidget *parent);
+    void            buildViewToolBar(QWidget *parent, QFrame *&load_into_widget, Editor_Mode view_type);
     void            buildCentralWidgetClear();
     void            buildCentralWidgetEditor();
     void            buildCentralWidgetWorldMap();

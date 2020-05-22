@@ -34,6 +34,11 @@ NodeMapView::NodeMapView(QWidget *parent, DrProject *project, NodeMapScene *scen
 
 NodeMapView::~NodeMapView() { }
 
+void NodeMapView::focusInEvent(QFocusEvent *event) {
+    m_editor_relay->setActiveWidget(Editor_Widgets::Node_View);
+    QGraphicsView::focusInEvent(event);
+}
+
 // SLOT:    Chance to reset local pointer variables when Scene is about to clear() (like when switching Editor_Mode)
 //       ...After Scene is rebuilt local reference pointers will be dangling
 void NodeMapView::sceneIsAboutToClear() {

@@ -18,7 +18,7 @@ class EditorScene;
 
 
 //####################################################################################
-//##    Change Stage in StageView
+//##    Change Stage in EditorView
 //############################
 class UndoCommandChangeStage : public QUndoCommand
 {

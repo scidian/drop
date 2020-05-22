@@ -28,13 +28,20 @@
 //####################################################################################
 void FormMain::updateToolbar() {
 
-    if (m_current_mode == Editor_Mode::World_Editor) {
+    if (getEditorMode() == Editor_Mode::World_Map) {
+        QAbstractButton *snap_grid = buttonsGroupGridSimple->button(int(Buttons_Grid::Snap_To_Grid));
+        if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+
+    } else if (getEditorMode() == Editor_Mode::World_Editor) {
+        QAbstractButton *snap_grid = buttonsGroupGridFull->button(int(Buttons_Grid::Snap_To_Grid));
+        if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+
         for (auto button : buttonsGroupLayering->buttons())     if (button->isEnabled()) button->setEnabled(false);
         for (auto button : buttonsGroupEdit->buttons())         if (button->isEnabled()) button->setEnabled(false);
         for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
 
         QString selected = "No Selection";
-        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Stage_View) {
+        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Editor_View) {
             // ***** Things are selected
             if (sceneEditor->getSelectionCount() > 0) {
                 for (auto button : buttonsGroupLayering->buttons())     if (!button->isEnabled()) button->setEnabled(true);

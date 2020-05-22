@@ -39,7 +39,7 @@ class NodeMapView;
 class IEditorRelay
 {
 private:
-    Editor_Widgets              m_active_widget         { Editor_Widgets::Stage_View };
+    Editor_Widgets              m_active_widget         { Editor_Widgets::Editor_View };
 
 public:
     // Constructor / Destructor
@@ -50,7 +50,7 @@ public:
     virtual TreeAssets*         getAssetTree() = 0;
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
-    virtual EditorView*         getStageView() = 0;
+    virtual EditorView*         getWorldEditor() = 0;
     virtual NodeMapView*        getWorldMapView() = 0;
 
     // Local Getter / Setters

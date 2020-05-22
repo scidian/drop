@@ -117,7 +117,7 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
             if (new_value.toBool() == true) {
                 thing->setComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Item_Locked, true);
             }
-            m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
+            m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } ,
                             { std::make_pair(comp, Props::Hidden_Item_Locked) });
 
         } else if (comp == Comps::Hidden_Settings && prop == Props::Hidden_Item_Locked) {
@@ -126,7 +126,7 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
                     thing->setComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Hide_From_Trees, false);
                 }
             }
-            m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
+            m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } ,
                             { std::make_pair(comp, Props::Hidden_Hide_From_Trees) });
 
 
@@ -138,7 +138,7 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
                 thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Velocity_X)->setEditable(test);
                 thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Velocity_Y)->setEditable(test);
                 thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Spin_Velocity)->setEditable(test);
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } ,
                                 { std::make_pair(Comps::Thing_Movement, Props::Thing_Velocity_X),
                                   std::make_pair(Comps::Thing_Movement, Props::Thing_Velocity_Y),
                                   std::make_pair(Comps::Thing_Movement, Props::Thing_Spin_Velocity) });
@@ -148,12 +148,12 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
             test = (type == Body_Type::Kinematic) ? true : false;
             if (test != pretest_velocity) {
                 thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Angle_Velocity)->setEditable(test);
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } ,
                                 { std::make_pair(Comps::Thing_Movement, Props::Thing_Angle_Velocity) });
             }
             if (test != pretest_player) {
                 thing->getComponentProperty(Comps::Thing_Movement, Props::Thing_Angle_Player)->setEditable(test);
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } ,
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } ,
                                 { std::make_pair(Comps::Thing_Movement, Props::Thing_Angle_Player) });
             }
 
@@ -214,11 +214,11 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
             // ***** If size or scale was changed, update the other and update the widgets in the Inspector
             if (prop == Props::Thing_Size || pretest) {
                 thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale, scale);
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { std::make_pair(comp, Props::Thing_Scale) });
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } , { std::make_pair(comp, Props::Thing_Scale) });
             }
             if (prop == Props::Thing_Scale || pretest) {
                 thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Size, size);
-                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { thing } , { std::make_pair(comp, Props::Thing_Size) });
+                m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { thing } , { std::make_pair(comp, Props::Thing_Size) });
             }
 
         } else if (comp == Comps::Thing_Layering && prop == Props::Thing_Z_Order) {
@@ -227,8 +227,8 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
         // Update view when camera zoom changes camera size to be drawn
         } else if ((comp == Comps::Thing_Settings_Character && prop == Props::Thing_Character_Camera_Zoom) ||
                    (comp == Comps::Thing_Settings_Camera    && prop == Props::Thing_Camera_Zoom)) {
-            if (m_editor_relay->getStageView() != nullptr)
-                m_editor_relay->getStageView()->update();
+            if (m_editor_relay->getWorldEditor() != nullptr)
+                m_editor_relay->getWorldEditor()->update();
 
         } else if ((comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Brightness) ||
                    (comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Contrast) ||

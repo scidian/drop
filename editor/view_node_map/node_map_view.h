@@ -72,18 +72,18 @@ private:
     bool                    m_wants_double_click            { false };      // Used to forward double click from mouseDoubleClickEvent to mousePressEvent
 
     // View_Mode::Selecting Variables
-    EditorViewRubberBand       *m_rubber_band               { nullptr };    // Holds our view's RubberBand object
-    QList<QGraphicsItem*>       m_items_start;                              // Stores items selected at start of new rubber band box
-    QList<QGraphicsItem*>       m_items_keep;                               // Stores list of items to keep on top of rubber band items (with control key)
+    EditorViewRubberBand   *m_rubber_band                   { nullptr };    // Holds our view's RubberBand object
+    QList<QGraphicsItem*>   m_items_start;                                  // Stores items selected at start of new rubber band box
+    QList<QGraphicsItem*>   m_items_keep;                                   // Stores list of items to keep on top of rubber band items (with control key)
 
     // View_Mode::Translating Variables
-    QElapsedTimer               m_origin_timer;                             // Tracks time since mouse down to help buffer movement while selecting
-    bool                        m_allow_movement            { false };      // Used along with m_origin_timer to help buffer movement while selecting
-    QPointF                     m_origin_item_start_pos     { 0, 0 };       // Tracks starting position of origin item when View_Mode::Translating started
+    QElapsedTimer           m_origin_timer;                                 // Tracks time since mouse down to help buffer movement while selecting
+    bool                    m_allow_movement                { false };      // Used along with m_origin_timer to help buffer movement while selecting
+    QPointF                 m_origin_item_start_pos         { 0, 0 };       // Tracks starting position of origin item when View_Mode::Translating started
 
     // View_Mode::Node_Connect Variables
-    DrSlot                     *m_last_mouse_slot           { nullptr };    // Last known Slot under mouse during mouseMoveEvent()
-    DrSlot                     *m_slot_start                { nullptr };    // When Node connect starts, this contains the DrSlot that was clicked
+    DrSlot                 *m_last_mouse_slot               { nullptr };    // Last known Slot under mouse during mouseMoveEvent()
+    DrSlot                 *m_slot_start                    { nullptr };    // When Node connect starts, this contains the DrSlot that was clicked
 
 
 
@@ -107,6 +107,9 @@ public:
 #if QT_CONFIG(wheelevent)
     virtual void    wheelEvent(QWheelEvent *event) override;                                // Inherited from QWidget
 #endif
+
+    // Event Overrides - Misc
+    virtual void    focusInEvent(QFocusEvent *event) override;
 
     // View Display Functions
     void                setViewRect(QRectF new_rect);

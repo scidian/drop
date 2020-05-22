@@ -57,8 +57,8 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWid
         QPointF scale = data(User_Roles::Scale).toPointF();
         if (Dr::IsCloseTo(0.0, scale.x(), 0.001)) scale.setX(0.001);
         if (Dr::IsCloseTo(0.0, scale.y(), 0.001)) scale.setY(0.001);
-        double adjust_x = 0.60 / (m_editor_relay->getStageView()->currentZoomLevel() * scale.x());      // Enlarge by x.xx pixels
-        double adjust_y = 0.60 / (m_editor_relay->getStageView()->currentZoomLevel() * scale.y());
+        double adjust_x = 0.60 / (m_editor_relay->currentViewZoom() * scale.x());      // Enlarge by x.xx pixels
+        double adjust_y = 0.60 / (m_editor_relay->currentViewZoom() * scale.y());
         QRectF dest = this->pixmap().rect();
                dest.adjust(-adjust_x, -adjust_y, adjust_x, adjust_y);
         painter->drawPixmap(dest, this->pixmap(), this->pixmap().rect());

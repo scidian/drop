@@ -18,18 +18,17 @@
 //##    Editor Interface Relay Handlers
 //####################################################################################
 //enum class Editor_Widgets {
-// Universal Widgets
-//      ToolBar,
+// Global Widgets
+//      Tool_Bar,
+//
+// Docks
 //      Asset_Tree,
 //      Inspector_Tree,
 //      Project_Tree,
 //
-// "World Editor" Widgets
-//      Stage_View,
-//
-// "World Map" Widgets
-//      Map_View,
-//}
+// Editor Widgets
+//      Editor_View,
+//      Node_View,
 
 Editor_Mode FormAnimation::getEditorMode() { return Editor_Mode::Animation_Editor; }
 void FormAnimation::setEditorMode(Editor_Mode new_mode) { }

@@ -56,7 +56,7 @@ void FormMain::buildToolBar() {
     widgetToolbarLayout->setSpacing(3);
     widgetToolbarLayout->setContentsMargins(12, 0, 12, 0);
 
-    // ***** Selectable Button group that keeps track of which mode we are in: World Editor, World Map, UI Editor
+    // ***** Selectable Button group that keeps track of which mode we are in: World Map, World Editor, UI Editor
     widgetGroupMode = new QWidget();
     widgetGroupMode->setObjectName(QStringLiteral("widgetGroupMode"));
     widgetGroupMode->setFixedHeight(c_toolbar_height);

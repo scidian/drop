@@ -238,7 +238,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         }
     }
 
-    // ***** Highlight DrAsset of selected Thing in AssetTree when a Thing is selected in the StageView or ProjectTree
+    // ***** Highlight DrAsset of selected Thing in AssetTree when a Thing is selected in the EditorView or ProjectTree
     if (new_settings_to_show != nullptr) {
         if (new_settings_to_show->getType() == DrType::Thing) {
             DrThing *thing = dynamic_cast<DrThing*>(new_settings_to_show);

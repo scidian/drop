@@ -54,7 +54,7 @@ void FormMain::buildCentralWidgetWorldMap() {
     QSizePolicy sizePolicyPreferredHorizontal(  QSizePolicy::Preferred,         QSizePolicy::Preferred);
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);      sizePolicyPreferredHorizontal.setVerticalStretch(0);
 
-    // ***** Initialize scene used for showing stages World Editor Mode viewEditor widget
+    // ***** Initialize scene used for showing stages Editor_Mode::World_Editor viewEditor widget
     sceneWorldMap = new NodeMapScene(this, m_project, this);
 
     // ***** Build central widgets
@@ -91,6 +91,11 @@ void FormMain::buildCentralWidgetWorldMap() {
             gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
             viewWorldMap->setViewport(gl_widget);
         }
+
+        // ***** Toolbar above World Map
+///        buildViewToolBar(widgetCentralWorldMap, toolbarWorldMap, Editor_Mode::World_Map);
+
+///    verticalLayoutWorldMap->addWidget(toolbarWorldMap);
     verticalLayoutWorldMap->addWidget(viewWorldMap);
 
 }
@@ -187,19 +192,19 @@ void FormMain::buildCentralWidgetEditor() {
                 splitterHorizontal->addWidget(treeProjectEditor);
 
 
-                    QWidget *widgetStageView = new QWidget(splitterHorizontal);
-                    widgetStageView->setObjectName(QStringLiteral("widgetStageView"));
-                    widgetStageView->setSizePolicy(sizePolicyView);
-                    widgetStageView->setMinimumSize(QSize(100, 0));
-                    widgetStageView->setFont(font);
+                    QWidget *widgetEditorView = new QWidget(splitterHorizontal);
+                    widgetEditorView->setObjectName(QStringLiteral("widgetEditorView"));
+                    widgetEditorView->setSizePolicy(sizePolicyView);
+                    widgetEditorView->setMinimumSize(QSize(100, 0));
+                    widgetEditorView->setFont(font);
 
-                        QVBoxLayout *verticalLayoutView = new QVBoxLayout(widgetStageView);
+                        QVBoxLayout *verticalLayoutView = new QVBoxLayout(widgetEditorView);
                         verticalLayoutView->setObjectName(QStringLiteral("verticalLayoutView"));
                         verticalLayoutView->setSpacing(0);
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
                         // ***** Load our EditorView to display our EditorScene collection of items
-                        viewEditor = new EditorView(widgetStageView, m_project, sceneEditor, this);
+                        viewEditor = new EditorView(widgetEditorView, m_project, sceneEditor, this);
                         viewEditor->setObjectName(QStringLiteral("viewEditor"));
                         viewEditor->setAcceptDrops(true);
                         viewEditor->setFrameShape(QFrame::NoFrame);
@@ -229,12 +234,12 @@ void FormMain::buildCentralWidgetEditor() {
                         }
 
 
-                        // ***** Toolbar above Stage View
-                        buildViewToolBar(widgetStageView);
+                        // ***** Toolbar above World Editor
+                        buildViewToolBar(widgetEditorView, toolbarEditor, Editor_Mode::World_Editor);
 
 
                         // ***** Lower View area Status Bar
-                        statusBar = new QFrame(widgetStageView);
+                        statusBar = new QFrame(widgetEditorView);
                         statusBar->setObjectName("statusBar");
                         statusBar->setFixedHeight(26);
                             QHBoxLayout *status_layout = new QHBoxLayout(statusBar);
@@ -262,11 +267,11 @@ void FormMain::buildCentralWidgetEditor() {
                             labelMousePosition->setFont(font);
                             status_layout->addWidget(labelMousePosition);
 
-                    verticalLayoutView->addWidget(viewToolBar);
+                    verticalLayoutView->addWidget(toolbarEditor);
                     verticalLayoutView->addWidget(viewEditor);
                     verticalLayoutView->addWidget(statusBar);
 
-                splitterHorizontal->addWidget(widgetStageView);
+                splitterHorizontal->addWidget(widgetEditorView);
                 splitterHorizontal->setSizes(QList<int> { 150, 300 });      // Sets tree_stage (stage assests) startup width to 150
                                                                             // #NOTE: You can save and restore the sizes of the widgets from a QByteArray
                                                                             //        using QSplitter.saveState() and QSplitter.restoreState() respectively

@@ -10,6 +10,7 @@
 #include "editor/form_main/form_main.h"
 #include "editor/preferences.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/view_node_map/node_map_view.h"
 
 
 //####################################################################################
@@ -18,7 +19,9 @@
 void FormMain::buttonGroupMouseClicked(int id) {
     Mouse_Mode clicked = static_cast<Mouse_Mode>(id);
 
-    if (viewEditor != nullptr) viewEditor->setMouseMode(clicked);
+    if      (getEditorMode() == Editor_Mode::World_Map)         { } ///viewWorldMap->setMouseMode(clicked); }
+    else if (getEditorMode() == Editor_Mode::World_Editor)      { viewEditor->setMouseMode(clicked); }
+
     if (clicked == Mouse_Mode::Pointer) {
         widgetGroupHandTool->setVisible(false);
         widgetGroupZoomTool->setVisible(false);
@@ -33,7 +36,9 @@ void FormMain::buttonGroupMouseClicked(int id) {
     }
 
     updateToolbar();
-    viewEditor->spaceBarUp();
+
+    if      (getEditorMode() == Editor_Mode::World_Map)         { viewWorldMap->spaceBarUp(); }
+    else if (getEditorMode() == Editor_Mode::World_Editor)      { viewEditor->spaceBarUp(); }
 }
 
 

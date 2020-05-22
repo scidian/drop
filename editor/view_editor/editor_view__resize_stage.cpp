@@ -59,7 +59,7 @@ void EditorView::resizeStage(QPointF mouse_in_view) {
 
     // Update data model and widgets
     stage->setComponentPropertyValue(Comps::Stage_Settings, Props::Stage_Size, new_size);
-    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Stage_View, { stage }, { ComponentProperty(Comps::Stage_Settings, Props::Stage_Size) } );
+    m_editor_relay->updateEditorWidgetsAfterItemChange(Editor_Widgets::Editor_View, { stage }, { ComponentProperty(Comps::Stage_Settings, Props::Stage_Size) } );
 }
 
 

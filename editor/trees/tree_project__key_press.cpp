@@ -29,7 +29,7 @@
 
 
 //####################################################################################
-//##    Handles Key Event, forwards some keys to StageView
+//##    Handles Key Event, forwards some keys to EditorView
 //####################################################################################
 void TreeProject::keyPressEvent(QKeyEvent *event) {
 
@@ -45,7 +45,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D) {
         // ***** Duplicate Thing
         if (type == DrType::Thing) {
-            m_editor_relay->getStageView()->keyPressEvent(event);
+            m_editor_relay->getWorldEditor()->keyPressEvent(event);
             return;
         }
     }
@@ -75,7 +75,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             // Update Editor Widgets
             m_editor_relay->buildProjectTree();
             m_editor_relay->buildInspector( { new_selected_stage->getKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selected_stage->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { new_selected_stage->getKey() } );
             m_editor_relay->buildScene( new_selected_stage->getKey() );
             return;
 
@@ -105,7 +105,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             // Update Editor Widgets
             m_editor_relay->buildProjectTree();
             m_editor_relay->buildInspector( { new_selected_world->getKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selected_world->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { new_selected_world->getKey() } );
             m_editor_relay->buildScene( new_selected_world->getLastStageShownKey() );
             return;
         }
@@ -115,7 +115,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     // ********** Layering Keys
     if (event->key() == Qt::Key_Comma || event->key() == Qt::Key_Period || event->key() == Qt::Key_Less || event->key() == Qt::Key_Greater) {
         if (type == DrType::Thing) {
-            m_editor_relay->getStageView()->keyPressEvent(event);
+            m_editor_relay->getWorldEditor()->keyPressEvent(event);
             return;
         }
     }
@@ -127,7 +127,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
             // ***** Delete selected Things
             if (type == DrType::Thing) {
-                m_editor_relay->getStageView()->keyPressEvent(event);
+                m_editor_relay->getWorldEditor()->keyPressEvent(event);
 
             // ***** Delete selected Stages
             } else if (type == DrType::Stage) {
@@ -180,7 +180,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     // Rebuild Project Tree, select new shown Stage
                     buildProjectTree(true);
                     m_editor_relay->buildInspector( { new_selection->getKey() } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { new_selection->getKey() } );
 
                 } else {
                     Dr::ShowMessageBox("Start Stages cannot be deleted.", QMessageBox::Icon::Information, this);
@@ -237,7 +237,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                     // Rebuild Project Tree, select new shown Stage
                     buildProjectTree(true);
                     m_editor_relay->buildInspector( { new_selection->getKey() } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Stage_View, { new_selection->getKey() } );
+                    m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { new_selection->getKey() } );
                 } else {
                     Dr::ShowMessageBox("Cannot delete World(s)! <br><br> Project must have at least one World.",
                                        QMessageBox::Icon::Information, this);

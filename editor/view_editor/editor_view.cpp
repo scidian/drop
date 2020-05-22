@@ -67,7 +67,7 @@ EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_sc
 EditorView::~EditorView() { }
 
 void EditorView::focusInEvent(QFocusEvent *event) {
-    m_editor_relay->setActiveWidget(Editor_Widgets::Stage_View);
+    m_editor_relay->setActiveWidget(Editor_Widgets::Editor_View);
     QGraphicsView::focusInEvent(event);
 }
 

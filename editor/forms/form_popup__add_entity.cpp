@@ -78,13 +78,13 @@ void FormPopup::buildPopupAddEntity() {
                 world = m_project->addWorld(DrWorldType::Physics_2D);
                 editor->buildProjectTree();
                 editor->buildInspector( { world->getKey() } );
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );
+                editor->updateItemSelection(Editor_Widgets::Editor_View, { world->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                 editor->buildScene( world->getFirstStageKey() );
             }
             this->close();
             if (editor && world != nullptr) {
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { world->getKey() } );
+                editor->updateItemSelection(Editor_Widgets::Editor_View, { world->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
         });
@@ -95,16 +95,16 @@ void FormPopup::buildPopupAddEntity() {
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
                 editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
-                new_stage = editor->getStageView()->getEditorScene()->getCurrentStageShown()->getParentWorld()->addStage();
+                new_stage = editor->getWorldEditor()->getEditorScene()->getCurrentStageShown()->getParentWorld()->addStage();
                 editor->buildProjectTree();
                 editor->buildInspector( { new_stage->getKey() } );
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { new_stage->getKey() } );
+                editor->updateItemSelection(Editor_Widgets::Editor_View, { new_stage->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                 editor->buildScene(new_stage->getKey());
             }
             this->close();
             if (editor && new_stage != nullptr) {
-                editor->updateItemSelection(Editor_Widgets::Stage_View, { new_stage->getKey() } );
+                editor->updateItemSelection(Editor_Widgets::Editor_View, { new_stage->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
         });

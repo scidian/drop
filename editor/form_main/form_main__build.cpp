@@ -104,9 +104,6 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
         }
     }
 
-    // ***** Sets Toolbar Widgets ***** for the new mode selected
-    setToolbar(new_mode);
-
     // Wait for possible finish loading
     if (new_mode != Editor_Mode::World_Editor) {
         while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
@@ -146,7 +143,11 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
         default:    Dr::ShowMessageBox("rebuildFormMain, setting - Mode not known", QMessageBox::Icon::Warning, this);
     }
 
-    // Wait until widgets are done being moved around
+    // ***** Sets Toolbar Widgets ***** for the new mode selected
+    updateToolbar();
+    setToolbar(new_mode);
+
+    // ***** Wait until widgets are done being moved around
     QApplication::processEvents();
     Dr::SetDoneLoading(true);
 

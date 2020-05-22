@@ -89,17 +89,17 @@ enum class Editor_Mode {
 //##    Different widgets in an Editor window, used for cross updating widgets
 //############################
 enum class Editor_Widgets {
-    // Universal Widgets
-    ToolBar,
+    // Global Widgets
+    Tool_Bar,
+
+    // Docks
     Asset_Tree,
     Inspector_Tree,
     Project_Tree,
 
-    // "World Map" Widgets
-    Map_View,
-
-    // "World Editor" Widgets
-    Stage_View,
+    // Editor Widgets
+    Editor_View,
+    Node_View,
 };
 
 
@@ -149,7 +149,7 @@ enum class Position_Flags {                                 // !!!!! Order is im
 
 
 //####################################################################################
-//##    Stage View Mouse Modes
+//##    World Editor Mouse Modes
 //############################
 enum class Mouse_Mode {
     None                = 0,
@@ -159,7 +159,7 @@ enum class Mouse_Mode {
 };
 
 //####################################################################################
-//##    Sub Stage View Mouse Mode - Mouse_Mode::Pointer
+//##    Sub World Editor Mouse Mode - Mouse_Mode::Pointer
 //############################
 enum class View_Mode {
     None,
