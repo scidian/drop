@@ -48,6 +48,7 @@ class DrProject;
 class EditorScene;
 class EditorView;
 class EditorViewRubberBand;
+class EditorViewToolbar;
 class FormPopup;
 class NodeMapScene;
 class NodeMapView;
@@ -85,12 +86,12 @@ private:
     QAction        *actionUndo, *actionRedo;
 
 
-    // ***** Toolbar Widgets
+    // ***** ToolBar Widgets
     QList<QWidget*>      toolbarWidgets { };
     QList<QLayoutItem*>  toolbarSpacers { };
 
     QToolBar       *toolbar;
-    QWidget        *widgetToolbar;              QHBoxLayout     *widgetToolbarLayout;
+    QWidget        *widgetToolBar;              QHBoxLayout     *widgetToolBarLayout;
 
     QWidget        *widgetGroupMode;            QButtonGroup    *buttonsGroupMode;
     QWidget        *widgetGroupEdit;            QButtonGroup    *buttonsGroupEdit;              QToolButton *buttonAdd;
@@ -113,18 +114,13 @@ private:
 
 
     // ***** "Editor" (World Editor) Widgets
-    TreeProject    *treeProjectEditor;                      // Shows Project Entities
-    EditorScene    *sceneEditor;                            // Holds the currently selected Stage
-    EditorView     *viewEditor;                             // Renders the World Editor View
-    QWidget        *widgetCentralEditor;
-    QScrollArea    *areaBottom;
-    QFrame         *toolbarEditor,          *statusBar;
-
-    //       "Editor" Tool Bar Widgets
-    QWidget        *widgetGroupMouse;       QButtonGroup   *buttonsGroupMouse;
-    QWidget        *widgetGroupToggle;      QButtonGroup   *buttonsGroupToggle;
-    QWidget        *widgetGroupHandTool;
-    QWidget        *widgetGroupZoomTool;
+    TreeProject         *treeProjectEditor;                     // Shows Project Entities
+    EditorScene         *sceneEditor;                           // Holds the currently selected Stage
+    EditorView          *viewEditor;                            // Renders the World Editor View
+    QWidget             *widgetCentralEditor;
+    QScrollArea         *areaBottom;
+    QFrame              *statusBar;
+    EditorViewToolbar   *toolbarEditor;
 
     //       "Editor" Status Bar Widgets
     QLabel         *labelSelected,  *labelInfo,     *labelMousePosition;
@@ -137,10 +133,10 @@ private:
 
 
     // ***** "WorldMap" Widgets
-    QWidget        *widgetCentralWorldMap;
-    NodeMapScene   *sceneWorldMap;
-    NodeMapView    *viewWorldMap;
-    QFrame         *toolbarWorldMap;
+    QWidget             *widgetCentralWorldMap;
+    NodeMapScene        *sceneWorldMap;
+    NodeMapView         *viewWorldMap;
+    EditorViewToolbar   *toolbarWorldMap;
 
 
 public:
@@ -162,7 +158,7 @@ public:
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getWorldEditor() override   { return viewEditor; }
-    virtual NodeMapView*        getWorldMapView() override  { return viewWorldMap; }
+    virtual NodeMapView*        getWorldMap() override      { return viewWorldMap; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;
@@ -183,16 +179,16 @@ public:
     virtual View_Mode   currentViewMode() override;
     virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
+    virtual void        updateViewToolbar(int button_id) override;
     virtual void        viewCenterOnPoint(QPointF center_point) override;
     virtual void        viewFitToContents() override;
     virtual void        viewZoomToScale(double zoom_scale) override;
-    //############################ END: Interface Relay Implementations
-
 
 public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
     virtual void        setMousePosition(std::string x, std::string y) override;
+    //############################ END: Interface Relay Implementations
 
 
 private:
@@ -200,7 +196,6 @@ private:
     void            buildMenu();
     void            buildSceneAfterLoading(long stage_key);
     void            buildToolBar();
-    void            buildViewToolBar(QWidget *parent, QFrame *&load_into_widget, Editor_Mode view_type);
     void            buildCentralWidgetClear();
     void            buildCentralWidgetEditor();
     void            buildCentralWidgetWorldMap();
@@ -222,19 +217,21 @@ private:
     // Help Menu Functions
     void            menuAbout();
 
-    // Toolbar Functions
-    void            addToolbarGroup(QWidget *group, bool add_spacer = true);
+    // ToolBar Functions
+    void            addToolBarGroup(QWidget *group, bool add_spacer = true);
     void            buttonGroupModeSetChecked(int id);
-    void            clearToolbar();
+    void            clearToolBar();
     QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
-    QToolButton*    createToolbarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h,
+    QToolButton*    createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h,
                                         bool checkable = false, bool enabled = true);
-    QLabel*         createToolbarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);
-    void            setToolbar(Editor_Mode new_mode);
-    void            updateToolbar();
+    QLabel*         createToolBarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);
+
+public:
+    void            setToolBar(Editor_Mode new_mode);
+    void            updateToolBar();
 
 private slots:
-    // Main Toolbar
+    // Main ToolBar
     void            buttonGroupEditClicked(int id);
     void            buttonGroupGridFullClicked(int id);
     void            buttonGroupGridSimpleClicked(int id);
@@ -242,10 +239,6 @@ private slots:
     void            buttonGroupModeClicked(int id);
     void            buttonGroupPlayClicked(int id);
     void            buttonGroupTransformClicked(int id);
-
-    // View Toolbar
-    void            buttonGroupMouseClicked(int id);
-    void            buttonGroupToggleClicked(int id);
 
     void            buildSceneAfterWaiting(long stage_key);
 

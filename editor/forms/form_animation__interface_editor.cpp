@@ -19,7 +19,7 @@
 //####################################################################################
 //enum class Editor_Widgets {
 // Global Widgets
-//      Tool_Bar,
+//      ToolBar,
 //
 // Docks
 //      Asset_Tree,
@@ -74,7 +74,7 @@ void FormAnimation::setAdvisorInfo(QString header, QString body) {
 void FormAnimation::setMousePosition(std::string x, std::string y) {
 
 }
-
+void FormAnimation::updateViewToolbar(int button_id) { }
 
 
 

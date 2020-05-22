@@ -56,7 +56,7 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
 
     // ***** Handle double click
     if (m_wants_double_click) {
-        if (origin_item_settings != nullptr) {
+        if (m_mouse_mode == Mouse_Mode::Pointer && origin_item_settings != nullptr) {
             if (origin_item_settings->getType() == DrType::World) {
                 DrWorld *world = dynamic_cast<DrWorld*>(origin_item_settings);
                 m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
@@ -66,6 +66,31 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
         }
         m_wants_double_click = false;
     }
+
+
+    // ******************* Process Hand Mouse Mode
+    if (m_mouse_mode == Mouse_Mode::Hand) {
+        QGraphicsView::mousePressEvent(event);
+        m_view_mode = View_Mode::Dragging;
+    }
+
+
+    // ******************* Process Magnify Mouse Mode
+    if (m_mouse_mode == Mouse_Mode::Magnify) {
+        if (dragMode() == QGraphicsView::DragMode::NoDrag) {
+            bool control_down = event->modifiers() & Qt::KeyboardModifier::ControlModifier;
+            if (event->button() & Qt::LeftButton) {
+                zoomInOut(control_down ? -50 :  50);
+            } else if (event->button() & Qt::RightButton) {
+                zoomInOut(control_down ?  50 : -50);
+            }
+
+        } else {
+            QGraphicsView::mousePressEvent(event);
+            m_view_mode = View_Mode::Dragging;
+        }
+    }
+
 
     // ******************* Prcoess Pointer Mouse Mode: If space bar isn't down, process mouse down
     if (m_mouse_mode == Mouse_Mode::Pointer) {

@@ -243,7 +243,7 @@ QString CustomStyleSheetFormatting() {
 
 
         //################################################################################
-        //##    StatusBar / View Toolbar
+        //##    StatusBar / View ToolBar
         //################################################################################
         " QFrame#statusBar { "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "

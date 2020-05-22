@@ -148,9 +148,6 @@ SOURCES += \
     editor/form_main/form_main__toolbar.cpp \
     editor/form_main/form_main__toolbar_build.cpp \
     editor/form_main/form_main__toolbar_click.cpp \
-    editor/form_main/form_main__view_toolbar.cpp \
-    editor/form_main/form_main__view_toolbar_build.cpp \
-    editor/form_main/form_main__view_toolbar_click.cpp \
     editor/forms/form_about.cpp \
     editor/forms/form_animation.cpp \
     editor/forms/form_animation__build.cpp \
@@ -250,6 +247,7 @@ SOURCES += \
     editor/view_node_map/node_map_view__paint.cpp \
     editor/view_node_map/node_map_view__select.cpp \
     editor/widgets/widgets_editor_rubber_band.cpp \
+    editor/widgets/widgets_editor_toolbar.cpp \
     editor/widgets/widgets_editor_tooltip.cpp \
     editor/widgets/widgets_inspector_checkbox.cpp \
     editor/widgets/widgets_inspector_combobox.cpp \

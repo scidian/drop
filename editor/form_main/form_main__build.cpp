@@ -84,7 +84,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
 
     // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {
-        clearToolbar();
+        clearToolBar();
         switch (old_mode) {
             case Editor_Mode::World_Map:
                 widgetCentralWorldMap = takeCentralWidget();
@@ -143,9 +143,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
         default:    Dr::ShowMessageBox("rebuildFormMain, setting - Mode not known", QMessageBox::Icon::Warning, this);
     }
 
-    // ***** Sets Toolbar Widgets ***** for the new mode selected
-    updateToolbar();
-    setToolbar(new_mode);
+    // ***** Sets ToolBar Widgets ***** for the new mode selected
+    updateToolBar();
+    setToolBar(new_mode);
 
     // ***** Wait until widgets are done being moved around
     QApplication::processEvents();

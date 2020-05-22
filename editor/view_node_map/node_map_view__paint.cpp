@@ -52,6 +52,10 @@ void NodeMapView::paintEvent(QPaintEvent *event) {
 
     // Paint Node Lines
     paintNodeLines(painter);
+
+    QPointF center_point = this->mapToScene(this->viewport()->geometry().center());
+    emit updateCenterPointX( center_point.x());
+    emit updateCenterPointY(-center_point.y());
 }
 
 
@@ -82,7 +86,7 @@ void NodeMapView::paintGrid(QPainter &painter) {
     painter.setPen(line_pen);
 
     // Paint Grid
-    QRectF  scene_rect = mapToScene(this->geometry()).boundingRect();
+    QRectF  scene_rect = mapToScene(this->viewport()->rect()).boundingRect();
 
     // Right Lines
     for (int x = 0; x < scene_rect.right(); x += m_grid_size.x()) {

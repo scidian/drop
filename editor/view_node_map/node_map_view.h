@@ -140,10 +140,22 @@ public:
     // Getters / Setters
     View_Mode           currentViewMode()                   { return m_view_mode; }
     double              currentZoomLevel()                  { return m_zoom_scale; }
+    Mouse_Mode          getMouseMode()                      { return m_mouse_mode; }
+    void                setMouseMode(Mouse_Mode mode)       { m_mouse_mode = mode; }
 
 
 public slots:
     void                sceneIsAboutToClear();                                              // Good chance to delete reference pointers
+
+
+signals:
+    // Mouse Mode Hand Signals
+    void    updateCenterPointX(double new_value);                       // Emitted to update View Tool Bar Hand Mode Center Point X Coordinate
+    void    updateCenterPointY(double new_value);                       // Emitted to update View Tool Bar Hand Mode Center Point Y Coordinate
+
+    // Mouse Mode Zoom Signals
+    void    updateZoomSlider(int new_value);                            // Emitted to update View Tool Bar Zoom Mode Slider
+    void    updateZoomSpin(int new_value);                              // Emitted to update View Tool Bar Zoom Mode Spin Box
 
 };
 

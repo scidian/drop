@@ -22,6 +22,7 @@
 class InspectorCheckBox : public QCheckBox
 {
     Q_OBJECT
+
 private:
     int             m_draw_left = 5;
     int             m_draw_top =  1;
@@ -67,6 +68,7 @@ class InspectorSlider : public QSlider
 
 private:
     QColor          m_tick_color = Qt::white;
+
 public:
     InspectorSlider(QWidget *parent = nullptr) : QSlider(parent) { }
     virtual ~InspectorSlider() override { }
@@ -107,6 +109,7 @@ protected:
 class InspectorSpinSlot : public QSpinBox
 {
     Q_OBJECT
+
 private:
     bool            m_show_menu_step        { true };
 
@@ -133,6 +136,7 @@ public slots:
 class InspectorDoubleSpinSlot : public QDoubleSpinBox
 {
     Q_OBJECT
+
 private:
     double          m_update_tolerance = 0.0;
 

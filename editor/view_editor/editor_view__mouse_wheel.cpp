@@ -135,7 +135,7 @@ void EditorView::zoomToScale(double scale, bool recalculate_level) {
     emit updateZoomSpin(static_cast<int>(m_zoom_scale * 100.0));
 }
 
-// Fits contents of stage into View, called from button on View Toolbar
+// Fits contents of stage into View, called from button on View ToolBar
 void EditorView::zoomToContents() {
     this->fitInView( this->scene()->sceneRect() );
 

@@ -188,10 +188,10 @@ void FormMain::closeEvent(QCloseEvent *event) {
     qApp->quit();
 }
 
-// Overrides resize event to keep toolbar proper width
+// Overrides resize event to keep Toolbar proper width
 void FormMain::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    widgetToolbar->setFixedWidth( this->width() );
+    widgetToolBar->setFixedWidth( this->width() );
 }
 
 

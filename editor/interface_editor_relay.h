@@ -11,6 +11,7 @@
 #include <QList>
 #include <QPointF>
 #include <QString>
+#include <QWidget>
 
 #include "core/types/dr_variant.h"
 #include "editor/constants_advisor_info.h"
@@ -51,7 +52,7 @@ public:
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
     virtual EditorView*         getWorldEditor() = 0;
-    virtual NodeMapView*        getWorldMapView() = 0;
+    virtual NodeMapView*        getWorldMap() = 0;
 
     // Local Getter / Setters
     Editor_Widgets              getActiveWidget() { return m_active_widget; }
@@ -84,6 +85,8 @@ public:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
     virtual void        setMousePosition(std::string x, std::string y) = 0;
+    virtual void        updateViewToolbar(int button_id) = 0;
+
 };
 
 

@@ -76,6 +76,9 @@ void NodeMapView::zoomToScale(double scale, bool recalculate_level) {
     matrix.scale(m_zoom_scale, m_zoom_scale);
     matrix.rotate(m_rotate);
     this->setMatrix(matrix);
+
+    emit updateZoomSlider(static_cast<int>(m_zoom / 10.0));
+    emit updateZoomSpin(static_cast<int>(m_zoom_scale * 100.0));
 }
 
 // Fits contents of NodeMapScene into View, called first time World Map is shown and DrProject::m_just_loaded is true

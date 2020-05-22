@@ -64,12 +64,13 @@ public:
     long            getAnimationKey() { return m_animation_key; }
     void            setAnimationKey(long key) { m_animation_key = key; }
 
-    // Interface Relay Implementations
+
+    //############################ START: Interface Relay Implementations
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
     virtual EditorView*         getWorldEditor() override   { return viewEditor; }
-    virtual NodeMapView*        getWorldMapView() override  { return nullptr; }
+    virtual NodeMapView*        getWorldMap() override      { return nullptr; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;
@@ -90,6 +91,7 @@ public:
     virtual View_Mode   currentViewMode() override;
     virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
+    virtual void        updateViewToolbar(int button_id) override;
     virtual void        viewCenterOnPoint(QPointF center_point) override;
     virtual void        viewFitToContents() override;
     virtual void        viewZoomToScale(double zoom_scale) override;
@@ -98,6 +100,8 @@ public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;
     virtual void        setMousePosition(std::string x, std::string y) override;
+    //############################ END: Interface Relay Implementations
+
 
 private:
     // Form Building / Setup

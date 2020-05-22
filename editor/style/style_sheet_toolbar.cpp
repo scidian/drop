@@ -14,15 +14,15 @@ namespace Dr {
 
 
 //################################################################################
-//##    Toolbar Style Sheet
+//##    ToolBar Style Sheet
 //################################################################################
 std::string StyleSheetToolBar() {
     return
-    // Toolbar
+    // ToolBar
     " QToolBar { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
     "       border-bottom: 0 solid; } "
 
-    // Toolbar Push Buttons
+    // ToolBar Push Buttons
     " QPushButton#toolbarButton { "
     "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
     "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
@@ -37,7 +37,7 @@ std::string StyleSheetToolBar() {
     " QLabel#labelSpacer {           border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
     " QLabel#labelSpacerNotVisible { border-left: 1px solid; border-color: transparent; } "
 
-    // Toobar Selectable Buttons
+    // ToolBar Selectable Buttons
     +
     StyleSheetToolBarModeButton("buttonModeWorldMap",  "toolbar_world_map.png",     "toolbar_world_map_faded.png",      5) +
     StyleSheetToolBarModeButton("buttonModeWorldEdit", "toolbar_world_editor.png",  "toolbar_world_editor_faded.png",   5) +
@@ -103,7 +103,7 @@ std::string StyleSheetToolBar() {
             " QToolButton#buttonSettingsEditor              { padding-left: 3px; padding-bottom: 3px; } " +
 
 
-    // View Toolbar Buttons
+    // View ToolBar Buttons
     StyleSheetToolBarModeButton("mousePointer", "toolbar_mouse_pointer.png",    "toolbar_mouse_pointer_faded.png",      5) +
     StyleSheetToolBarModeButton("mouseHand",    "toolbar_mouse_hand.png",       "toolbar_mouse_hand_faded.png",         5) +
     StyleSheetToolBarModeButton("mouseMagnify", "toolbar_mouse_magnify.png",    "toolbar_mouse_magnify_faded.png",      5) +
@@ -114,20 +114,20 @@ std::string StyleSheetToolBar() {
 
 
     // Popup Menus
-    " QMenu#menuToolbarOptions { "
+    " QMenu#menuToolBarOptions { "
     "      padding-top: 4px; padding-bottom: 4px; "
     "      color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
     "      font-size: " + std::to_string(Dr::FontSize()) + "px; "
     "      border: " + Dr::BorderWidth() + " solid; margin: 0px; "
     "      border-color: " + Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
     "      background: " + Dr::GetColor(Window_Colors::Shadow).name() + "; }"
-    " QMenu#menuToolbarOptions::item { padding-top: 2px; padding-bottom: 3px; } "
-    " QMenu#menuToolbarOptions::item:selected { "
+    " QMenu#menuToolBarOptions::item { padding-top: 2px; padding-bottom: 3px; } "
+    " QMenu#menuToolBarOptions::item:selected { "
     "       padding-left: 2px; "
     "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
     "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; } "
-    " QMenu#menuToolbarOptions::indicator:checked { left: 5px; top: -3px; } "
-    " QMenu#menuToolbarOptions::item:checked { "
+    " QMenu#menuToolBarOptions::indicator:checked { left: 5px; top: -3px; } "
+    " QMenu#menuToolBarOptions::item:checked { "
     "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
     // FormEngine Buttons

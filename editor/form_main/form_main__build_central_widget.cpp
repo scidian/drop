@@ -24,6 +24,7 @@
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
+#include "editor/widgets/widgets_editor.h"
 #include "engine/debug_flags.h"
 
 
@@ -92,10 +93,10 @@ void FormMain::buildCentralWidgetWorldMap() {
             viewWorldMap->setViewport(gl_widget);
         }
 
-        // ***** Toolbar above World Map
-///        buildViewToolBar(widgetCentralWorldMap, toolbarWorldMap, Editor_Mode::World_Map);
+        // ***** ToolBar above World Map
+        toolbarWorldMap = new EditorViewToolbar(widgetCentralWorldMap, m_project, this, Editor_Mode::World_Map, nullptr, viewWorldMap);
 
-///    verticalLayoutWorldMap->addWidget(toolbarWorldMap);
+    verticalLayoutWorldMap->addWidget(toolbarWorldMap);
     verticalLayoutWorldMap->addWidget(viewWorldMap);
 
 }
@@ -234,8 +235,8 @@ void FormMain::buildCentralWidgetEditor() {
                         }
 
 
-                        // ***** Toolbar above World Editor
-                        buildViewToolBar(widgetEditorView, toolbarEditor, Editor_Mode::World_Editor);
+                        // ***** ToolBar above World Editor
+                        toolbarEditor = new EditorViewToolbar(widgetEditorView, m_project, this, Editor_Mode::World_Editor, viewEditor, nullptr);
 
 
                         // ***** Lower View area Status Bar
@@ -252,7 +253,7 @@ void FormMain::buildCentralWidgetEditor() {
                             labelSelected->setAlignment(Qt::AlignmentFlag::AlignCenter);
                             labelSelected->setFont(font);
                             status_layout->addWidget(labelSelected);
-                            status_layout->addWidget(createToolbarSpacer(18));
+                            status_layout->addWidget(createToolBarSpacer(18));
 
                             labelInfo = new QLabel("");
                             labelInfo->setObjectName(QStringLiteral("labelInfo"));

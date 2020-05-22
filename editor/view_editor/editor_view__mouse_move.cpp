@@ -32,7 +32,7 @@
 //####################################################################################
 //##    Mouse cursors to use in View Mouse Move events
 //####################################################################################
-namespace Mouse_Cursors {
+namespace Mouse_Cursors_Editor {
     QCursor sizeVertical()      { return QCursor(QPixmap(":/assets/cursors/size_vertical.png")); }
     QCursor size022()           { return QCursor(QPixmap(":/assets/cursors/size_022.png")); }
     QCursor size045()           { return QCursor(QPixmap(":/assets/cursors/size_045.png")); }
@@ -128,7 +128,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
 
     } else if (m_mouse_mode == Mouse_Mode::Magnify) {
         if (m_flag_key_down_spacebar == false) {
-            viewport()->setCursor(Mouse_Cursors::magnify());
+            viewport()->setCursor(Mouse_Cursors_Editor::magnify());
         }
 
     } else if (m_mouse_mode == Mouse_Mode::Pointer) {
@@ -194,7 +194,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
                 setMouseCursorFromAngle(mouse_angle);
 
             } else if (m_over_handle == Position_Flags::Rotate) {
-                viewport()->setCursor(Mouse_Cursors::rotateAll());
+                viewport()->setCursor(Mouse_Cursors_Editor::rotateAll());
 
             } else if (m_over_handle == Position_Flags::Move_Item) {
                 viewport()->setCursor(Qt::CursorShape::SizeAllCursor);
@@ -296,7 +296,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
 
     // ******************* If mouse moved while alt pressed, rotate
     if (m_view_mode == View_Mode::Rotating) {
-        viewport()->setCursor(Mouse_Cursors::rotateAll());
+        viewport()->setCursor(Mouse_Cursors_Editor::rotateAll());
         rotateSelection(event->pos());
     }
 
@@ -366,23 +366,23 @@ void EditorView::setMouseCursorFromAngle(double angle_in_degrees) {
 
     angle_in_degrees = Dr::EqualizeAngle0to360(angle_in_degrees);
 
-    if      (angle_in_degrees <  11.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());           // 0        Top
-    else if (angle_in_degrees <  33.75) viewport()->setCursor(Mouse_Cursors::size022());                // 22.5
-    else if (angle_in_degrees <  56.25) viewport()->setCursor(Mouse_Cursors::size045());                // 45       Top Right
-    else if (angle_in_degrees <  78.75) viewport()->setCursor(Mouse_Cursors::size067());                // 67.5
-    else if (angle_in_degrees < 101.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());         // 90       Right
-    else if (angle_in_degrees < 123.75) viewport()->setCursor(Mouse_Cursors::size112());                // 112.5
-    else if (angle_in_degrees < 146.25) viewport()->setCursor(Mouse_Cursors::size135());                // 135      Bottom Right
-    else if (angle_in_degrees < 168.75) viewport()->setCursor(Mouse_Cursors::size157());                // 157
-    else if (angle_in_degrees < 191.25) viewport()->setCursor(Mouse_Cursors::sizeVertical());           // 180      Bottom
-    else if (angle_in_degrees < 213.75) viewport()->setCursor(Mouse_Cursors::size022());                // 202
-    else if (angle_in_degrees < 236.25) viewport()->setCursor(Mouse_Cursors::size045());                // 225      Bottom Left
-    else if (angle_in_degrees < 258.75) viewport()->setCursor(Mouse_Cursors::size067());                // 247
-    else if (angle_in_degrees < 281.25) viewport()->setCursor(Mouse_Cursors::sizeHorizontal());         // 270      Left
-    else if (angle_in_degrees < 303.75) viewport()->setCursor(Mouse_Cursors::size112());                // 292
-    else if (angle_in_degrees < 326.25) viewport()->setCursor(Mouse_Cursors::size135());                // 315      Top Left
-    else if (angle_in_degrees < 348.75) viewport()->setCursor(Mouse_Cursors::size157());                // 337
-    else                                viewport()->setCursor(Mouse_Cursors::sizeVertical());           // 360      Top
+    if      (angle_in_degrees <  11.25) viewport()->setCursor(Mouse_Cursors_Editor::sizeVertical());           // 0        Top
+    else if (angle_in_degrees <  33.75) viewport()->setCursor(Mouse_Cursors_Editor::size022());                // 22.5
+    else if (angle_in_degrees <  56.25) viewport()->setCursor(Mouse_Cursors_Editor::size045());                // 45       Top Right
+    else if (angle_in_degrees <  78.75) viewport()->setCursor(Mouse_Cursors_Editor::size067());                // 67.5
+    else if (angle_in_degrees < 101.25) viewport()->setCursor(Mouse_Cursors_Editor::sizeHorizontal());         // 90       Right
+    else if (angle_in_degrees < 123.75) viewport()->setCursor(Mouse_Cursors_Editor::size112());                // 112.5
+    else if (angle_in_degrees < 146.25) viewport()->setCursor(Mouse_Cursors_Editor::size135());                // 135      Bottom Right
+    else if (angle_in_degrees < 168.75) viewport()->setCursor(Mouse_Cursors_Editor::size157());                // 157
+    else if (angle_in_degrees < 191.25) viewport()->setCursor(Mouse_Cursors_Editor::sizeVertical());           // 180      Bottom
+    else if (angle_in_degrees < 213.75) viewport()->setCursor(Mouse_Cursors_Editor::size022());                // 202
+    else if (angle_in_degrees < 236.25) viewport()->setCursor(Mouse_Cursors_Editor::size045());                // 225      Bottom Left
+    else if (angle_in_degrees < 258.75) viewport()->setCursor(Mouse_Cursors_Editor::size067());                // 247
+    else if (angle_in_degrees < 281.25) viewport()->setCursor(Mouse_Cursors_Editor::sizeHorizontal());         // 270      Left
+    else if (angle_in_degrees < 303.75) viewport()->setCursor(Mouse_Cursors_Editor::size112());                // 292
+    else if (angle_in_degrees < 326.25) viewport()->setCursor(Mouse_Cursors_Editor::size135());                // 315      Top Left
+    else if (angle_in_degrees < 348.75) viewport()->setCursor(Mouse_Cursors_Editor::size157());                // 337
+    else                                viewport()->setCursor(Mouse_Cursors_Editor::sizeVertical());           // 360      Top
 }
 
 

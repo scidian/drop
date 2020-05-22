@@ -16,7 +16,7 @@ namespace Dr {
 //####################################################################################
 QString StringFromEditorWidget(Editor_Widgets widget) {
     switch (widget) {
-        case Editor_Widgets::Tool_Bar:          return "Toolbar";
+        case Editor_Widgets::ToolBar:           return "ToolBar";
         case Editor_Widgets::Inspector_Tree:    return "Inspector Tree";
         case Editor_Widgets::Asset_Tree:        return "Asset Tree";
         case Editor_Widgets::Project_Tree:      return "Project Tree";

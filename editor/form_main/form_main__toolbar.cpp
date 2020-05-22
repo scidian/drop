@@ -26,7 +26,7 @@
 //####################################################################################
 //##    Updates status bar, enables / disables buttons as necessary
 //####################################################################################
-void FormMain::updateToolbar() {
+void FormMain::updateToolBar() {
 
     if (getEditorMode() == Editor_Mode::World_Map) {
         QAbstractButton *snap_grid = buttonsGroupGridSimple->button(int(Buttons_Grid::Snap_To_Grid));
@@ -106,47 +106,47 @@ void FormMain::updateToolbar() {
 //####################################################################################
 //##    Clears and recreates the toolbar based on the new mode
 //####################################################################################
-void FormMain::clearToolbar() {
+void FormMain::clearToolBar() {
     for (auto widget : toolbarWidgets) {
-        widgetToolbarLayout->removeWidget( widget );
+        widgetToolBarLayout->removeWidget( widget );
         widget->hide();
     }
     // Use iterator to delete items in list
     for(auto it = toolbarSpacers.begin(); it != toolbarSpacers.end(); ) {
-        widgetToolbarLayout->removeItem( *it );
+        widgetToolBarLayout->removeItem( *it );
         it = toolbarSpacers.erase(it);
     }
 }
 
-void FormMain::setToolbar(Editor_Mode new_mode) {
+void FormMain::setToolBar(Editor_Mode new_mode) {
     switch (new_mode) {
         case Editor_Mode::World_Map:
-            addToolbarGroup( widgetGroupGridSimple,     false );
-            addToolbarGroup( widgetGroupPlay,           false );
-            addToolbarGroup( widgetGroupSettings,       false );
+            addToolBarGroup( widgetGroupGridSimple,     false );
+            addToolBarGroup( widgetGroupPlay,           false );
+            addToolBarGroup( widgetGroupSettings,       false );
             break;
         case Editor_Mode::World_Editor:
-            addToolbarGroup( widgetGroupEdit,           true );
-            addToolbarGroup( widgetGroupLayering,       true );
-            addToolbarGroup( widgetGroupTransform,      true );
-            addToolbarGroup( widgetGroupGridFull,       true );
-            addToolbarGroup( widgetGroupPlay,           false );
-            addToolbarGroup( widgetGroupSettings,       false );
+            addToolBarGroup( widgetGroupEdit,           true );
+            addToolBarGroup( widgetGroupLayering,       true );
+            addToolBarGroup( widgetGroupTransform,      true );
+            addToolBarGroup( widgetGroupGridFull,       true );
+            addToolBarGroup( widgetGroupPlay,           false );
+            addToolBarGroup( widgetGroupSettings,       false );
             break;
         case Editor_Mode::Clear:
-            addToolbarGroup( widgetGroupPlay,           false );
-            addToolbarGroup( widgetGroupSettings,       false );
+            addToolBarGroup( widgetGroupPlay,           false );
+            addToolBarGroup( widgetGroupSettings,       false );
             break;
 
 
         // !!!!! #TODO:
         case Editor_Mode::Stage_Map:
-            addToolbarGroup( widgetGroupPlay,           false );
-            addToolbarGroup( widgetGroupSettings,       false );
+            addToolBarGroup( widgetGroupPlay,           false );
+            addToolBarGroup( widgetGroupSettings,       false );
             break;
         case Editor_Mode::UI_Editor:
-            addToolbarGroup( widgetGroupPlay,           false );
-            addToolbarGroup( widgetGroupSettings,       false );
+            addToolBarGroup( widgetGroupPlay,           false );
+            addToolBarGroup( widgetGroupSettings,       false );
             break;
         case Editor_Mode::Animation_Editor:
         case Editor_Mode::Program_Loading:
@@ -154,15 +154,15 @@ void FormMain::setToolbar(Editor_Mode new_mode) {
     }
 }
 
-void FormMain::addToolbarGroup(QWidget *group, bool add_spacer) {
+void FormMain::addToolBarGroup(QWidget *group, bool add_spacer) {
     toolbarWidgets.append(group);
-    widgetToolbarLayout->addWidget(group);
+    widgetToolBarLayout->addWidget(group);
     group->show();
 
     if (add_spacer) {
         QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
         toolbarSpacers.append(spacer);
-        widgetToolbarLayout->addSpacerItem(spacer);
+        widgetToolBarLayout->addSpacerItem(spacer);
     }
 }
 

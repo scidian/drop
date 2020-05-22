@@ -20,6 +20,14 @@
 
 
 //####################################################################################
+//##    Mouse cursors to use in View Mouse Move events
+//####################################################################################
+namespace Mouse_Cursors_Map {
+    QCursor magnify()           { return QCursor(QPixmap(":/assets/cursors/magnify.png")); }
+};
+
+
+//####################################################################################
 //##
 //##    Mouse Moved
 //##
@@ -73,7 +81,17 @@ void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
 
 
     // ******************** Process Mouse Mode
-    if (m_mouse_mode == Mouse_Mode::Pointer) {
+    if (m_mouse_mode == Mouse_Mode::Hand) {
+        if (m_flag_key_down_spacebar == false) {
+            spaceBarDown();
+        }
+
+    } else if (m_mouse_mode == Mouse_Mode::Magnify) {
+        if (m_flag_key_down_spacebar == false) {
+            viewport()->setCursor(Mouse_Cursors_Map::magnify());
+        }
+
+    } else if (m_mouse_mode == Mouse_Mode::Pointer) {
 
         // Reset flag that holds which interactive mouse object we are over and has priority
         m_over_handle = Position_Flags::No_Position;

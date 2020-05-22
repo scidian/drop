@@ -14,6 +14,7 @@
 #include "core/colors/colors.h"
 #include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
+#include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
@@ -24,6 +25,7 @@
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
+#include "editor/widgets/widgets_editor.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
@@ -41,7 +43,7 @@
 //####################################################################################
 //enum class Editor_Widgets {
 // Global Widgets
-//      Tool_Bar,
+//      ToolBar,
 //
 // Docks
 //      Asset_Tree,
@@ -171,7 +173,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
     }
 
     // Updates status bar, enables / disables toolbar buttons
-    this->updateToolbar();
+    this->updateToolBar();
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long update_count = 0;
@@ -210,6 +212,20 @@ QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->roundToGrid(point_in_scene); }
     return point_in_scene;
 }
+void FormMain::updateViewToolbar(int button_id) {
+    Mouse_Mode clicked = static_cast<Mouse_Mode>(button_id);
+    if (viewWorldMap != nullptr) {
+        viewWorldMap->setMouseMode(clicked);
+        viewWorldMap->spaceBarUp();
+        if (toolbarWorldMap != nullptr) toolbarWorldMap->updateButtons(button_id);
+    }
+    if (viewEditor != nullptr) {
+        viewEditor->setMouseMode(clicked);
+        viewEditor->spaceBarUp();
+        if (toolbarEditor != nullptr)   toolbarEditor->updateButtons(button_id);
+    }
+    updateToolBar();
+}
 
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
@@ -236,7 +252,7 @@ void FormMain::viewZoomToScale(double zoom_scale) {
 }
 
 
-// Call to change the Advisor
+// SLOTS: Call to change the Advisor
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
 void FormMain::setAdvisorInfo(QString header, QString body) {
     // If Advisor not found, or Advisor dock was closed, cancel

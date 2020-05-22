@@ -19,7 +19,7 @@ typedef std::vector<QString> HeaderBodyList;
 
 namespace Advisor_Info {
 
-    // Toolbar Buttons
+    // ToolBar Buttons
     const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your Project and how the Worlds and "
                                                                "User Interfaces in your Project connect to each other." };
     const HeaderBodyList Mode_Editor            { "World Editor", "This mode will allow you to edit the contents of each Physics World. It is where "

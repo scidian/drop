@@ -57,10 +57,6 @@ enum User_Roles {
     Name,
     Type,
     Category_Name,
-
-    Toy,
-    Color,
-    Selected,
 };
 
 
@@ -81,6 +77,7 @@ enum class Editor_Mode {
     // App_Editor               = 7,
     // Puzzle_World_Editor      = 8,
 
+    // Component_Map            = 9,                        // Visual Scripting
 };
 
 
@@ -90,7 +87,7 @@ enum class Editor_Mode {
 //############################
 enum class Editor_Widgets {
     // Global Widgets
-    Tool_Bar,
+    ToolBar,
 
     // Docks
     Asset_Tree,
@@ -187,7 +184,7 @@ enum class Label_Names {
 
 
 //####################################################################################
-//##    Form_Main Toolbar Button Groups
+//##    Form_Main ToolBar Button Groups
 //############################
 enum class Buttons_Layering {
     Send_To_Back,
@@ -224,7 +221,7 @@ enum class Buttons_Play {
 
 
 //####################################################################################
-//##    Form_Main View Toolbar Button Groups
+//##    Form_Main View ToolBar Button Groups
 //############################
 enum class Buttons_Toggle {
     CameraOnOff,                    // Turns Camera Box drawing on / off

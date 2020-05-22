@@ -8,15 +8,75 @@
 #ifndef WIDGETS_EDITOR_H
 #define WIDGETS_EDITOR_H
 
+#include <QButtonGroup>
 #include <QElapsedTimer>
+#include <QLabel>
 #include <QGraphicsView>
 #include <QMap>
+#include <QPushButton>
 #include <QRubberBand>
+#include <QToolButton>
 
 #include "core/types/dr_pointf.h"
 #include "editor/constants_advisor_info.h"
 #include "editor/enums_editor.h"
 #include "project/enums_entity_types.h"
+
+// Forward Declarations
+class DrFilterHoverHandler;
+class EditorView;
+class NodeMapView;
+
+
+//####################################################################################
+//##    EditorViewToolbar
+//##        A mini toolbar for use with a View
+//############################
+class EditorViewToolbar : public QFrame
+{
+    Q_OBJECT
+
+private:
+    // External Borrowed Pointers
+    DrProject              *m_project;                                  // Pointer to currently loaded project
+    IEditorRelay           *m_editor_relay;                             // Pointer to IEditorRelay class of parent form
+    EditorView             *m_view_editor       { nullptr };            // Holds parent EditorView*  if m_my_editor_mode is a mode that uses EditorView
+    NodeMapView            *m_view_node         { nullptr };            // Holds parent NodeMapView* if m_my_editor_mode is a mode that uses NodeMapView
+
+
+    // Local Variables
+    DrFilterHoverHandler   *m_filter_hover;                             // Pointer to an event filter hover handler
+    Editor_Mode             m_editor_mode;                              // Editor Mode of this toolbars parent View
+
+    // Mouse Mode Buttons
+    QToolButton        *mouse_pointer, *mouse_hand, *mouse_magnify;
+
+    // Mini Tool Bar Widgets
+    QWidget            *widgetGroupMouse;
+    QWidget            *widgetGroupToggle;
+    QWidget            *widgetGroupHandTool;
+    QWidget            *widgetGroupZoomTool;
+
+    // Button Groups
+    QButtonGroup       *buttonsGroupMouse;
+    QButtonGroup       *buttonsGroupToggle;
+
+public:
+    // Constructor / Destructor
+    EditorViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
+                      EditorView *view_editor = nullptr, NodeMapView *view_node = nullptr);
+
+    // Building
+    QToolButton*    createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable = true, bool enabled = true);
+    QLabel*         createToolBarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);
+    QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
+    void            updateButtons(int id);
+
+private slots:
+    void            buttonGroupMouseClicked(int id);
+    void            buttonGroupToggleClicked(int id);
+    void            setAdvisorInfo(QString header, QString body);
+};
 
 
 //####################################################################################
