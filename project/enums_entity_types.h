@@ -38,35 +38,35 @@ constexpr double    c_node_spacing =            32;                 // Default s
 //############################
 enum class DrType {    
     // Shared Types
-    Animation,                  // Entities contained within DrProject::m_animations
-        Frame,                  // Entities contained within DrProject::DrAnimation::m_frames
-    Font,                       // Entities contained within DrProject::m_fonts
-    Image,                      // Entities contained within DrProject::m_images
+    Animation,                      // Entities contained within DrProject::m_animations
+        Frame,                      // Entities contained within DrProject::DrAnimation::m_frames
+    Font,                           // Entities contained within DrProject::m_fonts
+    Image,                          // Entities contained within DrProject::m_images
 
     // Mapped Types
-    World,                      // Entities contained within DrProject::m_worlds / DrProject::m_uis
-        Stage,                  // Entities contained within DrProject::DrWorld::m_stages
-            Thing,              // Entities contained within DrProject::DrWorld::DrStage::m_things
+    World,                          // Entities contained within DrProject::m_worlds / DrProject::m_uis
+        Stage,                      // Entities contained within DrProject::DrWorld::m_stages
+            Thing,                  // Entities contained within DrProject::DrWorld::DrStage::m_things
 ///         Background,
 ///         Foreground,
 
     // Assets for World Map
-    Block,                      // Entities contained within DrProject::m_blocks
+    Block,                          // Entities contained within DrProject::m_blocks
 
     // Assets for Editor: World Physics 2D
-    Asset,                      // Entities contained within DrProject::m_assets
-    Device,                     // Entities contained within DrProject::m_devices
-    Effect,                     // Entities contained within DrProject::m_effects
-    Item,                       // Entities contained within DrProject::m_items
-    Prefab,                     // Entities contained within DrProject::m_prefabs
+    Asset,                          // Entities contained within DrProject::m_assets
+    Device,                         // Entities contained within DrProject::m_devices
+    Effect,                         // Entities contained within DrProject::m_effects
+    Item,                           // Entities contained within DrProject::m_items
+    Prefab,                         // Entities contained within DrProject::m_prefabs
 /// Logic
 
     // Assets for Editor: World UI
-/// Buttons,                    // button types
-/// Controls,               // joystick, etc?
+/// Buttons,                        // button types
+/// Controls,                       // joystick, etc?
 
     // Misc Types
-    NotFound,                   // For passing a value in functions that represents No Type Selected / Found
+    NotFound,                       // For passing a value in functions that represents No Type Selected / Found
 };
 
 

@@ -34,7 +34,7 @@ class FormAnimation : public QMainWindow, public IEditorRelay
 
 private:
     // External Borrowed Pointers
-    DrProject   *m_project;                                             // Pointer to the open project
+    DrProject      *m_project;                                          // Pointer to the open project
 
     // Local Variables
     DrFilterHoverHandler   *m_filter_hover = nullptr;                   // Pointer to an event filter hover handler
@@ -66,11 +66,12 @@ public:
 
 
     //############################ START: Interface Relay Implementations
+    virtual TreeAdvisor*        getAdvisor() override       { return treeAdvisor; }
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getEditorView() override    { return viewEditor; }
-    virtual NodeMapView*        getNodeMapView() override   { return nullptr; }
+    virtual EditorView*         getViewEditor() override    { return viewEditor; }
+    virtual NodeMapView*        getViewNodeMap() override   { return nullptr; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;

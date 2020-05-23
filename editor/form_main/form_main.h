@@ -154,11 +154,12 @@ public:
 
 
     //############################ START: Interface Relay Implementations    
+    virtual TreeAdvisor*        getAdvisor() override       { return treeAdvisor; }
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getEditorView() override    { return viewEditor; }
-    virtual NodeMapView*        getNodeMapView() override   { return viewWorldMap; }
+    virtual EditorView*         getViewEditor() override    { return viewEditor; }
+    virtual NodeMapView*        getViewNodeMap() override   { return viewWorldMap; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;

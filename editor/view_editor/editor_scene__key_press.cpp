@@ -94,13 +94,13 @@ void EditorScene::keyPressEvent(QKeyEvent *event) {
                 View_Mode before_mode = m_editor_relay->currentViewMode();
                 bool      snap_center = Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool();
                 Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
-                if (m_editor_relay->getEditorView()) m_editor_relay->getEditorView()->setViewMode(View_Mode::Holding_Keys);
+                if (m_editor_relay->getViewEditor()) m_editor_relay->getViewEditor()->setViewMode(View_Mode::Holding_Keys);
 
                 // Move Item, ItemChange Event is activated for snapping to grid
-                item->moveBy( move_x, move_y);
+                item->moveBy(move_x, move_y);
 
                 // Restore settings after ItemChange Event is over
-                if (m_editor_relay->getEditorView()) m_editor_relay->getEditorView()->setViewMode(before_mode);
+                if (m_editor_relay->getViewEditor()) m_editor_relay->getViewEditor()->setViewMode(before_mode);
                 Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, snap_center);
             }
         }

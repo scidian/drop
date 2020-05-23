@@ -24,7 +24,7 @@ void DrProject::deleteEntity(long entity_key) {
     switch (entity->getType()) {
         case DrType::Asset:     deleteAsset(entity_key);    break;
         case DrType::Font:      deleteFont(entity_key);     break;
-        default: return;
+        case DrType::World:     deleteWorld(entity_key);    break;
     }
 }
 

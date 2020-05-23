@@ -8,6 +8,7 @@
 #ifndef NODE_MAP_SCENE_H
 #define NODE_MAP_SCENE_H
 
+#include <QElapsedTimer>
 #include <QGraphicsScene>
 #include <QTreeWidgetItem>
 
@@ -41,6 +42,9 @@ private:
     // Selection Variables
     QList<QGraphicsItem*>   m_selection_items;                              // List of selected items
 
+    // Timers for holding keys down
+    QMap<Qt::Key, QElapsedTimer>    m_key_timers;
+    QMap<Qt::Key, bool>             m_key_down;
 
 public:
     // Constructor / Destructor
@@ -62,14 +66,19 @@ public:
     QList<NodeMapItem*>     nodeMapItems();
     static NodeMapItem*     nodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key);
 
+    // Selection Functions
+    QRectF                  totalSelectionSceneRect();
+
     // Other Widget Update Calls
-    IEditorRelay*           getEditorRelay() { return m_editor_relay; }
     void                    updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs);
     void                    updateSelectionFromKeyList(QList<long> key_list);
     void                    updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
     void                    unselectLockedItems();
 
     // Getters / Setters
+    IEditorRelay*           getEditorRelay()                        { return m_editor_relay; }
+    DrProject*              getProject()                            { return m_project; }
+
     long                    getNodeMapEntityKey()                   { return m_node_map_entity; }
     bool                    needRebuild()                           { return m_need_rebuild_scene; }
     void                    setNeedRebuild(bool need)               { m_need_rebuild_scene = need; }

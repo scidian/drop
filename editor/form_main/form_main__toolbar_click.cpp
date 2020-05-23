@@ -187,7 +187,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
         engine->show();
 
     } else if (clicked == Buttons_Play::Play_Stage) {
-        long only_stage_key = this->getEditorView()->getEditorScene()->getCurrentStageKeyShown();
+        long only_stage_key = this->getViewEditor()->getEditorScene()->getCurrentStageKeyShown();
 
         DrStage *stage = m_project->findStageFromKey(only_stage_key);
         if (stage != nullptr) {

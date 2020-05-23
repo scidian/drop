@@ -48,11 +48,12 @@ public:
     virtual ~IEditorRelay();
 
     // Editor Widget Accessors
+    virtual TreeAdvisor*        getAdvisor() = 0;
     virtual TreeAssets*         getAssetTree() = 0;
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
-    virtual EditorView*         getEditorView() = 0;
-    virtual NodeMapView*        getNodeMapView() = 0;
+    virtual EditorView*         getViewEditor() = 0;
+    virtual NodeMapView*        getViewNodeMap() = 0;
 
     // Local Getter / Setters
     Editor_Widgets              getActiveWidget() { return m_active_widget; }

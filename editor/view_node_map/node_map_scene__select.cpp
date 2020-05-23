@@ -49,6 +49,24 @@ void NodeMapScene::selectionChanged() {
 
 
 //####################################################################################
+//##    Returns a scene rect containing all the selected items
+//####################################################################################
+QRectF NodeMapScene::totalSelectionSceneRect() {
+    // If no items selected, return empty rect
+    QRectF total_rect;
+    if (selectedItems().count() < 1) return total_rect;
+
+    // Start with rect of first item, add on each additional items rect
+    total_rect = selectedItems().first()->sceneBoundingRect();
+    for (auto item: selectedItems()) {
+        total_rect = total_rect.united(item->sceneBoundingRect());
+    }
+
+    return total_rect;
+}
+
+
+//####################################################################################
 //##    Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
 void NodeMapScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
@@ -106,9 +124,7 @@ void NodeMapScene::unselectLockedItems() {
         ///DrSettings *entity = m_project->findSettingsFromKey(item_key);
         // Check entity is valid, see if locked
         if (entity == nullptr) continue;
-        if (entity->isLocked()) {
-            item->setSelected(false);
-        }
+        if (entity->isLocked()) item->setSelected(false);
     }
 
     blockSignals(was_blocked);

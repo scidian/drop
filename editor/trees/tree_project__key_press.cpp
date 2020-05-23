@@ -45,7 +45,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D) {
         // ***** Duplicate Thing
         if (type == DrType::Thing) {
-            m_editor_relay->getEditorView()->keyPressEvent(event);
+            m_editor_relay->getViewEditor()->keyPressEvent(event);
             return;
         }
     }
@@ -53,7 +53,8 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_D) {
         // ***** Duplicate Stage
         if (type == DrType::Stage) {
-            DrStage *new_selected_stage = nullptr;
+            DrStage    *new_selected_stage = nullptr;
+            QList<long> copied_stage_keys { };
             int stage_count = 0;
             for (auto item : selectedItems()) {
                 DrStage *stage = getParentProject()->findStageFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
@@ -68,6 +69,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
                 DrStage *copy_stage = stage->getParentWorld()->addStageCopyFromStage(stage, new_name.toStdString());
                 if (stage_count == 0) new_selected_stage = copy_stage;
+                copied_stage_keys.push_back(copy_stage->getKey());
                 stage_count++;
             }
             if (new_selected_stage == nullptr) return;
@@ -75,13 +77,14 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             // Update Editor Widgets
             m_editor_relay->buildProjectTree();
             m_editor_relay->buildInspector( { new_selected_stage->getKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::View, { new_selected_stage->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::View, copied_stage_keys );
             m_editor_relay->buildScene( new_selected_stage->getKey() );
             return;
 
         // ***** Duplicate World
         } else if (type == DrType::World) {
-            DrWorld *new_selected_world = nullptr;
+            DrWorld    *new_selected_world = nullptr;
+            QList<long> copied_world_keys { };
             int world_count = 0;
             for (auto item : selectedItems()) {
                 DrWorld *world = getParentProject()->findWorldFromKey( item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
@@ -98,6 +101,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
                          copy_world->setNodePositionFromOtherWorld(world, Direction::Right);                        // Set Node Position
 
                 if (world_count == 0) new_selected_world = copy_world;
+                copied_world_keys.push_back(copy_world->getKey());
                 world_count++;
             }
             if (new_selected_world == nullptr) return;
@@ -105,7 +109,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
             // Update Editor Widgets
             m_editor_relay->buildProjectTree();
             m_editor_relay->buildInspector( { new_selected_world->getKey() } );
-            m_editor_relay->updateItemSelection(Editor_Widgets::View, { new_selected_world->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::View, copied_world_keys );
             m_editor_relay->buildScene( new_selected_world->getLastStageShownKey() );
             return;
         }
@@ -115,7 +119,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     // ********** Layering Keys
     if (event->key() == Qt::Key_Comma || event->key() == Qt::Key_Period || event->key() == Qt::Key_Less || event->key() == Qt::Key_Greater) {
         if (type == DrType::Thing) {
-            m_editor_relay->getEditorView()->keyPressEvent(event);
+            m_editor_relay->getViewEditor()->keyPressEvent(event);
             return;
         }
     }
@@ -127,7 +131,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
 
             // ***** Delete selected Things
             if (type == DrType::Thing) {
-                m_editor_relay->getEditorView()->keyPressEvent(event);
+                m_editor_relay->getViewEditor()->keyPressEvent(event);
 
             // ***** Delete selected Stages
             } else if (type == DrType::Stage) {

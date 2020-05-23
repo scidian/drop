@@ -20,6 +20,9 @@ class EditorViewRubberBand;
 class IEditorRelay;
 class NodeMapScene;
 
+// Local Constants
+const   double      c_node_grid_size             = 16;
+
 
 //####################################################################################
 //##    NodeMapView
@@ -46,15 +49,14 @@ private:
     int                     m_rotate            { 0 };                      // NOT IMPLEMENTED: Rotation of current view
 
     // Grid Style Variables (currently re-populated from EditorView::updateGrid
-    Grid_Style              m_grid_style        { Grid_Style::Lines };      // Grid type to display
-    QPointF                 m_grid_origin       { 0, 0 };                   // Origin point of grid in scene
-    QPointF                 m_grid_size         { 16, 16 };                 // Grid size
-    QPointF                 m_grid_scale        { 1, 1 };                   // X and Y scaling for after grid has been rotated
-    double                  m_grid_rotate       { 0 };                      // Rotation of grid lines
-    QColor                  m_grid_color;                                   // Grid color
-    QColor                  m_back_color        { Qt::black };              // World Map background color
-
-    bool                    m_grid_should_snap  { true };                   // Should snap to grid?
+    Grid_Style              m_grid_style        { Grid_Style::Lines };                  // Grid type to display
+    QPointF                 m_grid_origin       { 0, 0 };                               // Origin point of grid in scene
+    QPointF                 m_grid_size         { c_node_grid_size, c_node_grid_size};  // Grid size
+    QPointF                 m_grid_scale        { 1, 1 };                               // X and Y scaling for after grid has been rotated
+    double                  m_grid_rotate       { 0 };                                  // Rotation of grid lines
+    QColor                  m_grid_color;                                               // Grid color
+    QColor                  m_back_color        { Qt::black };                          // World Map background color
+    bool                    m_grid_should_snap  { true };                               // Should snap to grid?
 
     // Keyboard Flags
     bool                    m_flag_dont_check_keys          { false };      // True when we don't want mouseMoveEvent to update key flags
@@ -145,6 +147,7 @@ public:
     double              currentZoomLevel()                  { return m_zoom_scale; }
     Mouse_Mode          getMouseMode()                      { return m_mouse_mode; }
     void                setMouseMode(Mouse_Mode mode)       { m_mouse_mode = mode; }
+    void                setViewMode(View_Mode mode)         { m_view_mode = mode; }
 
 
 public slots:

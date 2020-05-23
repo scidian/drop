@@ -95,7 +95,7 @@ void FormPopup::buildPopupAddEntity() {
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) {
                 editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
-                new_stage = editor->getEditorView()->getEditorScene()->getCurrentStageShown()->getParentWorld()->addStage();
+                new_stage = editor->getViewEditor()->getEditorScene()->getCurrentStageShown()->getParentWorld()->addStage();
                 editor->buildProjectTree();
                 editor->buildInspector( { new_stage->getKey() } );
                 editor->updateItemSelection(Editor_Widgets::View, { new_stage->getKey() } );

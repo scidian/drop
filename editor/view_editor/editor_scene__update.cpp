@@ -227,8 +227,8 @@ void EditorScene::updateItemInScene(DrSettings *changed_item, std::list<Componen
         // Update view when camera zoom changes camera size to be drawn
         } else if ((comp == Comps::Thing_Settings_Character && prop == Props::Thing_Character_Camera_Zoom) ||
                    (comp == Comps::Thing_Settings_Camera    && prop == Props::Thing_Camera_Zoom)) {
-            if (m_editor_relay->getEditorView() != nullptr)
-                m_editor_relay->getEditorView()->update();
+            if (m_editor_relay->getViewEditor() != nullptr)
+                m_editor_relay->getViewEditor()->update();
 
         } else if ((comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Brightness) ||
                    (comp == Comps::Thing_Appearance && prop == Props::Thing_Filter_Contrast) ||

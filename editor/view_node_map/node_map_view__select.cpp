@@ -55,6 +55,7 @@ void NodeMapView::processSelection(QPoint mouse_in_view) {
     QList<QGraphicsItem*> before_band = my_scene->selectedItems(); ///my_scene->getSelectionItems();
 
     // Blocks signals while we try to figure out which items should be selected
+    bool signals_blocked = my_scene->signalsBlocked();
     my_scene->blockSignals(true);
 
     // Figure out new selection items
@@ -66,8 +67,8 @@ void NodeMapView::processSelection(QPoint mouse_in_view) {
         }
     }
 
-    // Re-connect signal and call selectionChanged if necessary
-    my_scene->blockSignals(false);
+    // Allow signals again, and call selectionChanged if necessary
+    my_scene->blockSignals(signals_blocked);
     if (before_band != scene()->selectedItems()) my_scene->selectionChanged();
 }
 
