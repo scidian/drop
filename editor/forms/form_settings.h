@@ -37,6 +37,11 @@ public:
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
 
+
+    // SoLoud Testing
+    void    playSound();
+
+
 };
 
 

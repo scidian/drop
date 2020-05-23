@@ -5,10 +5,16 @@
 //
 //
 //
+#include <QDebug>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QTimer>
 #include <QVBoxLayout>
+
+#include "3rd_party/soloud/soloud.h"
+#include "3rd_party/soloud/soloud_sfxr.h"
+#include "3rd_party/soloud/soloud_speech.h"
+#include "3rd_party/soloud/soloud_wav.h"
 
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
@@ -44,6 +50,18 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
     m_inner_widget->setObjectName(QStringLiteral("innerWidget"));
     QVBoxLayout *inner_layout = new QVBoxLayout(m_inner_widget);
 
+
+        QPushButton *play = new QPushButton("  Play  ");
+        Dr::ApplyDropShadowByType(play, Shadow_Types::Button_Shadow);
+        play->setObjectName(QStringLiteral("buttonDefault"));
+        inner_layout->addWidget(play);
+
+        // Connect a lambda function to the "exit" button to close the form
+        connect(play, &QPushButton::clicked, [this] () {
+            this->playSound();
+        });
+
+
         QPushButton *exit = new QPushButton("  Exit  ");
         Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
         exit->setObjectName(QStringLiteral("buttonDefault"));
@@ -53,6 +71,7 @@ FormSettings::FormSettings(DrProject *project, QWidget *parent) : QWidget(parent
         connect(exit, &QPushButton::clicked, [this] () {
             this->close();
         });
+
 
     layout->addWidget(m_inner_widget);
 
@@ -72,6 +91,40 @@ void FormSettings::resizeEvent(QResizeEvent *event) {
 
     Dr::ApplyRoundedCornerMask(this, 8, 8);
 }
+
+
+
+
+
+void FormSettings::playSound() {
+
+    SoLoud::Soloud  gSoloud;    // SoLoud engine
+    gSoloud.init();             // Initialize SoLoud
+
+    Dr::Sleep(100);
+
+    //SoLoud::Sfxr coin;
+    //coin.loadPreset(SoLoud::Sfxr::EXPLOSION, 2000);
+    //coin.setVolume(100);
+    //gSoloud.play(coin);
+
+
+    SoLoud::Speech sp;
+    sp.setText("I love Julie so much. She is my wifey. She is such a babe!");
+    gSoloud.play(sp);
+
+//    SoLoud::Wav     gWave;        // One wave file
+//    gWave.load("pew_pew.wav");    // Load a wave
+//    gSoloud.play(gWave);          // Play the wave
+
+
+    Dr::Sleep(10000);
+
+    gSoloud.deinit();           // Clean up!
+
+}
+
+
 
 
 

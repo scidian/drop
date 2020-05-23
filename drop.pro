@@ -16,6 +16,9 @@ QMAKE_CFLAGS    += -std=c99
 ##  C++ Compiler Flags
 QMAKE_CXXFLAGS  += -Wno-sign-conversion
 
+macx {
+    LIBS        += -framework AudioToolbox -framework CoreAudio
+}
 
 
 ##
@@ -46,6 +49,10 @@ RESOURCES += \
 
 ##### Some Distribution Files
 DISTFILES += \
+    3rd_party/soloud/audiosource/speech/Elements.def \
+    3rd_party/soloud/audiosource/speech/legal_readme.txt \
+    3rd_party/soloud/audiosource/tedsid/readme.txt \
+    3rd_party/soloud/c_api/soloud.def \
     drop_icon.ico \
     drop_icons.icns
 
@@ -69,6 +76,7 @@ RC_ICONS = drop_icon.ico
 
 ##### Additional PATHs
 INCLUDEPATH += $$PWD/3rd_party
+INCLUDEPATH += $$PWD/3rd_party/soloud
 
 
 ##### Sources
@@ -110,6 +118,77 @@ SOURCES += \
     3rd_party/hull_finder.cpp \
     3rd_party/poly_partition.cpp \
     3rd_party/polyline_simplification.cpp \
+    3rd_party/soloud/audiosource/monotone/soloud_monotone.cpp \
+    3rd_party/soloud/audiosource/noise/soloud_noise.cpp \
+    3rd_party/soloud/audiosource/openmpt/soloud_openmpt.cpp \
+    3rd_party/soloud/audiosource/openmpt/soloud_openmpt_dll.c \
+    3rd_party/soloud/audiosource/sfxr/soloud_sfxr.cpp \
+    3rd_party/soloud/audiosource/speech/darray.cpp \
+    3rd_party/soloud/audiosource/speech/klatt.cpp \
+    3rd_party/soloud/audiosource/speech/resonator.cpp \
+    3rd_party/soloud/audiosource/speech/soloud_speech.cpp \
+    3rd_party/soloud/audiosource/speech/tts.cpp \
+    3rd_party/soloud/audiosource/tedsid/sid.cpp \
+    3rd_party/soloud/audiosource/tedsid/soloud_tedsid.cpp \
+    3rd_party/soloud/audiosource/tedsid/ted.cpp \
+    3rd_party/soloud/audiosource/vic/soloud_vic.cpp \
+    3rd_party/soloud/audiosource/vizsn/soloud_vizsn.cpp \
+    3rd_party/soloud/audiosource/wav/dr_impl.cpp \
+    3rd_party/soloud/audiosource/wav/soloud_wav.cpp \
+    3rd_party/soloud/audiosource/wav/soloud_wavstream.cpp \
+    3rd_party/soloud/audiosource/wav/stb_vorbis.c \
+    3rd_party/soloud/backend/alsa/soloud_alsa.cpp \
+    3rd_party/soloud/backend/coreaudio/soloud_coreaudio.cpp \
+    3rd_party/soloud/backend/jack/soloud_jack.cpp \
+    3rd_party/soloud/backend/miniaudio/soloud_miniaudio.cpp \
+    3rd_party/soloud/backend/nosound/soloud_nosound.cpp \
+    3rd_party/soloud/backend/null/soloud_null.cpp \
+    3rd_party/soloud/backend/openal/soloud_openal.cpp \
+    3rd_party/soloud/backend/openal/soloud_openal_dll.c \
+    3rd_party/soloud/backend/opensles/soloud_opensles.cpp \
+    3rd_party/soloud/backend/oss/soloud_oss.cpp \
+    3rd_party/soloud/backend/portaudio/soloud_portaudio.cpp \
+    3rd_party/soloud/backend/portaudio/soloud_portaudio_dll.c \
+    3rd_party/soloud/backend/sdl/soloud_sdl1.cpp \
+    3rd_party/soloud/backend/sdl/soloud_sdl1_dll.c \
+    3rd_party/soloud/backend/sdl/soloud_sdl2.cpp \
+    3rd_party/soloud/backend/sdl/soloud_sdl2_dll.c \
+    3rd_party/soloud/backend/sdl2_static/soloud_sdl2_static.cpp \
+    3rd_party/soloud/backend/sdl_static/soloud_sdl_static.cpp \
+    3rd_party/soloud/backend/vita_homebrew/soloud_vita_homebrew.cpp \
+    3rd_party/soloud/backend/wasapi/soloud_wasapi.cpp \
+    3rd_party/soloud/backend/winmm/soloud_winmm.cpp \
+    3rd_party/soloud/backend/xaudio2/soloud_xaudio2.cpp \
+    3rd_party/soloud/c_api/soloud_c.cpp \
+    3rd_party/soloud/core/soloud.cpp \
+    3rd_party/soloud/core/soloud_audiosource.cpp \
+    3rd_party/soloud/core/soloud_bus.cpp \
+    3rd_party/soloud/core/soloud_core_3d.cpp \
+    3rd_party/soloud/core/soloud_core_basicops.cpp \
+    3rd_party/soloud/core/soloud_core_faderops.cpp \
+    3rd_party/soloud/core/soloud_core_filterops.cpp \
+    3rd_party/soloud/core/soloud_core_getters.cpp \
+    3rd_party/soloud/core/soloud_core_setters.cpp \
+    3rd_party/soloud/core/soloud_core_voicegroup.cpp \
+    3rd_party/soloud/core/soloud_core_voiceops.cpp \
+    3rd_party/soloud/core/soloud_fader.cpp \
+    3rd_party/soloud/core/soloud_fft.cpp \
+    3rd_party/soloud/core/soloud_fft_lut.cpp \
+    3rd_party/soloud/core/soloud_file.cpp \
+    3rd_party/soloud/core/soloud_filter.cpp \
+    3rd_party/soloud/core/soloud_misc.cpp \
+    3rd_party/soloud/core/soloud_queue.cpp \
+    3rd_party/soloud/core/soloud_thread.cpp \
+    3rd_party/soloud/filter/soloud_bassboostfilter.cpp \
+    3rd_party/soloud/filter/soloud_biquadresonantfilter.cpp \
+    3rd_party/soloud/filter/soloud_dcremovalfilter.cpp \
+    3rd_party/soloud/filter/soloud_echofilter.cpp \
+    3rd_party/soloud/filter/soloud_fftfilter.cpp \
+    3rd_party/soloud/filter/soloud_flangerfilter.cpp \
+    3rd_party/soloud/filter/soloud_freeverbfilter.cpp \
+    3rd_party/soloud/filter/soloud_lofifilter.cpp \
+    3rd_party/soloud/filter/soloud_robotizefilter.cpp \
+    3rd_party/soloud/filter/soloud_waveshaperfilter.cpp \
     core/colors/colors.cpp \
     core/colors/palette_blank.cpp \
     core/colors/palette_material.cpp \
@@ -962,6 +1041,52 @@ HEADERS += \
     3rd_party/hull_finder.h \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
+    3rd_party/soloud/audiosource/speech/darray.h \
+    3rd_party/soloud/audiosource/speech/klatt.h \
+    3rd_party/soloud/audiosource/speech/resonator.h \
+    3rd_party/soloud/audiosource/speech/tts.h \
+    3rd_party/soloud/audiosource/tedsid/sid.h \
+    3rd_party/soloud/audiosource/tedsid/ted.h \
+    3rd_party/soloud/audiosource/wav/dr_flac.h \
+    3rd_party/soloud/audiosource/wav/dr_mp3.h \
+    3rd_party/soloud/audiosource/wav/dr_wav.h \
+    3rd_party/soloud/audiosource/wav/stb_vorbis.h \
+    3rd_party/soloud/backend/miniaudio/miniaudio.h \
+    3rd_party/soloud/soloud.h \
+    3rd_party/soloud/soloud_audiosource.h \
+    3rd_party/soloud/soloud_bassboostfilter.h \
+    3rd_party/soloud/soloud_biquadresonantfilter.h \
+    3rd_party/soloud/soloud_bus.h \
+    3rd_party/soloud/soloud_c.h \
+    3rd_party/soloud/soloud_dcremovalfilter.h \
+    3rd_party/soloud/soloud_echofilter.h \
+    3rd_party/soloud/soloud_error.h \
+    3rd_party/soloud/soloud_fader.h \
+    3rd_party/soloud/soloud_fft.h \
+    3rd_party/soloud/soloud_fftfilter.h \
+    3rd_party/soloud/soloud_file.h \
+    3rd_party/soloud/soloud_file_hack_off.h \
+    3rd_party/soloud/soloud_file_hack_on.h \
+    3rd_party/soloud/soloud_filter.h \
+    3rd_party/soloud/soloud_flangerfilter.h \
+    3rd_party/soloud/soloud_freeverbfilter.h \
+    3rd_party/soloud/soloud_internal.h \
+    3rd_party/soloud/soloud_lofifilter.h \
+    3rd_party/soloud/soloud_misc.h \
+    3rd_party/soloud/soloud_monotone.h \
+    3rd_party/soloud/soloud_noise.h \
+    3rd_party/soloud/soloud_openmpt.h \
+    3rd_party/soloud/soloud_queue.h \
+    3rd_party/soloud/soloud_robotizefilter.h \
+    3rd_party/soloud/soloud_sfxr.h \
+    3rd_party/soloud/soloud_speech.h \
+    3rd_party/soloud/soloud_tedsid.h \
+    3rd_party/soloud/soloud_thread.h \
+    3rd_party/soloud/soloud_vic.h \
+    3rd_party/soloud/soloud_vizsn.h \
+    3rd_party/soloud/soloud_wav.h \
+    3rd_party/soloud/soloud_waveshaperfilter.h \
+    3rd_party/soloud/soloud_wavstream.h \
     3rd_party/stb/stb_image.h \
     3rd_party/stb/stb_image_resize.h \
     3rd_party/stb/stb_image_write.h \
