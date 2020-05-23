@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 2/27/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/23/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -8,6 +8,8 @@
 #include <QKeyEvent>
 
 #include "editor/interface_editor_relay.h"
+#include "editor/view_editor/editor_item.h"
+#include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
 
 
@@ -16,7 +18,7 @@
 //####################################################################################
 // Key press event
 void EditorView::keyPressEvent(QKeyEvent *event) {
-    // When space bar is down, enabled mouse press and move to translate viewable area    
+    // When space bar is down, enabled mouse press and move to translate viewable area
     if (event->key() == Qt::Key::Key_Space)     spaceBarDown();
     if (event->key() == Qt::Key::Key_Control)   m_flag_key_down_control = true;
     if (event->key() == Qt::Key::Key_Alt)       m_flag_key_down_alt = true;
@@ -49,7 +51,6 @@ void EditorView::keyReleaseEvent(QKeyEvent *event) {
     delete fire_mouse_move;
 }
 
-
 void EditorView::spaceBarDown() {
     m_flag_key_down_spacebar = true;
     setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
@@ -63,12 +64,6 @@ void EditorView::spaceBarUp() {
         setInteractive(true);
     }
 }
-
-
-
-
-
-
 
 
 

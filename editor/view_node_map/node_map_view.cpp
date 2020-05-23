@@ -35,7 +35,7 @@ NodeMapView::NodeMapView(QWidget *parent, DrProject *project, NodeMapScene *scen
 NodeMapView::~NodeMapView() { }
 
 void NodeMapView::focusInEvent(QFocusEvent *event) {
-    m_editor_relay->setActiveWidget(Editor_Widgets::Node_View);
+    m_editor_relay->setActiveWidget(Editor_Widgets::View);
     QGraphicsView::focusInEvent(event);
 }
 

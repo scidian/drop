@@ -80,11 +80,11 @@ void NodeMapView::mouseReleaseEvent(QMouseEvent *event) {
                 for (auto &item : my_scene->selectedItems())
                     item_keys.append(item->data(User_Roles::Key).toLongLong());
                 m_editor_relay->buildInspector( item_keys );
-                m_editor_relay->updateItemSelection(Editor_Widgets::Node_View);
+                m_editor_relay->updateItemSelection(Editor_Widgets::View);
             } else {
                 if (itemAt(event->pos()) == nullptr) {
                     m_editor_relay->buildInspector( { } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Node_View);
+                    m_editor_relay->updateItemSelection(Editor_Widgets::View);
                 }
             }
         }
@@ -135,7 +135,7 @@ void NodeMapView::mouseReleaseEvent(QMouseEvent *event) {
         for (auto &item : scene()->selectedItems())
             item_keys.append(item->data(User_Roles::Key).toLongLong());
         m_editor_relay->buildInspector( item_keys );
-        m_editor_relay->updateItemSelection(Editor_Widgets::Node_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::View);
 
     // ***** Pass event to base class
     } else {

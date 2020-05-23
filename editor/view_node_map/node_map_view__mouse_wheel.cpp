@@ -50,7 +50,7 @@ void NodeMapView::wheelEvent(QWheelEvent *event) {
 void NodeMapView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 350) m_zoom = 350;
-    if (m_zoom < -50) m_zoom = -50;
+    if (m_zoom <   0) m_zoom =   0;
     ///Dr::PrintDebug("Zoom: " + std::to_string(m_zoom));
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
@@ -58,7 +58,7 @@ void NodeMapView::zoomInOut(int level) {
 void NodeMapView::zoomToPower(int level) {
     m_zoom = level;
     if (m_zoom > 350) m_zoom = 350;
-    if (m_zoom < -50) m_zoom = -50;
+    if (m_zoom <   0) m_zoom =   0;
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 

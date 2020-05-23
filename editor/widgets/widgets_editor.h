@@ -67,6 +67,7 @@ public:
                       EditorView *view_editor = nullptr, NodeMapView *view_node = nullptr);
 
     // Building
+    void            buildToolbar();
     QToolButton*    createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable = true, bool enabled = true);
     QLabel*         createToolBarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);
     QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");

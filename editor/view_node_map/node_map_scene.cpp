@@ -44,7 +44,7 @@ void NodeMapScene::clearSceneOverride() {
 void NodeMapScene::sceneChanged(QList<QRectF>) {
     QRectF my_rect = sceneRect();
     QRectF items_rect = itemsBoundingRect();
-    double buffer = 300;
+    double buffer = 5000;
 
     double left_diff =   (items_rect.left())   - (my_rect.left() + buffer);
     double top_diff =    (items_rect.top())    - (my_rect.top() + buffer);

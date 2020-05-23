@@ -69,15 +69,15 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getWorldEditor() override   { return viewEditor; }
-    virtual NodeMapView*        getWorldMap() override      { return nullptr; }
+    virtual EditorView*         getEditorView() override    { return viewEditor; }
+    virtual NodeMapView*        getNodeMapView() override   { return nullptr; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;
-    virtual void        buildProjectTree() override;
+    virtual void        buildProjectTree(bool total_rebuild = false) override;
     virtual void        buildScene(long stage_key) override;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
@@ -91,9 +91,9 @@ public:
     virtual View_Mode   currentViewMode() override;
     virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
-    virtual void        updateViewToolbar(int button_id) override;
     virtual void        viewCenterOnPoint(QPointF center_point) override;
     virtual void        viewFitToContents() override;
+    virtual void        viewUpdateToolbar(int button_id) override;
     virtual void        viewZoomToScale(double zoom_scale) override;
 
 public slots:

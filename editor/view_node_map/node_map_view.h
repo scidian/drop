@@ -138,6 +138,9 @@ public:
     void                processSelection(QPoint mouse_in_view);
 
     // Getters / Setters
+    IEditorRelay*       getEditorRelay()                    { return m_editor_relay; }
+    DrProject*          getProject()                        { return m_project; }
+
     View_Mode           currentViewMode()                   { return m_view_mode; }
     double              currentZoomLevel()                  { return m_zoom_scale; }
     Mouse_Mode          getMouseMode()                      { return m_mouse_mode; }

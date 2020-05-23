@@ -205,7 +205,7 @@ void FormMain::buildCentralWidgetEditor() {
                         verticalLayoutView->setContentsMargins(0, 0, 0, 0);
 
                         // ***** Load our EditorView to display our EditorScene collection of items
-                        viewEditor = new EditorView(widgetEditorView, m_project, sceneEditor, this);
+                        viewEditor = new EditorView(widgetEditorView, m_project, this, sceneEditor);
                         viewEditor->setObjectName(QStringLiteral("viewEditor"));
                         viewEditor->setAcceptDrops(true);
                         viewEditor->setFrameShape(QFrame::NoFrame);

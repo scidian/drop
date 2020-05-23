@@ -9,6 +9,7 @@
 #define NODE_MAP_SCENE_H
 
 #include <QGraphicsScene>
+#include <QTreeWidgetItem>
 
 #include "editor/interface_editor_relay.h"
 #include "project/enums_entity_types.h"
@@ -46,6 +47,10 @@ public:
     explicit NodeMapScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, long node_map_entity_key = c_no_key);
     virtual ~NodeMapScene() override;
 
+    // Event Overrides
+    virtual void    keyPressEvent(QKeyEvent *event) override;
+    virtual void    keyReleaseEvent(QKeyEvent *event) override;
+
     // Construction
     void                    buildScene();                                   // Clears / builds node scene
     void                    clearSceneOverride();                           // Should call this instead of "clear()", prevents dangling pointers and resets local variables
@@ -60,6 +65,8 @@ public:
     // Other Widget Update Calls
     IEditorRelay*           getEditorRelay() { return m_editor_relay; }
     void                    updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs);
+    void                    updateSelectionFromKeyList(QList<long> key_list);
+    void                    updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list);
     void                    unselectLockedItems();
 
     // Getters / Setters

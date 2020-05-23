@@ -18,6 +18,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
 #include "engine/form_engine.h"
 #include "project/dr_project.h"
@@ -80,9 +81,12 @@ void FormMain::buttonGroupEditClicked(int id) {
         if (clicked == Buttons_Edit::Duplicate) event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_D,      { Qt::KeyboardModifier::NoModifier });
 
         if (getEditorMode() == Editor_Mode::World_Editor) {
-            if      (getActiveWidget() == Editor_Widgets::Project_Tree)     { treeProjectEditor->keyPressEvent(event); }
-            else if (getActiveWidget() == Editor_Widgets::Editor_View)      { sceneEditor->keyPressEvent(event); }
-            else if (getActiveWidget() == Editor_Widgets::Asset_Tree)       { treeAssetEditor->keyPressEvent(event); }
+            if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { treeAssetEditor->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::Project_Tree)     { treeProjectEditor->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::View) {
+                if (getEditorMode() == Editor_Mode::World_Map)              { sceneWorldMap->keyPressEvent(event); }
+                if (getEditorMode() == Editor_Mode::World_Editor)           { sceneEditor->keyPressEvent(event); }
+            }
         }
 
         if (event != nullptr) { delete event; event = nullptr; }
@@ -183,7 +187,7 @@ void FormMain::buttonGroupPlayClicked(int id) {
         engine->show();
 
     } else if (clicked == Buttons_Play::Play_Stage) {
-        long only_stage_key = this->getWorldEditor()->getEditorScene()->getCurrentStageKeyShown();
+        long only_stage_key = this->getEditorView()->getEditorScene()->getCurrentStageKeyShown();
 
         DrStage *stage = m_project->findStageFromKey(only_stage_key);
         if (stage != nullptr) {

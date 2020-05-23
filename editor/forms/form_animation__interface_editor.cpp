@@ -20,15 +20,12 @@
 //enum class Editor_Widgets {
 // Global Widgets
 //      ToolBar,
-//
+//      View,
 // Docks
+//      Advisor_Tree,
 //      Asset_Tree,
 //      Inspector_Tree,
 //      Project_Tree,
-//
-// Editor Widgets
-//      Editor_View,
-//      Node_View,
 
 Editor_Mode FormAnimation::getEditorMode() { return Editor_Mode::Animation_Editor; }
 void FormAnimation::setEditorMode(Editor_Mode new_mode) { }
@@ -39,7 +36,7 @@ void FormAnimation::buildAssetTree() {
 
 
 void FormAnimation::buildInspector(QList<long> entity_key_list, bool force_rebuild) { };
-void FormAnimation::buildProjectTree() { };
+void FormAnimation::buildProjectTree(bool total_rebuild) { };
 void FormAnimation::buildScene(long stage_key) { };
 
 void FormAnimation::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
@@ -74,7 +71,7 @@ void FormAnimation::setAdvisorInfo(QString header, QString body) {
 void FormAnimation::setMousePosition(std::string x, std::string y) {
 
 }
-void FormAnimation::updateViewToolbar(int button_id) { }
+void FormAnimation::viewUpdateToolbar(int button_id) { }
 
 
 

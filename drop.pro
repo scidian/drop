@@ -234,6 +234,7 @@ SOURCES += \
     editor/view_node_map/node_map_item__slot_info.cpp \
     editor/view_node_map/node_map_scene.cpp \
     editor/view_node_map/node_map_scene__build.cpp \
+    editor/view_node_map/node_map_scene__key_press.cpp \
     editor/view_node_map/node_map_scene__select.cpp \
     editor/view_node_map/node_map_scene__update.cpp \
     editor/view_node_map/node_map_view.cpp \
@@ -248,6 +249,7 @@ SOURCES += \
     editor/view_node_map/node_map_view__select.cpp \
     editor/widgets/widgets_editor_rubber_band.cpp \
     editor/widgets/widgets_editor_toolbar.cpp \
+    editor/widgets/widgets_editor_toolbar__build.cpp \
     editor/widgets/widgets_editor_tooltip.cpp \
     editor/widgets/widgets_inspector_checkbox.cpp \
     editor/widgets/widgets_inspector_combobox.cpp \

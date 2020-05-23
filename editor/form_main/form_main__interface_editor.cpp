@@ -44,15 +44,12 @@
 //enum class Editor_Widgets {
 // Global Widgets
 //      ToolBar,
-//
+//      View,
 // Docks
+//      Advisor_Tree,
 //      Asset_Tree,
 //      Inspector_Tree,
 //      Project_Tree,
-//
-// Editor Widgets
-//      Editor_View,
-//      Node_View,
 
 Editor_Mode FormMain::getEditorMode() { return m_current_mode; }
 void FormMain::setEditorMode(Editor_Mode new_mode) {
@@ -62,8 +59,8 @@ void FormMain::setEditorMode(Editor_Mode new_mode) {
         case Editor_Mode::Clear:                this->rebuildFormMain(Editor_Mode::Clear);              break;
 
         case Editor_Mode::Animation_Editor:
+        case Editor_Mode::Component_Map:
         case Editor_Mode::UI_Editor:
-        case Editor_Mode::Stage_Map:
             this->rebuildFormMain(Editor_Mode::Clear);
             break;
         case Editor_Mode::Program_Loading:
@@ -94,8 +91,8 @@ void FormMain::buildInspector(QList<long> entity_key_list, bool force_rebuild) {
     ///Dr::SetLabelText(Label_Names::Label_Bottom, "Build Inspector: " + QString::number(build_count++));
 }
 
-void FormMain::buildProjectTree() {
-    treeProjectEditor->buildProjectTree();
+void FormMain::buildProjectTree(bool total_rebuild) {
+    treeProjectEditor->buildProjectTree(total_rebuild);
 }
 
 // Fires an Undo stack command to change Stages within Scene
@@ -126,10 +123,8 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
     if (currentViewMode() == View_Mode::Rotating)       return;
 
     // !!!!! #NOTE: This order is semi important, best NOT TO CHANGE IT !!!!!
-    if (changed_from != Editor_Widgets::Editor_View) {
+    if (changed_from != Editor_Widgets::View) {
         if (getEditorMode() == Editor_Mode::World_Editor) {     sceneEditor->updateChangesInScene(changed_items, property_names); }
-    }
-    if (changed_from != Editor_Widgets::Node_View) {
         if (getEditorMode() == Editor_Mode::World_Map) {        sceneWorldMap->updateChangesInScene(changed_items, property_names); }
     }
     if (changed_from != Editor_Widgets::Inspector_Tree)         treeInspector->updateInspectorPropertyBoxes(changed_items, property_names);
@@ -144,10 +139,11 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
 
 void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> optional_key_list) {
 
-    if (selected_from == Editor_Widgets::Editor_View || selected_from == Editor_Widgets::Project_Tree) {
+    if (selected_from == Editor_Widgets::View || selected_from == Editor_Widgets::Project_Tree) {
         // Selects items in Scene View based on new selection in Project Tree
-        if (selected_from != Editor_Widgets::Editor_View) {
-            if (getEditorMode() == Editor_Mode::World_Editor) { sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() ); }
+        if (selected_from != Editor_Widgets::View) {
+            if (getEditorMode() == Editor_Mode::World_Map)      { sceneWorldMap->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() ); }
+            if (getEditorMode() == Editor_Mode::World_Editor)   { sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() ); }
         }
 
         // Selects items in Project Tree based on new selection in Scene View
@@ -167,9 +163,6 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
         // Code commented on purpose, Asset Tree gaining focus should not clear Project Tree / Editor View selection
         ///sceneEditor->updateSelectionFromKeyList( { } );
         ///treeProjectEditor->updateSelectionFromKeyList( { } );
-
-    } else if (selected_from == Editor_Widgets::Node_View) {
-
     }
 
     // Updates status bar, enables / disables toolbar buttons
@@ -212,20 +205,6 @@ QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->roundToGrid(point_in_scene); }
     return point_in_scene;
 }
-void FormMain::updateViewToolbar(int button_id) {
-    Mouse_Mode clicked = static_cast<Mouse_Mode>(button_id);
-    if (viewWorldMap != nullptr) {
-        viewWorldMap->setMouseMode(clicked);
-        viewWorldMap->spaceBarUp();
-        if (toolbarWorldMap != nullptr) toolbarWorldMap->updateButtons(button_id);
-    }
-    if (viewEditor != nullptr) {
-        viewEditor->setMouseMode(clicked);
-        viewEditor->spaceBarUp();
-        if (toolbarEditor != nullptr)   toolbarEditor->updateButtons(button_id);
-    }
-    updateToolBar();
-}
 
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
@@ -245,6 +224,20 @@ void FormMain::viewCenterOnPoint(QPointF center_point) {
 void FormMain::viewFitToContents() {
     if      (getEditorMode() == Editor_Mode::World_Map)         { viewWorldMap->zoomToContents(); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { viewEditor->zoomToContents(); }
+}
+void FormMain::viewUpdateToolbar(int button_id) {
+    Mouse_Mode clicked = static_cast<Mouse_Mode>(button_id);
+    if (viewWorldMap != nullptr) {
+        viewWorldMap->setMouseMode(clicked);
+        viewWorldMap->spaceBarUp();
+        if (toolbarWorldMap != nullptr) toolbarWorldMap->updateButtons(button_id);
+    }
+    if (viewEditor != nullptr) {
+        viewEditor->setMouseMode(clicked);
+        viewEditor->spaceBarUp();
+        if (toolbarEditor != nullptr)   toolbarEditor->updateButtons(button_id);
+    }
+    updateToolBar();
 }
 void FormMain::viewZoomToScale(double zoom_scale) {
     if      (getEditorMode() == Editor_Mode::World_Map)         { viewWorldMap->zoomToScale(zoom_scale); }

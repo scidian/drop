@@ -184,7 +184,7 @@ private:
 
 public:
     // Constructor
-    explicit EditorView(QWidget *parent, DrProject *project, EditorScene *from_scene, IEditorRelay *editor_relay);
+    explicit EditorView(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, EditorScene *from_scene);
     virtual ~EditorView() override;
 
     // Event Overrides - Paint
@@ -194,8 +194,8 @@ public:
 
     // Event Overrides - Input
     virtual void    scrollContentsBy(int dx, int dy) override;                              // Inherited from QAbstractScrollArea
-    virtual void    keyPressEvent(QKeyEvent *event) override;                               // Inherited from QWidget
-    virtual void    keyReleaseEvent(QKeyEvent *event) override;                             // Inherited from QWidget
+    virtual void    keyPressEvent(QKeyEvent *event) override;
+    virtual void    keyReleaseEvent(QKeyEvent *event) override;
     virtual void    mouseDoubleClickEvent(QMouseEvent *event) override;                     // Inherited from QWidget
     virtual void    mouseMoveEvent(QMouseEvent *event) override;                            // Inherited from QWidget
     virtual void    mousePressEvent(QMouseEvent *event) override;                           // Inherited from QWidget
@@ -282,11 +282,13 @@ public:
     void                resizeStage(QPointF mouse_in_view);
 
     // Getters / Setters
+    IEditorRelay*       getEditorRelay()                    { return m_editor_relay; }
+    DrProject*          getProject()                        { return m_project; }
+
     View_Mode           currentViewMode()                   { return m_view_mode; }
     double              currentZoomLevel()                  { return m_zoom_scale; }
     bool                hasShownAScene() const              { return m_flag_has_shown_a_scene_yet; }
     EditorScene*        getEditorScene()                    { return my_scene; }
-    IEditorRelay*       getEditorRelay()                    { return m_editor_relay; }
     Mouse_Mode          getMouseMode()                      { return m_mouse_mode; }
     void                setHasShownAScene(bool has)         { m_flag_has_shown_a_scene_yet = has; }
     void                setMouseCursorFromAngle(double angle_in_degrees);

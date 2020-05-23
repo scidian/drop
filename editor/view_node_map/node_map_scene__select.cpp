@@ -43,8 +43,48 @@ void NodeMapScene::selectionChanged() {
         }
 
         m_editor_relay->buildInspector(item_keys);
-        m_editor_relay->updateItemSelection(Editor_Widgets::Node_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::View);
     }
+}
+
+
+//####################################################################################
+//##    Selects items based on rows selected in Editor_Project_Tree
+//####################################################################################
+void NodeMapScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
+    QList <long> keys;
+    for (auto row : tree_list) {
+        long row_key = row->data(0, User_Roles::Key).toLongLong();
+        keys.append(row_key);
+    }
+    updateSelectionFromKeyList(keys);
+}
+
+
+//####################################################################################
+//##    Selects items based on custom Key list
+//####################################################################################
+void NodeMapScene::updateSelectionFromKeyList(QList<long> key_list) {
+    // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
+    blockSignals(true);
+
+    // Clear current selection
+    for (auto item : selectedItems()) item->setSelected(false);
+
+    for (auto item : items()) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
+
+        if (key_list.contains(item_key)) {
+            ///DrSettings *entity = m_project->findSettingsFromKey(item_key);
+            NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);
+            if (map_item == nullptr) continue;
+            DrSettings *entity = map_item->getEntity();
+            if (entity == nullptr)  continue;
+            if (entity->isLocked()) continue;
+            item->setSelected(true);
+        }
+    }
+    blockSignals(false);
 }
 
 

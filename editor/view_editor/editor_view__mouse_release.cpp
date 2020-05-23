@@ -62,11 +62,11 @@ void EditorView::mouseReleaseEvent(QMouseEvent *event) {
                 for (auto &item : my_scene->getSelectionItems())
                     item_keys.append(item->data(User_Roles::Key).toLongLong());
                 m_editor_relay->buildInspector( item_keys );
-                m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View);
+                m_editor_relay->updateItemSelection(Editor_Widgets::View);
             } else {
                 if (itemAt(event->pos()) == nullptr) {
                     m_editor_relay->buildInspector( { } );
-                    m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View);
+                    m_editor_relay->updateItemSelection(Editor_Widgets::View);
                 }
             }
         }
@@ -87,7 +87,7 @@ void EditorView::mouseReleaseEvent(QMouseEvent *event) {
             m_view_mode = View_Mode::None;
             QList<DrSettings*> selected_entities = convertItemListToSettings(my_scene->getSelectionItems());
             m_editor_relay->updateEditorWidgetsAfterItemChange(
-                        Editor_Widgets::Editor_View, { selected_entities.begin(), selected_entities.end() },
+                        Editor_Widgets::View, { selected_entities.begin(), selected_entities.end() },
                         {   std::make_pair(Comps::Thing_Transform, Props::Thing_Position),
                             std::make_pair(Comps::Thing_Transform, Props::Thing_Size),
                             std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
@@ -126,7 +126,7 @@ void EditorView::mouseReleaseEvent(QMouseEvent *event) {
         for (auto &item : my_scene->getSelectionItems())
             item_keys.append(item->data(User_Roles::Key).toLongLong());
         m_editor_relay->buildInspector( item_keys );
-        m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::View);
 
     // ***** Pass event to base class
     } else {

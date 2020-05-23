@@ -82,25 +82,25 @@ private:
 
 
     // ***** Menu Widgets
-    QMenuBar       *menuBar;
-    QAction        *actionUndo, *actionRedo;
+    QMenuBar        *menuBar;
+    QAction         *actionUndo, *actionRedo;
 
 
     // ***** ToolBar Widgets
     QList<QWidget*>      toolbarWidgets { };
     QList<QLayoutItem*>  toolbarSpacers { };
 
-    QToolBar       *toolbar;
-    QWidget        *widgetToolBar;              QHBoxLayout     *widgetToolBarLayout;
-
-    QWidget        *widgetGroupMode;            QButtonGroup    *buttonsGroupMode;
-    QWidget        *widgetGroupEdit;            QButtonGroup    *buttonsGroupEdit;              QToolButton *buttonAdd;
-    QWidget        *widgetGroupLayering;        QButtonGroup    *buttonsGroupLayering;
-    QWidget        *widgetGroupTransform;       QButtonGroup    *buttonsGroupTransform;
-    QWidget        *widgetGroupGridFull;        QButtonGroup    *buttonsGroupGridFull;
-    QWidget        *widgetGroupGridSimple;      QButtonGroup    *buttonsGroupGridSimple;
-    QWidget        *widgetGroupPlay;            QButtonGroup    *buttonsGroupPlay;
-    QWidget        *widgetGroupSettings;
+    QToolBar        *toolbar;
+    QWidget         *widgetToolBar;
+    QHBoxLayout     *widgetToolBarLayout;
+    QWidget             *widgetGroupMode;            QButtonGroup    *buttonsGroupMode;
+    QWidget             *widgetGroupEdit;            QButtonGroup    *buttonsGroupEdit;             QToolButton *buttonAdd;
+    QWidget             *widgetGroupLayering;        QButtonGroup    *buttonsGroupLayering;
+    QWidget             *widgetGroupTransform;       QButtonGroup    *buttonsGroupTransform;
+    QWidget             *widgetGroupGridFull;        QButtonGroup    *buttonsGroupGridFull;
+    QWidget             *widgetGroupGridSimple;      QButtonGroup    *buttonsGroupGridSimple;
+    QWidget             *widgetGroupPlay;            QButtonGroup    *buttonsGroupPlay;
+    QWidget             *widgetGroupSettings;
 
 
     // ***** Shared FormMain Widgets
@@ -114,26 +114,26 @@ private:
 
 
     // ***** "Editor" (World Editor) Widgets
+    QWidget         *widgetCentralEditor;
     TreeProject         *treeProjectEditor;                     // Shows Project Entities
     EditorScene         *sceneEditor;                           // Holds the currently selected Stage
     EditorView          *viewEditor;                            // Renders the World Editor View
-    QWidget             *widgetCentralEditor;
     QScrollArea         *areaBottom;
     QFrame              *statusBar;
     EditorViewToolbar   *toolbarEditor;
 
     //       "Editor" Status Bar Widgets
-    QLabel         *labelSelected,  *labelInfo,     *labelMousePosition;
+    QLabel                  *labelSelected,  *labelInfo,     *labelMousePosition;
 
     //       "Editor" Labels to display info
-    QLabel         *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
-    QLabel         *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;
-    QLabel         *labelPosition,  *labelCenter,   *labelScale,    *labelRotate,   *labelZOrder,   *labelPosFlag;
-    QLabel         *labelBottom;
+    QLabel                  *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
+    QLabel                  *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;
+    QLabel                  *labelPosition,  *labelCenter,   *labelScale,    *labelRotate,   *labelZOrder,   *labelPosFlag;
+    QLabel                  *labelBottom;
 
 
     // ***** "WorldMap" Widgets
-    QWidget             *widgetCentralWorldMap;
+    QWidget         *widgetCentralWorldMap;
     NodeMapScene        *sceneWorldMap;
     NodeMapView         *viewWorldMap;
     EditorViewToolbar   *toolbarWorldMap;
@@ -157,15 +157,15 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getWorldEditor() override   { return viewEditor; }
-    virtual NodeMapView*        getWorldMap() override      { return viewWorldMap; }
+    virtual EditorView*         getEditorView() override    { return viewEditor; }
+    virtual NodeMapView*        getNodeMapView() override   { return viewWorldMap; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;
 
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;
-    virtual void        buildProjectTree() override;
+    virtual void        buildProjectTree(bool total_rebuild = false) override;
     virtual void        buildScene(long stage_key) override;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
@@ -179,9 +179,9 @@ public:
     virtual View_Mode   currentViewMode() override;
     virtual double      currentViewZoom() override;
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) override;
-    virtual void        updateViewToolbar(int button_id) override;
     virtual void        viewCenterOnPoint(QPointF center_point) override;
     virtual void        viewFitToContents() override;
+    virtual void        viewUpdateToolbar(int button_id) override;
     virtual void        viewZoomToScale(double zoom_scale) override;
 
 public slots:

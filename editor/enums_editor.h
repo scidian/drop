@@ -60,24 +60,25 @@ enum User_Roles {
 };
 
 
-
 //####################################################################################
 //##    Modes for Interface Editor Form
+//##        These modes are modes that use a QGraphicsView and interface with some
+//##        combination of the Asset Tree, Advisor, Object Inspector, Toolbar, etc
 //############################
 enum class Editor_Mode {
     Clear                       = 0,
     Program_Loading             = 1,
 
-    World_Map                   = 2,                        // "Map"
-    World_Editor                = 3,                        // "Editor" (Physics)
-    UI_Editor                   = 4,                        // "UI"
+    World_Map                   = 2,                        // World Node Map
+    World_Editor                = 3,                        // 2D Physics World Editor
+    UI_Editor                   = 4,                        // UI Editor
 
-    Animation_Editor            = 5,
-    Stage_Map                   = 6,
-    // App_Editor               = 7,
-    // Puzzle_World_Editor      = 8,
+    Animation_Editor            = 5,                        // Animation Editor
+    Component_Map               = 6,                        // Visual Scripting
 
-    // Component_Map            = 9,                        // Visual Scripting
+    // Stage_Map                 = 7,
+    // App_Editor               = 8,
+    // Puzzle_World_Editor      = 9,
 };
 
 
@@ -88,15 +89,13 @@ enum class Editor_Mode {
 enum class Editor_Widgets {
     // Global Widgets
     ToolBar,
+    View,
 
     // Docks
+    Advisor,
     Asset_Tree,
     Inspector_Tree,
     Project_Tree,
-
-    // Editor Widgets
-    Editor_View,
-    Node_View,
 };
 
 

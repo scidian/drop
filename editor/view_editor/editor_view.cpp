@@ -28,7 +28,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_scene, IEditorRelay *editor_relay)
+EditorView::EditorView(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, EditorScene *from_scene)
     : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
 
     // Initialize rubber band object used as a selection box
@@ -67,9 +67,10 @@ EditorView::EditorView(QWidget *parent, DrProject *project, EditorScene *from_sc
 EditorView::~EditorView() { }
 
 void EditorView::focusInEvent(QFocusEvent *event) {
-    m_editor_relay->setActiveWidget(Editor_Widgets::Editor_View);
+    getEditorRelay()->setActiveWidget(Editor_Widgets::View);
     QGraphicsView::focusInEvent(event);
 }
+
 
 
 //####################################################################################
@@ -115,7 +116,7 @@ void EditorView::resizeEvent(QResizeEvent *event) {
     if (my_scene->getCurrentStageShown() == nullptr) return;
     if (hasShownAScene() == false) return;
 
-    m_editor_relay->viewCenterOnPoint( Dr::ToQPointF(my_scene->getCurrentStageShown()->getViewCenterPoint()) );
+    getEditorRelay()->viewCenterOnPoint( Dr::ToQPointF(my_scene->getCurrentStageShown()->getViewCenterPoint()) );
 }
 
 

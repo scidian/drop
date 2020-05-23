@@ -41,7 +41,7 @@ void FormMain::updateToolBar() {
         for (auto button : buttonsGroupTransform->buttons())    if (button->isEnabled()) button->setEnabled(false);
 
         QString selected = "No Selection";
-        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::Editor_View) {
+        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::View) {
             // ***** Things are selected
             if (sceneEditor->getSelectionCount() > 0) {
                 for (auto button : buttonsGroupLayering->buttons())     if (!button->isEnabled()) button->setEnabled(true);
@@ -140,7 +140,7 @@ void FormMain::setToolBar(Editor_Mode new_mode) {
 
 
         // !!!!! #TODO:
-        case Editor_Mode::Stage_Map:
+        case Editor_Mode::Component_Map:
             addToolBarGroup( widgetGroupPlay,           false );
             addToolBarGroup( widgetGroupSettings,       false );
             break;

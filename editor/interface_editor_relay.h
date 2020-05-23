@@ -40,7 +40,7 @@ class NodeMapView;
 class IEditorRelay
 {
 private:
-    Editor_Widgets              m_active_widget         { Editor_Widgets::Editor_View };
+    Editor_Widgets              m_active_widget         { Editor_Widgets::View };
 
 public:
     // Constructor / Destructor
@@ -51,8 +51,8 @@ public:
     virtual TreeAssets*         getAssetTree() = 0;
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
-    virtual EditorView*         getWorldEditor() = 0;
-    virtual NodeMapView*        getWorldMap() = 0;
+    virtual EditorView*         getEditorView() = 0;
+    virtual NodeMapView*        getNodeMapView() = 0;
 
     // Local Getter / Setters
     Editor_Widgets              getActiveWidget() { return m_active_widget; }
@@ -65,7 +65,7 @@ public:
     // Editor Functions
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) = 0;
-    virtual void        buildProjectTree() = 0;
+    virtual void        buildProjectTree(bool total_rebuild = false) = 0;
     virtual void        buildScene(long stage_key) = 0;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_names) = 0;
@@ -80,13 +80,12 @@ public:
     virtual QPointF     roundPointToGrid(QPointF point_in_scene) = 0;
     virtual void        viewCenterOnPoint(QPointF center_point) = 0;
     virtual void        viewFitToContents() = 0;
+    virtual void        viewUpdateToolbar(int button_id) = 0;
     virtual void        viewZoomToScale(double zoom_scale) = 0;
 
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
     virtual void        setMousePosition(std::string x, std::string y) = 0;
-    virtual void        updateViewToolbar(int button_id) = 0;
-
 };
 
 

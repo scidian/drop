@@ -47,7 +47,7 @@ void EditorScene::selectionChanged() {
         }
 
         m_editor_relay->buildInspector(item_keys);
-        m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View);
+        m_editor_relay->updateItemSelection(Editor_Widgets::View);
     }
 
     // !!!!! #TEMP: Testing to make sure not running non stop
@@ -219,16 +219,17 @@ void EditorScene::updateSelectionFromKeyList(QList<long> key_list) {
     // Clear current selection
     for (auto item : selectedItems()) item->setSelected(false);
 
-    for (auto key : key_list) {
-        for (auto item : items()) {
-            long item_key = item->data(User_Roles::Key).toLongLong();
+    for (auto item : items()) {
+        long item_key = item->data(User_Roles::Key).toLongLong();
 
-            if (item_key == key) {
-                DrSettings *settings = m_project->findSettingsFromKey(item_key);
-                if (settings == nullptr)  continue;
-                if (settings->isLocked()) continue;
-                item->setSelected(true);
-            }
+        if (key_list.contains(item_key)) {
+            ///DrSettings *settings = m_project->findSettingsFromKey(item_key);
+            EditorItem *editor_item = dynamic_cast<EditorItem*>(item);
+            if (editor_item == nullptr) continue;
+            DrSettings *entity = editor_item->getThing();
+            if (entity == nullptr)  continue;
+            if (entity->isLocked()) continue;
+            item->setSelected(true);
         }
     }
     resetSelectionGroup();

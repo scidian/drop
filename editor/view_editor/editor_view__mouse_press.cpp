@@ -191,7 +191,7 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
 
                         if (my_scene->getSelectionItems().count() <= 1) {
                             m_editor_relay->buildInspector( { origin_item_key } );
-                            m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { origin_item_key } );
+                            m_editor_relay->updateItemSelection(Editor_Widgets::View, { origin_item_key } );
                         }
                     }
 
@@ -258,7 +258,7 @@ QGraphicsItem* EditorView::setInspectorClearSelection(DrThing *thing) {
             if (my_scene->selectedItems().count() > 0) my_scene->clearSelection();
             if (m_editor_relay->getInspector()->getSelectedKeys().contains(thing->getKey()) == false) {
                 m_editor_relay->buildInspector( { thing->getKey() } );
-                m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { thing->getKey() } );
+                m_editor_relay->updateItemSelection(Editor_Widgets::View, { thing->getKey() } );
             }
             break;
         }

@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QTreeWidgetItem>
 #include <QWidget>
 
 #include "editor/helper_library.h"
@@ -49,7 +50,6 @@ void NodeMapScene::updateChangesInScene(std::list<DrSettings*> changed_items, st
         item->update();
     }
 }
-
 
 
 

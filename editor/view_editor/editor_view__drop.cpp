@@ -278,7 +278,7 @@ void EditorView::dropEvent(QDropEvent *event) {
         m_editor_relay->buildInspector( { asset->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
         if (thing != nullptr) {
-            m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { thing->getKey() } );
+            m_editor_relay->updateItemSelection(Editor_Widgets::View, { thing->getKey() } );
             m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
         }
         m_editor_relay->getAssetTree()->setSelectedKey(asset->getKey());
@@ -289,7 +289,7 @@ void EditorView::dropEvent(QDropEvent *event) {
     if (thing != nullptr) {
         this->setFocus();
         m_editor_relay->buildInspector( { thing->getKey() } );
-        m_editor_relay->updateItemSelection(Editor_Widgets::Editor_View, { thing->getKey() } );
+        m_editor_relay->updateItemSelection(Editor_Widgets::View, { thing->getKey() } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Project_Tree );
     }
 

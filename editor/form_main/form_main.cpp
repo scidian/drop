@@ -125,14 +125,9 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
     // !!!!! UPDATE: Fixed in Qt 5.14
 
     // Rebuild Editor Widgets
-    if (getEditorMode() == Editor_Mode::World_Map) {
-        buildAssetTree();
-        buildInspector( getInspector()->getSelectedKeys(), true );
-    } else if (getEditorMode() == Editor_Mode::World_Editor) {
-        buildAssetTree();
-        treeProjectEditor->buildProjectTree(true);
-        buildInspector( treeInspector->getSelectedKeys(), true );
-    }
+    buildAssetTree();
+    buildProjectTree(true);
+    buildInspector(treeInspector->getSelectedKeys(), true);
 
     // Force QGraphicsViews to rebuild
     if (viewWorldMap)   viewWorldMap->updateGrid();
