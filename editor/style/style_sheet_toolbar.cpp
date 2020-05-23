@@ -97,6 +97,7 @@ std::string StyleSheetToolBar() {
 
     StyleSheetToolBarButtons("buttonPlayground",        "playground.png",       "playground.png",       "playground.png",           4, 4, 4, 4, 4, false) +
     StyleSheetToolBarButtons("buttonImageViewer",       "atlas.png",            "atlas.png",            "atlas.png",                4, 4, 4, 4, 4, false) +
+    StyleSheetToolBarButtons("buttonSoundFiles",        "sound.png",            "sound.png",            "sound.png",                4, 4, 4, 4, 4, false) +
     StyleSheetToolBarButtons("buttonFontBuilder",       "fonts.png",            "fonts.png",            "fonts.png",                4, 4, 4, 4, 4, false) +
             " QToolButton#buttonFontBuilder                 { padding-left: 3px; padding-right: 3px; } " +
     StyleSheetToolBarButtons("buttonSettingsEditor",    "settings.png",         "settings.png",         "settings.png",             4, 4, 4, 4, 4, false) +

@@ -21,6 +21,7 @@
 #include "editor/forms/form_popup.h"
 #include "editor/forms/form_progress_box.h"
 #include "editor/forms/form_settings.h"
+#include "editor/forms/form_sound.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"
@@ -297,6 +298,13 @@ void FormMain::buildToolBar() {
             ///blank_form->show();
             FormFonts *font_editor = new FormFonts(m_project, this);
             font_editor->show();
+        });
+
+        tool = createToolBarButton(QStringLiteral("buttonSoundFiles"), Advisor_Info::Settings_Sound_Files, c_button_size_w, c_button_size_h, false);
+        toolbarLayoutSettings->addWidget(tool);
+        connect(tool, &QPushButton::clicked, [this] () {
+            FormSound *sound_files = new FormSound(m_project, this);
+            sound_files->show();
         });
 
         tool = createToolBarButton(QStringLiteral("buttonSettingsEditor"), Advisor_Info::Settings_Manager, c_button_size_w, c_button_size_h, false);

@@ -54,8 +54,8 @@
 //      Boost -                     Boost   Only using boost::any for now
 //      Chipmunk -                  MIT     Physics, very good. Eventually look into Bullet for 3D
 //      Font Stash -                zLib    Renders fonts as triangles
-//      Glm -                       MIT     Amazing vector / matrix math Library
-//      SoLoud -                    zLib    Sound Library
+//      Glm -                       MIT     Amazing vector / matrix math library
+//      SoLoud -                    zLib    Super duper awesome sound library
 //      Stb -                       MIT     Single file header libraries, great!
 //
 //  Small Source Libraries

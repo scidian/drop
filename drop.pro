@@ -242,6 +242,7 @@ SOURCES += \
     editor/forms/form_popup_colors.cpp \
     editor/forms/form_progress_box.cpp \
     editor/forms/form_settings.cpp \
+    editor/forms/form_sound.cpp \
     editor/helper_library.cpp \
     editor/pixmap/pixmap_draw.cpp \
     editor/pixmap/pixmap_draw_devices.cpp \
@@ -1125,6 +1126,7 @@ HEADERS += \
     editor/forms/form_popup.h \
     editor/forms/form_progress_box.h \
     editor/forms/form_settings.h \
+    editor/forms/form_sound.h \
     editor/helper_library.h \
     editor/interface_editor_relay.h \
     editor/pixmap/pixmap.h \

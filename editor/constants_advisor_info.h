@@ -27,6 +27,7 @@ namespace Advisor_Info {
     const HeaderBodyList Mode_UI                { "UI Editor", "This mode will allow you to edit the user interface layer of your Project." };
 
     const HeaderBodyList Settings_Image_Viewer  { "Image Viewer",       "View / manage Images used in this Project." };
+    const HeaderBodyList Settings_Sound_Files   { "Sound Files",        "Create and edit sounds to use in this Project." };
     const HeaderBodyList Settings_Font_Builder  { "Font Builder",       "Create and edit fonts used for Text Boxes." };
     const HeaderBodyList Settings_Manager       { "Project Settings",   "View and edit Project settings." };
 

@@ -1,12 +1,12 @@
 //
-//      Created by Stephens Nunnally on 3/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/23/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#ifndef FORM_SETTINGS_H
-#define FORM_SETTINGS_H
+#ifndef FORM_SOUND_H
+#define FORM_SOUND_H
 
 #include <QLabel>
 #include <QWidget>
@@ -16,10 +16,10 @@ class DrProject;
 
 
 //####################################################################################
-//##    FormSettings
-//##        Form to display Project settings
+//##    FormSound
+//##        Form to display Sound Files
 //############################
-class FormSettings : public QWidget
+class FormSound : public QWidget
 {
 private:
     // External Borrowed Pointers
@@ -31,38 +31,17 @@ private:
 
 public:
     // Constructor / Destructor
-    explicit FormSettings(DrProject *project, QWidget *parent = nullptr);
-    virtual ~FormSettings() override;
+    explicit FormSound(DrProject *project, QWidget *parent = nullptr);
+    virtual ~FormSound() override;
 
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
+
+
+    // SoLoud Testing
+    void    playSound();
+
+
 };
 
-
-
-
-
-
-#endif // FORM_SETTINGS_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // FORM_SOUND_H

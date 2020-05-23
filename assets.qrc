@@ -236,5 +236,6 @@
         <file>assets/inspector_icons/comp_ui.png</file>
         <file>assets/inspector_icons/comp_random.png</file>
         <file>assets/inspector_icons/comp_timer.png</file>
+        <file>assets/toolbar_icons/toolbar_sound.png</file>
     </qresource>
 </RCC>

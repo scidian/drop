@@ -174,6 +174,11 @@ QString FormAbout::licenseText() {
             "Copyright (c) 2005-2014 by G-Truc Creation."
             "<br><br>"
 
+            "This software uses SoLoud Libraries written by Jari Komppa and distributed under the zLib License. "
+            "Copyright (c) 2013-2018 Jari Komppa. "
+            "For more information, visit http://soloud-audio.com/legal.html"
+            "<br><br>"
+
             "This software uses STB Single File Libraries written by Sean Barrett and distributed under the MIT License. "
             "Copyright (c) 2017 Sean Barrett."
             "<br><br>"
