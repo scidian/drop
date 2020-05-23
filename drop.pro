@@ -53,6 +53,19 @@ DISTFILES += \
     3rd_party/soloud/audiosource/speech/legal_readme.txt \
     3rd_party/soloud/audiosource/tedsid/readme.txt \
     3rd_party/soloud/c_api/soloud.def \
+    LICENSE/license_boost.txt \
+    LICENSE/license_chipmunk.txt \
+    LICENSE/license_delaunator.txt \
+    LICENSE/license_font_aileron.txt \
+    LICENSE/license_font_stash.txt \
+    LICENSE/license_glm.txt \
+    LICENSE/license_hull_finder.txt \
+    LICENSE/license_poly_partition.txt \
+    LICENSE/license_polyline_simple.txt \
+    LICENSE/license_qt.txt \
+    LICENSE/license_simplex_noise.txt \
+    LICENSE/license_soloud.txt \
+    LICENSE/license_stb.txt \
     drop_icon.ico \
     drop_icons.icns
 
