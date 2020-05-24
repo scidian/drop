@@ -8,7 +8,7 @@
 #include <QHeaderView>
 
 #include "editor/docks/docks.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_animation.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 3/16/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/24/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -14,7 +14,7 @@
 #include <QMenu>
 
 #include "core/colors/colors.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -128,50 +128,6 @@ bool DrFilterPopUpMenuRelocater::eventFilter(QObject *obj, QEvent *event) {
     }
     return QObject::eventFilter(obj, event);
 }
-
-
-
-//####################################################################################
-//##    DrFilterClickAndDragWindow Class Functions
-//####################################################################################
-DrFilterClickAndDragWindow::DrFilterClickAndDragWindow(QObject *parent) : QObject(parent) { }
-
-bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
-    QMouseEvent *mouse_event;
-    QWidget     *widget;
-
-    if (event->type() == QEvent::Close) {
-        event->accept();
-        return QObject::eventFilter(obj, event);
-    }
-
-    if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
-        mouse_event = dynamic_cast<QMouseEvent*>(event);
-        widget =      dynamic_cast<QWidget*>(obj);
-        if (mouse_event == nullptr || widget == nullptr)
-            return QObject::eventFilter(obj, event);
-
-        if (event->type() == QEvent::MouseButtonPress) {
-            m_press_pos = mouse_event->pos();
-            m_is_moving = true;
-
-        } else if (event->type() == QEvent::MouseMove) {
-            if (mouse_event->buttons() == Qt::NoButton) {
-                m_is_moving = false;
-            } else if (m_is_moving) {
-                QPoint diff = mouse_event->pos() - m_press_pos;
-                widget->window()->move( widget->window()->pos() + diff );
-            }
-
-        } else if (event->type() == QEvent::MouseButtonRelease) {
-            m_is_moving = false;
-        }
-    }
-    return QObject::eventFilter(obj, event);
-}
-
-
-
 
 
 

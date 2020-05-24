@@ -16,7 +16,7 @@
 
 #include "core/colors/colors.h"
 #include "core/types/dr_color.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"

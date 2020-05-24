@@ -15,7 +15,7 @@
 #include "core/colors/colors.h"
 #include "core/imaging/imaging.h"
 #include "editor/form_main/form_main.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"

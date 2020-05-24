@@ -226,7 +226,8 @@ SOURCES += \
     editor/docks/docks_handle.cpp \
     editor/docks/docks_initialize.cpp \
     editor/enums_editor.cpp \
-    editor/event_filters.cpp \
+    editor/event_filters/event_filters.cpp \
+    editor/event_filters/event_filters__click_and_drag.cpp \
     editor/form_main/form_main.cpp \
     editor/form_main/form_main__build.cpp \
     editor/form_main/form_main__build_central_widget.cpp \
@@ -1127,7 +1128,7 @@ HEADERS += \
     editor/constants_advisor_info.h \
     editor/docks/docks.h \
     editor/enums_editor.h \
-    editor/event_filters.h \
+    editor/event_filters/event_filters.h \
     editor/form_main/form_main.h \
     editor/forms/form_about.h \
     editor/forms/form_animation.h \

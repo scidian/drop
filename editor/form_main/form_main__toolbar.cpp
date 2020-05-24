@@ -9,7 +9,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/form_main/form_main.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"

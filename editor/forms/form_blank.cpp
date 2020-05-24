@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 
 #include "editor/forms/form_blank.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"
 #include "project/dr_project.h"
@@ -51,7 +51,7 @@ FormBlank::FormBlank(DrProject *project, QWidget *parent) : QWidget(parent) {
     layout->addWidget(m_inner_widget);
 
     // ***** Center window on Parent Form and install dragging event filter
-    Dr::CenterFormOnParent(parent->window(), this);
+    if (parent) Dr::CenterFormOnParent(parent->window(), this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
 

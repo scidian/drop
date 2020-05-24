@@ -14,7 +14,7 @@
 #include <QSpinBox>
 #include <QVector3D>
 
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/preferences.h"

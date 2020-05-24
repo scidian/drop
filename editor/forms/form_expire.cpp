@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_expire.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"
@@ -109,7 +109,7 @@ FormExpire::FormExpire(QWidget *parent) : QMainWindow(parent) {
     layout->addWidget(m_inner_widget);
     this->setCentralWidget(widget_central);
 
-    // ***** Center Form and Install dragging event filter
+    // ***** Install dragging event filter
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
 

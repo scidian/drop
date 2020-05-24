@@ -13,7 +13,7 @@
 
 #include "core/colors/colors.h"
 #include "core/dr_random.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_blank.h"
 #include "editor/forms/form_progress_box.h"
 #include "editor/helper_library.h"
@@ -101,7 +101,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     m_color_seconds = 0.0;
 
     // ***** Center window on screen and install dragging event filter
-    Dr::CenterFormOnParent(parent, this);
+    if (parent) Dr::CenterFormOnParent(parent, this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 
     // ***** Timer to update progress bar colors

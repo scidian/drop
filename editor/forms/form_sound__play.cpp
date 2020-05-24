@@ -6,11 +6,12 @@
 //
 //
 #include "3rd_party/soloud/soloud.h"
+#include "3rd_party/soloud/soloud_audiosource.h"
 #include "3rd_party/soloud/soloud_sfxr.h"
 #include "3rd_party/soloud/soloud_speech.h"
 #include "3rd_party/soloud/soloud_wav.h"
 #include "core/dr_random.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_sound.h"
 #include "editor/helper_library.h"
@@ -40,6 +41,10 @@ void FormSound::playSpeech(std::string speech_text) {
 void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
     ///m_effect.setVolume(100);
     m_effect.loadPreset(preset, seed);
+
+    // Looking into possible wav form loading
+    ///SoLoud::AudioSourceInstance *asi = m_effect.createInstance();
+    ///asi->getAudio(asi->mResampleData[0]->mData, SAMPLE_GRANULARITY, SAMPLE_GRANULARITY);
 
     m_so_loud->play(m_effect);
 }

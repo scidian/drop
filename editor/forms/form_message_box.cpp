@@ -12,7 +12,7 @@
 
 #include "core/colors/colors.h"
 #include "core/dr_random.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_message_box.h"
 #include "editor/helper_library.h"
 #include "editor/style/style.h"

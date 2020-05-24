@@ -13,7 +13,7 @@
 #include <QPainter>
 
 #include "core/colors/colors.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_popup.h"
 #include "editor/preferences.h"

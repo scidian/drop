@@ -1,12 +1,12 @@
 //
-//      Created by Stephens Nunnally on 3/16/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/24/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#ifndef WIDGETS_EVENT_FILTERS_H
-#define WIDGETS_EVENT_FILTERS_H
+#ifndef EVENT_FILTERS_H
+#define EVENT_FILTERS_H
 
 #include <QWidget>
 
@@ -14,6 +14,19 @@
 
 // Forward Declarations
 class DrProperty;
+
+// Local Enum
+enum class Over_Border {
+    Top,
+    Top_Right,
+    Right,
+    Bottom_Right,
+    Bottom,
+    Bottom_Left,
+    Left,
+    Top_Left,
+    None,
+};
 
 
 //####################################################################################
@@ -77,18 +90,36 @@ protected:
 class DrFilterClickAndDragWindow : public QObject
 {
 private:
-    bool            m_is_moving = false;
-    QPoint          m_press_pos;
+    // Local Variables
+    bool            m_is_resizeable         { false };
+
+    // Internal Variables
+    Over_Border     m_over_border           { Over_Border::None };
+    bool            m_is_moving             { false };
+    bool            m_is_resizing           { false };
+
+    QPoint          m_press_pos             { 0, 0 };
+    QRect           m_press_window_rect;
+
 public:
-    explicit        DrFilterClickAndDragWindow(QObject *parent);
+    explicit        DrFilterClickAndDragWindow(QObject *parent = nullptr, bool resizable = false);
+
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };
 
 
+#endif // EVENT_FILTERS_H
 
 
-#endif // WIDGETS_EVENT_FILTERS_H
+
+
+
+
+
+
+
+
 
 
 

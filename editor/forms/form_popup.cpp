@@ -11,7 +11,7 @@
 #include <QMouseEvent>
 
 #include "core/colors/colors.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"

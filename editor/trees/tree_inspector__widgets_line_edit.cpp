@@ -14,7 +14,7 @@
 #include <QPainter>
 
 #include "core/colors/colors.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_inspector.h"

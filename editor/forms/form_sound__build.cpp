@@ -18,7 +18,7 @@
 
 #include "3rd_party/soloud/soloud.h"
 #include "core/dr_random.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
 #include "editor/forms/form_sound.h"
 #include "editor/helper_library.h"

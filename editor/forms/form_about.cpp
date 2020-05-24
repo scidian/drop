@@ -11,7 +11,7 @@
 #include <QVBoxLayout>
 
 #include "core/colors/colors.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/forms/form_about.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"

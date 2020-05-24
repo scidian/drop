@@ -14,7 +14,7 @@
 #include <QToolButton>
 
 #include "core/dr_random.h"
-#include "editor/event_filters.h"
+#include "editor/event_filters/event_filters.h"
 #include "editor/form_main/form_main.h"
 #include "editor/forms/form_blank.h"
 #include "editor/forms/form_fonts.h"
