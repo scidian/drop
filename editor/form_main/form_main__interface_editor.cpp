@@ -26,6 +26,7 @@
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
 #include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_toolbar.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"

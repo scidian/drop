@@ -49,23 +49,19 @@ RESOURCES += \
 
 ##### Some Distribution Files
 DISTFILES += \
-    3rd_party/soloud/audiosource/speech/Elements.def \
-    3rd_party/soloud/audiosource/speech/legal_readme.txt \
-    3rd_party/soloud/audiosource/tedsid/readme.txt \
-    3rd_party/soloud/c_api/soloud.def \
-    LICENSE/license_boost.txt \
-    LICENSE/license_chipmunk.txt \
-    LICENSE/license_delaunator.txt \
-    LICENSE/license_font_aileron.txt \
-    LICENSE/license_font_stash.txt \
-    LICENSE/license_glm.txt \
-    LICENSE/license_hull_finder.txt \
-    LICENSE/license_poly_partition.txt \
-    LICENSE/license_polyline_simple.txt \
-    LICENSE/license_qt.txt \
-    LICENSE/license_simplex_noise.txt \
-    LICENSE/license_soloud.txt \
-    LICENSE/license_stb.txt \
+    license/license_boost.txt \
+    license/license_chipmunk.txt \
+    license/license_delaunator.txt \
+    license/license_font_aileron.txt \
+    license/license_font_stash.txt \
+    license/license_glm.txt \
+    license/license_hull_finder.txt \
+    license/license_poly_partition.txt \
+    license/license_polyline_simple.txt \
+    license/license_qt.txt \
+    license/license_simplex_noise.txt \
+    license/license_soloud.txt \
+    license/license_stb.txt \
     drop_icon.ico \
     drop_icons.icns
 
@@ -256,6 +252,8 @@ SOURCES += \
     editor/forms/form_progress_box.cpp \
     editor/forms/form_settings.cpp \
     editor/forms/form_sound.cpp \
+    editor/forms/form_sound__build.cpp \
+    editor/forms/form_sound__play.cpp \
     editor/helper_library.cpp \
     editor/pixmap/pixmap_draw.cpp \
     editor/pixmap/pixmap_draw_devices.cpp \
@@ -341,13 +339,13 @@ SOURCES += \
     editor/view_node_map/node_map_view__paint.cpp \
     editor/view_node_map/node_map_view__select.cpp \
     editor/widgets/widgets_editor_rubber_band.cpp \
-    editor/widgets/widgets_editor_toolbar.cpp \
-    editor/widgets/widgets_editor_toolbar__build.cpp \
     editor/widgets/widgets_editor_tooltip.cpp \
     editor/widgets/widgets_inspector_checkbox.cpp \
     editor/widgets/widgets_inspector_combobox.cpp \
-    editor/widgets/widgets_inspector_slider.cpp \
     editor/widgets/widgets_inspector_spin.cpp \
+    editor/widgets/widgets_toolbar.cpp \
+    editor/widgets/widgets_toolbar__build.cpp \
+    editor/widgets/widgets_toolbar_slider.cpp \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
@@ -1056,6 +1054,7 @@ HEADERS += \
     3rd_party/poly_partition.h \
     3rd_party/polyline_simplification.h \
     3rd_party/soloud/audiosource/speech/darray.h \
+    3rd_party/soloud/audiosource/speech/elements.h \
     3rd_party/soloud/audiosource/speech/klatt.h \
     3rd_party/soloud/audiosource/speech/resonator.h \
     3rd_party/soloud/audiosource/speech/tts.h \
@@ -1159,6 +1158,7 @@ HEADERS += \
     editor/view_node_map/node_map_view.h \
     editor/widgets/widgets_editor.h \
     editor/widgets/widgets_inspector.h \
+    editor/widgets/widgets_toolbar.h \
     engine/constants_engine.h \
     engine/debug_flags.h \
     engine/engine.h \

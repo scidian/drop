@@ -34,7 +34,7 @@ FormExpire::FormExpire(QWidget *parent) : QMainWindow(parent) {
     this->setAcceptDrops(true);
     this->setWindowIcon(QIcon(":/assets/icon/icon256.png"));
 
-    // ***** Create a contianer widget, this will allow Create a layout for the form and add a button
+    // ***** Create a contianer widget, this will allow us to create a layout for the form and add buttons and stuff
     QWidget *widget_central = new QWidget();
     QVBoxLayout *layout = new QVBoxLayout(widget_central);
     layout->setContentsMargins(1, 1, 1, 1);

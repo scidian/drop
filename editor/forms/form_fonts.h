@@ -24,7 +24,7 @@ private:
     // External Borrowed Pointers
     DrProject   *m_project;                         // Pointer to the open project
 
-    // Local Variables
+    // Form Variables
     QWidget     *m_inner_widget;                    // Container widget, allows for a double form border
 
 public:

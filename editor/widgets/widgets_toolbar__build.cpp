@@ -25,6 +25,7 @@
 #include "editor/view_node_map/node_map_view.h"
 #include "editor/widgets/widgets_editor.h"
 #include "editor/widgets/widgets_inspector.h"
+#include "editor/widgets/widgets_toolbar.h"
 
 // Local Constants
 const int   c_toolbar_height =  36;
@@ -195,7 +196,7 @@ void EditorViewToolbar::buildToolbar() {
 
             InspectorSpinSlot   *zoom_spin =   new InspectorSpinSlot();
             QPushButton         *drop_button = new QPushButton();
-            InspectorSlider     *zoom_slider = new InspectorSlider();
+            ToolbarSlider       *zoom_slider = new ToolbarSlider();
 
             // Zoom Spin Box
             zoom_spin->setObjectName(QStringLiteral("zoomSpin"));

@@ -21,6 +21,7 @@
 #include "editor/view_node_map/node_map_view.h"
 #include "editor/widgets/widgets_editor.h"
 #include "editor/widgets/widgets_inspector.h"
+#include "editor/widgets/widgets_toolbar.h"
 
 
 //####################################################################################

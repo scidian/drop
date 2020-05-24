@@ -42,6 +42,7 @@ enum class DrType {
         Frame,                      // Entities contained within DrProject::DrAnimation::m_frames
     Font,                           // Entities contained within DrProject::m_fonts
     Image,                          // Entities contained within DrProject::m_images
+    Sound,                          // Entities contained within DrProject::m_sounds
 
     // Mapped Types
     World,                          // Entities contained within DrProject::m_worlds / DrProject::m_uis
@@ -70,15 +71,23 @@ enum class DrType {
 };
 
 
-// ################## Project Mapped Types ####################
-// ***** Slots
+// ################## Misc Types ####################
+// Slots
 enum class DrSlotType {
     Signal,
     Output,
 };
 
+// DrSound Types
+enum class DrSoundType {
+    Sound_Effect,
+    Speech,
+    Wav,
+};
 
-// ***** Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis
+
+// ################## Project Mapped Types ####################
+// Worlds,    Entities contained within DrProject::m_worlds / DrProject::m_uis
 enum class DrWorldType {
     // Editor Worlds
     Physics_2D,
@@ -90,7 +99,7 @@ enum class DrWorldType {
 };
 
 
-// ***** Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
+// Things,    Entities contained within DrProject::DrWorld::DrStage::m_things
 enum class DrThingType {
     None,
 
@@ -128,7 +137,7 @@ enum class DrThingType {
 
 
 // ################## Assets for World Map Sub Types ####################
-// ***** Blocks,    Entities contained within DrProject::m_blocks
+// Blocks,    Entities contained within DrProject::m_blocks
 enum class DrBlockType {
     World,                  // Physics 2D, UI, future 3D, Cards, Tower, etc
     Logic,                  // Random, Timer, etc
@@ -136,19 +145,19 @@ enum class DrBlockType {
 
 
 // ################## Assets for World Physics 2D Sub Types ####################
-// ***** Assets,    Entities contained within DrProject::m_assets
+// Assets,    Entities contained within DrProject::m_assets
 enum class DrAssetType {
     Character,
     Object,
     // Action
 };
 
-// ***** Devices,   Entities contained within DrProject::m_devices
+// Devices,   Entities contained within DrProject::m_devices
 enum class DrDeviceType {
     Camera,
 };
 
-// ***** Effects,   Entities contained within DrProject::m_effects
+// Effects,   Entities contained within DrProject::m_effects
 enum class DrEffectType {
     Light,
     Water,
@@ -163,12 +172,12 @@ enum class DrEffectType {
     // Fog,
 };
 
-// ***** Items,     Entities contained within DrProject::m_items
+// Items,     Entities contained within DrProject::m_items
 enum class DrItemType {
     Tile,
 };
 
-// ***** Prefabs,   Entities contained within DrProject::m_prefabs
+// Prefabs,   Entities contained within DrProject::m_prefabs
 enum class DrPrefabType {
     Blob,
     Character,

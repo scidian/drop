@@ -10,12 +10,13 @@
 #include <QStylePainter>
 
 #include "editor/widgets/widgets_inspector.h"
+#include "editor/widgets/widgets_toolbar.h"
 
 
 //####################################################################################
 //##    Custom Paint Event
 //####################################################################################
-void InspectorSlider::paintEvent(QPaintEvent *event) {
+void ToolbarSlider::paintEvent(QPaintEvent *event) {
     (void) event;
 
     QStylePainter painter(this);
@@ -62,7 +63,7 @@ void InspectorSlider::paintEvent(QPaintEvent *event) {
 //####################################################################################
 //##    Non signal activating setValue
 //####################################################################################
-void InspectorSlider::updateValue(int value) {
+void ToolbarSlider::updateValue(int value) {
     bool before_block = this->signalsBlocked();
     this->blockSignals(true);
     this->setValue( value );

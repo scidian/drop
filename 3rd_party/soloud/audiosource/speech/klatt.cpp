@@ -171,7 +171,7 @@ static PhonemeToElements phoneme_to_elements[PHONEME_COUNT] =
 
 static Element gElement[] =
 {
-#include "Elements.def"
+#include "elements.h"
 };
 
 static short clip(float input)

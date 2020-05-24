@@ -59,32 +59,6 @@ protected:
 
 
 //####################################################################################
-//##    Slider
-//##        Allows us to use Style Sheets with QSlider and still have Tick Marks painted
-//############################
-class InspectorSlider : public QSlider
-{
-    Q_OBJECT
-
-private:
-    QColor          m_tick_color = Qt::white;
-
-public:
-    InspectorSlider(QWidget *parent = nullptr) : QSlider(parent) { }
-    virtual ~InspectorSlider() override { }
-
-    // Event Overrides
-    virtual void    paintEvent(QPaintEvent *event) override;
-
-    // Getters / Setters
-    void            setTickColor(QColor color) {    m_tick_color =  color; }
-
-public slots:
-    void            updateValue(int value);
-};
-
-
-//####################################################################################
 //##    TripleSpinBox
 //##        Allows us to control number of decimals being shown in spin box
 //##        #NOTE: As name implies usually aiming for 3 decimals, but can be set by calling InspectorTripleSpinBox->setDecimals(xxx);

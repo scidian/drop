@@ -26,7 +26,7 @@ private:
     // External Borrowed Pointers
     QWidget     *m_parent           { nullptr };                                // Parent
 
-    // Local Variables
+    // Form Variables
     QWidget     *m_inner_widget     { nullptr };                                // Container widget, allows for a double form border
     QLabel      *m_pixmap           { nullptr };                                // Displays pixmap in message box
 

@@ -34,7 +34,7 @@ FormMessageBox::FormMessageBox(std::string message, QPixmap pixmap, QWidget *par
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
 
-    // ***** Create a contianer widget, this will allow Create a layout for the form and add a button
+    // ***** Create a contianer widget, this will allow us to create a layout for the form and add buttons and stuff
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
 

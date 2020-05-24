@@ -42,6 +42,16 @@ QString CustomStyleSheetFormatting() {
         // For all scrollable QWidgets, ::corner removes right botttom little box that appears when there are two scrollbars
         " QWidget::corner { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } " ///transparent; } "
 
+        // Sound Form
+        " QSplitter#splitterHorizontalSound {    "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + ";"
+        " } "
+        " QListView#listView        { "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border: none;"
+        " } "
+        " QWidget#widgetHolder      { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
+
         // Shared Empty Widgets
         " QWidget#widgetCentralClear { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
