@@ -421,6 +421,7 @@ SOURCES += \
     project/entities/dr_font.cpp \
     project/entities/dr_image.cpp \
     project/entities/dr_image__outline_image.cpp \
+    project/entities/dr_sound.cpp \
     project/entities/dr_stage.cpp \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \
@@ -1198,6 +1199,7 @@ HEADERS += \
     project/entities/dr_animation.h \
     project/entities/dr_font.h \
     project/entities/dr_image.h \
+    project/entities/dr_sound.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
     project/entities/dr_world.h \

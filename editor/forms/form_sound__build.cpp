@@ -81,6 +81,12 @@ void FormSound::buildSoundForm() {
         right_side_layout->setSpacing(4);
         right_side_layout->setContentsMargins(2, 2, 2, 2);
 
+            // Visualizer
+            m_visualizer = new VisualFrame(m_so_loud);
+                m_visualizer->setFixedHeight(100);
+            right_side_layout->addWidget(m_visualizer);
+
+
             // Sound Effects Top Row
             QWidget *sound_effects_1 = new QWidget();
             sound_effects_1->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
@@ -245,7 +251,7 @@ void FormSound::buildSoundForm() {
                                 for (auto string : options) {
                                     QAction *action = new QAction(" " + tr(string.toLatin1()));
                                     action->setCheckable(true);
-                                    if (string == "Triangle") action->setChecked(true);
+                                    if (count == m_speech_waveform) action->setChecked(true);
                                     action->setProperty(User_Property::Integer, QVariant::fromValue(count));
                                     group->addAction(action);
                                     menu->addAction(action);

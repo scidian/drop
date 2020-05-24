@@ -15,6 +15,7 @@
 #include "3rd_party/soloud/soloud_sfxr.h"
 #include "3rd_party/soloud/soloud_speech.h"
 #include "3rd_party/soloud/soloud_wav.h"
+#include "core/colors/colors.h"
 #include "core/dr_random.h"
 #include "editor/event_filters.h"
 #include "editor/forms/form_color_magnifier.h"
@@ -32,7 +33,9 @@
 FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
 
     // ***** Initialize SoLoud
-    m_so_loud.init();
+    m_so_loud = new SoLoud::Soloud();
+    m_so_loud->init();
+    m_so_loud->setVisualizationEnable(true);
 
     // ***** Set up initial window
     setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
@@ -48,11 +51,20 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     // ***** Center window on Parent Form and install dragging event filter
     Dr::CenterFormOnParent(parent->window(), this);
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
+
+    // ***** Visual Timer
+    QTimer *visual_timer = new QTimer(this);
+    visual_timer->setInterval(50);
+    connect(visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
+    visual_timer->setInterval(30);
+    visual_timer->setTimerType(Qt::PreciseTimer);
+    visual_timer->start();
 }
 
 FormSound::~FormSound() {
     // Clean up sound object
-    m_so_loud.deinit();
+    m_so_loud->deinit();
+    delete m_so_loud;
 }
 
 
@@ -64,6 +76,56 @@ void FormSound::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
     Dr::ApplyRoundedCornerMask(this, 8, 8);
 }
+
+// Visualizer
+void FormSound::drawVisuals() {
+    m_visualizer->update();
+}
+
+
+
+//####################################################################################
+//##    Visual Paint
+//####################################################################################
+VisualFrame::VisualFrame(SoLoud::Soloud *so_loud, QWidget *parent)
+    : QFrame(parent), m_so_loud(so_loud) {
+
+}
+
+VisualFrame::~VisualFrame() { }
+
+void VisualFrame::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+
+    double x_size = static_cast<double>(this->rect().width() / 256.0);
+    painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), x_size) );
+
+    if (m_so_loud) {
+        float *fft = m_so_loud->calcFFT();
+        float x = 0;
+        for (int i = 0; i < 256; i++) {
+            x += x_size;
+            double y_size = (fft[i] * 32) / 2;
+            painter.drawLine(x, (this->rect().height()/2) - y_size, x + 0.1, (this->rect().height()/2) + y_size);
+        }
+    } else {
+        QFrame::paintEvent(event);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -9,6 +9,7 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -24,6 +25,7 @@ void DrProject::deleteEntity(long entity_key) {
     switch (entity->getType()) {
         case DrType::Asset:     deleteAsset(entity_key);    break;
         case DrType::Font:      deleteFont(entity_key);     break;
+        case DrType::Sound:     deleteSound(entity_key);    break;
         case DrType::World:     deleteWorld(entity_key);    break;
     }
 }
@@ -128,6 +130,16 @@ void DrProject::deleteImage(long image_key) {
     if (image == nullptr) return;
     m_images.erase(image_key);
     delete image;
+}
+
+//####################################################################################
+//##    Delete Sound
+//####################################################################################
+void DrProject::deleteSound(long sound_key) {
+    DrSound *sound = findSoundFromKey(sound_key);
+    if (sound == nullptr) return;
+    m_sounds.erase(sound->getKey());
+    delete sound;
 }
 
 //####################################################################################

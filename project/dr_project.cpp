@@ -14,6 +14,7 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -52,6 +53,7 @@ void DrProject::clearProject(bool add_built_in_items) {
     for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_items.begin();         it != m_items.end(); )      {   delete it->second; it = m_items.erase(it);      }
     for (auto it = m_prefabs.begin();       it != m_prefabs.end(); )    {   delete it->second; it = m_prefabs.erase(it);    }
+    for (auto it = m_sounds.begin();        it != m_sounds.end(); )     {   delete it->second; it = m_sounds.erase(it);    }
     for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
     // Add these Images to every project for use with New Assets

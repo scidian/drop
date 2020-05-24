@@ -30,7 +30,7 @@ void FormSound::playSpeech(std::string speech_text) {
                         static_cast<float>(m_speech_slider_speed->value()) / 10.0,
                         static_cast<float>(m_speech_slider_decline->value()) / 100.0, m_speech_waveform );
 
-    m_so_loud.play(m_speech);
+    m_so_loud->play(m_speech);
 }
 
 
@@ -41,7 +41,7 @@ void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
     ///m_effect.setVolume(100);
     m_effect.loadPreset(preset, seed);
 
-    m_so_loud.play(m_effect);
+    m_so_loud->play(m_effect);
 }
 
 
@@ -50,7 +50,7 @@ void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
 //####################################################################################
 void FormSound::playWav(std::string wav_file) {
     m_wave.load(wav_file.data());
-    m_so_loud.play(m_wave);
+    m_so_loud->play(m_wave);
 }
 
 

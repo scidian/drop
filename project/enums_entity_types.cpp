@@ -25,6 +25,7 @@ std::string StringFromType(DrType type) {
         case DrType::Frame:                 return "Frame";
         case DrType::Image:                 return "Image";
         case DrType::Item:                  return "Item";
+        case DrType::Sound:                 return "Sound";
         case DrType::Prefab:                return "Prefab";
         case DrType::Stage:                 return "Stage";
         case DrType::Thing:                 return "Thing";
