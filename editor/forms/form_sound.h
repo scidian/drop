@@ -51,6 +51,8 @@ private:
     QWidget            *m_inner_widget;                         // Container widget, allows for a double form border
 
     VisualFrame        *m_visualizer;
+    QElapsedTimer       m_play_time;                            // Tracks when sound was last still playing
+
     QListWidget        *m_list;
 
     QSlider            *m_slider_0, *m_slider_1, *m_slider_2, *m_slider_3, *m_slider_4;

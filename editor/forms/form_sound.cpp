@@ -54,7 +54,7 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
 
     // ***** Visual Timer
     QTimer *visual_timer = new QTimer(this);
-    visual_timer->setInterval(50);
+    visual_timer->setInterval(20);
     connect(visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
     visual_timer->setInterval(30);
     visual_timer->setTimerType(Qt::PreciseTimer);
@@ -79,7 +79,13 @@ void FormSound::resizeEvent(QResizeEvent *event) {
 
 // Visualizer
 void FormSound::drawVisuals() {
-    m_visualizer->update();
+    if (m_so_loud->getActiveVoiceCount() > 0) {
+        m_play_time.restart();
+    }
+
+    if (m_play_time.elapsed() < 100) {
+        m_visualizer->update();
+    }
 }
 
 
@@ -105,7 +111,7 @@ void VisualFrame::paintEvent(QPaintEvent *event) {
         float x = 0;
         for (int i = 0; i < 256; i++) {
             x += x_size;
-            double y_size = (fft[i] * 32) / 2;
+            float y_size = (fft[i] * 32) / 2;
             painter.drawLine(x, (this->rect().height()/2) - y_size, x + 0.1, (this->rect().height()/2) + y_size);
         }
     } else {
