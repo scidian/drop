@@ -7,7 +7,8 @@
 //
 #include <QDebug>
 #include <QSizeGrip>
-#include <QListView>
+#include <QListWidget>
+#include <QListWidgetItem>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPushButton>
@@ -70,6 +71,9 @@ void FormSound::buildSoundForm() {
         left_side_layout->setContentsMargins(0, 0, 0, 0);
             m_list = new QListWidget();
             m_list->setObjectName(QStringLiteral("listView"));
+
+            m_list->connect(m_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(playItem(QListWidgetItem*)));
+
             left_side_layout->addWidget(m_list);
         splitter_horizontal->addWidget(m_list);
 

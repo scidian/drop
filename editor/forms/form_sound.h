@@ -36,24 +36,29 @@ class FormSound : public QWidget
 
 private:
     // External Borrowed Pointers
-    DrProject          *m_project;                              // Pointer to the open project
+    DrProject              *m_project;                                      // Pointer to the open project
+
+    // Local Variables
+    long                    m_key_gen = 1;                                  // Key generator for identifying sounds created on this Form
 
     // Sound Variables
-    SoLoud::Soloud     *m_so_loud;                              // Soloud instance
-    SoLoud::Sfxr        m_effect;
-    SoLoud::Speech      m_speech;
-    int                 m_speech_waveform   { KW_TRIANGLE };
-    SoLoud::Wav         m_wave;
+    ///std::list<DrSound*>  m_sounds;                                       // Local list of DrSounds, save Sounds to be used in game to m_project->m_sounds
+    SoLoud::Soloud         *m_so_loud;                                      // Soloud instance
 
-    std::list<DrSound*> m_sounds;                               // Local list of DrSounds, save Sounds to be used in game to m_project->m_sounds
+    ///SoLoud::Sfxr                 m_effect;
+    std::map<long, SoLoud::Sfxr*>   m_effects;                              // Sfxr sound effects
+    SoLoud::Speech                  m_speech;
+    int                             m_speech_waveform   { KW_TRIANGLE };
+    SoLoud::Wav                     m_wave;
+
 
     // Form Variables
-    QWidget            *m_inner_widget;                         // Container widget, allows for a double form border
+    QWidget            *m_inner_widget;                                     // Container widget, allows for a double form border
 
-    VisualFrame        *m_visualizer;
-    QElapsedTimer       m_play_time;                            // Tracks when sound was last still playing
+    VisualFrame        *m_visualizer;                                       // Widget that displays visualizer for current sounds playing
+    QElapsedTimer       m_play_time;                                        // Tracks when sound was last still playing
 
-    QListWidget        *m_list;
+    QListWidget        *m_list;                                             // Holds recently played sounds
 
     QSlider            *m_slider_0, *m_slider_1, *m_slider_2, *m_slider_3, *m_slider_4;
     QSlider            *m_slider_5, *m_slider_6, *m_slider_7, *m_slider_8, *m_slider_9;
@@ -69,14 +74,21 @@ public:
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
 
+    // Key Gen
+    int         getNextKey()                            { return m_key_gen++; }
+
     // Form Functions
     void        buildSoundForm();
     QWidget*    sliderPair(QString slider_text, QSlider *&slider);
 
-    // Sound Functions
+    // Sound Generate Functions
     void        playSpeech(std::string speech_text);
     void        playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed);
     void        playWav(std::string wav_file);
+
+    // Play Existing Sounds
+    void        playEffect(long effect_key);
+    QString     stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset);
 
     // Sound Variable Functions
     int         getSpeechWaveForm()                     { return m_speech_waveform; }
@@ -85,6 +97,7 @@ public:
 
 public slots:
     void        drawVisuals();
+    void        playItem(QListWidgetItem*);
 
 };
 

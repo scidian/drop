@@ -66,6 +66,9 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
 }
 
 FormSound::~FormSound() {
+    // Delete sounds
+    for (auto effect : m_effects)   { delete effect.second; }
+
     // Clean up sound object
     m_so_loud->deinit();
     delete m_so_loud;
