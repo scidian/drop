@@ -38,7 +38,9 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     m_so_loud->setVisualizationEnable(true);
 
     // ***** Set up initial window
-    setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+    setAttribute(Qt::WA_DeleteOnClose, true);
+    setAttribute(Qt::WA_Hover, true);
+    setMouseTracking(true);
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
 
     setMinimumSize(QSize(740, 560));
@@ -94,9 +96,7 @@ void FormSound::drawVisuals() {
 //##    Visual Paint
 //####################################################################################
 VisualFrame::VisualFrame(SoLoud::Soloud *so_loud, QWidget *parent)
-    : QFrame(parent), m_so_loud(so_loud) {
-
-}
+    : QFrame(parent), m_so_loud(so_loud) { }
 
 VisualFrame::~VisualFrame() { }
 
@@ -112,19 +112,12 @@ void VisualFrame::paintEvent(QPaintEvent *event) {
         for (int i = 0; i < 256; i++) {
             x += x_size;
             float y_size = (fft[i] * 32) / 2;
-            painter.drawLine(x, (this->rect().height()/2) - y_size, x + 0.1, (this->rect().height()/2) + y_size);
+            painter.drawLine(x, (this->rect().height()/2) - y_size, x + 1.0, (this->rect().height()/2) + y_size);
         }
     } else {
         QFrame::paintEvent(event);
     }
 }
-
-
-
-
-
-
-
 
 
 

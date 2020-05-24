@@ -89,7 +89,6 @@ public slots:
 };
 
 
-
 //####################################################################################
 //##    VisualFrame
 //##        Allows us to use Style Sheets with QSlider and still have Tick Marks painted

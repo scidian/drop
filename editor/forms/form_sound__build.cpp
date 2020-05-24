@@ -6,6 +6,7 @@
 //
 //
 #include <QDebug>
+#include <QSizeGrip>
 #include <QListView>
 #include <QMenu>
 #include <QMouseEvent>
