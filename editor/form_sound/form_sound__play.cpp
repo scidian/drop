@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/24/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -14,8 +14,8 @@
 #include "3rd_party/soloud/soloud_wav.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
+#include "editor/form_sound/form_sound.h"
 #include "editor/forms/form_color_magnifier.h"
-#include "editor/forms/form_sound.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -103,9 +103,6 @@ QString FormSound::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
         case (SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION):   return "Explosion";
     }
 }
-
-
-
 
 
 

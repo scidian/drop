@@ -237,6 +237,9 @@ SOURCES += \
     editor/form_main/form_main__toolbar.cpp \
     editor/form_main/form_main__toolbar_build.cpp \
     editor/form_main/form_main__toolbar_click.cpp \
+    editor/form_sound/form_sound.cpp \
+    editor/form_sound/form_sound__build.cpp \
+    editor/form_sound/form_sound__play.cpp \
     editor/forms/form_about.cpp \
     editor/forms/form_animation.cpp \
     editor/forms/form_animation__build.cpp \
@@ -252,9 +255,6 @@ SOURCES += \
     editor/forms/form_popup_colors.cpp \
     editor/forms/form_progress_box.cpp \
     editor/forms/form_settings.cpp \
-    editor/forms/form_sound.cpp \
-    editor/forms/form_sound__build.cpp \
-    editor/forms/form_sound__play.cpp \
     editor/helper_library.cpp \
     editor/pixmap/pixmap_draw.cpp \
     editor/pixmap/pixmap_draw_devices.cpp \
@@ -1130,6 +1130,7 @@ HEADERS += \
     editor/enums_editor.h \
     editor/event_filters/event_filters.h \
     editor/form_main/form_main.h \
+    editor/form_sound/form_sound.h \
     editor/forms/form_about.h \
     editor/forms/form_animation.h \
     editor/forms/form_blank.h \
@@ -1140,7 +1141,6 @@ HEADERS += \
     editor/forms/form_popup.h \
     editor/forms/form_progress_box.h \
     editor/forms/form_settings.h \
-    editor/forms/form_sound.h \
     editor/helper_library.h \
     editor/interface_editor_relay.h \
     editor/pixmap/pixmap.h \

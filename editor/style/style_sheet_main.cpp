@@ -48,6 +48,7 @@ QString CustomStyleSheetFormatting() {
         " } "
         " QListView#listView        { "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       selection-background-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
         "       border: none;"
         " } "
         " QWidget#widgetHolder      { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"

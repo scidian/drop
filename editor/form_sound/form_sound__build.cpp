@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/24/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -20,15 +20,13 @@
 #include "3rd_party/soloud/soloud.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
-#include "editor/forms/form_color_magnifier.h"
-#include "editor/forms/form_sound.h"
+#include "editor/form_sound/form_sound.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/widgets/widgets_inspector.h"
 #include "project/dr_project.h"
-
 
 
 //####################################################################################
@@ -79,17 +77,17 @@ void FormSound::buildSoundForm() {
 
 
         // Buttons and stuff on the right
-        QWidget *right_side = new QWidget();
-        right_side->setObjectName(QStringLiteral("widgetHolder"));
-        QVBoxLayout *right_side_layout = new QVBoxLayout(right_side);
-        right_side_layout->setObjectName(QStringLiteral("verticalLayout"));
-        right_side_layout->setSpacing(4);
-        right_side_layout->setContentsMargins(2, 2, 2, 2);
+        QWidget *middle_side = new QWidget();
+        middle_side->setObjectName(QStringLiteral("widgetHolder"));
+        QVBoxLayout *middle_side_layout = new QVBoxLayout(middle_side);
+        middle_side_layout->setObjectName(QStringLiteral("verticalLayout"));
+        middle_side_layout->setSpacing(4);
+        middle_side_layout->setContentsMargins(2, 2, 2, 2);
 
             // Visualizer
             m_visualizer = new VisualFrame(m_so_loud);
                 m_visualizer->setFixedHeight(100);
-            right_side_layout->addWidget(m_visualizer);
+            middle_side_layout->addWidget(m_visualizer);
 
 
             // Sound Effects Top Row
@@ -124,7 +122,7 @@ void FormSound::buildSoundForm() {
                     connect(play_effect_power, &QPushButton::clicked, [this] ()     {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::POWERUP, Dr::RandomInt(0, 5000));    });
                 sound_effect_layout_1->addWidget(play_effect_power);
 
-            right_side_layout->addWidget(sound_effects_1);
+            middle_side_layout->addWidget(sound_effects_1);
 
             // Sound Effects Second Row
             QWidget *sound_effects_2 = new QWidget();
@@ -152,7 +150,7 @@ void FormSound::buildSoundForm() {
                     connect(play_effect_blip, &QPushButton::clicked, [this] ()      {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::BLIP, Dr::RandomInt(0, 5000));    });
                 sound_effect_layout_2->addWidget(play_effect_blip);
 
-            right_side_layout->addWidget(sound_effects_2);
+            middle_side_layout->addWidget(sound_effects_2);
 
             // Sliders
             QWidget *sound_sliders = new QWidget();
@@ -186,7 +184,7 @@ void FormSound::buildSoundForm() {
                     right_slider_layout->addWidget( sliderPair("Slide 9", m_slider_9));
                 sound_slider_layout->addWidget(right_sliders);
 
-            right_side_layout->addWidget(sound_sliders);
+            middle_side_layout->addWidget(sound_sliders);
 
 
             // Speech
@@ -275,36 +273,36 @@ void FormSound::buildSoundForm() {
                     speech_slider_layout->addWidget(speech_left_slider);
 
 
-                    QWidget *speech_right_side = new QWidget();
-                    QVBoxLayout *speech_right_side_layout = new QVBoxLayout(speech_right_side);
-                    speech_right_side_layout->setObjectName(QStringLiteral("verticalLayout"));
-                    speech_right_side_layout->setSpacing(2);
-                    speech_right_side_layout->setContentsMargins(2, 2, 2, 2);
+                    QWidget *speech_middle = new QWidget();
+                    QVBoxLayout *speech_middle_layout = new QVBoxLayout(speech_middle);
+                    speech_middle_layout->setObjectName(QStringLiteral("verticalLayout"));
+                    speech_middle_layout->setSpacing(2);
+                    speech_middle_layout->setContentsMargins(2, 2, 2, 2);
 
                         QPushButton *play_speech = new QPushButton("Text to Speech");
                             Dr::ApplyDropShadowByType(play_speech, Shadow_Types::Button_Shadow);
                             play_speech->setObjectName(QStringLiteral("buttonDefault"));
                             connect(play_speech, &QPushButton::clicked, [this, speech_text_box] ()  {   this->playSpeech(speech_text_box->toPlainText().toStdString());   });
-                        speech_right_side_layout->addWidget(play_speech);
+                        speech_middle_layout->addWidget(play_speech);
 
-                    speech_slider_layout->addWidget(speech_right_side);
+                    speech_slider_layout->addWidget(speech_middle);
 
 
                 speech_layout->addWidget(speech_sliders);
-            right_side_layout->addWidget(speech_widget);
+            middle_side_layout->addWidget(speech_widget);
 
 
             // Fills space
-            right_side_layout->addStretch();
+            middle_side_layout->addStretch();
 
             // Exit Button
             QPushButton *exit = new QPushButton("  Exit  ");
                 Dr::ApplyDropShadowByType(exit, Shadow_Types::Button_Shadow);
                 exit->setObjectName(QStringLiteral("buttonDefault"));
                 connect(exit, &QPushButton::clicked, [this] ()                  {   this->close();  });
-            right_side_layout->addWidget(exit);
+            middle_side_layout->addWidget(exit);
 
-        splitter_horizontal->addWidget(right_side);
+        splitter_horizontal->addWidget(middle_side);
 
 
     // Sets splitter starting sizes, gives a size ratio for the layout to work with
@@ -346,6 +344,7 @@ QWidget* FormSound::sliderPair(QString slider_text, QSlider *&slider) {
     pair_layout->addWidget(slider);
     return pair;
 }
+
 
 
 

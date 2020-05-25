@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/23/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -19,8 +19,8 @@
 #include "core/dr_math.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
+#include "editor/form_sound/form_sound.h"
 #include "editor/forms/form_color_magnifier.h"
-#include "editor/forms/form_sound.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -132,15 +132,6 @@ void VisualFrame::paintEvent(QPaintEvent *event) {
         QFrame::paintEvent(event);
     }
 }
-
-
-
-
-
-
-
-
-
 
 
 
