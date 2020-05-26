@@ -49,8 +49,8 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
     // ***** Initialize Some User Variables
     DrPointF new_center =   DrPointF(0.0, 0.0);
     double   new_zoom =     1.0;
-    project->setOption(Project_Options::World_Map_Center,   new_center);
-    project->setOption(Project_Options::World_Map_Zoom,     new_zoom);
+    project->setOption(Project_Options::World_Graph_Center, new_center);
+    project->setOption(Project_Options::World_Graph_Zoom,   new_zoom);
 
 
     // ***** Build Test Project

@@ -51,7 +51,7 @@ enum class DrType {
 ///         Background,
 ///         Foreground,
 
-    // Assets for World Map
+    // Assets for World Graph
     Block,                          // Entities contained within DrProject::m_blocks
 
     // Assets for Editor: World Physics 2D
@@ -93,7 +93,7 @@ enum class DrWorldType {
     Physics_2D,
     UI,
 
-    // Worlds Used As Nodes in World Map
+    // Worlds Used As Nodes in World Graph
     Random_Out,
     Timed_Pause,
 };
@@ -136,7 +136,7 @@ enum class DrThingType {
 
 
 
-// ################## Assets for World Map Sub Types ####################
+// ################## Assets for World Graph Sub Types ####################
 // Blocks,    Entities contained within DrProject::m_blocks
 enum class DrBlockType {
     World,                  // Physics 2D, UI, future 3D, Cards, Tower, etc
@@ -194,7 +194,7 @@ enum class DrPrefabType {
 //##    Categories for the Asset Tree
 //############################
 namespace Asset_Category {
-    // World Map Node Editor
+    // World Graph Node Editor
     const std::string   Worlds          = "Worlds";
     const std::string   Logic           = "Logic";
 

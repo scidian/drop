@@ -23,8 +23,8 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "editor/widgets/widgets_view.h"
 #include "editor/widgets/widgets_view_toolbar.h"
 #include "engine/debug_flags.h"
@@ -55,7 +55,7 @@
 Editor_Mode FormMain::getEditorMode() { return m_current_mode; }
 void FormMain::setEditorMode(Editor_Mode new_mode) {
     switch (new_mode) {
-        case Editor_Mode::World_Map:            this->rebuildFormMain(Editor_Mode::World_Map);          break;
+        case Editor_Mode::World_Graph:          this->rebuildFormMain(Editor_Mode::World_Graph);        break;
         case Editor_Mode::World_Editor:         this->rebuildFormMain(Editor_Mode::World_Editor);       break;
         case Editor_Mode::Clear:                this->rebuildFormMain(Editor_Mode::Clear);              break;
 
@@ -98,8 +98,8 @@ void FormMain::buildProjectTree(bool total_rebuild) {
 
 // Fires an Undo stack command to change Stages within Scene
 void FormMain::buildScene(long stage_key) {
-    if (getEditorMode() == Editor_Mode::World_Map) {
-            sceneWorldMap->buildScene();
+    if (getEditorMode() == Editor_Mode::World_Graph) {
+            sceneWorldGraph->buildScene();
     } else if (getEditorMode() == Editor_Mode::World_Editor) {
         // Rebuild existing Stage
         if (stage_key == c_same_key) {
@@ -126,7 +126,7 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
     // !!!!! #NOTE: This order is semi important, best NOT TO CHANGE IT !!!!!
     if (changed_from != Editor_Widgets::View) {
         if (getEditorMode() == Editor_Mode::World_Editor) {     sceneEditor->updateChangesInScene(changed_items, property_names); }
-        if (getEditorMode() == Editor_Mode::World_Map) {        sceneWorldMap->updateChangesInScene(changed_items, property_names); }
+        if (getEditorMode() == Editor_Mode::World_Graph) {      sceneWorldGraph->updateChangesInScene(changed_items, property_names); }
     }
     if (changed_from != Editor_Widgets::Inspector_Tree)         treeInspector->updateInspectorPropertyBoxes(changed_items, property_names);
     if (changed_from != Editor_Widgets::Project_Tree)           treeProjectEditor->updateItems(changed_items, property_names);
@@ -143,7 +143,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
     if (selected_from == Editor_Widgets::View || selected_from == Editor_Widgets::Project_Tree) {
         // Selects items in Scene View based on new selection in Project Tree
         if (selected_from != Editor_Widgets::View) {
-            if (getEditorMode() == Editor_Mode::World_Map)      { sceneWorldMap->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() ); }
+            if (getEditorMode() == Editor_Mode::World_Graph)    { sceneWorldGraph->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() ); }
             if (getEditorMode() == Editor_Mode::World_Editor)   { sceneEditor->updateSelectionFromProjectTree( treeProjectEditor->selectedItems() ); }
         }
 
@@ -182,27 +182,27 @@ void FormMain::updateInspectorEnabledProperties() {
 
 DrProject*  FormMain::currentProject()                          { return m_project; }
 double      FormMain::currentViewGridAngle() {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { return viewWorldMap->currentGridAngle(); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { return viewWorldGraph->currentGridAngle(); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->currentGridAngle(); }
     return 0;
 }
 QPointF     FormMain::currentViewGridScale() {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { return viewWorldMap->currentGridScale(); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { return viewWorldGraph->currentGridScale(); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->currentGridScale(); }
     return QPointF(1.0, 1.0);
 }
 View_Mode   FormMain::currentViewMode() {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { return viewWorldMap->currentViewMode(); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { return viewWorldGraph->currentViewMode(); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->currentViewMode(); }
     return View_Mode::None;
 }
 double      FormMain::currentViewZoom() {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { return viewWorldMap->currentZoomLevel(); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { return viewWorldGraph->currentZoomLevel(); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->currentZoomLevel(); }
     return 1.0;
 }
 QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { return viewWorldMap->roundToGrid(point_in_scene); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { return viewWorldGraph->roundToGrid(point_in_scene); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { return viewEditor->roundToGrid(point_in_scene); }
     return point_in_scene;
 }
@@ -210,28 +210,28 @@ QPointF     FormMain::roundPointToGrid(QPointF point_in_scene) {
 // Fires a single shot timer to update view coordinates after event calls are done,
 // sometimes centerOn function doesnt work until after an update() has been processed in the event loop
 void FormMain::centerViewTimer(QPointF center_point) {
-    if (getEditorMode() == Editor_Mode::World_Map) {
-        viewWorldMap->centerOn(center_point);
+    if (getEditorMode() == Editor_Mode::World_Graph) {
+        viewWorldGraph->centerOn(center_point);
     } else if (getEditorMode() == Editor_Mode::World_Editor) {
         viewEditor->centerOn(center_point);
         viewEditor->setHasShownAScene(true);
     }
 }
 void FormMain::viewCenterOnPoint(QPointF center_point) {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { viewWorldMap->centerOn(center_point); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { viewWorldGraph->centerOn(center_point); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { viewEditor->centerOn(center_point); }
     QTimer::singleShot(0, this, [this, center_point] { this->centerViewTimer(center_point); } );
 }
 void FormMain::viewFitToContents() {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { viewWorldMap->zoomToContents(); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { viewWorldGraph->zoomToContents(); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { viewEditor->zoomToContents(); }
 }
 void FormMain::viewUpdateToolbar(int button_id) {
     Mouse_Mode clicked = static_cast<Mouse_Mode>(button_id);
-    if (viewWorldMap != nullptr) {
-        viewWorldMap->setMouseMode(clicked);
-        viewWorldMap->spaceBarUp();
-        if (toolbarWorldMap != nullptr) toolbarWorldMap->updateButtons(button_id);
+    if (viewWorldGraph != nullptr) {
+        viewWorldGraph->setMouseMode(clicked);
+        viewWorldGraph->spaceBarUp();
+        if (toolbarWorldGraph != nullptr) toolbarWorldGraph->updateButtons(button_id);
     }
     if (viewEditor != nullptr) {
         viewEditor->setMouseMode(clicked);
@@ -241,7 +241,7 @@ void FormMain::viewUpdateToolbar(int button_id) {
     updateToolBar();
 }
 void FormMain::viewZoomToScale(double zoom_scale) {
-    if      (getEditorMode() == Editor_Mode::World_Map)         { viewWorldMap->zoomToScale(zoom_scale); }
+    if      (getEditorMode() == Editor_Mode::World_Graph)       { viewWorldGraph->zoomToScale(zoom_scale); }
     else if (getEditorMode() == Editor_Mode::World_Editor)      { viewEditor->zoomToScale(zoom_scale); }
 }
 

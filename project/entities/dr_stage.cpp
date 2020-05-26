@@ -25,7 +25,7 @@ DrStage::DrStage(DrProject *parent_project, DrWorld *parent_world, long new_stag
 
     this->setViewCenterPoint(DrPointF(0, 0));
     this->setParentWorld(parent_world);                 // Pointer to parent World
-    this->setKey(new_stage_key);                        // assign key passed in from key generator, this key matches key in parent World map container
+    this->setKey(new_stage_key);                        // assign key passed in from key generator, this key matches key in parent World std::map container (m_worlds)
     this->setIsStartStage(is_start_stage);              // Is this a "Start Stage" or not, can only be one "Start Stage" per World
     initializeStageSettings(new_stage_name);            // Call to load in all the components / properties for this Stage entity
 

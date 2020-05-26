@@ -22,10 +22,10 @@ const   double      c_node_buffer =             16;                 // Buffer to
 
 
 //####################################################################################
-//##    NodeMapItem
-//##        A QGraphicsItem for a node (DrComponent) for use with our custom QGraphicsScene (NodeMapScene)
+//##    NodeItem
+//##        A QGraphicsItem for a node (DrComponent) for use with our custom QGraphicsScene (NodeScene)
 //############################
-class NodeMapItem : public QGraphicsPixmapItem
+class NodeItem : public QGraphicsPixmapItem
 {
 
 private:
@@ -53,8 +53,8 @@ private:
 
 public:
     // Constructor / Destructor
-    NodeMapItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *component);
-    virtual ~NodeMapItem() override;
+    NodeItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *component);
+    virtual ~NodeItem() override;
 
     // Base Getter Overrides
     virtual QRectF          boundingRect() const override;

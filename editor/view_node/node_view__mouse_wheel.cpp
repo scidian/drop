@@ -11,9 +11,9 @@
 #include <QTimer>
 
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 
 
 //####################################################################################
@@ -23,7 +23,7 @@
 //####################################################################################
 // Handles zooming in / out of view with mouse wheel
 #if QT_CONFIG(wheelevent)
-void NodeMapView::wheelEvent(QWheelEvent *event) {
+void NodeView::wheelEvent(QWheelEvent *event) {
     // ********** Allow for scene scrolling if ctrl (cmd) is down
     if (event->modifiers() & Qt::KeyboardModifier::ControlModifier) {
         QGraphicsView::wheelEvent(event);
@@ -47,7 +47,7 @@ void NodeMapView::wheelEvent(QWheelEvent *event) {
 }
 #endif
 
-void NodeMapView::zoomInOut(int level) {
+void NodeView::zoomInOut(int level) {
     m_zoom += level;
     if (m_zoom > 350) m_zoom = 350;
     if (m_zoom <   0) m_zoom =   0;
@@ -55,14 +55,14 @@ void NodeMapView::zoomInOut(int level) {
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
-void NodeMapView::zoomToPower(int level) {
+void NodeView::zoomToPower(int level) {
     m_zoom = level;
     if (m_zoom > 350) m_zoom = 350;
     if (m_zoom <   0) m_zoom =   0;
     zoomToScale(std::pow(2.0, (m_zoom - 250) / 50.0), false);
 }
 
-void NodeMapView::zoomToScale(double scale, bool recalculate_level) {
+void NodeView::zoomToScale(double scale, bool recalculate_level) {
     m_zoom_scale = scale;
 
     if (recalculate_level) {
@@ -88,8 +88,8 @@ void NodeMapView::zoomToScale(double scale, bool recalculate_level) {
     emit updateZoomSpin(static_cast<int>(m_zoom_scale * 100.0));
 }
 
-// Fits contents of NodeMapScene into View, called first time World Map is shown and DrProject::m_just_loaded is true
-void NodeMapView::zoomToContents() {    
+// Fits contents of NodeScene into View, called first time World Graph is shown and DrProject::m_just_loaded is true
+void NodeView::zoomToContents() {
     this->fitInView( scene()->itemsBoundingRect() );
 
     // QT515

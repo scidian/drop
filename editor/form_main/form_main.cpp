@@ -25,7 +25,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
@@ -82,7 +82,7 @@ FormMain::~FormMain() {
     sceneEditor->deleteLater();
 
     // Delete widgets not currently attached to main form
-    if (getEditorMode() != Editor_Mode::World_Map)      widgetCentralWorldMap->deleteLater();
+    if (getEditorMode() != Editor_Mode::World_Graph)    widgetCentralWorldGraph->deleteLater();
     if (getEditorMode() != Editor_Mode::World_Editor)   widgetCentralEditor->deleteLater();
     if (getEditorMode() != Editor_Mode::Clear)          widgetCentralClear->deleteLater();
 
@@ -130,7 +130,7 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
     buildInspector(treeInspector->getSelectedKeys(), true);
 
     // Force QGraphicsViews to rebuild
-    if (viewWorldMap)   viewWorldMap->updateGrid();
+    if (viewWorldGraph) viewWorldGraph->updateGrid();
     if (viewEditor)     viewEditor->updateGrid();
 }
 
@@ -145,8 +145,8 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
         if (key_event->key() == Qt::Key::Key_Space) {
-            if (getEditorMode() == Editor_Mode::World_Map) {
-                if (viewWorldMap->hasFocus() == false) viewWorldMap->spaceBarDown();
+            if (getEditorMode() == Editor_Mode::World_Graph) {
+                if (viewWorldGraph->hasFocus() == false) viewWorldGraph->spaceBarDown();
             } else if (getEditorMode() == Editor_Mode::World_Editor) {
                 if (viewEditor->hasFocus() == false) viewEditor->spaceBarDown();
             }
@@ -156,8 +156,8 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyRelease) {
         QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
         if (key_event->key() == Qt::Key::Key_Space) {
-            if (getEditorMode() == Editor_Mode::World_Map) {
-                if (viewWorldMap->hasFocus() == false) viewWorldMap->spaceBarUp();
+            if (getEditorMode() == Editor_Mode::World_Graph) {
+                if (viewWorldGraph->hasFocus() == false) viewWorldGraph->spaceBarUp();
             } else if (getEditorMode() == Editor_Mode::World_Editor) {
                 if (viewEditor->hasFocus() == false) viewEditor->spaceBarUp();
             }

@@ -8,16 +8,16 @@
 #include <QKeyEvent>
 
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 
 
 //####################################################################################
 //##    Key Events
 //####################################################################################
 // Key press event
-void NodeMapView::keyPressEvent(QKeyEvent *event) {
+void NodeView::keyPressEvent(QKeyEvent *event) {
     // When space bar is down, enabled mouse press and move to translate viewable area
     if (event->key() == Qt::Key::Key_Space)     spaceBarDown();
     if (event->key() == Qt::Key::Key_Control)   m_flag_key_down_control = true;
@@ -35,7 +35,7 @@ void NodeMapView::keyPressEvent(QKeyEvent *event) {
 }
 
 // Key release event
-void NodeMapView::keyReleaseEvent(QKeyEvent *event) {
+void NodeView::keyReleaseEvent(QKeyEvent *event) {
     // When space bar is released, change mode back to select / move items
     if (event->key() == Qt::Key::Key_Space)     spaceBarUp();
     if (event->key() == Qt::Key::Key_Control)   m_flag_key_down_control = false;
@@ -51,13 +51,13 @@ void NodeMapView::keyReleaseEvent(QKeyEvent *event) {
     delete fire_mouse_move;
 }
 
-void NodeMapView::spaceBarDown() {
+void NodeView::spaceBarDown() {
     m_flag_key_down_spacebar = true;
     setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
     setInteractive(false);
 }
 
-void NodeMapView::spaceBarUp() {
+void NodeView::spaceBarUp() {
     m_flag_key_down_spacebar = false;
     if (m_mouse_mode != Mouse_Mode::Hand) {
         setDragMode(QGraphicsView::DragMode::NoDrag);

@@ -10,9 +10,9 @@
 
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
@@ -23,7 +23,7 @@
 //##        Called after some change has been made to items on another widget besides
 //##        the QGraphicsView, updates the items in the scene
 //####################################################################################
-void NodeMapScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs) {
+void NodeScene::updateChangesInScene(std::list<DrSettings*> changed_items, std::list<ComponentProperty> component_property_pairs) {
     if (changed_items.empty()) return;
 
     (void) component_property_pairs;

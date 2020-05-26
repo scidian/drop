@@ -17,9 +17,9 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
 #include "project/constants_component_info.h"
 #include "project/dr_project.h"
@@ -37,7 +37,7 @@ const   double  c_seperator_height =            3;
 //####################################################################################
 //##    Custom Paint Handling
 //####################################################################################
-void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
     if (m_component == nullptr) return;
 
     // ***** Turn on anti aliasing if necessary
@@ -213,7 +213,7 @@ void NodeMapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     }
 
 
-}   // End NodeMapItem::paint()
+}   // End NodeItem::paint()
 
 
 

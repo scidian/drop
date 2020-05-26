@@ -73,12 +73,10 @@
 //
 //  Main Components
 //  ---------------
-//  FormMain                        Modes:  "World Map":        Node Map for Worlds / UI
-//                                          "World Editor":     Physics World 2D Editor
-//                                          "UI Editor":        UI World Editor
-//                                        FUTURE: Stage Map:    Stage Layout??
-//                                        FUTURE: App Editor
-//                                        FUTURE: Puzzle World Editor
+//  FormMain                        Modes:  "World Graph":              Node Graph for Worlds / UI
+//                                          "World Creator":            Physics World 2D Editor
+//                                          "UI Creator":               UI World Editor
+//                                          "Sound Creator":            Sound Mixer
 //
 //      FormAbout                   About Box
 //      FormAnimation               Animation Frame editor for Asset animations

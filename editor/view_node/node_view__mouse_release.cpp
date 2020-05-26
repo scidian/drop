@@ -11,9 +11,9 @@
 #include "core/dr_debug.h"
 #include "core/dr_math.h"
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "editor/widgets/widgets_view.h"
 #include "project/dr_project.h"
 #include "project/settings/settings_component.h"
@@ -24,10 +24,10 @@
 //##    Extracts a list of DrSettings pointers from a list of
 //##    EditorItems (QGraphicsItems) representing DrThings in a QGraphicsScene
 //####################################################################################
-QList<DrSettings*> NodeMapView::convertItemListToSettings(QList<QGraphicsItem*> list) {
+QList<DrSettings*> NodeView::convertItemListToSettings(QList<QGraphicsItem*> list) {
     QList<DrSettings*> new_list;
     for (auto item : list) {
-        NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);
+        NodeItem *map_item = dynamic_cast<NodeItem*>(item);
         if (map_item != nullptr) {
             DrSettings *as_entity = map_item->getEntity();
             new_list.append(as_entity);
@@ -42,7 +42,7 @@ QList<DrSettings*> NodeMapView::convertItemListToSettings(QList<QGraphicsItem*> 
 //##    Mouse Released
 //##
 //####################################################################################
-void NodeMapView::mouseReleaseEvent(QMouseEvent *event) {
+void NodeView::mouseReleaseEvent(QMouseEvent *event) {
     // Test for scene, convert to our custom class
     if (scene() == nullptr) return;
 
@@ -92,7 +92,7 @@ void NodeMapView::mouseReleaseEvent(QMouseEvent *event) {
         // ***** Finished trying to connect two node slots
         if (m_view_mode == View_Mode::Node_Connect) {
             m_view_mode = View_Mode::None;
-            NodeMapItem   *mouse_map_item =    dynamic_cast<NodeMapItem*>(mouse_item);
+            NodeItem   *mouse_map_item =    dynamic_cast<NodeItem*>(mouse_item);
 
             // We found an item under mouse and we have a start DrDlot, try to conenct
             if (mouse_map_item != nullptr && m_slot_start != nullptr) {

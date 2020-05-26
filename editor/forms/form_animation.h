@@ -70,8 +70,10 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
+
     virtual EditorView*         getViewEditor() override    { return viewEditor; }
-    virtual NodeMapView*        getViewNodeMap() override   { return nullptr; }
+    virtual MixerView*          getViewMixer() override     { return nullptr; }
+    virtual NodeView*           getViewNode() override      { return nullptr; }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;

@@ -69,16 +69,20 @@ enum class Editor_Mode {
     Clear                       = 0,
     Program_Loading             = 1,
 
-    World_Map                   = 2,                        // World Node Map
+    World_Graph                 = 2,                        // World Node Graph
     World_Editor                = 3,                        // 2D Physics World Editor
-    UI_Editor                   = 4,                        // UI Editor
+    UI_Editor                   = 4,                        // UI Page Layout
+    Sound_Creator               = 5,                        // Sound Mixer
 
-    Animation_Editor            = 5,                        // Animation Editor
-    Component_Map               = 6,                        // Visual Scripting
+    Animation_Editor            = 6,                        // Animation Editor
+    Component_Map               = 7,                        // Visual Scripting
 
-    // Stage_Map                 = 7,
-    // App_Editor               = 8,
-    // Puzzle_World_Editor      = 9,
+    // Stage_Graph              = ,
+
+    // App_Editor               = ,
+    // Puzzle_World_Editor      = ,
+    // Tower_Defense_Creator    = ,
+    // Card_Game_Creator        = ,
 };
 
 

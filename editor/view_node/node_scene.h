@@ -19,14 +19,14 @@
 class DrProject;
 class DrSettings;
 class IEditorRelay;
-class NodeMapItem;
+class NodeItem;
 
 
 //####################################################################################
-//##    NodeMapScene
-//##        Holds nodes (NodeMapItem) representing DrComponents
+//##    NodeScene
+//##        Holds nodes (NodeItem) representing DrComponents
 //############################
-class NodeMapScene : public QGraphicsScene
+class NodeScene : public QGraphicsScene
 {
     Q_OBJECT
 
@@ -36,7 +36,7 @@ private:
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    long                    m_node_map_entity           { c_no_key };       // Entity to build Nodes from DrComponents, if c_no_key NodeMapScene is built from DrProject (Worlds, etc)
+    long                    m_node_map_entity           { c_no_key };       // Entity to build Nodes from DrComponents, if c_no_key NodeScene is built from DrProject (Worlds, etc)
     bool                    m_need_rebuild_scene        { false };          // Flag to tell View to wait to update Options until scene has been rebuilt
 
     // Selection Variables
@@ -48,8 +48,8 @@ private:
 
 public:
     // Constructor / Destructor
-    explicit NodeMapScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, long node_map_entity_key = c_no_key);
-    virtual ~NodeMapScene() override;
+    explicit NodeScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, long node_map_entity_key = c_no_key);
+    virtual ~NodeScene() override;
 
     // Event Overrides
     virtual void    keyPressEvent(QKeyEvent *event) override;
@@ -60,11 +60,11 @@ public:
     void                    clearSceneOverride();                           // Should call this instead of "clear()", prevents dangling pointers and resets local variables
 
     // Scene Functions
-    NodeMapItem*            addItemToSceneFromComponent(DrComponent *component);
+    NodeItem*               addItemToSceneFromComponent(DrComponent *component);
     void                    setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y);
     void                    setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y);
-    QList<NodeMapItem*>     nodeMapItems();
-    static NodeMapItem*     nodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key);
+    QList<NodeItem*>        nodeItems();
+    static NodeItem*        nodeItemWithKey(QList<NodeItem*> &world_items, long entity_key);
 
     // Selection Functions
     QRectF                  totalSelectionSceneRect();

@@ -102,8 +102,8 @@
         <file>assets/toolbar_icons/toolbar_ui_editor.png</file>
         <file>assets/toolbar_icons/toolbar_world_editor_faded.png</file>
         <file>assets/toolbar_icons/toolbar_world_editor.png</file>
-        <file>assets/toolbar_icons/toolbar_world_map_faded.png</file>
-        <file>assets/toolbar_icons/toolbar_world_map.png</file>
+        <file>assets/toolbar_icons/toolbar_world_graph_faded.png</file>
+        <file>assets/toolbar_icons/toolbar_world_graph.png</file>
         <file>assets/test_images/metal_block.png</file>
         <file>assets/test_images/spare_wheel.png</file>
         <file>assets/toolbar_icons/toolbar_play.png</file>

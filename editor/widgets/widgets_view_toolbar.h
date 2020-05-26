@@ -27,7 +27,7 @@
 // Forward Declarations
 class DrFilterHoverHandler;
 class EditorView;
-class NodeMapView;
+class NodeView;
 
 
 //####################################################################################
@@ -42,8 +42,8 @@ private:
     // External Borrowed Pointers
     DrProject              *m_project;                                  // Pointer to currently loaded project
     IEditorRelay           *m_editor_relay;                             // Pointer to IEditorRelay class of parent form
-    EditorView             *m_view_editor       { nullptr };            // Holds parent EditorView*  if m_my_editor_mode is a mode that uses EditorView
-    NodeMapView            *m_view_node         { nullptr };            // Holds parent NodeMapView* if m_my_editor_mode is a mode that uses NodeMapView
+    EditorView             *m_view_editor       { nullptr };            // Holds parent EditorView* if m_my_editor_mode is a mode that uses EditorView
+    NodeView               *m_view_node         { nullptr };            // Holds parent NodeView*   if m_my_editor_mode is a mode that uses NodeView
 
 
     // Local Variables
@@ -66,7 +66,7 @@ private:
 public:
     // Constructor / Destructor
     ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
-                EditorView *view_editor = nullptr, NodeMapView *view_node = nullptr);
+                EditorView *view_editor = nullptr, NodeView *view_node = nullptr);
 
     // Building
     void            buildToolbar();

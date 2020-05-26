@@ -39,9 +39,9 @@ std::string StyleSheetToolBar() {
 
     // ToolBar Selectable Buttons
     +
-    StyleSheetToolBarModeButton("buttonModeWorldMap",  "toolbar_world_map.png",     "toolbar_world_map_faded.png",      5) +
-    StyleSheetToolBarModeButton("buttonModeWorldEdit", "toolbar_world_editor.png",  "toolbar_world_editor_faded.png",   5) +
-    StyleSheetToolBarModeButton("buttonModeUIEdit",    "toolbar_ui_editor.png",     "toolbar_ui_editor_faded.png",      5) +
+    StyleSheetToolBarModeButton("buttonModeWorldGraph", "toolbar_world_graph.png",   "toolbar_world_graph_faded.png",    5) +
+    StyleSheetToolBarModeButton("buttonModeWorldEdit",  "toolbar_world_editor.png",  "toolbar_world_editor_faded.png",   5) +
+    StyleSheetToolBarModeButton("buttonModeUIEdit",     "toolbar_ui_editor.png",     "toolbar_ui_editor_faded.png",      5) +
 
     " QToolButton {            border: 1px solid; "
     "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "

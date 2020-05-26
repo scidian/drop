@@ -39,7 +39,7 @@ DrWorld::DrWorld(DrProject *parent_project, long key, DrWorldType world_type, st
     }
 
     // Set initial Node Position
-    getComponent(Comps::World_Connections)->setNodePosition( parent_project->getNewWorldMapPosition() );
+    getComponent(Comps::World_Connections)->setNodePosition( parent_project->getNewWorldGraphPosition() );
 
 
     // !!!!! #TEMP: Testing node building

@@ -6,6 +6,7 @@
 //
 //
 #include <QDebug>
+#include <QTimer>
 
 #include "3rd_party/soloud/soloud.h"
 #include "3rd_party/soloud/soloud_audiosource.h"
@@ -34,6 +35,7 @@ void FormSound::playSpeech(std::string speech_text) {
                         static_cast<float>(m_speech_slider_decline->value()) / 100.0, m_speech_waveform );
 
     m_so_loud->play(m_speech);
+    m_visual_timer->start();
 }
 
 
@@ -50,10 +52,12 @@ void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
     long effect_key = getNextKey();
     m_effects[effect_key] = effect;
     m_so_loud->play(*m_effects[effect_key]);
+    m_visual_timer->start();
 
     QListWidgetItem *item = new QListWidgetItem(stringFromEffectType(preset) + QString::number(effect_key));
     item->setData(User_Roles::Key, QVariant::fromValue(effect_key));
     m_list->addItem(item);
+    item->setSelected(true);
 
     // Looking into possible wav form loading
     ///SoLoud::AudioSourceInstance *asi = m_effect.createInstance();
@@ -67,6 +71,7 @@ void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
 void FormSound::playWav(std::string wav_file) {
     m_wave.load(wav_file.data());
     m_so_loud->play(m_wave);
+    m_visual_timer->start();
 }
 
 
@@ -79,16 +84,13 @@ void FormSound::playEffect(long effect_key) {
     auto it = m_effects.find(effect_key);
     if (it != m_effects.end()) {
         m_so_loud->play(*m_effects[effect_key]);
+        m_visual_timer->start();
     }
 }
 
 void FormSound::playItem(QListWidgetItem *item) {
     long sound_key = item->data(User_Roles::Key).toInt();
-
-    auto it = m_effects.find(sound_key);
-    if (it != m_effects.end()) {
-        m_so_loud->play(*m_effects[sound_key]);
-    }
+    playEffect(sound_key);
 }
 
 

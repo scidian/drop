@@ -18,8 +18,8 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "engine/form_engine.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -84,7 +84,7 @@ void FormMain::buttonGroupEditClicked(int id) {
             if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { treeAssetEditor->keyPressEvent(event); }
             else if (getActiveWidget() == Editor_Widgets::Project_Tree)     { treeProjectEditor->keyPressEvent(event); }
             else if (getActiveWidget() == Editor_Widgets::View) {
-                if (getEditorMode() == Editor_Mode::World_Map)              { sceneWorldMap->keyPressEvent(event); }
+                if (getEditorMode() == Editor_Mode::World_Graph)            { sceneWorldGraph->keyPressEvent(event); }
                 if (getEditorMode() == Editor_Mode::World_Editor)           { sceneEditor->keyPressEvent(event); }
             }
         }
@@ -173,7 +173,7 @@ void FormMain::buttonGroupGridSimpleClicked(int id) {
         case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGridSimple->button(id)->isChecked());  break;
         case Buttons_Grid::Snap_Options:    ;
     }
-    viewWorldMap->updateGrid();
+    viewWorldGraph->updateGrid();
 }
 
 //####################################################################################

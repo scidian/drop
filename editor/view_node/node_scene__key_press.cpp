@@ -12,9 +12,9 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 
@@ -22,7 +22,7 @@
 //####################################################################################
 //##    Key Release
 //####################################################################################
-void NodeMapScene::keyReleaseEvent(QKeyEvent *event) {
+void NodeScene::keyReleaseEvent(QKeyEvent *event) {
     // Reset key timer
     Qt::Key key_released = static_cast<Qt::Key>(event->key());
     m_key_down[key_released] = false;
@@ -34,7 +34,7 @@ void NodeMapScene::keyReleaseEvent(QKeyEvent *event) {
 //####################################################################################
 //##    Key Press
 //####################################################################################
-void NodeMapScene::keyPressEvent(QKeyEvent *event) {
+void NodeScene::keyPressEvent(QKeyEvent *event) {
 
     // ***** If no selected items, pass on key press event and exit
     if (selectedItems().size() < 1) {
@@ -86,13 +86,13 @@ void NodeMapScene::keyPressEvent(QKeyEvent *event) {
                 View_Mode before_mode = m_editor_relay->currentViewMode();
                 bool      snap_center = Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool();
                 Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
-                if (m_editor_relay->getViewNodeMap()) m_editor_relay->getViewNodeMap()->setViewMode(View_Mode::Holding_Keys);
+                if (m_editor_relay->getViewNode()) m_editor_relay->getViewNode()->setViewMode(View_Mode::Holding_Keys);
 
                 // Move Item, ItemChange Event is activated for snapping to grid
                 item->moveBy(move_x, move_y);
 
                 // Restore settings after ItemChange Event is over
-                if (m_editor_relay->getViewNodeMap()) m_editor_relay->getViewNodeMap()->setViewMode(before_mode);
+                if (m_editor_relay->getViewNode()) m_editor_relay->getViewNode()->setViewMode(before_mode);
                 Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, snap_center);
             }
         }
@@ -121,8 +121,8 @@ void NodeMapScene::keyPressEvent(QKeyEvent *event) {
 
         // ***** Process Delete, Convert to DrSettings
         for (auto item : list_old_items) {
-            NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);   if (map_item == nullptr) continue;
-            DrSettings  *entity =   map_item->getEntity();              if (entity == nullptr) continue;
+            NodeItem  *map_item = dynamic_cast<NodeItem*>(item);    if (map_item == nullptr) continue;
+            DrSettings  *entity = map_item->getEntity();            if (entity == nullptr) continue;
 
              // Delete selected items
             switch (key_pressed) {

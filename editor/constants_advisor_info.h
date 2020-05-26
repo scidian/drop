@@ -20,8 +20,8 @@ typedef std::vector<QString> HeaderBodyList;
 namespace Advisor_Info {
 
     // ToolBar Buttons
-    const HeaderBodyList Mode_Map               { "World Map", "This mode will allow you to see the layout of your Project and how the Worlds and "
-                                                               "User Interfaces in your Project connect to each other." };
+    const HeaderBodyList Mode_Map               { "World Graph", "This mode will allow you to see the layout of your Project and how the Worlds and "
+                                                                 "User Interfaces in your Project connect to each other." };
     const HeaderBodyList Mode_Editor            { "World Editor", "This mode will allow you to edit the contents of each Physics World. It is where "
                                                                   "you can design each Stage and lay out your worlds / levels." };
     const HeaderBodyList Mode_UI                { "UI Editor", "This mode will allow you to edit the user interface layer of your Project." };
@@ -82,8 +82,8 @@ namespace Advisor_Info {
                                                                   "Editor to add them to current Stage." };
     const HeaderBodyList Project_Tree           { "Project Tree", "Lists the Things contained within the currently displayed Stage. Select Things "
                                                                   "to view / adjust properties for each Thing." };
-    const HeaderBodyList World_Map              { "World Map", "Shows project Worlds and User Interfaces. Allows you to control the flow of your game "
-                                                               "between Worlds and UIs." };
+    const HeaderBodyList World_Graph            { "World Graph", "Shows project Worlds and User Interfaces. Allows you to control the flow of your game "
+                                                                 "between Worlds and UIs." };
 
     // Form Main Widgets
     const HeaderBodyList ColorButton            { "Color Button", "Click this to open a color popup that has a convenient color selection." };

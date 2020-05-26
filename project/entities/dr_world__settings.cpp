@@ -56,7 +56,7 @@ void DrWorld::initializeWorldPhysics2D(std::string new_name) {
                            "Deletion Threshold", "Distance (in World units) away from active camera that Things are removed from the World. Keeps game "
                                                  "running smoothly.");
 
-    // Holds connections for Node Map / UI Loading
+    // Holds connection interconnecting Worlds with UIs, shown in World Node Graph
     addComponent(Comps::World_Connections, "World Connections", "Connections for this World.", Component_Colors::RGB_08_SeaFoam, true);
     getComponent(Comps::World_Connections)->setIcon(Component_Icons::World);
 

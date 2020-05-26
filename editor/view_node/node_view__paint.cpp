@@ -12,9 +12,9 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/settings/settings_component.h"
@@ -24,13 +24,13 @@
 //####################################################################################
 //##    DrawBackground / DrawForground, called before and after paintEvent
 //####################################################################################
-void NodeMapView::drawBackground(QPainter *painter, const QRectF &rect) {
+void NodeView::drawBackground(QPainter *painter, const QRectF &rect) {
     (void) rect;
 
     paintGrid(*painter);
 }
 
-void NodeMapView::drawForeground(QPainter *painter, const QRectF &rect) {
+void NodeView::drawForeground(QPainter *painter, const QRectF &rect) {
     (void) painter;
     (void) rect;
 
@@ -38,9 +38,9 @@ void NodeMapView::drawForeground(QPainter *painter, const QRectF &rect) {
 
 
 //####################################################################################
-//##    PAINT: Main Paint Event for QGraphicsView (NodeMapView)
+//##    PAINT: Main Paint Event for QGraphicsView (NodeView)
 //####################################################################################
-void NodeMapView::paintEvent(QPaintEvent *event) {
+void NodeView::paintEvent(QPaintEvent *event) {
     // ***** Pass on event to parent class paint items into scene
     QGraphicsView::paintEvent(event);
 
@@ -62,15 +62,15 @@ void NodeMapView::paintEvent(QPaintEvent *event) {
 //####################################################################################
 //##    PAINT: Draws grid lines
 //####################################################################################
-void NodeMapView::paintGrid(QPainter &painter) {
-    // Save current World Map view settings
+void NodeView::paintGrid(QPainter &painter) {
+    // Save current World Graph view settings
     if (my_scene && my_scene->needRebuild() == false) {
-        if (m_editor_relay->getEditorMode() == Editor_Mode::World_Map && Dr::CheckDoneLoading()) {
+        if (m_editor_relay->getEditorMode() == Editor_Mode::World_Graph && Dr::CheckDoneLoading()) {
             QRect   viewport_rect(0, 0, this->viewport()->width(), this->viewport()->height());
             QRectF  visible_scene_rect = this->mapToScene(viewport_rect).boundingRect();
             QPointF center_point = visible_scene_rect.center();
-            m_project->setOption(Project_Options::World_Map_Center,   DrPointF(center_point.x(), center_point.y()));
-            m_project->setOption(Project_Options::World_Map_Zoom,     m_zoom_scale);
+            m_project->setOption(Project_Options::World_Graph_Center,   DrPointF(center_point.x(), center_point.y()));
+            m_project->setOption(Project_Options::World_Graph_Zoom,     m_zoom_scale);
         }
     }
 
@@ -113,7 +113,7 @@ void NodeMapView::paintGrid(QPainter &painter) {
 //####################################################################################
 //##    PAINT: Draws Node Lines
 //####################################################################################
-void NodeMapView::paintNodeLines(QPainter &painter) {
+void NodeView::paintNodeLines(QPainter &painter) {
     // ***** Turn on anti aliasing if necessary
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor)) {
         painter.setRenderHint(QPainter::Antialiasing, true);
@@ -123,8 +123,8 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
     if (my_scene == nullptr) return;
 
     // **** Get Items, make sure they have DrComponents
-    QList<NodeMapItem*> map_items;
-    for (auto map_item : my_scene->nodeMapItems()) {
+    QList<NodeItem*> map_items;
+    for (auto map_item : my_scene->nodeItems()) {
         if (map_item->getComponent() == nullptr) continue;
         map_items.push_back(map_item);
     }
@@ -152,7 +152,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
         }
         // Highlight mouse over slot
         if (should_draw) {
-            NodeMapItem *mouse_item = NodeMapScene::nodeMapItemWithKey(map_items, m_last_mouse_slot->getParentSettings()->getKey());
+            NodeItem *mouse_item = NodeScene::nodeItemWithKey(map_items, m_last_mouse_slot->getParentSettings()->getKey());
             if (mouse_item != nullptr) {
                 QRectF scene_rect = mouse_item->slotSceneRect(m_last_mouse_slot);
                        scene_rect.adjust(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce);
@@ -178,11 +178,11 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
             for (auto connection : slot->connections()) {
 
                 // Find signal (input) slot to connect to
-                NodeMapItem *connected = NodeMapScene::nodeMapItemWithKey(map_items, connection.connected_entity_key);
-                          if (connected == nullptr) continue;
-                DrComponent  *connected_component = connected->getComponent();
-                          if (connected_component == nullptr) continue;
-                DrSlot       *connected_slot = nullptr;
+                NodeItem *connected = NodeScene::nodeItemWithKey(map_items, connection.connected_entity_key);
+                           if (connected == nullptr) continue;
+                DrComponent   *connected_component = connected->getComponent();
+                           if (connected_component == nullptr) continue;
+                DrSlot        *connected_slot = nullptr;
                 int slot_number_to_connect_to = 0;
                 for (auto &signal_pair : connected_component->getSignalMap()) {
                     if (signal_pair.second->getSlotKey() == connection.connected_signal_key) {
@@ -215,7 +215,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
     if (m_view_mode == View_Mode::Node_Connect) {
         // Find start slot scene position
         QPointF slot_point(0, 0);
-        NodeMapItem *connected = NodeMapScene::nodeMapItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
+        NodeItem *connected = NodeScene::nodeItemWithKey(map_items, m_slot_start->getParentSettings()->getKey());
         if (connected != nullptr) {
             slot_point = mapFromScene( connected->slotSceneRect(m_slot_start).center() );
 
@@ -242,7 +242,7 @@ void NodeMapView::paintNodeLines(QPainter &painter) {
 //##    Cubic Bezier Curve Control Points
 //##        Calculations are designed for left to right node lines
 //####################################################################################
-std::pair<QPointF, QPointF> NodeMapView::pointsC1C2(QPointF in, QPointF out) {
+std::pair<QPointF, QPointF> NodeView::pointsC1C2(QPointF in, QPointF out) {
 
     const double c_min_offset = 150 * m_zoom_scale;
 
@@ -287,7 +287,7 @@ std::pair<QPointF, QPointF> NodeMapView::pointsC1C2(QPointF in, QPointF out) {
 //####################################################################################
 //##    PAINT: Draws Node Lines
 //####################################################################################
-void NodeMapView::paintCubicCurve(QPainter &painter, QPen &line_pen, QPointF point_in, QPointF point_out, bool paint_dots) {
+void NodeView::paintCubicCurve(QPainter &painter, QPen &line_pen, QPointF point_in, QPointF point_out, bool paint_dots) {
     // Calculate Cubic Bezier Curve
     painter.setPen(line_pen);
     painter.setBrush(Qt::NoBrush);

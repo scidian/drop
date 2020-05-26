@@ -4,11 +4,13 @@
 //  File:
 //      FormMain - Class that holds our main form window
 //
-//      FormMain Modes:                         Handle / Nickname
-//          World Map: World / UI Layout            World Map
-//          World Editor                            World Editor
-//          UI Editor                               UI Editor
-//          Stage Map: Stage Layout
+//      FormMain Modes:
+//          World Graph         (World / UI Layout)
+//          World Creator       (2D Physics World)
+//          UI    Creator
+//          Sound Creator
+//      Future:
+//          Stage Graph?        (2D Physics World Stage Layout)
 //
 //      Main Components of FormMain while in normal "World Editor" mode:
 //          Tool Bar
@@ -17,7 +19,7 @@
 //
 //          Components That Have Items that Can Appear in Inspector:
 //              Asset List
-//              Scene View
+//              View (Editor / Graph / Sound)
 //                  Status Bar
 //              Project Tree
 //              Variable List
@@ -48,8 +50,10 @@ class DrProject;
 class EditorScene;
 class EditorView;
 class FormPopup;
-class NodeMapScene;
-class NodeMapView;
+class MixerScene;
+class MixerView;
+class NodeScene;
+class NodeView;
 class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
@@ -132,11 +136,11 @@ private:
     QLabel                  *labelBottom;
 
 
-    // ***** "WorldMap" Widgets
-    QWidget         *widgetCentralWorldMap;
-    NodeMapScene        *sceneWorldMap;
-    NodeMapView         *viewWorldMap;
-    ViewToolbar         *toolbarWorldMap;
+    // ***** "World Graph" Widgets
+    QWidget         *widgetCentralWorldGraph;
+    NodeScene           *sceneWorldGraph;
+    NodeView            *viewWorldGraph;
+    ViewToolbar         *toolbarWorldGraph;
 
 
 public:
@@ -158,8 +162,19 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
     virtual TreeInspector*      getInspector() override     { return treeInspector; }
     virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
-    virtual EditorView*         getViewEditor() override    { return viewEditor; }
-    virtual NodeMapView*        getViewNodeMap() override   { return viewWorldMap; }
+
+    virtual EditorView*         getViewEditor() override    {
+        if (getEditorMode() == Editor_Mode::World_Editor) return viewEditor;
+        return nullptr;
+    }
+    virtual MixerView*          getViewMixer() override     {
+        if (getEditorMode() == Editor_Mode::Sound_Creator) return nullptr;
+        return nullptr;
+    }
+    virtual NodeView*           getViewNode() override      {
+        if (getEditorMode() == Editor_Mode::World_Graph) return viewWorldGraph;
+        return nullptr;
+    }
 
     virtual Editor_Mode         getEditorMode() override;
     virtual void                setEditorMode(Editor_Mode new_mode) override;
@@ -199,7 +214,7 @@ private:
     void            buildToolBar();
     void            buildCentralWidgetClear();
     void            buildCentralWidgetEditor();
-    void            buildCentralWidgetWorldMap();
+    void            buildCentralWidgetWorldGraph();
     void            changePalette(Color_Scheme new_color_scheme);
     QLabel*         createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
     void            initializeFormMain();

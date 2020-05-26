@@ -12,9 +12,9 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 
@@ -22,7 +22,7 @@
 //####################################################################################
 //##    Item Change Event - Allows for auto updating on property changes
 //####################################################################################
-QVariant NodeMapItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value) {
 
     // If havent implicitly turned on changes, do not process
     if (m_item_change_flags_enabled == false)   return QGraphicsPixmapItem::itemChange(change, value);

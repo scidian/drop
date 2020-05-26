@@ -12,9 +12,9 @@
 
 #include "core/dr_debug.h"
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings_component_slot.h"
@@ -26,12 +26,12 @@
 //##
 //####################################################################################
 // Forwards a double click to mouse down
-void NodeMapView::mouseDoubleClickEvent(QMouseEvent *event) {
+void NodeView::mouseDoubleClickEvent(QMouseEvent *event) {
     m_wants_double_click = true;
     mousePressEvent(event);
 }
 
-void NodeMapView::mousePressEvent(QMouseEvent *event) {
+void NodeView::mousePressEvent(QMouseEvent *event) {
     // ***** Test for GraphicsScene
     if (scene() == nullptr) return;
 
@@ -119,7 +119,7 @@ void NodeMapView::mousePressEvent(QMouseEvent *event) {
 
                         // ***** Process press event for item movement (Translation)                        
                         if (origin_item_settings->isLocked() == false) {
-                            NodeMapItem *graphics_item = dynamic_cast<NodeMapItem*>(m_origin_item);
+                            NodeItem *graphics_item = dynamic_cast<NodeItem*>(m_origin_item);
 
                             // Mouse down on Slot Circle
                             if (graphics_item != nullptr) {

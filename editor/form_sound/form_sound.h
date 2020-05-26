@@ -56,7 +56,8 @@ private:
     QWidget            *m_inner_widget;                                     // Container widget, allows for a double form border
 
     VisualFrame        *m_visualizer;                                       // Widget that displays visualizer for current sounds playing
-    QElapsedTimer       m_play_time;                                        // Tracks when sound was last still playing
+    QTimer             *m_visual_timer;                                     // Event timer that calls update for visualizer
+    QElapsedTimer       m_last_play_time;                                   // Tracks when sound was last still playing
 
     QListWidget        *m_list;                                             // Holds recently played sounds
 

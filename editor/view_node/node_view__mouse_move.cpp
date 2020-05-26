@@ -13,9 +13,9 @@
 #include "core/dr_string.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/dr_project.h"
 
 
@@ -32,7 +32,7 @@ namespace Mouse_Cursors_Map {
 //##    Mouse Moved
 //##
 //####################################################################################
-void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
+void NodeView::mouseMoveEvent(QMouseEvent *event) {
     // Test for GraphicsScene
     if (scene() == nullptr) return;
 
@@ -68,7 +68,7 @@ void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
         DrSettings *settings = m_project->findSettingsFromKey(item_key);
         if (settings != nullptr) {
             if (settings->isLocked() == false) {
-                NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);
+                NodeItem *map_item = dynamic_cast<NodeItem*>(item);
                 if (map_item != nullptr) {
                     last_mouse_item = item;
                     m_last_mouse_slot = map_item->slotAtPoint( mapToScene(m_last_mouse_pos) );
@@ -102,7 +102,7 @@ void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
             if (m_over_handle == Position_Flags::No_Position && scene()->selectedItems().contains(last_mouse_item)) {
                 // If over Node, check that we're not over a slot circle
                 bool point_over_slot = false;
-                NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(last_mouse_item);
+                NodeItem *map_item = dynamic_cast<NodeItem*>(last_mouse_item);
                 if (map_item != nullptr) {
                     QPointF scene_point = this->mapToScene(m_last_mouse_pos);
                     point_over_slot = map_item->slotAtPoint(scene_point);
@@ -147,8 +147,8 @@ void NodeMapView::mouseMoveEvent(QMouseEvent *event) {
                 m_editor_relay->setAdvisorInfo(header, body);
             }
         } else {
-            if (m_editor_relay->getEditorMode() == Editor_Mode::World_Map) {
-                m_editor_relay->setAdvisorInfo(Advisor_Info::World_Map);
+            if (m_editor_relay->getEditorMode() == Editor_Mode::World_Graph) {
+                m_editor_relay->setAdvisorInfo(Advisor_Info::World_Graph);
             }
         }
     }

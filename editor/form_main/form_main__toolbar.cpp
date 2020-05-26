@@ -28,7 +28,7 @@
 //####################################################################################
 void FormMain::updateToolBar() {
 
-    if (getEditorMode() == Editor_Mode::World_Map) {
+    if (getEditorMode() == Editor_Mode::World_Graph) {
         QAbstractButton *snap_grid = buttonsGroupGridSimple->button(int(Buttons_Grid::Snap_To_Grid));
         if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
 
@@ -120,7 +120,7 @@ void FormMain::clearToolBar() {
 
 void FormMain::setToolBar(Editor_Mode new_mode) {
     switch (new_mode) {
-        case Editor_Mode::World_Map:
+        case Editor_Mode::World_Graph:
             addToolBarGroup( widgetGroupGridSimple,     false );
             addToolBarGroup( widgetGroupPlay,           false );
             addToolBarGroup( widgetGroupSettings,       false );

@@ -10,8 +10,8 @@
 #include "core/dr_math.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
@@ -27,7 +27,7 @@
 //  double                  m_selection_angle;          // Angle current selection has been rotated to
 //  QPointF                 m_selection_scale;          // Scaling applied to current selection
 //  QRectF                  m_selection_box;            // Starting outline of selected items
-void NodeMapScene::selectionChanged() {
+void NodeScene::selectionChanged() {
     // Don't allow selection if locked
     unselectLockedItems();
 
@@ -51,7 +51,7 @@ void NodeMapScene::selectionChanged() {
 //####################################################################################
 //##    Returns a scene rect containing all the selected items
 //####################################################################################
-QRectF NodeMapScene::totalSelectionSceneRect() {
+QRectF NodeScene::totalSelectionSceneRect() {
     // If no items selected, return empty rect
     QRectF total_rect;
     if (selectedItems().count() < 1) return total_rect;
@@ -69,7 +69,7 @@ QRectF NodeMapScene::totalSelectionSceneRect() {
 //####################################################################################
 //##    Selects items based on rows selected in Editor_Project_Tree
 //####################################################################################
-void NodeMapScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
+void NodeScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_list) {
     QList <long> keys;
     for (auto row : tree_list) {
         long row_key = row->data(0, User_Roles::Key).toLongLong();
@@ -82,7 +82,7 @@ void NodeMapScene::updateSelectionFromProjectTree(QList<QTreeWidgetItem*> tree_l
 //####################################################################################
 //##    Selects items based on custom Key list
 //####################################################################################
-void NodeMapScene::updateSelectionFromKeyList(QList<long> key_list) {
+void NodeScene::updateSelectionFromKeyList(QList<long> key_list) {
     // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
     blockSignals(true);
 
@@ -94,7 +94,7 @@ void NodeMapScene::updateSelectionFromKeyList(QList<long> key_list) {
 
         if (key_list.contains(item_key)) {
             ///DrSettings *entity = m_project->findSettingsFromKey(item_key);
-            NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);
+            NodeItem *map_item = dynamic_cast<NodeItem*>(item);
             if (map_item == nullptr) continue;
             DrSettings *entity = map_item->getEntity();
             if (entity == nullptr)  continue;
@@ -109,7 +109,7 @@ void NodeMapScene::updateSelectionFromKeyList(QList<long> key_list) {
 //####################################################################################
 //##    Unselects all locked items that may have been selected
 //####################################################################################
-void NodeMapScene::unselectLockedItems() {
+void NodeScene::unselectLockedItems() {
     // Turn off signals to stop recurssive calling of interface_relay->updateItemSelection()
     bool was_blocked = signalsBlocked();
     blockSignals(true);
@@ -117,7 +117,7 @@ void NodeMapScene::unselectLockedItems() {
     for (auto item : selectedItems()) {
         // Find referenced entity to check if locked
         DrSettings  *entity = nullptr;
-        NodeMapItem *map_item = dynamic_cast<NodeMapItem*>(item);
+        NodeItem *map_item = dynamic_cast<NodeItem*>(item);
         if (map_item != nullptr) entity = map_item->getEntity();
         // Another way to find reference entity, guaranteed not to access dangling pointer, but much slower
         ///long item_key = item->data(User_Roles::Key).toLongLong();

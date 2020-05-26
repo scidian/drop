@@ -22,8 +22,8 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "editor/widgets/widgets_view_toolbar.h"
 #include "editor/widgets/widgets_view.h"
 #include "engine/debug_flags.h"
@@ -52,53 +52,53 @@ void FormMain::buildCentralWidgetClear() {
 //####################################################################################
 //##    Builds Widgets used for FormMainMode "World Editor"
 //####################################################################################
-void FormMain::buildCentralWidgetWorldMap() {
+void FormMain::buildCentralWidgetWorldGraph() {
     QSizePolicy sizePolicyPreferredHorizontal(  QSizePolicy::Preferred,         QSizePolicy::Preferred);
     sizePolicyPreferredHorizontal.setHorizontalStretch(1);      sizePolicyPreferredHorizontal.setVerticalStretch(0);
 
     // ***** Initialize scene used for showing stages Editor_Mode::World_Editor viewEditor widget
-    sceneWorldMap = new NodeMapScene(this, m_project, this);
+    sceneWorldGraph = new NodeScene(this, m_project, this);
 
     // ***** Build central widgets
-    widgetCentralWorldMap = new QWidget();
-    widgetCentralWorldMap->setObjectName(QStringLiteral("widgetCentralWorldMap"));
-    widgetCentralWorldMap->setSizePolicy(sizePolicyPreferredHorizontal);
-        QVBoxLayout *verticalLayoutWorldMap = new QVBoxLayout(widgetCentralWorldMap);
-        verticalLayoutWorldMap->setSpacing(0);
-        verticalLayoutWorldMap->setObjectName(QStringLiteral("verticalLayoutWorldMap"));
+    widgetCentralWorldGraph = new QWidget();
+    widgetCentralWorldGraph->setObjectName(QStringLiteral("widgetCentralWorldGraph"));
+    widgetCentralWorldGraph->setSizePolicy(sizePolicyPreferredHorizontal);
+        QVBoxLayout *verticalLayoutWorldGraph = new QVBoxLayout(widgetCentralWorldGraph);
+        verticalLayoutWorldGraph->setSpacing(0);
+        verticalLayoutWorldGraph->setObjectName(QStringLiteral("verticalLayoutWorldGraph"));
         // This sets the border with for the main view area between middle and docks
-        verticalLayoutWorldMap->setContentsMargins(0, 0, 0, 0);
+        verticalLayoutWorldGraph->setContentsMargins(0, 0, 0, 0);
 
         // ***** Load our EditorView to display our EditorScene collection of items
-        viewWorldMap = new NodeMapView(widgetCentralWorldMap, m_project, sceneWorldMap, this);
-        viewWorldMap->setObjectName(QStringLiteral("viewWorldMap"));
-        viewWorldMap->setAcceptDrops(true);
-        viewWorldMap->setFrameShape(QFrame::NoFrame);
-        viewWorldMap->setDragMode(QGraphicsView::DragMode::NoDrag);
-        viewWorldMap->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-        viewWorldMap->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
-        viewWorldMap->zoomInOut( 0 );
+        viewWorldGraph = new NodeView(widgetCentralWorldGraph, m_project, sceneWorldGraph, this);
+        viewWorldGraph->setObjectName(QStringLiteral("viewWorldGraph"));
+        viewWorldGraph->setAcceptDrops(true);
+        viewWorldGraph->setFrameShape(QFrame::NoFrame);
+        viewWorldGraph->setDragMode(QGraphicsView::DragMode::NoDrag);
+        viewWorldGraph->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
+        viewWorldGraph->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
+        viewWorldGraph->zoomInOut( 0 );
 
         ///// This setting means we will decide when to call update(), controls recurssive paint events
-        ///viewWorldMap->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-        viewWorldMap->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
+        ///viewWorldGraph->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
+        viewWorldGraph->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
         if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
-            viewWorldMap->setRenderHint(QPainter::Antialiasing, false);
+            viewWorldGraph->setRenderHint(QPainter::Antialiasing, false);
         else
-            viewWorldMap->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+            viewWorldGraph->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
         if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
             QOpenGLWidget *gl_widget = new QOpenGLWidget();
             gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
-            viewWorldMap->setViewport(gl_widget);
+            viewWorldGraph->setViewport(gl_widget);
         }
 
-        // ***** ToolBar above World Map
-        toolbarWorldMap = new ViewToolbar(widgetCentralWorldMap, m_project, this, Editor_Mode::World_Map, nullptr, viewWorldMap);
+        // ***** ToolBar above World Graph
+        toolbarWorldGraph = new ViewToolbar(widgetCentralWorldGraph, m_project, this, Editor_Mode::World_Graph, nullptr, viewWorldGraph);
 
-    verticalLayoutWorldMap->addWidget(toolbarWorldMap);
-    verticalLayoutWorldMap->addWidget(viewWorldMap);
+    verticalLayoutWorldGraph->addWidget(toolbarWorldGraph);
+    verticalLayoutWorldGraph->addWidget(viewWorldGraph);
 
 }
 

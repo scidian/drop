@@ -22,7 +22,7 @@
 #include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_view.h"
 #include "editor/widgets/widgets_view.h"
 #include "editor/widgets/widgets_inspector.h"
 #include "editor/widgets/widgets_view_toolbar.h"

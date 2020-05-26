@@ -24,8 +24,8 @@
 #include "editor/trees/tree_project.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -60,7 +60,7 @@ void FormMain::initializeFormMain() {
 
     buildCentralWidgetClear();
     buildCentralWidgetEditor();
-    buildCentralWidgetWorldMap();
+    buildCentralWidgetWorldGraph();
 
     // Build Docks
     dockAdvisor =       Dr::BuildDockAdvisor(   m_project, this, treeAdvisor);
@@ -86,8 +86,8 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {
         clearToolBar();
         switch (old_mode) {
-            case Editor_Mode::World_Map:
-                widgetCentralWorldMap = takeCentralWidget();
+            case Editor_Mode::World_Graph:
+                widgetCentralWorldGraph = takeCentralWidget();
                 buildInspector( { } );
                 dockAssetsEditor->hide();
                 break;
@@ -112,10 +112,10 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
 
     // ***** Set New Layout *****
     switch (new_mode) {
-        case Editor_Mode::World_Map:
-            sceneWorldMap->clearSceneOverride();
+        case Editor_Mode::World_Graph:
+            sceneWorldGraph->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
-            setCentralWidget( widgetCentralWorldMap );
+            setCentralWidget( widgetCentralWorldGraph );
             dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
             treeAssetEditor->setShowTypes({ DrType::Block });
             buildAssetTree();

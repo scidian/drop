@@ -9,9 +9,9 @@
 
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
 #include "project/settings/settings.h"
@@ -20,7 +20,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-NodeMapScene::NodeMapScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, long node_map_entity)
+NodeScene::NodeScene(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, long node_map_entity)
     : QGraphicsScene(parent), m_project(project), m_editor_relay(editor_relay), m_node_map_entity(node_map_entity) {
 
     connect(this, SIGNAL(changed(QList<QRectF>)),   this, SLOT(sceneChanged(QList<QRectF>)));
@@ -28,10 +28,10 @@ NodeMapScene::NodeMapScene(QWidget *parent, DrProject *project, IEditorRelay *ed
 
 }
 
-NodeMapScene::~NodeMapScene() { }
+NodeScene::~NodeScene() { }
 
-void NodeMapScene::clearSceneOverride() {
-    emit aboutToClear();                                // NodeMapView::sceneIsAboutToClear() is connected to this signal, prevents dangling pointers
+void NodeScene::clearSceneOverride() {
+    emit aboutToClear();                                // NodeView::sceneIsAboutToClear() is connected to this signal, prevents dangling pointers
     this->setNeedRebuild(true);
     this->clear();
 }
@@ -41,7 +41,7 @@ void NodeMapScene::clearSceneOverride() {
 //##    SLOT's: sceneRectChanged, sceneChanged
 //####################################################################################
 // Connected from SIGNAL: QGraphicsScene::changed
-void NodeMapScene::sceneChanged(QList<QRectF>) {
+void NodeScene::sceneChanged(QList<QRectF>) {
     QRectF my_rect = sceneRect();
     QRectF items_rect = itemsBoundingRect();
     double buffer = 5000;
@@ -65,7 +65,7 @@ void NodeMapScene::sceneChanged(QList<QRectF>) {
 //####################################################################################
 //##    setPositionByOrigin - Sets item to new_x, new_y position in scene, offset by_origin point
 //####################################################################################
-void NodeMapScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y) {
+void NodeScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_origin, double new_x, double new_y) {
     item->setPos(new_x, new_y);
 
     QRectF      item_rect = item->boundingRect();
@@ -89,7 +89,7 @@ void NodeMapScene::setPositionByOrigin(QGraphicsItem *item, Position_Flags by_or
     setPositionByOrigin(item, item_pos, new_x, new_y);
 }
 
-void NodeMapScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y) {
+void NodeScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point, double new_x, double new_y) {
     QPointF new_pos;
     double  x_diff = origin_point.x() - new_x;
     double  y_diff = origin_point.y() - new_y;
@@ -101,23 +101,23 @@ void NodeMapScene::setPositionByOrigin(QGraphicsItem *item, QPointF origin_point
 
 
 //####################################################################################
-//##    Return scene()->items() as list of NodeMapItem pointers
+//##    Return scene()->items() as list of NodeItem pointers
 //####################################################################################
-QList<NodeMapItem*> NodeMapScene::nodeMapItems() {
-    QList<NodeMapItem*> world_items;
+QList<NodeItem*> NodeScene::nodeItems() {
+    QList<NodeItem*> world_items;
     world_items.clear();
 
     for (auto item : items()) {
-        NodeMapItem *world_item = dynamic_cast<NodeMapItem*>(item);
+        NodeItem *world_item = dynamic_cast<NodeItem*>(item);
         if (world_item != nullptr) world_items.push_back(world_item);
     }
     return world_items;
 }
 
 //####################################################################################
-//##    Returns NodeMapItem from list with the designated key
+//##    Returns NodeItem from list with the designated key
 //####################################################################################
-NodeMapItem* NodeMapScene::nodeMapItemWithKey(QList<NodeMapItem*> &world_items, long entity_key) {
+NodeItem* NodeScene::nodeItemWithKey(QList<NodeItem*> &world_items, long entity_key) {
     if (entity_key == c_no_key) return nullptr;
     for (auto world_item : world_items) {
         if (world_item->getEntity()->getKey() == entity_key) return world_item;

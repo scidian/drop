@@ -51,8 +51,8 @@ private:
     std::string         m_icon                      { "" };                             // Icon string
     DrColor             m_color                     { DrColor(128, 128, 128, 255) };    // Object Inspector / Node Box header color
     bool                m_is_hidden                 { false };                          // Should this Component be hidden from Object Insepctor?
-    DrPointF            m_node_position             { 0, 0 };                           // Node Map position of this Component
-    DrPointF            m_node_size                 { 0, 0 };                           // Node Map size of this Component
+    DrPointF            m_node_position             { 0, 0 };                           // Node Graph position of this Component
+    DrPointF            m_node_size                 { 0, 0 };                           // Node Graph size of this Component
 
 
     // For now this is not saved, assigned during creation in DrStage::addComponent()

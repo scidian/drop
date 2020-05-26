@@ -28,8 +28,8 @@ enum class Project_Options {        //  Type    User Editable   Description
     Width               = 31,       // long,    yes             This Projects target device window width,  usually 800
     Height              = 32,       // long,    yes             This Projects target device window height, usually 1600
 
-    World_Map_Center    = 40,       // pointf,  no              Saves center location of World Map view
-    World_Map_Zoom      = 41,       // double,  no              Saves zoom level of World Map view
+    World_Graph_Center  = 40,       // pointf,  no              Saves center location of World Graph view
+    World_Graph_Zoom    = 41,       // double,  no              Saves zoom level of World Graph view
 };
 
 enum class Orientation {
@@ -85,9 +85,9 @@ public:
     // #################### VARIABLES ####################
 private:
     // Usage Variables
-    bool            m_has_saved         { false };                  // If project is edited at all, turns to false until user saves
-    bool            m_test_only         { false };                  // For debugging purposes, stops Drop from asking to save when exiting
-    bool            m_map_shown         { false };                  // When a new project is loaded, this flag tells World Map to recenter the first time it is shown
+    bool            m_has_saved             { false };              // If project is edited at all, turns to false until user saves
+    bool            m_test_only             { false };              // For debugging purposes, stops Drop from asking to save when exiting
+    bool            m_world_graph_shown     { false };              // When a new project is loaded, this flag tells World Graph to recenter the first time it is shown
 
     // Project Variables
     long            m_key_generator     { c_starting_key_entity };  // Variable to hand out unique id key's to all children entities
@@ -108,8 +108,8 @@ private:
     ImageMap        m_images;                                       // Holds DrImages       (for use in DrFrames, loaded into DrEngineTextures)
     SoundMap        m_sounds;                                       // Holds DrSounds       (hold sound files / effects)
 
-    // World Map Items
-    BlockMap        m_blocks;                                       // Holds DrBlocks       (used as building blocks for World Map nodes)
+    // World Graph Items
+    BlockMap        m_blocks;                                       // Holds DrBlocks       (used as building blocks for World Graph nodes)
 
     // Physics World 2D Items
     AssetMap        m_assets;                                       // Holds DrAssets       (used as building blocks for DrThings)
@@ -127,12 +127,12 @@ public:
     // #################### INTERNAL FUNCTIONS ####################
 public:
     // Local Variable Functions
-    bool        hasSaved()                  { return m_has_saved; }
-    bool        isTestOnly()                { return m_test_only; }
-    bool        mapShown()                  { return m_map_shown; }
-    void        setHasSaved(bool saved)     { m_has_saved = saved; }
-    void        setIsTestOnly(bool test)    { m_test_only = test; }
-    void        setMapShown(bool loaded)    { m_map_shown = loaded; }
+    bool        hasSaved()                          { return m_has_saved; }
+    bool        isTestOnly()                        { return m_test_only; }
+    bool        worldGraphShown()                   { return m_world_graph_shown; }
+    void        setHasSaved(bool saved)             { m_has_saved = saved; }
+    void        setIsTestOnly(bool test)            { m_test_only = test; }
+    void        setWorldGraphShown(bool loaded)     { m_world_graph_shown = loaded; }
 
 
     // Entity Key Generator
@@ -170,7 +170,7 @@ public:
     long            getNumberOfPrefabs()    { return static_cast<long>(m_prefabs.size()); }
     long            getNumberOfSounds()     { return static_cast<long>(m_sounds.size()); }
     std::set<long>  getImageKeysUsedByProject();
-    DrPointF        getNewWorldMapPosition();
+    DrPointF        getNewWorldGraphPosition();
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
     DrType          findChildTypeFromKey(long check_key);

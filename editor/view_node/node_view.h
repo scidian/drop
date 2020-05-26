@@ -17,7 +17,7 @@
 // Forward Declarations
 class DrProject;
 class IEditorRelay;
-class NodeMapScene;
+class NodeScene;
 class ViewRubberBand;
 
 // Local Constants
@@ -25,10 +25,10 @@ const   double      c_node_grid_size             = 16;
 
 
 //####################################################################################
-//##    NodeMapView
-//##        A sub classed QGraphicsView to show our QGraphicsScene (NodeMapScene)
+//##    NodeView
+//##        A sub classed QGraphicsView to show our QGraphicsScene (NodeScene)
 //############################
-class NodeMapView : public QGraphicsView
+class NodeView : public QGraphicsView
 {
     Q_OBJECT
 
@@ -37,7 +37,7 @@ private:
     DrProject              *m_project;                                      // Pointer to currently loaded Project
     IEditorRelay           *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
-    NodeMapScene           *my_scene            { nullptr };                // Holds the scene() this view is set to as a NodeMapScene class
+    NodeScene              *my_scene            { nullptr };                // Holds the scene() this view is set to as a NodeScene class
 
     // Local Variables
     Mouse_Mode              m_mouse_mode        { Mouse_Mode::Pointer };    // Tracks current view mouse mode
@@ -55,7 +55,7 @@ private:
     QPointF                 m_grid_scale        { 1, 1 };                               // X and Y scaling for after grid has been rotated
     double                  m_grid_rotate       { 0 };                                  // Rotation of grid lines
     QColor                  m_grid_color;                                               // Grid color
-    QColor                  m_back_color        { Qt::black };                          // World Map background color
+    QColor                  m_back_color        { Qt::black };                          // Node Graph background color
     bool                    m_grid_should_snap  { true };                               // Should snap to grid?
 
     // Keyboard Flags
@@ -91,8 +91,8 @@ private:
 
 public:
     // Constructor / Destructor
-    explicit NodeMapView(QWidget *parent, DrProject *project, NodeMapScene *scene, IEditorRelay *editor_relay);
-    virtual ~NodeMapView() override;
+    explicit NodeView(QWidget *parent, DrProject *project, NodeScene *scene, IEditorRelay *editor_relay);
+    virtual ~NodeView() override;
 
     // Event Overrides - Paint
     virtual void    drawBackground(QPainter *painter, const QRectF &rect) override;

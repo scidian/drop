@@ -16,9 +16,9 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -29,10 +29,10 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-NodeMapItem::NodeMapItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *component) {
+NodeItem::NodeItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *component) {
     // ***** Check for DrComponent
     if (component == nullptr) {
-        Dr::PrintDebug("Error in NodeMapItem() contructor! Argument component is nullptr!");
+        Dr::PrintDebug("Error in NodeItem() contructor! Argument component is nullptr!");
         return;
     }
 
@@ -96,20 +96,20 @@ NodeMapItem::NodeMapItem(DrProject *project, IEditorRelay *editor_relay, DrCompo
     enableItemChangeFlags();
 }
 
-NodeMapItem::~NodeMapItem() { }
+NodeItem::~NodeItem() { }
 
-void NodeMapItem::disableItemChangeFlags() {
+void NodeItem::disableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, false);
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
     m_item_change_flags_enabled = false;
 }
-void NodeMapItem::enableItemChangeFlags() {
+void NodeItem::enableItemChangeFlags() {
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsGeometryChanges, true);
     setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, true);
     m_item_change_flags_enabled = true;
 }
 
-void NodeMapItem::updateSlotRects() {
+void NodeItem::updateSlotRects() {
     int signal_count = m_component->getSignalMap().size();
     int output_count = m_component->getOutputMap().size();
     m_signal_rects.clear();
@@ -123,13 +123,13 @@ void NodeMapItem::updateSlotRects() {
 //##    Item Property Overrides
 //####################################################################################
 // Outline of entire item including paint buffer
-QRectF NodeMapItem::boundingRect() const {
+QRectF NodeItem::boundingRect() const {
     QRectF my_rect = QRectF(0, 0, m_width + c_node_buffer*2, m_height + c_node_buffer*2);
     return my_rect;
 }
 
 // Defines mouseOver events, and intersection events for Rubber Band Box
-QPainterPath NodeMapItem::shape() const {
+QPainterPath NodeItem::shape() const {
     // Add rounded rect w/ paint buffer
     QPainterPath path;
     path.addRoundedRect(boundingRect().adjusted(c_node_buffer, c_node_buffer, -c_node_buffer, -c_node_buffer), c_corner_radius, c_corner_radius);
@@ -155,7 +155,7 @@ QPainterPath NodeMapItem::shape() const {
 //##    Event Overrides
 //####################################################################################
 // Force mouse press
-void NodeMapItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void NodeItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsItem::mousePressEvent(event);
 }
 

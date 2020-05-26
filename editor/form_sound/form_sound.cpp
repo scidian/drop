@@ -53,16 +53,19 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     buildSoundForm();
 
     // ***** Center window on Parent Form and install dragging event filter
-    if (parent) Dr::CenterFormOnParent(parent->window(), this);
+    if (parent) {
+        Dr::CenterFormOnParent(parent->window(), this);
+    } else {
+        Dr::CenterFormOnScreen(parent, this);
+    }
     this->installEventFilter(new DrFilterClickAndDragWindow(this, true));
 
     // ***** Visual Timer
-    QTimer *visual_timer = new QTimer(this);
-    visual_timer->setInterval(20);
-    connect(visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
-    visual_timer->setInterval(30);
-    visual_timer->setTimerType(Qt::PreciseTimer);
-    visual_timer->start();
+    m_visual_timer = new QTimer(this);
+    m_visual_timer->setInterval(20);
+    connect(m_visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
+    m_visual_timer->setInterval(25);
+    m_visual_timer->setTimerType(Qt::PreciseTimer);
 }
 
 FormSound::~FormSound() {
@@ -87,11 +90,13 @@ void FormSound::resizeEvent(QResizeEvent *event) {
 // Visualizer
 void FormSound::drawVisuals() {
     if (m_so_loud->getActiveVoiceCount() > 0) {
-        m_play_time.restart();
+        m_last_play_time.restart();
     }
+    m_visualizer->update();
 
-    if (m_play_time.elapsed() < 100) {
-        m_visualizer->update();
+    if (m_last_play_time.elapsed() > 350) {
+        m_visualizer->repaint();
+        m_visual_timer->stop();
     }
 }
 

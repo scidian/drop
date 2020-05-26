@@ -11,10 +11,10 @@
 
 
 //####################################################################################
-//##    World Node Functions
+//##    World Graph Node Functions
 //####################################################################################
-// Finds a location for an additional World in the Node World Map
-DrPointF DrProject::getNewWorldMapPosition() {
+// Finds a location for an additional World in the World Graph
+DrPointF DrProject::getNewWorldGraphPosition() {
     double left = 0, right = 0, top = 0, bottom = 0;
 
     for (auto &world_pair : getWorldMap()) {

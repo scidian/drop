@@ -30,7 +30,8 @@ class TreeInspector;
 class TreeProject;
 
 class EditorView;
-class NodeMapView;
+class MixerView;
+class NodeView;
 
 
 //####################################################################################
@@ -52,8 +53,10 @@ public:
     virtual TreeAssets*         getAssetTree() = 0;
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
+
     virtual EditorView*         getViewEditor() = 0;
-    virtual NodeMapView*        getViewNodeMap() = 0;
+    virtual MixerView*          getViewMixer() = 0;
+    virtual NodeView*           getViewNode() = 0;
 
     // Local Getter / Setters
     Editor_Widgets              getActiveWidget() { return m_active_widget; }

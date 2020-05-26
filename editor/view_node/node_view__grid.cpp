@@ -11,16 +11,16 @@
 #include "core/dr_math.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "project/constants_comps_and_props.h"
 
 
 //####################################################################################
 //##    Updates grid based on current stage shown, recalculates points and lines
 //####################################################################################
-void NodeMapView::updateGrid() {
+void NodeView::updateGrid() {
     if (scene() == nullptr) return;
 
     // Update Grid Properties
@@ -56,7 +56,7 @@ void NodeMapView::updateGrid() {
 //####################################################################################
 //##    Rounds point in scene to nearest point aligned to grid
 //####################################################################################
-QPointF NodeMapView::roundToGrid(QPointF point_in_scene) {
+QPointF NodeView::roundToGrid(QPointF point_in_scene) {
     // ***** Align new desired center to grid
     QTransform  remove_angle =      QTransform().rotate(-m_grid_rotate);
     QTransform  add_angle =         QTransform().rotate( m_grid_rotate);

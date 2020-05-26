@@ -15,9 +15,9 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/preferences.h"
-#include "editor/view_node_map/node_map_item.h"
-#include "editor/view_node_map/node_map_scene.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_item.h"
+#include "editor/view_node/node_scene.h"
+#include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
 #include "project/constants_component_info.h"
 #include "project/dr_project.h"
@@ -30,7 +30,7 @@
 //##    Returns Slot Circle Rect for a particular slot
 //####################################################################################
 // Calculates Slot rect by slot number, slot_number should start at 0
-QRectF NodeMapItem::slotRect(DrSlotType slot_type, int slot_number) {
+QRectF NodeItem::slotRect(DrSlotType slot_type, int slot_number) {
     int left = 0;
     int top  = (boundingRect().top() + c_node_buffer) + (c_node_row_height * (1.5 + static_cast<double>(slot_number)));
         top -= (c_slot_size/2);
@@ -42,7 +42,7 @@ QRectF NodeMapItem::slotRect(DrSlotType slot_type, int slot_number) {
 }
 
 // Slot rect by DrSlot*
-QRectF NodeMapItem::slotRect(DrSlot *slot) {
+QRectF NodeItem::slotRect(DrSlot *slot) {
     if (slot == nullptr) return QRectF();
 
     if (slot->getSlotType() == DrSlotType::Signal) {
@@ -61,7 +61,7 @@ QRectF NodeMapItem::slotRect(DrSlot *slot) {
     return QRectF();
 }
 
-QRectF NodeMapItem::slotSceneRect(DrSlot *slot) {
+QRectF NodeItem::slotSceneRect(DrSlot *slot) {
     if (slot == nullptr) return QRectF();
     QRectF    signal_rect = this->slotRect(slot);
     QPolygonF scene_rect =  this->mapToScene(signal_rect);
@@ -72,7 +72,7 @@ QRectF NodeMapItem::slotSceneRect(DrSlot *slot) {
 //####################################################################################
 //##    Returns DrSlot that is under scene_point
 //####################################################################################
-DrSlot* NodeMapItem::slotAtPoint(QPointF scene_point) {
+DrSlot* NodeItem::slotAtPoint(QPointF scene_point) {
     int signal = 0;
     for (auto &signal_pair : m_component->getSignalMap()) {
         ///QRectF    signal_rect = this->slotRect(DrSlotType::Signal, signal);

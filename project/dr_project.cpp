@@ -39,7 +39,7 @@ DrProject::~DrProject() {
 }
 
 void DrProject::clearProject(bool add_built_in_items) {
-    m_map_shown = false;
+    m_world_graph_shown = false;
     m_test_only = false;
 
     // Clear Data Maps

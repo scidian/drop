@@ -18,7 +18,7 @@
 #include "editor/preferences.h"
 #include "editor/style/style.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/view_node_map/node_map_view.h"
+#include "editor/view_node/node_view.h"
 #include "editor/widgets/widgets_view.h"
 #include "editor/widgets/widgets_inspector.h"
 #include "editor/widgets/widgets_view_toolbar.h"
@@ -28,13 +28,13 @@
 //##    Constructor / Destructor
 //####################################################################################
 ViewToolbar::ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
-                         EditorView *view_editor, NodeMapView *view_node)
+                         EditorView *view_editor, NodeView *view_node)
     : QFrame(parent) {
 
     // Make sure we have the proper class pointer to the Editor_Mode requested
     switch (editor_mode) {
         case Editor_Mode::Component_Map:
-        case Editor_Mode::World_Map:
+        case Editor_Mode::World_Graph:
             if (view_node == nullptr)   editor_mode = Editor_Mode::Clear;
             break;
         case Editor_Mode::Animation_Editor:

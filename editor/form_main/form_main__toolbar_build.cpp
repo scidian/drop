@@ -57,7 +57,7 @@ void FormMain::buildToolBar() {
     widgetToolBarLayout->setSpacing(3);
     widgetToolBarLayout->setContentsMargins(12, 0, 12, 0);
 
-    // ***** Selectable Button group that keeps track of which mode we are in: World Map, World Editor, UI Editor
+    // ***** Selectable Button group that keeps track of which mode we are in: World Graph, World Editor, UI Editor
     widgetGroupMode = new QWidget();
     widgetGroupMode->setObjectName(QStringLiteral("widgetGroupMode"));
     widgetGroupMode->setFixedHeight(c_toolbar_height);
@@ -69,8 +69,8 @@ void FormMain::buildToolBar() {
         buttonsGroupMode->setExclusive(true);
         connect(buttonsGroupMode, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
 
-        tool = createToolBarButton(QStringLiteral("buttonModeWorldMap"), Advisor_Info::Mode_Map, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Editor_Mode::World_Map));
+        tool = createToolBarButton(QStringLiteral("buttonModeWorldGraph"), Advisor_Info::Mode_Map, c_button_size_w + 4, c_button_size_h + 6, true);
+        buttonsGroupMode->addButton(tool, int(Editor_Mode::World_Graph));
         toolbarLayoutMode->addWidget(tool);
         toolbarLayoutMode->addWidget(createToolBarSpacer(c_button_size_h - 2));
 
@@ -82,6 +82,15 @@ void FormMain::buildToolBar() {
         tool = createToolBarButton(QStringLiteral("buttonModeUIEdit"), Advisor_Info::Mode_UI, c_button_size_w + 4, c_button_size_h + 6, true);
         buttonsGroupMode->addButton(tool, int(Editor_Mode::UI_Editor));
         toolbarLayoutMode->addWidget(tool);
+
+
+//        tool = createToolBarButton(QStringLiteral("buttonSoundFiles"), Advisor_Info::Settings_Sound_Files, c_button_size_w, c_button_size_h, false);
+//        toolbarLayoutSettings->addWidget(tool);
+//        connect(tool, &QPushButton::clicked, [this] () {
+//            FormSound *sound_files = new FormSound(m_project, this);
+//            sound_files->show();
+//        });
+
 
 
     // ***** Mode "Editor" Add-On, Edit: Holds Add , Delete, future Cut / Copy / Paste
@@ -207,7 +216,7 @@ void FormMain::buildToolBar() {
         buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Snap_Options));
         toolbarLayoutGridFull->addWidget(tool);
 
-    // ***** Mode "World Map" Add-On, Grid: Holds button that controls Snap to Grid
+    // ***** Mode "World Graph" Add-On, Grid: Holds button that controls Snap to Grid
     widgetGroupGridSimple = new QWidget(widgetToolBar);
     widgetGroupGridSimple->hide();
     widgetGroupGridSimple->setObjectName(QStringLiteral("widgetGroupGridSimple"));
@@ -298,13 +307,6 @@ void FormMain::buildToolBar() {
             ///blank_form->show();
             FormFonts *font_editor = new FormFonts(m_project, this);
             font_editor->show();
-        });
-
-        tool = createToolBarButton(QStringLiteral("buttonSoundFiles"), Advisor_Info::Settings_Sound_Files, c_button_size_w, c_button_size_h, false);
-        toolbarLayoutSettings->addWidget(tool);
-        connect(tool, &QPushButton::clicked, [this] () {
-            FormSound *sound_files = new FormSound(m_project, this);
-            sound_files->show();
         });
 
         tool = createToolBarButton(QStringLiteral("buttonSettingsEditor"), Advisor_Info::Settings_Manager, c_button_size_w, c_button_size_h, false);
