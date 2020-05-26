@@ -21,12 +21,36 @@
 #include "project/settings/settings_component_property.h"
 
 
+
+//####################################################################################
+//##    DrFilterClick Class Functions
+//####################################################################################
+DrFilterClick::DrFilterClick(QObject *parent) : QObject(parent) { m_timer.restart(); }
+DrFilterClick::~DrFilterClick() { }
+
+bool DrFilterClick::eventFilter(QObject *obj, QEvent *event) {
+    // When mouse button pressed, start a timer. If button is released within 500 milliseconds, emit a click
+    if (event->type() == QEvent::MouseButtonPress) {
+        m_timer.restart();
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        if (m_timer.elapsed() < 500) {
+            emit mouseClick();
+        }
+    }
+
+    return QObject::eventFilter(obj, event);
+}
+
+
 //####################################################################################
 //##    DrFilterHoverHandler Class Functions
 //##        This exists as a member object inside some parent classes (instead of being created on the fly like other event filters).
 //##        This is so the SIGNAL, signalMouseHover, only has to be CONNECTed once upon the parent class initialization.
 //##        Otherwise we'd have to pass an IEditorRelay into every class that wanted to initialize a DrFilterHoverHandler.
 //####################################################################################
+DrFilterHoverHandler::DrFilterHoverHandler(QObject *parent) : QObject(parent) { }
+DrFilterHoverHandler::~DrFilterHoverHandler() { }
+
 bool DrFilterHoverHandler::eventFilter(QObject *obj, QEvent *event) {
     QWidget *hover_widget = dynamic_cast<QWidget*>(obj);
     if (!hover_widget) return QObject::eventFilter(obj, event);

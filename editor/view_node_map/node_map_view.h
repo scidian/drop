@@ -16,9 +16,9 @@
 
 // Forward Declarations
 class DrProject;
-class EditorViewRubberBand;
 class IEditorRelay;
 class NodeMapScene;
+class ViewRubberBand;
 
 // Local Constants
 const   double      c_node_grid_size             = 16;
@@ -74,7 +74,7 @@ private:
     bool                    m_wants_double_click            { false };      // Used to forward double click from mouseDoubleClickEvent to mousePressEvent
 
     // View_Mode::Selecting Variables
-    EditorViewRubberBand   *m_rubber_band                   { nullptr };    // Holds our view's RubberBand object
+    ViewRubberBand         *m_rubber_band                   { nullptr };    // Holds our view's RubberBand object
     QList<QGraphicsItem*>   m_items_start;                                  // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>   m_items_keep;                                   // Stores list of items to keep on top of rubber band items (with control key)
 

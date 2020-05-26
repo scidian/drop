@@ -173,8 +173,8 @@ int main(int argc, char *argv[]) {
     FormExpire   form_expire;                                           // FormExpire used for demo versions that are expired
 
     // ***** Check date for expired versions
-    QDateTime now =     QDateTime::currentDateTime();
-    QDateTime expire =  QDateTime(QDate(2020, 06, 02));
+    QDate now =         QDate::currentDate();
+    QDate expire =      QDate(2020, 07, 02);
     long diff_days =    expire.daysTo(now);
     if (diff_days > 0) {
         form_expire.show();

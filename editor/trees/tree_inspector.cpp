@@ -26,6 +26,7 @@
 #include "editor/trees/tree_inspector.h"
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
+#include "editor/widgets/widgets_trees.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -307,7 +308,7 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             }
 
             // Build category button
-            AssetCategoryButton *category_button = new AssetCategoryButton(component_title, Qt::black, Qt::black, nullptr, category_item);
+            TreeCategoryButton *category_button = new TreeCategoryButton(component_title, Qt::black, Qt::black, nullptr, category_item);
             std::string button_style =
                         " QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
                                         " padding-left: 2px;"

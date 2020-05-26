@@ -15,6 +15,7 @@
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTimer>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include "3rd_party/soloud/soloud.h"

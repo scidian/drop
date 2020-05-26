@@ -11,7 +11,7 @@
 #include "editor/view_node_map/node_map_item.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 
 
 //####################################################################################
@@ -21,7 +21,7 @@ NodeMapView::NodeMapView(QWidget *parent, DrProject *project, NodeMapScene *scen
     : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
 
     // ***** Initialize rubber band object used as a selection box
-    m_rubber_band = new EditorViewRubberBand(QRubberBand::Shape::Rectangle, this);
+    m_rubber_band = new ViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
     // ***** Initialize variables
     updateGrid();

@@ -114,6 +114,26 @@ QString CustomStyleSheetFormatting() {
         "       color: " +      Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
+        // Generic Tool Buttons
+        " QToolButton#buttonDefault { "
+        "       color: " +      Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
+        "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border-radius: 4px; "
+        "       padding-left: 20px; padding-right:  20px; "
+        "       padding-top:   6px; padding-bottom:  6px; }"
+        " QToolButton#buttonDefault:focus { "
+        "       color: " +      Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QToolButton#buttonDefault:hover:!pressed { "
+        "       color: " +      Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
+        " QToolButton#buttonDefault:pressed { "
+        "       color: " +      Dr::GetColor(Window_Colors::Highlight).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; }"
+        " QToolButton#buttonDefault:disabled { "
+        "       color: " +      Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
         //################################################################################
         //##    Scroll bars, used mostly in QGraphicsView
@@ -404,7 +424,7 @@ QString CustomStyleSheetFormatting() {
         "       background: transparent; border: none; }"
 
         // Little Edit / Delete Buttons on Inspector Image Property
-        " QPushButton#buttonImageMiniButton {            border: 1px solid; border-radius: 4px; "
+        " QToolButton#buttonImageMiniButton {            border: 1px solid; border-radius: 4px; "
         "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       border-color: " +                
                 (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Background_Light).darker(150) :
@@ -412,7 +432,7 @@ QString CustomStyleSheetFormatting() {
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() + "; } "
-        " QPushButton#buttonImageMiniButton:hover {      border: 1px solid; "
+        " QToolButton#buttonImageMiniButton:hover {      border: 1px solid; "
         "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-color: " +
                 (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Button_Light).darker(130) :
@@ -420,7 +440,7 @@ QString CustomStyleSheetFormatting() {
                                    Dr::GetColor(Window_Colors::Button_Light).darker(130).name() +
                                    Dr::GetColor(Window_Colors::Button_Light).name() +
                                    Dr::GetColor(Window_Colors::Button_Light).darker(130).name() +"; } "
-        " QPushButton#buttonImageMiniButton:pressed {    border: 1px solid; "
+        " QToolButton#buttonImageMiniButton:pressed {    border: 1px solid; "
         "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Dark).name() +

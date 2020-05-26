@@ -7,14 +7,14 @@
 //
 #include <QStylePainter>
 #include "core/colors/colors.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "editor/helper_library.h"
 
 
 //####################################################################################
 //##    PAINT: Draw our Rubber Band selection box with custom colors
 //####################################################################################
-void EditorViewRubberBand::paintEvent(QPaintEvent *) {
+void ViewRubberBand::paintEvent(QPaintEvent *) {
     QStylePainter painter(this);
 
     QColor bg = Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light));

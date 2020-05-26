@@ -23,9 +23,9 @@
 #include "editor/style/style.h"
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_node_map/node_map_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "editor/widgets/widgets_inspector.h"
-#include "editor/widgets/widgets_toolbar.h"
+#include "editor/widgets/widgets_view_toolbar.h"
 
 // Local Constants
 const int   c_toolbar_height =  36;
@@ -36,7 +36,7 @@ const int   c_button_size_h =   26;
 //####################################################################################
 //##    Build Toolbar
 //####################################################################################
-void EditorViewToolbar::buildToolbar() {
+void ViewToolbar::buildToolbar() {
 
     this->setObjectName("viewToolBar");
     this->setFixedHeight(c_toolbar_height);
@@ -153,26 +153,18 @@ void EditorViewToolbar::buildToolbar() {
             }
 
             // Reset to Center
-            QPushButton *move_to_center = new QPushButton();
-            move_to_center->setObjectName(QStringLiteral("buttonDefault"));
+            QToolButton *move_to_center = new QToolButton();
             move_to_center->setToolTip("Center View to Zero");
             move_to_center->setFixedSize(25, 22);
             move_to_center->setObjectName("buttonImageMiniButton");
                 QPixmap center_icon(":/assets/toolbar_icons/toolbar_reset_center.png");
                 center_icon = QPixmap::fromImage( Dr::ColorizeImage(center_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 move_to_center->setIcon( QIcon(center_icon.scaled(QSize(15, 15), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-            if (m_view_node != nullptr) {
-                connect(move_to_center, &QPushButton::pressed, [this, point_x, point_y]() {
+            if (m_view_node != nullptr || m_view_editor != nullptr) {
+                connect(move_to_center, &QToolButton::pressed, [this, point_x, point_y]() {
                     point_x->updateValue(0.0);
                     point_y->updateValue(0.0);
-                    m_view_node->centerOn(0, 0);
-                });
-
-            } else if (m_view_editor != nullptr) {
-                connect(move_to_center, &QPushButton::pressed, [this, point_x, point_y]() {
-                    point_x->updateValue(0.0);
-                    point_y->updateValue(0.0);
-                    m_view_editor->centerOn(0, 0);
+                    m_editor_relay->viewCenterOnPoint(QPointF(0, 0));
                 });
             }
             m_filter_hover->attachToHoverHandler(move_to_center, "Center View to Zero", "Moves the centers of the World Editor to coordinate (0, 0).");
@@ -281,8 +273,7 @@ void EditorViewToolbar::buildToolbar() {
             toolbarLayoutZoom->addWidget(drop_button);
 
             // Fit to View Button
-            QPushButton *fit_to_view = new QPushButton();
-            fit_to_view->setObjectName(QStringLiteral("buttonDefault"));
+            QToolButton *fit_to_view = new QToolButton();
             fit_to_view->setToolTip("Fit to View");
             fit_to_view->setFixedSize(25, 22);
             fit_to_view->setObjectName("buttonImageMiniButton");

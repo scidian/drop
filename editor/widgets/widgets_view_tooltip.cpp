@@ -12,7 +12,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -26,7 +26,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-EditorViewToolTip::EditorViewToolTip(QWidget *parent) : QWidget(parent) {
+ViewToolTip::ViewToolTip(QWidget *parent) : QWidget(parent) {
     this->setObjectName(QStringLiteral("formTooltip"));
 
     this->setWindowModality(Qt::WindowModality::NonModal);
@@ -42,7 +42,7 @@ EditorViewToolTip::EditorViewToolTip(QWidget *parent) : QWidget(parent) {
 }
 
 
-void EditorViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data) {
+void ViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant data) {
     m_tip_type = type;
     this->setStyleSheet(QString::fromStdString(
                         " QWidget { background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
@@ -76,13 +76,13 @@ void EditorViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVar
     show();
 }
 
-void EditorViewToolTip::stopToolTip() {
+void ViewToolTip::stopToolTip() {
     hide();
     m_tip_type = View_Mode::None;
 }
 
 
-void EditorViewToolTip::updateToolTipData(QVariant data) {
+void ViewToolTip::updateToolTipData(QVariant data) {
     switch (m_tip_type) {
         case View_Mode::Rotating:       m_angle = data.toDouble();                                          break;
         case View_Mode::Resizing:       m_x = data.toPointF().x();      m_y = data.toPointF().y();          break;
@@ -92,19 +92,19 @@ void EditorViewToolTip::updateToolTipData(QVariant data) {
     }
 }
 
-void EditorViewToolTip::updateToolTipPosition(QPoint mouse_position) {
+void ViewToolTip::updateToolTipPosition(QPoint mouse_position) {
     move(mouse_position + getOffset());
 }
 
 
-void EditorViewToolTip::paintEvent(QPaintEvent *) {
+void ViewToolTip::paintEvent(QPaintEvent *) {
     QPainter painter(this);
 
     drawText(painter);
 }
 
 
-void EditorViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset) {
+void ViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset) {
 
     QFont font = painter.font();
     font.setPointSize ( Dr::FontSize() + 1 );

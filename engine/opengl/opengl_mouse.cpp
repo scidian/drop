@@ -332,10 +332,10 @@ void DrOpenGL::wheelEvent(QWheelEvent *event) {
     }
 
     // ***** Push Messages onto Signal Stack
-    m_engine->pushMessage(Messages::MouseScroll, event->delta());
+    m_engine->pushMessage(Messages::MouseScroll, event->angleDelta().y());
 
-    if (event->delta() > 0) { zoomInOut( 10); }
-    else                    { zoomInOut(-10); }
+    if (event->angleDelta().y() > 0) { zoomInOut( 10); }
+    else                             { zoomInOut(-10); }
     event->accept();
 }
 #endif

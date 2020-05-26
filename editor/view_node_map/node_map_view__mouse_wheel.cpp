@@ -34,12 +34,12 @@ void NodeMapView::wheelEvent(QWheelEvent *event) {
     Mouse_Mode before_zoom = m_mouse_mode;
     m_mouse_mode = Mouse_Mode::None;
     spaceBarUp();
-    QMouseEvent temp_event(QMouseEvent::Type::Move, event->pos(), Qt::MouseButton::NoButton, { }, { });
+    QMouseEvent temp_event(QMouseEvent::Type::Move, event->position().toPoint(), Qt::MouseButton::NoButton, { }, { });
     mouseMoveEvent(&temp_event);
 
     // ********** Process Zoom
-    if (event->delta() > 0) zoomInOut( 10);                 // In
-    else                    zoomInOut(-10);                 // Out
+    if (event->angleDelta().y() > 0) zoomInOut( 10);                // In
+    else                             zoomInOut(-10);                // Out
     event->accept();
 
     // Restore Mouse Mode
@@ -72,10 +72,17 @@ void NodeMapView::zoomToScale(double scale, bool recalculate_level) {
         m_zoom = static_cast<int>(solve_for_zoom);
     }
 
-    QMatrix matrix;
-    matrix.scale(m_zoom_scale, m_zoom_scale);
-    matrix.rotate(m_rotate);
-    this->setMatrix(matrix);
+    // QT515
+    //QMatrix matrix;
+    //matrix.scale(m_zoom_scale, m_zoom_scale);
+    //matrix.rotate(m_rotate);
+    //this->setMatrix(matrix);
+    // {
+    QTransform transform;
+    transform.scale(m_zoom_scale, m_zoom_scale);
+    transform.rotate(m_rotate);
+    this->setTransform(transform);
+    // }
 
     emit updateZoomSlider(static_cast<int>(m_zoom / 10.0));
     emit updateZoomSpin(static_cast<int>(m_zoom_scale * 100.0));
@@ -85,12 +92,21 @@ void NodeMapView::zoomToScale(double scale, bool recalculate_level) {
 void NodeMapView::zoomToContents() {    
     this->fitInView( scene()->itemsBoundingRect() );
 
-    QMatrix fit_matrix = this->matrix();
-    double  scale_x = fit_matrix.m11();
-    double  scale_y = fit_matrix.m22();
+    // QT515
+    //QMatrix fit_matrix = this->matrix();
+    //double  scale_x = fit_matrix.m11();
+    //double  scale_y = fit_matrix.m22();
+    //double  min = (scale_x < scale_y) ? scale_x : scale_y;
+    //        min = (min > 1.0) ? 1.0 : min;
+    //zoomToScale(min);
+    // {
+    QTransform transform = this->transform();
+    double  scale_x = transform.m11();
+    double  scale_y = transform.m22();
     double  min = (scale_x < scale_y) ? scale_x : scale_y;
             min = (min > 1.0) ? 1.0 : min;
     zoomToScale(min);
+    // }
 
     m_editor_relay->viewCenterOnPoint( scene()->itemsBoundingRect().center() );
 }

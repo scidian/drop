@@ -64,7 +64,7 @@ QLayoutItem *AssetFlowLayout::takeAt(int index) {
         return nullptr;
 }
 
-Qt::Orientations AssetFlowLayout::expandingDirections() const   { return nullptr; }
+Qt::Orientations AssetFlowLayout::expandingDirections() const   { return Qt::Orientation(); }
 int AssetFlowLayout::count() const                              { return item_list.size(); }
 QSize AssetFlowLayout::sizeHint() const                         { return minimumSize(); }
 bool AssetFlowLayout::hasHeightForWidth() const                 { return true; }

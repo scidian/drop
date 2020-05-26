@@ -7,6 +7,7 @@
 //
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 
 #include "core/colors/colors.h"
 #include "editor/helper_library.h"

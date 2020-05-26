@@ -24,10 +24,10 @@ class DrStage;
 class DrThing;
 class EditorItem;
 class EditorScene;
-class EditorViewRubberBand;
-class EditorViewToolTip;
 class IEditorRelay;
 class SelectionGroup;
+class ViewRubberBand;
+class ViewToolTip;
 
 
 //####################################################################################
@@ -123,7 +123,7 @@ private:
     QPointF                 m_drop_location;                                // Potential drop location of drag and drop operation
 
     // Tool Tip Variables
-    EditorViewToolTip                  *m_tool_tip;                         // Holds our view's custom Tool Tip box
+    ViewToolTip                        *m_tool_tip;                         // Holds our view's custom Tool Tip box
 
     // Selection Bounding Box Variables
     std::map<Position_Flags, QPointF>   m_selection_points;                 // Stores all points of the current selection box
@@ -133,7 +133,7 @@ private:
     Handle_Shapes                       m_handles_shape;                    // Stores which style handles should we draw
 
     // View_Mode::Selecting Variables
-    EditorViewRubberBand               *m_rubber_band;                      // Holds our view's RubberBand object
+    ViewRubberBand                     *m_rubber_band;                      // Holds our view's RubberBand object
     QList<QGraphicsItem*>               m_items_start;                      // Stores items selected at start of new rubber band box
     QList<QGraphicsItem*>               m_items_keep;                       // Stores list of items to keep on top of rubber band items (with control key)
 

@@ -24,14 +24,14 @@
 
 
 //####################################################################################
-//##    EditorViewRubberBand
+//##    ViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
-class EditorViewRubberBand : public QRubberBand
+class ViewRubberBand : public QRubberBand
 {
 public:
     // Constructor
-    EditorViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
+    ViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;
@@ -39,10 +39,10 @@ public:
 
 
 //####################################################################################
-//##    EditorViewToolTip
+//##    ViewToolTip
 //##        A parentless widget to be used as a custom tooltip
 //############################
-class EditorViewToolTip : public QWidget
+class ViewToolTip : public QWidget
 {
 private:
     View_Mode   m_tip_type = View_Mode::None;           // Which type of tool tip to show
@@ -56,7 +56,7 @@ private:
 
 public:
     // Constructor
-    EditorViewToolTip(QWidget *parent = nullptr);
+    ViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
     virtual void    paintEvent(QPaintEvent *) override;

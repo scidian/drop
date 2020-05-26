@@ -10,7 +10,7 @@
 #include <QStylePainter>
 
 #include "editor/widgets/widgets_inspector.h"
-#include "editor/widgets/widgets_toolbar.h"
+#include "editor/widgets/widgets_view_toolbar.h"
 
 
 //####################################################################################

@@ -24,6 +24,7 @@
 #include "editor/project/project.h"
 #include "editor/style/style.h"
 #include "editor/trees/tree_assets.h"
+#include "editor/widgets/widgets_trees.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_animation.h"
@@ -135,7 +136,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
     // ***** Create new items in list to hold asset categories
     std::map<std::string, QTreeWidgetItem*>         widget_items;
-    std::map<std::string, AssetCategoryButton*>     category_buttons;
+    std::map<std::string, TreeCategoryButton*>      category_buttons;
     std::map<std::string, QFrame*>                  assets_frames;
     ///std::map<Asset_Categories, AssetFlowLayout*> grid_layouts;
                                                     m_grid_layouts.clear();
@@ -391,7 +392,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     // ***** Create a child TreeWidgetItem attached to the TopLevel category item containing all the Assets for that category
     for (auto button_pair : category_buttons) {
         std::string          category_name =    button_pair.first;
-        AssetCategoryButton *button =           button_pair.second;
+        TreeCategoryButton  *button =           button_pair.second;
 
         // If enabled, show Asset Category
         if (button->isEnabled()) {
@@ -441,7 +442,7 @@ QList<QTreeWidgetItem*> TreeAssets::getListOfTopLevelItems() {
 //####################################################################################
 //##    Create and style a buttons to be used as a header items for the categories
 //####################################################################################
-AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std::string category_name) {
+TreeCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std::string category_name) {
     QString name, icon;
     std::vector<QString> info;
 
@@ -470,8 +471,8 @@ AssetCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std
 
     // ***** Create Category Button
     QString buttonColor = QString(" icon-size: " + icon_size + "; padding-left: " + padding_left + "; ");
-    AssetCategoryButton *button = new AssetCategoryButton(name, Dr::ToQColor(Dr::GetColor(Window_Colors::Text)),
-                                                                Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), nullptr, item);
+    TreeCategoryButton *button = new TreeCategoryButton(name, Dr::ToQColor(Dr::GetColor(Window_Colors::Text)),
+                                                              Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), nullptr, item);
     button->setObjectName("buttonAssetCategory");
     button->setStyleSheet(buttonColor);
     button->setEnabled(false);                                              // Created as false, becomes true if we add an Asset to the category

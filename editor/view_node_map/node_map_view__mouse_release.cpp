@@ -14,7 +14,7 @@
 #include "editor/view_node_map/node_map_item.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "project/dr_project.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_slot.h"

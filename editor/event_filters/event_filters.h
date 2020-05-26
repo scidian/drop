@@ -8,6 +8,7 @@
 #ifndef EVENT_FILTERS_H
 #define EVENT_FILTERS_H
 
+#include <QElapsedTimer>
 #include <QWidget>
 
 #include "editor/constants_advisor_info.h"
@@ -30,6 +31,30 @@ enum class Over_Border {
 
 
 //####################################################################################
+//##    DrFilterClick
+//##        QT515 : Qt 5.15 broke clicked(), pressed(), and other signals of QPushButton,
+//##                This wraps the MouseButtonPressed, MouseButtonReleased events with a timer as a temp fix
+//############################
+class DrFilterClick : public QObject
+{
+    Q_OBJECT
+
+private:
+    QElapsedTimer   m_timer;
+
+public:
+    DrFilterClick(QObject *parent);
+    virtual ~DrFilterClick();
+
+protected:
+    bool            eventFilter(QObject *obj, QEvent *event);
+
+signals:
+    void            mouseClick();
+};
+
+
+//####################################################################################
 //##    DrFilterHoverHandler
 //##        Catches hover events for widgets without needing subclassing
 //############################
@@ -38,8 +63,8 @@ class DrFilterHoverHandler : public QObject
     Q_OBJECT
 
 public:
-    DrFilterHoverHandler(QObject *parent) : QObject(parent) { }
-    virtual ~DrFilterHoverHandler() { }
+    DrFilterHoverHandler(QObject *parent);
+    virtual ~DrFilterHoverHandler();
 
     void            attachToHoverHandler(QWidget *widget, DrProperty *property);
     void            attachToHoverHandler(QWidget *widget, QString header, QString body);
@@ -62,6 +87,7 @@ class DrFilterMouseWheelAdjustmentGuard : public QObject
 {
 public:
     explicit        DrFilterMouseWheelAdjustmentGuard(QObject *parent);
+
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };
@@ -76,8 +102,10 @@ class DrFilterPopUpMenuRelocater : public QObject
 private:
     int         m_top_offset;
     int         m_left_offset;
+
 public:
     explicit        DrFilterPopUpMenuRelocater(QObject *parent, int top_offset, int left_offset);
+
 protected:
     bool            eventFilter(QObject *obj, QEvent *event) override;
 };

@@ -15,7 +15,7 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "project/entities/dr_thing.h"
 
 
@@ -37,7 +37,7 @@ void EditorView::wheelEvent(QWheelEvent *event) {
     if (m_over_handle == Position_Flags::Over_Camera && m_cam_mouse_over != nullptr) {
         if (m_cam_mouse_over->isLocked() == false) {
             setInspectorClearSelection(m_cam_mouse_over);
-            double change = (event->delta() > 0) ? 0.25 : -0.25;
+            double change = (event->angleDelta().y() > 0) ? 0.25 : -0.25;
             if (m_cam_mouse_over->getThingType() == DrThingType::Character) {
                 double cam_zoom = m_cam_mouse_over->getComponentPropertyValue(Comps::Thing_Settings_Character, Props::Thing_Character_Camera_Zoom).toDouble() + change;
                 if (cam_zoom < 0) cam_zoom = 0;
@@ -60,12 +60,12 @@ void EditorView::wheelEvent(QWheelEvent *event) {
     Mouse_Mode before_zoom = m_mouse_mode;
     m_mouse_mode = Mouse_Mode::None;
     spaceBarUp();
-    QMouseEvent temp_event(QMouseEvent::Type::Move, event->pos(), Qt::MouseButton::NoButton, { }, { });
+    QMouseEvent temp_event(QMouseEvent::Type::Move, event->position().toPoint(), Qt::MouseButton::NoButton, { }, { });
     mouseMoveEvent(&temp_event);
 
     // ********** Process Zoom
-    if (event->delta() > 0) zoomInOut( 10);                 // In
-    else                    zoomInOut(-10);                 // Out
+    if (event->angleDelta().y() > 0) zoomInOut( 10);                // In
+    else                             zoomInOut(-10);                // Out
     event->accept();
 
     // Restore Mouse Mode
@@ -73,7 +73,7 @@ void EditorView::wheelEvent(QWheelEvent *event) {
 
     // Show tool tip with zoom percentage, if first time start tooltip, otherwise update it
     if (m_tool_tip->getTipType() != View_Mode::Zooming)
-        m_tool_tip->startToolTip(View_Mode::Zooming, event->pos(), static_cast<int>(m_zoom_scale * 100) );
+        m_tool_tip->startToolTip(View_Mode::Zooming, event->position().toPoint(), static_cast<int>(m_zoom_scale * 100) );
     else
         m_tool_tip->updateToolTipData( static_cast<int>(m_zoom_scale * 100) );
 
@@ -121,10 +121,17 @@ void EditorView::zoomToScale(double scale, bool recalculate_level) {
         m_zoom = static_cast<int>(solve_for_zoom);
     }
 
-    QMatrix matrix;
-    matrix.scale(m_zoom_scale, m_zoom_scale);
-    matrix.rotate(m_rotate);
-    this->setMatrix(matrix);
+    // QT515
+    //QMatrix matrix;
+    //matrix.scale(m_zoom_scale, m_zoom_scale);
+    //matrix.rotate(m_rotate);
+    //this->setMatrix(matrix);
+    // {
+    QTransform transform;
+    transform.scale(m_zoom_scale, m_zoom_scale);
+    transform.rotate(m_rotate);
+    this->setTransform(transform);
+    // }
 
     updateSelectionBoundingBox(5);
     if (horizontalScrollBar()->value() == 0 && verticalScrollBar()->value() == 0) {
@@ -139,11 +146,19 @@ void EditorView::zoomToScale(double scale, bool recalculate_level) {
 void EditorView::zoomToContents() {
     this->fitInView( this->scene()->sceneRect() );
 
-    QMatrix fit_matrix = this->matrix();
-    double  scale_x = fit_matrix.m11();
-    double  scale_y = fit_matrix.m22();
+    // QT515
+    //QMatrix fit_matrix = this->matrix();
+    //double  scale_x = fit_matrix.m11();
+    //double  scale_y = fit_matrix.m22();
+    //double  min = (scale_x < scale_y) ? scale_x : scale_y;
+    //zoomToScale(min);
+    // {
+    QTransform transform = this->transform();
+    double  scale_x = transform.m11();
+    double  scale_y = transform.m22();
     double  min = (scale_x < scale_y) ? scale_x : scale_y;
     zoomToScale(min);
+    // }
 
     m_editor_relay->viewCenterOnPoint( this->scene()->sceneRect().center() );
 }

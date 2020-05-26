@@ -6,6 +6,7 @@
 //
 //
 #include <QtMath>
+#include <QPainterPath>
 #include <QScrollBar>
 
 #include "core/colors/colors.h"

@@ -24,8 +24,8 @@
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_node_map/node_map_scene.h"
 #include "editor/view_node_map/node_map_view.h"
-#include "editor/widgets/widgets_editor.h"
-#include "editor/widgets/widgets_toolbar.h"
+#include "editor/widgets/widgets_view_toolbar.h"
+#include "editor/widgets/widgets_view.h"
 #include "engine/debug_flags.h"
 
 
@@ -95,7 +95,7 @@ void FormMain::buildCentralWidgetWorldMap() {
         }
 
         // ***** ToolBar above World Map
-        toolbarWorldMap = new EditorViewToolbar(widgetCentralWorldMap, m_project, this, Editor_Mode::World_Map, nullptr, viewWorldMap);
+        toolbarWorldMap = new ViewToolbar(widgetCentralWorldMap, m_project, this, Editor_Mode::World_Map, nullptr, viewWorldMap);
 
     verticalLayoutWorldMap->addWidget(toolbarWorldMap);
     verticalLayoutWorldMap->addWidget(viewWorldMap);
@@ -237,7 +237,7 @@ void FormMain::buildCentralWidgetEditor() {
 
 
                         // ***** ToolBar above World Editor
-                        toolbarEditor = new EditorViewToolbar(widgetEditorView, m_project, this, Editor_Mode::World_Editor, viewEditor, nullptr);
+                        toolbarEditor = new ViewToolbar(widgetEditorView, m_project, this, Editor_Mode::World_Editor, viewEditor, nullptr);
 
 
                         // ***** Lower View area Status Bar

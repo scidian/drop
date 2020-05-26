@@ -20,8 +20,8 @@
 class DrFilterHoverHandler;
 class EditorScene;
 class EditorView;
-class EditorViewRubberBand;
 class FormPopup;
+class ViewRubberBand;
 
 
 //####################################################################################

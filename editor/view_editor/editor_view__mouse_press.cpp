@@ -19,7 +19,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"

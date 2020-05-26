@@ -274,7 +274,6 @@ SOURCES += \
     editor/style/style_sheet_toolbar.cpp \
     editor/trees/tree_advisor.cpp \
     editor/trees/tree_assets.cpp \
-    editor/trees/tree_assets__category_button.cpp \
     editor/trees/tree_assets__drag.cpp \
     editor/trees/tree_assets__event_filter.cpp \
     editor/trees/tree_assets__key_press.cpp \
@@ -339,14 +338,15 @@ SOURCES += \
     editor/interface_editor_relay.cpp \
     editor/view_node_map/node_map_view__paint.cpp \
     editor/view_node_map/node_map_view__select.cpp \
-    editor/widgets/widgets_editor_rubber_band.cpp \
-    editor/widgets/widgets_editor_tooltip.cpp \
     editor/widgets/widgets_inspector_checkbox.cpp \
     editor/widgets/widgets_inspector_combobox.cpp \
     editor/widgets/widgets_inspector_spin.cpp \
-    editor/widgets/widgets_toolbar.cpp \
-    editor/widgets/widgets_toolbar__build.cpp \
-    editor/widgets/widgets_toolbar_slider.cpp \
+    editor/widgets/widgets_trees_category_button.cpp \
+    editor/widgets/widgets_view_rubber_band.cpp \
+    editor/widgets/widgets_view_toolbar.cpp \
+    editor/widgets/widgets_view_toolbar__build.cpp \
+    editor/widgets/widgets_view_toolbar_slider.cpp \
+    editor/widgets/widgets_view_tooltip.cpp \
     engine/debug_flags.cpp \
     engine/engine.cpp \
     engine/engine_camera.cpp \
@@ -1158,9 +1158,10 @@ HEADERS += \
     editor/view_node_map/node_map_item.h \
     editor/view_node_map/node_map_scene.h \
     editor/view_node_map/node_map_view.h \
-    editor/widgets/widgets_editor.h \
     editor/widgets/widgets_inspector.h \
-    editor/widgets/widgets_toolbar.h \
+    editor/widgets/widgets_trees.h \
+    editor/widgets/widgets_view.h \
+    editor/widgets/widgets_view_toolbar.h \
     engine/constants_engine.h \
     engine/debug_flags.h \
     engine/engine.h \

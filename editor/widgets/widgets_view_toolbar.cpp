@@ -19,16 +19,16 @@
 #include "editor/style/style.h"
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_node_map/node_map_view.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "editor/widgets/widgets_inspector.h"
-#include "editor/widgets/widgets_toolbar.h"
+#include "editor/widgets/widgets_view_toolbar.h"
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-EditorViewToolbar::EditorViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
-                                     EditorView *view_editor, NodeMapView *view_node)
+ViewToolbar::ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
+                         EditorView *view_editor, NodeMapView *view_node)
     : QFrame(parent) {
 
     // Make sure we have the proper class pointer to the Editor_Mode requested
@@ -67,7 +67,7 @@ EditorViewToolbar::EditorViewToolbar(QWidget *parent, DrProject *project, IEdito
 //####################################################################################
 //##    SLOT: Catches signals from m_filter_hover and passes to InterfaceEditorRelay
 //####################################################################################
-void EditorViewToolbar::setAdvisorInfo(QString header, QString body) {
+void ViewToolbar::setAdvisorInfo(QString header, QString body) {
     m_editor_relay->setAdvisorInfo(header, body);
 }
 
@@ -75,11 +75,11 @@ void EditorViewToolbar::setAdvisorInfo(QString header, QString body) {
 //####################################################################################
 //##    buttonGroupMouse SLOT and functions
 //####################################################################################
-void EditorViewToolbar::buttonGroupMouseClicked(int id) {
+void ViewToolbar::buttonGroupMouseClicked(int id) {
     m_editor_relay->viewUpdateToolbar(id);
 }
 
-void EditorViewToolbar::updateButtons(int id) {
+void ViewToolbar::updateButtons(int id) {
     Mouse_Mode clicked = static_cast<Mouse_Mode>(id);
 
     if (clicked == Mouse_Mode::Pointer) {
@@ -103,7 +103,7 @@ void EditorViewToolbar::updateButtons(int id) {
 //####################################################################################
 //##    buttonGroupToggle SLOT and functions
 //####################################################################################
-void EditorViewToolbar::buttonGroupToggleClicked(int id) {
+void ViewToolbar::buttonGroupToggleClicked(int id) {
     Buttons_Toggle clicked = static_cast<Buttons_Toggle>(id);
 
     if (clicked == Buttons_Toggle::CameraOnOff) {
@@ -120,7 +120,7 @@ void EditorViewToolbar::buttonGroupToggleClicked(int id) {
 //####################################################################################
 //##    Button creation calls
 //####################################################################################
-QToolButton* EditorViewToolbar::createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable, bool enabled) {
+QToolButton* ViewToolbar::createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable, bool enabled) {
     QToolButton *tool = new QToolButton();
     tool->setObjectName(style_sheet_name);
     if (checkable) {
@@ -135,7 +135,7 @@ QToolButton* EditorViewToolbar::createToolBarButton(const QString &style_sheet_n
 }
 
 // DEFAULTS: height = 24, space_on_the_right = 1, visible = true
-QLabel* EditorViewToolbar::createToolBarSpacer(int height, int space_on_the_right, bool visible) {
+QLabel* ViewToolbar::createToolBarSpacer(int height, int space_on_the_right, bool visible) {
     QLabel *spacer = new QLabel();
     if (visible) spacer->setObjectName(QStringLiteral("labelSpacer"));
     else         spacer->setObjectName(QStringLiteral("labelSpacerNotVisible"));
@@ -143,7 +143,7 @@ QLabel* EditorViewToolbar::createToolBarSpacer(int height, int space_on_the_righ
     return spacer;
 }
 
-QPushButton* EditorViewToolbar::createPushButton(QString name, QString text) {
+QPushButton* ViewToolbar::createPushButton(QString name, QString text) {
     QFont font = Dr::CustomFont();
     QPushButton *button = new QPushButton();
     button->setObjectName( name );

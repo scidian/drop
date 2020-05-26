@@ -6,6 +6,7 @@
 //
 //
 #include <QPainter>
+#include <QPainterPath>
 
 #include "editor/helper_library.h"
 #include "editor/preferences.h"

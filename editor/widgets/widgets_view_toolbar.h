@@ -31,10 +31,10 @@ class NodeMapView;
 
 
 //####################################################################################
-//##    EditorViewToolbar
+//##    ViewToolbar
 //##        A mini toolbar for use with a View
 //############################
-class EditorViewToolbar : public QFrame
+class ViewToolbar : public QFrame
 {
     Q_OBJECT
 
@@ -65,8 +65,8 @@ private:
 
 public:
     // Constructor / Destructor
-    EditorViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
-                      EditorView *view_editor = nullptr, NodeMapView *view_node = nullptr);
+    ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
+                EditorView *view_editor = nullptr, NodeMapView *view_node = nullptr);
 
     // Building
     void            buildToolbar();

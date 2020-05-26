@@ -1,42 +1,55 @@
 //
-//      Created by Stephens Nunnally on 12/4/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/26/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
+#include <QDebug>
+#include <QEvent>
 #include <QPainter>
+#include <QPushButton>
 
-#include "editor/trees/tree_assets.h"
+#include "editor/event_filters/event_filters.h"
+#include "editor/widgets/widgets_trees.h"
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-AssetCategoryButton::AssetCategoryButton(const QString &text, QColor text_color, QColor disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item) :
+TreeCategoryButton::TreeCategoryButton(const QString &text, QColor text_color, QColor disabled_color, QWidget *parent, QTreeWidgetItem *parent_tree_item) :
     QPushButton(text, parent) {
+
     // Forwards user button click to function that expands / contracts
-    connect(this, SIGNAL(clicked()), this, SLOT(buttonPressed()));
+    this->connect(this, &QPushButton::clicked, [this] () { this->buttonPressed(); });
+
+    // Possible QT515 fix for broken QPushButton signals
+    // {
+    //  DrFilterClick *filter_click = new DrFilterClick(this);
+    //  installEventFilter(filter_click);
+    //  connect(filter_click, SIGNAL(mouseClick()), this, SLOT(buttonPressed()));
+    // }
 
     m_parent_item =     parent_tree_item;
 
     m_text_color =      text_color;
     m_disabled_color =  disabled_color;
 }
-AssetCategoryButton::~AssetCategoryButton() { }
+TreeCategoryButton::~TreeCategoryButton() { }
 
 
 //####################################################################################
 //##    Called by click signal, expands or contracts category after user click
 //####################################################################################
-void AssetCategoryButton::buttonPressed() {
+void TreeCategoryButton::buttonPressed() {
     m_parent_item->setExpanded( !(m_parent_item->isExpanded()) );
 }
+
 
 //####################################################################################
 //##    Override paint event to draw tree expansion decoration
 //####################################################################################
-void AssetCategoryButton::paintEvent(QPaintEvent *event) {
+void TreeCategoryButton::paintEvent(QPaintEvent *event) {
     QPushButton::paintEvent(event);
 
     // Don't draw little triangle if it's going to interfere with category label
@@ -64,6 +77,8 @@ void AssetCategoryButton::paintEvent(QPaintEvent *event) {
     }
     painter.drawPolygon(triangle, Qt::FillRule::OddEvenFill);
 }
+
+
 
 
 

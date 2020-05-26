@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDoubleSpinBox>
+#include <QPushButton>
 #include <QSlider>
 #include <QSpinBox>
 

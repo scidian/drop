@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include "core/colors/colors.h"
@@ -120,6 +121,7 @@ void FormMessageBox::showEvent(QShowEvent *event) {
     } else {
         Dr::CenterFormOnParent(m_parent->window(), this);
     }
+
     this->installEventFilter(new DrFilterClickAndDragWindow(this));
 }
 
@@ -130,12 +132,12 @@ void FormMessageBox::showEvent(QShowEvent *event) {
 QPushButton* FormMessageBox::addButton(QString text, QMessageBox::StandardButton button) {
     QPushButton *push = new QPushButton(" " + text + " ");
     push->setObjectName(QStringLiteral("buttonDefault"));
-    push->setFont( Dr::CustomFont() );
+    push->setFont(Dr::CustomFont());
     push->setFocusPolicy(Qt::StrongFocus);
     Dr::ApplyDropShadowByType(push, Shadow_Types::Button_Shadow);
 
     connect(push, &QPushButton::clicked, [this, button] () {
-        m_button = button;
+        this->m_button = button;
         this->close();
     });
 
@@ -158,12 +160,13 @@ QMessageBox::StandardButton FormMessageBox::execute() {
     // Set Focus on first PushButton
     if (m_button_list.size() > 0) {
         m_button_list[0]->setFocus(Qt::FocusReason::ActiveWindowFocusReason);
+
+        // Loop until button pressed
+        while (m_button == QMessageBox::NoButton) {
+            qApp->processEvents();
+        }
     }
 
-    // Loop until button pressed
-    while (m_button == QMessageBox::NoButton) {
-        qApp->processEvents();
-    }
     return m_button;
 }
 

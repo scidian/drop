@@ -47,8 +47,6 @@ class DrFilterHoverHandler;
 class DrProject;
 class EditorScene;
 class EditorView;
-class EditorViewRubberBand;
-class EditorViewToolbar;
 class FormPopup;
 class NodeMapScene;
 class NodeMapView;
@@ -56,6 +54,8 @@ class TreeAssets;
 class TreeAdvisor;
 class TreeInspector;
 class TreeProject;
+class ViewRubberBand;
+class ViewToolbar;
 
 
 //####################################################################################
@@ -120,7 +120,7 @@ private:
     EditorView          *viewEditor;                            // Renders the World Editor View
     QScrollArea         *areaBottom;
     QFrame              *statusBar;
-    EditorViewToolbar   *toolbarEditor;
+    ViewToolbar         *toolbarEditor;
 
     //       "Editor" Status Bar Widgets
     QLabel                  *labelSelected,  *labelInfo,     *labelMousePosition;
@@ -136,7 +136,7 @@ private:
     QWidget         *widgetCentralWorldMap;
     NodeMapScene        *sceneWorldMap;
     NodeMapView         *viewWorldMap;
-    EditorViewToolbar   *toolbarWorldMap;
+    ViewToolbar         *toolbarWorldMap;
 
 
 public:

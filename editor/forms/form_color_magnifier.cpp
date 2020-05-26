@@ -10,6 +10,7 @@
 #include <QGridLayout>
 #include <QGuiApplication>
 #include <QPainter>
+#include <QPainterPath>
 #include <QScreen>
 
 #include "editor/form_main/form_main.h"

@@ -11,6 +11,7 @@
 #include <QGuiApplication>
 #include <QLayout>
 #include <QLayoutItem>
+#include <QPainterPath>
 #include <QScreen>
 #include <QStyle>
 #include <QWindow>

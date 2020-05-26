@@ -14,7 +14,7 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_view.h"
 #include "editor/view_editor/editor_scene.h"
-#include "editor/widgets/widgets_editor.h"
+#include "editor/widgets/widgets_view.h"
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_world.h"
@@ -32,10 +32,10 @@ EditorView::EditorView(QWidget *parent, DrProject *project, IEditorRelay *editor
     : QGraphicsView(parent), m_project(project), m_editor_relay(editor_relay) {
 
     // Initialize rubber band object used as a selection box
-    m_rubber_band = new EditorViewRubberBand(QRubberBand::Shape::Rectangle, this);
+    m_rubber_band = new ViewRubberBand(QRubberBand::Shape::Rectangle, this);
 
     // Initialize tool tip object used for displaying some helpful info
-    m_tool_tip = new EditorViewToolTip(this);
+    m_tool_tip = new ViewToolTip(this);
     m_tool_tip->hide();
 
     m_over_handle = Position_Flags::No_Position;

@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QToolButton>
 #include <QWidget>
 
 

@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QImage>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPixmap>
 #include <QRgb>
 #include <QVector2D>

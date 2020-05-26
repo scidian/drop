@@ -42,6 +42,8 @@ void DrFilterAssetMouseHandler::startDrag(QLabel *label_pixmap, long asset_key) 
 
     // Pull pixmap of asset and scale based on current view zoom level
     QPixmap pre_pixmap = *label_pixmap->pixmap();
+    // QT515
+    ///QPixmap pre_pixmap = label_pixmap->pixmap(Qt::ReturnByValueConstant());
     QPixmap pixmap;
     QString text;
 
