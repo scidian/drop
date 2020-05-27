@@ -10,7 +10,7 @@
 #include <QRadioButton>
 
 #include "editor/form_main/form_main.h"
-#include "editor/form_sound/form_sound.h"
+#include "editor/form_sound/form_sound_effect.h"
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"

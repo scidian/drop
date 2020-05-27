@@ -16,7 +16,7 @@
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_main/form_main.h"
-#include "editor/form_sound/form_sound.h"
+#include "editor/form_sound/form_sound_effect.h"
 #include "editor/forms/form_blank.h"
 #include "editor/forms/form_fonts.h"
 #include "editor/forms/form_popup.h"
@@ -42,230 +42,226 @@ void FormMain::buildToolBar() {
     QToolButton *tool;
 
     // ***** Initialize toolbar widget
-    toolbar = new QToolBar(this);
-    toolbar->setObjectName(QStringLiteral("toolbar"));
-    toolbar->setFixedHeight(c_toolbar_height);
-    toolbar->setMovable(false);
-    toolbar->setFloatable(false);
-    toolbar->installEventFilter(new DrFilterClickAndDragWindow(toolbar));
+    m_toolbar = new QToolBar(this);
+    m_toolbar->setObjectName(QStringLiteral("toolbar"));
+    m_toolbar->setFixedHeight(c_toolbar_height);
+    m_toolbar->setMovable(false);
+    m_toolbar->setFloatable(false);
+    m_toolbar->installEventFilter(new DrFilterClickAndDragWindow(m_toolbar));
 
     // ***** This is a container object that holds all toolbar button groups, allowing us to put them in a layout
-    widgetToolBar = new QWidget();
-    widgetToolBar->setObjectName(QStringLiteral("widgetToolBar"));
-    widgetToolBar->setFixedHeight(c_toolbar_height);
-    widgetToolBarLayout = new QHBoxLayout(widgetToolBar);
-    widgetToolBarLayout->setSpacing(3);
-    widgetToolBarLayout->setContentsMargins(12, 0, 12, 0);
+    m_widget_toolbar = new QWidget();
+    m_widget_toolbar->setObjectName(QStringLiteral("widgetToolBar"));
+    m_widget_toolbar->setFixedHeight(c_toolbar_height);
+    m_widget_toolbar_layout = new QHBoxLayout(m_widget_toolbar);
+    m_widget_toolbar_layout->setSpacing(3);
+    m_widget_toolbar_layout->setContentsMargins(12, 0, 12, 0);
 
-    // ***** Selectable Button group that keeps track of which mode we are in: World Graph, World Editor, UI Editor
-    widgetGroupMode = new QWidget();
-    widgetGroupMode->setObjectName(QStringLiteral("widgetGroupMode"));
-    widgetGroupMode->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutMode = new QHBoxLayout(widgetGroupMode);
+    // ***** Selectable Button group that keeps track of which mode we are in: World Graph, World Creator, UI Creator, Sound Creator
+    m_widget_group_mode = new QWidget();
+    m_widget_group_mode->setObjectName(QStringLiteral("widgetGroupMode"));
+    m_widget_group_mode->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutMode = new QHBoxLayout(m_widget_group_mode);
         toolbarLayoutMode->setSpacing(3);
         toolbarLayoutMode->setContentsMargins(0, 1, 0, 0);
 
-        buttonsGroupMode = new QButtonGroup();
-        buttonsGroupMode->setExclusive(true);
-        connect(buttonsGroupMode, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
+        m_buttons_group_mode = new QButtonGroup();
+        m_buttons_group_mode->setExclusive(true);
+        connect(m_buttons_group_mode, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
 
-        tool = createToolBarButton(QStringLiteral("buttonModeWorldGraph"), Advisor_Info::Mode_Map, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Editor_Mode::World_Graph));
+        tool = createToolBarButton(QStringLiteral("buttonModeWorldGraph"), Advisor_Info::Mode_World_Graph, c_button_size_w + 4, c_button_size_h + 6, true);
+        m_buttons_group_mode->addButton(tool, int(Editor_Mode::World_Graph));
         toolbarLayoutMode->addWidget(tool);
         toolbarLayoutMode->addWidget(createToolBarSpacer(c_button_size_h - 2));
 
-        tool = createToolBarButton(QStringLiteral("buttonModeWorldEdit"), Advisor_Info::Mode_Editor, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Editor_Mode::World_Editor));
+        tool = createToolBarButton(QStringLiteral("buttonModeWorldEdit"), Advisor_Info::Mode_World_Creator, c_button_size_w + 4, c_button_size_h + 6, true);
+        m_buttons_group_mode->addButton(tool, int(Editor_Mode::World_Creator));
         toolbarLayoutMode->addWidget(tool);
         toolbarLayoutMode->addWidget(createToolBarSpacer(c_button_size_h - 2));
 
-        tool = createToolBarButton(QStringLiteral("buttonModeUIEdit"), Advisor_Info::Mode_UI, c_button_size_w + 4, c_button_size_h + 6, true);
-        buttonsGroupMode->addButton(tool, int(Editor_Mode::UI_Editor));
+        tool = createToolBarButton(QStringLiteral("buttonModeUIEdit"), Advisor_Info::Mode_UI_Creator, c_button_size_w + 4, c_button_size_h + 6, true);
+        m_buttons_group_mode->addButton(tool, int(Editor_Mode::UI_Creator));
         toolbarLayoutMode->addWidget(tool);
+        toolbarLayoutMode->addWidget(createToolBarSpacer(c_button_size_h - 2));
 
-
-//        tool = createToolBarButton(QStringLiteral("buttonSoundFiles"), Advisor_Info::Settings_Sound_Files, c_button_size_w, c_button_size_h, false);
-//        toolbarLayoutSettings->addWidget(tool);
-//        connect(tool, &QPushButton::clicked, [this] () {
-//            FormSound *sound_files = new FormSound(m_project, this);
-//            sound_files->show();
-//        });
-
+        tool = createToolBarButton(QStringLiteral("buttonModeSound"), Advisor_Info::Mode_Sound_Creator, c_button_size_w + 4, c_button_size_h + 6, true);
+        m_buttons_group_mode->addButton(tool, int(Editor_Mode::Sound_Creator));
+        toolbarLayoutMode->addWidget(tool);
 
 
     // ***** Mode "Editor" Add-On, Edit: Holds Add , Delete, future Cut / Copy / Paste
-    widgetGroupEdit = new QWidget(widgetToolBar);
-    widgetGroupEdit->hide();
-    widgetGroupEdit->setObjectName(QStringLiteral("widgetGroupEdit"));
-    widgetGroupEdit->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutEdit = new QHBoxLayout(widgetGroupEdit);
+    m_widget_group_edit = new QWidget(m_widget_toolbar);
+    m_widget_group_edit->hide();
+    m_widget_group_edit->setObjectName(QStringLiteral("widgetGroupEdit"));
+    m_widget_group_edit->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutEdit = new QHBoxLayout(m_widget_group_edit);
         toolbarLayoutEdit->setSpacing(5);
         toolbarLayoutEdit->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupEdit = new QButtonGroup();
-        buttonsGroupEdit->setExclusive(false);
-        connect(buttonsGroupEdit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
+        m_buttons_group_edit = new QButtonGroup();
+        m_buttons_group_edit->setExclusive(false);
+        connect(m_buttons_group_edit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
 
-        buttonAdd = createToolBarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, c_button_size_w + 14, c_button_size_h, false, true);
-        buttonsGroupEdit->addButton(buttonAdd, int(Buttons_Edit::Add));
-        toolbarLayoutEdit->addWidget(buttonAdd);
+        m_button_add = createToolBarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, c_button_size_w + 14, c_button_size_h, false, true);
+        m_buttons_group_edit->addButton(m_button_add, int(Buttons_Edit::Add));
+        toolbarLayoutEdit->addWidget(m_button_add);
 
         tool = createToolBarButton(QStringLiteral("buttonDuplicate"), Advisor_Info::Duplicate, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Duplicate));
+        m_buttons_group_edit->addButton(tool, int(Buttons_Edit::Duplicate));
         toolbarLayoutEdit->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonDeleteThing"), Advisor_Info::Trash_Can, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupEdit->addButton(tool, int(Buttons_Edit::Delete));
+        m_buttons_group_edit->addButton(tool, int(Buttons_Edit::Delete));
         toolbarLayoutEdit->addWidget(tool);
 
 
     // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to Front / Back
-    widgetGroupLayering = new QWidget(widgetToolBar);
-    widgetGroupLayering->hide();
-    widgetGroupLayering->setObjectName(QStringLiteral("widgetGroupLayering"));
-    widgetGroupLayering->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutLayering = new QHBoxLayout(widgetGroupLayering);
+    m_widget_group_layering = new QWidget(m_widget_toolbar);
+    m_widget_group_layering->hide();
+    m_widget_group_layering->setObjectName(QStringLiteral("widgetGroupLayering"));
+    m_widget_group_layering->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutLayering = new QHBoxLayout(m_widget_group_layering);
         toolbarLayoutLayering->setSpacing(1);
         toolbarLayoutLayering->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupLayering = new QButtonGroup();
-        buttonsGroupLayering->setExclusive(false);
-        connect(buttonsGroupLayering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
+        m_buttons_group_layering = new QButtonGroup();
+        m_buttons_group_layering->setExclusive(false);
+        connect(m_buttons_group_layering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Send_to_Back, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Back));
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Back));
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Send_Backward, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Backward));
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_Backward));
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Send_Forward, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_Forward));
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_Forward));
         toolbarLayoutLayering->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Send_to_Front, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupLayering->addButton(tool, int(Buttons_Layering::Send_To_Front));
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Front));
         toolbarLayoutLayering->addWidget(tool);
 
     // ***** Mode "Editor" Add-On, Transform: Holds buttons that Flip / Rotate things
-    widgetGroupTransform = new QWidget(widgetToolBar);
-    widgetGroupTransform->hide();
-    widgetGroupTransform->setObjectName(QStringLiteral("widgetGroupTransform"));
-    widgetGroupTransform->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutTransform = new QHBoxLayout(widgetGroupTransform);
+    m_widget_group_transform = new QWidget(m_widget_toolbar);
+    m_widget_group_transform->hide();
+    m_widget_group_transform->setObjectName(QStringLiteral("widgetGroupTransform"));
+    m_widget_group_transform->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutTransform = new QHBoxLayout(m_widget_group_transform);
         toolbarLayoutTransform->setSpacing(1);
         toolbarLayoutTransform->setContentsMargins(2, 0, 0, 0);
 
-        buttonsGroupTransform = new QButtonGroup();
-        buttonsGroupTransform->setExclusive(false);
-        connect(buttonsGroupTransform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
+        m_buttons_group_transform = new QButtonGroup();
+        m_buttons_group_transform->setExclusive(false);
+        connect(m_buttons_group_transform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Reset, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Reset_Object));
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Reset_Object));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonTransformFlipH"), Advisor_Info::Flip_H, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Flip_H));
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Flip_H));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonTransformFlipV"), Advisor_Info::Flip_V, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Flip_V));
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Flip_V));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonTransformRotateL"), Advisor_Info::Rotate_L, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Rotate_L));
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Rotate_L));
         toolbarLayoutTransform->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonTransformRotateR"), Advisor_Info::Rotate_R, c_button_size_w, c_button_size_h, false, false);
-        buttonsGroupTransform->addButton(tool, int(Buttons_Transform::Rotate_R));
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Rotate_R));
         toolbarLayoutTransform->addWidget(tool);
 
 
     // ***** Mode "Editor" Add-On, Grid: Holds buttons that control Snap to Grid, Resize to Grid, Show Grid on Top
-    widgetGroupGridFull = new QWidget(widgetToolBar);
-    widgetGroupGridFull->hide();
-    widgetGroupGridFull->setObjectName(QStringLiteral("widgetGroupGridFull"));
-    widgetGroupGridFull->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutGridFull = new QHBoxLayout(widgetGroupGridFull);
+    m_widget_group_grid_full = new QWidget(m_widget_toolbar);
+    m_widget_group_grid_full->hide();
+    m_widget_group_grid_full->setObjectName(QStringLiteral("widgetGroupGridFull"));
+    m_widget_group_grid_full->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutGridFull = new QHBoxLayout(m_widget_group_grid_full);
         toolbarLayoutGridFull->setSpacing(0);
         toolbarLayoutGridFull->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupGridFull = new QButtonGroup();
-        buttonsGroupGridFull->setExclusive(false);
-        connect(buttonsGroupGridFull, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
+        m_buttons_group_grid_full = new QButtonGroup();
+        m_buttons_group_grid_full->setExclusive(false);
+        connect(m_buttons_group_grid_full, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Grid_On_Top));
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Grid_On_Top));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool());
         toolbarLayoutGridFull->addWidget(tool);
         toolbarLayoutGridFull->addSpacing(1);
 
         tool = createToolBarButton(QStringLiteral("buttonResizeToGrid"), Advisor_Info::Resize_To_Grid, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool());
         toolbarLayoutGridFull->addWidget(tool);
         toolbarLayoutGridFull->addSpacing(1);
 
         tool = createToolBarButton(QStringLiteral("buttonSnapToGrid"), Advisor_Info::Grid_Snap_To_Grid, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
         toolbarLayoutGridFull->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonSnapOptions"), Advisor_Info::Grid_Snap_Options, 14, c_button_size_h, false, true);
-        buttonsGroupGridFull->addButton(tool, int(Buttons_Grid::Snap_Options));
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_Options));
         toolbarLayoutGridFull->addWidget(tool);
 
     // ***** Mode "World Graph" Add-On, Grid: Holds button that controls Snap to Grid
-    widgetGroupGridSimple = new QWidget(widgetToolBar);
-    widgetGroupGridSimple->hide();
-    widgetGroupGridSimple->setObjectName(QStringLiteral("widgetGroupGridSimple"));
-    widgetGroupGridSimple->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutGridSimple = new QHBoxLayout(widgetGroupGridSimple);
+    m_widget_group_grid_simple = new QWidget(m_widget_toolbar);
+    m_widget_group_grid_simple->hide();
+    m_widget_group_grid_simple->setObjectName(QStringLiteral("widgetGroupGridSimple"));
+    m_widget_group_grid_simple->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutGridSimple = new QHBoxLayout(m_widget_group_grid_simple);
         toolbarLayoutGridSimple->setSpacing(0);
         toolbarLayoutGridSimple->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupGridSimple = new QButtonGroup();
-        buttonsGroupGridSimple->setExclusive(false);
-        connect(buttonsGroupGridSimple, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
+        m_buttons_group_grid_simple = new QButtonGroup();
+        m_buttons_group_grid_simple->setExclusive(false);
+        connect(m_buttons_group_grid_simple, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonSnapToMap"), Advisor_Info::Grid_Snap_To_Grid, c_button_size_w, c_button_size_h, true);
-        buttonsGroupGridSimple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        m_buttons_group_grid_simple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
         toolbarLayoutGridSimple->addWidget(tool);
         toolbarLayoutGridSimple->addWidget(createToolBarSpacer(c_button_size_h - 2, 34, false));
 
 
     // ***** Mode "Editor" Add-On, Play: Holds buttons that starts game Engine window
-    widgetGroupPlay = new QWidget(widgetToolBar);
-    widgetGroupPlay->hide();
-    widgetGroupPlay->setObjectName(QStringLiteral("widgetGroupPlay"));
-    widgetGroupPlay->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutPlay = new QHBoxLayout(widgetGroupPlay);
+    m_widget_group_play = new QWidget(m_widget_toolbar);
+    m_widget_group_play->hide();
+    m_widget_group_play->setObjectName(QStringLiteral("widgetGroupPlay"));
+    m_widget_group_play->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutPlay = new QHBoxLayout(m_widget_group_play);
         toolbarLayoutPlay->setSpacing(5);
         toolbarLayoutPlay->setContentsMargins(0, 0, 0, 0);
 
-        buttonsGroupPlay = new QButtonGroup();
-        buttonsGroupPlay->setExclusive(false);
-        connect(buttonsGroupPlay, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
+        m_buttons_group_play = new QButtonGroup();
+        m_buttons_group_play->setExclusive(false);
+        connect(m_buttons_group_play, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, c_button_size_w + 14, c_button_size_h, false, true);
-        buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play));
+        m_buttons_group_play->addButton(tool, int(Buttons_Play::Play));
         toolbarLayoutPlay->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonPlayStage"), Advisor_Info::Play_Stage, c_button_size_w, c_button_size_h, false, true);
-        buttonsGroupPlay->addButton(tool, int(Buttons_Play::Play_Stage));
+        m_buttons_group_play->addButton(tool, int(Buttons_Play::Play_Stage));
         toolbarLayoutPlay->addWidget(tool);
 
         toolbarLayoutPlay->addWidget(createToolBarSpacer(c_button_size_h - 2, 34, false));
 
 
     // ***** Settings Buttons
-    widgetGroupSettings = new QWidget(widgetToolBar);
-    widgetGroupSettings->hide();
-    widgetGroupSettings->setObjectName(QStringLiteral("widgetGroupSettings"));
-    widgetGroupSettings->setFixedHeight(c_toolbar_height);
-        QHBoxLayout *toolbarLayoutSettings = new QHBoxLayout(widgetGroupSettings);
+    m_widget_group_settings = new QWidget(m_widget_toolbar);
+    m_widget_group_settings->hide();
+    m_widget_group_settings->setObjectName(QStringLiteral("widgetGroupSettings"));
+    m_widget_group_settings->setFixedHeight(c_toolbar_height);
+        QHBoxLayout *toolbarLayoutSettings = new QHBoxLayout(m_widget_group_settings);
         toolbarLayoutSettings->setSpacing(5);
         toolbarLayoutSettings->setContentsMargins(0, 0, 0, 0);
 
@@ -319,17 +315,17 @@ void FormMain::buildToolBar() {
 
     // ********** Set up initial toolbar
     // Clears the containers that keeps track of whats added to the toolbar layout
-    toolbarWidgets.clear();
-    toolbarSpacers.clear();
+    m_toolbar_widgets.clear();
+    m_toolbar_spacers.clear();
 
     // Set the initial toolbar as the mode buttons only
-    widgetToolBarLayout->addWidget(widgetGroupMode);
-    widgetToolBarLayout->addStretch();
+    m_widget_toolbar_layout->addWidget(m_widget_group_mode);
+    m_widget_toolbar_layout->addStretch();
 
     // Add the toolbar onto FormMain
-    toolbar->addWidget(widgetToolBar);
-    widgetToolBar->setFixedWidth( this->width() );
-    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar);
+    m_toolbar->addWidget(m_widget_toolbar);
+    m_widget_toolbar->setFixedWidth( this->width() );
+    this->addToolBar(Qt::ToolBarArea::TopToolBarArea, m_toolbar);
 }
 
 

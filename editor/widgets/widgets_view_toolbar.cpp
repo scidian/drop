@@ -28,24 +28,27 @@
 //##    Constructor / Destructor
 //####################################################################################
 ViewToolbar::ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
-                         EditorView *view_editor, NodeView *view_node)
+                         EditorView *view_editor, NodeView *view_node, MixerView *view_mixer)
     : QFrame(parent) {
 
     // Make sure we have the proper class pointer to the Editor_Mode requested
     switch (editor_mode) {
-        case Editor_Mode::Component_Map:
+        case Editor_Mode::Component_Graph:
         case Editor_Mode::World_Graph:
             if (view_node == nullptr)   editor_mode = Editor_Mode::Clear;
             break;
-        case Editor_Mode::Animation_Editor:
-        case Editor_Mode::UI_Editor:
-        case Editor_Mode::World_Editor:
+        case Editor_Mode::Animation_Creator:
+        case Editor_Mode::UI_Creator:
+        case Editor_Mode::World_Creator:
             if (view_editor == nullptr) editor_mode = Editor_Mode::Clear;
             break;
+        case Editor_Mode::Sound_Creator:
+            if (view_mixer == nullptr)  editor_mode = Editor_Mode::Clear;
         case Editor_Mode::Clear:
-        case Editor_Mode::Program_Loading:
-            view_node =   nullptr;
-            view_editor = nullptr;
+        case Editor_Mode::Program_Loading:            
+            view_editor =   nullptr;
+            view_mixer =    nullptr;
+            view_node =     nullptr;
             break;
     }
 

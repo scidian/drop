@@ -329,7 +329,7 @@ void ViewToolbar::buildToolbar() {
 
         // ***** Toggled View Options, Debug On/Off, etc
         view_toolbar_layout->addStretch();
-        if (m_editor_mode == Editor_Mode::World_Editor) {
+        if (m_editor_mode == Editor_Mode::World_Creator) {
             widgetGroupToggle = new QWidget();
             widgetGroupToggle->setObjectName(QStringLiteral("widgetGroupToggle"));
             widgetGroupToggle->setFixedHeight(c_toolbar_height);

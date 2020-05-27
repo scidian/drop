@@ -7,19 +7,19 @@
 //      FormMain Modes:
 //          World Graph         (World / UI Layout)
 //          World Creator       (2D Physics World)
-//          UI    Creator
+//          UI Creator
 //          Sound Creator
 //      Future:
 //          Stage Graph?        (2D Physics World Stage Layout)
 //
-//      Main Components of FormMain while in normal "World Editor" mode:
+//      Main Components of FormMain:
 //          Tool Bar
 //          Advisor (Dock)
 //          Inspector (Dock)
 //
 //          Components That Have Items that Can Appear in Inspector:
 //              Asset List
-//              View (Editor / Graph / Sound)
+//              View (Editor / Node Graph / Sound Mixer)
 //                  Status Bar
 //              Project Tree
 //              Variable List
@@ -78,7 +78,7 @@ public:
 
 private:
     // ***** Local Variables
-    DrProject              *m_project           { nullptr };                        // BASE DEFINITION of DrProject!!!!! Holds current open game project
+    DrProject              *m_project           { nullptr };                        // INITIAL DEFINITION of DrProject!!!!! Holds current open game project!
     DrProject              *m_external_images   { nullptr };                        // Project that loads included images
     DrFilterHoverHandler   *m_filter_hover      { nullptr };                        // Pointer to an event filter hover handler
 
@@ -86,61 +86,61 @@ private:
 
 
     // ***** Menu Widgets
-    QMenuBar        *menuBar;
-    QAction         *actionUndo, *actionRedo;
+    QMenuBar        *m_menu_bar;
+    QAction         *m_action_undo, *m_action_redo;
 
 
     // ***** ToolBar Widgets
-    QList<QWidget*>      toolbarWidgets { };
-    QList<QLayoutItem*>  toolbarSpacers { };
+    QList<QWidget*>      m_toolbar_widgets { };
+    QList<QLayoutItem*>  m_toolbar_spacers { };
 
-    QToolBar        *toolbar;
-    QWidget         *widgetToolBar;
-    QHBoxLayout     *widgetToolBarLayout;
-    QWidget             *widgetGroupMode;            QButtonGroup    *buttonsGroupMode;
-    QWidget             *widgetGroupEdit;            QButtonGroup    *buttonsGroupEdit;             QToolButton *buttonAdd;
-    QWidget             *widgetGroupLayering;        QButtonGroup    *buttonsGroupLayering;
-    QWidget             *widgetGroupTransform;       QButtonGroup    *buttonsGroupTransform;
-    QWidget             *widgetGroupGridFull;        QButtonGroup    *buttonsGroupGridFull;
-    QWidget             *widgetGroupGridSimple;      QButtonGroup    *buttonsGroupGridSimple;
-    QWidget             *widgetGroupPlay;            QButtonGroup    *buttonsGroupPlay;
-    QWidget             *widgetGroupSettings;
+    QToolBar        *m_toolbar;
+    QWidget         *m_widget_toolbar;
+    QHBoxLayout     *m_widget_toolbar_layout;
+    QWidget             *m_widget_group_mode;           QButtonGroup    *m_buttons_group_mode;
+    QWidget             *m_widget_group_edit;           QButtonGroup    *m_buttons_group_edit;          QToolButton *m_button_add;
+    QWidget             *m_widget_group_layering;       QButtonGroup    *m_buttons_group_layering;
+    QWidget             *m_widget_group_transform;      QButtonGroup    *m_buttons_group_transform;
+    QWidget             *m_widget_group_grid_full;      QButtonGroup    *m_buttons_group_grid_full;
+    QWidget             *m_widget_group_grid_simple;    QButtonGroup    *m_buttons_group_grid_simple;
+    QWidget             *m_widget_group_play;           QButtonGroup    *m_buttons_group_play;
+    QWidget             *m_widget_group_settings;
 
 
     // ***** Shared FormMain Widgets
-    QDockWidget    *dockAdvisor;            TreeAdvisor    *treeAdvisor;
-    QDockWidget    *dockAssetsEditor;       TreeAssets     *treeAssetEditor;
-    QDockWidget    *dockInspector;          TreeInspector  *treeInspector;
+    QDockWidget    *m_dock_advisor;         TreeAdvisor    *m_tree_advisor;
+    QDockWidget    *m_dock_assets;          TreeAssets     *m_tree_assets;
+    QDockWidget    *m_dock_inspector;       TreeInspector  *m_tree_inspector;
 
 
     // ***** "Empty" Main Widget
-    QWidget        *widgetCentralClear;
+    QWidget        *m_widget_central_clear;
 
 
-    // ***** "Editor" (World Editor) Widgets
-    QWidget         *widgetCentralEditor;
-    TreeProject         *treeProjectEditor;                     // Shows Project Entities
-    EditorScene         *sceneEditor;                           // Holds the currently selected Stage
-    EditorView          *viewEditor;                            // Renders the World Editor View
-    QScrollArea         *areaBottom;
-    QFrame              *statusBar;
-    ViewToolbar         *toolbarEditor;
+    // ***** "Editor" (World Creator) Widgets
+    QWidget         *m_widget_central_editor;
+    TreeProject         *m_tree_project;                        // Shows Project Entities
+    EditorScene         *m_scene_editor;                        // Holds the currently selected Stage
+    EditorView          *m_view_editor;                         // Renders the World Editor View
+    QScrollArea         *m_area_bottom;
+    QFrame              *m_status_bar;
+    ViewToolbar         *m_toolbar_editor;
 
     //       "Editor" Status Bar Widgets
-    QLabel                  *labelSelected,  *labelInfo,     *labelMousePosition;
+    QLabel                  *m_label_selected,  *m_label_info,      *m_label_mouse_position;
 
     //       "Editor" Labels to display info
-    QLabel                  *label1,         *label2,        *label3,        *labelMouse1,   *labelMouse2;
-    QLabel                  *labelObject1,   *labelObject2,  *labelObject3,  *labelObject4,  *labelObject5;
-    QLabel                  *labelPosition,  *labelCenter,   *labelScale,    *labelRotate,   *labelZOrder,   *labelPosFlag;
-    QLabel                  *labelBottom;
+    QLabel                  *label_1,           *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
+    QLabel                  *label_object_1,    *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
+    QLabel                  *label_position,    *label_center,      *label_scale,       *label_rotate,      *label_z_order,     *label_pos_flag;
+    QLabel                  *label_bottom;
 
 
     // ***** "World Graph" Widgets
-    QWidget         *widgetCentralWorldGraph;
-    NodeScene           *sceneWorldGraph;
-    NodeView            *viewWorldGraph;
-    ViewToolbar         *toolbarWorldGraph;
+    QWidget         *m_widget_central_world_graph;
+    NodeScene           *m_scene_world_graph;
+    NodeView            *m_view_world_graph;
+    ViewToolbar         *m_toolbar_world_graph;
 
 
 public:
@@ -158,21 +158,21 @@ public:
 
 
     //############################ START: Interface Relay Implementations    
-    virtual TreeAdvisor*        getAdvisor() override       { return treeAdvisor; }
-    virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
-    virtual TreeInspector*      getInspector() override     { return treeInspector; }
-    virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
+    virtual TreeAdvisor*        getAdvisor() override       { return m_tree_advisor; }
+    virtual TreeAssets*         getAssetTree() override     { return m_tree_assets; }
+    virtual TreeInspector*      getInspector() override     { return m_tree_inspector; }
+    virtual TreeProject*        getProjectTree() override   { return m_tree_project; }
 
     virtual EditorView*         getViewEditor() override    {
-        if (getEditorMode() == Editor_Mode::World_Editor) return viewEditor;
+        if (getEditorMode() == Editor_Mode::World_Creator)    return m_view_editor;
         return nullptr;
     }
     virtual MixerView*          getViewMixer() override     {
-        if (getEditorMode() == Editor_Mode::Sound_Creator) return nullptr;
+        if (getEditorMode() == Editor_Mode::Sound_Creator)    return nullptr;
         return nullptr;
     }
     virtual NodeView*           getViewNode() override      {
-        if (getEditorMode() == Editor_Mode::World_Graph) return viewWorldGraph;
+        if (getEditorMode() == Editor_Mode::World_Graph)      return m_view_world_graph;
         return nullptr;
     }
 

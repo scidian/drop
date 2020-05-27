@@ -30,10 +30,10 @@ private:
     IEditorRelay   *m_editor_relay;                                 // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    QString         m_advisor_header { "No Data" };                 // Keeps current Advisor Header
-    QString         m_advisor_body { "No Data" };                   // Keeps current Advisor Body
+    QString         m_advisor_header    { "No Data" };              // Keeps current Advisor Header
+    QString         m_advisor_body      { "No Data" };              // Keeps current Advisor Body
 
-    QMutex          advisor_mutex { QMutex::NonRecursive };         // Used to keep building function thread safe
+    QMutex          m_advisor_mutex     { QMutex::NonRecursive };   // Used to keep building function thread safe
 
 public:
     // Constructor

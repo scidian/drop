@@ -63,10 +63,10 @@ void FormMain::initializeFormMain() {
     buildCentralWidgetWorldGraph();
 
     // Build Docks
-    dockAdvisor =       Dr::BuildDockAdvisor(   m_project, this, treeAdvisor);
-    dockAssetsEditor =  Dr::BuildDockAssets(    m_project, this, treeAssetEditor);
-    dockInspector =     Dr::BuildDockInspector( m_project, this, treeInspector);
-    Dr::InitializeDockWidgets(this, dockAdvisor, dockAssetsEditor, dockInspector);
+    m_dock_advisor =        Dr::BuildDockAdvisor(   m_project, this, m_tree_advisor);
+    m_dock_assets =         Dr::BuildDockAssets(    m_project, this, m_tree_assets);
+    m_dock_inspector =      Dr::BuildDockInspector( m_project, this, m_tree_inspector);
+    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector);
 }
 
 
@@ -78,26 +78,26 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     Editor_Mode old_mode = m_current_mode;
     m_current_mode = new_mode;
 
-    Dr::LockDockWidth( dockAdvisor, dockAdvisor->width() );
-    Dr::LockDockWidth( dockAssetsEditor, dockAssetsEditor->width() );
-    Dr::LockDockWidth( dockInspector, dockInspector->width() );
+    Dr::LockDockWidth( m_dock_advisor, m_dock_advisor->width() );
+    Dr::LockDockWidth( m_dock_assets, m_dock_assets->width() );
+    Dr::LockDockWidth( m_dock_inspector, m_dock_inspector->width() );
 
     // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {
         clearToolBar();
         switch (old_mode) {
             case Editor_Mode::World_Graph:
-                widgetCentralWorldGraph = takeCentralWidget();
+                m_widget_central_world_graph = takeCentralWidget();
                 buildInspector( { } );
-                dockAssetsEditor->hide();
+                m_dock_assets->hide();
                 break;
-            case Editor_Mode::World_Editor:
-                widgetCentralEditor = takeCentralWidget();
+            case Editor_Mode::World_Creator:
+                m_widget_central_editor = takeCentralWidget();
                 buildInspector( { } );
-                dockAssetsEditor->hide();
+                m_dock_assets->hide();
                 break;
             case Editor_Mode::Clear:
-                widgetCentralClear = takeCentralWidget();
+                m_widget_central_clear = takeCentralWidget();
                 break;
             default:
                 Dr::ShowMessageBox("rebuildFormMain, clearing - Mode not known", QMessageBox::Icon::Warning, this);
@@ -105,7 +105,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     }
 
     // Wait for possible finish loading
-    if (new_mode != Editor_Mode::World_Editor) {
+    if (new_mode != Editor_Mode::World_Creator) {
         while (Dr::CheckDoneLoading() == false) QApplication::processEvents();
     }
     Dr::SetDoneLoading(false);
@@ -113,31 +113,31 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     // ***** Set New Layout *****
     switch (new_mode) {
         case Editor_Mode::World_Graph:
-            sceneWorldGraph->clearSceneOverride();
+            m_scene_world_graph->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
-            setCentralWidget( widgetCentralWorldGraph );
-            dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
-            treeAssetEditor->setShowTypes({ DrType::Block });
+            setCentralWidget( m_widget_central_world_graph );
+            m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
+            m_tree_assets->setShowTypes({ DrType::Block });
             buildAssetTree();
-            dockAssetsEditor->show();
+            m_dock_assets->show();
             buildSceneAfterLoading( c_no_key );
             break;
 
-        case Editor_Mode::World_Editor:
-            sceneEditor->clearSceneOverride();
+        case Editor_Mode::World_Creator:
+            m_scene_editor->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
-            setCentralWidget( widgetCentralEditor );
-            dockAssetsEditor->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
-            treeAssetEditor->setShowTypes({ DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
+            setCentralWidget( m_widget_central_editor );
+            m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
+            m_tree_assets->setShowTypes({ DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
             buildAssetTree();
-            dockAssetsEditor->show();
+            m_dock_assets->show();
             buildProjectTree();
             buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
 
         case Editor_Mode::Clear:
             setWindowTitle( tr("Drop") );
-            setCentralWidget( widgetCentralClear );
+            setCentralWidget( m_widget_central_clear );
             break;
 
         default:    Dr::ShowMessageBox("rebuildFormMain, setting - Mode not known", QMessageBox::Icon::Warning, this);
@@ -151,9 +151,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     QApplication::processEvents();
     Dr::SetDoneLoading(true);
 
-    Dr::UnlockDockWidth( this, dockAdvisor );
-    Dr::UnlockDockWidth( this, dockAssetsEditor );
-    Dr::UnlockDockWidth( this, dockInspector );
+    Dr::UnlockDockWidth( this, m_dock_advisor );
+    Dr::UnlockDockWidth( this, m_dock_assets );
+    Dr::UnlockDockWidth( this, m_dock_inspector );
     buttonGroupModeSetChecked(int(new_mode));
 }
 

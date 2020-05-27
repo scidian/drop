@@ -27,6 +27,7 @@
 // Forward Declarations
 class DrFilterHoverHandler;
 class EditorView;
+class MixerView;
 class NodeView;
 
 
@@ -66,7 +67,7 @@ private:
 public:
     // Constructor / Destructor
     ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *editor_relay, Editor_Mode editor_mode,
-                EditorView *view_editor = nullptr, NodeView *view_node = nullptr);
+                EditorView *view_editor = nullptr, NodeView *view_node = nullptr, MixerView *view_mixer = nullptr);
 
     // Building
     void            buildToolbar();

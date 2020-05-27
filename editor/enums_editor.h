@@ -12,55 +12,6 @@
 
 
 //####################################################################################
-//##    Custom QStrings for storing data in QWidgets using setProperty
-//############################
-namespace User_Property {
-    const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
-    const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
-    const char External[12] =       "dr_external";          // Set to true if DrEntity (DrImage) is in external image DrProject
-
-    const char CompKey[12] =        "dr_comp_key";          // Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
-    const char CompName[13] =       "dr_comp_name";         // Stores Component Name of a Property in a widget
-    const char PropKey[12] =        "dr_prop_key";          // Stores Property  Key (sub key assigned to unique Property from owning DrComponent)
-    const char PropName[13] =       "dr_prop_name";         // Stores Property  Name of a Property in a widget
-
-    const char Color[9] =           "dr_color";             // Stores a color value (QColor.rgba())
-    const char Order[9] =           "dr_order";             // Used for properties with mulitple values (like Size has X and Y),
-                                                            //      the index of the single property we want (0, 1, 2, etc)
-
-    const char Header[10] =         "dr_header";            // Used for Advisor Text
-    const char Body[8] =            "dr_body";              // Used for Advisor Text
-
-    const char Mouse_Over[14] =     "dr_mouse_over";        // Set to true by DrFilterHoverHandler when mouse is over widget
-    const char Mouse_Pos[13] =      "dr_mouse_pos";         // Set to mouse position (QPoint) by DrFilterHoverHandler when mouse is moving over widget
-    const char Mouse_Down[14] =     "dr_mouse_down";        // Set to true when mouse is down so we can prepare for a drag event (used for DrAssets)
-    const char Mouse_Down_Pos[18] = "dr_mouse_down_pos";    // Set to mouse position when mouse button is first pressed (used for DrAssets)
-}
-
-
-//####################################################################################
-//##    Custom Qt::UserRole 's for storing data in QWidgets using setData
-//############################
-enum User_Roles {
-    Key = 0x0100,                                           // Stores Object Key in User Data of widget / graphicsitem
-                                                            // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
-    CompKey,                                                // Stores Component Key
-    CompName,                                               // Stores Component Name
-    PropKey,                                                // Stores Property  Key
-    PropName,                                               // Stores Property  Name
-
-    Scale,      Pre_Resize_Scale,
-    Rotation,   Pre_Rotate_Rotation,
-    Z_Order,
-    Opacity,
-
-    Name,
-    Type,
-    Category_Name,
-};
-
-
-//####################################################################################
 //##    Modes for Interface Editor Form
 //##        These modes are modes that use a QGraphicsView and interface with some
 //##        combination of the Asset Tree, Advisor, Object Inspector, Toolbar, etc
@@ -70,17 +21,17 @@ enum class Editor_Mode {
     Program_Loading             = 1,
 
     World_Graph                 = 2,                        // World Node Graph
-    World_Editor                = 3,                        // 2D Physics World Editor
-    UI_Editor                   = 4,                        // UI Page Layout
+    World_Creator               = 3,                        // 2D Physics World Editor
+    UI_Creator                  = 4,                        // UI Editor
     Sound_Creator               = 5,                        // Sound Mixer
 
-    Animation_Editor            = 6,                        // Animation Editor
-    Component_Map               = 7,                        // Visual Scripting
+    Animation_Creator           = 6,                        // Animation Editor
+    Component_Graph             = 7,                        // Visual Scripting
 
     // Stage_Graph              = ,
 
-    // App_Editor               = ,
-    // Puzzle_World_Editor      = ,
+    // App_Creator              = ,
+    // Puzzle_World_Creator     = ,
     // Tower_Defense_Creator    = ,
     // Card_Game_Creator        = ,
 };
@@ -149,7 +100,7 @@ enum class Position_Flags {                                 // !!!!! Order is im
 
 
 //####################################################################################
-//##    World Editor Mouse Modes
+//##    World Editor View Mouse Modes
 //############################
 enum class Mouse_Mode {
     None                = 0,
@@ -159,7 +110,7 @@ enum class Mouse_Mode {
 };
 
 //####################################################################################
-//##    Sub World Editor Mouse Mode - Mouse_Mode::Pointer
+//##    Sub World Editor View Mouse Mode - Mouse_Mode::Pointer
 //############################
 enum class View_Mode {
     None,
@@ -232,6 +183,56 @@ enum class Buttons_Toggle {
 };
 
 
+
+//####################################################################################
+//##    Custom QStrings for storing data in QWidgets using setProperty
+//############################
+namespace User_Property {
+    const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
+    const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
+    const char External[12] =       "dr_external";          // Set to true if DrEntity (DrImage) is in external image DrProject
+
+    const char CompKey[12] =        "dr_comp_key";          // Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
+    const char CompName[13] =       "dr_comp_name";         // Stores Component Name of a Property in a widget
+    const char PropKey[12] =        "dr_prop_key";          // Stores Property  Key (sub key assigned to unique Property from owning DrComponent)
+    const char PropName[13] =       "dr_prop_name";         // Stores Property  Name of a Property in a widget
+
+    const char Color[9] =           "dr_color";             // Stores a color value (QColor.rgba())
+    const char Order[9] =           "dr_order";             // Used for properties with mulitple values (like Size has X and Y),
+                                                            //      the index of the single property we want (0, 1, 2, etc)
+
+    const char Header[10] =         "dr_header";            // Used for Advisor Text
+    const char Body[8] =            "dr_body";              // Used for Advisor Text
+
+    const char Mouse_Over[14] =     "dr_mouse_over";        // Set to true by DrFilterHoverHandler when mouse is over widget
+    const char Mouse_Pos[13] =      "dr_mouse_pos";         // Set to mouse position (QPoint) by DrFilterHoverHandler when mouse is moving over widget
+    const char Mouse_Down[14] =     "dr_mouse_down";        // Set to true when mouse is down so we can prepare for a drag event (used for DrAssets)
+    const char Mouse_Down_Pos[18] = "dr_mouse_down_pos";    // Set to mouse position when mouse button is first pressed (used for DrAssets)
+}
+
+
+//####################################################################################
+//##    Custom Qt::UserRole 's for storing data in QWidgets using setData
+//############################
+enum User_Roles {
+    Key = 0x0100,                                           // Stores Object Key in User Data of widget / graphicsitem
+                                                            // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
+    CompKey,                                                // Stores Component Key
+    CompName,                                               // Stores Component Name
+    PropKey,                                                // Stores Property  Key
+    PropName,                                               // Stores Property  Name
+
+    Scale,      Pre_Resize_Scale,
+    Rotation,   Pre_Rotate_Rotation,
+    Z_Order,
+    Opacity,
+
+    Name,
+    Type,
+    Category_Name,
+};
+
+
 //####################################################################################
 //##    Some public forward function declarations for some enum functions
 //############################
@@ -245,6 +246,10 @@ namespace Dr {
 
 
 #endif // ENUMS_EDITOR_H
+
+
+
+
 
 
 

@@ -1,12 +1,12 @@
 //
-//      Created by Stephens Nunnally on 11/25/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/27/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
 #include "editor/docks/docks.h"
-#include "editor/forms/form_animation.h"
+#include "editor/form_animation/form_animation.h"
 #include "editor/style/style.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
@@ -26,8 +26,6 @@ FormAnimation::FormAnimation(DrProject *project, long animation_key, QWidget *pa
 }
 
 FormAnimation::~FormAnimation() { }
-
-
 
 
 

@@ -24,10 +24,10 @@
 //##    SLOT, Sets the Advisor Dock text
 //####################################################################################
 void TreeAdvisor::changeAdvisor(QString header, QString body) {
-    if (advisor_mutex.tryLock() == false) return;           // Try and lock mutex to make this thread safe
+    if (m_advisor_mutex.tryLock() == false) return;             // Try and lock mutex to make this thread safe
 
-    this->clear();                                          // Clear / delete all from advisor tree
-    m_advisor_header = header;                              // Save Header for reference later
+    this->clear();                                              // Clear / delete all from advisor tree
+    m_advisor_header = header;                                  // Save Header for reference later
     m_advisor_body = body;
 
     // Set font sizes
@@ -61,7 +61,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body) {
     // Adjust height to maximize advisor text in advisor window
     body_label->setFixedHeight(body_label->rect().height() + (this->rect().bottom() - body_label->rect().bottom() - 1) );
 
-    advisor_mutex.unlock();                                 // Unlock function for other threads
+    m_advisor_mutex.unlock();                                 // Unlock function for other threads
 }
 
 

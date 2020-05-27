@@ -14,7 +14,7 @@ CONFIG          +=  c++11                                       # "QMAKE_CXXFLAG
 QMAKE_CFLAGS    += -std=c99
 
 ##  C++ Compiler Flags
-QMAKE_CXXFLAGS  += -Wno-sign-conversion
+QMAKE_CXXFLAGS  += -Wno-sign-conversion -Wno-missing-braces
 
 macx {
     LIBS        += -framework AudioToolbox -framework CoreAudio
@@ -228,6 +228,9 @@ SOURCES += \
     editor/enums_editor.cpp \
     editor/event_filters/event_filters.cpp \
     editor/event_filters/event_filters__click_and_drag.cpp \
+    editor/form_animation/form_animation.cpp \
+    editor/form_animation/form_animation__build.cpp \
+    editor/form_animation/form_animation__interface_editor.cpp \
     editor/form_main/form_main.cpp \
     editor/form_main/form_main__build.cpp \
     editor/form_main/form_main__build_central_widget.cpp \
@@ -237,13 +240,10 @@ SOURCES += \
     editor/form_main/form_main__toolbar.cpp \
     editor/form_main/form_main__toolbar_build.cpp \
     editor/form_main/form_main__toolbar_click.cpp \
-    editor/form_sound/form_sound.cpp \
-    editor/form_sound/form_sound__build.cpp \
-    editor/form_sound/form_sound__play.cpp \
+    editor/form_sound/form_sound_effect.cpp \
+    editor/form_sound/form_sound_effect__build.cpp \
+    editor/form_sound/form_sound_effect__play.cpp \
     editor/forms/form_about.cpp \
-    editor/forms/form_animation.cpp \
-    editor/forms/form_animation__build.cpp \
-    editor/forms/form_animation__interface_editor.cpp \
     editor/forms/form_blank.cpp \
     editor/forms/form_color_magnifier.cpp \
     editor/forms/form_expire.cpp \
@@ -1132,10 +1132,10 @@ HEADERS += \
     editor/docks/docks.h \
     editor/enums_editor.h \
     editor/event_filters/event_filters.h \
+    editor/form_animation/form_animation.h \
     editor/form_main/form_main.h \
-    editor/form_sound/form_sound.h \
+    editor/form_sound/form_sound_effect.h \
     editor/forms/form_about.h \
-    editor/forms/form_animation.h \
     editor/forms/form_blank.h \
     editor/forms/form_color_magnifier.h \
     editor/forms/form_expire.h \

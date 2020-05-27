@@ -78,22 +78,22 @@ QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, Tre
     size_policy_preferred_vertical.setHorizontalStretch(0);
     size_policy_preferred_vertical.setVerticalStretch(1);
 
-    QDockWidget *dockAssetsEditor = new QDockWidget();
-    dockAssetsEditor->setWindowTitle( "" );
-    dockAssetsEditor->setObjectName(QStringLiteral("dockAssetsEditor"));
-    dockAssetsEditor->setFont(Dr::CustomFont());
-    dockAssetsEditor->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);  /// | QDockWidget::DockWidgetClosable);
-    dockAssetsEditor->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-        QWidget *widgetAssestEditor = new QWidget();
-        widgetAssestEditor->setObjectName(QStringLiteral("widgetAssestsEditor"));
-        widgetAssestEditor->setSizePolicy(size_policy_preferred_vertical);
-            QVBoxLayout *verticalLayoutAsset = new QVBoxLayout(widgetAssestEditor);
-            verticalLayoutAsset->setObjectName(QStringLiteral("verticalLayoutAsset"));
-            verticalLayoutAsset->setSpacing(0);
-            verticalLayoutAsset->setContentsMargins(0, 0, 0, 0);
+    QDockWidget *m_dock_assets = new QDockWidget();
+    m_dock_assets->setWindowTitle( "" );
+    m_dock_assets->setObjectName(QStringLiteral("dockAssets"));
+    m_dock_assets->setFont(Dr::CustomFont());
+    m_dock_assets->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable);  /// | QDockWidget::DockWidgetClosable);
+    m_dock_assets->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        QWidget *widget_assest_editor = new QWidget();
+        widget_assest_editor->setObjectName(QStringLiteral("widgetAssestsEditor"));
+        widget_assest_editor->setSizePolicy(size_policy_preferred_vertical);
+            QVBoxLayout *vertical_layout_asset = new QVBoxLayout(widget_assest_editor);
+            vertical_layout_asset->setObjectName(QStringLiteral("verticalLayoutAsset"));
+            vertical_layout_asset->setSpacing(0);
+            vertical_layout_asset->setContentsMargins(0, 0, 0, 0);
 
                 // ***** Load our custom TreeAssets for the Asset List
-                tree_assets = new TreeAssets(widgetAssestEditor, project, editor_relay);
+                tree_assets = new TreeAssets(widget_assest_editor, project, editor_relay);
                 tree_assets->setObjectName(QStringLiteral("treeAssetEditor"));
                 tree_assets->setColumnCount(1);
                 tree_assets->setFont(Dr::CustomFont());
@@ -116,10 +116,10 @@ QDockWidget* BuildDockAssets(DrProject *project, IEditorRelay *editor_relay, Tre
                 tree_assets->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
                 tree_assets->verticalScrollBar()->setSingleStep(25);
 
-            verticalLayoutAsset->insertWidget(0, tree_assets);
+            vertical_layout_asset->insertWidget(0, tree_assets);
 
-        dockAssetsEditor->setWidget(widgetAssestEditor);
-    return dockAssetsEditor;
+        m_dock_assets->setWidget(widget_assest_editor);
+    return m_dock_assets;
 }
 
 

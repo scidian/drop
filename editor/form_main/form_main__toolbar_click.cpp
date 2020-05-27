@@ -36,9 +36,9 @@ void FormMain::buttonGroupModeClicked(int id) {
 }
 
 void FormMain::buttonGroupModeSetChecked(int id) {
-    QList<QAbstractButton*> buttons = buttonsGroupMode->buttons();
+    QList<QAbstractButton*> buttons = m_buttons_group_mode->buttons();
     for (auto button : buttons) {
-        bool is_button = (buttonsGroupMode->button(id) == button);
+        bool is_button = (m_buttons_group_mode->button(id) == button);
         button->setChecked(is_button);
         button->setDown(!is_button);
     }
@@ -58,7 +58,7 @@ void FormMain::buttonGroupLayeringClicked(int id) {
     if (clicked == Buttons_Layering::Send_Backward) { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Comma,   { Qt::KeyboardModifier::NoModifier }); }
 
     if (event) {
-        sceneEditor->keyPressEvent(event);
+        m_scene_editor->keyPressEvent(event);
         delete event;
     }
 }
@@ -71,7 +71,7 @@ void FormMain::buttonGroupEditClicked(int id) {
     Buttons_Edit clicked = static_cast<Buttons_Edit>(id);
 
     if (clicked == Buttons_Edit::Add) {
-        FormPopup *popupAdd = new FormPopup(buttonsGroupEdit->button(id), m_project, widgetGroupEdit);
+        FormPopup *popupAdd = new FormPopup(m_buttons_group_edit->button(id), m_project, m_widget_group_edit);
         popupAdd->buildPopupAddEntity();
         popupAdd->show();
 
@@ -80,12 +80,12 @@ void FormMain::buttonGroupEditClicked(int id) {
         if (clicked == Buttons_Edit::Delete)    event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Delete, { Qt::KeyboardModifier::NoModifier });
         if (clicked == Buttons_Edit::Duplicate) event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_D,      { Qt::KeyboardModifier::NoModifier });
 
-        if (getEditorMode() == Editor_Mode::World_Editor) {
-            if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { treeAssetEditor->keyPressEvent(event); }
-            else if (getActiveWidget() == Editor_Widgets::Project_Tree)     { treeProjectEditor->keyPressEvent(event); }
+        if (getEditorMode() == Editor_Mode::World_Creator) {
+            if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { m_tree_assets->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::Project_Tree)     { m_tree_project->keyPressEvent(event); }
             else if (getActiveWidget() == Editor_Widgets::View) {
-                if (getEditorMode() == Editor_Mode::World_Graph)            { sceneWorldGraph->keyPressEvent(event); }
-                if (getEditorMode() == Editor_Mode::World_Editor)           { sceneEditor->keyPressEvent(event); }
+                if (getEditorMode() == Editor_Mode::World_Graph)            { m_scene_world_graph->keyPressEvent(event); }
+                if (getEditorMode() == Editor_Mode::World_Creator)          { m_scene_editor->keyPressEvent(event); }
             }
         }
 
@@ -105,7 +105,7 @@ void FormMain::buttonGroupTransformClicked(int id) {
         std::list<ComponentProperty> properties_to_update { std::make_pair(Comps::Thing_Transform, Props::Thing_Scale),
                                                             std::make_pair(Comps::Thing_Transform, Props::Thing_Rotation) };
 
-        for (auto item : sceneEditor->getSelectionItems()) {
+        for (auto item : m_scene_editor->getSelectionItems()) {
             EditorItem *graphics_item = dynamic_cast<EditorItem*>(item);
             if (graphics_item == nullptr) continue;
             DrThing *thing = graphics_item->getThing();
@@ -115,25 +115,25 @@ void FormMain::buttonGroupTransformClicked(int id) {
             thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale, DrPointF(1, 1));
             thing->setComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation, 0);
         }
-        sceneEditor->resetSelectionGroup();
+        m_scene_editor->resetSelectionGroup();
         updateEditorWidgetsAfterItemChange(Editor_Widgets::ToolBar, settings, properties_to_update );
 
     } else if (clicked == Buttons_Transform::Flip_H || clicked == Buttons_Transform::Flip_V) {
         QPointF scale = (clicked == Buttons_Transform::Flip_H) ? QPointF(-1, 1) : QPointF(1, -1);
 
-        if (sceneEditor->scene_mutex.tryLock() == true) {
-            viewEditor->startResizeSelection(QPoint(0, 0), false);
-            viewEditor->resizeSelection(QPointF(0, 0), true, scale);
-            sceneEditor->scene_mutex.unlock();
+        if (m_scene_editor->scene_mutex.tryLock() == true) {
+            m_view_editor->startResizeSelection(QPoint(0, 0), false);
+            m_view_editor->resizeSelection(QPointF(0, 0), true, scale);
+            m_scene_editor->scene_mutex.unlock();
         }
 
     } else if (clicked == Buttons_Transform::Rotate_L || clicked == Buttons_Transform::Rotate_R) {
         double angle = (clicked == Buttons_Transform::Rotate_L) ? -90 : 90;
 
-        if (sceneEditor->scene_mutex.tryLock() == true) {
-            viewEditor->startRotateSelection(QPoint(0, 0), false);
-            viewEditor->rotateSelection(QPoint(0, 0), true, angle);
-            sceneEditor->scene_mutex.unlock();
+        if (m_scene_editor->scene_mutex.tryLock() == true) {
+            m_view_editor->startRotateSelection(QPoint(0, 0), false);
+            m_view_editor->rotateSelection(QPoint(0, 0), true, angle);
+            m_scene_editor->scene_mutex.unlock();
         }
     }
 }
@@ -145,19 +145,19 @@ void FormMain::buttonGroupGridFullClicked(int id) {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     if (clicked == Buttons_Grid::Snap_Options) {
-        FormPopup *popupGrid = new FormPopup(buttonsGroupGridFull->button(id), m_project, widgetGroupGridFull);
+        FormPopup *popupGrid = new FormPopup(m_buttons_group_grid_full->button(id), m_project, m_widget_group_grid_full);
         popupGrid->buildPopupGridSnap();
         popupGrid->show();
 
     } else {
         switch (clicked) {
-            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGridFull->button(id)->isChecked());  break;
-            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGridFull->button(id)->isChecked());  break;
-            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGridFull->button(id)->isChecked());  break;
+            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   m_buttons_group_grid_full->button(id)->isChecked());  break;
+            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, m_buttons_group_grid_full->button(id)->isChecked());  break;
+            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    m_buttons_group_grid_full->button(id)->isChecked());  break;
             case Buttons_Grid::Snap_Options:    ;
         }
-        viewEditor->updateGrid();
-        viewEditor->updateSelectionBoundingBox(8);
+        m_view_editor->updateGrid();
+        m_view_editor->updateSelectionBoundingBox(8);
     }
 }
 
@@ -168,12 +168,12 @@ void FormMain::buttonGroupGridSimpleClicked(int id) {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     switch (clicked) {
-        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   buttonsGroupGridSimple->button(id)->isChecked());  break;
-        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, buttonsGroupGridSimple->button(id)->isChecked());  break;
-        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    buttonsGroupGridSimple->button(id)->isChecked());  break;
+        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   m_buttons_group_grid_simple->button(id)->isChecked());  break;
+        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, m_buttons_group_grid_simple->button(id)->isChecked());  break;
+        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    m_buttons_group_grid_simple->button(id)->isChecked());  break;
         case Buttons_Grid::Snap_Options:    ;
     }
-    viewWorldGraph->updateGrid();
+    m_view_world_graph->updateGrid();
 }
 
 //####################################################################################

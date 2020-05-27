@@ -68,23 +68,23 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
     initializeFormMain();
 
     // ********** Loads project into FormMain
-    setEditorMode( Editor_Mode::World_Editor );
+    setEditorMode( Editor_Mode::World_Creator );
 }
 
 // Destructor Deletes all Widgets so that it can then safely delete Project
 FormMain::~FormMain() {
     // Wait until scene is not being changed, then delete view and scene
     qApp->blockSignals(true);
-    while (sceneEditor->scene_mutex.tryLock() == false)
+    while (m_scene_editor->scene_mutex.tryLock() == false)
         qApp->processEvents();
-    sceneEditor->clearSceneOverride();
-    sceneEditor->scene_mutex.unlock();
-    sceneEditor->deleteLater();
+    m_scene_editor->clearSceneOverride();
+    m_scene_editor->scene_mutex.unlock();
+    m_scene_editor->deleteLater();
 
     // Delete widgets not currently attached to main form
-    if (getEditorMode() != Editor_Mode::World_Graph)    widgetCentralWorldGraph->deleteLater();
-    if (getEditorMode() != Editor_Mode::World_Editor)   widgetCentralEditor->deleteLater();
-    if (getEditorMode() != Editor_Mode::Clear)          widgetCentralClear->deleteLater();
+    if (getEditorMode() != Editor_Mode::World_Graph)    m_widget_central_world_graph->deleteLater();
+    if (getEditorMode() != Editor_Mode::World_Creator)  m_widget_central_editor->deleteLater();
+    if (getEditorMode() != Editor_Mode::Clear)          m_widget_central_clear->deleteLater();
 
     delete m_project;
     delete m_external_images;
@@ -127,11 +127,11 @@ void FormMain::changePalette(Color_Scheme new_color_scheme) {
     // Rebuild Editor Widgets
     buildAssetTree();
     buildProjectTree(true);
-    buildInspector(treeInspector->getSelectedKeys(), true);
+    buildInspector(m_tree_inspector->getSelectedKeys(), true);
 
     // Force QGraphicsViews to rebuild
-    if (viewWorldGraph) viewWorldGraph->updateGrid();
-    if (viewEditor)     viewEditor->updateGrid();
+    if (m_view_world_graph) m_view_world_graph->updateGrid();
+    if (m_view_editor)      m_view_editor->updateGrid();
 }
 
 
@@ -146,9 +146,9 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
         QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
         if (key_event->key() == Qt::Key::Key_Space) {
             if (getEditorMode() == Editor_Mode::World_Graph) {
-                if (viewWorldGraph->hasFocus() == false) viewWorldGraph->spaceBarDown();
-            } else if (getEditorMode() == Editor_Mode::World_Editor) {
-                if (viewEditor->hasFocus() == false) viewEditor->spaceBarDown();
+                if (m_view_world_graph->hasFocus() == false) m_view_world_graph->spaceBarDown();
+            } else if (getEditorMode() == Editor_Mode::World_Creator) {
+                if (m_view_editor->hasFocus() == false) m_view_editor->spaceBarDown();
             }
         }
     }
@@ -157,9 +157,9 @@ bool FormMain::eventFilter(QObject *obj, QEvent *event) {
         QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
         if (key_event->key() == Qt::Key::Key_Space) {
             if (getEditorMode() == Editor_Mode::World_Graph) {
-                if (viewWorldGraph->hasFocus() == false) viewWorldGraph->spaceBarUp();
-            } else if (getEditorMode() == Editor_Mode::World_Editor) {
-                if (viewEditor->hasFocus() == false) viewEditor->spaceBarUp();
+                if (m_view_world_graph->hasFocus() == false) m_view_world_graph->spaceBarUp();
+            } else if (getEditorMode() == Editor_Mode::World_Creator) {
+                if (m_view_editor->hasFocus() == false) m_view_editor->spaceBarUp();
             }
         }
     }
@@ -186,7 +186,7 @@ void FormMain::closeEvent(QCloseEvent *event) {
 // Overrides resize event to keep Toolbar proper width
 void FormMain::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    widgetToolBar->setFixedWidth( this->width() );
+    m_widget_toolbar->setFixedWidth( this->width() );
 }
 
 
@@ -197,26 +197,26 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text) {
     if (Dr::CheckDoneLoading() == false) return;
 
     switch (label_name) {
-        case Label_Names::Label_1:          label1->setText(new_text);         break;
-        case Label_Names::Label_2:          label2->setText(new_text);         break;
-        case Label_Names::Label_3:          label3->setText(new_text);         break;
-        case Label_Names::Label_Mouse_1:    labelMouse1->setText(new_text);   break;
-        case Label_Names::Label_Mouse_2:    labelMouse2->setText(new_text);   break;
+        case Label_Names::Label_1:          label_1->setText(new_text);             break;
+        case Label_Names::Label_2:          label_2->setText(new_text);             break;
+        case Label_Names::Label_3:          label_3->setText(new_text);             break;
+        case Label_Names::Label_Mouse_1:    label_mouse_1->setText(new_text);       break;
+        case Label_Names::Label_Mouse_2:    label_mouse_2->setText(new_text);       break;
 
-        case Label_Names::Label_Object_1:   labelObject1->setText(new_text);  break;
-        case Label_Names::Label_Object_2:   labelObject2->setText(new_text);  break;
-        case Label_Names::Label_Object_3:   labelObject3->setText(new_text);  break;
-        case Label_Names::Label_Object_4:   labelObject4->setText(new_text);  break;
-        case Label_Names::Label_Object_5:   labelObject5->setText(new_text);  break;
+        case Label_Names::Label_Object_1:   label_object_1->setText(new_text);      break;
+        case Label_Names::Label_Object_2:   label_object_2->setText(new_text);      break;
+        case Label_Names::Label_Object_3:   label_object_3->setText(new_text);      break;
+        case Label_Names::Label_Object_4:   label_object_4->setText(new_text);      break;
+        case Label_Names::Label_Object_5:   label_object_5->setText(new_text);      break;
 
-        case Label_Names::Label_Position:   labelPosition->setText(new_text);  break;
-        case Label_Names::Label_Center:     labelCenter->setText(new_text);    break;
-        case Label_Names::Label_Scale:      labelScale->setText(new_text);     break;
-        case Label_Names::Label_Rotate:     labelRotate->setText(new_text);    break;
-        case Label_Names::Label_Z_Order:    labelZOrder->setText(new_text);   break;
-        case Label_Names::Label_Pos_Flag:   labelPosFlag->setText(new_text);  break;
+        case Label_Names::Label_Position:   label_position->setText(new_text);      break;
+        case Label_Names::Label_Center:     label_center->setText(new_text);        break;
+        case Label_Names::Label_Scale:      label_scale->setText(new_text);         break;
+        case Label_Names::Label_Rotate:     label_rotate->setText(new_text);        break;
+        case Label_Names::Label_Z_Order:    label_z_order->setText(new_text);       break;
+        case Label_Names::Label_Pos_Flag:   label_pos_flag->setText(new_text);      break;
 
-        case Label_Names::Label_Bottom:     labelBottom->setText(new_text);    break;
+        case Label_Names::Label_Bottom:     label_bottom->setText(new_text);        break;
     }
 }
 

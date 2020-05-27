@@ -20,11 +20,12 @@ typedef std::vector<QString> HeaderBodyList;
 namespace Advisor_Info {
 
     // ToolBar Buttons
-    const HeaderBodyList Mode_Map               { "World Graph", "This mode will allow you to see the layout of your Project and how the Worlds and "
+    const HeaderBodyList Mode_World_Graph       { "World Graph", "This mode will allow you to see the layout of your Project and how the Worlds and "
                                                                  "User Interfaces in your Project connect to each other." };
-    const HeaderBodyList Mode_Editor            { "World Editor", "This mode will allow you to edit the contents of each Physics World. It is where "
-                                                                  "you can design each Stage and lay out your worlds / levels." };
-    const HeaderBodyList Mode_UI                { "UI Editor", "This mode will allow you to edit the user interface layer of your Project." };
+    const HeaderBodyList Mode_World_Creator     { "World Creator", "This mode will allow you to edit the contents of each Physics World. It is where "
+                                                                   "you can design each Stage and lay out your worlds / levels." };
+    const HeaderBodyList Mode_UI_Creator        { "UI Creator", "This mode will allow you to edit the user interface layers of your Project." };
+    const HeaderBodyList Mode_Sound_Creator     { "Sound Creator", "This mode will allow you mix / edit sounds for your Project." };
 
     const HeaderBodyList Settings_Image_Viewer  { "Image Viewer",       "View / manage Images used in this Project." };
     const HeaderBodyList Settings_Sound_Files   { "Sound Files",        "Create and edit sounds to use in this Project." };

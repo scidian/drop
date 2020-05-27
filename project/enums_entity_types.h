@@ -42,7 +42,6 @@ enum class DrType {
         Frame,                      // Entities contained within DrProject::DrAnimation::m_frames
     Font,                           // Entities contained within DrProject::m_fonts
     Image,                          // Entities contained within DrProject::m_images
-    Sound,                          // Entities contained within DrProject::m_sounds
 
     // Mapped Types
     World,                          // Entities contained within DrProject::m_worlds / DrProject::m_uis
@@ -51,10 +50,10 @@ enum class DrType {
 ///         Background,
 ///         Foreground,
 
-    // Assets for World Graph
+    // Assets for View Node: World Graph
     Block,                          // Entities contained within DrProject::m_blocks
 
-    // Assets for Editor: World Physics 2D
+    // Assets for View Editor: World Creator (2D Physics)
     Asset,                          // Entities contained within DrProject::m_assets
     Device,                         // Entities contained within DrProject::m_devices
     Effect,                         // Entities contained within DrProject::m_effects
@@ -62,9 +61,13 @@ enum class DrType {
     Prefab,                         // Entities contained within DrProject::m_prefabs
 /// Logic
 
-    // Assets for Editor: World UI
+    // Assets for View Editor: UI Creator
 /// Buttons,                        // button types
 /// Controls,                       // joystick, etc?
+
+    // Assets for View Mixer: Sound Creator
+    Music,                          // Entities contained within DrProject::m_music
+    Sound,                          // Entities contained within DrProject::m_sounds
 
     // Misc Types
     NotFound,                       // For passing a value in functions that represents No Type Selected / Found
@@ -194,11 +197,11 @@ enum class DrPrefabType {
 //##    Categories for the Asset Tree
 //############################
 namespace Asset_Category {
-    // World Graph Node Editor
+    // View Node: World Graph
     const std::string   Worlds          = "Worlds";
     const std::string   Logic           = "Logic";
 
-    // World Physics 2D Editor
+    // View Editor: World Creator (2D Physics)
     const std::string   Characters      = "Characters";
     const std::string   Objects         = "Objects";
     const std::string   Devices         = "Devices";
@@ -208,9 +211,15 @@ namespace Asset_Category {
     const std::string   Text            = "Text";
     const std::string   Images          = "Images";
 
-    // World UI Editor
+    // View Editor: UI Creator
     const std::string   Buttons         = "Buttons";
     const std::string   Controls        = "Controls";
+
+    // View Mixer: Sound Creator
+    const std::string   Music           = "Music";
+    const std::string   Sounds          = "Sounds";
+    const std::string   Speech          = "Speech";
+    const std::string   Wav             = "Wav";
 };
 
 

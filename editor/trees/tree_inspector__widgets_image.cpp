@@ -13,7 +13,7 @@
 
 #include "core/colors/colors.h"
 #include "editor/event_filters/event_filters.h"
-#include "editor/forms/form_animation.h"
+#include "editor/form_animation/form_animation.h"
 #include "editor/forms/form_popup.h"
 #include "editor/forms/form_progress_box.h"
 #include "editor/helper_library.h"

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 11/25/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/27/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -42,17 +42,17 @@ private:
 
 
     // ***** Shared FormAnimation Widgets
-    TreeAdvisor    *treeAdvisor;                            // Custom classes for Advisor Window
-    TreeAssets     *treeAssetEditor;                        // Shows Project Assets
-    TreeInspector  *treeInspector;                          // Custom classes for Inspector Window
-    TreeProject    *treeProjectEditor;
-    QDockWidget    *dockAdvisor, *dockAssetsEditor, *dockInspector;
-    QWidget        *widgetCentral;
+    TreeAdvisor    *m_tree_advisor;                                     // Custom classes for Advisor Window
+    TreeAssets     *m_tree_assets;                                      // Shows Project Assets
+    TreeInspector  *m_tree_inspector;                                   // Custom classes for Inspector Window
+    TreeProject    *m_tree_project;
+    QDockWidget    *m_dock_advisor, *m_dock_assets, *m_dock_inspector;
+    QWidget        *m_widget_central;
 
     // ***** "Editor" (Animation Editor) Widgets
-    EditorScene    *sceneEditor;                            // Holds the currently selected Stage
-    EditorView     *viewEditor;                             // Renders the EditorView
-    QScrollArea    *areaBottom;
+    EditorScene    *m_scene_editor;                                     // Holds the currently selected Stage
+    EditorView     *m_view_editor;                                      // Renders the EditorView
+    QScrollArea    *m_area_bottom;
 
 
 public:
@@ -66,12 +66,12 @@ public:
 
 
     //############################ START: Interface Relay Implementations
-    virtual TreeAdvisor*        getAdvisor() override       { return treeAdvisor; }
-    virtual TreeAssets*         getAssetTree() override     { return treeAssetEditor; }
-    virtual TreeInspector*      getInspector() override     { return treeInspector; }
-    virtual TreeProject*        getProjectTree() override   { return treeProjectEditor; }
+    virtual TreeAdvisor*        getAdvisor() override       { return m_tree_advisor; }
+    virtual TreeAssets*         getAssetTree() override     { return m_tree_assets; }
+    virtual TreeInspector*      getInspector() override     { return m_tree_inspector; }
+    virtual TreeProject*        getProjectTree() override   { return m_tree_project; }
 
-    virtual EditorView*         getViewEditor() override    { return viewEditor; }
+    virtual EditorView*         getViewEditor() override    { return m_view_editor; }
     virtual MixerView*          getViewMixer() override     { return nullptr; }
     virtual NodeView*           getViewNode() override      { return nullptr; }
 
@@ -115,10 +115,6 @@ private:
 };
 
 #endif // FORM_ANIMATION_H
-
-
-
-
 
 
 

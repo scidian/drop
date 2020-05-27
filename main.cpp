@@ -74,15 +74,15 @@
 //  Main Components
 //  ---------------
 //  FormMain                        Modes:  "World Graph":              Node Graph for Worlds / UI
-//                                          "World Creator":            Physics World 2D Editor
+//                                          "World Creator":            2D Physics World Editor
 //                                          "UI Creator":               UI World Editor
 //                                          "Sound Creator":            Sound Mixer
 //
 //      FormAbout                   About Box
 //      FormAnimation               Animation Frame editor for Asset animations
 //      FormFonts                   Create / View Fonts for Use in Project
-//      FormPlayground              Physics Playground
 //      FormSettings                View / edit project settings
+//      FormSound                   Create sound effects to add as DrSounds
 //
 //      FormCollision               Edit Collision Shape
 //      FormImageViewer             View / Edit Project Images
@@ -104,6 +104,9 @@
 //      FormImageEditor             Draw shapes, objects for use in Assets, vectors, custom format, export
 //      FormParticleEditor          Make custom particles
 //      FormSoundEditor
+//
+//  Old:
+//      FormPlayground              Physics Playground
 //
 //
 #include <QApplication>

@@ -182,6 +182,7 @@ std::string DrSettings::getName() {
         case DrType::Image:
         case DrType::Item:
         case DrType::Prefab:
+        case DrType::Music:
         case DrType::Sound:
         case DrType::Stage:
         case DrType::Thing:

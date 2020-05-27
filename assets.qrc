@@ -237,5 +237,6 @@
         <file>assets/inspector_icons/comp_random.png</file>
         <file>assets/inspector_icons/comp_timer.png</file>
         <file>assets/toolbar_icons/toolbar_sound.png</file>
+        <file>assets/toolbar_icons/toolbar_sound_faded.png</file>
     </qresource>
 </RCC>

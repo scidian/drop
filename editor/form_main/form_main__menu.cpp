@@ -41,9 +41,9 @@ void FormMain::menuNew(bool test_project) {
     // Set up new Project
     setEditorMode( Editor_Mode::Clear );
     Dr::InitializeNewProject(m_project, "New Project", Orientation::Portrait, c_project_width, c_project_height, test_project);
-    treeAssetEditor->clear();
-    treeProjectEditor->clear();
-    setEditorMode( Editor_Mode::World_Editor );                     // Causes FormMain to rebuild itself
+    m_tree_assets->clear();
+    m_tree_project->clear();
+    setEditorMode( Editor_Mode::World_Creator );                    // Causes FormMain to rebuild itself
 }
 
 
@@ -71,9 +71,9 @@ void FormMain::menuOpen() {
         m_project->clearProject();
         Dr::AddBuiltInImages(m_project);
         Dr::OpenProjectFromFile(m_project, open_file.toStdString());
-        treeAssetEditor->clear();
-        treeProjectEditor->clear();
-        setEditorMode( Editor_Mode::World_Editor );
+        m_tree_assets->clear();
+        m_tree_project->clear();
+        setEditorMode( Editor_Mode::World_Creator );
     }
 }
 
@@ -125,22 +125,22 @@ void FormMain::menuUndo() {
     // !!!!!!!!!!
     // !!!!!!!!!! #FIXME: Need to get Undo / Redo working again !!!!!!!!!!
     // !!!!!!!!!!
-    ///sceneEditor->undoAction();
+    ///m_scene_editor->undoAction();
 }
 void FormMain::menuRedo() {
     // !!!!!!!!!!
     // !!!!!!!!!! #FIXME: Need to get Undo / Redo working again !!!!!!!!!!
     // !!!!!!!!!!
-    ///sceneEditor->redoAction();
+    ///m_scene_editor->redoAction();
 }
 
 // SLOT: Updates Undo / Redo text
 void FormMain::editMenuAboutToShow() {
 
-    actionUndo->setText("Undo Disabled");
-    actionRedo->setText("Redo Disabled");
-    actionUndo->setEnabled(false);
-    actionRedo->setEnabled(false);
+    m_action_undo->setText("Undo Disabled");
+    m_action_redo->setText("Redo Disabled");
+    m_action_undo->setEnabled(false);
+    m_action_redo->setEnabled(false);
     return;
 
     // !!!!!!!!!!
@@ -149,24 +149,24 @@ void FormMain::editMenuAboutToShow() {
     // !!!!!!!!!!
     // !!!!!!!!!!
 
-    QString undo_text = sceneEditor->getCurrentUndo();
-    QString redo_text = sceneEditor->getCurrentRedo();
-    actionUndo->setText(undo_text);
-    actionRedo->setText(redo_text);
+    QString undo_text = m_scene_editor->getCurrentUndo();
+    QString redo_text = m_scene_editor->getCurrentRedo();
+    m_action_undo->setText(undo_text);
+    m_action_redo->setText(redo_text);
 
     if (undo_text.isEmpty()) {
-        actionUndo->setText("&Undo");
-        actionUndo->setEnabled(false);
+        m_action_undo->setText("&Undo");
+        m_action_undo->setEnabled(false);
     }
     if (redo_text.isEmpty()) {
-        actionRedo->setText("&Redo");
-        actionRedo->setEnabled(false);
+        m_action_redo->setText("&Redo");
+        m_action_redo->setEnabled(false);
     }
 }
 
 void FormMain::editMenuAboutToHide() {
-    actionUndo->setEnabled(true);
-    actionRedo->setEnabled(true);
+    m_action_undo->setEnabled(true);
+    m_action_redo->setEnabled(true);
 }
 
 
