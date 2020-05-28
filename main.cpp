@@ -82,7 +82,7 @@
 //      FormAnimation               Animation Frame editor for Asset animations
 //      FormFonts                   Create / View Fonts for Use in Project
 //      FormSettings                View / edit project settings
-//      FormSound                   Create sound effects to add as DrSounds
+//      FormSoundEffect             Create sound effects to add as DrSounds
 //
 //      FormCollision               Edit Collision Shape
 //      FormImageViewer             View / Edit Project Images
@@ -101,9 +101,8 @@
 //  Future:
 //      FormNewObject               Choose from different square / circle types with various bevels, coloring, corners, etc
 //      FormStartup                 Pick Recent Project, News, Create New Project / Select Template
-//      FormImageEditor             Draw shapes, objects for use in Assets, vectors, custom format, export
-//      FormParticleEditor          Make custom particles
-//      FormSoundEditor
+//      FormImageCreator            Draw shapes, objects for use in Assets, vectors, custom format, export
+//      FormParticleCreator         Make custom particles
 //
 //  Old:
 //      FormPlayground              Physics Playground

@@ -52,6 +52,9 @@ QString CustomStyleSheetFormatting() {
         "       border: none;"
         " } "
         " QWidget#widgetHolder      { background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; }"
+        " QFrame#soundWave { "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-top:    1 solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; }"
 
         // Shared Empty Widgets
         " QWidget#widgetCentralClear { background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"

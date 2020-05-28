@@ -13,10 +13,12 @@
 #include "3rd_party/soloud/soloud_sfxr.h"
 #include "3rd_party/soloud/soloud_speech.h"
 #include "3rd_party/soloud/soloud_wav.h"
+#include "core/colors/colors.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_sound_effect.h"
-#include "editor/forms/form_color_magnifier.h"
+#include "editor/form_sound/visualizer.h"
+#include "editor/form_sound/wave_form.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -27,7 +29,7 @@
 //####################################################################################
 //##    Speech
 //####################################################################################
-void FormSound::playSpeech(std::string speech_text) {
+void FormSoundEffect::playSpeech(std::string speech_text) {
     m_speech.setText(speech_text.data());
 
     m_speech.setParams( m_speech_slider_freq->value(),
@@ -42,7 +44,7 @@ void FormSound::playSpeech(std::string speech_text) {
 //####################################################################################
 //##    Sound Effect
 //####################################################################################
-void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
+void FormSoundEffect::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
 
     ///m_effect.loadPreset(preset, seed);
     ///m_so_loud->play(m_effect);
@@ -58,17 +60,13 @@ void FormSound::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
     item->setData(User_Roles::Key, QVariant::fromValue(effect_key));
     m_list->addItem(item);
     item->setSelected(true);
-
-    // Looking into possible wav form loading
-    ///SoLoud::AudioSourceInstance *asi = m_effect.createInstance();
-    ///asi->getAudio(asi->mResampleData[0]->mData, SAMPLE_GRANULARITY, SAMPLE_GRANULARITY);
 }
 
 
 //####################################################################################
 //##    Wav File
 //####################################################################################
-void FormSound::playWav(std::string wav_file) {
+void FormSoundEffect::playWav(std::string wav_file) {
     m_wave.load(wav_file.data());
     m_so_loud->play(m_wave);
     m_visual_timer->start();
@@ -80,21 +78,35 @@ void FormSound::playWav(std::string wav_file) {
 //####################################################################################
 //##    Play Sounds from Containers
 //####################################################################################
-void FormSound::playEffect(long effect_key) {
+SoLoud::Sfxr* FormSoundEffect::getEffect(long effect_key) {
     auto it = m_effects.find(effect_key);
-    if (it != m_effects.end()) {
-        m_so_loud->play(*m_effects[effect_key]);
+    if (it != m_effects.end()) return it->second; else return nullptr;
+}
+
+
+void FormSoundEffect::drawItem() {
+    if (m_list->selectedItems().size() > 0) {
+        QListWidgetItem *item = m_list->selectedItems().first();
+        long sound_key = item->data(User_Roles::Key).toInt();
+        SoLoud::Sfxr* sound_effect = getEffect(sound_key);
+        m_sound_wave->setSound(sound_effect);
+    } else {
+        m_sound_wave->setSound(nullptr);
+    }
+    m_sound_wave->repaint();
+}
+
+void FormSoundEffect::playItem(QListWidgetItem *item) {
+    long sound_key = item->data(User_Roles::Key).toInt();
+    SoLoud::Sfxr* sound_effect = getEffect(sound_key);
+    if (sound_effect != nullptr) {
+        m_so_loud->play(*sound_effect);
         m_visual_timer->start();
     }
 }
 
-void FormSound::playItem(QListWidgetItem *item) {
-    long sound_key = item->data(User_Roles::Key).toInt();
-    playEffect(sound_key);
-}
 
-
-QString FormSound::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
+QString FormSoundEffect::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
     switch (preset) {
         case (SoLoud::Sfxr::SFXR_PRESETS::BLIP):        return "Blip";
         case (SoLoud::Sfxr::SFXR_PRESETS::COIN):        return "Coin";
@@ -105,6 +117,15 @@ QString FormSound::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
         case (SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION):   return "Explosion";
     }
 }
+
+
+
+
+
+
+
+
+
 
 
 

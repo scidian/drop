@@ -20,7 +20,7 @@
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_sound_effect.h"
-#include "editor/forms/form_color_magnifier.h"
+#include "editor/form_sound/visualizer.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -31,7 +31,7 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
+FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
 
     // ***** Initialize SoLoud
     m_so_loud = new SoLoud::Soloud();
@@ -50,7 +50,7 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Build Form
-    buildSoundForm();
+    buildSoundEffectForm();
 
     // ***** Center window on Parent Form and install dragging event filter
     if (parent) {
@@ -64,11 +64,10 @@ FormSound::FormSound(DrProject *project, QWidget *parent) : QWidget(parent), m_p
     m_visual_timer = new QTimer(this);
     m_visual_timer->setInterval(20);
     connect(m_visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
-    m_visual_timer->setInterval(25);
     m_visual_timer->setTimerType(Qt::PreciseTimer);
 }
 
-FormSound::~FormSound() {
+FormSoundEffect::~FormSoundEffect() {
     // Delete sounds
     for (auto effect : m_effects)   { delete effect.second; }
 
@@ -82,61 +81,28 @@ FormSound::~FormSound() {
 //##    Events
 //####################################################################################
 // Keeps container widget same size as form
-void FormSound::resizeEvent(QResizeEvent *event) {
+void FormSoundEffect::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
     Dr::ApplyRoundedCornerMask(this, 8, 8);
 }
 
 // Visualizer
-void FormSound::drawVisuals() {
+void FormSoundEffect::drawVisuals() {
     if (m_so_loud->getActiveVoiceCount() > 0) {
-        m_last_play_time.restart();
+        m_visual_timer->setInterval(20);
     }
     m_visualizer->update();
 
-    if (m_last_play_time.elapsed() > 350) {
+    if (m_last_play_time.elapsed() > 1000) {
         m_visualizer->repaint();
-        m_visual_timer->stop();
+        m_visual_timer->setInterval(500);
     }
 }
 
 
 
-//####################################################################################
-//##    Visual Paint
-//####################################################################################
-VisualFrame::VisualFrame(SoLoud::Soloud *so_loud, QWidget *parent)
-    : QFrame(parent), m_so_loud(so_loud) { }
 
-VisualFrame::~VisualFrame() { }
 
-void VisualFrame::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-
-    double x_size = 256.0 / static_cast<double>(this->rect().width());
-    painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), x_size) );
-
-    if (m_so_loud) {
-        ///float *wave = m_so_loud->getWave();
-        float *fft = m_so_loud->calcFFT();
-
-        for (int x = 0; x < this->rect().width(); x++) {
-            int i = Dr::Clamp(static_cast<int>(x_size * x), 0, 255);
-
-            // For Wave Form
-            ///painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)), 1) );
-            ///float y_size_w = (this->height() / 10.0) * (wave[i] * 32);
-            ///painter.drawLine(x, (this->rect().height()/2) - y_size_w, x, (this->rect().height()/2) + y_size_w);
-
-            // For Frequency Visual
-            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 1) );
-            float y_size_f = (this->height() / 400.0) * (fft[i] * 32);
-            painter.drawLine(x, (this->rect().height()/2) - y_size_f, x, (this->rect().height()/2) + y_size_f);
-        }
-    } else {
-        QFrame::paintEvent(event);
-    }
-}
 
 
 

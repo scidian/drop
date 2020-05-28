@@ -22,6 +22,8 @@
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_sound_effect.h"
+#include "editor/form_sound/visualizer.h"
+#include "editor/form_sound/wave_form.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -33,7 +35,7 @@
 //####################################################################################
 //##    Builds out Sound Form
 //####################################################################################
-void FormSound::buildSoundForm() {
+void FormSoundEffect::buildSoundEffectForm() {
 
     // Create a contianer widget, this will allow us to create a layout for the form and add buttons and stuff
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -70,12 +72,16 @@ void FormSound::buildSoundForm() {
         left_side_layout->setContentsMargins(0, 0, 0, 0);
             m_list = new QListWidget();
             m_list->setObjectName(QStringLiteral("listView"));
-
+            m_list->setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
             m_list->connect(m_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(playItem(QListWidgetItem*)));
-
+            m_list->connect(m_list, SIGNAL(itemSelectionChanged()), this, SLOT(drawItem()));
             left_side_layout->addWidget(m_list);
-        splitter_horizontal->addWidget(m_list);
 
+            m_sound_wave = new WaveForm(m_so_loud);
+            m_sound_wave->setObjectName(QStringLiteral("soundWave"));
+            m_sound_wave->setFixedHeight(100);
+            left_side_layout->addWidget(m_sound_wave);
+        splitter_horizontal->addWidget(left_side);
 
         // Buttons and stuff on the right
         QWidget *middle_side = new QWidget();
@@ -87,7 +93,7 @@ void FormSound::buildSoundForm() {
 
             // Visualizer
             m_visualizer = new VisualFrame(m_so_loud);
-                m_visualizer->setFixedHeight(100);
+            m_visualizer->setFixedHeight(100);
             middle_side_layout->addWidget(m_visualizer);
 
 
@@ -99,13 +105,13 @@ void FormSound::buildSoundForm() {
             sound_effect_layout_1->setSpacing(4);
             sound_effect_layout_1->setContentsMargins(4, 0, 4, 2);
 
-                QPushButton *play_effect_coin = new QPushButton("Coin");
+                QPushButton *play_effect_coin = new QPushButton("Coin / Success");
                     Dr::ApplyDropShadowByType(play_effect_coin, Shadow_Types::Button_Shadow);
                     play_effect_coin->setObjectName(QStringLiteral("buttonDefault"));
                     connect(play_effect_coin, &QPushButton::clicked, [this] ()      {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::COIN, Dr::RandomInt(0, 5000));    });
                 sound_effect_layout_1->addWidget(play_effect_coin);
 
-                QPushButton *play_effect_laser = new QPushButton("Laser");
+                QPushButton *play_effect_laser = new QPushButton("Laser / Shoot");
                     Dr::ApplyDropShadowByType(play_effect_laser, Shadow_Types::Button_Shadow);
                     play_effect_laser->setObjectName(QStringLiteral("buttonDefault"));
                     connect(play_effect_laser, &QPushButton::clicked, [this] ()     {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::LASER, Dr::RandomInt(0, 5000));    });
@@ -133,7 +139,7 @@ void FormSound::buildSoundForm() {
             sound_effect_layout_2->setSpacing(4);
             sound_effect_layout_2->setContentsMargins(4, 2, 4, 2);
 
-                QPushButton *play_effect_hurt = new QPushButton("Hurt");
+                QPushButton *play_effect_hurt = new QPushButton("Hurt / Hit");
                     Dr::ApplyDropShadowByType(play_effect_hurt, Shadow_Types::Button_Shadow);
                     play_effect_hurt->setObjectName(QStringLiteral("buttonDefault"));
                     connect(play_effect_hurt, &QPushButton::clicked, [this] ()      {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::HURT, Dr::RandomInt(0, 5000));    });
@@ -145,7 +151,7 @@ void FormSound::buildSoundForm() {
                     connect(play_effect_jump, &QPushButton::clicked, [this] ()      {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::JUMP, Dr::RandomInt(0, 5000));    });
                 sound_effect_layout_2->addWidget(play_effect_jump);
 
-                QPushButton *play_effect_blip = new QPushButton("Blip");
+                QPushButton *play_effect_blip = new QPushButton("Blip / Select");
                     Dr::ApplyDropShadowByType(play_effect_blip, Shadow_Types::Button_Shadow);
                     play_effect_blip->setObjectName(QStringLiteral("buttonDefault"));
                     connect(play_effect_blip, &QPushButton::clicked, [this] ()      {   this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::BLIP, Dr::RandomInt(0, 5000));    });
@@ -322,7 +328,7 @@ void FormSound::buildSoundForm() {
 //####################################################################################
 //##    Builds a label / slider pair
 //####################################################################################
-QWidget* FormSound::sliderPair(QString slider_text, QSlider *&slider) {
+QWidget* FormSoundEffect::sliderPair(QString slider_text, QSlider *&slider) {
     QWidget *pair = new QWidget();
     QHBoxLayout *pair_layout = new QHBoxLayout(pair);
     pair_layout->setSpacing(0);

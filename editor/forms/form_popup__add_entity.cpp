@@ -118,11 +118,11 @@ void FormPopup::buildPopupAddEntity() {
         connect(buttonChar,   &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Character, c_key_image_character); });
         connect(buttonObject, &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Object,    c_key_image_object); });
         connect(buttonEffect, &QRadioButton::released, [this]() {
-            FormSound *sound_files = new FormSound(m_project, nullptr);
-            sound_files->show();
-            sound_files->setFocus(Qt::FocusReason::PopupFocusReason);
+            FormSoundEffect *sound_effects = new FormSoundEffect(m_project, nullptr);
+            sound_effects->show();
+            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
             this->close();                                                                              // Close this popup
-            sound_files->setFocus(Qt::FocusReason::PopupFocusReason);
+            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
         });
 
         // Add World / Stage options
