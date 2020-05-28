@@ -160,10 +160,13 @@ cpShape* ThingCompPhysics::addShapePolygon(const std::vector<DrPointF> &points) 
         std::list<TPPLPoly> testpolys, result;
         testpolys.push_back( poly );
         TPPLPartition pp;
-        pp.ConvexPartition_OPT(&(*testpolys.begin()), &result);
-        ///pp.ConvexPartition_HM(&testpolys, &result);
+        int convex = 0;
+        // Method #1
+        convex = pp.ConvexPartition_OPT(&(*testpolys.begin()), &result);        // !!!!! #NOTE: Had weird error with built in prefab ladder image with this
+        // Method #2, if OPT fails, fall back to HM
+        if (convex == 0) convex = pp.ConvexPartition_HM(&testpolys, &result);
 
-        for (auto poly : result) {
+        for (auto &poly : result) {
             std::vector<cpVect> verts { };
             verts.resize(static_cast<size_t>(poly.GetNumPoints()));
             for (int i = 0; i < poly.GetNumPoints(); i++) {

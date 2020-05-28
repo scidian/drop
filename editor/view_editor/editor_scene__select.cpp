@@ -252,9 +252,11 @@ void EditorScene::unselectLockedItems() {
         DrSettings *entity = nullptr;
         EditorItem *editor_item = dynamic_cast<EditorItem*>(item);
         if (editor_item != nullptr) entity = editor_item->getThing();
+
         // Another way to find reference entity, guaranteed not to access dangling pointer, but much slower
         ///long item_key = item->data(User_Roles::Key).toLongLong();
         ///DrSettings *entity = m_project->findSettingsFromKey(item_key);
+
         // Check entity is valid, see if locked
         if (entity == nullptr) continue;
         if (entity->isLocked()) {

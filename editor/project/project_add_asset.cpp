@@ -94,6 +94,7 @@ DrAsset* AddPrefab(DrProject *project, DrPrefabType prefab_type) {
             break;
         case DrPrefabType::Ladder:
             asset = Dr::AddAsset(project, DrAssetType::Object, c_key_image_ladder, "Ladder");
+            asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Shape)->setValue(static_cast<int>(Collision_Shape::Square));
             asset->getComponentProperty(Comps::Asset_Collision, Props::Asset_Collision_Gravity_Multiplier)->setValue(0.0);
             break;
         case DrPrefabType::Object:

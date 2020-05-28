@@ -48,8 +48,8 @@ void WaveForm::setSound(SoLoud::AudioSource* audio) {
         do {
             float buffer[SAMPLE_GRANULARITY];                                                   // Create an empty array
             memset(buffer, 0, sizeof(float) * SAMPLE_GRANULARITY);                              // Zero out the array
-            voice->getAudio(buffer, SAMPLE_GRANULARITY, SAMPLE_GRANULARITY);                    // Read some samples from the voice (advances internal play time)
-            voice_data.insert(voice_data.end(), &buffer[0], &buffer[SAMPLE_GRANULARITY]);       // Copy the samples into a vector
+            int readcount = voice->getAudio(buffer, SAMPLE_GRANULARITY, SAMPLE_GRANULARITY);    // Read some samples from the voice (advances internal play time)
+            voice_data.insert(voice_data.end(), &buffer[0], &buffer[readcount]);                // Copy the samples into a vector
         } while (!voice->hasEnded());
 
         // ***** Calculate AudioSource length in seconds

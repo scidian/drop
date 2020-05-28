@@ -54,6 +54,7 @@ EditorScene::EditorScene(QWidget *parent, DrProject *project, IEditorRelay *edit
 EditorScene::~EditorScene() { }
 
 void EditorScene::clearSceneOverride() {
+    this->clearSelection();
     setCurrentStageKeyShown(c_no_key);
     setCurrentStageShown(nullptr);
     this->clear();

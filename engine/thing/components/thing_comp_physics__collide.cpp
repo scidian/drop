@@ -5,6 +5,7 @@
 //
 //
 //
+#include "core/dr_debug.h"
 #include "engine/engine.h"
 #include "engine/engine_message.h"
 #include "engine/engine_texture.h"
@@ -137,7 +138,9 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         // Temp gravity multiplier if colliding with an object or sensor that should change its gravity
         if (Dr::FuzzyCompare(physics_b->getGravityMultiplier(), 1.0) == false) {
             // Apply temp gravity multiplier if button pressed away from gravity
-            if (but_dot < 0.0 || but_dot > 0.0) thing_a->compPlayer()->setTempGravityMultiplier( physics_b->getGravityMultiplier() );
+            if (but_dot < 0.0 || but_dot > 0.0) {
+                thing_a->compPlayer()->setTempGravityMultiplier( physics_b->getGravityMultiplier() );
+            }
         }
     }
 

@@ -116,12 +116,14 @@ void NodeScene::unselectLockedItems() {
 
     for (auto item : selectedItems()) {
         // Find referenced entity to check if locked
-        DrSettings  *entity = nullptr;
-        NodeItem *map_item = dynamic_cast<NodeItem*>(item);
-        if (map_item != nullptr) entity = map_item->getEntity();
+        ///DrSettings  *entity = nullptr;
+        ///NodeItem *map_item = dynamic_cast<NodeItem*>(item);
+        ///if (map_item != nullptr) entity = map_item->getEntity();
+
         // Another way to find reference entity, guaranteed not to access dangling pointer, but much slower
-        ///long item_key = item->data(User_Roles::Key).toLongLong();
-        ///DrSettings *entity = m_project->findSettingsFromKey(item_key);
+        long item_key = item->data(User_Roles::Key).toLongLong();
+        DrSettings *entity = m_project->findSettingsFromKey(item_key);
+
         // Check entity is valid, see if locked
         if (entity == nullptr) continue;
         if (entity->isLocked()) item->setSelected(false);

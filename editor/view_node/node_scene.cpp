@@ -31,6 +31,7 @@ NodeScene::NodeScene(QWidget *parent, DrProject *project, IEditorRelay *editor_r
 NodeScene::~NodeScene() { }
 
 void NodeScene::clearSceneOverride() {
+    this->clearSelection();
     emit aboutToClear();                                // NodeView::sceneIsAboutToClear() is connected to this signal, prevents dangling pointers
     this->setNeedRebuild(true);
     this->clear();

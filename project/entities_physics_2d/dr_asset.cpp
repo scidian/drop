@@ -5,6 +5,7 @@
 //      DrAsset Class Definitions
 //
 //
+#include "3rd_party/hull_finder.h"
 #include "3rd_party/polyline_simplification.h"
 #include "core/dr_debug.h"
 #include "project/constants_component_info.h"
