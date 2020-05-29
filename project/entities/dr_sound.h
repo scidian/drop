@@ -8,6 +8,8 @@
 #ifndef DRSOUND_H
 #define DRSOUND_H
 
+#include "3rd_party/soloud/soloud.h"
+#include "3rd_party/soloud/soloud_audiosource.h"
 #include "core/types/dr_color.h"
 #include "core/types/dr_point.h"
 #include "core/types/dr_pointf.h"
@@ -26,22 +28,38 @@ class DrSound : public DrSettings
 {
 private:
     // Local Variables
-    DrSoundType     m_sound_type        { DrSoundType::Sound_Effect };                 // Type of this sound
+    DrSoundType             m_sound_type        { DrSoundType::Sound_Effect };      // Type of this sound
+    SoLoud::AudioSource    *m_audio_source      { nullptr };                        // Pointer to sound in memory
+    DrBitmap                m_wave_form;                                            // Wave form image
 
 
 public:
     // Constructor / Destructor
-    DrSound(DrProject *parent_project, DrSoundType sound_type, long key = c_no_key);
+    DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
 
     // DrSettings Overrides
     virtual DrType      getType() override              { return DrType::Sound; }
 
+    // Initializing
+    void                    initializeSoundSettings(std::string new_name);
+
     // Getters / Setters
-    DrSoundType         getSoundType()                  { return m_sound_type; }
+    SoLoud::AudioSource*    getAudioSource()                { return m_audio_source; }
+    DrSoundType             getSoundType()                  { return m_sound_type; }
+    DrBitmap                getWaveForm()                   { return m_wave_form; }
+    void                    setWaveForm(DrBitmap bitmap)    { m_wave_form = bitmap; }
+
 
 };
 
 #endif // DRSOUND_H
+
+
+
+
+
+
+
 
 
 

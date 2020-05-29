@@ -19,7 +19,7 @@ DrItem::DrItem(DrProject *parent_project, long key, DrItemType item_type) : DrSe
 
     m_item_type = item_type;
 
-    // ***** Initialize Effect Settings
+    // ***** Initialize Item Settings
     DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setEditable(false);
     property_name->setDisplayName("Item Name");

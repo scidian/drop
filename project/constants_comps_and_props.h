@@ -110,8 +110,14 @@ namespace Comps {
     // ***** DrAnimation Components
     const std::string Animation_Settings                = "AnSe";
 
-    // ***** DrFrame Components
-    const std::string Frame_Settings                    = "FrSe";
+        // ***** DrFrame Components
+        const std::string Frame_Settings                    = "FrSe";
+
+    // ***** DrMusic Components
+    const std::string Music_Settings                    = "MuSe";
+
+    // ***** DrSound Components
+    const std::string Sound_Settings                    = "SoSe";
 
     // ***** DrAsset Components
     const std::string Asset_Collision                   = "AsCollision";
@@ -224,6 +230,11 @@ namespace Props {
     const std::string Animation_Settings_Future_1           = "AnSeFuture1";
     const std::string Animation_Settings_Future_2           = "AnSeFuture2";
     const std::string Animation_Settings_Future_3           = "AnSeFuture3";
+
+
+    // ******************** DrSound Component Properties
+    // Asset_Settings_Character
+    const std::string Sound_Settings_Color                  = "SoSeColor";                  // color
 
 
     // ******************** DrAsset Component Properties

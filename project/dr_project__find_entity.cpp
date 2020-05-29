@@ -14,6 +14,7 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_music.h"
 #include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
@@ -82,6 +83,9 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
 
     PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
     if (prefab_iter != m_prefabs.end())         return prefab_iter->second;
+
+    MusicMap::iterator music_iter = m_music.find(check_key);
+    if (music_iter != m_music.end())            return music_iter->second;
 
     SoundMap::iterator sound_iter = m_sounds.find(check_key);
     if (sound_iter != m_sounds.end())          return sound_iter->second;
@@ -160,6 +164,11 @@ DrItem* DrProject::findItemFromKey(long check_key) {
 DrPrefab* DrProject::findPrefabFromKey(long check_key) {
     PrefabMap::iterator prefab_iter = m_prefabs.find(check_key);
     return ((prefab_iter != m_prefabs.end()) ? prefab_iter->second : nullptr);
+}
+
+DrMusic* DrProject::findMusicFromKey(long check_key) {
+    MusicMap::iterator music_iter = m_music.find(check_key);
+    return ((music_iter != m_music.end()) ? music_iter->second : nullptr);
 }
 
 DrSound* DrProject::findSoundFromKey(long check_key) {

@@ -238,5 +238,11 @@
         <file>assets/inspector_icons/comp_timer.png</file>
         <file>assets/toolbar_icons/toolbar_sound.png</file>
         <file>assets/toolbar_icons/toolbar_sound_faded.png</file>
+        <file>assets/inspector_icons/comp_sound_effect.png</file>
+        <file>assets/inspector_icons/comp_sound_filter.png</file>
+        <file>assets/inspector_icons/comp_sound_noise.png</file>
+        <file>assets/inspector_icons/comp_sound_speech.png</file>
+        <file>assets/inspector_icons/comp_sound_wave.png</file>
+        <file>assets/inspector_icons/comp_sound.png</file>
     </qresource>
 </RCC>

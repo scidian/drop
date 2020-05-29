@@ -19,7 +19,7 @@ DrPrefab::DrPrefab(DrProject *parent_project, long key, DrPrefabType prefab_type
 
     m_prefab_type = prefab_type;
 
-    // ***** Initialize Effect Settings
+    // ***** Initialize Prefab Settings
     DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
     property_name->setEditable(false);
     property_name->setDisplayName("Prefab Name");

@@ -59,7 +59,7 @@ void FormMain::initializeFormMain() {
     buildToolBar();
 
     buildCentralWidgetClear();
-    buildCentralWidgetEditor();
+    buildCentralWidgetWorldCreator();
     buildCentralWidgetWorldGraph();
 
     // Build Docks

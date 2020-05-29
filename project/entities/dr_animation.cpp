@@ -81,7 +81,7 @@ DrImage* DrAnimation::getFirstFrameImage() {
 
 
 //####################################################################################
-//##    Property loading - initializeAnimationSettings
+//##    Settings Components
 //####################################################################################
 void DrAnimation::initializeAnimationSettings(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);

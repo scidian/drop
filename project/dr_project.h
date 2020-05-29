@@ -8,6 +8,7 @@
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
+#include "3rd_party/soloud/soloud_audiosource.h"
 #include "project/constants_entity_keys.h"
 #include "project/settings/settings.h"
 
@@ -47,6 +48,7 @@ class DrFont;
 class DrImage;
 class DrItem;
 class DrPrefab;
+class DrMusic;
 class DrSound;
 class DrStage;
 class DrThing;
@@ -66,6 +68,7 @@ typedef std::map<long,              DrFont*>        FontMap;
 typedef std::map<long,              DrImage*>       ImageMap;
 typedef std::map<long,              DrItem*>        ItemMap;
 typedef std::map<long,              DrPrefab*>      PrefabMap;
+typedef std::map<long,              DrMusic*>       MusicMap;
 typedef std::map<long,              DrSound*>       SoundMap;
 typedef std::map<long,              DrWorld*>       WorldMap;
 
@@ -106,6 +109,7 @@ private:
     AnimationMap    m_animations;                                   // Holds DrAnimations   (which in turn hold DrFrames)
     FontMap         m_fonts;                                        // Holds DrFonts        (currently custom bitmap fonts)
     ImageMap        m_images;                                       // Holds DrImages       (for use in DrFrames, loaded into DrEngineTextures)
+    MusicMap        m_music;                                        // Holds DrMusic        (which in turn hold a collection of DrSounds)
     SoundMap        m_sounds;                                       // Holds DrSounds       (hold sound files / effects)
 
     // World Graph Items
@@ -157,18 +161,10 @@ public:
     ImageMap&       getImageMap()           { return m_images; }
     ItemMap&        getItemMap()            { return m_items; }
     PrefabMap&      getPrefabMap()          { return m_prefabs; }
+    MusicMap&       getMusicMap()           { return m_music; }
     SoundMap&       getSoundMap()           { return m_sounds; }
     WorldMap&       getWorldMap()           { return m_worlds; }
 
-    long            getNumberOfAnimations() { return static_cast<long>(m_animations.size()); }
-    long            getNumberOfAssets()     { return static_cast<long>(m_assets.size()); }
-    long            getNumberOfDevices()    { return static_cast<long>(m_devices.size()); }
-    long            getNumberOfEffects()    { return static_cast<long>(m_effects.size()); }
-    long            getNumberOfFonts()      { return static_cast<long>(m_fonts.size()); }
-    long            getNumberOfImages()     { return static_cast<long>(m_images.size()); }
-    long            getNumberOfItems()      { return static_cast<long>(m_items.size()); }
-    long            getNumberOfPrefabs()    { return static_cast<long>(m_prefabs.size()); }
-    long            getNumberOfSounds()     { return static_cast<long>(m_sounds.size()); }
     std::set<long>  getImageKeysUsedByProject();
     DrPointF        getNewWorldGraphPosition();
 
@@ -184,6 +180,7 @@ public:
     DrImage*        findImageFromKey(long check_key);
     DrItem*         findItemFromKey(long check_key);
     DrPrefab*       findPrefabFromKey(long check_key);
+    DrMusic*        findMusicFromKey(long check_key);
     DrSound*        findSoundFromKey(long check_key);
     DrStage*        findStageFromKey(long check_key);
     DrThing*        findThingFromKey(long check_key);
@@ -208,7 +205,8 @@ public:
     DrImage*        addImage(std::string image_name, DrBitmap &bitmap, long key = c_no_key, bool outline = true, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
-    long            addSound(DrSoundType sound_type, long key = c_no_key);
+    DrMusic*        addMusic(long key);
+    DrSound*        addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
     DrWorld*        addWorld(DrWorldType world_type);
     DrWorld*        addWorld(DrWorldType world_type, long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);
@@ -222,6 +220,7 @@ public:
     void            deleteEntity(long entity_key);
     void            deleteFont(long font_key);
     void            deleteImage(long image_key);
+    void            deleteMusic(long music_key);
     void            deleteSound(long sound_key);
     void            deleteWorld(long world_key);
 

@@ -13,6 +13,7 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
+#include "project/entities/dr_music.h"
 #include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
@@ -96,10 +97,16 @@ long DrProject::addPrefab(DrPrefabType prefab_type, long key) {
     return new_prefab_key;
 }
 
-long DrProject::addSound(DrSoundType sound_type, long key) {
+DrMusic* DrProject::addMusic(long key) {
+    long new_music_key = (key == c_no_key) ? getNextKey() : key;
+    m_music[new_music_key] = new DrMusic(this, new_music_key);
+    return m_music[new_music_key];
+}
+
+DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key) {
     long new_sound_key = (key == c_no_key) ? getNextKey() : key;
-    m_sounds[new_sound_key] = new DrSound(this, sound_type, new_sound_key);
-    return new_sound_key;
+    m_sounds[new_sound_key] = new DrSound(this, sound_type, audio_source, new_sound_key);
+    return m_sounds[new_sound_key];
 }
 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World

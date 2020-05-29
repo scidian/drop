@@ -113,11 +113,11 @@ private:
     QDockWidget    *m_dock_inspector;       TreeInspector  *m_tree_inspector;
 
 
-    // ***** "Empty" Main Widget
+    // ***** "Empty" Widget
     QWidget        *m_widget_central_clear;
 
 
-    // ***** "Editor" (World Creator) Widgets
+    // ***** "World Creator" (Editor) Widgets
     QWidget         *m_widget_central_editor;
     TreeProject         *m_tree_project;                        // Shows Project Entities
     EditorScene         *m_scene_editor;                        // Holds the currently selected Stage
@@ -126,10 +126,10 @@ private:
     QFrame              *m_status_bar;
     ViewToolbar         *m_toolbar_editor;
 
-    //       "Editor" Status Bar Widgets
+    //       "World Creator" (Editor) Status Bar Widgets
     QLabel                  *m_label_selected,  *m_label_info,      *m_label_mouse_position;
 
-    //       "Editor" Labels to display info
+    //       "World Creator" (Editor) Labels to display info
     QLabel                  *label_1,           *label_2,           *label_3,           *label_mouse_1,     *label_mouse_2;
     QLabel                  *label_object_1,    *label_object_2,    *label_object_3,    *label_object_4,    *label_object_5;
     QLabel                  *label_position,    *label_center,      *label_scale,       *label_rotate,      *label_z_order,     *label_pos_flag;
@@ -141,6 +141,12 @@ private:
     NodeScene           *m_scene_world_graph;
     NodeView            *m_view_world_graph;
     ViewToolbar         *m_toolbar_world_graph;
+
+
+    // ***** "Sound Creator" Widgets
+    QWidget         *m_widget_central_sound_creator;
+    MixerScene          *m_scene_mixer;
+    MixerView           *m_view_mixer;
 
 
 public:
@@ -213,8 +219,9 @@ private:
     void            buildSceneAfterLoading(long stage_key);
     void            buildToolBar();
     void            buildCentralWidgetClear();
-    void            buildCentralWidgetEditor();
     void            buildCentralWidgetWorldGraph();
+    void            buildCentralWidgetWorldCreator();
+    void            buildCentralWidgetSoundCreator();
     void            changePalette(Color_Scheme new_color_scheme);
     QLabel*         createLabel(QWidget *parent, QString object_name, QRect label_rect, QFont &label_font);
     void            initializeFormMain();

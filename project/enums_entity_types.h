@@ -83,9 +83,11 @@ enum class DrSlotType {
 
 // DrSound Types
 enum class DrSoundType {
+    Audio_File,
+    Instrument,
+    Noise,
     Sound_Effect,
     Speech,
-    Wav,
 };
 
 

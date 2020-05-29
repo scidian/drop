@@ -18,7 +18,7 @@
 
 
 //####################################################################################
-//##    Property loading - initializeStageSettings
+//##    Settings Components
 //####################################################################################
 void DrStage::initializeStageSettings(std::string new_name) {
     DrProperty *property_name = getComponentProperty(Comps::Entity_Settings, Props::Entity_Name);
