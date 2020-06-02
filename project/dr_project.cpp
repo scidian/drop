@@ -14,7 +14,6 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
-#include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -23,6 +22,9 @@
 #include "project/entities_physics_2d/dr_effect.h"
 #include "project/entities_physics_2d/dr_item.h"
 #include "project/entities_physics_2d/dr_prefab.h"
+#include "project/entities_sound/dr_mix.h"
+#include "project/entities_sound/dr_sound.h"
+#include "project/entities_sound/dr_track.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_slot.h"
 
@@ -52,8 +54,9 @@ void DrProject::clearProject(bool add_built_in_items) {
     for (auto it = m_fonts.begin();         it != m_fonts.end(); )      {   delete it->second; it = m_fonts.erase(it);      }
     for (auto it = m_images.begin();        it != m_images.end(); )     {   delete it->second; it = m_images.erase(it);     }
     for (auto it = m_items.begin();         it != m_items.end(); )      {   delete it->second; it = m_items.erase(it);      }
+    for (auto it = m_mixes.begin();         it != m_mixes.end(); )      {   delete it->second; it = m_mixes.erase(it);      }
     for (auto it = m_prefabs.begin();       it != m_prefabs.end(); )    {   delete it->second; it = m_prefabs.erase(it);    }
-    for (auto it = m_sounds.begin();        it != m_sounds.end(); )     {   delete it->second; it = m_sounds.erase(it);    }
+    for (auto it = m_sounds.begin();        it != m_sounds.end(); )     {   delete it->second; it = m_sounds.erase(it);     }
     for (auto it = m_worlds.begin();        it != m_worlds.end(); )     {   delete it->second; it = m_worlds.erase(it);     }
 
     // Add these Images to every project for use with New Assets

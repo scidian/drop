@@ -5,14 +5,17 @@
 //
 //
 //
+#include <QGraphicsColorizeEffect>
 #include <QPainter>
 
 #include "editor/helper_library.h"
+#include "editor/pixmap/pixmap.h"
 #include "editor/project/project.h"
 #include "project/entities/dr_font.h"
 #include "project/entities_physics_2d/dr_asset.h"
 #include "project/entities_physics_2d/dr_device.h"
 #include "project/entities_physics_2d/dr_effect.h"
+#include "project/entities_sound/dr_mix.h"
 
 namespace Dr {
 
@@ -54,6 +57,24 @@ QPixmap GetAssetPixmapItem(DrItemType item_type) {
     switch (item_type) {
         case DrItemType::Tile:          return QPixmap(":/assets/asset_types/tile.png");
     }
+}
+
+
+//####################################################################################
+//##    Returns Asset Tree Item Pixmap
+//####################################################################################
+QPixmap GetAssetPixmapMix(DrMix *mix) {
+    QPixmap pix(":/assets/asset_types/mix.png");
+    if (mix == nullptr) return pix;
+
+    DrColor tint_color = mix->getComponentPropertyValue(Comps::Mix_Settings, Props::Mix_Settings_Color).toColor();
+
+    QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
+    colorize->setStrength(1.0);
+    colorize->setColor(Dr::ToQColor(tint_color));
+
+    pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 0) );
+    return pix;
 }
 
 

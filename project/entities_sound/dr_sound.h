@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/24/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/2/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -36,9 +36,10 @@ private:
 public:
     // Constructor / Destructor
     DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
+    virtual ~DrSound() override;
 
     // DrSettings Overrides
-    virtual DrType      getType() override              { return DrType::Sound; }
+    virtual DrType          getType() override              { return DrType::Sound; }
 
     // Initializing
     void                    initializeSoundSettings(std::string new_name);

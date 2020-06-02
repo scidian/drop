@@ -9,12 +9,12 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
-#include "project/entities/dr_music.h"
-#include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_sound/dr_mix.h"
+#include "project/entities_sound/dr_sound.h"
 
 
 //####################################################################################
@@ -27,7 +27,8 @@ void DrProject::deleteEntity(long entity_key) {
         case DrType::Asset:     deleteAsset(entity_key);    break;
         case DrType::Font:      deleteFont(entity_key);     break;
         case DrType::Image:     deleteImage(entity_key);    break;
-        case DrType::Music:     deleteMusic(entity_key);    break;
+        case DrType::Mix:       deleteMix(entity_key);      break;
+        case DrType::NotFound:  break;
         case DrType::Sound:     deleteSound(entity_key);    break;
         case DrType::World:     deleteWorld(entity_key);    break;
     }
@@ -136,13 +137,13 @@ void DrProject::deleteImage(long image_key) {
 }
 
 //####################################################################################
-//##    Delete Music
+//##    Delete Mix
 //####################################################################################
-void DrProject::deleteMusic(long music_key) {
-    DrMusic *music = findMusicFromKey(music_key);
-    if (music == nullptr) return;
-    m_music.erase(music->getKey());
-    delete music;
+void DrProject::deleteMix(long mix_key) {
+    DrMix *mix = findMixFromKey(mix_key);
+    if (mix == nullptr) return;
+    m_mixes.erase(mix->getKey());
+    delete mix;
 }
 
 //####################################################################################

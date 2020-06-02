@@ -32,7 +32,7 @@
 NodeItem::NodeItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *component) {
     // ***** Check for DrComponent
     if (component == nullptr) {
-        Dr::PrintDebug("Error in NodeItem() contructor! Argument component is nullptr!");
+        Dr::PrintDebug("Error in NodeItem() constructor! Argument component is nullptr!");
         return;
     }
 

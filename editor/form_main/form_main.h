@@ -188,7 +188,7 @@ public:
     virtual void        buildAssetTree() override;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) override;
     virtual void        buildProjectTree(bool total_rebuild = false) override;
-    virtual void        buildScene(long stage_key) override;
+    virtual void        buildScene(long from_key) override;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
                                                            std::list<ComponentProperty> property_names) override;

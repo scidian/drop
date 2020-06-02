@@ -24,6 +24,8 @@
 #include "editor/trees/tree_project.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/view_mixer/mixer_scene.h"
+#include "editor/view_mixer/mixer_view.h"
 #include "editor/view_node/node_scene.h"
 #include "editor/view_node/node_view.h"
 #include "engine/debug_flags.h"
@@ -61,6 +63,7 @@ void FormMain::initializeFormMain() {
     buildCentralWidgetClear();
     buildCentralWidgetWorldCreator();
     buildCentralWidgetWorldGraph();
+    buildCentralWidgetSoundCreator();
 
     // Build Docks
     m_dock_advisor =        Dr::BuildDockAdvisor(   m_project, this, m_tree_advisor);
@@ -93,6 +96,11 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
                 break;
             case Editor_Mode::World_Creator:
                 m_widget_central_editor = takeCentralWidget();
+                buildInspector( { } );
+                m_dock_assets->hide();
+                break;
+            case Editor_Mode::Sound_Creator:
+                m_widget_central_sound_creator = takeCentralWidget();
                 buildInspector( { } );
                 m_dock_assets->hide();
                 break;
@@ -134,6 +142,17 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             buildProjectTree();
             buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
             break;
+
+        case Editor_Mode::Sound_Creator:
+            m_scene_mixer->clearSceneOverride();
+            setWindowTitle( tr("Drop") + " - Sound Creator");
+            setCentralWidget( m_widget_central_sound_creator );
+            m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Sounds").toUtf8()) );
+            m_tree_assets->setShowTypes({ DrType::Mix, DrType::Sound });
+            buildAssetTree();
+            m_dock_assets->show();
+            buildProjectTree();
+            buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Mix).toInt() );
 
         case Editor_Mode::Clear:
             setWindowTitle( tr("Drop") );

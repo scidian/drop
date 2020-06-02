@@ -115,8 +115,8 @@ void FormMain::buildCentralWidgetSoundCreator() {
     size_policy_preferred_horizontal.setHorizontalStretch(1);
     size_policy_preferred_horizontal.setVerticalStretch(0);
 
-    // ***** Initialize scene used for mixing DrMusic
-//    m_scene_mixer = new MixerScene(this, m_project, this);
+    // ***** Initialize scene used for mixing DrMix
+    m_scene_mixer = new MixerScene(this, m_project, this);
 
 //    // ***** Build central widgets
 //    m_widget_central_world_graph = new QWidget();

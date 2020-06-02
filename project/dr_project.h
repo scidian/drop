@@ -21,15 +21,18 @@ enum class Project_Options {        //  Type    User Editable   Description
     Name                = 10,       // string,  yes             Name of Current Project
     File_Name_Path      = 11,       // string,  kind of         Full Path and File Name of Project, will save to this unless choose Save As
 
-    Current_World       = 20,       // long,    no              World currently displayed in editor
-    Current_Stage       = 21,       // long,    no              Scene currently displayed in editor
+    Current_World       = 20,       // long,    no              World currently displayed in Editor_Mode::World_Creator
+    Current_Stage       = 21,       // long,    no              Scene currently displayed in Editor_Mode::World_Creator
 
     Orientation         = 30,       // int,     yes             This Projects target device orientation (enum Orientation)
     Width               = 31,       // long,    yes             This Projects target device window width,  usually 800
     Height              = 32,       // long,    yes             This Projects target device window height, usually 1600
 
-    World_Graph_Center  = 40,       // pointf,  no              Saves center location of World Graph view
-    World_Graph_Zoom    = 41,       // double,  no              Saves zoom level of World Graph view
+    World_Graph_Center  = 40,       // pointf,  no              Saves center location of Editor_Mode::World_Graph view
+    World_Graph_Zoom    = 41,       // double,  no              Saves zoom level of Editor_Mode::World_Graph view
+
+    Current_Mix         = 50,       // long,    no              DrMix currently displayed in Editor_Mode::Sound_Creator
+
 };
 
 enum class Orientation {
@@ -47,7 +50,7 @@ class DrFont;
 class DrImage;
 class DrItem;
 class DrPrefab;
-class DrMusic;
+class DrMix;
 class DrSound;
 class DrStage;
 class DrThing;
@@ -68,7 +71,7 @@ typedef std::map<long,              DrFont*>        FontMap;
 typedef std::map<long,              DrImage*>       ImageMap;
 typedef std::map<long,              DrItem*>        ItemMap;
 typedef std::map<long,              DrPrefab*>      PrefabMap;
-typedef std::map<long,              DrMusic*>       MusicMap;
+typedef std::map<long,              DrMix*>         MixMap;
 typedef std::map<long,              DrSound*>       SoundMap;
 typedef std::map<long,              DrWorld*>       WorldMap;
 
@@ -109,7 +112,7 @@ private:
     AnimationMap    m_animations;                                   // Holds DrAnimations   (which in turn hold DrFrames)
     FontMap         m_fonts;                                        // Holds DrFonts        (currently custom bitmap fonts)
     ImageMap        m_images;                                       // Holds DrImages       (for use in DrFrames, loaded into DrEngineTextures)
-    MusicMap        m_music;                                        // Holds DrMusic        (which in turn hold a collection of DrSounds)
+    MixMap          m_mixes;                                        // Holds DrMix          (which in turn hold a collection of DrTracks)
     SoundMap        m_sounds;                                       // Holds DrSounds       (hold sound files / effects)
 
     // World Graph Items
@@ -161,7 +164,7 @@ public:
     ImageMap&       getImageMap()           { return m_images; }
     ItemMap&        getItemMap()            { return m_items; }
     PrefabMap&      getPrefabMap()          { return m_prefabs; }
-    MusicMap&       getMusicMap()           { return m_music; }
+    MixMap&         getMixMap()             { return m_mixes; }
     SoundMap&       getSoundMap()           { return m_sounds; }
     WorldMap&       getWorldMap()           { return m_worlds; }
 
@@ -181,7 +184,7 @@ public:
     DrImage*        findImageFromKey(long check_key);
     DrItem*         findItemFromKey(long check_key);
     DrPrefab*       findPrefabFromKey(long check_key);
-    DrMusic*        findMusicFromKey(long check_key);
+    DrMix*          findMixFromKey(long check_key);
     DrSound*        findSoundFromKey(long check_key);
     DrStage*        findStageFromKey(long check_key, long world_key = c_no_key);
     DrThing*        findThingFromKey(long check_key, long stage_key = c_no_key, long world_key = c_no_key);
@@ -206,7 +209,7 @@ public:
     DrImage*        addImage(std::string image_name, DrBitmap &bitmap, long key = c_no_key, bool outline = true, IProgressBar *progress = nullptr);
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
-    DrMusic*        addMusic(long key);
+    DrMix*          addMix(long key = c_no_key);
     DrSound*        addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
     DrWorld*        addWorld(DrWorldType world_type);
     DrWorld*        addWorld(DrWorldType world_type, long key, long start_stage_key, long last_stage_in_editor_key);
@@ -221,7 +224,7 @@ public:
     void            deleteEntity(long entity_key);
     void            deleteFont(long font_key);
     void            deleteImage(long image_key);
-    void            deleteMusic(long music_key);
+    void            deleteMix(long mix_key);
     void            deleteSound(long sound_key);
     void            deleteWorld(long world_key);
 

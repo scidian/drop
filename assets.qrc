@@ -244,5 +244,6 @@
         <file>assets/inspector_icons/comp_sound_speech.png</file>
         <file>assets/inspector_icons/comp_sound_wave.png</file>
         <file>assets/inspector_icons/comp_sound.png</file>
+        <file>assets/asset_types/mix.png</file>
     </qresource>
 </RCC>

@@ -92,6 +92,9 @@ namespace Comps {
 
     //  An = Animation
     //  Fr = Frame
+    //  Mi = Mix
+    //  Tr = Track
+    //  So = Sound
     //  As = Asset
     //  Ui = UI
     //  Wo = World
@@ -113,11 +116,16 @@ namespace Comps {
         // ***** DrFrame Components
         const std::string Frame_Settings                    = "FrSe";
 
-    // ***** DrMusic Components
-    const std::string Music_Settings                    = "MuSe";
+
+    // ***** DrMix Components
+    const std::string Mix_Settings                      = "MiSe";
+
+    // ***** DrTrack Components
+    const std::string Track_Settings                    = "TrSe";
 
     // ***** DrSound Components
     const std::string Sound_Settings                    = "SoSe";
+
 
     // ***** DrAsset Components
     const std::string Asset_Collision                   = "AsCollision";
@@ -129,6 +137,7 @@ namespace Comps {
     const std::string Asset_Settings_Character          = "AsSeCharacter";
     const std::string Asset_Settings_Object             = "AsSeObject";
     const std::string Asset_Settings_Font               = "AsSeFont";
+
 
     // ***** DrWorld::Physics_2D Components
     const std::string World_Settings                    = "WoSe";
@@ -142,9 +151,11 @@ namespace Comps {
     //       DrWorld::UI Components
     const std::string UI_Settings                       = "UiSe";
 
+
     // ***** DrStage Components
     const std::string Stage_Settings                    = "StSe";
     const std::string Stage_Grid                        = "StGrid";
+
 
     // ***** DrThing Shared Components
     const std::string Thing_Transform                   = "Transform";
@@ -201,6 +212,9 @@ namespace Props {
 
     //  An = Animation
     //  Fr = Frame
+    //  Mi = Mix
+    //  Tr = Track
+    //  So = Sound
     //  As = Asset
     //  Wo = World
     //  St = Stage
@@ -232,8 +246,16 @@ namespace Props {
     const std::string Animation_Settings_Future_3           = "AnSeFuture3";
 
 
+    // ******************** DrMix Component Properties
+    // Mix_Settings
+    const std::string Mix_Settings_Color                    = "MiSeColor";                  // color
+
+    // ******************** DrTrack Component Properties
+    // Track_Settings
+    const std::string Track_Settings_Color                  = "TrSeColor";                  // color
+
     // ******************** DrSound Component Properties
-    // Asset_Settings_Character
+    // Sound_Settings
     const std::string Sound_Settings_Color                  = "SoSeColor";                  // color
 
 

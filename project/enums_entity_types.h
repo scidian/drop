@@ -69,8 +69,8 @@ enum class DrType {
 /// Controls,                       // joystick, etc?
 
     // Assets for View Mixer: Sound Creator
-    Music,                          // Entities contained within DrProject::m_music
-        Track,                      // Entities contained within DrProject::m_music::m_tracks
+    Mix,                            // Entities contained within DrProject::m_mixes
+        Track,                      // Entities contained within DrProject::m_mixes::m_tracks
     Sound,                          // Entities contained within DrProject::m_sounds
 };
 
@@ -219,7 +219,7 @@ namespace Asset_Category {
     const std::string   Controls        = "Controls";
 
     // View Mixer: Sound Creator
-    const std::string   Music           = "Music";
+    const std::string   Mixes           = "Mixes";
     const std::string   Sounds          = "Sounds";
     const std::string   Speech          = "Speech";
     const std::string   Wav             = "Wav";

@@ -182,10 +182,11 @@ std::string DrSettings::getName() {
         case DrType::Image:
         case DrType::Item:
         case DrType::Prefab:
-        case DrType::Music:
+        case DrType::Mix:
         case DrType::Sound:
         case DrType::Stage:
         case DrType::Thing:
+        case DrType::Track:
         case DrType::World:        
             name_component = getComponent(Comps::Entity_Settings);              if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Props::Entity_Name);   if (name_property ==  nullptr) return "No Name Property";

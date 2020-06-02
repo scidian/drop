@@ -37,7 +37,7 @@ void FormAnimation::buildAssetTree() {
 
 void FormAnimation::buildInspector(QList<long> entity_key_list, bool force_rebuild) { };
 void FormAnimation::buildProjectTree(bool total_rebuild) { };
-void FormAnimation::buildScene(long stage_key) { };
+void FormAnimation::buildScene(long from_key) { };
 
 void FormAnimation::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items,
                                                        std::list<ComponentProperty> property_names) { };

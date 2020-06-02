@@ -26,10 +26,11 @@ std::string StringFromType(DrType type) {
         case DrType::Image:                 return "Image";
         case DrType::Item:                  return "Item";
         case DrType::Prefab:                return "Prefab";
-        case DrType::Music:                 return "Music";
+        case DrType::Mix:                   return "Mix";
         case DrType::Sound:                 return "Sound";
         case DrType::Stage:                 return "Stage";
         case DrType::Thing:                 return "Thing";
+        case DrType::Track:                 return "Track";
         case DrType::World:                 return "World";
 
         case DrType::NotFound:              return "Not Found";

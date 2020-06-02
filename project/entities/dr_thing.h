@@ -29,7 +29,7 @@ struct Order_Info_Thing {
 
 //####################################################################################
 //##    DrThing
-//##        Class to hold one Thing within a Stage
+//##        Class to hold one DrThing within a DrStage
 //############################
 class DrThing : public DrSettings
 {

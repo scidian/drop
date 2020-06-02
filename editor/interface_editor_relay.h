@@ -70,7 +70,7 @@ public:
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) = 0;
     virtual void        buildProjectTree(bool total_rebuild = false) = 0;
-    virtual void        buildScene(long stage_key) = 0;
+    virtual void        buildScene(long from_key) = 0;
 
     virtual void        updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, std::list<DrSettings*> changed_items, std::list<ComponentProperty> property_names) = 0;
     virtual void        updateInspectorEnabledProperties() = 0;

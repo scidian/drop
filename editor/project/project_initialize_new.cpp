@@ -14,6 +14,7 @@
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_sound/dr_mix.h"
 #include "project/settings/settings_component.h"
 
 namespace Dr {
@@ -41,9 +42,13 @@ void InitializeNewProject(DrProject *project, std::string project_name, Orientat
 
     // ***** Add Initial World
     DrWorld *world_1 = project->addWorld(DrWorldType::Physics_2D);
-    DrWorld *current_world = world_1;
     project->setOption(Project_Options::Current_World,      world_1->getKey());
-    project->setOption(Project_Options::Current_Stage,      current_world->getFirstStageKey());
+    project->setOption(Project_Options::Current_Stage,      world_1->getFirstStageKey());
+
+
+    // ***** Add Initial Mix
+    DrMix *mix_1 = project->addMix();
+    project->setOption(Project_Options::Current_Mix,        mix_1->getKey());
 
 
     // ***** Initialize Some User Variables

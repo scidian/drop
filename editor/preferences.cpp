@@ -183,6 +183,10 @@ void LoadPreferences() {
     Dr::SetInspectorExpanded(Comps::Asset_Settings_Font,       true);
     Dr::SetInspectorExpanded(Comps::Asset_Settings_Object,     true);
 
+    Dr::SetInspectorExpanded(Comps::Mix_Settings,              true);
+    Dr::SetInspectorExpanded(Comps::Sound_Settings,            true);
+    Dr::SetInspectorExpanded(Comps::Track_Settings,            true);
+
     Dr::SetInspectorExpanded(Comps::World_Settings,            true);
     Dr::SetInspectorExpanded(Comps::World_Physics,             true);
 

@@ -23,6 +23,8 @@
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
+#include "editor/view_mixer/mixer_scene.h"
+#include "editor/view_mixer/mixer_view.h"
 #include "editor/view_node/node_scene.h"
 #include "editor/view_node/node_view.h"
 #include "editor/widgets/widgets_view.h"
@@ -58,7 +60,7 @@ void FormMain::setEditorMode(Editor_Mode new_mode) {
         case Editor_Mode::World_Graph:          this->rebuildFormMain(Editor_Mode::World_Graph);        break;
         case Editor_Mode::World_Creator:        this->rebuildFormMain(Editor_Mode::World_Creator);      break;
         case Editor_Mode::UI_Creator:           this->rebuildFormMain(Editor_Mode::Clear);              break;
-        case Editor_Mode::Sound_Creator:        this->rebuildFormMain(Editor_Mode::Clear);              break;
+        case Editor_Mode::Sound_Creator:        this->rebuildFormMain(Editor_Mode::Sound_Creator);      break;
         case Editor_Mode::Clear:                this->rebuildFormMain(Editor_Mode::Clear);              break;
 
         case Editor_Mode::Animation_Creator:
@@ -98,18 +100,21 @@ void FormMain::buildProjectTree(bool total_rebuild) {
 }
 
 // Fires an Undo stack command to change Stages within Scene
-void FormMain::buildScene(long stage_key) {
+void FormMain::buildScene(long from_key) {
     if (getEditorMode() == Editor_Mode::World_Graph) {
         m_scene_world_graph->buildScene();
+
     } else if (getEditorMode() == Editor_Mode::World_Creator) {
         // Rebuild existing Stage
-        if (stage_key == c_same_key) {
+        if (from_key == c_same_key) {
             emit newStageSelected(m_project, m_scene_editor, m_scene_editor->getCurrentStageKeyShown(), m_scene_editor->getCurrentStageKeyShown());
         // Select new stage
-        } else if (m_scene_editor->getCurrentStageKeyShown() != stage_key) {
-            emit newStageSelected(m_project, m_scene_editor, m_scene_editor->getCurrentStageKeyShown(), stage_key);
+        } else if (m_scene_editor->getCurrentStageKeyShown() != from_key) {
+            emit newStageSelected(m_project, m_scene_editor, m_scene_editor->getCurrentStageKeyShown(), from_key);
         }
 
+    } else if (getEditorMode() == Editor_Mode::World_Graph) {
+        m_scene_mixer->buildScene(from_key);
     }
 }
 

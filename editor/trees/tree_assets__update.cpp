@@ -12,6 +12,7 @@
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
+#include "editor/project/project.h"
 #include "editor/trees/tree_assets.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
@@ -67,7 +68,7 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
     std::list<ComponentProperty> newly_changed_properties;
 
     QFrame  *text_holder;
-    QLabel  *asset_name;
+    QLabel  *asset_name, *asset_pix;
     QString  asset_text;
 
     for (auto entity : changed_entities) {
@@ -81,6 +82,7 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                     std::string comp = component_property_pair.first;
                     std::string prop = component_property_pair.second;
 
+                    // ***** Update Asset Name
                     if (comp == Comps::Entity_Settings && prop == Props::Entity_Name) {
                         asset_text = QString::fromStdString(entity->getName());
 
@@ -105,6 +107,17 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                             text_holder = frame->findChild<QFrame*>("textHolder");
                             asset_text = Dr::FitStringToWidth( asset_name->font(), asset_text, text_holder->width() );
                             asset_name->setText( asset_text );
+                        }
+                    }
+
+                    // ***** Update Colorized Pixmap of DrMix, DrSound
+                    QSize frame_size = QSize(100, 66);
+                    QSize pix_size =   QSize(frame_size.width() - 25, frame_size.height() - 30);
+                    if (comp == Comps::Mix_Settings && prop == Props::Mix_Settings_Color) {
+                        DrMix *mix = m_project->findMixFromKey(label_key);
+                        asset_pix = frame->findChild<QLabel*>("assetPixmap");
+                        if (asset_pix != nullptr && mix != nullptr) {
+                            asset_pix->setPixmap(Dr::GetAssetPixmapMix(mix).scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                         }
                     }
 

@@ -13,8 +13,6 @@
 #include "project/entities/dr_animation.h"
 #include "project/entities/dr_font.h"
 #include "project/entities/dr_image.h"
-#include "project/entities/dr_music.h"
-#include "project/entities/dr_sound.h"
 #include "project/entities/dr_stage.h"
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
@@ -23,6 +21,8 @@
 #include "project/entities_physics_2d/dr_effect.h"
 #include "project/entities_physics_2d/dr_item.h"
 #include "project/entities_physics_2d/dr_prefab.h"
+#include "project/entities_sound/dr_mix.h"
+#include "project/entities_sound/dr_sound.h"
 #include "project/settings/settings_component.h"
 
 
@@ -97,10 +97,10 @@ long DrProject::addPrefab(DrPrefabType prefab_type, long key) {
     return new_prefab_key;
 }
 
-DrMusic* DrProject::addMusic(long key) {
-    long new_music_key = (key == c_no_key) ? getNextKey() : key;
-    m_music[new_music_key] = new DrMusic(this, new_music_key);
-    return m_music[new_music_key];
+DrMix* DrProject::addMix(long key) {
+    long new_mix_key = (key == c_no_key) ? getNextKey() : key;
+    m_mixes[new_mix_key] = new DrMix(this, new_mix_key);
+    return m_mixes[new_mix_key];
 }
 
 DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key) {

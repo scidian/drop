@@ -38,6 +38,9 @@
 #include "project/entities_physics_2d/dr_effect.h"
 #include "project/entities_physics_2d/dr_item.h"
 #include "project/entities_physics_2d/dr_prefab.h"
+#include "project/entities_sound/dr_mix.h"
+#include "project/entities_sound/dr_sound.h"
+#include "project/entities_sound/dr_track.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -129,7 +132,9 @@ void TreeAssets::buildAssetTree(QString search_text) {
     FontMap     &list_fonts =   getParentProject()->getFontMap();
     ImageMap    &list_images =  getParentProject()->getImageMap();
     ItemMap     &list_items =   getParentProject()->getItemMap();
+    MixMap      &list_mixes =   getParentProject()->getMixMap();
     PrefabMap   &list_prefabs = getParentProject()->getPrefabMap();
+    SoundMap    &list_sounds =  getParentProject()->getSoundMap();
     int rowCount = 0;
     this->clear();
     m_asset_frames.clear();
@@ -159,18 +164,23 @@ void TreeAssets::buildAssetTree(QString search_text) {
         widget_items[Asset_Category::Effects] =         new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Effects,         widget_items[Asset_Category::Effects]) );
     }
+    if (show_types.contains(DrType::Font)) {
+        widget_items[Asset_Category::Text] =            new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Text,            widget_items[Asset_Category::Text]) );
+    }
     if (show_types.contains(DrType::Item)) {
         widget_items[Asset_Category::Items] =           new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Items,           widget_items[Asset_Category::Items]) );
+    }
+    if (show_types.contains(DrType::Mix)) {
+        widget_items[Asset_Category::Mixes] =           new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Mixes,           widget_items[Asset_Category::Mixes]) );
     }
     if (show_types.contains(DrType::Prefab)) {
         widget_items[Asset_Category::Prefabs] =         new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Prefabs,         widget_items[Asset_Category::Prefabs]) );
     }
-    if (show_types.contains(DrType::Font)) {
-        widget_items[Asset_Category::Text] =            new QTreeWidgetItem();
-        asset_categories.push_back( std::make_pair(Asset_Category::Text,            widget_items[Asset_Category::Text]) );
-    }
+
 
     DrProject *external_images = nullptr;
     std::set<std::string> image_categories;
@@ -223,6 +233,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Effect)) { for (auto effect_pair : list_effects) { if (effect_pair.first > c_no_key) entities.push_back(effect_pair.second); } }
     if (show_types.contains(DrType::Font))   { for (auto font_pair :   list_fonts)   { if (font_pair.first > c_no_key)   entities.push_back(font_pair.second); } }
     if (show_types.contains(DrType::Item))   { for (auto item_pair :   list_items)   { if (item_pair.first > c_no_key)   entities.push_back(item_pair.second); } }
+    if (show_types.contains(DrType::Mix))    { for (auto mix_pair :    list_mixes)   { if (mix_pair.first > c_no_key)    entities.push_back(mix_pair.second); } }
     if (show_types.contains(DrType::Prefab)) { for (auto prefab_pair : list_prefabs) { if (prefab_pair.first > c_no_key) entities.push_back(prefab_pair.second); } }
     if (show_types.contains(DrType::Image))  {
         // Add Images to be shown, only add built in images to list if they're being used in current DrProject
@@ -339,6 +350,11 @@ void TreeAssets::buildAssetTree(QString search_text) {
                 pix = Dr::GetAssetPixmapItem( item->getItemType() );
                 description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Item[1];
 
+            } else if (entity->getType() == DrType::Mix) {
+                DrMix *mix = static_cast<DrMix*>(entity);
+                pix = Dr::GetAssetPixmapMix(mix);
+                description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Mix[1];
+
             } else if (entity->getType() == DrType::Prefab) {
                 DrPrefab *prefab = static_cast<DrPrefab*>(entity);
                 pix = Dr::GetAssetPixmapPrefab( prefab->getPrefabType() );
@@ -379,6 +395,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
                 category_name = Asset_Category::Images;
             }
         } else if (entity->getType() == DrType::Item) {                 category_name = Asset_Category::Items;
+        } else if (entity->getType() == DrType::Mix) {                  category_name = Asset_Category::Mixes;
         } else if (entity->getType() == DrType::Prefab) {               category_name = Asset_Category::Prefabs;
         } else { continue; }
 
@@ -453,6 +470,7 @@ TreeCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std:
     else if (category_name == Asset_Category::Devices)       { icon = "comp_camera.png";        info = Advisor_Info::Asset_Device;    }
     else if (category_name == Asset_Category::Effects)       { icon = "comp_effects.png";       info = Advisor_Info::Asset_Effect;    }
     else if (category_name == Asset_Category::Items)         { icon = "comp_item.png";          info = Advisor_Info::Asset_Item;      }
+    else if (category_name == Asset_Category::Mixes)         { icon = "comp_sound.png";         info = Advisor_Info::Asset_Mix;       }
     else if (category_name == Asset_Category::Prefabs)       { icon = "comp_foliage.png";       info = Advisor_Info::Asset_Prefab;    }
     else if (category_name == Asset_Category::Text)          { icon = "comp_font.png";          info = Advisor_Info::Asset_Text;      }
     else if (category_name == Asset_Category::Images)        { icon = "comp_images.png";        info = Advisor_Info::Asset_Image;     }

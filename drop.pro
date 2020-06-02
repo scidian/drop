@@ -323,7 +323,12 @@ SOURCES += \
     editor/view_editor/editor_view__select.cpp \
     editor/interface_editor_relay.cpp \
     editor/view_mixer/mixer_item.cpp \
+    editor/view_mixer/mixer_item__paint.cpp \
     editor/view_mixer/mixer_scene.cpp \
+    editor/view_mixer/mixer_scene__build.cpp \
+    editor/view_mixer/mixer_scene__key_press.cpp \
+    editor/view_mixer/mixer_scene__select.cpp \
+    editor/view_mixer/mixer_scene__update.cpp \
     editor/view_mixer/mixer_view.cpp \
     editor/view_node/node_item.cpp \
     editor/view_node/node_item__item_change.cpp \
@@ -427,8 +432,6 @@ SOURCES += \
     project/entities/dr_font.cpp \
     project/entities/dr_image.cpp \
     project/entities/dr_image__outline_image.cpp \
-    project/entities/dr_music.cpp \
-    project/entities/dr_sound.cpp \
     project/entities/dr_stage.cpp \
     project/entities/dr_stage__settings.cpp \
     project/entities/dr_thing.cpp \
@@ -448,6 +451,9 @@ SOURCES += \
     project/entities_physics_2d/dr_effect.cpp \
     project/entities_physics_2d/dr_item.cpp \
     project/entities_physics_2d/dr_prefab.cpp \
+    project/entities_sound/dr_mix.cpp \
+    project/entities_sound/dr_sound.cpp \
+    project/entities_sound/dr_track.cpp \
     project/entities_ui/dr_button.cpp \
     project/enums_entity_types.cpp \
     project/properties/property_collision.cpp \
@@ -1212,8 +1218,6 @@ HEADERS += \
     project/entities/dr_animation.h \
     project/entities/dr_font.h \
     project/entities/dr_image.h \
-    project/entities/dr_music.h \
-    project/entities/dr_sound.h \
     project/entities/dr_stage.h \
     project/entities/dr_thing.h \
     project/entities/dr_world.h \
@@ -1223,6 +1227,9 @@ HEADERS += \
     project/entities_physics_2d/dr_effect.h \
     project/entities_physics_2d/dr_item.h \
     project/entities_physics_2d/dr_prefab.h \
+    project/entities_sound/dr_mix.h \
+    project/entities_sound/dr_sound.h \
+    project/entities_sound/dr_track.h \
     project/entities_ui/dr_button.h \
     project/enums_entity_types.h \
     project/properties/property_collision.h \

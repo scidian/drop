@@ -24,9 +24,6 @@
 //##          connected from built in Qt SIGNAL EditorScene::selectionChanged()
 //####################################################################################
 //  QList<QGraphicsItem*>   m_selection_items;          // List of selected items
-//  double                  m_selection_angle;          // Angle current selection has been rotated to
-//  QPointF                 m_selection_scale;          // Scaling applied to current selection
-//  QRectF                  m_selection_box;            // Starting outline of selected items
 void NodeScene::selectionChanged() {
     // Don't allow selection if locked
     unselectLockedItems();

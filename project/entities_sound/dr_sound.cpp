@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/24/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/2/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -7,7 +7,7 @@
 //
 #include "core/colors/colors.h"
 #include "project/constants_component_info.h"
-#include "project/entities/dr_sound.h"
+#include "project/entities_sound/dr_sound.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
@@ -23,6 +23,8 @@ DrSound::DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::Audi
 
     initializeSoundSettings("New Sound");
 }
+
+DrSound::~DrSound() { }
 
 
 //####################################################################################
@@ -41,17 +43,6 @@ void DrSound::initializeSoundSettings(std::string new_name) {
                            "Sound Color", "Color this Sound will appear in the Asset Tree.");
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
