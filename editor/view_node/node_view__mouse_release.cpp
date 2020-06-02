@@ -53,12 +53,14 @@ void NodeView::mouseReleaseEvent(QMouseEvent *event) {
     QPointF mouse_in_scene = mapToScene(event->pos());
 
     // ***** Get top most unlocked item
-    QGraphicsItem  *mouse_item = itemAt(event->pos());
-    long            mouse_item_key = c_no_key;
-    DrSettings     *mouse_item_settings = nullptr;
+    QGraphicsItem  *mouse_item =            nullptr;
+    long            mouse_item_key =        c_no_key;
+    DrType          mouse_item_type =       DrType::NotFound;
+    DrSettings     *mouse_item_settings =   nullptr;
     for (auto item : items(event->pos())) {
         mouse_item_key = item->data(User_Roles::Key).toLongLong();
-        mouse_item_settings = m_project->findSettingsFromKey(mouse_item_key);
+        mouse_item_type = static_cast<DrType>(item->data(User_Roles::Type).toInt());
+        mouse_item_settings = m_project->findSettingsFromKeyOfType(mouse_item_key, mouse_item_type);
         if (mouse_item_settings != nullptr) {
             if (mouse_item_settings->isLocked() == false) {
                 mouse_item = item;

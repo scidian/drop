@@ -44,6 +44,7 @@ void FormMain::menuNew(bool test_project) {
     m_tree_assets->clear();
     m_tree_project->clear();
     setEditorMode( Editor_Mode::World_Creator );                    // Causes FormMain to rebuild itself
+    updateItemSelection(Editor_Widgets::View, { m_project->getOption(Project_Options::Current_World).toInt() });
 }
 
 

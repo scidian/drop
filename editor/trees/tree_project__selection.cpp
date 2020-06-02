@@ -74,14 +74,14 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
 
     // ***** Size is more than 1, prevent items of different types being selected at same time
     } else {
-        DrType selected_type = getParentProject()->findChildTypeFromKey( this->getSelectedKey() );
+        DrType selected_type = getParentProject()->findSettingsTypeFromKey( this->getSelectedKey() );
 
         // Check if newly selected items are same type, if not, do not allow select
         QList<long> key_list { };
         for (auto &check_item : item_list) {
             // Get key from each item so we can compare it to first selected item
             long    check_key =  check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-            DrType  check_type = getParentProject()->findChildTypeFromKey(check_key);
+            DrType  check_type = getParentProject()->findSettingsTypeFromKey(check_key);
 
             // If we are over item that was first selected, skip to next
             if (check_key == this->getSelectedKey()) {

@@ -122,7 +122,7 @@ void WaveForm::paintEvent(QPaintEvent *) {
     // Draw playback length
     painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), 1) );
     painter.setFont(Dr::CustomFont());
-    QString play_time = Dr::RemoveTrailingDecimals(m_audio_length, 2) + "ms";
+    QString play_time = Dr::RemoveTrailingDecimals(m_audio_length, 2) + "sec";
     painter.drawText(this->rect(), Qt::AlignRight | Qt::AlignBottom, play_time);
 
 }

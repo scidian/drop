@@ -99,7 +99,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
     QGraphicsItem *item_under_mouse = nullptr;/// = itemAt(m_last_mouse_pos);
     for (auto item : items(m_last_mouse_pos)) {
         long item_key = item->data(User_Roles::Key).toLongLong();
-        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        DrSettings *settings = my_scene->getCurrentStageShown()->findThing(item_key);
         if (settings != nullptr) {
             if (settings->isLocked() == false) {
                 item_under_mouse = item;
@@ -276,7 +276,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
             if (thing != nullptr) {
                 header =    QString::fromStdString(thing->getName());
                 body =      "<b>Asset ID Key: " + QString::number(thing->getAssetKey()) + "</b><br>" +
-                            item_under_mouse->data(User_Roles::Type).toString();
+                            item_under_mouse->data(User_Roles::Description).toString();
                 m_editor_relay->setAdvisorInfo(header, body);
             }
         } else {

@@ -215,7 +215,7 @@ namespace User_Property {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //############################
 enum User_Roles {
-    Key = 0x0100,                                           // Stores Object Key in User Data of widget / graphicsitem
+    Key = 0x0100,                                           // Stores Object Key in User Data of Widget / QGraphicsItem
                                                             // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
     CompKey,                                                // Stores Component Key
     CompName,                                               // Stores Component Name
@@ -228,8 +228,9 @@ enum User_Roles {
     Opacity,
 
     Name,
-    Type,
     Category_Name,
+    Description,
+    Type,
 };
 
 

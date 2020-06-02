@@ -28,7 +28,7 @@
 // Forwards a double click to mouse down
 void NodeView::mouseDoubleClickEvent(QMouseEvent *event) {
     m_wants_double_click = true;
-    mousePressEvent(event);
+    NodeView::mousePressEvent(event);
 }
 
 void NodeView::mousePressEvent(QMouseEvent *event) {
@@ -40,12 +40,15 @@ void NodeView::mousePressEvent(QMouseEvent *event) {
     m_origin_in_scene = mapToScene(m_origin);
 
     // ***** Get top most unlocked item
-    long        origin_item_key = c_no_key;
-    DrSettings *origin_item_settings = nullptr;
-    m_origin_item =  itemAt(event->pos());
+    long        origin_item_key =       c_no_key;
+    DrType      origin_item_type =      DrType::NotFound;
+    DrSettings *origin_item_settings =  nullptr;
+    ///m_origin_item = itemAt(event->pos());
+    m_origin_item = nullptr;
     for (auto item : items(event->pos())) {
-        origin_item_key = item->data(User_Roles::Key).toLongLong();
-        origin_item_settings = m_project->findSettingsFromKey(origin_item_key);
+        origin_item_key =  item->data(User_Roles::Key).toLongLong();
+        origin_item_type = static_cast<DrType>(item->data(User_Roles::Type).toInt());
+        origin_item_settings = m_project->findSettingsFromKeyOfType(origin_item_key, origin_item_type);
         if (origin_item_settings != nullptr) {
             if (origin_item_settings->isLocked() == false) {
                 m_origin_item = item;
@@ -56,15 +59,19 @@ void NodeView::mousePressEvent(QMouseEvent *event) {
 
     // ***** Handle double click
     if (m_wants_double_click) {
+        m_wants_double_click = false;
         if (m_mouse_mode == Mouse_Mode::Pointer && origin_item_settings != nullptr) {
             if (origin_item_settings->getType() == DrType::World) {
                 DrWorld *world = dynamic_cast<DrWorld*>(origin_item_settings);
-                m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
-                m_editor_relay->updateItemSelection(Editor_Widgets::View, { world->getKey() });
-                m_editor_relay->setEditorMode(Editor_Mode::World_Creator);
+                if (world != nullptr) {
+                    m_view_mode = View_Mode::None;
+                    m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
+                    m_editor_relay->setEditorMode(Editor_Mode::World_Creator);
+                    m_editor_relay->updateItemSelection(Editor_Widgets::View, { world->getKey() });
+                    return;
+                }
             }
         }
-        m_wants_double_click = false;
     }
 
 

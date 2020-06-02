@@ -131,7 +131,8 @@ long DrWorld::getFirstStageKey() {
 
 // Returns a pointer to the World with the associated Key from the map container
 DrStage* DrWorld::getStageFromKey(long from_stage_key) {
-    return m_stages[from_stage_key];
+    StageMap::iterator stage_iter = m_stages.find(from_stage_key);
+    return ((stage_iter != m_stages.end()) ? stage_iter->second : nullptr);
 }
 
 // Returns a pointer to the World with the mathcing name

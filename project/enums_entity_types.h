@@ -37,6 +37,9 @@ constexpr double    c_node_spacing =            32;                 // Default s
 //##
 //############################
 enum class DrType {    
+    // Misc Types
+    NotFound = 0,                   // For passing a value in functions that represents No Type Selected / Found, !!!!! #NOTE: Keep as zero
+
     // Shared Types
     Animation,                      // Entities contained within DrProject::m_animations
         Frame,                      // Entities contained within DrProject::DrAnimation::m_frames
@@ -67,10 +70,8 @@ enum class DrType {
 
     // Assets for View Mixer: Sound Creator
     Music,                          // Entities contained within DrProject::m_music
+        Track,                      // Entities contained within DrProject::m_music::m_tracks
     Sound,                          // Entities contained within DrProject::m_sounds
-
-    // Misc Types
-    NotFound,                       // For passing a value in functions that represents No Type Selected / Found
 };
 
 

@@ -47,9 +47,10 @@ NodeItem::NodeItem(DrProject *project, IEditorRelay *editor_relay, DrComponent *
     // ***** Store some initial user data
     std::string            description = m_entity->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromType(m_entity->getType());
-    setData(User_Roles::Name,       QString::fromStdString(m_entity->getName()));
-    setData(User_Roles::Type,       QString::fromStdString(description));
-    setData(User_Roles::Key,        QVariant::fromValue(m_entity_key));
+    setData(User_Roles::Name,           QString::fromStdString(m_entity->getName()));
+    setData(User_Roles::Description,    QString::fromStdString(description));
+    setData(User_Roles::Type,           QVariant::fromValue(static_cast<int>(m_entity->getType())));
+    setData(User_Roles::Key,            QVariant::fromValue(m_entity_key));
 
     // ***** Turn on anti aliasing
     if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))

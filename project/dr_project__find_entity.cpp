@@ -36,7 +36,7 @@
 //##
 //####################################################################################
 // Searches all member variables / containers for the specified unique project key
-DrType DrProject::findChildTypeFromKey(long check_key) {
+DrType DrProject::findSettingsTypeFromKey(long check_key) {
     DrSettings *entity = findSettingsFromKey(check_key);
     return ((entity == nullptr) ? DrType::NotFound : entity->getType());
 }
@@ -58,7 +58,31 @@ DrSlot* DrProject::findSlotFromKeys(long entity_key, long component_key, long sl
     return nullptr;
 }
 
-// Returns a pointer to the Base DrSettings class of the item with the specified key
+// Returns a pointer to the Base DrSettings class of the item with the specified Key and Type
+DrSettings* DrProject::findSettingsFromKeyOfType(long check_key, DrType type) {
+    switch (type) {
+        case DrType::Animation:     return findAnimationFromKey(check_key);
+        case DrType::Asset:         return findAssetFromKey(check_key);
+        case DrType::Block:         /* NEED IMPLEMENT */    break;
+        case DrType::Device:        return findDeviceFromKey(check_key);
+        case DrType::Effect:        return findEffectFromKey(check_key);
+        case DrType::Font:          return findFontFromKey(check_key);
+        case DrType::Frame:         /* NEED IMPLEMENT - !!!!! #TEMP DrFrames currently use DrImage key */    break;
+        case DrType::Image:         return findImageFromKey(check_key);
+        case DrType::Item:          return findItemFromKey(check_key);
+        case DrType::Music:         return findMusicFromKey(check_key);
+        case DrType::NotFound:      return findSettingsFromKey(check_key);
+        case DrType::Prefab:        return findPrefabFromKey(check_key);
+        case DrType::Sound:         return findSoundFromKey(check_key);
+        case DrType::Stage:         return findStageFromKey(check_key);
+        case DrType::Thing:         return findThingFromKey(check_key);
+        case DrType::Track:         /* NEED IMPLEMENT */    break;
+        case DrType::World:         return findWorldFromKey(check_key);
+    }
+    return nullptr;
+}
+
+// Returns a pointer to the Base DrSettings class of the item with the specified Key
 DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, std::string custom_error) {
     AnimationMap::iterator animation_iter = m_animations.find(check_key);
     if (animation_iter != m_animations.end())   return animation_iter->second;
@@ -93,6 +117,7 @@ DrSettings* DrProject::findSettingsFromKey(long check_key, bool show_warning, st
     // Search Worlds, Stages and Things
     WorldMap::iterator world_iter = m_worlds.find(check_key);
     if (world_iter != m_worlds.end())           return world_iter->second;
+
     for (auto &world_pair : m_worlds) {
         StageMap &stages = world_pair.second->getStageMap();
         StageMap::iterator stage_iter = stages.find(check_key);
@@ -176,24 +201,51 @@ DrSound* DrProject::findSoundFromKey(long check_key) {
     return ((sound_iter != m_sounds.end()) ? sound_iter->second : nullptr);
 }
 
-DrStage* DrProject::findStageFromKey(long check_key) {
-    for (auto &world_pair : m_worlds) {
-        StageMap &stages = world_pair.second->getStageMap();
-        StageMap::iterator stage_iter = stages.find(check_key);
-
-        if (stage_iter != stages.end())
-            return stage_iter->second;
+DrStage* DrProject::findStageFromKey(long check_key, long world_key) {
+    // We know world key
+    if (world_key != c_no_key) {
+        DrWorld *search_world = findWorldFromKey(world_key);                if (search_world == nullptr) return nullptr;
+        return search_world->getStageFromKey(check_key);
+    // Don't know world key
+    } else {
+        for (auto &world_pair : m_worlds) {
+            StageMap &stages = world_pair.second->getStageMap();
+            StageMap::iterator stage_iter = stages.find(check_key);
+            if (stage_iter != stages.end()) return stage_iter->second;
+        }
     }
     return nullptr;
 }
 
-DrThing* DrProject::findThingFromKey(long check_key) {
-    for (auto &world_pair : m_worlds) {
-        for (auto &stage_pair : world_pair.second->getStageMap()) {
-            ThingMap &things = stage_pair.second->getThingMap();
-            ThingMap::iterator thing_iter = things.find(check_key);
-            if (thing_iter != things.end())
-                return thing_iter->second;
+DrThing* DrProject::findThingFromKey(long check_key, long stage_key, long world_key) {
+    // We know world and stage keys
+    if (world_key != c_no_key && stage_key != c_no_key) {
+        DrWorld *search_world = findWorldFromKey(world_key);                if (search_world == nullptr) return nullptr;
+        DrStage *search_stage = search_world->getStageFromKey(stage_key);   if (search_stage == nullptr) return nullptr;
+        return   search_stage->findThing(check_key);
+    // We know world key
+    } else if (world_key != c_no_key) {
+        DrWorld *search_world = findWorldFromKey(world_key);                if (search_world == nullptr) return nullptr;
+        for (auto &stage_pair : search_world->getStageMap()) {
+            DrThing *thing = stage_pair.second->findThing(check_key);
+            if (thing != nullptr) return thing;
+        }
+    // We know stage key
+    } else if (stage_key != c_no_key) {
+        for (auto &world_pair : m_worlds) {
+            DrStage *search_stage = world_pair.second->getStageFromKey(stage_key);
+            if (search_stage != nullptr) {
+                DrThing *thing = search_stage->findThing(check_key);
+                if (thing != nullptr) return thing;
+            }
+        }
+    // Don't know world or stage key
+    } else {
+        for (auto &world_pair : m_worlds) {
+            for (auto &stage_pair : world_pair.second->getStageMap()) {
+                DrThing *thing = stage_pair.second->findThing(check_key);
+                if (thing != nullptr) return thing;
+            }
         }
     }
     return nullptr;

@@ -64,8 +64,9 @@ void NodeView::mouseMoveEvent(QMouseEvent *event) {
     DrSlot *old_slot = m_last_mouse_slot;
     m_last_mouse_slot = nullptr;
     for (auto item : items(m_last_mouse_pos)) {
-        long item_key = item->data(User_Roles::Key).toLongLong();
-        DrSettings *settings = m_project->findSettingsFromKey(item_key);
+        long   item_key =  item->data(User_Roles::Key).toLongLong();
+        DrType item_type = static_cast<DrType>(item->data(User_Roles::Type).toInt());
+        DrSettings *settings = m_project->findSettingsFromKeyOfType(item_key, item_type);
         if (settings != nullptr) {
             if (settings->isLocked() == false) {
                 NodeItem *map_item = dynamic_cast<NodeItem*>(item);
@@ -139,11 +140,12 @@ void NodeView::mouseMoveEvent(QMouseEvent *event) {
     if (m_view_mode == View_Mode::None) {
         if (last_mouse_item != nullptr && m_project != nullptr) {
             QString header, body;
-            long item_key = last_mouse_item->data(User_Roles::Key).toLongLong();
-            DrSettings *entity = m_project->findSettingsFromKey(item_key);
+            long   item_key =  last_mouse_item->data(User_Roles::Key).toLongLong();
+            DrType item_type = static_cast<DrType>(last_mouse_item->data(User_Roles::Type).toInt());
+            DrSettings *entity = m_project->findSettingsFromKeyOfType(item_key, item_type);
             if (entity != nullptr) {
                 header =    QString::fromStdString(entity->getName());
-                body =      last_mouse_item->data(User_Roles::Type).toString();
+                body =      last_mouse_item->data(User_Roles::Description).toString();
                 m_editor_relay->setAdvisorInfo(header, body);
             }
         } else {

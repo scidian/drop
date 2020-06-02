@@ -8,7 +8,6 @@
 #ifndef DRPROJECT_H
 #define DRPROJECT_H
 
-#include "3rd_party/soloud/soloud_audiosource.h"
 #include "project/constants_entity_keys.h"
 #include "project/settings/settings.h"
 
@@ -54,6 +53,7 @@ class DrStage;
 class DrThing;
 class DrWorld;
 class IProgressBar;
+namespace SoLoud { class AudioSource; }
 
 // Type Definitions
 typedef std::map<Project_Options,   DrVariant>      OptionMap;
@@ -169,7 +169,8 @@ public:
     DrPointF        getNewWorldGraphPosition();
 
     DrSettings*     findSettingsFromKey(long check_key, bool show_warning = true, std::string custom_error = "");
-    DrType          findChildTypeFromKey(long check_key);
+    DrSettings*     findSettingsFromKeyOfType(long check_key, DrType type);
+    DrType          findSettingsTypeFromKey(long check_key);
     DrSlot*         findSlotFromKeys(long entity_key, long component_key, long slot_key);
 
     DrAnimation*    findAnimationFromKey(long check_key);
@@ -182,8 +183,8 @@ public:
     DrPrefab*       findPrefabFromKey(long check_key);
     DrMusic*        findMusicFromKey(long check_key);
     DrSound*        findSoundFromKey(long check_key);
-    DrStage*        findStageFromKey(long check_key);
-    DrThing*        findThingFromKey(long check_key);
+    DrStage*        findStageFromKey(long check_key, long world_key = c_no_key);
+    DrThing*        findThingFromKey(long check_key, long stage_key = c_no_key, long world_key = c_no_key);
     DrWorld*        findWorldFromKey(long check_key);
 
     DrDevice*       findDeviceFromType(DrDeviceType type);

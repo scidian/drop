@@ -68,6 +68,12 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
     // If this is a temporary item, or not attached to a scene, do not process change
     if (m_temp_only || !m_editor_relay)         return QGraphicsPixmapItem::itemChange(change, value);
 
+    // If value is not valid, do not process change
+    if (value.isValid() == false) {
+        qDebug() << "EditorItem::itemChange() provided value is invalid! Change was: " << change;
+        return QGraphicsPixmapItem::itemChange(change, value);
+    }
+
     // If havent implicitly turned on changes, do not process
     if (m_item_change_flags_enabled == false)   return QGraphicsPixmapItem::itemChange(change, value);
 
@@ -78,6 +84,11 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
 
     // ********** Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
+        if (value.type() != QVariant::Type::PointF) {
+            qDebug() << "EditorItem::itemChange() change ItemPositionChange not provided with QPointF! Type was: " << value.type();
+            return QGraphicsPixmapItem::itemChange(change, value);
+        }
+
         // If not coming from an interactive view mode, return event position
         QPointF new_pos = value.toPointF();
         if (m_editor_relay->currentViewMode() != View_Mode::Translating &&

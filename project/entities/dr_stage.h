@@ -53,7 +53,7 @@ public:
     void            setParentWorld(DrWorld *world)          { m_parent_world = world; }
     DrWorld*        getParentWorld()                        { return m_parent_world; }
     ThingMap&       getThingMap()                           { return m_things; }
-    DrThing*        getThing(long key)                      { return m_things[key]; }
+    DrThing*        findThing(long key);
 
     bool            isStartStage()                          { return m_is_start_stage; }
     void            setIsStartStage(bool is_start_stage)    { m_is_start_stage = is_start_stage; }

@@ -24,11 +24,22 @@
 //####################################################################################
 QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value) {
 
-    // If havent implicitly turned on changes, do not process
+    // If value is not valid, do not process change
+    if (value.isValid() == false) {
+        qDebug() << "NodeItem::itemChange() provided value is invalid! Change was: " << change;
+        return QGraphicsPixmapItem::itemChange(change, value);
+    }
+
+    // If haven't implicitly turned on changes, do not process
     if (m_item_change_flags_enabled == false)   return QGraphicsPixmapItem::itemChange(change, value);
 
     // ********** Intercepts item position change and limits new location if Snap to Grid is on
     if (change == ItemPositionChange) {
+        if (value.type() != QVariant::Type::PointF) {
+            qDebug() << "NodeItem::itemChange() change ItemPositionChange not provided with QPointF! Type was: " << value.type();
+            return QGraphicsPixmapItem::itemChange(change, value);
+        }
+
         // If not coming from an interactive view mode, return event position
         QPointF new_pos = value.toPointF();
         if (m_editor_relay->currentViewMode() != View_Mode::Translating &&

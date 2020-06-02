@@ -48,13 +48,14 @@ void EditorView::mousePressEvent(QMouseEvent *event) {
     m_origin_in_scene = mapToScene(m_origin);
 
     // ***** Get top most unlocked item
-    long     origin_item_key = c_no_key;
-    DrThing *origin_item_thing = nullptr;
-    bool     origin_locked = false;
-    m_origin_item =  itemAt(event->pos());
+    long     origin_item_key =      c_no_key;
+    DrThing *origin_item_thing =    nullptr;
+    bool     origin_locked =        false;
+    ///m_origin_item = itemAt(event->pos());
+    m_origin_item = nullptr;
     for (auto item : items(event->pos())) {
         origin_item_key = item->data(User_Roles::Key).toLongLong();
-        origin_item_thing = m_project->findThingFromKey(origin_item_key);
+        origin_item_thing = my_scene->getCurrentStageShown()->findThing(origin_item_key);
         if (origin_item_thing != nullptr) {
             if (origin_item_thing->isLocked() == false) {
                 m_origin_item = item;

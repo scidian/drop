@@ -176,9 +176,10 @@ EditorItem::EditorItem(DrProject *project, IEditorRelay *editor_relay, DrThing *
     // ***** Store some initial user data
     std::string            description = m_thing->getComponentPropertyValue(Comps::Hidden_Settings, Props::Hidden_Advisor_Description).toString();
     if (description == "") description = Dr::StringFromThingType(m_thing->getThingType());
-    setData(User_Roles::Name,       QString::fromStdString(m_asset->getName()) );
-    setData(User_Roles::Type,       QString::fromStdString(description) );
-    setData(User_Roles::Key,        QVariant::fromValue(m_thing_key));
+    setData(User_Roles::Name,           QString::fromStdString(m_asset->getName()) );
+    setData(User_Roles::Description,    QString::fromStdString(description));
+    setData(User_Roles::Type,           QVariant::fromValue(static_cast<int>(m_thing->getType())));
+    setData(User_Roles::Key,            QVariant::fromValue(m_thing_key));
 
     double   angle =   m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Rotation).toDouble();
     DrPointF scale =   m_thing->getComponentPropertyValue(Comps::Thing_Transform, Props::Thing_Scale).toPointF();

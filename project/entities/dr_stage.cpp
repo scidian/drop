@@ -74,6 +74,15 @@ void DrStage::deleteThing(DrThing *&thing) {
 
 
 //####################################################################################
+//##    Find Thing in Stage
+//####################################################################################
+DrThing* DrStage::findThing(long thing_key) {
+    ThingMap::iterator thing_iter = m_things.find(thing_key);
+    if (thing_iter != m_things.end()) return thing_iter->second; else return nullptr;
+}
+
+
+//####################################################################################
 //##    Returns a list of Thing keys contained in Stage, sorted from high z value to low
 //####################################################################################
 std::vector<long> DrStage::thingKeysSortedByZOrder(Sort_Order sort_order) {
