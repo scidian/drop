@@ -284,11 +284,8 @@ void ViewToolbar::buildToolbar() {
 
             // Zoom Slider
             zoom_slider->setToolTip("Select Zoom Level");
-            if (m_view_node != nullptr) {
-                zoom_slider->setRange( 0, 35);
-            } else if (m_view_editor != nullptr) {
-                zoom_slider->setRange(-5, 50);
-            }
+            if      (m_view_node != nullptr)    { zoom_slider->setRange( 0, 35); }
+            else if (m_view_editor != nullptr)  { zoom_slider->setRange(-5, 50); }
             zoom_slider->setFixedWidth(165);
             zoom_slider->setValue(20);
             zoom_slider->setTickInterval(5);

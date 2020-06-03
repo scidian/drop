@@ -260,7 +260,7 @@ QString CustomStyleSheetFormatting() {
 
         " QPushButton#buttonAssetCategory { "
         "       height: " + std::to_string(Dr::Scale(22)) + "px; "
-        "       font-size: " + std::to_string(Dr::FontSize(2)) + "px; "
+        "       font-size: " + std::to_string(Dr::Scale(12)) + "px; "
         "       text-align: left; "
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
         "       border: none; "
