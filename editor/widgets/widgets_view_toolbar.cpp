@@ -123,7 +123,7 @@ void ViewToolbar::buttonGroupToggleClicked(int id) {
 //####################################################################################
 //##    Button creation calls
 //####################################################################################
-QToolButton* ViewToolbar::createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h, bool checkable, bool enabled) {
+QToolButton* ViewToolbar::createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, bool checkable, bool enabled) {
     QToolButton *tool = new QToolButton();
     tool->setObjectName(style_sheet_name);
     if (checkable) {
@@ -132,7 +132,6 @@ QToolButton* ViewToolbar::createToolBarButton(const QString &style_sheet_name, H
     }
     tool->setToolTip(advisor_text[0]);
     tool->setEnabled(enabled);
-    tool->setFixedSize(w, h);
     m_filter_hover->attachToHoverHandler(tool, advisor_text);
     return tool;
 }

@@ -28,9 +28,7 @@
 #include "editor/widgets/widgets_view_toolbar.h"
 
 // Local Constants
-const int   c_toolbar_height =  36;
-const int   c_button_size_w =   32;
-const int   c_button_size_h =   26;
+const int   c_spacer_height =   28;
 
 
 //####################################################################################
@@ -39,7 +37,6 @@ const int   c_button_size_h =   26;
 void ViewToolbar::buildToolbar() {
 
     this->setObjectName("viewToolBar");
-    this->setFixedHeight(c_toolbar_height);
         QHBoxLayout *view_toolbar_layout = new QHBoxLayout(this);
         view_toolbar_layout->setObjectName(QStringLiteral("viewToolBarLayout"));
         view_toolbar_layout->setSpacing(4);
@@ -48,7 +45,6 @@ void ViewToolbar::buildToolbar() {
         // ***** Selectable Button group that keeps track of which mouse mode we are in: Pointer, Hand, Mganify, etc.
         widgetGroupMouse = new QWidget();
         widgetGroupMouse->setObjectName(QStringLiteral("widgetGroupMouse"));
-        widgetGroupMouse->setFixedHeight(c_toolbar_height);
             QHBoxLayout *toolbarLayoutMouse = new QHBoxLayout(widgetGroupMouse);
             toolbarLayoutMouse->setSpacing(3);
             toolbarLayoutMouse->setContentsMargins(0, 0, 0, 0);
@@ -57,34 +53,34 @@ void ViewToolbar::buildToolbar() {
             buttonsGroupMouse->setExclusive(true);
             connect(buttonsGroupMouse, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupMouseClicked(int)));
 
-            mouse_pointer = createToolBarButton(QStringLiteral("mousePointer"), Advisor_Info::Mouse_Pointer, c_button_size_w, c_button_size_h + 2, true);
+            mouse_pointer = createToolBarButton(QStringLiteral("mousePointer"), Advisor_Info::Mouse_Pointer, true);
             mouse_pointer->setChecked(true);
             buttonsGroupMouse->addButton(mouse_pointer, int(Mouse_Mode::Pointer));
             toolbarLayoutMouse->addWidget(mouse_pointer);
 
-            mouse_hand = createToolBarButton(QStringLiteral("mouseHand"), Advisor_Info::Mouse_Hand, c_button_size_w, c_button_size_h + 2, true);
+            mouse_hand = createToolBarButton(QStringLiteral("mouseHand"), Advisor_Info::Mouse_Hand, true);
             buttonsGroupMouse->addButton(mouse_hand,    int(Mouse_Mode::Hand));
             toolbarLayoutMouse->addWidget(mouse_hand);
 
-            mouse_magnify = createToolBarButton(QStringLiteral("mouseMagnify"), Advisor_Info::Mouse_Magnify, c_button_size_w, c_button_size_h + 2, true);
+            mouse_magnify = createToolBarButton(QStringLiteral("mouseMagnify"), Advisor_Info::Mouse_Magnify, true);
             buttonsGroupMouse->addButton(mouse_magnify, int(Mouse_Mode::Magnify));
             toolbarLayoutMouse->addWidget(mouse_magnify);
 
         view_toolbar_layout->addWidget(widgetGroupMouse);
         view_toolbar_layout->addSpacing(2);
-        view_toolbar_layout->addWidget(createToolBarSpacer(c_button_size_h - 2));
+        view_toolbar_layout->addWidget(createToolBarSpacer(c_spacer_height));
 
 
         // ***** Mouse Mode Add-On, Hand: Center Point Label / Input
         widgetGroupHandTool = new QWidget();
         widgetGroupHandTool->setObjectName(QStringLiteral("widgetGroupHandTool"));
-        widgetGroupHandTool->setFixedHeight(c_toolbar_height);
             QHBoxLayout *toolbarLayoutHand = new QHBoxLayout(widgetGroupHandTool);
             toolbarLayoutHand->setSpacing(0);
             toolbarLayoutHand->setContentsMargins(4, 0, 0, 0);
             toolbarLayoutHand->setAlignment(Qt::AlignmentFlag::AlignVCenter);
 
             QLabel *center_point = new QLabel();
+            center_point->setObjectName(QStringLiteral("labelCenterPoint"));
             center_point->setFont(Dr::CustomFont());
             center_point->setAlignment(Qt::AlignmentFlag::AlignCenter);
             center_point->setText("Center Point: ");
@@ -94,8 +90,8 @@ void ViewToolbar::buildToolbar() {
             InspectorDoubleSpinSlot *point_y = new InspectorDoubleSpinSlot();
 
             // Point X Box
+            point_x->setObjectName(QStringLiteral("handToolPoint"));
             point_x->setToolTip("Center X Coordinate");
-            point_x->setFixedHeight(22);
             point_x->setFont(Dr::CustomFont());
             point_x->setDecimals(1);
             point_x->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -124,8 +120,8 @@ void ViewToolbar::buildToolbar() {
             }
 
             // Point Y Box
+            point_y->setObjectName(QStringLiteral("handToolPoint"));
             point_y->setToolTip("Center Y Coordinate");
-            point_y->setFixedHeight(22);
             point_y->setFont(Dr::CustomFont());
             point_y->setDecimals(1);
             point_y->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -154,9 +150,8 @@ void ViewToolbar::buildToolbar() {
 
             // Reset to Center
             QToolButton *move_to_center = new QToolButton();
-            move_to_center->setToolTip("Center View to Zero");
-            move_to_center->setFixedSize(25, 22);
             move_to_center->setObjectName("buttonImageMiniButton");
+            move_to_center->setToolTip("Center View to Zero");
                 QPixmap center_icon(":/assets/toolbar_icons/toolbar_reset_center.png");
                 center_icon = QPixmap::fromImage( Dr::ColorizeImage(center_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 move_to_center->setIcon( QIcon(center_icon.scaled(QSize(15, 15), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
@@ -180,7 +175,6 @@ void ViewToolbar::buildToolbar() {
         // ***** Mouse Mode Add-On, Zoom: Current Zoom Percentage Drop Down, Fit To View, Slider
         widgetGroupZoomTool = new QWidget();
         widgetGroupZoomTool->setObjectName(QStringLiteral("widgetGroupZoomTool"));
-        widgetGroupZoomTool->setFixedHeight(c_toolbar_height);
             QHBoxLayout *toolbarLayoutZoom = new QHBoxLayout(widgetGroupZoomTool);
             toolbarLayoutZoom->setSpacing(0);
             toolbarLayoutZoom->setContentsMargins(3, 0, 0, 0);
@@ -193,7 +187,6 @@ void ViewToolbar::buildToolbar() {
             // Zoom Spin Box
             zoom_spin->setObjectName(QStringLiteral("zoomSpin"));
             zoom_spin->setToolTip("Zoom Level");
-            zoom_spin->setFixedHeight(22);
             zoom_spin->setFont(Dr::CustomFont());
             zoom_spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
             if (m_view_node != nullptr) {
@@ -274,9 +267,8 @@ void ViewToolbar::buildToolbar() {
 
             // Fit to View Button
             QToolButton *fit_to_view = new QToolButton();
-            fit_to_view->setToolTip("Fit to View");
-            fit_to_view->setFixedSize(25, 22);
             fit_to_view->setObjectName("buttonImageMiniButton");
+            fit_to_view->setToolTip("Fit to View");
                 QPixmap fit_icon(":/assets/toolbar_icons/toolbar_fit_to_view.png");
                 fit_icon = QPixmap::fromImage( Dr::ColorizeImage(fit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light))) );
                 fit_to_view->setIcon( QIcon(fit_icon.scaled(QSize(10, 10), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
@@ -298,7 +290,6 @@ void ViewToolbar::buildToolbar() {
                 zoom_slider->setRange(-5, 50);
             }
             zoom_slider->setFixedWidth(165);
-            zoom_slider->setMaximumHeight(26);
             zoom_slider->setValue(20);
             zoom_slider->setTickInterval(5);
             zoom_slider->setSingleStep(1);
@@ -332,7 +323,6 @@ void ViewToolbar::buildToolbar() {
         if (m_editor_mode == Editor_Mode::World_Creator) {
             widgetGroupToggle = new QWidget();
             widgetGroupToggle->setObjectName(QStringLiteral("widgetGroupToggle"));
-            widgetGroupToggle->setFixedHeight(c_toolbar_height);
                 QHBoxLayout *toolbarLayoutToggle = new QHBoxLayout(widgetGroupToggle);
                 toolbarLayoutToggle->setSpacing(3);
                 toolbarLayoutToggle->setContentsMargins(0, 0, 0, 0);
@@ -341,17 +331,17 @@ void ViewToolbar::buildToolbar() {
                 buttonsGroupToggle->setExclusive(false);
                 connect(buttonsGroupToggle, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
 
-                QToolButton *camera_on_off = createToolBarButton("cameraOnOff", Advisor_Info::Camera_On_Off, c_button_size_w, c_button_size_h, true);
+                QToolButton *camera_on_off = createToolBarButton("cameraOnOff", Advisor_Info::Camera_On_Off, true);
                 buttonsGroupToggle->addButton(camera_on_off, int(Buttons_Toggle::CameraOnOff));
                 camera_on_off->setChecked(false);
                 toolbarLayoutToggle->addWidget(camera_on_off);
 
-                QToolButton *debug_on_off = createToolBarButton("debugOnOff", Advisor_Info::Debug_On_Off, c_button_size_w, c_button_size_h, true);
+                QToolButton *debug_on_off = createToolBarButton("debugOnOff", Advisor_Info::Debug_On_Off, true);
                 buttonsGroupToggle->addButton(debug_on_off, int(Buttons_Toggle::DebugOnOff));
                 debug_on_off->setChecked(false);
                 toolbarLayoutToggle->addWidget(debug_on_off);
 
-            view_toolbar_layout->addWidget(createToolBarSpacer(c_button_size_h - 2));
+            view_toolbar_layout->addWidget(createToolBarSpacer(c_spacer_height));
             view_toolbar_layout->addSpacing(2);
             view_toolbar_layout->addWidget(widgetGroupToggle);
         }

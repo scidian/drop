@@ -13,6 +13,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QToolButton>
 #include <QTreeWidget>
 
 #include "core/types/dr_variant.h"
@@ -137,8 +138,8 @@ private:
     IEditorRelay   *m_editor_relay;                     // Pointer to IEditorRelay class of parent form
 
     // Local Variables
-    QPushButton    *m_delete_button = nullptr;          // Little "Delete" button
-    QPushButton    *m_edit_button = nullptr;            // Little "Edit" button
+    QToolButton    *m_delete_button = nullptr;          // Little "Delete" button
+    QToolButton    *m_edit_button = nullptr;            // Little "Edit" button
 
 public:
     explicit        DrImageHolder(IEditorRelay *editor_relay, QWidget *parent = nullptr);
@@ -147,10 +148,10 @@ public:
     void            setChildrenGeometry();
 
     // Getters / Setters
-    QPushButton*        getDeleteButton()       { return m_delete_button; }
-    QPushButton*        getEditButton()         { return m_edit_button; }
-    void                setDeleteButton(QPushButton *button)    { m_delete_button = button; }
-    void                setEditButton(QPushButton *button)      { m_edit_button = button; }
+    QToolButton*        getDeleteButton()       { return m_delete_button; }
+    QToolButton*        getEditButton()         { return m_edit_button; }
+    void                setDeleteButton(QToolButton *button)    { m_delete_button = button; }
+    void                setEditButton(QToolButton *button)      { m_edit_button = button; }
 };
 
 

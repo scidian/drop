@@ -65,7 +65,6 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
 
     // Build search bar
     m_search_widget = new QWidget(parent);
-    m_search_widget->setFixedHeight(30);
     m_search_widget->setObjectName(QStringLiteral("assetSearchWidget"));
     getHoverHandler()->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
     m_search_widget->setToolTip( Advisor_Info::Asset_Search[0] );
@@ -273,7 +272,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, DrFilterAssetMouseHandler
         QFrame *single_asset = new QFrame();
-        single_asset->setObjectName("assetFrame");
+        single_asset->setObjectName(QStringLiteral("assetFrame"));
         single_asset->setProperty(User_Property::Key,           QVariant::fromValue( entity->getKey() ));
         single_asset->setProperty(User_Property::Mouse_Down,    false);
         single_asset->setProperty(User_Property::External,      entity->getParentProject() == external_images);

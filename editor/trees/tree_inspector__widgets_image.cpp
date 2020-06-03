@@ -10,6 +10,7 @@
 #include <QHBoxLayout>
 #include <QMimeData>
 #include <QPainter>
+#include <QToolButton>
 
 #include "core/colors/colors.h"
 #include "editor/event_filters/event_filters.h"
@@ -43,9 +44,9 @@
 //####################################################################################
 QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSizePolicy size_policy, DrImageHolder *use_this_holder) {
 
-    int frame_height = 100;
-    int frame_width =  100;
-    bool rebuilding = false;
+    int frame_height = Dr::Scale(100);
+    int frame_width =  Dr::Scale(100);
+    bool rebuilding =  false;
 
     // Create new Image Frame
     DrImageHolder *image_frame;
@@ -100,14 +101,13 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
 
         if (animation != nullptr) {
             // ***** Delete Button
-            QPushButton *delete_button = new QPushButton(image_frame);
-            Dr::ApplyDropShadowByType(delete_button, Shadow_Types::Button_Shadow_Thin);
-            delete_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+            QToolButton *delete_button = new QToolButton(image_frame);
             delete_button->setObjectName("buttonImageMiniButton");
+            Dr::ApplyDropShadowByType(delete_button, Shadow_Types::Button_Shadow_Thin);
                 QPixmap delete_icon(":/assets/gui_misc/image_delete.png");
                 delete_icon = QPixmap::fromImage( Dr::ColorizeImage(delete_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
                 delete_button->setIcon( QIcon(delete_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-            delete_button->setFixedSize(19, 17);
+            delete_button->setFixedSize(Dr::Scale(19), Dr::Scale(17));
             delete_button->setVisible(false);
             image_frame->setDeleteButton(delete_button);
 
@@ -121,14 +121,13 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
             });
 
             // ***** Edit Button
-            QPushButton *edit_button = new QPushButton(image_frame);
-            Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);
-            edit_button->setStyleSheet(" padding-left: 1; padding-top: 1; ");
+            QToolButton *edit_button = new QToolButton(image_frame);
             edit_button->setObjectName("buttonImageMiniButton");
+            Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);            
                 QPixmap edit_icon(":/assets/gui_misc/image_edit.png");
                 edit_icon = QPixmap::fromImage( Dr::ColorizeImage(edit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
                 edit_button->setIcon( QIcon(edit_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );
-            edit_button->setFixedSize(19, 17);
+            edit_button->setFixedSize(Dr::Scale(19), Dr::Scale(17));
             edit_button->setVisible(false);
             image_frame->setEditButton(edit_button);
 
@@ -156,8 +155,8 @@ DrImageHolder::DrImageHolder(IEditorRelay *editor_relay, QWidget *parent) : QFra
 };
 
 void DrImageHolder::setChildrenGeometry() {
-    if (this->getDeleteButton() != nullptr) this->getDeleteButton()->setGeometry( this->width() - 26, 10, 19, 17);
-    if (this->getEditButton()   != nullptr) this->getEditButton()->setGeometry(   this->width() - 26, 31, 19, 17);
+    if (this->getDeleteButton() != nullptr) this->getDeleteButton()->setGeometry( this->width() - Dr::Scale(26), 10, Dr::Scale(19), Dr::Scale(17));
+    if (this->getEditButton()   != nullptr) this->getEditButton()->setGeometry(   this->width() - Dr::Scale(26), 10 + Dr::Scale(21), Dr::Scale(19), Dr::Scale(17));
 }
 
 

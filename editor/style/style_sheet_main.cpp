@@ -98,11 +98,11 @@ QString CustomStyleSheetFormatting() {
 
         // Generic Push Buttons
         " QPushButton#buttonDefault { "
+        "       margin: 4px; "
         "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
         "       color: " +      Dr::GetColor(Window_Colors::Text).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-        "       border-top: " + std::to_string(Dr::Scale(1)) + "px solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-radius: 4px; "
+        "       border-radius: " + std::to_string(Dr::Scale(4)) + "px; "
         "       padding-left: 20px; padding-right:  20px; "
         "       padding-top:   6px; padding-bottom:  6px; }"
         " QPushButton#buttonDefault:focus { "
@@ -215,13 +215,17 @@ QString CustomStyleSheetFormatting() {
         //################################################################################
         //##    Dock Widgets - Stacked Dock TabBars
         //################################################################################
-        " QDockWidget { font-size: " + std::to_string(Dr::FontSize()) + "px; font: bold; "
-        "               color: " + Dr::GetColor(Window_Colors::Header_Text).name() + "; } "
+        " QDockWidget { "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
+        "       font: bold; "
+        "       color: " + Dr::GetColor(Window_Colors::Header_Text).name() + "; "
+        " } "
         " QDockWidget::title { "
         "       text-align: center; "
         "       background: qlineargradient(x1:0 y1:0, x2:0 y2:1, "
         "                   stop:0 " + Dr::GetColor(Window_Colors::Icon_Light).name() + ", "
-        "                   stop:1 " + Dr::GetColor(Window_Colors::Header_Fade).name() + "); } "
+        "                   stop:1 " + Dr::GetColor(Window_Colors::Header_Fade).name() + "); "
+        " } "
 
         // Tab bar that appears when you stack multiple DockWidgets
         " QTabBar { "
@@ -230,12 +234,14 @@ QString CustomStyleSheetFormatting() {
         "       color: " +      Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
-        "       font-size: " + std::to_string(Dr::FontSize()) + "px; } "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
+        " } "
         " QTabBar::tab:selected { "
         "       color: " +      Dr::GetColor(Window_Colors::Text_Light).name() + "; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       padding-top: 2px; padding-bottom: 3px; padding-left: 4px; padding-right: 4px; "
-        "       font-size: " + std::to_string(Dr::FontSize()) + "px; } "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
+        " } "
 
 
         //################################################################################
@@ -243,7 +249,7 @@ QString CustomStyleSheetFormatting() {
         //################################################################################
         " QFrame#assetFrame { border: " + Dr::BorderWidth() + " solid; " + StyleSheetRecessedBackgroundBorder(5, 95) +
         "       margin-top: 2px; margin-bottom: 2px; margin-left: 5px; margin-right: 0px; "
-        "       border-radius: 6px; } "
+        "       border-radius: " + std::to_string(Dr::Scale(6)) + "px; } "
         " QFrame#assetFrame:hover { " + StyleSheetRecessedBackgroundBorder(5, 95, true) + "; } "
         ///"       border: " + Dr::BorderWidth() + " solid " + Dr::GetColor(Window_Colors::Icon_Dark).name()  + "; }"
 
@@ -252,27 +258,32 @@ QString CustomStyleSheetFormatting() {
         "       border-radius: 6px; } "
         " QFrame#inspectorImageFrame:hover { " + StyleSheetRecessedBackgroundBorder(5, 95, true) + "; } "
 
-        " QPushButton#buttonAssetCategory { height: " + std::to_string(Dr::Scale(22)) + "px; font: " + std::to_string(Dr::Scale(13)) + "px; text-align: left; "
-        "               color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
-        "               border: none; "
-        "               border-style: solid; "
-        "               border-top-width: " + Dr::BorderWidth() + "; "
-        "               border-bottom-width: " + Dr::BorderWidth() + "; "
-        "               border-color: " + Dr::GetColor(Window_Colors::Header_Fade).name() + "; "
-        "               background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
-        "                           stop:0.00 " + Dr::GetColor(Window_Colors::Midlight).name() +        ///Button_Light).lighter(150).name() +
-        "                           stop:0.05 " + Dr::GetColor(Window_Colors::Midlight).name() +        ///Button_Light).lighter(150).name() +
-        "                           stop:0.10 " + Dr::GetColor(Window_Colors::Button_Light).name() +
-        "                         , stop:0.90 " + Dr::GetColor(Window_Colors::Background_Light).name() +///Button_Light).darker(200).name() +
-        "                         , stop:0.95 " + Dr::GetColor(Window_Colors::Background_Light).name() +///Button_Light).darker(400).name() +
-        "                         , stop:1.00 " + Dr::GetColor(Window_Colors::Shadow).name() + "); }"   ///Window_Colors::Button_Light).darker(400).name() + "); } "
+        " QPushButton#buttonAssetCategory { "
+        "       height: " + std::to_string(Dr::Scale(22)) + "px; "
+        "       font-size: " + std::to_string(Dr::FontSize(2)) + "px; "
+        "       text-align: left; "
+        "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
+        "       border: none; "
+        "       border-style: solid; "
+        "       border-top-width: " + Dr::BorderWidth() + "; "
+        "       border-bottom-width: " + Dr::BorderWidth() + "; "
+        "       border-color: " + Dr::GetColor(Window_Colors::Header_Fade).name() + "; "
+        "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
+        "                       stop:0.00 " + Dr::GetColor(Window_Colors::Midlight).name() +        ///Button_Light).lighter(150).name() +
+        "                       stop:0.05 " + Dr::GetColor(Window_Colors::Midlight).name() +        ///Button_Light).lighter(150).name() +
+        "                       stop:0.10 " + Dr::GetColor(Window_Colors::Button_Light).name() +
+        "                     , stop:0.90 " + Dr::GetColor(Window_Colors::Background_Light).name() +///Button_Light).darker(200).name() +
+        "                     , stop:0.95 " + Dr::GetColor(Window_Colors::Background_Light).name() +///Button_Light).darker(400).name() +
+        "                     , stop:1.00 " + Dr::GetColor(Window_Colors::Shadow).name() + "); }"   ///Window_Colors::Button_Light).darker(400).name() + "); } "
         " QPushButton#buttonAssetCategory:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; } "
         " QPushButton#buttonAssetCategory:pressed  { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
         " QPushButton#buttonAssetCategory:disabled { color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
 
         " QWidget#assetSearchWidget {"
+        "       height: " + std::to_string(Dr::Scale(30)) + "px; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
         " QLineEdit#assetSearchBar { "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
         "       background-image: url(:/assets/gui_misc/search.png); "
         "       background-repeat: no-repeat; "
         "       background-position: left; "
@@ -280,25 +291,29 @@ QString CustomStyleSheetFormatting() {
 
 
         //################################################################################
-        //##    Main ToolBar
-        //################################################################################
-        " QToolBar#toolbar {        height: " + std::to_string(Dr::Scale(40)) + "px; } "
-        " QWidget#widgetToolBar {   height: " + std::to_string(Dr::Scale(40)) + "px; } "
-
-
-        //################################################################################
         //##    StatusBar / View ToolBar
         //################################################################################
         " QFrame#statusBar { "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border-top:    " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; "
-        "       border-bottom: " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
+        "       padding: 2px; "
+        "       height:         " + std::to_string(Dr::Scale(28)) + "px; "
+        "       background:     " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        "       border-top:     " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; "
+        "       border-bottom:  " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
 
         " QFrame#viewToolBar { "
-        "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
-        "       border-top:    " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; "
-        "       border-bottom: " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
+        "       background:     " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+        "       border-top:     " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Seperator).name() + "; "
+        "       border-bottom:  " + std::to_string(Dr::Scale(1)) + "px solid " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
 
+        " QDoubleSpinBox#handToolPoint { "
+        "                               height: " + std::to_string(Dr::Scale(22)) + "px; "
+        "                               font-size: " + std::to_string(Dr::FontSize()) + "px; "
+        " } "
+        " QLabel#labelCenterPoint {     font-size: " + std::to_string(Dr::FontSize()) + "px; }"
+
+        " QLabel#labelSelected {        font-size: " + std::to_string(Dr::FontSize()) + "px; }"
+        " QLabel#labelInfo {            font-size: " + std::to_string(Dr::FontSize()) + "px; }"
+        " QLabel#labelMousePosition {   font-size: " + std::to_string(Dr::FontSize()) + "px; }"
 
         //################################################################################
         //##    Inspector Widgets - Spinboxes, LineEdits, Pushbutton Menus, Sliders
@@ -326,7 +341,7 @@ QString CustomStyleSheetFormatting() {
         " QAbstractSpinBox#spinBool:!enabled { color: transparent; }"
 
         // Spin boxes - Zoom
-        " QAbstractSpinBox#zoomSpin {        border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(20)) + "px; "
+        " QAbstractSpinBox#zoomSpin {        border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(22)) + "px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +
         "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
@@ -407,7 +422,7 @@ QString CustomStyleSheetFormatting() {
         "       background: transparent; border: none; }"
 
         // Drop down PushButtons - spinBoxSelect
-        " QPushButton#spinBoxSelect { border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(20)) + "px; "
+        " QPushButton#spinBoxSelect { border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(21)) + "px; "
         "       border-top-left-radius: 0px; border-bottom-left-radius: 0px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
                 //StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 9, 92) +
@@ -439,7 +454,10 @@ QString CustomStyleSheetFormatting() {
         "       background: transparent; border: none; }"
 
         // Little Edit / Delete Buttons on Inspector Image Property
-        " QToolButton#buttonImageMiniButton {            border: " + std::to_string(Dr::Scale(1)) + "px solid; border-radius: 4px; "
+        " QToolButton#buttonImageMiniButton { "
+        "       width:  " + std::to_string(Dr::Scale(20)) + "px; "
+        "       height: " + std::to_string(Dr::Scale(18)) + "px; "
+        "       border: 1px solid; border-radius: 4px; "
         "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
         "       border-color: " +                
                 (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Background_Light).darker(150) :
@@ -447,7 +465,8 @@ QString CustomStyleSheetFormatting() {
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() + "; } "
-        " QToolButton#buttonImageMiniButton:hover {      border: " + std::to_string(Dr::Scale(1)) + "px solid; "
+        " QToolButton#buttonImageMiniButton:hover { "
+        "       border: 1px solid; "
         "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-color: " +
                 (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Button_Light).darker(130) :
@@ -455,7 +474,8 @@ QString CustomStyleSheetFormatting() {
                                    Dr::GetColor(Window_Colors::Button_Light).darker(130).name() +
                                    Dr::GetColor(Window_Colors::Button_Light).name() +
                                    Dr::GetColor(Window_Colors::Button_Light).darker(130).name() +"; } "
-        " QToolButton#buttonImageMiniButton:pressed {    border: " + std::to_string(Dr::Scale(1)) + "px solid; "
+        " QToolButton#buttonImageMiniButton:pressed { "
+        "       border: 1px solid; "
         "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
                                    Dr::GetColor(Window_Colors::Background_Dark).name() +
@@ -481,8 +501,10 @@ QString CustomStyleSheetFormatting() {
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
         // Slider for Opacity, etc.
-        " QSlider::groove:horizontal { height: " + std::to_string(Dr::Scale(4)) + "px; background: black; "
-        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; } "
+        " QSlider::groove:horizontal { "
+        "       height: " + std::to_string(Dr::Scale(4)) + "px; background: black; "
+        "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "
+        " } "
         " QSlider::handle:horizontal {"
         "       border: " + std::to_string(Dr::Scale(2)) + "px solid; "
         "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
@@ -494,14 +516,17 @@ QString CustomStyleSheetFormatting() {
         " QSlider::handle:horizontal:hover {"
         "       background: " +   Dr::GetColor(Window_Colors::Highlight).name() + "; "
         " } "
-        " QSlider::add-page:horizontal { border-radius: 2px; border-top: 1px solid; margin: 0 2; "
+        " QSlider::add-page:horizontal { "
+        "       border-radius: 2px; border-top: 1px solid; margin: 0 2; "
         "       background: " +   Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-        " QSlider::sub-page:horizontal { border-radius: 2px; border-top: 1px solid; "
+        " QSlider::sub-page:horizontal { "
+        "       border-radius: 2px; border-top: 1px solid; "
         "       background: " +   Dr::GetColor(Window_Colors::Icon_Dark).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Icon_Light).name() + "; } "
         // Disabled Slider
-        " QSlider::sub-page:horizontal:!enabled { border-radius: 2px; border-top: 1px solid; "
+        " QSlider::sub-page:horizontal:!enabled { "
+        "       border-radius: 2px; border-top: 1px solid; "
         "       background: " +   Dr::GetColor(Window_Colors::Text_Dark).name() + "; "
         "       border-color: " + Dr::GetColor(Window_Colors::Text_Dark).name() + "; } "
         " QSlider::handle:horizontal:!enabled {"

@@ -301,7 +301,6 @@ void FormMain::buildCentralWidgetWorldCreator() {
                         // ***** Lower View area Status Bar
                         m_status_bar = new QFrame(widget_editor_view);
                         m_status_bar->setObjectName("statusBar");
-                        m_status_bar->setFixedHeight(26);
                             QHBoxLayout *status_layout = new QHBoxLayout(m_status_bar);
                             status_layout->setObjectName(QStringLiteral("statusLayout"));
                             status_layout->setSpacing(6);
