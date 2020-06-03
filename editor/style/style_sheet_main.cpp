@@ -322,7 +322,9 @@ QString CustomStyleSheetFormatting() {
         " QCheckBox#checkInspector::indicator { height: " + std::to_string(Dr::Scale(27)) + "px; width: " + std::to_string(Dr::Scale(32)) + "px; }"
 
         // Spin boxes, mostly in Inspector
-        " QAbstractSpinBox {        border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(20)) + "px; "
+        " QAbstractSpinBox {        "
+        "       border: " + Dr::BorderWidth() + " solid; "
+        "       height: " + std::to_string(Dr::Scale(20)) + "px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +
         "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
@@ -341,7 +343,10 @@ QString CustomStyleSheetFormatting() {
         " QAbstractSpinBox#spinBool:!enabled { color: transparent; }"
 
         // Spin boxes - Zoom
-        " QAbstractSpinBox#zoomSpin {        border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(22)) + "px; "
+        " QAbstractSpinBox#zoomSpin { "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
+        "       border: " + Dr::BorderWidth() + " solid; "
+        "       height: " + std::to_string(Dr::Scale(22)) + "px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +
         "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
@@ -422,7 +427,9 @@ QString CustomStyleSheetFormatting() {
         "       background: transparent; border: none; }"
 
         // Drop down PushButtons - spinBoxSelect
-        " QPushButton#spinBoxSelect { border: " + Dr::BorderWidth() + " solid; height: " + std::to_string(Dr::Scale(21)) + "px; "
+        " QPushButton#spinBoxSelect { "
+        "       border: " + Dr::BorderWidth() + " solid; "
+        "       height: " + std::to_string(Dr::Scale(21)) + "px; "
         "       border-top-left-radius: 0px; border-bottom-left-radius: 0px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " +
                 //StyleSheetPoppedOutBackgroundBorder(Dr::GetColor(Window_Colors::Background_Light), Dr::GetColor(Window_Colors::Background_Light), 9, 92) +

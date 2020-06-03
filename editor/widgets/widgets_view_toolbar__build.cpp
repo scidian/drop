@@ -197,7 +197,7 @@ void ViewToolbar::buildToolbar() {
             zoom_spin->setSingleStep(50);
             zoom_spin->setSuffix("%");
             zoom_spin->setValue(50);
-            int max_zoom_width = Dr::CheckFontWidth(Dr::CustomFont(), "3200%") + 20;
+            int max_zoom_width = Dr::CheckFontWidth(Dr::CustomFont(), "3200%") + 40;
             zoom_spin->setFixedWidth(max_zoom_width);
             zoom_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
             if (m_view_node != nullptr) {
