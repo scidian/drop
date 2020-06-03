@@ -132,22 +132,26 @@ void        SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
 void LoadPreferences() {
 
     // ***** Program Color Scheme
-    Dr::SetColorScheme(Color_Scheme::Dark);
+    Dr::SetPreference(Preferences::Gui_Scale,                               1.0);
+    Dr::SetPreference(Preferences::Color_Scheme,                            QVariant::fromValue(static_cast<int>(Color_Scheme::Dark)));
 
-    // ***** World Editor Options
-    Dr::SetPreference(Preferences::World_Editor_Show_Camera_Boxes,      false);
-    Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes,  false);
+    Dr::SetScale(Dr::GetPreference(Preferences::Gui_Scale).toDouble());
+    Dr::SetColorScheme(static_cast<Color_Scheme>(Dr::GetPreference(Preferences::Color_Scheme).toInt()));
 
-    // !!!!! NOT IMPLEMENTED YET: World Editor Options
-    Dr::SetPreference(Preferences::World_Editor_Lock_Backgrounds,       false);
-    Dr::SetPreference(Preferences::World_Editor_Show_Connections,       false);
+    // ***** Editor Options
+    Dr::SetPreference(Preferences::Editor_Show_Camera_Boxes,                false);
+    Dr::SetPreference(Preferences::Editor_Show_Collision_Shapes,            false);
+
+    // !!!!! NOT IMPLEMENTED YET: Editor Options
+    Dr::SetPreference(Preferences::Editor_Lock_Backgrounds,                 false);
+    Dr::SetPreference(Preferences::Editor_Show_Connections,                 false);
     // !!!!!
 
-    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,           true);
-    Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid,         true);
-    Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,            false);
+    Dr::SetPreference(Preferences::Editor_Snap_To_Grid,                     true);
+    Dr::SetPreference(Preferences::Editor_Resize_To_Grid,                   true);
+    Dr::SetPreference(Preferences::Editor_Grid_On_Top,                      false);
 
-    Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
+    Dr::SetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box,  false);
 
 
     // ***** Stored Color History

@@ -62,7 +62,7 @@ void NodeScene::keyPressEvent(QKeyEvent *event) {
 
         // Amount to move items when arrow keys are pressed
         QPointF move_by (grid_size.x * grid_scale.x, grid_size.y * grid_scale.y);
-        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) {
+        if (Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool() == false) {
             if        (m_key_timers[key_pressed].elapsed() <  750) {    move_by.setX(   1.0 );  move_by.setY(   1.0 );
             } else if (m_key_timers[key_pressed].elapsed() < 1500) {    move_by.setX(   5.0 );  move_by.setY(   5.0 );
             } else if (m_key_timers[key_pressed].elapsed() < 2250) {    move_by.setX(  25.0 );  move_by.setY(  25.0 );
@@ -84,8 +84,8 @@ void NodeScene::keyPressEvent(QKeyEvent *event) {
             if (Dr::FuzzyCompare(0.0, move_x) == false || Dr::FuzzyCompare(0.0, move_y) == false) {
                 // Store current settings and prepare for ItemChange Event
                 View_Mode before_mode = m_editor_relay->currentViewMode();
-                bool      snap_center = Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool();
-                Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
+                bool      snap_center = Dr::GetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box).toBool();
+                Dr::SetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box, false);
                 if (m_editor_relay->getViewNode()) m_editor_relay->getViewNode()->setViewMode(View_Mode::Holding_Keys);
 
                 // Move Item, ItemChange Event is activated for snapping to grid
@@ -93,7 +93,7 @@ void NodeScene::keyPressEvent(QKeyEvent *event) {
 
                 // Restore settings after ItemChange Event is over
                 if (m_editor_relay->getViewNode()) m_editor_relay->getViewNode()->setViewMode(before_mode);
-                Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, snap_center);
+                Dr::SetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box, snap_center);
             }
         }
     }

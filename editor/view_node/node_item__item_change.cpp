@@ -48,7 +48,7 @@ QVariant NodeItem::itemChange(GraphicsItemChange change, const QVariant &value) 
         }
 
         // Not snapping to grid? Go ahead and return event position
-        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
+        if (Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
         // Round new position to grid
         QPointF rounded_center = m_editor_relay->roundPointToGrid(new_pos);

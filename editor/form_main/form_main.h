@@ -244,7 +244,6 @@ private:
     void            addToolBarGroup(QWidget *group, bool add_spacer = true);
     void            buttonGroupModeSetChecked(int id);
     void            clearToolBar();
-    QPushButton*    createPushButton(QString name = "toolbarButton", QString text = "Button");
     QToolButton*    createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, int w, int h,
                                         bool checkable = false, bool enabled = true);
     QLabel*         createToolBarSpacer(int height = 24, int space_on_the_right = 1, bool visible = true);

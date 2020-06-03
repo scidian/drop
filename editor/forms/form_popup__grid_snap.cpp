@@ -40,15 +40,15 @@ void FormPopup::buildPopupGridSnap() {
         button1->setFont(font); button1->setFixedHeight( rect1.height() + 4 );
         button2->setFont(font); button2->setFixedHeight( rect1.height() + 4 );
 
-        button1->setChecked( Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
-        button2->setChecked(!Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool());
+        button1->setChecked( Dr::GetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box).toBool());
+        button2->setChecked(!Dr::GetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box).toBool());
 
         connect(button1, &QRadioButton::released, [this]() {
-            Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, true);
+            Dr::SetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box, true);
             this->close();
         });
         connect(button2, &QRadioButton::released, [this]() {
-            Dr::SetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box, false);
+            Dr::SetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box, false);
             this->close();
         });
 

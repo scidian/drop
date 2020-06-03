@@ -44,7 +44,6 @@ void FormMain::buildToolBar() {
     // ***** Initialize toolbar widget
     m_toolbar = new QToolBar(this);
     m_toolbar->setObjectName(QStringLiteral("toolbar"));
-    m_toolbar->setFixedHeight(c_toolbar_height);
     m_toolbar->setMovable(false);
     m_toolbar->setFloatable(false);
     m_toolbar->installEventFilter(new DrFilterClickAndDragWindow(m_toolbar));
@@ -52,7 +51,6 @@ void FormMain::buildToolBar() {
     // ***** This is a container object that holds all toolbar button groups, allowing us to put them in a layout
     m_widget_toolbar = new QWidget();
     m_widget_toolbar->setObjectName(QStringLiteral("widgetToolBar"));
-    m_widget_toolbar->setFixedHeight(c_toolbar_height);
     m_widget_toolbar_layout = new QHBoxLayout(m_widget_toolbar);
     m_widget_toolbar_layout->setSpacing(3);
     m_widget_toolbar_layout->setContentsMargins(12, 0, 12, 0);
@@ -193,19 +191,19 @@ void FormMain::buildToolBar() {
 
         tool = createToolBarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, c_button_size_w, c_button_size_h, true);
         m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Grid_On_Top));
-        tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool());
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Grid_On_Top).toBool());
         toolbarLayoutGridFull->addWidget(tool);
         toolbarLayoutGridFull->addSpacing(1);
 
         tool = createToolBarButton(QStringLiteral("buttonResizeToGrid"), Advisor_Info::Resize_To_Grid, c_button_size_w, c_button_size_h, true);
         m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
-        tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool());
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Resize_To_Grid).toBool());
         toolbarLayoutGridFull->addWidget(tool);
         toolbarLayoutGridFull->addSpacing(1);
 
         tool = createToolBarButton(QStringLiteral("buttonSnapToGrid"), Advisor_Info::Grid_Snap_To_Grid, c_button_size_w, c_button_size_h, true);
         m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
-        tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
         toolbarLayoutGridFull->addWidget(tool);
 
         tool = createToolBarButton(QStringLiteral("buttonSnapOptions"), Advisor_Info::Grid_Snap_Options, 14, c_button_size_h, false, true);
@@ -227,7 +225,7 @@ void FormMain::buildToolBar() {
 
         tool = createToolBarButton(QStringLiteral("buttonSnapToMap"), Advisor_Info::Grid_Snap_To_Grid, c_button_size_w, c_button_size_h, true);
         m_buttons_group_grid_simple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
-        tool->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
         toolbarLayoutGridSimple->addWidget(tool);
         toolbarLayoutGridSimple->addWidget(createToolBarSpacer(c_button_size_h - 2, 34, false));
 
@@ -343,7 +341,7 @@ QToolButton* FormMain::createToolBarButton(const QString &style_sheet_name, Head
     }
     tool->setToolTip(advisor_text[0]);
     tool->setEnabled(enabled);
-    tool->setFixedSize(w, h);
+    tool->setFixedSize(Dr::Scale(w), Dr::Scale(h));
     m_filter_hover->attachToHoverHandler(tool, advisor_text);
     ///Dr::ApplyDropShadowByType(tool, Shadow_Types::Button_Shadow_Thin);
     return tool;
@@ -360,17 +358,12 @@ QLabel* FormMain::createToolBarSpacer(int height, int space_on_the_right, bool v
     return spacer;
 }
 
-QPushButton* FormMain::createPushButton(QString name, QString text) {
-    QFont font = Dr::CustomFont();
 
-    QPushButton *button = new QPushButton();
-    button->setObjectName( name );
-    button->setFont(font);
-    button->setFixedSize(80, 24);
-    Dr::ApplyDropShadowByType(button,    Shadow_Types::Button_Shadow);
-    button->setText( text );
-    return button;
-}
+
+
+
+
+
 
 
 

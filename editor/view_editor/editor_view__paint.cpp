@@ -96,13 +96,13 @@ void EditorView::paintEvent(QPaintEvent *event) {
     }
 
     // Draw collision shapes if we have a Stage
-    if (Dr::GetPreference(Preferences::World_Editor_Show_Collision_Shapes).toBool() && stage != nullptr) {
+    if (Dr::GetPreference(Preferences::Editor_Show_Collision_Shapes).toBool() && stage != nullptr) {
         paintCollisionShapes(painter, stage);
         paintDebugHealth(painter, stage);
     }
 
     // Draw camera boxes if we have a Stage
-    if (Dr::GetPreference(Preferences::World_Editor_Show_Camera_Boxes).toBool() && stage != nullptr) {
+    if (Dr::GetPreference(Preferences::Editor_Show_Camera_Boxes).toBool() && stage != nullptr) {
         paintCameras(painter, stage);
     }
 
@@ -129,7 +129,7 @@ void EditorView::paintEvent(QPaintEvent *event) {
     }
 
     // Draw Crosshairs under potential drag and drop
-    if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool()) {
+    if (Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool()) {
         if (m_drop_might_happen)
             paintCrossHairs(painter, mapFromScene(m_drop_location));
     }

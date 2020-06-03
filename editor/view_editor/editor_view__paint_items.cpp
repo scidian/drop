@@ -199,7 +199,7 @@ void EditorView::paintItemCenters(QPainter &painter) {
     ///    painter.setCompositionMode(QPainter::CompositionMode::RasterOp_NotDestination);
 
     // Draw crosshairs on SelectionBox center
-    if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool()) {
+    if (Dr::GetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box).toBool()) {
         QPoint center = mapFromScene(my_scene->getSelectionTransform().map( my_scene->getSelectionBox().center()) );
         paintCrossHairs(painter, center);
 

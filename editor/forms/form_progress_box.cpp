@@ -35,7 +35,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
     setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::WindowModality::ApplicationModal);
-    setMinimumSize(QSize(300, 150));
+    setMinimumSize(QSize(200 + Dr::Scale(100), 100 + Dr::Scale(50)));
     setObjectName(QStringLiteral("childForm"));
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
@@ -76,8 +76,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
             button_spacer->addStretch();
 
             QPushButton *cancel = new QPushButton("  " + cancel_button_text + "  ");
-            cancel->setFixedHeight(26);
-            ///cancel->setFont(label_font);
+            cancel->setFixedHeight(13 + Dr::Scale(13));
             Dr::ApplyDropShadowByType(cancel, Shadow_Types::Button_Shadow);
             cancel->setObjectName(QStringLiteral("buttonDefault"));
 

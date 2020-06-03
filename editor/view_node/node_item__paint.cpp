@@ -135,7 +135,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     // Header Text
     QString header_text = QString::fromStdString(m_component->getDisplayName());
     if (m_entity->getType() == DrType::World) header_text = QString::fromStdString(m_entity->getName());
-    QFont header_font = Dr::CustomFont(2);
+    QFont header_font = Dr::CustomFont(2, false);
           ///header_font.setBold(true);
     painter->setFont(header_font);
     // Draw drop shadow for header
@@ -189,7 +189,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     for (auto &output_rect : getOutputRects()) { painter->drawEllipse(output_rect.adjusted(c_circle_reduce, c_circle_reduce, -c_circle_reduce, -c_circle_reduce)); }
 
     // Slot Text
-    painter->setFont(Dr::CustomFont(1));
+    painter->setFont(Dr::CustomFont(1, false));
     painter->setPen(text_color);
     int text_flags_in =  Qt::AlignVCenter | Qt::AlignLeft;
     int text_flags_out = Qt::AlignVCenter | Qt::AlignRight;

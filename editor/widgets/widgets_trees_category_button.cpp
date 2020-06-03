@@ -10,6 +10,7 @@
 #include <QPainter>
 #include <QPushButton>
 
+#include "core/colors/colors.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/widgets/widgets_trees.h"
 
@@ -67,13 +68,13 @@ void TreeCategoryButton::paintEvent(QPaintEvent *event) {
 
     QPolygonF triangle;
     if (!(m_parent_item->isExpanded())) {
-        triangle.append( QPointF(x - 2, y - 4) );       // To the right
-        triangle.append( QPointF(x + 2, y + 0) );
-        triangle.append( QPointF(x - 2, y + 4) );
+        triangle.append( QPointF(x - Dr::Scale(2), y - Dr::Scale(4)) );       // To the right
+        triangle.append( QPointF(x + Dr::Scale(2), y + Dr::Scale(0)) );
+        triangle.append( QPointF(x - Dr::Scale(2), y + Dr::Scale(4)) );
     } else {
-        triangle.append( QPointF(x - 4, y - 2) );       // To the bottom
-        triangle.append( QPointF(x + 4, y - 2) );
-        triangle.append( QPointF(x - 0, y + 2) );
+        triangle.append( QPointF(x - Dr::Scale(4), y - Dr::Scale(2)) );       // To the bottom
+        triangle.append( QPointF(x + Dr::Scale(4), y - Dr::Scale(2)) );
+        triangle.append( QPointF(x - Dr::Scale(0), y + Dr::Scale(2)) );
     }
     painter.drawPolygon(triangle, Qt::FillRule::OddEvenFill);
 }

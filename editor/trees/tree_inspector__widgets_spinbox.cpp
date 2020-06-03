@@ -14,6 +14,7 @@
 #include <QSpinBox>
 #include <QVector3D>
 
+#include "core/colors/colors.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_inspector.h"
@@ -35,7 +36,7 @@ QSpinBox* TreeInspector::createIntSpinBox(DrProperty *property, QFont &font, QSi
         property_value = property->getValue().toInt();
 
     InspectorSpinSlot *spin = new InspectorSpinSlot();
-    spin->setFixedHeight(22);
+    spin->setFixedHeight(Dr::Scale(22));
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -89,7 +90,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
         property_value = property->getValue().toDouble();
 
     InspectorTripleSpinBox *spin = new InspectorTripleSpinBox();
-    spin->setFixedHeight(22);
+    spin->setFixedHeight(Dr::Scale(22));
     spin->setFont(font);
     spin->setSizePolicy(size_policy);
     spin->setDecimals(3);
@@ -135,7 +136,7 @@ QDoubleSpinBox* TreeInspector::createDoubleSpinBox(DrProperty *property, QFont &
 //####################################################################################
 QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type) {
     QFrame *spin_pair = new QFrame();
-    spin_pair->setFixedHeight(24);
+    spin_pair->setFixedHeight(Dr::Scale(24));
     spin_pair->setSizePolicy(size_policy);
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
@@ -150,8 +151,8 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
     else
         spin_right  = initializeEmptySpinBox(property, font, property->getValue().toPointF().y);
 
-    spin_left->setFixedHeight(22);
-    spin_right->setFixedHeight(22);
+    spin_left->setFixedHeight(Dr::Scale(22));
+    spin_right->setFixedHeight(Dr::Scale(22));
 
     switch (spin_type) {
         case Property_Type::PointF:
@@ -239,7 +240,7 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
 //####################################################################################
 QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font, QSizePolicy size_policy, Property_Type spin_type) {
     QFrame *spin_trio = new QFrame();
-    spin_trio->setFixedHeight(24);
+    spin_trio->setFixedHeight(Dr::Scale(24));
     spin_trio->setSizePolicy(size_policy);
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_trio);
@@ -251,9 +252,9 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
     InspectorTripleSpinBox *spin_y = initializeEmptySpinBox(property, font, static_cast<double>(point3D.y));
     InspectorTripleSpinBox *spin_z = initializeEmptySpinBox(property, font, static_cast<double>(point3D.z));
 
-    spin_x->setFixedHeight(22);
-    spin_y->setFixedHeight(22);
-    spin_z->setFixedHeight(22);
+    spin_x->setFixedHeight(Dr::Scale(22));
+    spin_y->setFixedHeight(Dr::Scale(22));
+    spin_z->setFixedHeight(Dr::Scale(22));
 
     switch (spin_type) {
         case Property_Type::Point3D:
@@ -318,7 +319,7 @@ QFrame* TreeInspector::createDoubleSpinBoxTrio(DrProperty *property, QFont &font
 //####################################################################################
 QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
     QFrame *spin_pair = new QFrame();
-    spin_pair->setFixedHeight(24);
+    spin_pair->setFixedHeight(Dr::Scale(24));
     spin_pair->setSizePolicy(size_policy);
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
@@ -339,8 +340,8 @@ QFrame* TreeInspector::createVariableSpinBoxPair(DrProperty *property, QFont &fo
     size_policy.setHorizontalStretch(3);
     spin_right->setSizePolicy(size_policy);
 
-    spin_left->setFixedHeight(22);
-    spin_right->setFixedHeight(22);
+    spin_left->setFixedHeight(Dr::Scale(22));
+    spin_right->setFixedHeight(Dr::Scale(22));
 
     horizontal_split->addWidget(spin_left);
     horizontal_split->addWidget(variable_sign);
@@ -403,7 +404,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         property_value = property->getValue().toDouble();
 
     QWidget *slider_pair = new QWidget();
-    slider_pair->setMaximumHeight(25);
+    slider_pair->setMaximumHeight(Dr::Scale(25));
     slider_pair->setSizePolicy(size_policy);
     getHoverHandler()->attachToHoverHandler(slider_pair, property);                            // Connect to hover handler for advisor
 
@@ -414,7 +415,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         InspectorTripleSpinBox *spin = new InspectorTripleSpinBox();
         spin->setFont(font);
         spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
-        spin->setFixedHeight(22);
+        spin->setFixedHeight(Dr::Scale(22));
         spin->setMinimumWidth(40);
         size_policy.setHorizontalStretch(1);
         spin->setSizePolicy(size_policy);
@@ -446,7 +447,7 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         spin->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin));
 
         QSlider *slider = new QSlider(Qt::Orientation::Horizontal);
-        slider->setMaximumHeight(26);
+        slider->setMaximumHeight(Dr::Scale(26));
         size_policy.setHorizontalStretch(3);
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);

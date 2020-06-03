@@ -54,9 +54,9 @@ void EditorView::updateGrid() {
 
     int style =         stage->getComponentPropertyValue(Comps::Stage_Grid, Props::Stage_Grid_Style).toInt();
     m_grid_style =      static_cast<Grid_Style>(style);
-    m_grid_should_snap =  Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool();
-    m_grid_resize_snap =  Dr::GetPreference(Preferences::World_Editor_Resize_To_Grid).toBool();
-    m_grid_show_on_top =  Dr::GetPreference(Preferences::World_Editor_Grid_On_Top).toBool();
+    m_grid_should_snap =  Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool();
+    m_grid_resize_snap =  Dr::GetPreference(Preferences::Editor_Resize_To_Grid).toBool();
+    m_grid_show_on_top =  Dr::GetPreference(Preferences::Editor_Grid_On_Top).toBool();
 
     QColor background = (m_back_color_use) ? m_back_color : scheme_bg_color;
     this->setStyleSheet(" QFrame { background-color: " + background.name() + "; } ");

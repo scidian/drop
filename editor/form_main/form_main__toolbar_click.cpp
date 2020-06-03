@@ -151,9 +151,9 @@ void FormMain::buttonGroupGridFullClicked(int id) {
 
     } else {
         switch (clicked) {
-            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   m_buttons_group_grid_full->button(id)->isChecked());  break;
-            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, m_buttons_group_grid_full->button(id)->isChecked());  break;
-            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    m_buttons_group_grid_full->button(id)->isChecked());  break;
+            case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::Editor_Snap_To_Grid,   m_buttons_group_grid_full->button(id)->isChecked());  break;
+            case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::Editor_Resize_To_Grid, m_buttons_group_grid_full->button(id)->isChecked());  break;
+            case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::Editor_Grid_On_Top,    m_buttons_group_grid_full->button(id)->isChecked());  break;
             case Buttons_Grid::Snap_Options:    ;
         }
         m_view_editor->updateGrid();
@@ -168,9 +168,9 @@ void FormMain::buttonGroupGridSimpleClicked(int id) {
     Buttons_Grid clicked = static_cast<Buttons_Grid>(id);
 
     switch (clicked) {
-        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::World_Editor_Snap_To_Grid,   m_buttons_group_grid_simple->button(id)->isChecked());  break;
-        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::World_Editor_Resize_To_Grid, m_buttons_group_grid_simple->button(id)->isChecked());  break;
-        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::World_Editor_Grid_On_Top,    m_buttons_group_grid_simple->button(id)->isChecked());  break;
+        case Buttons_Grid::Snap_To_Grid:    Dr::SetPreference(Preferences::Editor_Snap_To_Grid,   m_buttons_group_grid_simple->button(id)->isChecked());  break;
+        case Buttons_Grid::Resize_To_Grid:  Dr::SetPreference(Preferences::Editor_Resize_To_Grid, m_buttons_group_grid_simple->button(id)->isChecked());  break;
+        case Buttons_Grid::Grid_On_Top:     Dr::SetPreference(Preferences::Editor_Grid_On_Top,    m_buttons_group_grid_simple->button(id)->isChecked());  break;
         case Buttons_Grid::Snap_Options:    ;
     }
     m_view_world_graph->updateGrid();

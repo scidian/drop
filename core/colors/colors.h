@@ -64,6 +64,10 @@ namespace Dr {
     DrColor         RandomColor();                              // Also declared in core/dr_random.h
 
     // ***** Style Functions
+    double          GetScale();
+    void            SetScale(double s);
+    int             Scale(int i);
+    double          Scale(double d);
     std::string     BorderWidth();                              // Project wide border width for Style Sheets, as String
     int             BorderWidthAsInt();                         // Project wide border width for Style Sheets, as Int
 

@@ -267,9 +267,9 @@ void TreeAssets::buildAssetTree(QString search_text) {
         QString entity_name = QString::fromStdString(entity->getName());
         if (!entity_name.toLower().contains(search_text.toLower())) continue;
 
-        QSize frame_size = QSize(100, 66);
-        QRect name_rect =  QRect(10, 0, frame_size.width() - 20, 25);
-        QSize pix_size =   QSize(frame_size.width() - 25, frame_size.height() - 30);
+        QSize frame_size = QSize(Dr::Scale(100), Dr::Scale(66));
+        QRect name_rect =  QRect(10, 0, frame_size.width() - 20, Dr::Scale(25));
+        QSize pix_size =   QSize(frame_size.width() - Dr::Scale(25), frame_size.height() - Dr::Scale(30));
 
         // ***** Store current asset key in widget and install a mouse handler event filter on the item, DrFilterAssetMouseHandler
         QFrame *single_asset = new QFrame();
@@ -482,7 +482,7 @@ TreeCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std:
     // Add spacing and translate
     name = " " + tr(name.toLatin1());
 
-    QString icon_size =     "20px 16px";
+    QString icon_size =     QString::number(Dr::Scale(20)) + "px " + QString::number(Dr::Scale(16)) + "px";
     QString padding_left =  "9px";
 
     // ***** Create Category Button

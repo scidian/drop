@@ -40,10 +40,10 @@ namespace Dr {
 
 
     // ***** Custom Font Functions
-    QFont       CustomFont(int add_points = 0);
-    QFont       CustomFontLarger();
+    QFont       CustomFont(int add_points = 0, bool scale = true);
+    QFont       CustomFontLarger(bool scale = true);
     QString     FontFamily();
-    int         FontSize();
+    int         FontSize(bool scale = true);
     void        LoadCustomFonts();
 
 

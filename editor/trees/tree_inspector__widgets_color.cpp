@@ -71,7 +71,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         QPushButton *picker_button = new QPushButton();
         picker_button->setObjectName(QStringLiteral("buttonColorPicker"));
         picker_button->setToolTip( Advisor_Info::ColorPicker[0] );
-        picker_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
+        picker_button->setFixedSize(Dr::Scale(25), Dr::Scale(20) + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(picker_button, &QPushButton::pressed, this, [this, picker_button, color_button]() {
             FormColorMagnifier *picker = new FormColorMagnifier(color_button, QCursor::pos(), 115, 115, 8);
             connect(picker, SIGNAL(colorGrabbed(QWidget*, DrColor)), this, SLOT(setButtonColor(QWidget*, DrColor)) );
@@ -85,7 +85,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         QPushButton *dialog_button = new QPushButton();
         dialog_button->setObjectName(QStringLiteral("buttonColorDialog"));
         dialog_button->setToolTip( Advisor_Info::ColorDialog[0] );
-        dialog_button->setFixedSize(25, 20 + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
+        dialog_button->setFixedSize(Dr::Scale(25), Dr::Scale(20) + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(dialog_button, &QPushButton::clicked, [this, color_button] () {
             this->setButtonColorFromSystemDialog(color_button);
         });

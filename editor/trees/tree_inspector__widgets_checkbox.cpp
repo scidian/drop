@@ -68,7 +68,7 @@ QCheckBox* TreeInspector::createCheckBox(DrProperty *property, QFont &font, QSiz
 QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
 
     QFrame *spin_pair = new QFrame();
-    spin_pair->setFixedHeight(25);
+    spin_pair->setFixedHeight(Dr::Scale(25));
     spin_pair->setSizePolicy(size_policy);
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
@@ -77,7 +77,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
     horizontal_split->setContentsMargins(0,0,0,2);
 
     InspectorCheckBox *check_left = new InspectorCheckBox();
-    check_left->setFixedWidth(36);
+    check_left->setFixedWidth(Dr::Scale(36));
     check_left->setObjectName("checkInspector");
     check_left->setFont(font);
     check_left->setDrawLeft(0);
@@ -94,7 +94,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 
     InspectorTripleSpinBox *spin_right = initializeEmptySpinBox(property, font, property->getValue().toVector()[1].toDouble());
     spin_right->setObjectName("spinBool");
-    spin_right->setFixedHeight(22);
+    spin_right->setFixedHeight(Dr::Scale(22));
     spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
     spin_right->setRange(property->getValue().toVector()[2].toDouble(), property->getValue().toVector()[3].toDouble());
     spin_right->setSingleStep(property->getValue().toVector()[4].toDouble());
@@ -134,7 +134,7 @@ QFrame* TreeInspector::createCheckBoxSpinBoxPair(DrProperty *property, QFont &fo
 QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &font, QSizePolicy size_policy) {
 
     QFrame *spin_pair = new QFrame();
-    spin_pair->setFixedHeight(25);
+    spin_pair->setFixedHeight(Dr::Scale(25));
     spin_pair->setSizePolicy(size_policy);
 
     QHBoxLayout *horizontal_split = new QHBoxLayout(spin_pair);
@@ -143,8 +143,8 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     horizontal_split->setContentsMargins(0,0,0,0);
 
     InspectorCheckBox *check_left = new InspectorCheckBox();
-    check_left->setFixedWidth(36);
-    check_left->setFixedHeight(22);
+    check_left->setFixedWidth(Dr::Scale(36));
+    check_left->setFixedHeight(Dr::Scale(22));
     check_left->setObjectName("checkInspector");
     check_left->setFont(font);
     check_left->setDrawLeft(0);
@@ -164,7 +164,7 @@ QFrame* TreeInspector::createCheckBoxIntBoxPair(DrProperty *property, QFont &fon
     spin_right->setFont(font);
     spin_right->setAttribute(Qt::WA_MacShowFocusRect, 0);
     spin_right->setMinimumWidth(50);
-    spin_right->setFixedHeight(22);
+    spin_right->setFixedHeight(Dr::Scale(22));
     spin_right->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
     spin_right->setPrefix(QString::fromStdString(property->getValue().toVector()[5].toString()));
     spin_right->setRange(property->getValue().toVector()[2].toInt(), property->getValue().toVector()[3].toInt());

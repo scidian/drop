@@ -160,7 +160,7 @@ void EditorView::mouseMoveEvent(QMouseEvent *event) {
         }
 
         // ***** Check if over camera when Debug Camera mode is activated
-        if (Dr::GetPreference(Preferences::World_Editor_Show_Camera_Boxes).toBool() && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
+        if (Dr::GetPreference(Preferences::Editor_Show_Camera_Boxes).toBool() && m_view_mode == View_Mode::None && m_flag_key_down_spacebar == false) {
             if (m_cam_selected == nullptr) {
                 DrThing *before_check = m_cam_mouse_over;
                 DrThing *over = nullptr;

@@ -13,6 +13,7 @@
 #include <QMessageBox>
 
 #include "core/colors/colors.h"
+#include "core/dr_math.h"
 #include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
@@ -31,12 +32,12 @@
 //####################################################################################
 void FormMain::buildMenu() {
 
-    // ***** Create menu bar
+    // ***** Create Menu Bar
     m_menu_bar = new QMenuBar(this);
     m_menu_bar->setObjectName(QStringLiteral("menuBar"));
     m_menu_bar->setGeometry(QRect(0, 0, 1100, 22));
 
-
+    // ***** File Menu
     QMenu *menu_file;
     QAction *action_new, *action_open, *action_save, *action_save_as, *action_exit;
     menu_file = new QMenu(m_menu_bar);
@@ -78,10 +79,10 @@ void FormMain::buildMenu() {
     menu_edit->addAction(m_action_undo);
     menu_edit->addAction(m_action_redo);
 
-    // ***** Color Schemes sub menu
+    // ***** Color Schemes Menu
     QMenu *menu_color_schemes;
     menu_color_schemes = new QMenu(m_menu_bar);
-    menu_color_schemes->setObjectName(QStringLiteral("menuColor_Schemes"));
+    menu_color_schemes->setObjectName(QStringLiteral("menuColorSchemes"));
     QAction *action_dark, *action_mid, *action_light, *action_navy, *action_grape, *action_rust, *action_coffee, *action_emerald;
     action_dark =    new QAction(this);  action_dark->setObjectName(QStringLiteral("actionDark"));
     action_mid =     new QAction(this);  action_mid->setObjectName(QStringLiteral("actionMid"));
@@ -91,17 +92,17 @@ void FormMain::buildMenu() {
     action_rust =    new QAction(this);  action_rust->setObjectName(QStringLiteral("actionRust"));
     action_coffee =  new QAction(this);  action_coffee->setObjectName(QStringLiteral("actionCoffee"));
     action_emerald = new QAction(this);  action_emerald->setObjectName(QStringLiteral("actionEmerald"));
-        QActionGroup *alignmentGroup;
-        alignmentGroup = new QActionGroup(this);
-        alignmentGroup->addAction(action_dark);
-        alignmentGroup->addAction(action_mid);
-        alignmentGroup->addAction(action_light);
-        alignmentGroup->addAction(action_navy);
-        alignmentGroup->addAction(action_grape);
-        alignmentGroup->addAction(action_rust);
-        alignmentGroup->addAction(action_coffee);
-        alignmentGroup->addAction(action_emerald);
-        alignmentGroup->setExclusive(true);
+        QActionGroup *group_alignment;
+        group_alignment = new QActionGroup(this);
+        group_alignment->addAction(action_dark);
+        group_alignment->addAction(action_mid);
+        group_alignment->addAction(action_light);
+        group_alignment->addAction(action_navy);
+        group_alignment->addAction(action_grape);
+        group_alignment->addAction(action_rust);
+        group_alignment->addAction(action_coffee);
+        group_alignment->addAction(action_emerald);
+        group_alignment->setExclusive(true);
         action_dark->setCheckable(true);
         action_mid->setCheckable(true);
         action_light->setCheckable(true);
@@ -143,6 +144,44 @@ void FormMain::buildMenu() {
     menu_color_schemes->addAction(action_coffee);
     menu_color_schemes->addAction(action_emerald);
 
+    // ***** View Menu
+    QMenu *menu_view;
+    menu_view = new QMenu(m_menu_bar);
+    menu_view->setObjectName(QStringLiteral("menuView"));
+
+    QMenu *sub_menu_scale = new QMenu(menu_view);
+    sub_menu_scale->setObjectName(QStringLiteral("menuScale"));
+        QAction *action_1x, *action_1_5x, *action_2x;
+        action_1x =     new QAction(this);  action_1x->setObjectName(QStringLiteral("action1x"));
+        action_1_5x =   new QAction(this);  action_1_5x->setObjectName(QStringLiteral("action1_5x"));
+        action_2x =     new QAction(this);  action_2x->setObjectName(QStringLiteral("action2x"));
+            QActionGroup *group_gui_scale;
+            group_gui_scale = new QActionGroup(this);
+            group_gui_scale->addAction(action_1x);
+            group_gui_scale->addAction(action_1_5x);
+            group_gui_scale->addAction(action_2x);
+            group_gui_scale->setExclusive(true);
+            action_1x->setCheckable(true);
+            action_1_5x->setCheckable(true);
+            action_2x->setCheckable(true);
+
+            double scale = Dr::GetScale();
+            if      (Dr::FuzzyCompare(scale, 1.0)) { action_1x->setChecked(true); }
+            else if (Dr::FuzzyCompare(scale, 1.5)) { action_1_5x->setChecked(true); }
+            else if (Dr::FuzzyCompare(scale, 2.0)) { action_2x->setChecked(true); }
+
+        connect(action_1x,      &QAction::triggered, [this]() { Dr::SetScale(1.0); changePalette(Dr::GetColorScheme()); });
+        connect(action_1_5x,    &QAction::triggered, [this]() { Dr::SetScale(1.5); changePalette(Dr::GetColorScheme()); });
+        connect(action_2x,      &QAction::triggered, [this]() { Dr::SetScale(2.0); changePalette(Dr::GetColorScheme()); });
+
+        sub_menu_scale->addAction(action_1x);
+        sub_menu_scale->addAction(action_1_5x);
+        sub_menu_scale->addAction(action_2x);
+        menu_view->addAction(sub_menu_scale->menuAction());
+    m_menu_bar->addAction(menu_view->menuAction());
+
+
+    // ***** Help Menu
     QMenu *menu_help;
     QAction *action_help, *action_about;
     menu_help = new QMenu(m_menu_bar);
@@ -157,7 +196,8 @@ void FormMain::buildMenu() {
     menu_help->addAction(action_help);
     menu_help->addAction(action_about);
 
-    // !!!!! #DEBUG:    Load hidden debug menu into menu bar
+
+    // ***** Debug Menu     !!!!! #DEBUG: Load hidden debug menu into menu bar
     if (Dr::CheckDebugFlag(Debug_Flags::Show_Secret_Menu)) {
         QMenu *menu_debug;
         menu_debug = new QMenu(m_menu_bar);
@@ -199,33 +239,56 @@ void FormMain::buildMenu() {
     // !!!!!
 
     // ***** Set menu titles and sub menu texts
-    menu_file->setTitle(QApplication::translate("MainWindow",            "&File", nullptr));
-    action_new->setText(QApplication::translate("MainWindow",                "&New Project", nullptr));
-    action_open->setText(QApplication::translate("MainWindow",               "&Open Project", nullptr));
-    action_save->setText(QApplication::translate("MainWindow",               "&Save Project", nullptr));
-    action_save_as->setText(QApplication::translate("MainWindow",             "Save Project &As", nullptr));
-    action_exit->setText(QApplication::translate("MainWindow",               "E&xit", nullptr));
+    menu_file->setTitle(QApplication::translate("MainWindow",           "&File", nullptr));
+    action_new->setText(QApplication::translate("MainWindow",               "&New Project", nullptr));
+    action_open->setText(QApplication::translate("MainWindow",              "&Open Project", nullptr));
+    action_save->setText(QApplication::translate("MainWindow",              "&Save Project", nullptr));
+    action_save_as->setText(QApplication::translate("MainWindow",           "Save Project &As", nullptr));
+    action_exit->setText(QApplication::translate("MainWindow",              "E&xit", nullptr));
 
-    menu_edit->setTitle(QApplication::translate("MainWindow",            "&Edit", nullptr));
-    m_action_undo->setText(QApplication::translate("MainWindow",               "&Undo", nullptr));
-    m_action_redo->setText(QApplication::translate("MainWindow",               "&Redo", nullptr));
+    menu_edit->setTitle(QApplication::translate("MainWindow",           "&Edit", nullptr));
+    m_action_undo->setText(QApplication::translate("MainWindow",            "&Undo", nullptr));
+    m_action_redo->setText(QApplication::translate("MainWindow",            "&Redo", nullptr));
 
-    menu_color_schemes->setTitle(QApplication::translate("MainWindow",   "Color Schemes", nullptr));
-    action_dark->setText(QApplication::translate("MainWindow",               "Dark", nullptr));
-    action_mid->setText(QApplication::translate("MainWindow",                "Mid", nullptr));
-    action_light->setText(QApplication::translate("MainWindow",              "Light", nullptr));
-    action_navy->setText(QApplication::translate("MainWindow",               "Navy", nullptr));
-    action_grape->setText(QApplication::translate("MainWindow",              "Grape", nullptr));
-    action_rust->setText(QApplication::translate("MainWindow",               "Rust", nullptr));
-    action_coffee->setText(QApplication::translate("MainWindow",             "Coffee", nullptr));
-    action_emerald->setText(QApplication::translate("MainWindow",            "Emerald", nullptr));
+    menu_color_schemes->setTitle(QApplication::translate("MainWindow",  "Color Schemes", nullptr));
+    action_dark->setText(QApplication::translate("MainWindow",              "Dark", nullptr));
+    action_mid->setText(QApplication::translate("MainWindow",               "Mid", nullptr));
+    action_light->setText(QApplication::translate("MainWindow",             "Light", nullptr));
+    action_navy->setText(QApplication::translate("MainWindow",              "Navy", nullptr));
+    action_grape->setText(QApplication::translate("MainWindow",             "Grape", nullptr));
+    action_rust->setText(QApplication::translate("MainWindow",              "Rust", nullptr));
+    action_coffee->setText(QApplication::translate("MainWindow",            "Coffee", nullptr));
+    action_emerald->setText(QApplication::translate("MainWindow",           "Emerald", nullptr));
 
-    menu_help->setTitle(QApplication::translate("MainWindow",            "&Help", nullptr));
-    action_help->setText(QApplication::translate("MainWindow",               "&Drop Documentation", nullptr));
-    action_about->setText(QApplication::translate("MainWindow",              "&About", nullptr));
+    menu_view->setTitle(QApplication::translate("MainWindow",           "&View", nullptr));
+    sub_menu_scale->setTitle(QApplication::translate("MainWindow",          "Scale Interface", nullptr));
+    action_1x->setText(QApplication::translate("MainWindow",                    "x 1 (default)", nullptr));
+    action_1_5x->setText(QApplication::translate("MainWindow",                  "x 1.5", nullptr));
+    action_2x->setText(QApplication::translate("MainWindow",                    "x 2", nullptr));
+
+    menu_help->setTitle(QApplication::translate("MainWindow",           "&Help", nullptr));
+    action_help->setText(QApplication::translate("MainWindow",              "&Drop Documentation", nullptr));
+    action_about->setText(QApplication::translate("MainWindow",             "&About", nullptr));
 
     this->setMenuBar(m_menu_bar);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

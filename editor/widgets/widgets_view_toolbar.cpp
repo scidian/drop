@@ -110,11 +110,11 @@ void ViewToolbar::buttonGroupToggleClicked(int id) {
     Buttons_Toggle clicked = static_cast<Buttons_Toggle>(id);
 
     if (clicked == Buttons_Toggle::CameraOnOff) {
-        Dr::SetPreference(Preferences::World_Editor_Show_Camera_Boxes, buttonsGroupToggle->button(id)->isChecked());
+        Dr::SetPreference(Preferences::Editor_Show_Camera_Boxes, buttonsGroupToggle->button(id)->isChecked());
         m_editor_relay->getViewEditor()->update();
 
     } else if (clicked == Buttons_Toggle::DebugOnOff) {
-        Dr::SetPreference(Preferences::World_Editor_Show_Collision_Shapes, buttonsGroupToggle->button(id)->isChecked());
+        Dr::SetPreference(Preferences::Editor_Show_Collision_Shapes, buttonsGroupToggle->button(id)->isChecked());
         m_editor_relay->getViewEditor()->update();
     }
 }

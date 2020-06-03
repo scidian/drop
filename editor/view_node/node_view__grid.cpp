@@ -39,7 +39,7 @@ void NodeView::updateGrid() {
     ///m_grid_color =       QColor::fromRgba(stage->getComponentPropertyValue(Components::Stage_Grid, Properties::Stage_Grid_Color).toUInt());
     ///m_grid_style =       Grid_Style::Lines;
 
-    m_grid_should_snap =    Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool();
+    m_grid_should_snap =    Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool();
 
     if (m_back_color != scheme_bg_color) {
         m_back_color = scheme_bg_color;

@@ -53,14 +53,14 @@ void ViewToolTip::startToolTip(View_Mode type, QPoint mouse_position, QVariant d
     switch (m_tip_type) {
         case View_Mode::Resizing:
         case View_Mode::Translating:
-            setFixedSize(66, 32);   m_offset = QPoint(30, -63);
+            setFixedSize(Dr::Scale(66), Dr::Scale(32));   m_offset = QPoint(30, -63);
             m_x_radius = 8;
             m_y_radius = 8;
             break;
         case View_Mode::Rotating:
         case View_Mode::Zooming:
         default:
-            setFixedSize(60, 18);   m_offset = QPoint(30, -45);
+            setFixedSize(Dr::Scale(60), Dr::Scale(18));   m_offset = QPoint(30, -45);
             m_x_radius = 8;
             m_y_radius = 8;
             break;

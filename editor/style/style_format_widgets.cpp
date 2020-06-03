@@ -123,16 +123,16 @@ void ApplyDropShadowByType(QWidget *target_widget, Shadow_Types shadow_type) {
     switch (shadow_type) {
         case Shadow_Types::Button_Shadow:
             if (Dr::GetColorScheme() == Color_Scheme::Light)
-                ApplyDropShadow(target_widget, 3,  0,  2, Dr::ToQColor(Dr::GetColor(Window_Colors::Text)) );
+                ApplyDropShadow(target_widget, 3, Dr::Scale(0), Dr::Scale(2), Dr::ToQColor(Dr::GetColor(Window_Colors::Text)) );
             else
-                ApplyDropShadow(target_widget, 3,  0,  2, Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)) );
+                ApplyDropShadow(target_widget, 3, Dr::Scale(0), Dr::Scale(2), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)) );
             break;
         case Shadow_Types::Button_Shadow_Thin:
-            ApplyDropShadow(target_widget, 0,  0,  1, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150) );
-        break;
+                ApplyDropShadow(target_widget, 0, Dr::Scale(0), Dr::Scale(1), Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(150) );
+            break;
         case Shadow_Types::Tool_Tip_Shadow:
-            ApplyDropShadow(target_widget, 4,  0,  3, Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
-        break;
+                ApplyDropShadow(target_widget, 4, Dr::Scale(0), Dr::Scale(3), Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
+            break;
     }
 }
 
@@ -173,9 +173,9 @@ void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius, bool below) {
     pixmap.fill(Qt::green);
     QPainter paint(&pixmap);
     paint.setRenderHint(QPainter::Antialiasing, true);
-    paint.setPen( QPen(Qt::NoPen) );
+    paint.setPen(Qt::NoPen);
 
-    paint.setBrush( Qt::red );
+    paint.setBrush(Qt::red);
     paint.drawRoundedRect(0, 10, widget->rect().width(), widget->rect().height() - 10, x_radius, y_radius);
 
     QPoint points[3];

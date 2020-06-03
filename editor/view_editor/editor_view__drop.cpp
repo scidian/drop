@@ -111,7 +111,7 @@ void EditorView::dropEvent(QDropEvent *event) {
 
         // Figure out where we want to drop this thing
         QPointF  position;
-        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false)
+        if (Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool() == false)
             position = mapToScene(event->pos() + offset);
         else
             position = m_drop_location;

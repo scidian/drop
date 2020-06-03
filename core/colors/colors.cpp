@@ -20,12 +20,18 @@ namespace Dr {
 //####################################################################################
 //##    Local Static Variables
 //####################################################################################
-static Color_Scheme      l_current_color_scheme = Color_Scheme::Dark;
+static double            l_interface_scale          { 1.0 };                                // Current GUI multiplier scale
+static Color_Scheme      l_current_color_scheme     { Color_Scheme::Dark };                 // Current color scheme
 static Color_Scheme_Map  l_color_schemes;
-static Color_Palette_Map l_color_palettes;                                      // Stores color palettes
+static Color_Palette_Map l_color_palettes;                                                  // Stores color palettes
 
-std::string BorderWidth()       { return "1px"; }                               // Project wide border width for Style Sheets, as QString
-int         BorderWidthAsInt()  { return 1; }                                   // Project wide border width for Style Sheets, as Int
+double      GetScale()          { return l_interface_scale; }
+void        SetScale(double s)  { l_interface_scale = Dr::Clamp(s, 0.5, 4.0); }
+int         Scale(int i)        { return static_cast<int>(static_cast<double>(i) * l_interface_scale); }
+double      Scale(double d)     { return (d * l_interface_scale); }
+
+std::string BorderWidth()       { return std::to_string(BorderWidthAsInt()) + "px"; }       // Project wide border width for Style Sheets, as String
+int         BorderWidthAsInt()  { return (1.0 * GetScale()); }                              // Project wide border width for Style Sheets, as Int
 
 
 //####################################################################################

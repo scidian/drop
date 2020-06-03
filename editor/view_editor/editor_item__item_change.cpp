@@ -97,10 +97,10 @@ QVariant EditorItem::itemChange(GraphicsItemChange change, const QVariant &value
         }
 
         // Not snapping to grid? Go ahead and return event position
-        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool() == false) return new_pos;
+        if (Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool() == false) return new_pos;
 
         // ***** Calculate new center based on SelectionBox starting center and difference between starting scenePos() and new passed in new_pos
-        if (Dr::GetPreference(Preferences::World_Editor_Snap_To_Center_Of_Selection_Box).toBool() == true) {
+        if (Dr::GetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box).toBool() == true) {
             EditorScene *editor_scene = dynamic_cast<EditorScene*>(this->scene());
             QPointF new_select_center, rounded_select_center;
             QPointF adjust_by;

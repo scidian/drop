@@ -109,20 +109,22 @@ void LoadCustomFonts() {
 }
 
 // Returns custom font family
-QString FontFamily()    { return (l_font_id >= 0) ? l_font_family : "Arial"; }
+QString FontFamily()        { return (l_font_id >= 0) ? l_font_family : "Arial"; }
 
 // Project wide font size
-int FontSize()          { return 11; }
+int FontSize(bool scale)    { return (scale ? Dr::Scale(11) : 11); }
 
-QFont CustomFont(int add_points) {
+QFont CustomFont(int add_points, bool scale) {
     QFont font(FontFamily());
-    font.setPointSize(FontSize() + add_points);
+    if (scale)  font.setPointSize(FontSize(scale) + Dr::Scale(add_points));
+    else        font.setPointSize(FontSize(scale) + add_points);
     return font;
 }
 
-QFont CustomFontLarger() {
+QFont CustomFontLarger(bool scale) {
     QFont font(FontFamily());
-    font.setPointSize(FontSize() + 2);
+    if (scale)  font.setPointSize(FontSize(scale) + Dr::Scale(2));
+    else        font.setPointSize(FontSize(scale) + 2);
     return font;
 }
 
@@ -290,7 +292,7 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
         ///pix = QPixmap::fromImage( Dr::ApplyBorderToImage(pix.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)), 2, 3) );
 
         // Simple Icon
-        pix = QPixmap(icon_string + ".png").scaled(54, 54, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        pix = QPixmap(icon_string + ".png").scaled(Dr::Scale(54), Dr::Scale(54), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         // Colorize Effect
         if (icon == QMessageBox::Icon::Information) {
@@ -302,7 +304,7 @@ QMessageBox::StandardButton ShowMessageBox(std::string message, QMessageBox::Ico
 
         // Drop Shadow Effect
         QGraphicsDropShadowEffect *drop_shadow = new QGraphicsDropShadowEffect();
-        drop_shadow->setOffset(-1, 2);
+        drop_shadow->setOffset(Dr::Scale(-1), Dr::Scale(2));
         drop_shadow->setBlurRadius(3);
         if (Dr::GetColorScheme() == Color_Scheme::Light) {
             drop_shadow->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Text)) );

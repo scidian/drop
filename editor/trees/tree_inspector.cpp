@@ -310,7 +310,8 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             // Build category button
             TreeCategoryButton *category_button = new TreeCategoryButton(component_title, Qt::black, Qt::black, nullptr, category_item);
             std::string button_style =
-                        " QPushButton { height: 22px; font: 13px; text-align: left; icon-size: 20px 16px; color: black; "
+                        " QPushButton { height: " + std::to_string(Dr::Scale(22)) + "px; font: " + std::to_string(Dr::Scale(13)) + "px; "
+                                        " text-align: left; icon-size: " + std::to_string(Dr::Scale(20)) + "px " + std::to_string(Dr::Scale(16)) + "px; color: black; "
                                         " padding-left: 2px;"
                                         " border: none; "
                                         " border-style: solid; "

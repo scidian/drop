@@ -25,28 +25,33 @@ class IEditorRelay;
 //##    Program Wide Options / Settings / Preferences)
 //############################
 enum class Preferences {
+    // Drop Info
     Version_Major,                                  // string (should be convertible to int)
     Version_Minor,                                  // string (should be convertible to int)
     Version_Build,                                  // string (should be convertible to int)
 
+    // Engine Options
     Limit_Frames_Rendered,                          // bool
 
-    World_Editor_Show_Collision_Shapes,             // bool
-    World_Editor_Show_Camera_Boxes,                 // bool
-
-    // !!!!! #TODO: Not implemented
-    World_Editor_Show_Connections,                  // bool
-    World_Editor_Lock_Backgrounds,                  // bool
-    // !!!!! #END TODO
-
-    World_Editor_Snap_To_Grid,                      // bool
-    World_Editor_Resize_To_Grid,                    // bool
-    World_Editor_Grid_On_Top,                       // bool
-
-    World_Editor_Snap_To_Center_Of_Selection_Box,   // bool
-
+    // General Options
+    Gui_Scale,                                      // double - menu / widget size scale factor
+    Color_Scheme,                                   // int - enum class Color_Scheme
     Color_Popup_History,                            // std::vector<DrVariant> (DrVariant = qRgba = unsigned int)
     Color_Popup_Tab,                                // int - 0 = Palette, 1 = History
+
+    // View "Editor" Options
+    Editor_Show_Collision_Shapes,                   // bool
+    Editor_Show_Camera_Boxes,                       // bool
+
+    Editor_Show_Connections,                        // bool     // !!!!! #TODO: Not implemented !!!!!
+    Editor_Lock_Backgrounds,                        // bool     // !!!!! #TODO: Not implemented !!!!!
+
+    Editor_Snap_To_Grid,                            // bool
+    Editor_Resize_To_Grid,                          // bool
+    Editor_Grid_On_Top,                             // bool
+
+    Editor_Snap_To_Center_Of_Selection_Box,         // bool
+
 };
 
 

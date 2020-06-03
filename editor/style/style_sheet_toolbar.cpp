@@ -26,7 +26,7 @@ std::string StyleSheetToolBar() {
     " QPushButton#toolbarButton { "
     "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
     "       background: " + Dr::GetColor(Window_Colors::Button_Light).name() + "; "
-    "       border-top: 1 solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
+    "       border-top: " + std::to_string(Dr::Scale(1)) + "px solid; border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
     "       border-radius: 4px; }"
     " QPushButton#toolbarButton:hover:!pressed { color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; "
     "       background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; }"
@@ -34,8 +34,8 @@ std::string StyleSheetToolBar() {
     "       background: " + Dr::GetColor(Window_Colors::Background_Dark).name() + "; }"
 
     // QLabel Spacer
-    " QLabel#labelSpacer {           border-left: 1px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
-    " QLabel#labelSpacerNotVisible { border-left: 1px solid; border-color: transparent; } "
+    " QLabel#labelSpacer {           border-left: " + std::to_string(Dr::Scale(1)) + "px solid; border-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; } "
+    " QLabel#labelSpacerNotVisible { border-left: " + std::to_string(Dr::Scale(1)) + "px solid; border-color: transparent; } "
 
     // ToolBar Selectable Buttons
     +
@@ -44,19 +44,19 @@ std::string StyleSheetToolBar() {
     StyleSheetToolBarModeButton("buttonModeUIEdit",         "toolbar_ui_editor.png",        "toolbar_ui_editor_faded.png",      5) +
     StyleSheetToolBarModeButton("buttonModeSound",          "toolbar_sound.png",            "toolbar_sound_faded.png",          5) +
 
-    " QToolButton {            border: 1px solid; "
+    " QToolButton {            border: " + std::to_string(Dr::Scale(1)) + "px solid; "
     "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
     "       border-color: " +  Dr::GetColor(Window_Colors::Button_Light).lighter(130).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +
                                Dr::GetColor(Window_Colors::Button_Light).name() +"; } "
-    " QToolButton:hover {      border: 1px solid; "
+    " QToolButton:hover {      border: " + std::to_string(Dr::Scale(1)) + "px solid; "
     "       background: " +    Dr::GetColor(Window_Colors::Midlight).name() + "; "
     "       border-color: " +  Dr::GetColor(Window_Colors::Midlight).lighter(150).name() +
                                Dr::GetColor(Window_Colors::Midlight).name() +
                                Dr::GetColor(Window_Colors::Midlight).name() +
                                Dr::GetColor(Window_Colors::Midlight).name() +"; } "
-    " QToolButton:pressed {    border: 1px solid; "
+    " QToolButton:pressed {    border: " + std::to_string(Dr::Scale(1)) + "px solid; "
     "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
     "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() +
                                Dr::GetColor(Window_Colors::Background_Dark).name() +
@@ -164,14 +164,14 @@ std::string StyleSheetToolBar() {
 std::string StyleSheetToolBarModeButton(std::string button_name, std::string icon_name, std::string icon_faded_name, int padding) {
     std::string pad = std::to_string(padding);
     return
-    " QToolButton#" + button_name + " {                  border-radius: 4px; border: 1px solid;  "
+    " QToolButton#" + button_name + " {                  border-radius: 4px; border: " + std::to_string(Dr::Scale(1)) + "px solid;  "
     "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
     "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-    " QToolButton#" + button_name + ":hover:!checked {   border-radius: 4px; border: 1px solid; "
+    " QToolButton#" + button_name + ":hover:!checked {   border-radius: 4px; border: " + std::to_string(Dr::Scale(1)) + "px solid; "
     "       background: " +   Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
     "       border-color: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
-    " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
-    " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: 1px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
+    " QToolButton#" + button_name + ":checked {          border-radius: 4px; border: " + std::to_string(Dr::Scale(1)) + "px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
+    " QToolButton#" + button_name + ":hover:checked {    border-radius: 4px; border: " + std::to_string(Dr::Scale(1)) + "px solid; " + StyleSheetRecessedBackgroundBorder(9, 95) +  "; } "
     " QToolButton#" + button_name + "  {                image: url(:/assets/toolbar_icons/" + icon_name + "); padding: " + pad + "px; } "
     " QToolButton#" + button_name + ":!checked {        image: url(:/assets/toolbar_icons/" + icon_faded_name + "); padding: " + pad + "px; } "
     " QToolButton#" + button_name + ":pressed {         image: url(:/assets/toolbar_icons/" + icon_faded_name + "); padding: " + pad + "px; } "
@@ -199,7 +199,7 @@ std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_u
     if (checkable) {
         if (Dr::GetColorScheme() == Color_Scheme::Light) {
             text +=
-                " QToolButton#" + button_name + ":checked { border: 1px solid; "
+                " QToolButton#" + button_name + ":checked { border: " + std::to_string(Dr::Scale(1)) + "px solid; "
                 "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
                 "       border-color: " +  Dr::GetColor(Window_Colors::Background_Light).darker(200).name() + " " +
                                            Dr::GetColor(Window_Colors::Background_Light).name() + " " +
@@ -207,7 +207,7 @@ std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_u
                                            Dr::GetColor(Window_Colors::Background_Light).name() +"; } ";
         } else {
             text +=
-                " QToolButton#" + button_name + ":checked { border: 1px solid; "
+                " QToolButton#" + button_name + ":checked { border: " + std::to_string(Dr::Scale(1)) + "px solid; "
                 "       background: " +    Dr::GetColor(Window_Colors::Background_Dark).name() + "; "
                 "       border-color: " +  Dr::GetColor(Window_Colors::Background_Dark).darker(150).name() + " " +
                                            Dr::GetColor(Window_Colors::Background_Dark).name() + " " +

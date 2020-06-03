@@ -30,11 +30,11 @@ void FormMain::updateToolBar() {
 
     if (getEditorMode() == Editor_Mode::World_Graph) {
         QAbstractButton *snap_grid = m_buttons_group_grid_simple->button(int(Buttons_Grid::Snap_To_Grid));
-        if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+        if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
 
     } else if (getEditorMode() == Editor_Mode::World_Creator) {
         QAbstractButton *snap_grid = m_buttons_group_grid_full->button(int(Buttons_Grid::Snap_To_Grid));
-        if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::World_Editor_Snap_To_Grid).toBool());
+        if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
 
         for (auto button : m_buttons_group_layering->buttons())     if (button->isEnabled()) button->setEnabled(false);
         for (auto button : m_buttons_group_edit->buttons())         if (button->isEnabled()) button->setEnabled(false);

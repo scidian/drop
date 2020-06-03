@@ -18,7 +18,7 @@
 //####################################################################################
 void InspectorCheckBox::paintEvent(QPaintEvent *) {
     /// default: m_draw_left = 6, m_draw_top = 1
-    QRect  checkbox_indicator(m_draw_left - 1, m_draw_top - 1, 22, 26);
+    QRect  checkbox_indicator(m_draw_left - 1, m_draw_top - 1, Dr::Scale(22), Dr::Scale(26));
     QPoint mouse_position = property(User_Property::Mouse_Pos).toPoint();
 
     QPainter painter(this);
@@ -38,39 +38,38 @@ void InspectorCheckBox::paintEvent(QPaintEvent *) {
         // Draw bottom highlight
         painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).lighter(200), Dr::BorderWidthAsInt()) );
         painter.setBrush( Qt::NoBrush );
-        painter.drawRoundedRect(m_draw_left, m_draw_top, 21, 21, 4, 4);
+        painter.drawRoundedRect(m_draw_left, m_draw_top, Dr::Scale(21), Dr::Scale(21), 4, 4);
 
         // Draw main square
-        QLinearGradient gradient(m_draw_left, m_draw_top, m_draw_left, 21);
+        QLinearGradient gradient(m_draw_left, m_draw_top, m_draw_left, Dr::Scale(21));
         gradient.setColorAt(0.00, top);
         gradient.setColorAt(0.14, top);
         gradient.setColorAt(0.18, middle);
         gradient.setColorAt(1.00, middle);
         painter.setBrush(gradient);
         painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)).darker(200), Dr::BorderWidthAsInt()) );
-        painter.drawRoundedRect(m_draw_left, m_draw_top, 21, 20, 4, 4);
+        painter.drawRoundedRect(m_draw_left, m_draw_top, Dr::Scale(21), Dr::Scale(20), 4, 4);
+    }
 
-        // Draw check mark
-        if (checkState()) {
-            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
-            QVector<QLineF> check;
-            ///check.append( QLineF( 11, 13, 13, 16) );
-            ///check.append( QLineF( 14, 16, 21,  8) );
-            check.append( QLineF( m_draw_left + 5, m_draw_top + 12, m_draw_left + 7,  m_draw_top + 15) );
-            check.append( QLineF( m_draw_left + 8, m_draw_top + 15, m_draw_left + 15, m_draw_top +  7) );
-            painter.drawLines(check);
-        }
+    // Draw check mark
+    if (this->isEnabled()) {
+        painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), Dr::Scale(2), Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
     } else {
-        // Draw check mark
-        if (checkState()) {
-            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), 2, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
-            QVector<QLineF> check;
-            ///check.append( QLineF( 11, 13, 13, 16) );
-            ///check.append( QLineF( 14, 16, 21,  8) );
-            check.append( QLineF( m_draw_left + 5, m_draw_top + 12, m_draw_left + 7,  m_draw_top + 15) );
-            check.append( QLineF( m_draw_left + 8, m_draw_top + 15, m_draw_left + 15, m_draw_top +  7) );
-            painter.drawLines(check);
-        }
+        painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), Dr::Scale(2), Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap) );
+    }
+    if (checkState()) {
+        ///check.append( QLineF( m_draw_left + 5, m_draw_top + 12, m_draw_left + 7,  m_draw_top + 15) );
+        ///check.append( QLineF( m_draw_left + 8, m_draw_top + 15, m_draw_left + 15, m_draw_top +  7) );
+
+        QVector<QLineF> check;
+        double c_left, c_top;
+        c_left =    m_draw_left + Dr::Scale(5);
+        c_top =     m_draw_top +  Dr::Scale(12);
+        check.append( QLineF(c_left, c_top, c_left + Dr::Scale(2), c_top + Dr::Scale(3)) );
+        c_left =    m_draw_left + Dr::Scale(8);
+        c_top =     m_draw_top +  Dr::Scale(15);
+        check.append( QLineF(c_left, c_top, c_left + Dr::Scale(7), c_top - Dr::Scale(8)) );
+        painter.drawLines(check);
     }
 
     // Draws Outline of CheckBox

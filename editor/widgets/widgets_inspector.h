@@ -32,10 +32,10 @@ public:
     InspectorCheckBox(QWidget *parent = nullptr) : QCheckBox (parent) { }
     virtual ~InspectorCheckBox() override { }
 
-    int             getDrawLeft() { return m_draw_left; }
-    int             getDrawTop() { return m_draw_top; }
-    void            setDrawLeft(int left) { m_draw_left = left; }
-    void            setDrawTop(int top) { m_draw_top = top; }
+    int             getDrawLeft()           { return m_draw_left; }
+    int             getDrawTop()            { return m_draw_top; }
+    void            setDrawLeft(int left)   { m_draw_left = left; }
+    void            setDrawTop(int top)     { m_draw_top = top; }
 
 protected:
     virtual void    paintEvent(QPaintEvent *) override;
