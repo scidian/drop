@@ -79,6 +79,8 @@ namespace Dr {
     void    ApplyPixelation(QImage &image,  QPointF data_pair);
 
     QImage  ColorizeImage(const QImage &from_image, QColor new_color);
+    QImage  TintImage(const QImage &from_image, QColor tint_color);
+
     QImage  CheckOpacityTolerance(const QImage &from_image);
 
 

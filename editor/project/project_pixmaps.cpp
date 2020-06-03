@@ -8,6 +8,7 @@
 #include <QGraphicsColorizeEffect>
 #include <QPainter>
 
+#include "core/colors/colors.h"
 #include "editor/helper_library.h"
 #include "editor/pixmap/pixmap.h"
 #include "editor/project/project.h"
@@ -69,11 +70,23 @@ QPixmap GetAssetPixmapMix(DrMix *mix) {
 
     DrColor tint_color = mix->getComponentPropertyValue(Comps::Mix_Settings, Props::Mix_Settings_Color).toColor();
 
-    QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
-    colorize->setStrength(1.0);
-    colorize->setColor(Dr::ToQColor(tint_color));
+    // Tint with Graphics Effect
+    ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();
+    ///colorize->setStrength(1.0);
+    ///colorize->setColor(Dr::ToQColor(tint_color));
+    ///pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 0) );
 
-    pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), colorize, 0) );
+    // Tint
+    pix = QPixmap::fromImage( Dr::TintImage(pix.toImage(), Dr::ToQColor(tint_color)) );
+
+    // Drop Shadow
+    QGraphicsDropShadowEffect *shadow_effect;
+    shadow_effect = new QGraphicsDropShadowEffect();
+    shadow_effect->setBlurRadius(2);
+    shadow_effect->setOffset(-2, 2);
+    shadow_effect->setColor( Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)) );
+    pix = QPixmap::fromImage( Dr::ApplyEffectToImage(pix.toImage(), shadow_effect, 4) );
+
     return pix;
 }
 

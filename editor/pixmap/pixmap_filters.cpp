@@ -152,6 +152,30 @@ QImage ColorizeImage(const QImage &from_image, QColor new_color) {
 }
 
 
+//####################################################################################
+//##    Tints an image towards tint_color
+//####################################################################################
+QImage TintImage(const QImage &from_image, QColor tint_color) {
+    QImage image = from_image;
+    std::vector<QRgb*> lines = GetScanLines(image);
+
+    for (size_t y = 0; y < static_cast<size_t>(image.height()); ++y) {
+        for (size_t x = 0; x < static_cast<size_t>(image.width()); ++x) {
+            QColor color = QColor::fromRgba( lines[y][x] );
+
+            // Convert to grayscale
+            double temp = (color.redF() * 0.2126) + (color.greenF() * 0.7152) + (color.blueF() * 0.0722);
+
+            // Colorize
+            color.setRedF(   Dr::Clamp(temp * tint_color.redF()   * 2.0, 0.0, 1.0) );
+            color.setGreenF( Dr::Clamp(temp * tint_color.greenF() * 2.0, 0.0, 1.0) );
+            color.setBlueF(  Dr::Clamp(temp * tint_color.blueF()  * 2.0, 0.0, 1.0) );
+            lines[y][x] = color.rgba();
+        }
+    }
+    return image;
+}
+
 
 //####################################################################################
 //##    Sets any pixels <= 2 opacity to zero for easier GraphicsItem shapes
