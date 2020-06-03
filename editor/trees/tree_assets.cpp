@@ -369,13 +369,11 @@ void TreeAssets::buildAssetTree(QString search_text) {
             asset_pix->setFont(font);
             asset_pix->setSizePolicy(sp_right);
             asset_pix->setAlignment(Qt::AlignmentFlag::AlignCenter);
+            asset_pix->setProperty(User_Property::Size, pix_size);
             vertical_split->addWidget( asset_pix );
 
             // Draw pixmap onto label
-            if (pix.isNull())
-                asset_pix->setPixmap(pix);
-            else
-                asset_pix->setPixmap(pix.scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            if (pix.isNull() == false) asset_pix->setPixmap(pix.scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
 
         // ***** Add widget to proper category

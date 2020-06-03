@@ -188,26 +188,28 @@ enum class Buttons_Toggle {
 //##    Custom QStrings for storing data in QWidgets using setProperty
 //############################
 namespace User_Property {
-    const char Integer[7] =         "dr_int";               // Stores an Integer in the User Property of a widget
-    const char Key[7] =             "dr_key";               // Stores Object Key in User Property of widget
-    const char External[12] =       "dr_external";          // Set to true if DrEntity (DrImage) is in external image DrProject
+    const char Integer[7] =         "dr_int";               // int      Stores an Integer in the User Property of a widget
+    const char Key[7] =             "dr_key";               // long     Stores Object Key in User Property of widget
 
-    const char CompKey[12] =        "dr_comp_key";          // Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
-    const char CompName[13] =       "dr_comp_name";         // Stores Component Name of a Property in a widget
-    const char PropKey[12] =        "dr_prop_key";          // Stores Property  Key (sub key assigned to unique Property from owning DrComponent)
-    const char PropName[13] =       "dr_prop_name";         // Stores Property  Name of a Property in a widget
+    const char External[12] =       "dr_external";          // bool     Set to true if DrEntity (DrImage) is in external image DrProject
 
-    const char Color[9] =           "dr_color";             // Stores a color value (QColor.rgba())
-    const char Order[9] =           "dr_order";             // Used for properties with mulitple values (like Size has X and Y),
-                                                            //      the index of the single property we want (0, 1, 2, etc)
+    const char CompKey[12] =        "dr_comp_key";          // long     Stores Component Key (sub key assigned to unique Component from owning DrSettings entity)
+    const char CompName[13] =       "dr_comp_name";         // QString  Stores Component Name of a Property in a widget
+    const char PropKey[12] =        "dr_prop_key";          // long     Stores Property  Key (sub key assigned to unique Property from owning DrComponent)
+    const char PropName[13] =       "dr_prop_name";         // QString  Stores Property  Name of a Property in a widget
 
-    const char Header[10] =         "dr_header";            // Used for Advisor Text
-    const char Body[8] =            "dr_body";              // Used for Advisor Text
+    const char Size[8] =            "dr_size";              // QSize    Stores a size value
+    const char Color[9] =           "dr_color";             // QColor   Stores a color value (QColor.rgba())
+    const char Order[9] =           "dr_order";             // int      Used for properties with mulitple values (like Size has X and Y),
+                                                            //              the index of the single property we want (0, 1, 2, etc)
 
-    const char Mouse_Over[14] =     "dr_mouse_over";        // Set to true by DrFilterHoverHandler when mouse is over widget
-    const char Mouse_Pos[13] =      "dr_mouse_pos";         // Set to mouse position (QPoint) by DrFilterHoverHandler when mouse is moving over widget
-    const char Mouse_Down[14] =     "dr_mouse_down";        // Set to true when mouse is down so we can prepare for a drag event (used for DrAssets)
-    const char Mouse_Down_Pos[18] = "dr_mouse_down_pos";    // Set to mouse position when mouse button is first pressed (used for DrAssets)
+    const char Header[10] =         "dr_header";            // QString  Used for Advisor Text
+    const char Body[8] =            "dr_body";              // QString  Used for Advisor Text
+
+    const char Mouse_Over[14] =     "dr_mouse_over";        // bool     Set to true by DrFilterHoverHandler when mouse is over widget
+    const char Mouse_Pos[13] =      "dr_mouse_pos";         // QPoint   Set to mouse position (QPoint) by DrFilterHoverHandler when mouse is moving over widget
+    const char Mouse_Down[14] =     "dr_mouse_down";        // bool     Set to true when mouse is down so we can prepare for a drag event (used for DrAssets)
+    const char Mouse_Down_Pos[18] = "dr_mouse_down_pos";    // QPoint   Set to mouse position when mouse button is first pressed (used for DrAssets)
 }
 
 
@@ -215,22 +217,24 @@ namespace User_Property {
 //##    Custom Qt::UserRole 's for storing data in QWidgets using setData
 //############################
 enum User_Roles {
-    Key = 0x0100,                                           // Stores Object Key in User Data of Widget / QGraphicsItem
-                                                            // From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
-    CompKey,                                                // Stores Component Key
-    CompName,                                               // Stores Component Name
-    PropKey,                                                // Stores Property  Key
-    PropName,                                               // Stores Property  Name
+    Key = 0x0100,                                           // long     Stores Object Key in User Data of Widget / QGraphicsItem
+                                                            //              From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
+    CompKey,                                                // long     Stores Component Key
+    CompName,                                               // QString  Stores Component Name
+    PropKey,                                                // long     Stores Property  Key
+    PropName,                                               // QString  Stores Property  Name
 
-    Scale,      Pre_Resize_Scale,
-    Rotation,   Pre_Rotate_Rotation,
-    Z_Order,
-    Opacity,
+    Scale,                                                  // QPointF  Stores an items scale
+    Pre_Resize_Scale,                                       // QPointF  Stores an items scale at the start of a transformation (usually by Mouse_Mode)
+    Rotation,                                               // double   Stores an items rotation
+    Pre_Rotate_Rotation,                                    // double   Stores an items rotation at the start of a transformation (usually by Mouse_Mode)
+    Z_Order,                                                // double   Stores an items z order
+    Opacity,                                                // double   Opacity stored between 0.0 and 100.0
 
-    Name,
-    Category_Name,
-    Description,
-    Type,
+    Name,                                                   // QString  Stores an items name
+    Category_Name,                                          // QString
+    Description,                                            // QString
+    Type,                                                   // int      static_cast from DrType
 };
 
 

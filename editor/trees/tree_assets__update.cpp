@@ -111,12 +111,11 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                     }
 
                     // ***** Update Colorized Pixmap of DrMix, DrSound
-                    QSize frame_size = QSize(100, 66);
-                    QSize pix_size =   QSize(frame_size.width() - 25, frame_size.height() - 30);
                     if (comp == Comps::Mix_Settings && prop == Props::Mix_Settings_Color) {
                         DrMix *mix = m_project->findMixFromKey(label_key);
                         asset_pix = frame->findChild<QLabel*>("assetPixmap");
                         if (asset_pix != nullptr && mix != nullptr) {
+                            QSize pix_size = asset_pix->property(User_Property::Size).toSize();
                             asset_pix->setPixmap(Dr::GetAssetPixmapMix(mix).scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                         }
                     }

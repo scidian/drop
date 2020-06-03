@@ -19,7 +19,7 @@ DrMix::DrMix(DrProject *parent_project, long key) : DrSettings(parent_project) {
     this->setKey(key);
 
     // ***** Initialize Mix Settings
-    initializeMixSettings("New Mix");
+    initializeMixSettings("Mix 1");
 
 }
 
