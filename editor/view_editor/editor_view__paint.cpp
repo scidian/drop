@@ -172,7 +172,7 @@ void EditorView::paintGrid(QPainter &painter) {
     if (m_zoom_scale >= 8.0) point_size = 8;
     if (m_zoom_scale >= 16.0) point_size = 10;
     QPen dot_pen =  QPen( m_grid_color, point_size, Qt::PenStyle::SolidLine, Qt::PenCapStyle::RoundCap );
-    QPen line_pen = QPen( m_grid_color, 1);
+    QPen line_pen = QPen( m_grid_color, Dr::Scale(1.0));
     line_pen.setCosmetic(true);
 
     if (m_grid_needs_redraw) {
@@ -384,7 +384,7 @@ void EditorView::paintToolTip(QPainter &painter) {
     painter.setBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)));
     painter.drawRoundedRect(left_offset, top_offset + 2, w, h, m_tool_tip->getXRadius(), m_tool_tip->getYRadius(), Qt::SizeMode::AbsoluteSize);
 
-    QLinearGradient gradient( left_offset, top_offset, left_offset, top_offset + h);
+    QLinearGradient gradient(left_offset, top_offset, left_offset, top_offset + h);
     gradient.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light)));
     gradient.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark)));
     painter.setBrush(gradient);

@@ -142,11 +142,11 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
     // !!!!! END
 
     // Size of side handle boxes (left, top, right, bottom)
-    double side_size = 10;
+    double side_size = Dr::Scale(10.0);
     double s_half = side_size / 2;
 
     // Size of corner handle boxes (top left, top right, bottom left, bottom right
-    double corner_size = 14;
+    double corner_size = Dr::Scale(14.0);
 
     // Check if bounding box handles should be squares or circles
     double angle = my_scene->getSelectionAngle();

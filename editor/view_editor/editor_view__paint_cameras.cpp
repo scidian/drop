@@ -37,8 +37,9 @@ const double    c_edge_radius =     3.0;                // Size of frame edges
 //##    Paints corners of Character Camera Frame
 //####################################################################################
 void paintCornerSquare(QPainter &painter, QPointF location) {
-    QRectF square(location - QPointF(c_square_radius, c_square_radius), location + QPointF(c_square_radius, c_square_radius));
-    QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), 1);
+    double adjusted_radius = Dr::Scale(c_square_radius);
+    QRectF square(location - QPointF(adjusted_radius, adjusted_radius), location + QPointF(adjusted_radius, adjusted_radius));
+    QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), Dr::Scale(1.0));
          corner_pen.setCosmetic(true);
     painter.setPen(corner_pen);
     QLinearGradient corner_fade(square.topLeft(), square.bottomRight());
@@ -52,7 +53,8 @@ void paintFrameEdge(QPainter &painter, QPointF point1, QPointF point2) {
     QPolygonF poly;
     poly << point1 << point2;
     QRectF box = poly.boundingRect();
-    QRectF square(box.topLeft() - QPointF(c_edge_radius, c_edge_radius), box.bottomRight() + QPointF(c_edge_radius, c_edge_radius));
+    double adjusted_radius = Dr::Scale(c_edge_radius);
+    QRectF square(box.topLeft() - QPointF(adjusted_radius, adjusted_radius), box.bottomRight() + QPointF(adjusted_radius, adjusted_radius));
     painter.drawRect(square);
 }
 
@@ -121,7 +123,7 @@ void EditorView::paintCameras(QPainter &painter, DrStage *stage) {
                 painter.setBrush(QBrush(box_fill));
                 painter.drawPolygon(square);
 
-                QPen edge_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), 1);
+                QPen edge_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator))), Dr::Scale(1.0));
                      edge_pen.setCosmetic(true);
                 painter.setPen(edge_pen);
                 painter.setBrush(frame_brushes[cam.frame_top]);     paintFrameEdge(painter, tl_b, tr_b);
@@ -228,12 +230,12 @@ void EditorView::paintCameras(QPainter &painter, DrStage *stage) {
                 gradient_y.setColorAt(0.0, ring_y_front);
                 QBrush brush_y(gradient_y);
                 QPen pen_y;
-                pen_y.setWidth(c_outline_width);
-                pen_y.setBrush(brush_y);
+                     pen_y.setWidth(Dr::Scale(c_outline_width));
+                     pen_y.setBrush(brush_y);
                 painter.setPen(pen_y);
             } else {
                 QPen pen_zero(Dr::ToQColor(Dr::white));
-                pen_zero.setWidth(c_outline_width);
+                     pen_zero.setWidth(Dr::Scale(c_outline_width));
                 painter.setPen(pen_zero);
             }
             painter.translate(middle);
@@ -251,7 +253,7 @@ void EditorView::paintCameras(QPainter &painter, DrStage *stage) {
             } else {
                 cam_color = cam_color.darker( 100 + static_cast<int>(abs(percent_z) * 30.f));
             }
-            painter.setPen(QPen(QBrush(Dr::ToQColor(cam_color)), 1));
+            painter.setPen(QPen(QBrush(Dr::ToQColor(cam_color)), Dr::Scale(1.0)));
             painter.translate(middle);
 
             // Old Small Circle Drawing

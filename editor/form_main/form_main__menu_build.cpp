@@ -261,7 +261,7 @@ void FormMain::buildMenu() {
     action_emerald->setText(QApplication::translate("MainWindow",           "Emerald", nullptr));
 
     menu_view->setTitle(QApplication::translate("MainWindow",           "&View", nullptr));
-    sub_menu_scale->setTitle(QApplication::translate("MainWindow",          "Scale Interface", nullptr));
+    sub_menu_scale->setTitle(QApplication::translate("MainWindow",          "Interface Magnification", nullptr));
     action_1x->setText(QApplication::translate("MainWindow",                    "x 1 (default)", nullptr));
     action_1_5x->setText(QApplication::translate("MainWindow",                  "x 1.5", nullptr));
     action_2x->setText(QApplication::translate("MainWindow",                    "x 2", nullptr));

@@ -447,7 +447,6 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         spin->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin));
 
         QSlider *slider = new QSlider(Qt::Orientation::Horizontal);
-        slider->setMaximumHeight(Dr::Scale(26));
         size_policy.setHorizontalStretch(3);
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);

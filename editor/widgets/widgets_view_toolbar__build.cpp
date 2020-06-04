@@ -235,9 +235,9 @@ void ViewToolbar::buildToolbar() {
                     for (auto string : options) {
                         QString action_text = string + tr("%");
                         if (m_view_node != nullptr) {
-                            if (string == "100") action_text += " - (default)";
+                            if (string == "100") action_text += " - (default) ";
                         } else if (m_view_editor != nullptr) {
-                            if (string == "50")  action_text += " - (default)";
+                            if (string == "50")  action_text += " - (default) ";
                         }
                         // Add spaces in front of short numbers
                         for (int add_space = string.length(); add_space < 4; ++add_space) {

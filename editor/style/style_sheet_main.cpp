@@ -443,7 +443,8 @@ QString CustomStyleSheetFormatting() {
         "       padding-left: 10px; "
         "       text-align: left; } "
         " QPushButton#spinBoxSelect::menu-indicator { left: -8px; top: -7px; }"
-        " QPushButton#spinBoxSelect:hover { border: " + Dr::BorderWidth() + " solid; "
+        " QPushButton#spinBoxSelect:hover { "
+        "       border: " + Dr::BorderWidth() + " solid; "
         "       color: " + Dr::GetColor(Window_Colors::Text_Light).name() + "; " +
         "       background: " +    Dr::GetColor(Window_Colors::Button_Light).name() + "; "
         "       border-color: " +
@@ -508,6 +509,9 @@ QString CustomStyleSheetFormatting() {
         "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
 
         // Slider for Opacity, etc.
+        " QSlider { "
+        "       height: " + std::to_string(Dr::Scale(24)) + "px; "
+        " } "
         " QSlider::groove:horizontal { "
         "       height: " + std::to_string(Dr::Scale(4)) + "px; background: black; "
         "       background: " + Dr::GetColor(Window_Colors::Background_Light).name() + "; "

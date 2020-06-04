@@ -144,7 +144,7 @@ QPushButton* TreeInspector::createListBox(DrProperty *property, QFont &font, QSi
     // Loop through possible strings, add them to sub menu along with a connect to a lambda function that can update object settings
     int string_count = 0;
     for (auto string : options) {
-        QAction *action = new QAction(string);
+        QAction *action = new QAction(string + " ");
         group->addAction(action);
         action->setCheckable(true);
         menu->addAction(action);

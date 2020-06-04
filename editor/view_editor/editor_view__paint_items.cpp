@@ -32,7 +32,7 @@ void EditorView::paintItemOutlines(QPainter &painter) {
     QList<QGraphicsItem*>  my_items = my_scene->getSelectionItems();
 
     QBrush pen_brush( Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) );
-    painter.setPen(QPen(pen_brush, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(pen_brush, Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter.setBrush(Qt::NoBrush);
 
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
@@ -69,7 +69,7 @@ void EditorView::paintItemOutlines(QPainter &painter) {
 void EditorView::paintBoundingBox(QPainter &painter) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 1));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), Dr::Scale(1.0)));
 
     // ***** Map item bounding box to screen so we can draw it
     QPolygonF polygon = my_scene->getSelectionBox();
@@ -105,13 +105,14 @@ void EditorView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
             painter.translate(draw_center);
             painter.rotate( m_grid_rotate );
 
-            QRectF square(QPointF(-c_square_radius, -c_square_radius), QPointF(c_square_radius, c_square_radius));
-            QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight))), 1);
+            double adjusted_radius = Dr::Scale(c_square_radius);
+            QRectF square(QPointF(-adjusted_radius, -adjusted_radius), QPointF(adjusted_radius, adjusted_radius));
+            QPen corner_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Highlight))), Dr::Scale(1.0));
                  corner_pen.setCosmetic(true);
             painter.setPen(corner_pen);
             QLinearGradient corner_fade(square.topLeft(), square.bottomRight());
-            corner_fade.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light).lighter(150)));
-            corner_fade.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark ).darker( 200)));
+                corner_fade.setColorAt(0.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light).lighter(150)));
+                corner_fade.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark ).darker( 200)));
             painter.setBrush(corner_fade);
 
             if (shape_to_draw == Handle_Shapes::Circles) {                
@@ -126,8 +127,9 @@ void EditorView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
             painter.translate(draw_center);
             painter.rotate( m_grid_rotate );
 
-            QRectF circle(QPointF(-c_rotate_radius, -c_rotate_radius), QPointF(c_rotate_radius, c_rotate_radius));
-            QPen rotate_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light).lighter(150))), 1);
+            double adjusted_radius = Dr::Scale(c_rotate_radius);
+            QRectF circle(QPointF(-adjusted_radius, -adjusted_radius), QPointF(adjusted_radius, adjusted_radius));
+            QPen rotate_pen = QPen(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light).lighter(150))), Dr::Scale(1.0));
                  rotate_pen.setCosmetic(true);
             painter.setPen(rotate_pen);
             QLinearGradient rotate_fade(circle.topLeft(), circle.bottomRight());
@@ -158,7 +160,7 @@ void EditorView::paintGroupAngle(QPainter &painter, double angle) {
     bool antialiasing_before = painter.testRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::Antialiasing, false);
 
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 1));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), Dr::Scale(1.0)));
 
     // !!!!! #DEBUG:    Draws from center to origin point (mouse down), and center to last position (mouse move)
     if (Dr::CheckDebugFlag(Debug_Flags::Paint_Rotating_Angles)) {
@@ -237,9 +239,9 @@ void EditorView::paintCrossHairs(QPainter &painter, QPoint center) {
     lines.append( t.map (line) );
 
     painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), 4));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)), Dr::Scale(4.0)));
     painter.drawLines(lines);
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)), 2));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)), Dr::Scale(2.0)));
     painter.drawLines(lines);
 
 }

@@ -80,7 +80,7 @@ void NodeView::paintGrid(QPainter &painter) {
 
     // Set up QPainter
     QColor  line_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark).darker(110));
-    QPen    line_pen = QPen(line_color, 1);
+    QPen    line_pen = QPen(line_color, Dr::Scale(1.0));
             line_pen.setCosmetic(true);
     painter.setBrush(Qt::NoBrush);
     painter.setPen(line_pen);

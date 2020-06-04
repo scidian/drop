@@ -215,7 +215,7 @@ std::string StyleSheetToolBarModeButton(std::string button_name, std::string ico
 //##    Formatting for normal toolbar buttons
 //################################################################################
 std::string StyleSheetToolBarButtons(std::string button_name, std::string icon_unchecked, std::string icon_checked, std::string icon_disabled,
-                                 int padding, int tl, int tr, int bl, int br, bool checkable, int custom_width, int custom_height) {
+                                     int padding, int tl, int tr, int bl, int br, bool checkable, int custom_width, int custom_height) {
     int width =  c_button_size_w;
     int height = c_button_size_h;
     if (custom_width  != 0) width  = custom_width;

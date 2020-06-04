@@ -106,8 +106,7 @@ void ViewToolTip::paintEvent(QPaintEvent *) {
 
 void ViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset) {
 
-    QFont font = painter.font();
-    font.setPointSize ( Dr::FontSize() + 1 );
+    QFont font = Dr::CustomFont(1);
     painter.setFont(font);
     painter.setPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Light)));
 
@@ -116,6 +115,7 @@ void ViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset) {
     int left;
     QPixmap  pic(w * 2, h);
     QPainter paint_pic(&pic);
+             paint_pic.setFont(font);
     QRect    bounding_1, bounding_2;
     QString  text_1, text_2;
 
@@ -138,14 +138,14 @@ void ViewToolTip::drawText(QPainter &painter, int left_offset, int top_offset) {
             paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_1, &bounding_1);
             paint_pic.drawText( 0, 0, w, h, Qt::AlignmentFlag::AlignLeft, text_2, &bounding_2);
             left = (bounding_1.width() > bounding_2.width()) ? (w - bounding_1.width() + 4) / 2 : (w - bounding_2.width() + 4) / 2;
-            painter.drawText( left_offset + left,     top_offset,               w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_1);
-            painter.drawText( left_offset + left + 1, top_offset + (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_2);
+            painter.drawText(left_offset + left,     top_offset,               w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_1);
+            painter.drawText(left_offset + left + 1, top_offset + (h / 2) - 1, w, h / 2, Qt::AlignmentFlag::AlignVCenter, text_2);
 
             break;
         case View_Mode::Rotating:
         case View_Mode::Zooming:
         default:
-            painter.drawText( left_offset, top_offset, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
+            painter.drawText(left_offset, top_offset, w, h, Qt::AlignmentFlag::AlignCenter, text_1);
     }
 }
 
