@@ -37,7 +37,8 @@ void FormPopup::buildPopupAddSoundEntity() {
             << tr("Add Audio File")
             << tr("Add Instrument Sound")
             << tr("Add Speech Synthesis")
-            << tr("Add Sound Effect");
+            << tr("Add Sound Effect")
+            << tr("Add White Noise");
     QList<QRect> rects;
     int width = 0;
     for (auto option : options) {
@@ -58,36 +59,40 @@ void FormPopup::buildPopupAddSoundEntity() {
         QRadioButton *buttonInstrument =    new QRadioButton(options[2]);   buttonInstrument->setObjectName(  QStringLiteral("popupRadio"));
         QRadioButton *buttonSpeech =        new QRadioButton(options[3]);   buttonSpeech->setObjectName(QStringLiteral("popupRadio"));
         QRadioButton *buttonEffect =        new QRadioButton(options[4]);   buttonEffect->setObjectName(QStringLiteral("popupRadio"));
+        QRadioButton *buttonNoise =         new QRadioButton(options[5]);   buttonNoise->setObjectName(QStringLiteral("popupRadio"));
 
         buttonMix->setFont(font);           buttonMix->setFixedHeight(          rects[0].height() + 4 );
         buttonAudio->setFont(font);         buttonAudio->setFixedHeight(        rects[1].height() + 4 );
         buttonInstrument->setFont(font);    buttonInstrument->setFixedHeight(   rects[2].height() + 4 );
         buttonSpeech->setFont(font);        buttonSpeech->setFixedHeight(       rects[3].height() + 4 );
         buttonEffect->setFont(font);        buttonEffect->setFixedHeight(       rects[4].height() + 4 );
+        buttonNoise->setFont(font);         buttonNoise->setFixedHeight(        rects[5].height() + 4 );
 
         buttonMix->setCheckable(false);
         buttonAudio->setCheckable(false);
         buttonInstrument->setCheckable(false);
         buttonSpeech->setCheckable(false);
         buttonEffect->setCheckable(false);
+        buttonNoise->setCheckable(false);
 
         // Adds new Mix to Project
         connect(buttonMix, &QRadioButton::released, [this]() {
             DrMix *mix = nullptr;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
+            // Add Mix, Update EditorRelay widgets
             if (editor) {
-                editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
                 mix = m_project->addMix();
-                editor->buildProjectTree();
+                editor->buildAssetTree();
                 editor->buildInspector( { mix->getKey() } );
-                editor->updateItemSelection(Editor_Widgets::View, { mix->getKey() } );
-                editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-                editor->buildScene( mix->getKey() );
+                editor->updateItemSelection(Editor_Widgets::Asset_Tree);
+                editor->getAssetTree()->setSelectedKey(mix->getKey());
+                editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
+            // Close this popup
             this->close();
+            // Make sure we leave with Asset Tree highlighted and active
             if (editor && mix != nullptr) {
-                editor->updateItemSelection(Editor_Widgets::View, { mix->getKey() } );
-                editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+                editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
             }
         });
 
@@ -106,10 +111,14 @@ void FormPopup::buildPopupAddSoundEntity() {
         // Adds Sound Effect
         connect(buttonEffect, &QRadioButton::released, [this]() {
             FormSoundEffect *sound_effects = new FormSoundEffect(m_project, nullptr);
+            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
             sound_effects->show();
+            this->close();
             sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
-            this->close();                                                                              // Close this popup
-            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
+        });
+
+        // Adds White Noise
+        connect(buttonEffect, &QRadioButton::released, []() {
         });
 
         // Add Mix option
@@ -131,6 +140,7 @@ void FormPopup::buildPopupAddSoundEntity() {
         layout->addWidget(buttonInstrument);
         layout->addWidget(buttonSpeech);
         layout->addWidget(buttonEffect);
+        layout->addWidget(buttonNoise);
         layout->addSpacing(4);
 }
 

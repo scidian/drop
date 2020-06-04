@@ -28,17 +28,23 @@
 //####################################################################################
 void FormMain::updateToolBar() {
 
+    // ***** Start by disabling buttons, we we re-enable them as necessary in this function
+    for (auto button : m_buttons_group_layering->buttons())     if (button->isEnabled()) button->setEnabled(false);
+    for (auto button : m_buttons_group_edit->buttons())         if (button->isEnabled()) button->setEnabled(false);
+    for (auto button : m_buttons_group_transform->buttons())    if (button->isEnabled()) button->setEnabled(false);
+    m_button_add->setEnabled(true);
+
+
+    // ********** World Graph Toolbar Update
     if (getEditorMode() == Editor_Mode::World_Graph) {
         QAbstractButton *snap_grid = m_buttons_group_grid_simple->button(int(Buttons_Grid::Snap_To_Grid));
         if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
 
+
+    // ********** World Creator Toolbar Update
     } else if (getEditorMode() == Editor_Mode::World_Creator) {
         QAbstractButton *snap_grid = m_buttons_group_grid_full->button(int(Buttons_Grid::Snap_To_Grid));
         if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
-
-        for (auto button : m_buttons_group_layering->buttons())     if (button->isEnabled()) button->setEnabled(false);
-        for (auto button : m_buttons_group_edit->buttons())         if (button->isEnabled()) button->setEnabled(false);
-        for (auto button : m_buttons_group_transform->buttons())    if (button->isEnabled()) button->setEnabled(false);
 
         QString selected = "No Selection";
         if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::View) {
@@ -79,8 +85,8 @@ void FormMain::updateToolBar() {
                 }
             }
 
+        // ***** Asset is selected
         } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && m_tree_assets->getSelectedKey() != c_no_key) {
-            // ***** Asset is selected
             DrSettings *asset = m_project->findSettingsFromKey(m_tree_assets->getSelectedKey(), false);
             if (asset != nullptr) {
                 if (asset->getType() == DrType::Asset || asset->getType() == DrType::Font) {
@@ -91,7 +97,7 @@ void FormMain::updateToolBar() {
             }
         }
 
-        m_button_add->setEnabled(true);
+        // ***** Update Status Bar
         if (m_view_editor->getMouseMode() == Mouse_Mode::Pointer) {
             m_label_selected->setText(selected);
         } else if (m_view_editor->getMouseMode() == Mouse_Mode::Hand) {
@@ -99,7 +105,24 @@ void FormMain::updateToolBar() {
         } else if (m_view_editor->getMouseMode() == Mouse_Mode::Magnify) {
             m_label_selected->setText("Left click to <b>Zoom In</b>, right click to <b>Zoom Out</b>");
         }
-    }
+
+
+    // ********** Sound Creator Toolbar Update
+    } else if (getEditorMode() == Editor_Mode::Sound_Creator) {
+
+        // ***** Asset is selected
+        if (getActiveWidget() == Editor_Widgets::Asset_Tree && m_tree_assets->getSelectedKey() != c_no_key) {
+            DrSettings *asset = m_project->findSettingsFromKey(m_tree_assets->getSelectedKey(), false);
+            if (asset != nullptr) {
+                if (asset->getType() == DrType::Mix || asset->getType() == DrType::Sound) {
+                    for (auto button : m_buttons_group_edit->buttons()) {
+                        if (!button->isEnabled()) button->setEnabled(true);
+                    }
+                }
+            }
+        }
+
+    }   // End Editor_Mode::Sound_Creator
 }
 
 

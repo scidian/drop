@@ -1,12 +1,12 @@
 //
-//      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/4/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
 //
 //
-#ifndef FORM_SOUND_H
-#define FORM_SOUND_H
+#ifndef FORM_SPEECH_SYNTHESIS_H
+#define FORM_SPEECH_SYNTHESIS_H
 
 #include <QElapsedTimer>
 #include <QLabel>
@@ -28,10 +28,10 @@ class WaveForm;
 
 
 //####################################################################################
-//##    FormSoundEffect
-//##        Form to create / add Sfxr Sound Effect
+//##    FormSpeechSynthesis
+//##        Form to create / add Speech Synthesis
 //############################
-class FormSoundEffect : public QWidget
+class FormSpeechSynthesis : public QWidget
 {
     Q_OBJECT
 
@@ -40,12 +40,16 @@ private:
     DrProject              *m_project;                                      // Pointer to the open project
 
     // Local Variables
-    long                    m_key_gen           { 1 };                      // Key generator for identifying sounds created on this Form
-    long                    m_selected_effect   { c_no_key };               // Local key of the Effect currently selected (to be passed back to Project)
+    long                    m_key_gen = 1;                                  // Key generator for identifying sounds created on this Form
 
     // Sound Variables
-    SoLoud::Soloud                 *m_so_loud;                              // Soloud instance
+    SoLoud::Soloud         *m_so_loud;                                      // Soloud instance
+
     std::map<long, SoLoud::Sfxr*>   m_effects;                              // Sfxr sound effects
+    SoLoud::Speech                  m_speech;
+    int                             m_speech_waveform   { KW_TRIANGLE };
+    SoLoud::Wav                     m_wave;
+
 
     // Form Variables
     QWidget            *m_inner_widget;                                     // Container widget, allows for a double form border
@@ -60,11 +64,13 @@ private:
     QSlider            *m_slider_0, *m_slider_1, *m_slider_2, *m_slider_3, *m_slider_4;
     QSlider            *m_slider_5, *m_slider_6, *m_slider_7, *m_slider_8, *m_slider_9;
 
+    QSlider            *m_speech_slider_freq, *m_speech_slider_speed, *m_speech_slider_decline;
+
 
 public:
     // Constructor / Destructor
-    explicit FormSoundEffect(DrProject *project, QWidget *parent = nullptr);
-    virtual ~FormSoundEffect() override;
+    explicit FormSpeechSynthesis(DrProject *project, QWidget *parent = nullptr);
+    virtual ~FormSpeechSynthesis() override;
 
     // Event Overrides
     virtual void resizeEvent(QResizeEvent *event) override;
@@ -77,12 +83,17 @@ public:
     QWidget*        sliderPair(QString slider_text, QSlider *&slider);
 
     // Sound Generate Functions
+    void            playSpeech(std::string speech_text);
     void            playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed);
+    void            playWav(std::string wav_file);
 
     // Existing Sounds
     SoLoud::Sfxr*   getEffect(long effect_key);
-    long            selectedEffectKey()                     { return m_selected_effect; }
     QString         stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset);
+
+    // Sound Variable Functions
+    int             getSpeechWaveForm()                     { return m_speech_waveform; }
+    void            setSpeechWaveForm(int wave_form)        { m_speech_waveform = wave_form; }
 
 
 public slots:
@@ -93,9 +104,7 @@ public slots:
 };
 
 
-#endif // FORM_SOUND_H
-
-
+#endif // FORM_SPEECH_SYNTHESIS_H
 
 
 

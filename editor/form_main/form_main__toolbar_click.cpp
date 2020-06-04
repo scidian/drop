@@ -93,6 +93,9 @@ void FormMain::buttonGroupEditClicked(int id) {
                 if (getEditorMode() == Editor_Mode::World_Graph)            { m_scene_world_graph->keyPressEvent(event); }
                 if (getEditorMode() == Editor_Mode::World_Creator)          { m_scene_editor->keyPressEvent(event); }
             }
+
+        } else if (getEditorMode() == Editor_Mode::Sound_Creator) {
+            if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { m_tree_assets->keyPressEvent(event); }
         }
 
         if (event != nullptr) { delete event; event = nullptr; }

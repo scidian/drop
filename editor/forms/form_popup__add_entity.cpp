@@ -73,6 +73,7 @@ void FormPopup::buildPopupAddWorldEntity() {
         connect(buttonWorld, &QRadioButton::released, [this]() {
             DrWorld *world = nullptr;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
+            // Add World, Update EditorRelay widgets
             if (editor) {
                 editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
                 world = m_project->addWorld(DrWorldType::Physics_2D);
@@ -82,7 +83,9 @@ void FormPopup::buildPopupAddWorldEntity() {
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                 editor->buildScene( world->getFirstStageKey() );
             }
+            // Close this popup
             this->close();
+            // Make sure we leave with Project Tree highlighted and active
             if (editor && world != nullptr) {
                 editor->updateItemSelection(Editor_Widgets::View, { world->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
@@ -93,6 +96,7 @@ void FormPopup::buildPopupAddWorldEntity() {
         connect(buttonStage, &QRadioButton::released, [this]() {
             DrStage *new_stage = nullptr;
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
+            // Add Stage, Update EditorRelay widgets
             if (editor) {
                 editor->buildInspector( { } );      // Clear inspector to stop Inspector signals
                 new_stage = editor->getViewEditor()->getEditorScene()->getCurrentStageShown()->getParentWorld()->addStage();
@@ -102,7 +106,9 @@ void FormPopup::buildPopupAddWorldEntity() {
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                 editor->buildScene(new_stage->getKey());
             }
+            // Close this popup
             this->close();
+            // Make sure we leave with Project Tree highlighted and active
             if (editor && new_stage != nullptr) {
                 editor->updateItemSelection(Editor_Widgets::View, { new_stage->getKey() } );
                 editor->getProjectTree()->setFocus(Qt::FocusReason::PopupFocusReason);

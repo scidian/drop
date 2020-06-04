@@ -5,6 +5,7 @@
 //
 //
 //
+#include "3rd_party/soloud/soloud_sfxr.h"
 #include "core/colors/colors.h"
 #include "project/constants_component_info.h"
 #include "project/entities_sound/dr_sound.h"
@@ -18,8 +19,8 @@
 DrSound::DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key) : DrSettings(parent_project) {
     this->setKey(key);
 
-    m_sound_type = sound_type;
-    m_audio_source = audio_source;
+    m_sound_type =      sound_type;
+    m_audio_source =    audio_source;
 
     initializeSoundSettings("New Sound");
 }

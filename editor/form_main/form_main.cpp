@@ -73,7 +73,7 @@ FormMain::FormMain(QWidget *parent, std::string file_to_open) : QMainWindow(pare
 
 // Destructor Deletes all Widgets so that it can then safely delete Project
 FormMain::~FormMain() {
-    // Wait until scene is not being changed, then delete view and scene
+    // ***** Wait until scene is not being changed, then delete view and scene
     qApp->blockSignals(true);
     while (m_scene_editor->scene_mutex.tryLock() == false)
         qApp->processEvents();
@@ -81,7 +81,7 @@ FormMain::~FormMain() {
     m_scene_editor->scene_mutex.unlock();
     m_scene_editor->deleteLater();
 
-    // Delete widgets not currently attached to main form
+    // ***** Delete widgets not currently attached to main form
     if (getEditorMode() != Editor_Mode::World_Graph)    m_widget_central_world_graph->deleteLater();
     if (getEditorMode() != Editor_Mode::World_Creator)  m_widget_central_editor->deleteLater();
     if (getEditorMode() != Editor_Mode::Clear)          m_widget_central_clear->deleteLater();

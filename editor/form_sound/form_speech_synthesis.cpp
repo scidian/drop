@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/4/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -19,7 +19,7 @@
 #include "core/dr_math.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
-#include "editor/form_sound/form_sound_effect.h"
+#include "editor/form_sound/form_speech_synthesis.h"
 #include "editor/form_sound/visualizer.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
@@ -31,7 +31,7 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
+FormSpeechSynthesis::FormSpeechSynthesis(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
 
     // ***** Initialize SoLoud
     m_so_loud = new SoLoud::Soloud();
@@ -47,7 +47,7 @@ FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(
 
     setMinimumSize(QSize(740, 560));
     setObjectName(QStringLiteral("childForm"));
-    setStyleSheet( Dr::CustomStyleSheetFormatting() );
+    this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Build Form
     buildSoundEffectForm();
@@ -67,19 +67,11 @@ FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(
     m_visual_timer->setTimerType(Qt::PreciseTimer);
 }
 
+FormSpeechSynthesis::~FormSpeechSynthesis() {
+    // Delete sounds
+    for (auto effect : m_effects)   { delete effect.second; }
 
-//####################################################################################
-//##    Destructor
-//####################################################################################
-FormSoundEffect::~FormSoundEffect() {
-    // ***** Delete sounds
-    for (auto effect : m_effects) {
-        if (effect.first != m_selected_effect) {
-            delete effect.second;
-        }
-    }
-
-    // ***** Clean up sound object
+    // Clean up sound object
     m_so_loud->deinit();
     delete m_so_loud;
 }
@@ -89,13 +81,13 @@ FormSoundEffect::~FormSoundEffect() {
 //##    Events
 //####################################################################################
 // Keeps container widget same size as form
-void FormSoundEffect::resizeEvent(QResizeEvent *event) {
+void FormSpeechSynthesis::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
     Dr::ApplyRoundedCornerMask(this, 8, 8);
 }
 
 // Visualizer
-void FormSoundEffect::drawVisuals() {
+void FormSpeechSynthesis::drawVisuals() {
     if (m_so_loud->getActiveVoiceCount() > 0) {
         m_visual_timer->setInterval(20);
     }
@@ -106,10 +98,6 @@ void FormSoundEffect::drawVisuals() {
         m_visual_timer->setInterval(500);
     }
 }
-
-
-
-
 
 
 

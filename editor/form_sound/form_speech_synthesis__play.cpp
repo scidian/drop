@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/4/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
 //
@@ -16,7 +16,7 @@
 #include "core/colors/colors.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
-#include "editor/form_sound/form_sound_effect.h"
+#include "editor/form_sound/form_speech_synthesis.h"
 #include "editor/form_sound/visualizer.h"
 #include "editor/form_sound/wave_form.h"
 #include "editor/helper_library.h"
@@ -27,9 +27,28 @@
 
 
 //####################################################################################
+//##    Speech
+//####################################################################################
+void FormSpeechSynthesis::playSpeech(std::string speech_text) {
+    m_speech.setText(speech_text.data());
+
+    m_speech.setParams( m_speech_slider_freq->value(),
+                        static_cast<float>(m_speech_slider_speed->value()) / 10.0,
+                        static_cast<float>(m_speech_slider_decline->value()) / 100.0, m_speech_waveform );
+
+    m_so_loud->play(m_speech);
+    m_visual_timer->start();
+}
+
+
+//####################################################################################
 //##    Sound Effect
 //####################################################################################
-void FormSoundEffect::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
+void FormSpeechSynthesis::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
+
+    ///m_effect.loadPreset(preset, seed);
+    ///m_so_loud->play(m_effect);
+
     SoLoud::Sfxr *effect = new SoLoud::Sfxr();
                   effect->loadPreset(preset, seed);
     long effect_key = getNextKey();
@@ -42,20 +61,31 @@ void FormSoundEffect::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
     item->setData(User_Roles::Key, QVariant::fromValue(effect_key));
     m_list->addItem(item);
     item->setSelected(true);
-    m_selected_effect = effect_key;
 }
+
+
+//####################################################################################
+//##    Wav File
+//####################################################################################
+void FormSpeechSynthesis::playWav(std::string wav_file) {
+    m_wave.load(wav_file.data());
+    m_so_loud->play(m_wave);
+    m_visual_timer->start();
+}
+
+
 
 
 //####################################################################################
 //##    Play Sounds from Containers
 //####################################################################################
-SoLoud::Sfxr* FormSoundEffect::getEffect(long effect_key) {
+SoLoud::Sfxr* FormSpeechSynthesis::getEffect(long effect_key) {
     auto it = m_effects.find(effect_key);
     if (it != m_effects.end()) return it->second; else return nullptr;
 }
 
 
-void FormSoundEffect::drawItem() {
+void FormSpeechSynthesis::drawItem() {
     if (m_list->selectedItems().size() > 0) {
         QListWidgetItem *item = m_list->selectedItems().first();
         long sound_key = item->data(User_Roles::Key).toInt();
@@ -67,9 +97,8 @@ void FormSoundEffect::drawItem() {
     m_sound_wave->repaint();
 }
 
-void FormSoundEffect::playItem(QListWidgetItem *item) {
+void FormSpeechSynthesis::playItem(QListWidgetItem *item) {
     long sound_key = item->data(User_Roles::Key).toInt();
-    m_selected_effect = sound_key;
     SoLoud::Sfxr* sound_effect = getEffect(sound_key);
     if (sound_effect != nullptr) {
         m_so_loud->play(*sound_effect);
@@ -78,7 +107,7 @@ void FormSoundEffect::playItem(QListWidgetItem *item) {
 }
 
 
-QString FormSoundEffect::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
+QString FormSpeechSynthesis::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
     switch (preset) {
         case (SoLoud::Sfxr::SFXR_PRESETS::BLIP):        return "Blip";
         case (SoLoud::Sfxr::SFXR_PRESETS::COIN):        return "Coin";
@@ -89,11 +118,6 @@ QString FormSoundEffect::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset)
         case (SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION):   return "Explosion";
     }
 }
-
-
-
-
-
 
 
 

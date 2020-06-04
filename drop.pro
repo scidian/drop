@@ -243,6 +243,9 @@ SOURCES += \
     editor/form_sound/form_sound_effect.cpp \
     editor/form_sound/form_sound_effect__build.cpp \
     editor/form_sound/form_sound_effect__play.cpp \
+    editor/form_sound/form_speech_synthesis.cpp \
+    editor/form_sound/form_speech_synthesis__build.cpp \
+    editor/form_sound/form_speech_synthesis__play.cpp \
     editor/form_sound/visualizer.cpp \
     editor/form_sound/wave_form.cpp \
     editor/forms/form_about.cpp \
@@ -1145,6 +1148,7 @@ HEADERS += \
     editor/form_animation/form_animation.h \
     editor/form_main/form_main.h \
     editor/form_sound/form_sound_effect.h \
+    editor/form_sound/form_speech_synthesis.h \
     editor/form_sound/visualizer.h \
     editor/form_sound/wave_form.h \
     editor/forms/form_about.h \

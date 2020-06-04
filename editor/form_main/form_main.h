@@ -40,6 +40,7 @@
 #include <QToolButton>
 #include <QWidgetAction>
 
+#include "3rd_party/soloud/soloud.h"
 #include "core/colors/colors.h"
 #include "editor/interface_editor_relay.h"
 #include "project/constants_comps_and_props.h"
@@ -84,6 +85,8 @@ private:
 
     Editor_Mode             m_current_mode      { Editor_Mode::Program_Loading };   // Holds what state FormMain is in
 
+    // ***** Sound Variables
+///    SoLoud::Soloud      *m_so_loud;                                              // Soloud instance
 
     // ***** Menu Widgets
     QMenuBar        *m_menu_bar;
