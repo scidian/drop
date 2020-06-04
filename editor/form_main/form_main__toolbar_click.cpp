@@ -71,9 +71,15 @@ void FormMain::buttonGroupEditClicked(int id) {
     Buttons_Edit clicked = static_cast<Buttons_Edit>(id);
 
     if (clicked == Buttons_Edit::Add) {
-        FormPopup *popupAdd = new FormPopup(m_buttons_group_edit->button(id), m_project, m_widget_group_edit);
-        popupAdd->buildPopupAddEntity();
-        popupAdd->show();
+        if (getEditorMode() == Editor_Mode::World_Creator) {
+            FormPopup *popupAdd = new FormPopup(m_buttons_group_edit->button(id), m_project, m_widget_group_edit);
+            popupAdd->buildPopupAddWorldEntity();
+            popupAdd->show();
+        } else if (getEditorMode() == Editor_Mode::Sound_Creator) {
+            FormPopup *popupAdd = new FormPopup(m_buttons_group_edit->button(id), m_project, m_widget_group_edit);
+            popupAdd->buildPopupAddSoundEntity();
+            popupAdd->show();
+        }
 
     } else if (clicked == Buttons_Edit::Delete || clicked == Buttons_Edit::Duplicate) {
         QKeyEvent *event = nullptr;

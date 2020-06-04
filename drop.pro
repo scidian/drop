@@ -253,6 +253,7 @@ SOURCES += \
     editor/forms/form_message_box.cpp \
     editor/forms/form_popup.cpp \
     editor/forms/form_popup__add_entity.cpp \
+    editor/forms/form_popup__add_sound.cpp \
     editor/forms/form_popup__grid_snap.cpp \
     editor/forms/form_popup_colors.cpp \
     editor/forms/form_progress_box.cpp \

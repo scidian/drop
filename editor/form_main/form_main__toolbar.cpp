@@ -111,7 +111,7 @@ void FormMain::clearToolBar() {
         m_widget_toolbar_layout->removeWidget( widget );
         widget->hide();
     }
-    // Use iterator to delete items in list
+    // Use iterator to delete Spacer Items
     for(auto it = m_toolbar_spacers.begin(); it != m_toolbar_spacers.end(); ) {
         m_widget_toolbar_layout->removeItem( *it );
         it = m_toolbar_spacers.erase(it);
@@ -138,6 +138,7 @@ void FormMain::setToolBar(Editor_Mode new_mode) {
             addToolBarGroup( m_widget_group_settings,       false );
             break;
         case Editor_Mode::Sound_Creator:
+            addToolBarGroup( m_widget_group_edit,           true );
             addToolBarGroup( m_widget_group_play,           false );
             addToolBarGroup( m_widget_group_settings,       false );
             break;
@@ -161,7 +162,7 @@ void FormMain::addToolBarGroup(QWidget *group, bool add_spacer) {
     group->show();
 
     if (add_spacer) {
-        QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Policy::Expanding, QSizePolicy::Minimum);
         m_toolbar_spacers.append(spacer);
         m_widget_toolbar_layout->addSpacerItem(spacer);
     }

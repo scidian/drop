@@ -70,7 +70,8 @@ public:
 
 
     // ***** Custom Pop-Ups
-    void            buildPopupAddEntity();                                              // Add Entity to Project
+    void            buildPopupAddSoundEntity();                                         // Add DrSound (Audio File, Speech, Sound Effect, etc) entity to Project
+    void            buildPopupAddWorldEntity();                                         // Add World / Stage / Thing / Asset / Character entity to Project
     void            addAssetFromPopup(DrAssetType asset_type, long source_key);         // Child function for Popup Entity Form
 
     void            buildPopupGridSnap();                                               // Snap to Grid Option

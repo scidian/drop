@@ -10,7 +10,6 @@
 #include <QRadioButton>
 
 #include "editor/form_main/form_main.h"
-#include "editor/form_sound/form_sound_effect.h"
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
@@ -28,9 +27,9 @@
 
 
 //####################################################################################
-//##    Builds out FormPop's inner widget to show options for Adding an Entity to Project
+//##    Builds out FormPop's inner widget to show options for Adding a World Entity to Project
 //####################################################################################
-void FormPopup::buildPopupAddEntity() {
+void FormPopup::buildPopupAddWorldEntity() {
     QFont font = Dr::CustomFont();
     QFontMetrics font_metrics { font };
 
@@ -39,8 +38,7 @@ void FormPopup::buildPopupAddEntity() {
     options << tr("Add New World")
             << tr("Add New Stage")
             << tr("Add Character Asset")
-            << tr("Add Object Asset")
-            << tr("Add Sound Effect");
+            << tr("Add Object Asset");
     QList<QRect> rects;
     int width = 0;
     for (auto option : options) {
@@ -60,19 +58,16 @@ void FormPopup::buildPopupAddEntity() {
         QRadioButton *buttonStage =  new QRadioButton(options[1]);      buttonStage->setObjectName( QStringLiteral("popupRadio"));
         QRadioButton *buttonChar =   new QRadioButton(options[2]);      buttonChar->setObjectName(  QStringLiteral("popupRadio"));
         QRadioButton *buttonObject = new QRadioButton(options[3]);      buttonObject->setObjectName(QStringLiteral("popupRadio"));
-        QRadioButton *buttonEffect = new QRadioButton(options[4]);      buttonEffect->setObjectName(QStringLiteral("popupRadio"));
 
         buttonWorld->setFont(font);     buttonWorld->setFixedHeight(    rects[0].height() + 4 );
         buttonStage->setFont(font);     buttonStage->setFixedHeight(    rects[1].height() + 4 );
         buttonChar->setFont(font);      buttonChar->setFixedHeight(     rects[2].height() + 4 );
         buttonObject->setFont(font);    buttonObject->setFixedHeight(   rects[3].height() + 4 );
-        buttonEffect->setFont(font);    buttonEffect->setFixedHeight(   rects[4].height() + 4 );
 
         buttonWorld->setCheckable(false);
         buttonStage->setCheckable(false);
         buttonChar->setCheckable(false);
         buttonObject->setCheckable(false);
-        buttonEffect->setCheckable(false);
 
         // Adds World to Project
         connect(buttonWorld, &QRadioButton::released, [this]() {
@@ -117,13 +112,6 @@ void FormPopup::buildPopupAddEntity() {
         // Adds Character / Object Asset to Project
         connect(buttonChar,   &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Character, c_key_image_character); });
         connect(buttonObject, &QRadioButton::released, [this]() { this->addAssetFromPopup(DrAssetType::Object,    c_key_image_object); });
-        connect(buttonEffect, &QRadioButton::released, [this]() {
-            FormSoundEffect *sound_effects = new FormSoundEffect(m_project, nullptr);
-            sound_effects->show();
-            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
-            this->close();                                                                              // Close this popup
-            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
-        });
 
         // Add World / Stage options
         layout->addSpacing(4);
@@ -143,19 +131,6 @@ void FormPopup::buildPopupAddEntity() {
         // Add Character / Object options
         layout->addWidget(buttonChar);
         layout->addWidget(buttonObject);
-        layout->addSpacing(4);
-
-        // Divider line looks nice
-        QLabel *line_2 = new QLabel();
-        line_2->setMaximumHeight(1);
-        line_2->setStyleSheet(QString::fromStdString(
-                              "color: " +      Dr::GetColor(Window_Colors::Midlight).name() + "; "
-                              "background: " + Dr::GetColor(Window_Colors::Midlight).name() + "; "
-                              "border: none; margin-left: 5px; margin-right: 5px;"));
-        layout->addWidget(line_2);
-
-        // Add Sound Effect Option
-        layout->addWidget(buttonEffect);
         layout->addSpacing(4);
 }
 
