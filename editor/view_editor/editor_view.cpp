@@ -24,6 +24,11 @@
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
 
+// Local Constants
+const   double  c_rotate_handle_distance            = 20.0;             // Distance rotate handle is away from selection box outline
+const   double  c_side_handle_size                  = 10.0;             // Thickness of mousue area around the sides of the selection box for resizing
+const   double  c_corner_handle_size                = 14.0;             // Size of square mouse area at corners of the selection box for resizing
+
 
 //####################################################################################
 //##    Constructor / Destructor
@@ -142,11 +147,11 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
     // !!!!! END
 
     // Size of side handle boxes (left, top, right, bottom)
-    double side_size = Dr::Scale(10.0);
+    double side_size = Dr::Scale(c_side_handle_size);
     double s_half = side_size / 2;
 
     // Size of corner handle boxes (top left, top right, bottom left, bottom right
-    double corner_size = Dr::Scale(14.0);
+    double corner_size = Dr::Scale(c_corner_handle_size);
 
     // Check if bounding box handles should be squares or circles
     double angle = my_scene->getSelectionAngle();
@@ -229,13 +234,13 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
     QPoint  zero = top;
 
     if ((scale.x() >=0 && scale.y() >= 0) || (scale.x() <= 0 && scale.y() <= 0))
-        zero.setY(zero.y() - 22);
+        zero.setY(zero.y() - Dr::Scale(c_rotate_handle_distance));
     else
-        zero.setY(zero.y() + 22);
+        zero.setY(zero.y() + Dr::Scale(c_rotate_handle_distance));
 
     QTransform rotate = Dr::CreateRotatedQTransform(top, m_handles_angles[Position_Flags::Top]);
     zero = rotate.map(zero);
-    m_handles[Position_Flags::Rotate] = rectAtCenterPoint( zero, corner_size);
+    m_handles[Position_Flags::Rotate] = rectAtCenterPoint(zero, corner_size);
     m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();
 
 

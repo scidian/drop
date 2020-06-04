@@ -19,6 +19,7 @@
 
 // Forward Declarations
 class DrProject;
+class DrSound;
 class DrTrack;
 
 // Type Definitions
@@ -38,7 +39,7 @@ private:
 
 public:
     // Constructor / Destructor
-    DrMix(DrProject *parent_project, long key = c_no_key);
+    DrMix(DrProject *parent_project, long key, std::string new_mix_name);
     virtual ~DrMix() override;
 
     // DrSettings Overrides
@@ -49,6 +50,12 @@ public:
 
     // Getters / Setters
     TrackMap&               getTrackMap()                   { return m_tracks; }
+
+    // Mix Construction
+    DrTrack* addTrack(DrSound *from_sound, long track_key = c_no_key, long track_number = 0, double x_position = 0);
+    DrTrack* addTrackCopyFromTrack(DrTrack *from_track);
+
+
 
 };
 

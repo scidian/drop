@@ -195,6 +195,9 @@ public:
     DrItem*         findItemFromType(DrItemType type);
     DrPrefab*       findPrefabFromType(DrPrefabType type);
 
+    // Mixes
+    DrMix*          findMixWithName(std::string mix_name);
+
     // Worlds
     long            getFirstWorldKey()      { return m_worlds.begin()->first; }
     long            getNumberOfWorlds()     { return static_cast<long>(m_worlds.size()); }
@@ -210,6 +213,7 @@ public:
     long            addItem(DrItemType item_type, long key = c_no_key);
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
     DrMix*          addMix(long key = c_no_key);
+    DrMix*          addMixCopyFromMix(DrMix* from_mix, std::string new_name);
     DrSound*        addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
     DrWorld*        addWorld(DrWorldType world_type);
     DrWorld*        addWorld(DrWorldType world_type, long key, long start_stage_key, long last_stage_in_editor_key);

@@ -81,7 +81,7 @@ void TreeProject::selectionChanged(const QItemSelection &selected, const QItemSe
         for (auto &check_item : item_list) {
             // Get key from each item so we can compare it to first selected item
             long    check_key =  check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-            DrType  check_type = getParentProject()->findSettingsTypeFromKey(check_key);
+            DrType  check_type = findSettingsFromItem(check_item)->getType();
 
             // If we are over item that was first selected, skip to next
             if (check_key == this->getSelectedKey()) {

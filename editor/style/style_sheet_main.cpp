@@ -142,7 +142,7 @@ QString CustomStyleSheetFormatting() {
         //################################################################################
         //##    Scroll bars, used mostly in QGraphicsView
         //################################################################################
-        " QScrollBar:vertical { width: " + std::to_string(Dr::Scale(10)) + "px; margin: 0px; border-radius: 0px; "
+        " QScrollBar:vertical { width: " + std::to_string(6 + Dr::Scale(4)) + "px; margin: 0px; border-radius: 0px; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; } "
         " QScrollBar::handle:vertical { margin: 2px; border-radius: 3px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, "
@@ -151,7 +151,7 @@ QString CustomStyleSheetFormatting() {
         " QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; } "
         " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { height: 0px; } "
 
-        " QScrollBar:horizontal { height: " + std::to_string(Dr::Scale(10)) + "px; margin: 0px; border-radius: 0px; "
+        " QScrollBar:horizontal { height: " + std::to_string(6 + Dr::Scale(4)) + "px; margin: 0px; border-radius: 0px; "
         "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + " ; } "
         " QScrollBar::handle:horizontal {      margin: 2px; border-radius: 3px; "
         "       background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, "

@@ -23,6 +23,7 @@
 #include "project/entities_physics_2d/dr_prefab.h"
 #include "project/entities_sound/dr_mix.h"
 #include "project/entities_sound/dr_sound.h"
+#include "project/entities_sound/dr_track.h"
 #include "project/settings/settings_component.h"
 
 
@@ -98,9 +99,34 @@ long DrProject::addPrefab(DrPrefabType prefab_type, long key) {
 }
 
 DrMix* DrProject::addMix(long key) {
+    int number_of_mixes = static_cast<int>(m_mixes.size());
+    std::string new_name;
+    do {
+        ++number_of_mixes;
+        new_name = "Mix " + std::to_string(number_of_mixes);
+    } while (findMixWithName(new_name) != nullptr);
     long new_mix_key = (key == c_no_key) ? getNextKey() : key;
-    m_mixes[new_mix_key] = new DrMix(this, new_mix_key);
+    m_mixes[new_mix_key] = new DrMix(this, new_mix_key, new_name);
     return m_mixes[new_mix_key];
+}
+
+// Adds a new Mix, copied from another Mix
+DrMix* DrProject::addMixCopyFromMix(DrMix* from_mix, std::string new_name) {
+    // Make Copy
+    DrMix *copy_mix = addMix(c_no_key);
+           copy_mix->copyEntitySettings(from_mix);
+           copy_mix->setName( new_name );
+
+    // Copy all Tracks from Mix
+    int track_count = 0;
+    for (auto &track_pair : from_mix->getTrackMap()) {
+        // Make Copy
+        DrTrack *track = track_pair.second;
+        copy_mix->addTrackCopyFromTrack(track);
+
+        track_count++;
+    }
+    return copy_mix;
 }
 
 DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key) {
@@ -111,11 +137,11 @@ DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_
 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World
 DrWorld* DrProject::addWorld(DrWorldType world_type) {
-    int test_num = static_cast<int>(m_worlds.size());
+    int number_of_worlds = static_cast<int>(m_worlds.size());
     std::string new_name;
     do {
-        ++test_num;
-        new_name = "World " + std::to_string(test_num);
+        ++number_of_worlds;
+        new_name = "World " + std::to_string(number_of_worlds);
     } while (findWorldWithName(new_name) != nullptr);
 
     long new_world_key = getNextKey();
@@ -135,18 +161,24 @@ DrWorld* DrProject::addWorld(DrWorldType world_type, long key, long start_stage_
 
 // Adds a new World, copied from another World
 DrWorld* DrProject::addWorldCopyFromWorld(DrWorld* from_world, std::string new_name) {
+    // Make Copy
     DrWorld *copy_world = addWorld(from_world->getWorldType());
-    copy_world->copyEntitySettings(from_world);
+             copy_world->copyEntitySettings(from_world);
+             copy_world->setName( new_name );
 
-    // Set new name of copy World
-    copy_world->setName( new_name );
+    // Copy non component-property variables of DrWorld class
+    copy_world->setExpanded(from_world->getExpanded());
 
     // Copy all Stages from World
     int stage_count = 0;
     for (auto &stage_pair : from_world->getStageMap()) {
+        // Make Copy
         DrStage *stage = stage_pair.second;
         DrStage *copy_stage = copy_world->addStageCopyFromStage(stage, stage->getName(), (stage_count == 0));
-        copy_stage->copyEntitySettings(stage);
+
+        // Copy non component-property variables of DrStage class
+        copy_stage->setExpanded(stage->getExpanded());
+
         stage_count++;
     }
     return copy_world;

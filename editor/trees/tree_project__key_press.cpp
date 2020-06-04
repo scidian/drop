@@ -36,7 +36,7 @@ void TreeProject::keyPressEvent(QKeyEvent *event) {
     // ***** If we dont have selected items exit, otherwise get type of selected items
     if (selectedItems().count() < 1) { QTreeWidget::keyPressEvent(event); return; }
     long        first_key = selectedItems().first()->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-    DrSettings *settings =  getParentProject()->findSettingsFromKey( first_key, false );
+    DrSettings *settings =  findSettingsFromItem(selectedItems().first());
     if (settings == nullptr)         { QTreeWidget::keyPressEvent(event); return; }
     DrType      type =      settings->getType();
 

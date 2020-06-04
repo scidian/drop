@@ -27,6 +27,7 @@
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
 #include "project/entities_physics_2d/dr_effect.h"
+#include "project/entities_sound/dr_mix.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component_property.h"
 
@@ -96,28 +97,48 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
     // ***** Duplicate Asset
     if (event->key() == Qt::Key_D) {
         DrSettings *entity = getParentProject()->findSettingsFromKey(getSelectedKey());
+        long duplicated_key = c_no_key;
         if (entity == nullptr) return;
-        if (entity->getType() != DrType::Asset) return;
-        DrAsset *asset = dynamic_cast<DrAsset*>(entity);
-        if (asset == nullptr) return;       
+        if (entity->getType() == DrType::Asset) {
+            DrAsset *asset = dynamic_cast<DrAsset*>(entity);
+            if (asset == nullptr) return;
 
-        // Find name for copy
-        std::vector<QString> asset_names;
-        for (auto &asset_pair : getParentProject()->getAssetMap()) {
-            asset_names.push_back( QString::fromStdString(asset_pair.second->getName()) );
+            // Find name for copy
+            std::vector<QString> asset_names;
+            for (auto &asset_pair : getParentProject()->getAssetMap()) {
+                asset_names.push_back( QString::fromStdString(asset_pair.second->getName()) );
+            }
+            QString new_name = Dr::FindCopyName(QString::fromStdString(asset->getName()), asset_names);
+
+            // Create new Asset, copy Settings / Components / Properties
+            DrAsset *copy_asset = getParentProject()->addAsset( asset->getAssetType(), asset->getBaseKey() );
+                     copy_asset->copyEntitySettings(asset);
+                     copy_asset->setName( new_name.toStdString() );
+
+            duplicated_key = copy_asset->getKey();
+
+        } else if (entity->getType() == DrType::Mix) {
+            DrMix *mix = dynamic_cast<DrMix*>(entity);
+            if (mix == nullptr) return;
+
+            // Find name for copy
+            std::vector<QString> mix_names;
+            for (auto &mix_pair : getParentProject()->getMixMap()) {
+                mix_names.push_back( QString::fromStdString(mix_pair.second->getName()) );
+            }
+            QString new_name = Dr::FindCopyName(QString::fromStdString(mix->getName()), mix_names);
+
+            // Create new Mix, copies Settings / Components / Properties
+            DrMix *copy_mix = getParentProject()->addMixCopyFromMix(mix, new_name.toStdString());
+
+            duplicated_key = copy_mix->getKey();
         }
-        QString new_name = Dr::FindCopyName(QString::fromStdString(asset->getName()), asset_names);
-
-        // Create new Asset, copy Settings / Components / Properties
-        DrAsset *copy_asset = getParentProject()->addAsset( asset->getAssetType(), asset->getBaseKey() );
-        copy_asset->copyEntitySettings(asset);
-        copy_asset->setName( new_name.toStdString() );
 
         // Update EditorRelay widgets
         m_editor_relay->buildAssetTree();
-        m_editor_relay->buildInspector( { copy_asset->getKey() } );
+        m_editor_relay->buildInspector( { duplicated_key } );
         m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
-        setSelectedKey(copy_asset->getKey());
+        setSelectedKey(duplicated_key);
         setFocus(Qt::FocusReason::PopupFocusReason);
     }
 
@@ -127,8 +148,28 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
         DrSettings *entity = getParentProject()->findSettingsFromKey(getSelectedKey());
         if (entity == nullptr) return;
-        if (entity->getType() != DrType::Asset && entity->getType() != DrType::Font) return;
 
+        // Check that Entity type is deletable
+        if (entity->getType() != DrType::Asset &&
+            entity->getType() != DrType::Font &&
+            entity->getType() != DrType::Mix) {
+            return;
+        }
+
+        // Check that user wishes to delete Mix
+        if (entity->getType() == DrType::Mix) {
+            if (getParentProject()->getMixMap().size() <= 1) {
+                Dr::ShowMessageBox("Cannot delete Mix! <br><br> Project must have at least one Mix.", QMessageBox::Icon::Information, this);
+                return;
+            } else {
+                QMessageBox::StandardButton proceed;
+                proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected Mix?", QMessageBox::Icon::Question,
+                                             this, QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
+                if (proceed == QMessageBox::StandardButton::No) return;
+            }
+        }
+
+        // Delete entity
         removeAsset(getSelectedKey());
 
         // Select next availale item if there is one

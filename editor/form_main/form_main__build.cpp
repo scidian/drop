@@ -31,6 +31,7 @@
 #include "engine/debug_flags.h"
 #include "project/dr_project.h"
 #include "project/entities/dr_stage.h"
+#include "project/entities/dr_world.h"
 
 
 //####################################################################################
@@ -131,7 +132,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             buildSceneAfterLoading( c_no_key );
             break;
 
-        case Editor_Mode::World_Creator:
+        case Editor_Mode::World_Creator: {
             m_scene_editor->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             setCentralWidget( m_widget_central_editor );
@@ -140,8 +141,13 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             buildAssetTree();
             m_dock_assets->show();
             buildProjectTree();
-            buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
+            long stage_key = m_project->getOption(Project_Options::Current_Stage).toInt();
+            buildSceneAfterLoading( stage_key );
+            // Select current world in Project Tree
+            DrStage *new_stage = m_project->findStageFromKey(stage_key);
+            if (new_stage) updateItemSelection(Editor_Widgets::View, { new_stage->getParentWorld()->getKey() });
             break;
+        }
 
         case Editor_Mode::Sound_Creator:
             m_scene_mixer->clearSceneOverride();

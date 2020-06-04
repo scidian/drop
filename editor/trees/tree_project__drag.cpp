@@ -74,21 +74,21 @@ void TreeProject::dragMoveEvent(QDragMoveEvent *event) {
     QTreeWidgetItem *item_at = this->itemAt(event->pos());
     m_can_drop = false;
     if (item_at != nullptr) {
-        long        check_key = item_at->data(0, User_Roles::Key).toLongLong();
+        DrSettings *check_settings = findSettingsFromItem(item_at);
+        if (check_settings != nullptr) {
 
-        // !!!!! #DEBUG:    Show stage tree drag event info
-        if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
-            Dr::SetLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
-                                                        ", Checking: " + QString::number(check_key) );
-        }
-        // !!!!! END
+            // !!!!! #DEBUG:    Show stage tree drag event info
+            if (Dr::CheckDebugFlag(Debug_Flags::Label_Stage_Tree_Drag)) {
+                Dr::SetLabelText(Label_Names::Label_Object_3, "Selected: " + QString::number(m_selected_key) +
+                                                            ", Checking: " + QString::number(check_settings->getKey()) );
+            }
+            // !!!!! END
 
-        // Check if its the same type as already selected, if so allow possible drop
-        if (m_is_dragging && m_selected_key > 0 && check_key > 0) {
-            DrSettings *check_settings =    getParentProject()->findSettingsFromKey(check_key);
-            DrSettings *selected_settings = getParentProject()->findSettingsFromKey(m_selected_key);
-
-            if (check_settings->getType() == selected_settings->getType()) { m_can_drop = true; }
+            // Check if its the same type as already selected, if so allow possible drop
+            if (m_is_dragging && m_selected_key > 0) {
+                DrSettings *selected_settings = getParentProject()->findSettingsFromKey(m_selected_key);
+                if (check_settings->getType() == selected_settings->getType()) m_can_drop = true;
+            }
         }
     }
 

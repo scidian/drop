@@ -6,6 +6,7 @@
 //
 //
 #include "project/constants_component_info.h"
+#include "project/dr_project.h"
 #include "project/entities_sound/dr_mix.h"
 #include "project/entities_sound/dr_track.h"
 #include "project/settings/settings_component.h"
@@ -15,11 +16,11 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-DrMix::DrMix(DrProject *parent_project, long key) : DrSettings(parent_project) {
+DrMix::DrMix(DrProject *parent_project, long key, std::string new_mix_name) : DrSettings(parent_project) {
     this->setKey(key);
 
     // ***** Initialize Mix Settings
-    initializeMixSettings("Mix 1");
+    initializeMixSettings(new_mix_name);
 
 }
 
@@ -44,6 +45,25 @@ void DrMix::initializeMixSettings(std::string new_name) {
                            "Mix Color", "Color this Mix will appear in the Asset Tree.");
 
 }
+
+
+
+//####################################################################################
+//##    Adding Tracks Components
+//####################################################################################
+DrTrack* DrMix::addTrack(DrSound *from_sound, long track_key, long track_number, double x_position) {
+    long new_track_key = (track_key == c_no_key) ? getParentProject()->getNextKey() : track_key;
+    m_tracks[new_track_key] = new DrTrack(getParentProject(), this, from_sound, new_track_key, track_number, x_position);
+    return m_tracks[new_track_key];
+}
+
+// Adds a Track as a copy from another Track
+DrTrack* DrMix::addTrackCopyFromTrack(DrTrack *from_track) {
+    DrTrack *copy_track = addTrack(from_track->getSound());
+             copy_track->copyEntitySettings(copy_track);
+    return copy_track;
+}
+
 
 
 

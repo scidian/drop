@@ -197,6 +197,16 @@ DrMix* DrProject::findMixFromKey(long check_key) {
     return ((mix_iter != m_mixes.end()) ? mix_iter->second : nullptr);
 }
 
+// Returns a pointer to the Mix with the mathcing name
+DrMix* DrProject::findMixWithName(std::string mix_name) {
+    std::string compare_name;
+    for (auto &mix_pair: m_mixes) {
+        compare_name = mix_pair.second->getName();
+        if (compare_name == mix_name) { return mix_pair.second; }
+    }
+    return nullptr;
+}
+
 DrSound* DrProject::findSoundFromKey(long check_key) {
     SoundMap::iterator sound_iter = m_sounds.find(check_key);
     return ((sound_iter != m_sounds.end()) ? sound_iter->second : nullptr);

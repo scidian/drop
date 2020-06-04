@@ -67,7 +67,6 @@ void NodeView::mousePressEvent(QMouseEvent *event) {
                     m_view_mode = View_Mode::None;
                     m_project->setOption(Project_Options::Current_Stage, world->getStartStageKey());
                     m_editor_relay->setEditorMode(Editor_Mode::World_Creator);
-                    m_editor_relay->updateItemSelection(Editor_Widgets::View, { world->getKey() });
                     return;
                 }
             }

@@ -59,6 +59,7 @@ public:
     void                        buildProjectTree(bool total_rebuild = false);
     void                        ensureSelectionVisible();
     QTreeWidgetItem*            findItemWithProjectKey(long key);
+    DrSettings*                 findSettingsFromItem(QTreeWidgetItem* item);
     QList<QTreeWidgetItem*>     getListOfAllTreeWidgetItems();
     QList<QTreeWidgetItem*>     getListOfChildrenFromItem( QTreeWidgetItem *item);
     void                        installLockBox(DrSettings *entity, QTreeWidgetItem *thing_item);

@@ -53,8 +53,8 @@ void FormMain::buttonGroupLayeringClicked(int id) {
     QKeyEvent *event = nullptr;
 
     if (clicked == Buttons_Layering::Send_To_Front) { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Greater, { Qt::KeyboardModifier::NoModifier }); }
-    if (clicked == Buttons_Layering::Send_To_Back) {  event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Less,    { Qt::KeyboardModifier::NoModifier }); }
-    if (clicked == Buttons_Layering::Send_Forward) {  event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Period,  { Qt::KeyboardModifier::NoModifier }); }
+    if (clicked == Buttons_Layering::Send_To_Back)  { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Less,    { Qt::KeyboardModifier::NoModifier }); }
+    if (clicked == Buttons_Layering::Send_Forward)  { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Period,  { Qt::KeyboardModifier::NoModifier }); }
     if (clicked == Buttons_Layering::Send_Backward) { event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Comma,   { Qt::KeyboardModifier::NoModifier }); }
 
     if (event) {

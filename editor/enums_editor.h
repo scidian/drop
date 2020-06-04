@@ -219,6 +219,9 @@ namespace User_Property {
 enum User_Roles {
     Key = 0x0100,                                           // long     Stores Object Key in User Data of Widget / QGraphicsItem
                                                             //              From qnamespace.h: Qt::UserRole, starting number for our own UserRoles
+    StageKey,                                               // long     Stores possible parent Stage Key if object is DrThing
+    WorldKey,                                               // long     Stores possible parent World Key if object is DrThing or DrStage
+
     CompKey,                                                // long     Stores Component Key
     CompName,                                               // QString  Stores Component Name
     PropKey,                                                // long     Stores Property  Key

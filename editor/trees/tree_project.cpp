@@ -51,8 +51,9 @@ void TreeProject::focusInEvent(QFocusEvent *event) {
 
     if (selectedItems().count() > 0) {
         QList<long> key_list { };
-        for (auto check_item : selectedItems())
+        for (auto check_item : selectedItems()) {
             key_list.push_back( check_item->data(COLUMN_TITLE, User_Roles::Key).toLongLong() );
+        }
         m_editor_relay->buildInspector( key_list );
     }
 
@@ -61,7 +62,29 @@ void TreeProject::focusInEvent(QFocusEvent *event) {
 
 
 //####################################################################################
-//##    Populates Tree Project List based on Project data
+//##    Finds an Entity based on data stored in QTreeWidgetItem
+//####################################################################################
+DrSettings* TreeProject::findSettingsFromItem(QTreeWidgetItem* item) {
+    long    key =   item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
+    DrType  type =  static_cast<DrType>(item->data(COLUMN_TITLE, User_Roles::Type).toInt());
+
+    if (type == DrType::World) {
+        return getParentProject()->findWorldFromKey(key);
+    } else if (type == DrType::Stage) {
+        long world_key = item->data(COLUMN_TITLE, User_Roles::WorldKey).toLongLong();
+        return getParentProject()->findStageFromKey(key, world_key);
+    } else if (type == DrType::Thing) {
+        long stage_key = item->data(COLUMN_TITLE, User_Roles::StageKey).toLongLong();
+        long world_key = item->data(COLUMN_TITLE, User_Roles::WorldKey).toLongLong();
+        return getParentProject()->findThingFromKey(key, stage_key, world_key);
+    } else {
+        return getParentProject()->findSettingsFromKey(key, false);
+    }
+}
+
+
+//####################################################################################
+//##    Populates Tree Project List based on Project entities
 //####################################################################################
 void TreeProject::buildProjectTree(bool total_rebuild) {
 
@@ -81,10 +104,11 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
     // ***** Gets list of items in tree, if keys have been removed from project, removes items
     for (auto item : item_list) {
         // Check if item source key is still in project, if so add to map
-        long key = item->data(COLUMN_TITLE, User_Roles::Key).toLongLong();
-        if (key <= 0)               { item_map[key] = item; continue; }
-        DrSettings *settings = getParentProject()->findSettingsFromKey(key, false);
-        if (settings != nullptr)    { item_map[key] = item; continue; }
+        DrSettings *settings = findSettingsFromItem(item);
+        if (settings != nullptr) {
+            item_map[settings->getKey()] = item;
+            continue;
+        }
 
         // If we made it here, remove item from tree
         int index = this->indexOfTopLevelItem(item);
@@ -113,7 +137,8 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
             icon_image = QPixmap(":/assets/tree_icons/tree_world.png").toImage();
             world_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(Dr::ColorizeImage(icon_image, icon_color))));
             world_item->setText(COLUMN_TITLE, "World: " + QString::fromStdString(world->getName()));
-            world_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(world->getKey()));
+            world_item->setData(COLUMN_TITLE, User_Roles::Key,  QVariant::fromValue(world->getKey()));
+            world_item->setData(COLUMN_TITLE, User_Roles::Type, QVariant::fromValue(static_cast<int>(world->getType())));
             world_item->setExpanded( world->getExpanded() );
             this->addTopLevelItem(world_item);
         }
@@ -130,7 +155,9 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                 icon_image = QPixmap(":/assets/tree_icons/tree_stage.png").toImage();
                 stage_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(Dr::ColorizeImage(icon_image, icon_color))));
                 stage_item->setText(COLUMN_TITLE, "Stage: " + QString::fromStdString(stage->getName()));
-                stage_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(stage->getKey()));                
+                stage_item->setData(COLUMN_TITLE, User_Roles::Key,      QVariant::fromValue(stage->getKey()));
+                stage_item->setData(COLUMN_TITLE, User_Roles::WorldKey, QVariant::fromValue(stage->getParentWorld()->getKey()));
+                stage_item->setData(COLUMN_TITLE, User_Roles::Type,     QVariant::fromValue(static_cast<int>(stage->getType())));
                 stage_item->setExpanded( stage->getExpanded() );
             }
 
@@ -172,7 +199,10 @@ void TreeProject::buildProjectTree(bool total_rebuild) {
                     }
                     thing_item->setIcon(COLUMN_TITLE, QIcon(QPixmap::fromImage(Dr::ColorizeImage(icon_image, icon_color))));
                     thing_item->setText(COLUMN_TITLE, QString::fromStdString(thing->getName()));
-                    thing_item->setData(COLUMN_TITLE, User_Roles::Key, QVariant::fromValue(thing->getKey()));
+                    thing_item->setData(COLUMN_TITLE, User_Roles::Key,      QVariant::fromValue(thing->getKey()));
+                    thing_item->setData(COLUMN_TITLE, User_Roles::StageKey, QVariant::fromValue(thing->getParentStage()->getKey()));
+                    thing_item->setData(COLUMN_TITLE, User_Roles::WorldKey, QVariant::fromValue(thing->getParentWorld()->getKey()));
+                    thing_item->setData(COLUMN_TITLE, User_Roles::Type,     QVariant::fromValue(static_cast<int>(thing->getType())));
                 }
 
                 // ***** Update Z-Order

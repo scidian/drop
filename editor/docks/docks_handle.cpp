@@ -21,7 +21,7 @@ void LockDockWidth(QDockWidget *&dock, int width) {
 
 void UnlockDockWidth(QMainWindow *window, QDockWidget *&dock) {
     int pre_width = dock->width();
-    dock->setMaximumSize(622, QWIDGETSIZE_MAX);
+    dock->setMaximumSize(625, QWIDGETSIZE_MAX);
 
     QString dock_name = dock->objectName();
     if (dock_name == "dockInspector")
