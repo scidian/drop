@@ -43,8 +43,6 @@ private:
     long                    m_key_gen = 1;                                  // Key generator for identifying sounds created on this Form
 
     // Sound Variables
-    SoLoud::Soloud         *m_so_loud;                                      // Soloud instance
-
     std::map<long, SoLoud::Sfxr*>   m_effects;                              // Sfxr sound effects
     SoLoud::Speech                  m_speech;
     int                             m_speech_waveform   { KW_TRIANGLE };

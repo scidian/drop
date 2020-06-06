@@ -85,7 +85,7 @@ ThingCompPhysics::ThingCompPhysics(DrEngineWorld *engine_world, DrEngineThing *p
         case Body_Type::Kinematic:  this->body = cpBodyNewKinematic();                              break;
     }
     cpBodySetPosition( this->body, cpv(x, y) );
-    thing()->setAngle( -angle );
+    setAngle( -angle );
     cpBodySetUserData( this->body, thing() );                                   // Set chipmunk User Data, store DrEngineThing* for use later
 
     if (body_type == Body_Type::Kinematic) {
@@ -126,6 +126,31 @@ ThingCompPhysics::~ThingCompPhysics() {
 
     // ***** Delete cpBody and all cpShapes / cpConstraints (joints) associated with it
     this->body = world()->removeBody(this->body);
+}
+
+
+//####################################################################################
+//##    Sets Angle
+//####################################################################################
+void ThingCompPhysics::setAngle(double new_angle) {
+    if (body == nullptr) return;
+
+    // Get current angle, set new angle
+    double current_angle = Dr::RadiansToDegrees( cpBodyGetAngle(body) );
+    cpBodySetAngle( body, Dr::DegreesToRadians(new_angle) );
+
+    // Set angle of all soft body physics children
+    if (thing()->compSoftBody() != nullptr && isPhysicsChild() == false) {
+        for (size_t i = 0; i < thing()->compSoftBody()->soft_balls.size(); ++i) {
+            DrEngineThing *next_ball = thing()->compSoftBody()->soft_balls[i];
+            if (next_ball == thing()) continue;
+            if (next_ball == nullptr) continue;
+            if (next_ball->compPhysics()->body == nullptr) continue;
+            DrPointF new_position = Dr::RotatePointAroundOrigin(next_ball->getPosition(), thing()->getPosition(), new_angle - current_angle);
+            cpBodySetPosition(next_ball->compPhysics()->body, cpv(new_position.x, new_position.y));
+            next_ball->setAngle(new_angle);
+        }
+    }
 }
 
 

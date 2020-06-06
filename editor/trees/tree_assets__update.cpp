@@ -19,6 +19,8 @@
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_sound/dr_mix.h"
+#include "project/entities_sound/dr_sound.h"
 
 
 //####################################################################################
@@ -116,7 +118,15 @@ void TreeAssets::updateAssetList(std::list<DrSettings*> changed_entities, std::l
                         asset_pix = frame->findChild<QLabel*>("assetPixmap");
                         if (asset_pix != nullptr && mix != nullptr) {
                             QSize pix_size = asset_pix->property(User_Property::Size).toSize();
-                            asset_pix->setPixmap(Dr::GetAssetPixmapMix(mix).scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                            asset_pix->setPixmap(Dr::GetAssetPixmapSound(DrSoundType::Mix, mix).scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                        }
+                    }
+                    if (comp == Comps::Sound_Settings && prop == Props::Sound_Settings_Color) {
+                        DrSound *sound = m_project->findSoundFromKey(label_key);
+                        asset_pix = frame->findChild<QLabel*>("assetPixmap");
+                        if (asset_pix != nullptr && sound != nullptr) {
+                            QSize pix_size = asset_pix->property(User_Property::Size).toSize();
+                            asset_pix->setPixmap(Dr::GetAssetPixmapSound(sound->getSoundType(), sound).scaled(pix_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                         }
                     }
 

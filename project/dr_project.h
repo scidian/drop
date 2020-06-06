@@ -214,7 +214,7 @@ public:
     long            addPrefab(DrPrefabType prefab_type, long key = c_no_key);
     DrMix*          addMix(long key = c_no_key);
     DrMix*          addMixCopyFromMix(DrMix* from_mix, std::string new_name);
-    DrSound*        addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
+    DrSound*        addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key, std::string new_name = "New Sound");
     DrWorld*        addWorld(DrWorldType world_type);
     DrWorld*        addWorld(DrWorldType world_type, long key, long start_stage_key, long last_stage_in_editor_key);
     DrWorld*        addWorldCopyFromWorld(DrWorld* from_world, std::string new_name);

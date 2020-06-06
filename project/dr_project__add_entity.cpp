@@ -129,9 +129,9 @@ DrMix* DrProject::addMixCopyFromMix(DrMix* from_mix, std::string new_name) {
     return copy_mix;
 }
 
-DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key) {
+DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key, std::string new_name) {
     long new_sound_key = (key == c_no_key) ? getNextKey() : key;
-    m_sounds[new_sound_key] = new DrSound(this, sound_type, audio_source, new_sound_key);
+    m_sounds[new_sound_key] = new DrSound(this, sound_type, audio_source, new_sound_key, new_name);
     return m_sounds[new_sound_key];
 }
 

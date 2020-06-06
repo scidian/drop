@@ -37,7 +37,7 @@ namespace Dr {
     QPixmap     GetAssetPixmapDevice(DrDeviceType device_type);
     QPixmap     GetAssetPixmapEffect(DrEffectType effect_type);
     QPixmap     GetAssetPixmapItem(DrItemType item_type);
-    QPixmap     GetAssetPixmapMix(DrMix *mix);
+    QPixmap     GetAssetPixmapSound(DrSoundType sound_type, DrSettings *entity);
     QPixmap     GetAssetPixmapPrefab(DrPrefabType prefab_type);
 
 

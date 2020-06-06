@@ -25,7 +25,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-WaveForm::WaveForm(SoLoud::Soloud *so_loud, QWidget *parent) : QFrame(parent), m_so_loud(so_loud) { }
+WaveForm::WaveForm(QWidget *parent) : QFrame(parent) { }
 WaveForm::~WaveForm() { }
 
 
@@ -39,7 +39,7 @@ void WaveForm::setSound(SoLoud::AudioSource* audio) {
 
     // Create an instance of the selected SoLoud::AudioSource so we can find wave form
     SoLoud::AudioSourceInstance *voice = nullptr;
-    if (m_so_loud != nullptr && m_audio != nullptr) voice = m_audio->createInstance();
+    if (m_audio != nullptr) voice = m_audio->createInstance();
 
     // If we successfully createds AudioInstance
     if (voice != nullptr) {

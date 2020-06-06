@@ -85,8 +85,6 @@ private:
 
     Editor_Mode             m_current_mode      { Editor_Mode::Program_Loading };   // Holds what state FormMain is in
 
-    // ***** Sound Variables
-///    SoLoud::Soloud      *m_so_loud;                                              // Soloud instance
 
     // ***** Menu Widgets
     QMenuBar        *m_menu_bar;

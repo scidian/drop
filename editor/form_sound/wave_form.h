@@ -32,7 +32,6 @@ class WaveForm : public QFrame
 
 private:
     // External Borrowed Pointers
-    SoLoud::Soloud             *m_so_loud           { nullptr };
     SoLoud::AudioSource        *m_audio             { nullptr };
 
     // Local Variables
@@ -42,7 +41,7 @@ private:
 
 
 public:
-    WaveForm(SoLoud::Soloud *so_loud, QWidget *parent = nullptr);
+    WaveForm(QWidget *parent = nullptr);
     virtual ~WaveForm() override;
 
     // Event Overrides

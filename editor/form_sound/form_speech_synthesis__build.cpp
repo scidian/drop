@@ -77,7 +77,7 @@ void FormSpeechSynthesis::buildSoundEffectForm() {
             m_list->connect(m_list, SIGNAL(itemSelectionChanged()), this, SLOT(drawItem()));
             left_side_layout->addWidget(m_list);
 
-            m_sound_wave = new WaveForm(m_so_loud);
+            m_sound_wave = new WaveForm();
             m_sound_wave->setObjectName(QStringLiteral("soundWave"));
             m_sound_wave->setFixedHeight(100);
             left_side_layout->addWidget(m_sound_wave);
@@ -92,7 +92,7 @@ void FormSpeechSynthesis::buildSoundEffectForm() {
         middle_side_layout->setContentsMargins(2, 2, 2, 2);
 
             // Visualizer
-            m_visualizer = new VisualFrame(m_so_loud);
+            m_visualizer = new VisualFrame();
             m_visualizer->setFixedHeight(100);
             middle_side_layout->addWidget(m_visualizer);
 

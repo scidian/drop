@@ -18,6 +18,7 @@
 #include "core/colors/colors.h"
 #include "core/dr_math.h"
 #include "core/dr_random.h"
+#include "core/sound.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_speech_synthesis.h"
 #include "editor/form_sound/visualizer.h"
@@ -32,11 +33,6 @@
 //##    Constructor
 //####################################################################################
 FormSpeechSynthesis::FormSpeechSynthesis(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
-
-    // ***** Initialize SoLoud
-    m_so_loud = new SoLoud::Soloud();
-    m_so_loud->init();
-    m_so_loud->setVisualizationEnable(true);
 
     // ***** Set up initial window
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
@@ -70,10 +66,6 @@ FormSpeechSynthesis::FormSpeechSynthesis(DrProject *project, QWidget *parent) : 
 FormSpeechSynthesis::~FormSpeechSynthesis() {
     // Delete sounds
     for (auto effect : m_effects)   { delete effect.second; }
-
-    // Clean up sound object
-    m_so_loud->deinit();
-    delete m_so_loud;
 }
 
 
@@ -88,7 +80,7 @@ void FormSpeechSynthesis::resizeEvent(QResizeEvent *event) {
 
 // Visualizer
 void FormSpeechSynthesis::drawVisuals() {
-    if (m_so_loud->getActiveVoiceCount() > 0) {
+    if (Dr::GetSoLoud()->getActiveVoiceCount() > 0) {
         m_visual_timer->setInterval(20);
     }
     m_visualizer->update();

@@ -15,6 +15,7 @@
 #include "3rd_party/soloud/soloud_wav.h"
 #include "core/colors/colors.h"
 #include "core/dr_random.h"
+#include "core/sound.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_speech_synthesis.h"
 #include "editor/form_sound/visualizer.h"
@@ -36,7 +37,7 @@ void FormSpeechSynthesis::playSpeech(std::string speech_text) {
                         static_cast<float>(m_speech_slider_speed->value()) / 10.0,
                         static_cast<float>(m_speech_slider_decline->value()) / 100.0, m_speech_waveform );
 
-    m_so_loud->play(m_speech);
+    Dr::GetSoLoud()->play(m_speech);
     m_visual_timer->start();
 }
 
@@ -47,13 +48,13 @@ void FormSpeechSynthesis::playSpeech(std::string speech_text) {
 void FormSpeechSynthesis::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
 
     ///m_effect.loadPreset(preset, seed);
-    ///m_so_loud->play(m_effect);
+    ///Dr::GetSoLoud()->play(m_effect);
 
     SoLoud::Sfxr *effect = new SoLoud::Sfxr();
                   effect->loadPreset(preset, seed);
     long effect_key = getNextKey();
     m_effects[effect_key] = effect;
-    m_so_loud->play(*m_effects[effect_key]);
+    Dr::GetSoLoud()->play(*m_effects[effect_key]);
     m_visual_timer->start();
 
     QString item_text = stringFromEffectType(preset) + QString::number(effect_key);
@@ -69,7 +70,7 @@ void FormSpeechSynthesis::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) 
 //####################################################################################
 void FormSpeechSynthesis::playWav(std::string wav_file) {
     m_wave.load(wav_file.data());
-    m_so_loud->play(m_wave);
+    Dr::GetSoLoud()->play(m_wave);
     m_visual_timer->start();
 }
 
@@ -101,7 +102,7 @@ void FormSpeechSynthesis::playItem(QListWidgetItem *item) {
     long sound_key = item->data(User_Roles::Key).toInt();
     SoLoud::Sfxr* sound_effect = getEffect(sound_key);
     if (sound_effect != nullptr) {
-        m_so_loud->play(*sound_effect);
+        Dr::GetSoLoud()->play(*sound_effect);
         m_visual_timer->start();
     }
 }

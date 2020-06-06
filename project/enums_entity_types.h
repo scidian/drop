@@ -86,6 +86,7 @@ enum class DrSlotType {
 enum class DrSoundType {
     Audio_File,
     Instrument,
+    Mix,
     Noise,
     Sound_Effect,
     Speech,
@@ -219,10 +220,12 @@ namespace Asset_Category {
     const std::string   Controls        = "Controls";
 
     // View Mixer: Sound Creator
+    const std::string   Audio_Files     = "Audio";
+    const std::string   Instruments     = "Instruments";
     const std::string   Mixes           = "Mixes";
-    const std::string   Sounds          = "Sounds";
+    const std::string   Noise           = "Noise";
+    const std::string   Sound_Effects   = "Sound Effects";
     const std::string   Speech          = "Speech";
-    const std::string   Wav             = "Wav";
 };
 
 

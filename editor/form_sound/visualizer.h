@@ -23,11 +23,9 @@ class VisualFrame : public QFrame
     Q_OBJECT
 
 private:
-    // External Borrowed Pointers
-    SoLoud::Soloud     *m_so_loud;
 
 public:
-    VisualFrame(SoLoud::Soloud *so_loud, QWidget *parent = nullptr);
+    VisualFrame(QWidget *parent = nullptr);
     virtual ~VisualFrame() override;
 
     // Event Overrides

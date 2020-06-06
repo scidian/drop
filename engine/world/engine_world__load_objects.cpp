@@ -259,7 +259,7 @@ DrEngineThing* DrEngineWorld::loadPhysicsObjectToWorld(DrThing *thing,
             break;
     }
 
-    // Soft Body constructors dont set angle or opacity, do it now
+    // ***** Soft Body constructors dont set angle or opacity, do it now
     object->setOpacity(info.opacity);
     object->setAngle(-info.angle);
 

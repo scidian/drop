@@ -239,26 +239,7 @@ double DrEngineThing::getAngle() {
 }
 
 void DrEngineThing::setAngle(double new_angle) {
-    if (compPhysics() != nullptr) {
-        if (compPhysics()->body == nullptr) return;
-
-        // Get current angle, set new angle
-        double current_angle = Dr::RadiansToDegrees( cpBodyGetAngle(compPhysics()->body) );
-        cpBodySetAngle( compPhysics()->body, Dr::DegreesToRadians(new_angle) );
-
-        // Set angle of all soft body physics children
-        if (this->compSoftBody() != nullptr && compPhysics()->isPhysicsChild() == false) {
-            for (size_t i = 0; i < this->compSoftBody()->soft_balls.size(); ++i) {
-                DrEngineThing *next_ball = this->compSoftBody()->soft_balls[i];
-                if (next_ball == this) continue;
-                if (next_ball == nullptr) continue;
-                if (next_ball->compPhysics()->body == nullptr) continue;
-                DrPointF new_position = Dr::RotatePointAroundOrigin(next_ball->getPosition(), this->getPosition(), new_angle - current_angle);
-                cpBodySetPosition(next_ball->compPhysics()->body, cpv(new_position.x, new_position.y));
-                next_ball->setAngle(new_angle);
-            }
-        }
-    }
+    if (compPhysics() != nullptr) compPhysics()->setAngle(new_angle);
 
     m_angle_z = new_angle;
 }

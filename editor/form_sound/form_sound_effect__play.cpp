@@ -11,10 +11,9 @@
 #include "3rd_party/soloud/soloud.h"
 #include "3rd_party/soloud/soloud_audiosource.h"
 #include "3rd_party/soloud/soloud_sfxr.h"
-#include "3rd_party/soloud/soloud_speech.h"
-#include "3rd_party/soloud/soloud_wav.h"
 #include "core/colors/colors.h"
 #include "core/dr_random.h"
+#include "core/sound.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_sound_effect.h"
 #include "editor/form_sound/visualizer.h"
@@ -34,7 +33,7 @@ void FormSoundEffect::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
                   effect->loadPreset(preset, seed);
     long effect_key = getNextKey();
     m_effects[effect_key] = effect;
-    m_so_loud->play(*m_effects[effect_key]);
+    Dr::GetSoLoud()->play(*m_effects[effect_key]);
     m_visual_timer->start();
 
     QString item_text = stringFromEffectType(preset) + QString::number(effect_key);
@@ -72,7 +71,7 @@ void FormSoundEffect::playItem(QListWidgetItem *item) {
     m_selected_effect = sound_key;
     SoLoud::Sfxr* sound_effect = getEffect(sound_key);
     if (sound_effect != nullptr) {
-        m_so_loud->play(*sound_effect);
+        Dr::GetSoLoud()->play(*sound_effect);
         m_visual_timer->start();
     }
 }

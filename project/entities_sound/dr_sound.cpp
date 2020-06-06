@@ -16,13 +16,15 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-DrSound::DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key) : DrSettings(parent_project) {
+DrSound::DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key, std::string new_sound_name)
+    : DrSettings(parent_project) {
+
     this->setKey(key);
 
     m_sound_type =      sound_type;
     m_audio_source =    audio_source;
 
-    initializeSoundSettings("New Sound");
+    initializeSoundSettings(new_sound_name);
 }
 
 DrSound::~DrSound() { }

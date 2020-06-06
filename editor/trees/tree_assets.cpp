@@ -179,7 +179,18 @@ void TreeAssets::buildAssetTree(QString search_text) {
         widget_items[Asset_Category::Prefabs] =         new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Prefabs,         widget_items[Asset_Category::Prefabs]) );
     }
-
+    if (show_types.contains(DrType::Sound)) {
+        widget_items[Asset_Category::Audio_Files] =     new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Audio_Files,     widget_items[Asset_Category::Audio_Files]) );
+        widget_items[Asset_Category::Instruments] =     new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Instruments,     widget_items[Asset_Category::Instruments]) );
+        widget_items[Asset_Category::Noise] =           new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Noise,           widget_items[Asset_Category::Noise]) );
+        widget_items[Asset_Category::Sound_Effects] =   new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Sound_Effects,   widget_items[Asset_Category::Sound_Effects]) );
+        widget_items[Asset_Category::Speech] =          new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::Speech,          widget_items[Asset_Category::Speech]) );
+    }
 
     DrProject *external_images = nullptr;
     std::set<std::string> image_categories;
@@ -234,6 +245,7 @@ void TreeAssets::buildAssetTree(QString search_text) {
     if (show_types.contains(DrType::Item))   { for (auto item_pair :   list_items)   { if (item_pair.first > c_no_key)   entities.push_back(item_pair.second); } }
     if (show_types.contains(DrType::Mix))    { for (auto mix_pair :    list_mixes)   { if (mix_pair.first > c_no_key)    entities.push_back(mix_pair.second); } }
     if (show_types.contains(DrType::Prefab)) { for (auto prefab_pair : list_prefabs) { if (prefab_pair.first > c_no_key) entities.push_back(prefab_pair.second); } }
+    if (show_types.contains(DrType::Sound))  { for (auto sound_pair :  list_sounds)  { if (sound_pair.first > c_no_key)  entities.push_back(sound_pair.second); } }
     if (show_types.contains(DrType::Image))  {
         // Add Images to be shown, only add built in images to list if they're being used in current DrProject
         for (auto &image_pair : list_images) {
@@ -351,13 +363,18 @@ void TreeAssets::buildAssetTree(QString search_text) {
 
             } else if (entity->getType() == DrType::Mix) {
                 DrMix *mix = static_cast<DrMix*>(entity);
-                pix = Dr::GetAssetPixmapMix(mix);
+                pix = Dr::GetAssetPixmapSound(DrSoundType::Mix, mix);
                 description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Mix[1];
 
             } else if (entity->getType() == DrType::Prefab) {
                 DrPrefab *prefab = static_cast<DrPrefab*>(entity);
                 pix = Dr::GetAssetPixmapPrefab( prefab->getPrefabType() );
                 description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Prefab[1];
+
+            } else if (entity->getType() == DrType::Sound) {
+                DrSound *sound = static_cast<DrSound*>(entity);
+                pix = Dr::GetAssetPixmapSound(sound->getSoundType(), sound);
+                description = "<b>ID Key: " + QString::number(entity->getKey()) + "</b><br>" + Advisor_Info::Asset_Sound[1];
 
             }
             description += "<br>" + QString::fromStdString(hidden_txt);
@@ -394,6 +411,16 @@ void TreeAssets::buildAssetTree(QString search_text) {
         } else if (entity->getType() == DrType::Item) {                 category_name = Asset_Category::Items;
         } else if (entity->getType() == DrType::Mix) {                  category_name = Asset_Category::Mixes;
         } else if (entity->getType() == DrType::Prefab) {               category_name = Asset_Category::Prefabs;
+        } else if (entity->getType() == DrType::Sound) {
+            DrSound *sound = static_cast<DrSound*>(entity);
+            switch (sound->getSoundType()) {
+                case DrSoundType::Audio_File:                           category_name = Asset_Category::Audio_Files;        break;
+                case DrSoundType::Instrument:                           category_name = Asset_Category::Instruments;        break;
+                case DrSoundType::Mix:                                  break;
+                case DrSoundType::Noise:                                category_name = Asset_Category::Noise;              break;
+                case DrSoundType::Sound_Effect:                         category_name = Asset_Category::Sound_Effects;      break;
+                case DrSoundType::Speech:                               category_name = Asset_Category::Speech;             break;
+            }
         } else { continue; }
 
         m_grid_layouts[category_name]->addWidget(single_asset);         // Category now has at least one Asset, setEnabled so it will be displayed
@@ -462,15 +489,22 @@ TreeCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std:
 
     bool external_category = false;
     name = QString::fromStdString(category_name);
-    if      (category_name == Asset_Category::Characters)    { icon = "comp_character.png";     info = Advisor_Info::Asset_Character; }
-    else if (category_name == Asset_Category::Objects)       { icon = "comp_object.png";        info = Advisor_Info::Asset_Object;    }
-    else if (category_name == Asset_Category::Devices)       { icon = "comp_camera.png";        info = Advisor_Info::Asset_Device;    }
-    else if (category_name == Asset_Category::Effects)       { icon = "comp_effects.png";       info = Advisor_Info::Asset_Effect;    }
-    else if (category_name == Asset_Category::Items)         { icon = "comp_item.png";          info = Advisor_Info::Asset_Item;      }
-    else if (category_name == Asset_Category::Mixes)         { icon = "comp_sound.png";         info = Advisor_Info::Asset_Mix;       }
-    else if (category_name == Asset_Category::Prefabs)       { icon = "comp_foliage.png";       info = Advisor_Info::Asset_Prefab;    }
-    else if (category_name == Asset_Category::Text)          { icon = "comp_font.png";          info = Advisor_Info::Asset_Text;      }
-    else if (category_name == Asset_Category::Images)        { icon = "comp_images.png";        info = Advisor_Info::Asset_Image;     }
+    if      (category_name == Asset_Category::Characters)       { icon = "comp_character.png";          info = Advisor_Info::Asset_Character; }
+    else if (category_name == Asset_Category::Objects)          { icon = "comp_object.png";             info = Advisor_Info::Asset_Object;    }
+    else if (category_name == Asset_Category::Devices)          { icon = "comp_camera.png";             info = Advisor_Info::Asset_Device;    }
+    else if (category_name == Asset_Category::Effects)          { icon = "comp_effects.png";            info = Advisor_Info::Asset_Effect;    }
+    else if (category_name == Asset_Category::Items)            { icon = "comp_item.png";               info = Advisor_Info::Asset_Item;      }
+    else if (category_name == Asset_Category::Mixes)            { icon = "comp_sound_mix.png";          info = Advisor_Info::Asset_Mix;       }
+    else if (category_name == Asset_Category::Prefabs)          { icon = "comp_foliage.png";            info = Advisor_Info::Asset_Prefab;    }
+    else if (category_name == Asset_Category::Text)             { icon = "comp_font.png";               info = Advisor_Info::Asset_Text;      }
+    // Sounds
+    else if (category_name == Asset_Category::Audio_Files)      { icon = "comp_sound_wave.png";         info = Advisor_Info::Asset_Sound;     }
+    else if (category_name == Asset_Category::Instruments)      { icon = "comp_sound_instrument.png";   info = Advisor_Info::Asset_Sound;     }
+    else if (category_name == Asset_Category::Noise)            { icon = "comp_sound_noise.png";        info = Advisor_Info::Asset_Sound;     }
+    else if (category_name == Asset_Category::Sound_Effects)    { icon = "comp_sound_effect.png";       info = Advisor_Info::Asset_Sound;     }
+    else if (category_name == Asset_Category::Speech)           { icon = "comp_sound_speech.png";       info = Advisor_Info::Asset_Sound;     }
+    // Images
+    else if (category_name == Asset_Category::Images)           { icon = "comp_images.png";             info = Advisor_Info::Asset_Image;     }
     else {
         external_category = true;
         name.replace(0, 1, name.at(0).toUpper());

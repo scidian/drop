@@ -11,13 +11,11 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-#include "3rd_party/soloud/soloud.h"
 #include "3rd_party/soloud/soloud_sfxr.h"
-#include "3rd_party/soloud/soloud_speech.h"
-#include "3rd_party/soloud/soloud_wav.h"
 #include "core/colors/colors.h"
 #include "core/dr_math.h"
 #include "core/dr_random.h"
+#include "core/sound.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_sound_effect.h"
 #include "editor/form_sound/visualizer.h"
@@ -32,11 +30,6 @@
 //##    Constructor
 //####################################################################################
 FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
-
-    // ***** Initialize SoLoud
-    m_so_loud = new SoLoud::Soloud();
-    m_so_loud->init();
-    m_so_loud->setVisualizationEnable(true);
 
     // ***** Set up initial window
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
@@ -78,10 +71,6 @@ FormSoundEffect::~FormSoundEffect() {
             delete effect.second;
         }
     }
-
-    // ***** Clean up sound object
-    m_so_loud->deinit();
-    delete m_so_loud;
 }
 
 
@@ -96,7 +85,7 @@ void FormSoundEffect::resizeEvent(QResizeEvent *event) {
 
 // Visualizer
 void FormSoundEffect::drawVisuals() {
-    if (m_so_loud->getActiveVoiceCount() > 0) {
+    if (Dr::GetSoLoud()->getActiveVoiceCount() > 0) {
         m_visual_timer->setInterval(20);
     }
     m_visualizer->update();

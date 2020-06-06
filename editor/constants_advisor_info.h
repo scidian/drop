@@ -112,6 +112,7 @@ namespace Advisor_Info {
     const HeaderBodyList Asset_Mix              { "Mix Asset", "This is a Mix Composition of Tracks created / editable in the Sound Creator." };
     const HeaderBodyList Asset_Prefab           { "Prefab Asset", "These are Physics Objects whose settings are already set to commmon settings for specific "
                                                                   "types of game objects." };
+    const HeaderBodyList Asset_Sound            { "Sound Asset", "This is a Audio File or Sound Effect for use in your game or in the Sound Creator to mix into music." };
     const HeaderBodyList Asset_Text             { "Text Asset", "Use Text Assets to show text boxes in your game. You can use them as titles or for showing "
                                                                 "values like hit points, coins or distance." };
 

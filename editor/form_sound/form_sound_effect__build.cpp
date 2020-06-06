@@ -20,6 +20,7 @@
 
 #include "3rd_party/soloud/soloud.h"
 #include "core/dr_random.h"
+#include "core/sound.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_sound_effect.h"
 #include "editor/form_sound/visualizer.h"
@@ -28,8 +29,10 @@
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"
+#include "editor/trees/tree_assets.h"
 #include "editor/widgets/widgets_inspector.h"
 #include "project/dr_project.h"
+#include "project/entities_sound/dr_sound.h"
 
 
 //####################################################################################
@@ -77,7 +80,7 @@ void FormSoundEffect::buildSoundEffectForm() {
             m_list->connect(m_list, SIGNAL(itemSelectionChanged()), this, SLOT(drawItem()));
             left_side_layout->addWidget(m_list);
 
-            m_sound_wave = new WaveForm(m_so_loud);
+            m_sound_wave = new WaveForm();
             m_sound_wave->setObjectName(QStringLiteral("soundWave"));
             m_sound_wave->setFixedHeight(100);
             left_side_layout->addWidget(m_sound_wave);
@@ -92,7 +95,7 @@ void FormSoundEffect::buildSoundEffectForm() {
         middle_side_layout->setContentsMargins(2, 2, 2, 2);
 
             // Visualizer
-            m_visualizer = new VisualFrame(m_so_loud);
+            m_visualizer = new VisualFrame();
             m_visualizer->setFixedHeight(100);
             middle_side_layout->addWidget(m_visualizer);
 
@@ -103,7 +106,7 @@ void FormSoundEffect::buildSoundEffectForm() {
             QHBoxLayout *sound_effect_layout_1 = new QHBoxLayout(sound_effects_1);
             sound_effect_layout_1->setObjectName(QStringLiteral("horizontalLayout"));
             sound_effect_layout_1->setSpacing(4);
-            sound_effect_layout_1->setContentsMargins(4, 0, 4, 2);
+            sound_effect_layout_1->setContentsMargins(4, 0, 0, 2);
 
                 QPushButton *play_effect_coin = new QPushButton("Coin / Success");
                     Dr::ApplyDropShadowByType(play_effect_coin, Shadow_Types::Button_Shadow);
@@ -194,18 +197,58 @@ void FormSoundEffect::buildSoundEffectForm() {
             middle_side_layout->addWidget(sound_sliders);
             middle_side_layout->addStretch();
 
-            // Accept Button
-            QPushButton *accept = new QPushButton("  Add Sound  ");
-                Dr::ApplyDropShadowByType(accept, Shadow_Types::Button_Shadow);
-                accept->setObjectName(QStringLiteral("buttonDefault"));
-                connect(accept, &QPushButton::clicked, [this] () {
-                    SoLoud::Sfxr *effect = getEffect(selectedEffectKey());
-                    if (effect) {
-                        m_project->addSound(DrSoundType::Sound_Effect, effect);
-                    }
-                    this->close();
-                });
-            middle_side_layout->addWidget(accept);
+
+            QWidget *buttons = new QWidget();
+            QHBoxLayout *button_layout = new QHBoxLayout(buttons);
+            button_layout->setObjectName(QStringLiteral("horizontalLayout"));
+            button_layout->setSpacing(4);
+            button_layout->setContentsMargins(4, 0, 0, 0);
+
+                QSizePolicy button_left(QSizePolicy::Expanding,  QSizePolicy::Maximum); button_left.setHorizontalStretch(1);
+                QSizePolicy button_right(QSizePolicy::Expanding, QSizePolicy::Maximum); button_right.setHorizontalStretch(2);
+
+                // Cancel Button
+                QPushButton *cancel = new QPushButton("  Cancel  ");
+                    cancel->setObjectName(QStringLiteral("buttonDefault"));
+                    cancel->setSizePolicy(button_left);
+                    Dr::ApplyDropShadowByType(cancel, Shadow_Types::Button_Shadow);
+                    connect(cancel, &QPushButton::clicked, [this] () { this->close(); });
+                button_layout->addWidget(cancel);
+
+                // Accept Button
+                QPushButton *accept = new QPushButton("  Add Sound  ");
+                    accept->setObjectName(QStringLiteral("buttonDefault"));
+                    accept->setSizePolicy(button_right);
+                    Dr::ApplyDropShadowByType(accept, Shadow_Types::Button_Shadow);
+                    connect(accept, &QPushButton::clicked, [this] () {
+                        SoLoud::Sfxr *effect = getEffect(selectedEffectKey());
+
+                        if (effect) {
+                            // Add Sound
+                            std::string sound_name = m_list->selectedItems().first()->text().toStdString();
+                            DrSound *sound = m_project->addSound(DrSoundType::Sound_Effect, effect, c_no_key, sound_name);
+
+                            // Update EditorRelay widgets
+                            IEditorRelay *editor = Dr::GetActiveEditorRelay();
+                            if (editor && sound) {
+                                editor->buildAssetTree();
+                                editor->buildInspector( { sound->getKey() } );
+                                editor->updateItemSelection(Editor_Widgets::Asset_Tree);
+                                editor->getAssetTree()->setSelectedKey(sound->getKey());
+                                editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+                            }
+                            // Close this popup
+                            this->close();
+                            // Make sure we leave with Asset Tree highlighted and active
+                            if (editor && sound) {
+                                editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+                            }
+                        } else {
+                            this->close();
+                        }
+                    });
+                button_layout->addWidget(accept);
+            middle_side_layout->addWidget(buttons);
 
         splitter_horizontal->addWidget(middle_side);
 

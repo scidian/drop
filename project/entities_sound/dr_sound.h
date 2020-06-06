@@ -35,7 +35,8 @@ private:
 
 public:
     // Constructor / Destructor
-    DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source, long key = c_no_key);
+    DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::AudioSource *audio_source,
+            long key = c_no_key, std::string new_sound_name = "New Sound");
     virtual ~DrSound() override;
 
     // DrSettings Overrides

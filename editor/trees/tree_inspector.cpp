@@ -195,9 +195,20 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         }
         case DrType::Device:    m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Device);             break;
         case DrType::Effect:    m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Effect);             break;
+        case DrType::Font:      m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Text);               break;
         case DrType::Image:     m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Image);              break;
-        default:
+        case DrType::Item:      m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Item);               break;
+        case DrType::Mix:       m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Mix);                break;
+        case DrType::Prefab:    m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Prefab);             break;
+        case DrType::Sound:     m_editor_relay->setAdvisorInfo(Advisor_Info::Asset_Sound);              break;
+
+        case DrType::Animation:
+        case DrType::Block:
+        case DrType::Frame:
+        case DrType::NotFound:
+        case DrType::Track:
             m_editor_relay->setAdvisorInfo(Advisor_Info::Not_Set);
+            break;
     }
 
 

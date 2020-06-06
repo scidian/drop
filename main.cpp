@@ -113,6 +113,7 @@
 #include <QSurfaceFormat>
 
 #include "core/colors/colors.h"
+#include "core/sound.h"
 #include "editor/form_main/form_main.h"
 #include "editor/forms/form_expire.h"
 #include "editor/helper_library.h"
@@ -129,6 +130,9 @@ int main(int argc, char *argv[]) {
 
     // ***** Initiliaze application
     QApplication drop(argc, argv);                                      // Declare application
+
+    // ***** Initializer Soloud singleton
+    Dr::InitializeSound();
 
     // Check if we need to open a file (NOT FOR MACOS)
     QString open_file ="";
@@ -193,6 +197,9 @@ int main(int argc, char *argv[]) {
 
     // ***** Run Program
     drop.exec();
+
+    // ***** Clean up singletons
+    Dr::CleanUpSound();
 
     ///Dr::ShowMessageBox("Finished running program");
     return 0;

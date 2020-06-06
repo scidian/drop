@@ -64,11 +64,20 @@ QPixmap GetAssetPixmapItem(DrItemType item_type) {
 //####################################################################################
 //##    Returns Asset Tree Item Pixmap
 //####################################################################################
-QPixmap GetAssetPixmapMix(DrMix *mix) {
-    QPixmap pix(":/assets/asset_types/mix.png");
-    if (mix == nullptr) return pix;
+QPixmap GetAssetPixmapSound(DrSoundType sound_type, DrSettings *entity) {
+    QPixmap pix;
+    DrColor tint_color;
 
-    DrColor tint_color = mix->getComponentPropertyValue(Comps::Mix_Settings, Props::Mix_Settings_Color).toColor();
+    switch (sound_type) {
+        case DrSoundType::Mix:
+            pix = QPixmap(":/assets/asset_types/mix.png");
+            tint_color = entity->getComponentPropertyValue(Comps::Mix_Settings, Props::Mix_Settings_Color).toColor();
+            break;
+        case DrSoundType::Sound_Effect:
+            pix = QPixmap(":/assets/asset_types/mix.png");
+            tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
+        default: ;
+    }
 
     // Tint with Graphics Effect
     ///QGraphicsColorizeEffect *colorize = new QGraphicsColorizeEffect();

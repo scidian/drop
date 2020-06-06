@@ -44,7 +44,6 @@ private:
     long                    m_selected_effect   { c_no_key };               // Local key of the Effect currently selected (to be passed back to Project)
 
     // Sound Variables
-    SoLoud::Soloud                 *m_so_loud;                              // Soloud instance
     std::map<long, SoLoud::Sfxr*>   m_effects;                              // Sfxr sound effects
 
     // Form Variables

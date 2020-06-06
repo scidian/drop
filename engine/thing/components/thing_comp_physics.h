@@ -181,6 +181,7 @@ public:
     const long&         getTextureNumber()      { return m_texture_number; }
     const long&         getAssetKey()           { return m_texture_number; }
 
+    void                setAngle(double angle);
     void                setDoesCollide(bool should_collide) { m_does_collide = should_collide; }
     void                setCollidesWith(Collision_Groups groups) { m_collide_with = groups; }
     void                setTextureNumber(long texture_number) { m_texture_number = texture_number; }
