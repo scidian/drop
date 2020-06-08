@@ -5,6 +5,8 @@
 //      Functions to Add different item types into DrProject
 //
 //
+#include "3rd_party/soloud/soloud_speech.h"
+#include "3rd_party/soloud/soloud_sfxr.h"
 #include "core/dr_containers.h"
 #include "core/dr_debug.h"
 #include "core/imaging/imaging.h"
@@ -115,7 +117,7 @@ DrMix* DrProject::addMixCopyFromMix(DrMix* from_mix, std::string new_name) {
     // Make Copy
     DrMix *copy_mix = addMix(c_no_key);
            copy_mix->copyEntitySettings(from_mix);
-           copy_mix->setName( new_name );
+           copy_mix->setName(new_name);
 
     // Copy all Tracks from Mix
     int track_count = 0;
@@ -133,6 +135,26 @@ DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_
     long new_sound_key = (key == c_no_key) ? getNextKey() : key;
     m_sounds[new_sound_key] = new DrSound(this, sound_type, audio_source, new_sound_key, new_name);
     return m_sounds[new_sound_key];
+}
+
+DrSound* DrProject::addSoundCopyFromSound(DrSound *from_sound, std::string new_name) {
+    // Copy Audio Data, compiler copy contructor
+    SoLoud::AudioSource *copy_audio;
+    switch (from_sound->getSoundType()) {
+        case DrSoundType::Sound_Effect: copy_audio = new SoLoud::Sfxr(*static_cast<SoLoud::Sfxr*>(from_sound->getAudioSource()));         break;
+        case DrSoundType::Speech:       copy_audio = new SoLoud::Speech(*static_cast<SoLoud::Speech*>(from_sound->getAudioSource()));     break;
+    }
+
+    // Copy Audio Data, trying to use malloc
+    ///SoLoud::AudioSource *copy_audio = (SoLoud::AudioSource*)malloc(sizeof(*from_sound->getAudioSource()));
+    ///std::copy(from_sound->getAudioSource(), from_sound->getAudioSource() + sizeof(*from_sound->getAudioSource()), copy_audio);
+
+    // Make Copy
+    DrSound *copy_sound = addSound(from_sound->getSoundType(), copy_audio);
+             copy_sound->copyEntitySettings(from_sound);
+             copy_sound->setName(new_name);
+
+    return copy_sound;
 }
 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World

@@ -26,6 +26,8 @@ class DrSound;
 class VisualFrame;
 class WaveForm;
 
+// Type Definitions
+typedef SoLoud::Sfxr::SFXR_PRESETS SoundEffectType;
 
 //####################################################################################
 //##    FormSoundEffect
@@ -40,8 +42,8 @@ private:
     DrProject              *m_project;                                      // Pointer to the open project
 
     // Local Variables
-    long                    m_key_gen           { 1 };                      // Key generator for identifying sounds created on this Form
-    long                    m_selected_effect   { c_no_key };               // Local key of the Effect currently selected (to be passed back to Project)
+    std::map<SoundEffectType, long> m_key_gen;                              // Key generator for identifying sounds created on this Form
+    long                            m_selected_effect   { c_no_key };       // Local key of the Effect currently selected (to be passed back to Project)
 
     // Sound Variables
     std::map<long, SoLoud::Sfxr*>   m_effects;                              // Sfxr sound effects
@@ -69,19 +71,19 @@ public:
     virtual void resizeEvent(QResizeEvent *event) override;
 
     // Key Gen
-    int             getNextKey()                            { return m_key_gen++; }
+    int             getNextKey(SoundEffectType type)        { return m_key_gen[type]++; }
 
     // Form Functions
     void            buildSoundEffectForm();
     QWidget*        sliderPair(QString slider_text, QSlider *&slider);
 
     // Sound Generate Functions
-    void            playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed);
+    void            playSfxr(SoundEffectType preset, int seed);
 
     // Existing Sounds
     SoLoud::Sfxr*   getEffect(long effect_key);
     long            selectedEffectKey()                     { return m_selected_effect; }
-    QString         stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset);
+    QString         stringFromEffectType(SoundEffectType preset);
 
 
 public slots:

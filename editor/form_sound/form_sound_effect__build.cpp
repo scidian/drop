@@ -111,25 +111,25 @@ void FormSoundEffect::buildSoundEffectForm() {
                 QPushButton *play_effect_coin = new QPushButton("Coin / Success");
                     Dr::ApplyDropShadowByType(play_effect_coin, Shadow_Types::Button_Shadow);
                     play_effect_coin->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_coin, &QPushButton::clicked, [this] ()      { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::COIN, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_coin, &QPushButton::clicked, [this] ()      { this->playSfxr(SoundEffectType::COIN, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_1->addWidget(play_effect_coin);
 
                 QPushButton *play_effect_laser = new QPushButton("Laser / Shoot");
                     Dr::ApplyDropShadowByType(play_effect_laser, Shadow_Types::Button_Shadow);
                     play_effect_laser->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_laser, &QPushButton::clicked, [this] ()     { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::LASER, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_laser, &QPushButton::clicked, [this] ()     { this->playSfxr(SoundEffectType::LASER, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_1->addWidget(play_effect_laser);
 
                 QPushButton *play_effect_explode = new QPushButton("Explode");
                     Dr::ApplyDropShadowByType(play_effect_explode, Shadow_Types::Button_Shadow);
                     play_effect_explode->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_explode, &QPushButton::clicked, [this] ()   { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_explode, &QPushButton::clicked, [this] ()   { this->playSfxr(SoundEffectType::EXPLOSION, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_1->addWidget(play_effect_explode);
 
                 QPushButton *play_effect_power = new QPushButton("Powerup");
                     Dr::ApplyDropShadowByType(play_effect_power, Shadow_Types::Button_Shadow);
                     play_effect_power->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_power, &QPushButton::clicked, [this] ()     { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::POWERUP, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_power, &QPushButton::clicked, [this] ()     { this->playSfxr(SoundEffectType::POWERUP, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_1->addWidget(play_effect_power);
 
             middle_side_layout->addWidget(sound_effects_1);
@@ -145,19 +145,19 @@ void FormSoundEffect::buildSoundEffectForm() {
                 QPushButton *play_effect_hurt = new QPushButton("Hurt / Hit");
                     Dr::ApplyDropShadowByType(play_effect_hurt, Shadow_Types::Button_Shadow);
                     play_effect_hurt->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_hurt, &QPushButton::clicked, [this] ()      { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::HURT, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_hurt, &QPushButton::clicked, [this] ()      { this->playSfxr(SoundEffectType::HURT, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_2->addWidget(play_effect_hurt);
 
                 QPushButton *play_effect_jump = new QPushButton("Jump");
                     Dr::ApplyDropShadowByType(play_effect_jump, Shadow_Types::Button_Shadow);
                     play_effect_jump->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_jump, &QPushButton::clicked, [this] ()      { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::JUMP, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_jump, &QPushButton::clicked, [this] ()      { this->playSfxr(SoundEffectType::JUMP, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_2->addWidget(play_effect_jump);
 
                 QPushButton *play_effect_blip = new QPushButton("Blip / Select");
                     Dr::ApplyDropShadowByType(play_effect_blip, Shadow_Types::Button_Shadow);
                     play_effect_blip->setObjectName(QStringLiteral("buttonDefault"));
-                    connect(play_effect_blip, &QPushButton::clicked, [this] ()      { this->playSfxr(SoLoud::Sfxr::SFXR_PRESETS::BLIP, Dr::RandomInt(0, 500000)); });
+                    connect(play_effect_blip, &QPushButton::clicked, [this] ()      { this->playSfxr(SoundEffectType::BLIP, Dr::RandomInt(0, 500000)); });
                 sound_effect_layout_2->addWidget(play_effect_blip);
 
             middle_side_layout->addWidget(sound_effects_2);

@@ -28,10 +28,10 @@
 //####################################################################################
 //##    Sound Effect
 //####################################################################################
-void FormSoundEffect::playSfxr(SoLoud::Sfxr::SFXR_PRESETS preset, int seed) {
+void FormSoundEffect::playSfxr(SoundEffectType preset, int seed) {
     SoLoud::Sfxr *effect = new SoLoud::Sfxr();
                   effect->loadPreset(preset, seed);
-    long effect_key = getNextKey();
+    long effect_key = getNextKey(preset);
     m_effects[effect_key] = effect;
     Dr::GetSoLoud()->play(*m_effects[effect_key]);
     m_visual_timer->start();
@@ -77,15 +77,15 @@ void FormSoundEffect::playItem(QListWidgetItem *item) {
 }
 
 
-QString FormSoundEffect::stringFromEffectType(SoLoud::Sfxr::SFXR_PRESETS preset) {
+QString FormSoundEffect::stringFromEffectType(SoundEffectType preset) {
     switch (preset) {
-        case (SoLoud::Sfxr::SFXR_PRESETS::BLIP):        return "Blip";
-        case (SoLoud::Sfxr::SFXR_PRESETS::COIN):        return "Coin";
-        case (SoLoud::Sfxr::SFXR_PRESETS::HURT):        return "Hurt";
-        case (SoLoud::Sfxr::SFXR_PRESETS::JUMP):        return "Jump";
-        case (SoLoud::Sfxr::SFXR_PRESETS::LASER):       return "Laser";
-        case (SoLoud::Sfxr::SFXR_PRESETS::POWERUP):     return "PowerUp";
-        case (SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION):   return "Explosion";
+        case (SoundEffectType::BLIP):           return "Blip";
+        case (SoundEffectType::COIN):           return "Coin";
+        case (SoundEffectType::HURT):           return "Hurt";
+        case (SoundEffectType::JUMP):           return "Jump";
+        case (SoundEffectType::LASER):          return "Laser";
+        case (SoundEffectType::POWERUP):        return "PowerUp";
+        case (SoundEffectType::EXPLOSION):      return "Explosion";
     }
 }
 

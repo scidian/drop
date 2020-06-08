@@ -154,9 +154,9 @@ void FormPopup::addAssetFromPopup(DrAssetType asset_type, long source_key) {
     // Update EditorRelay widgets
     editor->buildAssetTree();
     editor->buildInspector( { asset->getKey() } );
-    editor->updateItemSelection(Editor_Widgets::Asset_Tree);
     editor->getAssetTree()->setSelectedKey(asset->getKey());
     editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+    editor->updateItemSelection(Editor_Widgets::Asset_Tree);
 
     // Close this popup
     this->close();

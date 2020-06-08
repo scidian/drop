@@ -84,9 +84,9 @@ void FormPopup::buildPopupAddSoundEntity() {
                 mix = m_project->addMix();
                 editor->buildAssetTree();
                 editor->buildInspector( { mix->getKey() } );
-                editor->updateItemSelection(Editor_Widgets::Asset_Tree);
                 editor->getAssetTree()->setSelectedKey(mix->getKey());
                 editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+                editor->updateItemSelection(Editor_Widgets::Asset_Tree);
             }
             // Close this popup
             this->close();

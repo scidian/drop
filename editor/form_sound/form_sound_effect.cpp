@@ -31,6 +31,15 @@
 //####################################################################################
 FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
 
+    // ***** Initialize Key Generators
+    m_key_gen[SoundEffectType::BLIP] = 1;
+    m_key_gen[SoundEffectType::COIN] = 1;
+    m_key_gen[SoundEffectType::HURT] = 1;
+    m_key_gen[SoundEffectType::JUMP] = 1;
+    m_key_gen[SoundEffectType::LASER] = 1;
+    m_key_gen[SoundEffectType::POWERUP] = 1;
+    m_key_gen[SoundEffectType::EXPLOSION] = 1;
+
     // ***** Set up initial window
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
     setMouseTracking(true);

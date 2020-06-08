@@ -28,6 +28,7 @@
 #include "project/entities_physics_2d/dr_asset.h"
 #include "project/entities_physics_2d/dr_effect.h"
 #include "project/entities_sound/dr_mix.h"
+#include "project/entities_sound/dr_sound.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component_property.h"
 
@@ -105,9 +106,8 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
             // Find name for copy
             std::vector<QString> asset_names;
-            for (auto &asset_pair : getParentProject()->getAssetMap()) {
+            for (auto &asset_pair : getParentProject()->getAssetMap())
                 asset_names.push_back( QString::fromStdString(asset_pair.second->getName()) );
-            }
             QString new_name = Dr::FindCopyName(QString::fromStdString(asset->getName()), asset_names);
 
             // Create new Asset, copy Settings / Components / Properties
@@ -123,15 +123,29 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
             // Find name for copy
             std::vector<QString> mix_names;
-            for (auto &mix_pair : getParentProject()->getMixMap()) {
+            for (auto &mix_pair : getParentProject()->getMixMap())
                 mix_names.push_back( QString::fromStdString(mix_pair.second->getName()) );
-            }
             QString new_name = Dr::FindCopyName(QString::fromStdString(mix->getName()), mix_names);
 
             // Create new Mix, copies Settings / Components / Properties
             DrMix *copy_mix = getParentProject()->addMixCopyFromMix(mix, new_name.toStdString());
 
             duplicated_key = copy_mix->getKey();
+
+        } else if (entity->getType() == DrType::Sound) {
+            DrSound *sound = dynamic_cast<DrSound*>(entity);
+            if (sound == nullptr) return;
+
+            // Find name for copy
+            std::vector<QString> sound_names;
+            for (auto &mix_pair : getParentProject()->getSoundMap())
+                sound_names.push_back( QString::fromStdString(mix_pair.second->getName()) );
+            QString new_name = Dr::FindCopyName(QString::fromStdString(sound->getName()), sound_names);
+
+            // Create new Sound, copies Settings / Components / Properties
+            DrSound *copy_sound = getParentProject()->addSoundCopyFromSound(sound, new_name.toStdString());
+
+            duplicated_key = copy_sound->getKey();
         }
 
         // Update EditorRelay widgets

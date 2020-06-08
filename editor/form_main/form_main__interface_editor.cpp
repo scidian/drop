@@ -173,7 +173,7 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
     }
 
     // Updates status bar, enables / disables toolbar buttons
-    this->updateToolBar();
+    updateToolBar();
 
     // !!!!! #TEMP: Testing to make sure not running non stop
     ///static long update_count = 0;
@@ -242,7 +242,7 @@ void FormMain::viewUpdateToolbar(int button_id) {
     if (m_view_editor != nullptr) {
         m_view_editor->setMouseMode(clicked);
         m_view_editor->spaceBarUp();
-        if (m_toolbar_editor != nullptr)   m_toolbar_editor->updateButtons(button_id);
+        if (m_toolbar_editor != nullptr) m_toolbar_editor->updateButtons(button_id);
     }
     updateToolBar();
 }

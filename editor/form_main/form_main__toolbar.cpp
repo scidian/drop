@@ -6,11 +6,13 @@
 //
 //
 #include <QButtonGroup>
+#include <QDebug>
 #include <QToolBar>
 #include <QToolButton>
 
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_main/form_main.h"
+#include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_project.h"
@@ -27,6 +29,8 @@
 //##    Updates status bar, enables / disables buttons as necessary
 //####################################################################################
 void FormMain::updateToolBar() {
+
+    Editor_Widgets active_widget = getActiveWidget();
 
     // ***** Start by disabling buttons, we we re-enable them as necessary in this function
     for (auto button : m_buttons_group_layering->buttons())     if (button->isEnabled()) button->setEnabled(false);
@@ -47,7 +51,7 @@ void FormMain::updateToolBar() {
         if (snap_grid) snap_grid->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
 
         QString selected = "No Selection";
-        if (getActiveWidget() == Editor_Widgets::Project_Tree || getActiveWidget() == Editor_Widgets::View) {
+        if (active_widget == Editor_Widgets::Project_Tree || active_widget == Editor_Widgets::View) {
             // ***** Things are selected
             if (m_scene_editor->getSelectionCount() > 0) {
                 for (auto button : m_buttons_group_layering->buttons())     if (!button->isEnabled()) button->setEnabled(true);
@@ -86,10 +90,10 @@ void FormMain::updateToolBar() {
             }
 
         // ***** Asset is selected
-        } else if (getActiveWidget() == Editor_Widgets::Asset_Tree && m_tree_assets->getSelectedKey() != c_no_key) {
-            DrSettings *asset = m_project->findSettingsFromKey(m_tree_assets->getSelectedKey(), false);
-            if (asset != nullptr) {
-                if (asset->getType() == DrType::Asset || asset->getType() == DrType::Font) {
+        } else if (active_widget == Editor_Widgets::Asset_Tree || active_widget == Editor_Widgets::Inspector_Tree) {
+            DrSettings *entity = m_project->findSettingsFromKey(m_tree_assets->getSelectedKey(), false);
+            if (entity != nullptr) {
+                if (entity->getType() == DrType::Asset || entity->getType() == DrType::Font) {
                     for (auto button : m_buttons_group_edit->buttons()) {
                         if (!button->isEnabled()) button->setEnabled(true);
                     }
@@ -111,10 +115,10 @@ void FormMain::updateToolBar() {
     } else if (getEditorMode() == Editor_Mode::Sound_Creator) {
 
         // ***** Asset is selected
-        if (getActiveWidget() == Editor_Widgets::Asset_Tree && m_tree_assets->getSelectedKey() != c_no_key) {
-            DrSettings *asset = m_project->findSettingsFromKey(m_tree_assets->getSelectedKey(), false);
-            if (asset != nullptr) {
-                if (asset->getType() == DrType::Mix || asset->getType() == DrType::Sound) {
+        if (active_widget == Editor_Widgets::Asset_Tree || active_widget == Editor_Widgets::Inspector_Tree) {
+            DrSettings *entity = m_project->findSettingsFromKey(m_tree_assets->getSelectedKey(), false);
+            if (entity != nullptr) {
+                if (entity->getType() == DrType::Mix || entity->getType() == DrType::Sound) {
                     for (auto button : m_buttons_group_edit->buttons()) {
                         if (!button->isEnabled()) button->setEnabled(true);
                     }
