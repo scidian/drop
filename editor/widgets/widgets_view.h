@@ -30,12 +30,24 @@
 //############################
 class ViewDial : public QDial
 {
+    Q_OBJECT
+
+    Q_PROPERTY(int dialSize READ getDialSize WRITE setDialSize)
+
+private:
+    int dialSize_;
+
 public:
     // Constructor
-    ViewDial(QWidget *parent = nullptr) : QDial(parent) { }
+    ViewDial(QWidget *parent = nullptr, int dial_size = 5);
+    virtual ~ViewDial() override;
 
     // Event Overrides
     virtual void    paintEvent(QPaintEvent *event) override;
+
+    // Getters / Setters
+    void            setDialSize(int size);
+    int             getDialSize() const;
 };
 
 

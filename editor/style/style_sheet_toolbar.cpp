@@ -53,6 +53,11 @@ std::string StyleSheetToolBar() {
     " QWidget#widgetGroupVisual {       height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
 
 
+    // Master Volume Dial
+    " QDial#dialMasterVolume { qproperty-dialSize: " + std::to_string(Dr::Scale(c_toolbar_height - 8)) + "; }"
+
+
+
     // ToolBar Push Buttons
     " QPushButton#toolbarButton { "
     "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; "
