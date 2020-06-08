@@ -9,6 +9,7 @@
 #define WIDGETS_EDITOR_H
 
 #include <QButtonGroup>
+#include <QDial>
 #include <QElapsedTimer>
 #include <QLabel>
 #include <QGraphicsView>
@@ -24,6 +25,21 @@
 
 
 //####################################################################################
+//##    ViewDial
+//##        A sub classed QDial so we can override paint event for Dial
+//############################
+class ViewDial : public QDial
+{
+public:
+    // Constructor
+    ViewDial(QWidget *parent = nullptr) : QDial(parent) { }
+
+    // Event Overrides
+    virtual void    paintEvent(QPaintEvent *event) override;
+};
+
+
+//####################################################################################
 //##    ViewRubberBand
 //##        A sub classed QRubberBand so we can override paint event for rubber band
 //############################
@@ -31,10 +47,10 @@ class ViewRubberBand : public QRubberBand
 {
 public:
     // Constructor
-    ViewRubberBand(Shape shape, QWidget *parent) : QRubberBand (shape, parent) { }
+    ViewRubberBand(Shape shape, QWidget *parent) : QRubberBand(shape, parent) { }
 
     // Event overrides
-    virtual void    paintEvent(QPaintEvent *) override;
+    virtual void    paintEvent(QPaintEvent *event) override;
 };
 
 
@@ -59,7 +75,7 @@ public:
     ViewToolTip(QWidget *parent = nullptr);
 
     // Event overrides
-    virtual void    paintEvent(QPaintEvent *) override;
+    virtual void    paintEvent(QPaintEvent *event) override;
 
     // Functions
     void            drawText(QPainter &painter, int left_offset = 0, int top_offset = 0);

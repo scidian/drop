@@ -166,7 +166,8 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         // Check that Entity type is deletable
         if (entity->getType() != DrType::Asset &&
             entity->getType() != DrType::Font &&
-            entity->getType() != DrType::Mix) {
+            entity->getType() != DrType::Mix &&
+            entity->getType() != DrType::Sound) {
             return;
         }
 
@@ -181,6 +182,12 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
                                              this, QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
                 if (proceed == QMessageBox::StandardButton::No) return;
             }
+
+        } else if (entity->getType() == DrType::Sound) {
+            QMessageBox::StandardButton proceed;
+            proceed = Dr::ShowMessageBox("Are you sure you wish to delete the selected Sound? This will affect all Mixes that use this Sound.", QMessageBox::Icon::Question,
+                                         this, QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No);
+            if (proceed == QMessageBox::StandardButton::No) return;
         }
 
         // Delete entity

@@ -41,7 +41,7 @@ private:
 
 
 public:
-    WaveForm(QWidget *parent = nullptr);
+    WaveForm(QWidget *parent = nullptr, SoLoud::AudioSource *audio_source = nullptr);
     virtual ~WaveForm() override;
 
     // Event Overrides

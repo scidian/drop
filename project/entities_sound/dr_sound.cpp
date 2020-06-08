@@ -27,7 +27,9 @@ DrSound::DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::Audi
     initializeSoundSettings(new_sound_name);
 }
 
-DrSound::~DrSound() { }
+DrSound::~DrSound() {
+    delete m_audio_source;
+}
 
 
 //####################################################################################

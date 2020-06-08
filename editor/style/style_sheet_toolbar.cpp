@@ -34,14 +34,23 @@ std::string StyleSheetToolBar() {
     "       background: " + Dr::GetColor(Window_Colors::Button_Dark).name() + "; "
     "       border-bottom: 0 solid; } "
     " QWidget#widgetToolBar {           height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
+
+    // Shared Groups
     " QWidget#widgetGroupMode {         height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
     " QWidget#widgetGroupEdit {         height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
+    " QWidget#widgetGroupPlay {         height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
+    " QWidget#widgetGroupSettings {     height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
+
+    // View "Editor" Groups
     " QWidget#widgetGroupLayering {     height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
     " QWidget#widgetGroupTransform {    height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
     " QWidget#widgetGroupGridFull {     height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
+
+    // View "Node" Groups
     " QWidget#widgetGroupGridSimple {   height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
-    " QWidget#widgetGroupPlay {         height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
-    " QWidget#widgetGroupSettings {     height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
+
+    // View "Mixer" Groups
+    " QWidget#widgetGroupVisual {       height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
 
 
     // ToolBar Push Buttons
@@ -153,6 +162,7 @@ std::string StyleSheetToolBar() {
     " QMenu#menuToolBarOptions::indicator:checked { left: 5px; top: -3px; } "
     " QMenu#menuToolBarOptions::item:checked { "
     "       color: " + Dr::GetColor(Window_Colors::Highlight).name() + "; }"
+
 
     // FormEngine Buttons
     " QToolButton#engineButton {            border: 1px solid; border-radius: 4px; "

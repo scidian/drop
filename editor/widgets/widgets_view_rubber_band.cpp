@@ -6,6 +6,7 @@
 //
 //
 #include <QStylePainter>
+
 #include "core/colors/colors.h"
 #include "editor/widgets/widgets_view.h"
 #include "editor/helper_library.h"

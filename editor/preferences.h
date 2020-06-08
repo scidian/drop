@@ -34,10 +34,10 @@ enum class Preferences {
     Limit_Frames_Rendered,                          // bool
 
     // General Options
-    Gui_Scale,                                      // double - menu / widget size scale factor
-    Color_Scheme,                                   // int - enum class Color_Scheme
+    Gui_Scale,                                      // double   menu / widget size multiplication factor (1x, 1.5x, 2x, etc)
+    Color_Scheme,                                   // int      enum class Color_Scheme
     Color_Popup_History,                            // std::vector<DrVariant> (DrVariant = qRgba = unsigned int)
-    Color_Popup_Tab,                                // int - 0 = Palette, 1 = History
+    Color_Popup_Tab,                                // int      0 = Palette, 1 = History
 
     // View "Editor" Options
     Editor_Show_Collision_Shapes,                   // bool
@@ -51,6 +51,10 @@ enum class Preferences {
     Editor_Grid_On_Top,                             // bool
 
     Editor_Snap_To_Center_Of_Selection_Box,         // bool
+
+    // View "Mixer" Options
+    Mixer_Master_Volume,                            // double   0.0 to 100.0
+    Mixer_Auto_Play_Asset_Sounds,                   // bool
 
 };
 

@@ -25,7 +25,7 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-WaveForm::WaveForm(QWidget *parent) : QFrame(parent) { }
+WaveForm::WaveForm(QWidget *parent, SoLoud::AudioSource *audio_source) : QFrame(parent), m_audio(audio_source) { }
 WaveForm::~WaveForm() { }
 
 

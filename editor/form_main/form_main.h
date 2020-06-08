@@ -98,14 +98,23 @@ private:
     QToolBar        *m_toolbar;
     QWidget         *m_widget_toolbar;
     QHBoxLayout     *m_widget_toolbar_layout;
+
+    // Shared Groups
     QWidget             *m_widget_group_mode;           QButtonGroup    *m_buttons_group_mode;
     QWidget             *m_widget_group_edit;           QButtonGroup    *m_buttons_group_edit;          QToolButton *m_button_add;
+    QWidget             *m_widget_group_play;           QButtonGroup    *m_buttons_group_play;
+    QWidget             *m_widget_group_settings;
+
+    // View "Editor" Groups
     QWidget             *m_widget_group_layering;       QButtonGroup    *m_buttons_group_layering;
     QWidget             *m_widget_group_transform;      QButtonGroup    *m_buttons_group_transform;
     QWidget             *m_widget_group_grid_full;      QButtonGroup    *m_buttons_group_grid_full;
+
+    // View "Node" Groups
     QWidget             *m_widget_group_grid_simple;    QButtonGroup    *m_buttons_group_grid_simple;
-    QWidget             *m_widget_group_play;           QButtonGroup    *m_buttons_group_play;
-    QWidget             *m_widget_group_settings;
+
+    // View "Mixer" Groups
+    QWidget             *m_widget_group_visual;
 
 
     // ***** Shared FormMain Widgets

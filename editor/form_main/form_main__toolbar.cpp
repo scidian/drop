@@ -166,6 +166,7 @@ void FormMain::setToolBar(Editor_Mode new_mode) {
             break;
         case Editor_Mode::Sound_Creator:
             addToolBarGroup( m_widget_group_edit,           true );
+            addToolBarGroup( m_widget_group_visual,         true );
             addToolBarGroup( m_widget_group_play,           false );
             addToolBarGroup( m_widget_group_settings,       false );
             break;

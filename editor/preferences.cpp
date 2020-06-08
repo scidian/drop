@@ -131,27 +131,27 @@ void        SetCursor(QCursor &cursor) { qApp->setOverrideCursor(cursor); }
 //####################################################################################
 void LoadPreferences() {
 
-    // ***** Program Color Scheme
+    // ***** General Options
     Dr::SetPreference(Preferences::Gui_Scale,                               1.0);
     Dr::SetPreference(Preferences::Color_Scheme,                            QVariant::fromValue(static_cast<int>(Color_Scheme::Dark)));
-
-    Dr::SetScale(Dr::GetPreference(Preferences::Gui_Scale).toDouble());
-    Dr::SetColorScheme(static_cast<Color_Scheme>(Dr::GetPreference(Preferences::Color_Scheme).toInt()));
+    Dr::SetPreference(Preferences::Color_Popup_Tab, 0);                 // int - 0 = Palette, 1 = History
 
     // ***** Editor Options
     Dr::SetPreference(Preferences::Editor_Show_Camera_Boxes,                false);
     Dr::SetPreference(Preferences::Editor_Show_Collision_Shapes,            false);
 
-    // !!!!! NOT IMPLEMENTED YET: Editor Options
-    Dr::SetPreference(Preferences::Editor_Lock_Backgrounds,                 false);
-    Dr::SetPreference(Preferences::Editor_Show_Connections,                 false);
-    // !!!!!
+    Dr::SetPreference(Preferences::Editor_Lock_Backgrounds,                 false);     // !!!!! #TODO: THIS OPTION NOT IMPLEMENTED YET
+    Dr::SetPreference(Preferences::Editor_Show_Connections,                 false);     // !!!!! #TODO: THIS OPTION NOT IMPLEMENTED YET
 
     Dr::SetPreference(Preferences::Editor_Snap_To_Grid,                     true);
     Dr::SetPreference(Preferences::Editor_Resize_To_Grid,                   true);
     Dr::SetPreference(Preferences::Editor_Grid_On_Top,                      false);
 
     Dr::SetPreference(Preferences::Editor_Snap_To_Center_Of_Selection_Box,  false);
+
+    // ***** Mixer Options
+    Dr::SetPreference(Preferences::Mixer_Master_Volume,                     100.0);
+    Dr::SetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds,            true);
 
 
     // ***** Stored Color History
@@ -161,8 +161,13 @@ void LoadPreferences() {
     Dr::AddToColorHistory( Dr::green );
     Dr::AddToColorHistory( Dr::blue  );
 
-    Dr::SetPreference(Preferences::Color_Popup_Tab, 0);                 // int - 0 = Palette, 1 = History
 
+    // ********** Set program variables from loaded Preferences
+    Dr::SetScale(Dr::GetPreference(Preferences::Gui_Scale).toDouble());
+    Dr::SetColorScheme(static_cast<Color_Scheme>(Dr::GetPreference(Preferences::Color_Scheme).toInt()));
+
+
+    //####################################################################################
 
     // ***** List of Asset Categories Being Expanded, defaults to true if not found in l_asset_categories
     /**
@@ -175,7 +180,6 @@ void LoadPreferences() {
     Dr::SetAssetExpanded(Asset_Category::Text,          true);
     Dr::SetAssetExpanded(Asset_Category::Images,        true);
     */
-
 
     // ***** List of Inspector Component Categories Being Expanded
     Dr::SetInspectorExpanded(Comps::Entity_Settings,           true);

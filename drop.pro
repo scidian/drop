@@ -357,6 +357,7 @@ SOURCES += \
     editor/widgets/widgets_inspector_combobox.cpp \
     editor/widgets/widgets_inspector_spin.cpp \
     editor/widgets/widgets_trees_category_button.cpp \
+    editor/widgets/widgets_view_dial.cpp \
     editor/widgets/widgets_view_rubber_band.cpp \
     editor/widgets/widgets_view_toolbar.cpp \
     editor/widgets/widgets_view_toolbar__build.cpp \

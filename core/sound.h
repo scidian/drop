@@ -8,6 +8,8 @@
 #ifndef SOUND_H
 #define SOUND_H
 
+#include "3rd_party/soloud/soloud.h"
+
 // Forward Declarations
 namespace SoLoud { class Soloud; }
 

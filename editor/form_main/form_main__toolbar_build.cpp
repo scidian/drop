@@ -8,12 +8,14 @@
 #include <QApplication>
 #include <QButtonGroup>
 #include <QDebug>
+#include <QDial>
 #include <QMenu>
 #include <QRadioButton>
 #include <QToolBar>
 #include <QToolButton>
 
 #include "core/dr_random.h"
+#include "editor/enums_editor.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_main/form_main.h"
 #include "editor/form_sound/form_sound_effect.h"
@@ -22,10 +24,12 @@
 #include "editor/forms/form_popup.h"
 #include "editor/forms/form_progress_box.h"
 #include "editor/forms/form_settings.h"
+#include "editor/form_sound/visualizer.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"
-#include "editor/enums_editor.h"
+#include "editor/widgets/widgets_view.h"
+
 
 // Local Constants
 const int   c_spacer_height =   28;
@@ -53,7 +57,9 @@ void FormMain::buildToolBar() {
     m_widget_toolbar_layout->setSpacing(3);
     m_widget_toolbar_layout->setContentsMargins(12, 0, 12, 0);
 
-    // ***** Selectable Button group that keeps track of which mode we are in: World Graph, World Creator, UI Creator, Sound Creator
+    // ******************** Shared Groups ********************
+
+    // ***** Mode Group: Selectable button group that keeps track of which mode we are in: World Graph, World Creator, UI Creator, Sound Creator, etc
     m_widget_group_mode = new QWidget();
     m_widget_group_mode->setObjectName(QStringLiteral("widgetGroupMode"));
         QHBoxLayout *toolbar_layout_mode = new QHBoxLayout(m_widget_group_mode);
@@ -83,8 +89,7 @@ void FormMain::buildToolBar() {
         m_buttons_group_mode->addButton(tool, int(Editor_Mode::Sound_Creator));
         toolbar_layout_mode->addWidget(tool);
 
-
-    // ***** Mode "Editor" Add-On, Edit: Holds Add , Delete, future Cut / Copy / Paste
+    // ***** Edit Group: Holds Add , Delete, future Cut / Copy / Paste
     m_widget_group_edit = new QWidget(m_widget_toolbar);
     m_widget_group_edit->hide();
     m_widget_group_edit->setObjectName(QStringLiteral("widgetGroupEdit"));
@@ -108,121 +113,7 @@ void FormMain::buildToolBar() {
         m_buttons_group_edit->addButton(tool, int(Buttons_Edit::Delete));
         toolbar_layout_edit->addWidget(tool);
 
-
-    // ***** Mode "Editor" Add-On, Layering: Holds buttons that send Things to Front / Back
-    m_widget_group_layering = new QWidget(m_widget_toolbar);
-    m_widget_group_layering->hide();
-    m_widget_group_layering->setObjectName(QStringLiteral("widgetGroupLayering"));
-        QHBoxLayout *toolbar_layout_layering = new QHBoxLayout(m_widget_group_layering);
-        toolbar_layout_layering->setSpacing(1);
-        toolbar_layout_layering->setContentsMargins(0, 0, 0, 0);
-
-        m_buttons_group_layering = new QButtonGroup();
-        m_buttons_group_layering->setExclusive(false);
-        connect(m_buttons_group_layering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
-
-        tool = createToolBarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Send_to_Back, false, false);
-        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Back));
-        toolbar_layout_layering->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Send_Backward, false, false);
-        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_Backward));
-        toolbar_layout_layering->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Send_Forward, false, false);
-        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_Forward));
-        toolbar_layout_layering->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Send_to_Front, false, false);
-        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Front));
-        toolbar_layout_layering->addWidget(tool);
-
-    // ***** Mode "Editor" Add-On, Transform: Holds buttons that Flip / Rotate things
-    m_widget_group_transform = new QWidget(m_widget_toolbar);
-    m_widget_group_transform->hide();
-    m_widget_group_transform->setObjectName(QStringLiteral("widgetGroupTransform"));
-        QHBoxLayout *toolbar_layout_transform = new QHBoxLayout(m_widget_group_transform);
-        toolbar_layout_transform->setSpacing(1);
-        toolbar_layout_transform->setContentsMargins(2, 0, 0, 0);
-
-        m_buttons_group_transform = new QButtonGroup();
-        m_buttons_group_transform->setExclusive(false);
-        connect(m_buttons_group_transform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
-
-        tool = createToolBarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Reset, false, false);
-        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Reset_Object));
-        toolbar_layout_transform->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonTransformFlipH"), Advisor_Info::Flip_H, false, false);
-        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Flip_H));
-        toolbar_layout_transform->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonTransformFlipV"), Advisor_Info::Flip_V, false, false);
-        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Flip_V));
-        toolbar_layout_transform->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonTransformRotateL"), Advisor_Info::Rotate_L, false, false);
-        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Rotate_L));
-        toolbar_layout_transform->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonTransformRotateR"), Advisor_Info::Rotate_R, false, false);
-        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Rotate_R));
-        toolbar_layout_transform->addWidget(tool);
-
-
-    // ***** Mode "Editor" Add-On, Grid: Holds buttons that control Snap to Grid, Resize to Grid, Show Grid on Top
-    m_widget_group_grid_full = new QWidget(m_widget_toolbar);
-    m_widget_group_grid_full->hide();
-    m_widget_group_grid_full->setObjectName(QStringLiteral("widgetGroupGridFull"));
-        QHBoxLayout *toolbar_layout_grid_full = new QHBoxLayout(m_widget_group_grid_full);
-        toolbar_layout_grid_full->setSpacing(0);
-        toolbar_layout_grid_full->setContentsMargins(0, 0, 0, 0);
-
-        m_buttons_group_grid_full = new QButtonGroup();
-        m_buttons_group_grid_full->setExclusive(false);
-        connect(m_buttons_group_grid_full, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
-
-        tool = createToolBarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, true);
-        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Grid_On_Top));
-        tool->setChecked(Dr::GetPreference(Preferences::Editor_Grid_On_Top).toBool());
-        toolbar_layout_grid_full->addWidget(tool);
-        toolbar_layout_grid_full->addSpacing(1);
-
-        tool = createToolBarButton(QStringLiteral("buttonResizeToGrid"), Advisor_Info::Resize_To_Grid, true);
-        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
-        tool->setChecked(Dr::GetPreference(Preferences::Editor_Resize_To_Grid).toBool());
-        toolbar_layout_grid_full->addWidget(tool);
-        toolbar_layout_grid_full->addSpacing(1);
-
-        tool = createToolBarButton(QStringLiteral("buttonSnapToGrid"), Advisor_Info::Grid_Snap_To_Grid, true);
-        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
-        tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
-        toolbar_layout_grid_full->addWidget(tool);
-
-        tool = createToolBarButton(QStringLiteral("buttonSnapOptions"), Advisor_Info::Grid_Snap_Options, false, true);
-        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_Options));
-        toolbar_layout_grid_full->addWidget(tool);
-
-    // ***** Mode "World Graph" Add-On, Grid: Holds button that controls Snap to Grid
-    m_widget_group_grid_simple = new QWidget(m_widget_toolbar);
-    m_widget_group_grid_simple->hide();
-    m_widget_group_grid_simple->setObjectName(QStringLiteral("widgetGroupGridSimple"));
-        QHBoxLayout *toolbar_layout_grid_simple = new QHBoxLayout(m_widget_group_grid_simple);
-        toolbar_layout_grid_simple->setSpacing(0);
-        toolbar_layout_grid_simple->setContentsMargins(0, 0, 0, 0);
-
-        m_buttons_group_grid_simple = new QButtonGroup();
-        m_buttons_group_grid_simple->setExclusive(false);
-        connect(m_buttons_group_grid_simple, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
-
-        tool = createToolBarButton(QStringLiteral("buttonSnapToMap"), Advisor_Info::Grid_Snap_To_Grid, true);
-        m_buttons_group_grid_simple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
-        tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
-        toolbar_layout_grid_simple->addWidget(tool);
-        toolbar_layout_grid_simple->addWidget(createToolBarSpacer(c_spacer_height, 34, false));
-
-
-    // ***** Mode "Editor" Add-On, Play: Holds buttons that starts game Engine window
+    // ***** Play Group: Holds buttons that starts game Engine window
     m_widget_group_play = new QWidget(m_widget_toolbar);
     m_widget_group_play->hide();
     m_widget_group_play->setObjectName(QStringLiteral("widgetGroupPlay"));
@@ -243,7 +134,6 @@ void FormMain::buildToolBar() {
         toolbar_layout_play->addWidget(tool);
 
         toolbar_layout_play->addWidget(createToolBarSpacer(c_spacer_height, 34, false));
-
 
     // ***** Settings Buttons
     m_widget_group_settings = new QWidget(m_widget_toolbar);
@@ -301,7 +191,149 @@ void FormMain::buildToolBar() {
         });
 
 
-    // ********** Set up initial toolbar
+    // ******************** View "Editor" Groups ********************
+
+    // ***** View "Editor" Add-On, Layering: Holds buttons that send Things to Front / Back
+    m_widget_group_layering = new QWidget(m_widget_toolbar);
+    m_widget_group_layering->hide();
+    m_widget_group_layering->setObjectName(QStringLiteral("widgetGroupLayering"));
+        QHBoxLayout *toolbar_layout_layering = new QHBoxLayout(m_widget_group_layering);
+        toolbar_layout_layering->setSpacing(1);
+        toolbar_layout_layering->setContentsMargins(0, 0, 0, 0);
+
+        m_buttons_group_layering = new QButtonGroup();
+        m_buttons_group_layering->setExclusive(false);
+        connect(m_buttons_group_layering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
+
+        tool = createToolBarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Send_to_Back, false, false);
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Back));
+        toolbar_layout_layering->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonSendBackward"), Advisor_Info::Send_Backward, false, false);
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_Backward));
+        toolbar_layout_layering->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonSendForward"), Advisor_Info::Send_Forward, false, false);
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_Forward));
+        toolbar_layout_layering->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonSendToFront"), Advisor_Info::Send_to_Front, false, false);
+        m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Front));
+        toolbar_layout_layering->addWidget(tool);
+
+    // ***** View "Editor" Add-On, Transform: Holds buttons that Flip / Rotate things
+    m_widget_group_transform = new QWidget(m_widget_toolbar);
+    m_widget_group_transform->hide();
+    m_widget_group_transform->setObjectName(QStringLiteral("widgetGroupTransform"));
+        QHBoxLayout *toolbar_layout_transform = new QHBoxLayout(m_widget_group_transform);
+        toolbar_layout_transform->setSpacing(1);
+        toolbar_layout_transform->setContentsMargins(2, 0, 0, 0);
+
+        m_buttons_group_transform = new QButtonGroup();
+        m_buttons_group_transform->setExclusive(false);
+        connect(m_buttons_group_transform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
+
+        tool = createToolBarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Reset, false, false);
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Reset_Object));
+        toolbar_layout_transform->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonTransformFlipH"), Advisor_Info::Flip_H, false, false);
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Flip_H));
+        toolbar_layout_transform->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonTransformFlipV"), Advisor_Info::Flip_V, false, false);
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Flip_V));
+        toolbar_layout_transform->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonTransformRotateL"), Advisor_Info::Rotate_L, false, false);
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Rotate_L));
+        toolbar_layout_transform->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonTransformRotateR"), Advisor_Info::Rotate_R, false, false);
+        m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Rotate_R));
+        toolbar_layout_transform->addWidget(tool);
+
+    // ***** View "Editor" Add-On, Grid: Holds buttons that control Snap to Grid, Resize to Grid, Show Grid on Top
+    m_widget_group_grid_full = new QWidget(m_widget_toolbar);
+    m_widget_group_grid_full->hide();
+    m_widget_group_grid_full->setObjectName(QStringLiteral("widgetGroupGridFull"));
+        QHBoxLayout *toolbar_layout_grid_full = new QHBoxLayout(m_widget_group_grid_full);
+        toolbar_layout_grid_full->setSpacing(0);
+        toolbar_layout_grid_full->setContentsMargins(0, 0, 0, 0);
+
+        m_buttons_group_grid_full = new QButtonGroup();
+        m_buttons_group_grid_full->setExclusive(false);
+        connect(m_buttons_group_grid_full, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
+
+        tool = createToolBarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, true);
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Grid_On_Top));
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Grid_On_Top).toBool());
+        toolbar_layout_grid_full->addWidget(tool);
+        toolbar_layout_grid_full->addSpacing(1);
+
+        tool = createToolBarButton(QStringLiteral("buttonResizeToGrid"), Advisor_Info::Resize_To_Grid, true);
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Resize_To_Grid));
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Resize_To_Grid).toBool());
+        toolbar_layout_grid_full->addWidget(tool);
+        toolbar_layout_grid_full->addSpacing(1);
+
+        tool = createToolBarButton(QStringLiteral("buttonSnapToGrid"), Advisor_Info::Grid_Snap_To_Grid, true);
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
+        toolbar_layout_grid_full->addWidget(tool);
+
+        tool = createToolBarButton(QStringLiteral("buttonSnapOptions"), Advisor_Info::Grid_Snap_Options, false, true);
+        m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Snap_Options));
+        toolbar_layout_grid_full->addWidget(tool);
+
+
+    // ******************** View "Node" Groups ********************
+
+    // ***** View "Node" Add-On, Grid: Holds button that controls Snap to Grid
+    m_widget_group_grid_simple = new QWidget(m_widget_toolbar);
+    m_widget_group_grid_simple->hide();
+    m_widget_group_grid_simple->setObjectName(QStringLiteral("widgetGroupGridSimple"));
+        QHBoxLayout *toolbar_layout_grid_simple = new QHBoxLayout(m_widget_group_grid_simple);
+        toolbar_layout_grid_simple->setSpacing(0);
+        toolbar_layout_grid_simple->setContentsMargins(0, 0, 0, 0);
+
+        m_buttons_group_grid_simple = new QButtonGroup();
+        m_buttons_group_grid_simple->setExclusive(false);
+        connect(m_buttons_group_grid_simple, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
+
+        tool = createToolBarButton(QStringLiteral("buttonSnapToMap"), Advisor_Info::Grid_Snap_To_Grid, true);
+        m_buttons_group_grid_simple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
+        tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
+        toolbar_layout_grid_simple->addWidget(tool);
+        toolbar_layout_grid_simple->addWidget(createToolBarSpacer(c_spacer_height, 34, false));
+
+
+    // ******************** View "Mixer" Groups ********************
+
+    // ***** View "Mixer" Add-On, Visual: Holds Volume Dial and Visualizer Frame
+    m_widget_group_visual = new QWidget(m_widget_toolbar);
+    m_widget_group_visual->hide();
+    m_widget_group_visual->setObjectName(QStringLiteral("widgetGroupVisual"));
+        QHBoxLayout *toolbar_layout_visual = new QHBoxLayout(m_widget_group_visual);
+        toolbar_layout_visual->setSpacing(0);
+        toolbar_layout_visual->setContentsMargins(0, 0, 0, 0);
+
+        ViewDial *volume_dial = new ViewDial();
+        volume_dial->setObjectName(QStringLiteral("dialMasterVolume"));
+        volume_dial->setRange(0, 100);
+        volume_dial->setNotchesVisible(false);
+        volume_dial->setWrapping(false);
+        volume_dial->setValue(Dr::GetPreference(Preferences::Mixer_Master_Volume).toDouble());
+        volume_dial->setToolTip("Master Volume");
+        toolbar_layout_visual->addWidget(volume_dial);
+
+        VisualFrame *visual_frame = new VisualFrame();
+        toolbar_layout_visual->addWidget(visual_frame);
+
+
+
+    // ******************** Set up initial toolbar ********************
+
     // Clears the containers that keeps track of whats added to the toolbar layout
     m_toolbar_widgets.clear();
     m_toolbar_spacers.clear();
