@@ -52,9 +52,8 @@ std::string StyleSheetToolBar() {
     // View "Mixer" Groups
     " QWidget#widgetGroupVisual {       height: " + std::to_string(Dr::Scale(c_toolbar_height)) + "px; } "
 
-
     // Master Volume Dial
-    " QDial#dialMasterVolume { qproperty-dialSize: " + std::to_string(Dr::Scale(c_toolbar_height - 8)) + "; }"
+    " QDial#dialMasterVolume { qproperty-dialSize: " + std::to_string(Dr::Scale(c_toolbar_height - Dr::Scale(6))) + "; }"
 
 
 

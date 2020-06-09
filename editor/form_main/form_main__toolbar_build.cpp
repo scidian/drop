@@ -318,7 +318,7 @@ void FormMain::buildToolBar() {
         toolbar_layout_visual->setSpacing(0);
         toolbar_layout_visual->setContentsMargins(0, 0, 0, 0);
 
-        ViewDial *volume_dial = new ViewDial();
+        ViewDial *volume_dial = new ViewDial(nullptr, Dial_Style::Knotch_Line, true);
         volume_dial->setObjectName(QStringLiteral("dialMasterVolume"));
         volume_dial->setRange(0, 100);
         volume_dial->setNotchesVisible(false);

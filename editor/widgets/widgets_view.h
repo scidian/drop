@@ -23,6 +23,12 @@
 #include "editor/enums_editor.h"
 #include "project/enums_entity_types.h"
 
+// Local Enums
+enum class Dial_Style {
+    Knotch_Circle,
+    Knotch_Line,
+};
+
 
 //####################################################################################
 //##    ViewDial
@@ -35,19 +41,25 @@ class ViewDial : public QDial
     Q_PROPERTY(int dialSize READ getDialSize WRITE setDialSize)
 
 private:
-    int dialSize_;
+    Dial_Style  m_dial_style        { Dial_Style::Knotch_Line };
+    int         m_dial_size         { 20 };
+    bool        m_show_ticks        { true };
 
 public:
     // Constructor
-    ViewDial(QWidget *parent = nullptr, int dial_size = 5);
+    ViewDial(QWidget *parent = nullptr, Dial_Style style = Dial_Style::Knotch_Line, bool show_ticks = false, int dial_size = 20);
     virtual ~ViewDial() override;
 
     // Event Overrides
     virtual void    paintEvent(QPaintEvent *event) override;
 
     // Getters / Setters
-    void            setDialSize(int size);
     int             getDialSize() const;
+    Dial_Style      getDialStyle()                  { return m_dial_style; }
+    bool            getShowTicks()                  { return m_show_ticks; }
+    void            setDialSize(int size);
+    void            setDialStyle(Dial_Style style)  { m_dial_style = style; }
+    void            setShowTicks(bool show)         { m_show_ticks = show; }
 };
 
 

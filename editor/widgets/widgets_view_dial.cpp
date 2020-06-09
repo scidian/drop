@@ -10,16 +10,20 @@
 #include "editor/helper_library.h"
 #include "editor/widgets/widgets_view.h"
 
-// Local Constans
-const double    c_knob_margin       = 10.0;
-const double    c_knob_radius       = 10.0;
+// Local Constants
+const double    c_knob_radius       =  6.0;             // Determines size of Circle Knotch for Dial_Style::Knotch_Circle dial
+const double    c_draw_arc_span     = 16.0;             // QPainter drawArc() spanAngle must be specified in 1/16th of a degree
 
 
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-ViewDial::ViewDial(QWidget *parent, int dial_size) : QDial(parent), dialSize_(dial_size) {
-    this->setFixedSize(dialSize_, dialSize_);
+ViewDial::ViewDial(QWidget *parent, Dial_Style style, bool show_ticks, int dial_size)
+    : QDial(parent), m_dial_size(dial_size) {
+
+    this->setFixedSize(m_dial_size, m_dial_size);
+    m_dial_style = style;
+    m_show_ticks = show_ticks;
 }
 
 ViewDial::~ViewDial() { }
@@ -29,80 +33,133 @@ ViewDial::~ViewDial() { }
 //##    Custom Style Sheet Properties
 //####################################################################################
 void ViewDial::setDialSize(int size) {
-    dialSize_ = size;
+    m_dial_size = size;
 }
 int ViewDial::getDialSize() const {
-    return dialSize_;
+    return m_dial_size;
 }
 
 
 //####################################################################################
-//##    PAINT: Draw our Dial with custom colors
+//##    PAINT: Draw custom Dial
 //####################################################################################
 void ViewDial::paintEvent(QPaintEvent*) {
 
-    this->setFixedSize(dialSize_, dialSize_);
-    double knob_radius = c_knob_radius / (100.0 / dialSize_);
-    double knob_margin = c_knob_margin / (100.0 / dialSize_);
+    // Update size based on custom Style Sheet property "qproperty-dialSize"
+    this->setFixedSize(m_dial_size, m_dial_size);
 
-    static const double degree270 = 1.50 * DR_PI;
-    static const double degree225 = 1.25 * DR_PI;
-
+    // Initialize Painter
     QPainter painter(this);
     painter.setBackgroundMode(Qt::OpaqueMode);
     painter.setRenderHint(QPainter::Antialiasing);
 
+    QColor use_icon_color = Dr::ToQColor(Dr::GetColor(Dr::GetColorScheme() == Color_Scheme::Light ? Window_Colors::Icon_Dark : Window_Colors::Icon_Light));
+
+    // Calculate Angle of Dial
+    double ratio = double(QDial::value()) / double(QDial::maximum());           // Find ratio between current value and maximum to calculate angle
+    double angle = (ratio * 270.0) + 45.0;                                      // Angle between 0 and 270, starting at lower left (0 = east)
+
+    // Get Diameter of QDial
+    double diameter = Dr::Min(QDial::width(), QDial::height());
+    double mid = static_cast<double>(QDial::width()) / 2.0;
+
+    // Show Ticks if turned on
+    double dial_shrink = 0;
+    double y_offset = 0;
+    if (m_show_ticks) {
+        dial_shrink = Dr::Scale(4.0);
+        y_offset = dial_shrink / 2.0;
+
+        // Circular Line
+        double full_shrink = Dr::Scale(1.0);
+        QRectF full_rect(full_shrink, full_shrink, diameter - (2.0*full_shrink), diameter - (2.0*full_shrink));
+               full_rect.moveCenter(QPointF(full_rect.center().x(), full_rect.center().y() + y_offset));
+
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen(use_icon_color, Dr::Scale(1.5), Qt::SolidLine, Qt::RoundCap));
+        painter.drawArc(full_rect, (-135 - (270 * ratio)) * c_draw_arc_span, (270 * ratio) * c_draw_arc_span);
+        painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Shadow)), Dr::Scale(1.5), Qt::SolidLine, Qt::RoundCap));
+        painter.drawArc(full_rect, -45 * c_draw_arc_span, (270 * (1.0 - ratio)) * c_draw_arc_span);
+
+        // Circular Ticks
+        /**
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(use_icon_color);
+        DrPointF top(0, (diameter / 2.0) - Dr::Scale(1.0));
+        double tick_radius = (c_knob_radius / (100.0 / m_dial_size) * 0.5);
+        for (int i = 0; i <= 270; i += 30) {
+            painter.translate(mid, mid + y_offset);
+            painter.rotate(static_cast<double>(i + 45));
+            painter.drawEllipse(Dr::ToQPointF(top), tick_radius, tick_radius);
+            painter.resetTransform();
+        } */
+
+    } else {
+        dial_shrink = Dr::Scale(1.0);
+        y_offset = 0.0;
+    }
+
+    // Calculate Rect for Dial
+    QRectF circle_rect(dial_shrink, dial_shrink, diameter - (2.0*dial_shrink), diameter - (2.0*dial_shrink));
+           circle_rect.moveCenter(QPointF(circle_rect.center().x(), circle_rect.center().y() + y_offset));
+
     // Draw Background Circle
+    QColor light_color, dark_color;
+    light_color = Dr::ToQColor(Dr::GetColor(Window_Colors::Text));
+    dark_color  = Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark));
+
+    QConicalGradient gradient;
+    gradient.setAngle(30);
+    gradient.setColorAt(0.0000, light_color);
+    gradient.setColorAt(0.1666, dark_color);
+    gradient.setColorAt(0.3333, light_color);
+    gradient.setColorAt(0.4999, dark_color);
+    gradient.setColorAt(0.6666, light_color);
+    gradient.setColorAt(0.8333, dark_color);
+    gradient.setColorAt(1.0000, light_color);
+
+    painter.translate(mid, mid + y_offset);
+    painter.rotate(angle);
     painter.setPen(QPen(Qt::NoPen));
-    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Light)) );
-    painter.drawEllipse(1, 1, QDial::height() - 2, QDial::height() - 2);
+    painter.setBrush(gradient);
+    QRectF offset_center = circle_rect;
+           offset_center.moveTo(-circle_rect.width() / 2.0, -circle_rect.height() / 2.0);
+    painter.drawEllipse(offset_center);
+    painter.resetTransform();
 
     // Draw Background Arcs
-    int width =  QDial::width();
-    int height = QDial::height();
-    double r = Dr::Min(width, height) / 2.0;
-    double inset = Dr::Scale(0.0);
-    double dx = this->rect().x() + inset + (width - 2  * r) / 2.0 + 1;
-    double dy = this->rect().y() + inset + (height - 2 * r) / 2.0 + 1;
-    QRect br = QRect(int(dx), int(dy), int(r * 2 - 2 * inset - 2), int(r * 2 - 2 * inset - 2));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), 0.0 + Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap));
+    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Text)) );
+    painter.drawArc(circle_rect, -45 * c_draw_arc_span, 180 * c_draw_arc_span);
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), 0.0 + Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap));
+    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)) );
+    painter.drawArc(circle_rect, 135 * c_draw_arc_span, 180 * c_draw_arc_span);
 
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)), 1.0 + Dr::Scale(1.0)));
-    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)) );
-    painter.drawArc(br,  60 * 16, 180 * 16);
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Light)), Dr::Scale(1.0)));
-    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Button_Dark)) );
-    painter.drawArc(br, 240 * 16, 180 * 16);
+    // Draw Knotch Line
+    if (m_dial_style == Dial_Style::Knotch_Line) {
+        double scale = static_cast<double>(circle_rect.width()) / 6.0;
+        DrPointF top(0, scale * (2.25));
+        DrPointF bot(0, scale * (1.00 + Dr::Scale(0.25)));
 
-    // Find ratio between current value and maximum to calculate angle
-    double ratio = static_cast<double>(QDial::value()) / static_cast<double>(QDial::maximum());
-
-    // The maximum amount of degrees is 270, offset by 225
-    double angle = ratio * degree270 - degree225;
-
-    // Radius of background circle
-    double radius = QDial::height() / 2.0;
-
-    // Add r to have (0,0) in center of dial
-    double y = sin(angle) * (radius - knob_radius - knob_margin) + radius;
-    double x = cos(angle) * (radius - knob_radius - knob_margin) + radius;
+        painter.translate(mid, mid + y_offset);
+        painter.rotate(angle);
+        painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)), Dr::Scale(2.0), Qt::SolidLine, Qt::RoundCap));
+        painter.drawLine(Dr::ToQPointF(top), Dr::ToQPointF(bot));
+        painter.resetTransform();
 
     // Draw the Value Circle
-    painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)) );
-    painter.drawEllipse(QPointF(x,y), knob_radius, knob_radius);
+    } else if (m_dial_style == Dial_Style::Knotch_Circle) {
+        double scale = static_cast<double>(circle_rect.width()) / 6.0;
+        DrPointF top(0, scale * 2.0);
 
-
-    double mid =   static_cast<double>(QDial::width()) / 2.0;
-
-    double scale = static_cast<double>(QDial::width()) / 6.0;
-
-    DrPointF top(0, scale);
-    DrPointF bot(0, scale * 2.0);
-
-    top = Dr::RotatePointAroundOrigin(DrPointF(mid, mid), top, angle);
-    bot = Dr::RotatePointAroundOrigin(DrPointF(mid, mid), top, angle);
-
-    painter.setBrush( Qt::white );
-    painter.drawLine( Dr::ToQPointF(top), Dr::ToQPointF(bot) );
+        double knob_radius = c_knob_radius / (100.0 / m_dial_size);
+        painter.translate(mid, mid + y_offset);
+        painter.rotate(angle);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Seperator)));
+        painter.drawEllipse(Dr::ToQPointF(top), knob_radius, knob_radius);
+        painter.resetTransform();
+    }
 
 }
 
