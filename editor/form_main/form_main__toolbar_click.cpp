@@ -88,6 +88,7 @@ void FormMain::buttonGroupEditClicked(int id) {
 
         if (getEditorMode() == Editor_Mode::World_Creator) {
             if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { m_tree_assets->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::Inspector_Tree)   { m_tree_assets->keyPressEvent(event); }
             else if (getActiveWidget() == Editor_Widgets::Project_Tree)     { m_tree_project->keyPressEvent(event); }
             else if (getActiveWidget() == Editor_Widgets::View) {
                 if (getEditorMode() == Editor_Mode::World_Graph)            { m_scene_world_graph->keyPressEvent(event); }
@@ -96,6 +97,7 @@ void FormMain::buttonGroupEditClicked(int id) {
 
         } else if (getEditorMode() == Editor_Mode::Sound_Creator) {
             if      (getActiveWidget() == Editor_Widgets::Asset_Tree)       { m_tree_assets->keyPressEvent(event); }
+            else if (getActiveWidget() == Editor_Widgets::Inspector_Tree)   { m_tree_assets->keyPressEvent(event); }
         }
 
         if (event != nullptr) { delete event; event = nullptr; }
