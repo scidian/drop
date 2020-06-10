@@ -17,6 +17,7 @@
 #include "core/dr_random.h"
 #include "core/sound.h"
 #include "editor/event_filters/event_filters.h"
+#include "editor/form_main/form_main.h"
 #include "editor/form_sound/form_sound_effect.h"
 #include "editor/form_sound/visualizer.h"
 #include "editor/helper_library.h"
@@ -29,7 +30,8 @@
 //####################################################################################
 //##    Constructor
 //####################################################################################
-FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(parent), m_project(project) {
+FormSoundEffect::FormSoundEffect(DrProject *project, FormMain *form_main, QWidget *parent)
+    : QWidget(parent), m_sound_creator(form_main), m_project(project) {
 
     // ***** Initialize Key Generators
     m_key_gen[SoundEffectType::BLIP] = 1;
@@ -65,8 +67,8 @@ FormSoundEffect::FormSoundEffect(DrProject *project, QWidget *parent) : QWidget(
     // ***** Visual Timer
     m_visual_timer = new QTimer(this);
     m_visual_timer->setInterval(20);
-    connect(m_visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
     m_visual_timer->setTimerType(Qt::PreciseTimer);
+    connect(m_visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
 }
 
 
@@ -95,13 +97,15 @@ void FormSoundEffect::resizeEvent(QResizeEvent *event) {
 // Visualizer
 void FormSoundEffect::drawVisuals() {
     if (Dr::GetSoLoud()->getActiveVoiceCount() > 0) {
-        m_visual_timer->setInterval(20);
+        m_sound_creator->drawVisuals();
+        m_visual_timer->start();
+        m_last_play_time.restart();
     }
-    m_visualizer->update();
 
-    if (m_last_play_time.elapsed() > 1000) {
+    if (m_last_play_time.elapsed() < 2000) {
         m_visualizer->repaint();
-        m_visual_timer->setInterval(500);
+    } else {
+        m_visual_timer->stop();
     }
 }
 

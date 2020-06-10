@@ -34,7 +34,7 @@ void FormSoundEffect::playSfxr(SoundEffectType preset, int seed) {
     long effect_key = getNextKey(preset);
     m_effects[effect_key] = effect;
     Dr::GetSoLoud()->play(*m_effects[effect_key]);
-    m_visual_timer->start();
+    drawVisuals();
 
     QString item_text = stringFromEffectType(preset) + QString::number(effect_key);
     QListWidgetItem *item = new QListWidgetItem(item_text);
@@ -72,7 +72,7 @@ void FormSoundEffect::playItem(QListWidgetItem *item) {
     SoLoud::Sfxr* sound_effect = getEffect(sound_key);
     if (sound_effect != nullptr) {
         Dr::GetSoLoud()->play(*sound_effect);
-        m_visual_timer->start();
+        drawVisuals();
     }
 }
 

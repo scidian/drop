@@ -28,6 +28,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QElapsedTimer>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -61,6 +62,7 @@ class TreeInspector;
 class TreeProject;
 class ViewRubberBand;
 class ViewToolbar;
+class VisualFrame;
 
 
 //####################################################################################
@@ -157,6 +159,9 @@ private:
     QWidget         *m_widget_central_sound_creator;
     MixerScene          *m_scene_mixer;
     MixerView           *m_view_mixer;
+    VisualFrame         *m_visualizer;                                      // Widget that displays visualizer for current sounds playing
+    QTimer              *m_visual_timer;                                    // Event timer that calls update for visualizer
+    QElapsedTimer        m_last_play_time;                                  // Tracks when sound was last still playing
 
 
 public:
@@ -261,7 +266,8 @@ public:
     void            setToolBar(Editor_Mode new_mode);
     void            updateToolBar();
 
-private slots:
+
+public slots:
     // Main ToolBar
     void            buttonGroupEditClicked(int id);
     void            buttonGroupGridFullClicked(int id);
@@ -276,6 +282,10 @@ private slots:
     void            centerViewTimer(QPointF center_point);
     void            editMenuAboutToShow();
     void            editMenuAboutToHide();
+
+    // Sound Creator
+    void            drawVisuals();
+
 
 signals:
     // Undo Stack Signals

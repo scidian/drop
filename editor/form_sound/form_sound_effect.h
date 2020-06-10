@@ -23,6 +23,7 @@
 // Forward Declarations
 class DrProject;
 class DrSound;
+class FormMain;
 class VisualFrame;
 class WaveForm;
 
@@ -39,6 +40,7 @@ class FormSoundEffect : public QWidget
 
 private:
     // External Borrowed Pointers
+    FormMain               *m_sound_creator;                                // Pointer to Parent FormMain
     DrProject              *m_project;                                      // Pointer to the open project
 
     // Local Variables
@@ -64,7 +66,7 @@ private:
 
 public:
     // Constructor / Destructor
-    explicit FormSoundEffect(DrProject *project, QWidget *parent = nullptr);
+    explicit FormSoundEffect(DrProject *project, FormMain *form_main, QWidget *parent = nullptr);
     virtual ~FormSoundEffect() override;
 
     // Event Overrides

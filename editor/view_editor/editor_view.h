@@ -228,7 +228,6 @@ public:
     double              calculateCornerAngle(double angle1, double angle2);
     Transform_Data      decomposeTransform(QTransform &from_transform, bool qr_type = true);
     double              extractAngleFromTransform(QTransform &from_transform);
-    QRectF              rectAtCenterPoint(QPoint center, double rect_size);
     void                updateSelectionBoundingBox(int called_from = 0);
 
     // Grid Functions

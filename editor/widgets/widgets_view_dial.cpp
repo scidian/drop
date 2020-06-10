@@ -128,10 +128,10 @@ void ViewDial::paintEvent(QPaintEvent*) {
     painter.resetTransform();
 
     // Draw Background Arcs
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), 0.0 + Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap));
     painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Text)) );
     painter.drawArc(circle_rect, -45 * c_draw_arc_span, 180 * c_draw_arc_span);
-    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), 0.0 + Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap));
+    painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)), Dr::Scale(1.0), Qt::SolidLine, Qt::RoundCap));
     painter.setBrush( Dr::ToQColor(Dr::GetColor(Window_Colors::Text_Dark)) );
     painter.drawArc(circle_rect, 135 * c_draw_arc_span, 180 * c_draw_arc_span);
 

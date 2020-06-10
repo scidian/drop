@@ -53,7 +53,7 @@ enum class Preferences {
     Editor_Snap_To_Center_Of_Selection_Box,         // bool
 
     // View "Mixer" Options
-    Mixer_Master_Volume,                            // double   0.0 to 100.0
+    Mixer_Master_Volume,                            // double   0.0 to 100.0 (i.e. percent)
     Mixer_Auto_Play_Asset_Sounds,                   // bool
 
 };

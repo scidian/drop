@@ -14,6 +14,7 @@
 //####################################################################################
 #include <QApplication>
 
+#include "core/sound.h"
 #include "editor/form_main/form_main.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -165,6 +166,7 @@ void LoadPreferences() {
     // ********** Set program variables from loaded Preferences
     Dr::SetScale(Dr::GetPreference(Preferences::Gui_Scale).toDouble());
     Dr::SetColorScheme(static_cast<Color_Scheme>(Dr::GetPreference(Preferences::Color_Scheme).toInt()));
+    Dr::GetSoLoud()->setGlobalVolume(Dr::GetPreference(Preferences::Mixer_Master_Volume).toDouble() / 100.0);
 
 
     //####################################################################################

@@ -242,7 +242,14 @@ QTransform CreateRotatedQTransform(QPointF offset, double angle_in_degrees) {
 QTransform CreateRotatedQTransform(DrPointF offset, double angle_in_degrees) {
     return CreateRotatedQTransform(ToQPointF(offset), angle_in_degrees);
 }
-
+// Returns a Rect around center point with sides length of rect_size
+QRect RectAtPoint(QPoint center, int rect_size) {
+    return QRect(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
+}
+// Returns a RectF around center point with sides length of rect_size
+QRectF RectFAtPoint(QPointF center, double rect_size) {
+    return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
+}
 
 //####################################################################################
 //##

@@ -115,6 +115,12 @@ void FormMain::buildCentralWidgetSoundCreator() {
     size_policy_preferred_horizontal.setHorizontalStretch(1);
     size_policy_preferred_horizontal.setVerticalStretch(0);
 
+    // ***** Visual Timer
+    m_visual_timer = new QTimer(this);
+    m_visual_timer->setInterval(20);
+    m_visual_timer->setTimerType(Qt::PreciseTimer);
+    connect(m_visual_timer, SIGNAL(timeout()), this, SLOT(drawVisuals()));
+
     // ***** Initialize scene used for mixing DrMix
     m_scene_mixer = new MixerScene(this, m_project, this);
 

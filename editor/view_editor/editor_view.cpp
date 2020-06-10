@@ -180,11 +180,11 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
 
 
     // ***** Store view coodinate rectangles of corners for size grip handles
-    m_handles[Position_Flags::Top_Left] =     rectAtCenterPoint( mapFromScene( top_left  ), corner_size);
-    m_handles[Position_Flags::Top_Right] =    rectAtCenterPoint( mapFromScene( top_right ), corner_size);
-    m_handles[Position_Flags::Bottom_Left] =  rectAtCenterPoint( mapFromScene( bot_left  ), corner_size);
-    m_handles[Position_Flags::Bottom_Right] = rectAtCenterPoint( mapFromScene( bot_right ), corner_size);
-    m_handles[Position_Flags::Center] =       rectAtCenterPoint( mapFromScene( center    ), corner_size);
+    m_handles[Position_Flags::Top_Left] =     Dr::RectFAtPoint( mapFromScene( top_left  ), corner_size);
+    m_handles[Position_Flags::Top_Right] =    Dr::RectFAtPoint( mapFromScene( top_right ), corner_size);
+    m_handles[Position_Flags::Bottom_Left] =  Dr::RectFAtPoint( mapFromScene( bot_left  ), corner_size);
+    m_handles[Position_Flags::Bottom_Right] = Dr::RectFAtPoint( mapFromScene( bot_right ), corner_size);
+    m_handles[Position_Flags::Center] =       Dr::RectFAtPoint( mapFromScene( center    ), corner_size);
 
     // ***** Remove rotation from bounding box in scene, map bounding box scene coordinates to view coordinates
     QTransform remove_rotation = Dr::CreateRotatedQTransform(center, -angle);
@@ -240,7 +240,7 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
 
     QTransform rotate = Dr::CreateRotatedQTransform(top, m_handles_angles[Position_Flags::Top]);
     zero = rotate.map(zero);
-    m_handles[Position_Flags::Rotate] = rectAtCenterPoint(zero, corner_size);
+    m_handles[Position_Flags::Rotate] = Dr::RectFAtPoint(zero, corner_size);
     m_handles_centers[Position_Flags::Rotate] = m_handles[Position_Flags::Rotate].boundingRect().center();
 
 
@@ -254,11 +254,6 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
     }
 
     my_scene->scene_mutex.unlock();
-}
-
-// Helper function, returns a RectF around center point with sides length of rect_size
-QRectF EditorView::rectAtCenterPoint(QPoint center, double rect_size) {
-    return QRectF(center.x() - rect_size / 2, center.y() - rect_size / 2, rect_size, rect_size);
 }
 
 // Calculates the angle facing away from the corner of two angles, for calculating mouse angle of corners

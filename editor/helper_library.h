@@ -72,9 +72,12 @@ namespace Dr {
     // ***** Qt Comparison
     bool        SameQColor(QColor color1, QColor color2, double tolerance);
 
+
     // ***** Qt Math
     QTransform  CreateRotatedQTransform(QPointF  offset, double angle_in_degrees);
     QTransform  CreateRotatedQTransform(DrPointF offset, double angle_in_degrees);
+    QRect       RectAtPoint(QPoint center,   int rect_size);
+    QRectF      RectFAtPoint(QPointF center, double rect_size);
 
 
     // ***** User Interaction

@@ -12,8 +12,10 @@
 #include <QTimer>
 
 #include "core/colors/colors.h"
+#include "core/sound.h"
 #include "editor/docks/docks.h"
 #include "editor/form_main/form_main.h"
+#include "editor/form_sound/visualizer.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/project/project.h"
@@ -219,6 +221,44 @@ void FormMain::setLabelText(Label_Names label_name, QString new_text) {
         case Label_Names::Label_Bottom:     label_bottom->setText(new_text);        break;
     }
 }
+
+
+//####################################################################################
+//##    Sound Creator Visualizer
+//####################################################################################
+void FormMain::drawVisuals() {
+    if (Dr::GetSoLoud()->getActiveVoiceCount() > 0) {
+        m_visual_timer->start();
+        m_last_play_time.restart();
+    }
+
+    if (m_last_play_time.elapsed() < 2000) {
+        m_visualizer->repaint();
+    } else {
+        m_visual_timer->stop();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

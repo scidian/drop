@@ -16,6 +16,7 @@
 #include "core/colors/colors.h"
 #include "core/sound.h"
 #include "editor/constants_advisor_info.h"
+#include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -71,6 +72,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
             if (Dr::GetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds).toBool()) {
                 DrSound *sound = static_cast<DrSound*>(entity);
                 Dr::GetSoLoud()->play(*sound->getAudioSource());
+                if (Dr::GetActiveFormMain()) Dr::GetActiveFormMain()->drawVisuals();
             }
         }
 

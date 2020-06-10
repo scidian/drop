@@ -110,11 +110,16 @@ void FormPopup::buildPopupAddSoundEntity() {
 
         // Adds Sound Effect
         connect(buttonEffect, &QRadioButton::released, [this]() {
-            FormSoundEffect *sound_effects = new FormSoundEffect(m_project, nullptr);
-            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
-            sound_effects->show();
-            this->close();
-            sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
+            FormMain *form_main = Dr::GetActiveFormMain();
+            if (form_main != nullptr) {
+                FormSoundEffect *sound_effects = new FormSoundEffect(m_project, form_main);
+                sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
+                sound_effects->show();
+                this->close();
+                sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
+            } else {
+                this->close();
+            }
         });
 
         // Adds White Noise

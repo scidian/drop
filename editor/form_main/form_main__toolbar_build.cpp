@@ -15,6 +15,7 @@
 #include <QToolButton>
 
 #include "core/dr_random.h"
+#include "core/sound.h"
 #include "editor/enums_editor.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_main/form_main.h"
@@ -28,6 +29,7 @@
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/style/style.h"
+#include "editor/widgets/widgets_inspector.h"
 #include "editor/widgets/widgets_view.h"
 
 
@@ -315,21 +317,56 @@ void FormMain::buildToolBar() {
     m_widget_group_visual->hide();
     m_widget_group_visual->setObjectName(QStringLiteral("widgetGroupVisual"));
         QHBoxLayout *toolbar_layout_visual = new QHBoxLayout(m_widget_group_visual);
-        toolbar_layout_visual->setSpacing(0);
+        toolbar_layout_visual->setSpacing(8);
         toolbar_layout_visual->setContentsMargins(0, 0, 0, 0);
 
-        ViewDial *volume_dial = new ViewDial(nullptr, Dial_Style::Knotch_Line, true);
+        InspectorSpinSlot   *volume_spin = new InspectorSpinSlot();
+        ViewDial            *volume_dial = new ViewDial(nullptr, Dial_Style::Knotch_Line, true);
+
+        // Visualizer
+        m_visualizer = new VisualFrame();
+        m_visualizer->setObjectName(QStringLiteral("visualizerFrame"));
+        m_visualizer->setFixedHeight(10.0 + Dr::Scale(20.0));
+        m_visualizer->setFixedWidth(50.0 + Dr::Scale(50.0));
+        m_visualizer->turnOnAutoScale(m_visualizer->width(), m_visualizer->height());
+        m_visualizer->showBorder(true);
+        toolbar_layout_visual->addWidget(m_visualizer);
+
+        // Volume Dial
         volume_dial->setObjectName(QStringLiteral("dialMasterVolume"));
         volume_dial->setRange(0, 100);
         volume_dial->setNotchesVisible(false);
         volume_dial->setWrapping(false);
         volume_dial->setValue(Dr::GetPreference(Preferences::Mixer_Master_Volume).toDouble());
         volume_dial->setToolTip("Master Volume");
+        connect(volume_dial, &QDial::valueChanged, [volume_dial, volume_spin] () {
+            double volume = static_cast<double>(volume_dial->value());
+            Dr::SetPreference(Preferences::Mixer_Master_Volume, volume);
+            Dr::GetSoLoud()->setGlobalVolume(volume / 100.0);
+            volume_spin->blockSignals(true);
+            volume_spin->setValue(volume);
+            volume_spin->blockSignals(false);
+        });
         toolbar_layout_visual->addWidget(volume_dial);
 
-        VisualFrame *visual_frame = new VisualFrame();
-        toolbar_layout_visual->addWidget(visual_frame);
-
+        // Volume Spin Box
+        volume_spin->setToolTip("Master Volume");
+        volume_spin->setFont(Dr::CustomFont());
+        volume_spin->setAttribute(Qt::WA_MacShowFocusRect, 0);
+        volume_spin->setRange(0, 100);
+        volume_spin->setSingleStep(1);
+        volume_spin->setSuffix("%");
+        volume_spin->setValue(Dr::GetPreference(Preferences::Mixer_Master_Volume).toDouble());
+        volume_spin->setButtonSymbols(QAbstractSpinBox::ButtonSymbols::NoButtons);
+        connect (volume_spin, QOverload<int>::of(&QSpinBox::valueChanged), this, [volume_dial] (int i) {
+            double volume = static_cast<double>(i);
+            Dr::SetPreference(Preferences::Mixer_Master_Volume, volume);
+            Dr::GetSoLoud()->setGlobalVolume(volume / 100.0);
+            volume_dial->blockSignals(true);
+            volume_dial->setValue(volume);
+            volume_dial->blockSignals(false);
+        });
+        toolbar_layout_visual->addWidget(volume_spin);
 
 
     // ******************** Set up initial toolbar ********************

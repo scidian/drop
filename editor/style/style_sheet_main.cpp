@@ -325,6 +325,7 @@ QString CustomStyleSheetFormatting() {
         " QAbstractSpinBox {        "
         "       border: " + Dr::BorderWidth() + " solid; "
         "       height: " + std::to_string(Dr::Scale(20)) + "px; "
+        "       font-size: " + std::to_string(Dr::FontSize()) + "px; "
         "       border-top-left-radius: 4px; border-bottom-left-radius: 6px; border-top-right-radius: 4px; border-bottom-right-radius: 6px;"
         "       color: " + Dr::GetColor(Window_Colors::Text).name() + "; " + StyleSheetRecessedBackgroundBorder(15, 92) +
         "       selection-color: " + Dr::GetColor(Window_Colors::Shadow).name() + "; "
