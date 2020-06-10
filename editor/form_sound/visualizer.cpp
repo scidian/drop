@@ -53,15 +53,21 @@ void VisualFrame::paintEvent(QPaintEvent *) {
     if (m_show_border) {
         QRect border_rect = this->rect().adjusted(Dr::Scale(1.0), Dr::Scale(1.0), -Dr::Scale(1.0), -Dr::Scale(1.0));
 
+        QLinearGradient gradient(0, border_rect.top(), 0, border_rect.bottom());
+        gradient.setColorAt(0.00, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+        gradient.setColorAt(0.10, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+        gradient.setColorAt(0.11, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)));
+        gradient.setColorAt(0.95, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)));
+        gradient.setColorAt(0.96, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+        gradient.setColorAt(1.00, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+
         // Border
-        painter.setBrush(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark))));
+        painter.setBrush(gradient);
         painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)), Dr::Scale(1.0)));
         painter.drawRoundedRect(border_rect, Dr::Scale(4.0), Dr::Scale(4.0));
 
-        // Top Dark Inset
-        painter.setBrush(QBrush(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150))));
-        painter.drawRoundedRect(border_rect.x(), border_rect.y(), border_rect.width(), Dr::Scale(4.0), Dr::Scale(4.0), Dr::Scale(4.0));
-
+        painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).lighter(150)), Dr::Scale(1.0)));
+        painter.drawLine(border_rect.left() + Dr::Scale(2.0), border_rect.bottom() + Dr::Scale(1.0), border_rect.right() - Dr::Scale(2.0), border_rect.bottom() + Dr::Scale(1.0));
     }
 
     // Paint Visuals
