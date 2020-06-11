@@ -148,31 +148,36 @@ void FormMain::clearToolBar() {
 void FormMain::setToolBar(Editor_Mode new_mode) {
     switch (new_mode) {
         case Editor_Mode::World_Graph:
-            addToolBarGroup( m_widget_group_grid_simple,    false );
-            addToolBarGroup( m_widget_group_play,           false );
-            addToolBarGroup( m_widget_group_settings,       false );
+            addToolBarSpacer(true, 70);
+            addToolBarGroup( m_widget_group_grid_simple,    false, 35);
+            addToolBarGroup( m_widget_group_play,           false, 35);
+            addToolBarGroup( m_widget_group_settings,       false);
             break;
         case Editor_Mode::World_Creator:
-            addToolBarGroup( m_widget_group_edit,           true );
-            addToolBarGroup( m_widget_group_layering,       true );
-            addToolBarGroup( m_widget_group_transform,      true );
-            addToolBarGroup( m_widget_group_grid_full,      true );
-            addToolBarGroup( m_widget_group_play,           false );
-            addToolBarGroup( m_widget_group_settings,       false );
+            addToolBarSpacer(false, 70);
+            addToolBarGroup( m_widget_group_edit,           true);
+            addToolBarGroup( m_widget_group_layering,       true);
+            addToolBarGroup( m_widget_group_transform,      true);
+            addToolBarGroup( m_widget_group_grid_full,      false, 35);
+            addToolBarGroup( m_widget_group_play,           false, 35);
+            addToolBarGroup( m_widget_group_settings,       false);
             break;
         case Editor_Mode::UI_Creator:
-            addToolBarGroup( m_widget_group_play,           false );
-            addToolBarGroup( m_widget_group_settings,       false );
+            addToolBarSpacer(true);
+            addToolBarGroup( m_widget_group_play,           false, 35);
+            addToolBarGroup( m_widget_group_settings,       false);
             break;
         case Editor_Mode::Sound_Creator:
-            addToolBarGroup( m_widget_group_edit,           true );
-            addToolBarGroup( m_widget_group_visual,         true );
-            addToolBarGroup( m_widget_group_play,           false );
-            addToolBarGroup( m_widget_group_settings,       false );
+            addToolBarSpacer(false, 70);
+            addToolBarGroup( m_widget_group_edit,           true);
+            addToolBarGroup( m_widget_group_visual,         false, 35);
+            addToolBarGroup( m_widget_group_play,           false, 35);
+            addToolBarGroup( m_widget_group_settings,       false);
             break;
         case Editor_Mode::Clear:
-            addToolBarGroup( m_widget_group_play,           false );
-            addToolBarGroup( m_widget_group_settings,       false );
+            addToolBarSpacer(true);
+            addToolBarGroup( m_widget_group_play,           false, 35);
+            addToolBarGroup( m_widget_group_settings,       false);
             break;
 
 
@@ -184,17 +189,33 @@ void FormMain::setToolBar(Editor_Mode new_mode) {
     }
 }
 
-void FormMain::addToolBarGroup(QWidget *group, bool add_spacer) {
+void FormMain::addToolBarGroup(QWidget *group, bool spacer_expands, int min_desired_spacer_size) {
     m_toolbar_widgets.append(group);
     m_widget_toolbar_layout->addWidget(group);
     group->show();
-
-    if (add_spacer) {
-        QSpacerItem *spacer = new QSpacerItem(0, 0, QSizePolicy::Policy::Expanding, QSizePolicy::Minimum);
-        m_toolbar_spacers.append(spacer);
-        m_widget_toolbar_layout->addSpacerItem(spacer);
-    }
+    addToolBarSpacer(spacer_expands, min_desired_spacer_size);
 }
+
+void FormMain::addToolBarSpacer(bool spacer_expands, int min_desired_size) {
+    QSpacerItem *spacer;
+    if (spacer_expands)
+        spacer = new QSpacerItem(min_desired_size, 0, QSizePolicy::Policy::Expanding, QSizePolicy::Minimum);
+    else
+        spacer = new QSpacerItem(min_desired_size, 0, QSizePolicy::Policy::Preferred, QSizePolicy::Minimum);
+    m_toolbar_spacers.append(spacer);
+    m_widget_toolbar_layout->addSpacerItem(spacer);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

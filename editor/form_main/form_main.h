@@ -256,7 +256,8 @@ private:
     void            menuAbout();
 
     // ToolBar Functions
-    void            addToolBarGroup(QWidget *group, bool add_spacer = true);
+    void            addToolBarGroup(QWidget *group, bool spacer_expands = true, int min_desired_spacer_size = 0);
+    void            addToolBarSpacer(bool spacer_expands = true, int min_desired_size = 0);
     void            buttonGroupModeSetChecked(int id);
     void            clearToolBar();
     QToolButton*    createToolBarButton(const QString &style_sheet_name, HeaderBodyList advisor_text, bool checkable = false, bool enabled = true);

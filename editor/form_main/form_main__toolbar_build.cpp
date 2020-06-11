@@ -135,7 +135,6 @@ void FormMain::buildToolBar() {
         m_buttons_group_play->addButton(tool, int(Buttons_Play::Play_Stage));
         toolbar_layout_play->addWidget(tool);
 
-        toolbar_layout_play->addWidget(createToolBarSpacer(c_spacer_height, 34, false));
 
     // ***** Settings Buttons
     m_widget_group_settings = new QWidget(m_widget_toolbar);
@@ -307,7 +306,6 @@ void FormMain::buildToolBar() {
         m_buttons_group_grid_simple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));
         tool->setChecked(Dr::GetPreference(Preferences::Editor_Snap_To_Grid).toBool());
         toolbar_layout_grid_simple->addWidget(tool);
-        toolbar_layout_grid_simple->addWidget(createToolBarSpacer(c_spacer_height, 34, false));
 
 
     // ******************** View "Mixer" Groups ********************
@@ -377,11 +375,11 @@ void FormMain::buildToolBar() {
 
     // Set the initial toolbar as the mode buttons only
     m_widget_toolbar_layout->addWidget(m_widget_group_mode);
-    m_widget_toolbar_layout->addStretch();
+    ///m_widget_toolbar_layout->addStretch();
 
     // Add the toolbar onto FormMain
     m_toolbar->addWidget(m_widget_toolbar);
-    m_widget_toolbar->setFixedWidth( this->width() );
+    m_widget_toolbar->setFixedWidth(this->width());
     this->addToolBar(Qt::ToolBarArea::TopToolBarArea, m_toolbar);
 }
 
@@ -407,11 +405,10 @@ QToolButton* FormMain::createToolBarButton(const QString &style_sheet_name, Head
 
 // DEFAULTS: height = 24, space_on_the_right = 1, visible = true
 QLabel* FormMain::createToolBarSpacer(int height, int space_on_the_right, bool visible) {
+    QString object_name = visible ? QStringLiteral("labelSpacer") : QStringLiteral("labelSpacerNotVisible");
+
     QLabel *spacer = new QLabel();
-    if (visible)
-        spacer->setObjectName(QStringLiteral("labelSpacer"));
-    else
-        spacer->setObjectName(QStringLiteral("labelSpacerNotVisible"));
+    spacer->setObjectName(object_name);
     spacer->setFixedSize( space_on_the_right, height );
     return spacer;
 }
