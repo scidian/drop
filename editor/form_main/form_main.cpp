@@ -84,10 +84,15 @@ FormMain::~FormMain() {
     m_scene_editor->deleteLater();
 
     // ***** Delete widgets not currently attached to main form
+    if (getEditorMode() != Editor_Mode::Clear)          m_widget_central_clear->deleteLater();
     if (getEditorMode() != Editor_Mode::World_Graph)    m_widget_central_world_graph->deleteLater();
     if (getEditorMode() != Editor_Mode::World_Creator)  m_widget_central_editor->deleteLater();
-    if (getEditorMode() != Editor_Mode::Clear)          m_widget_central_clear->deleteLater();
+    if (getEditorMode() != Editor_Mode::Sound_Creator)  m_widget_central_sound_creator->deleteLater();
 
+    // ***** Make sure we stop all playing sound before deleting DrProject (which contains DrSounds that could be playing)
+    Dr::GetSoLoud()->stopAll();
+
+    // Delete project (DrProject destructor handles deleting all of its own data) and images
     delete m_project;
     delete m_external_images;
 }

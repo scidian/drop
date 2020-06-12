@@ -184,8 +184,8 @@ void TreeAssets::buildAssetTree(QString search_text) {
         asset_categories.push_back( std::make_pair(Asset_Category::Audio_Files,     widget_items[Asset_Category::Audio_Files]) );
         widget_items[Asset_Category::Instruments] =     new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Instruments,     widget_items[Asset_Category::Instruments]) );
-        widget_items[Asset_Category::Noise] =           new QTreeWidgetItem();
-        asset_categories.push_back( std::make_pair(Asset_Category::Noise,           widget_items[Asset_Category::Noise]) );
+        widget_items[Asset_Category::White_Noise] =     new QTreeWidgetItem();
+        asset_categories.push_back( std::make_pair(Asset_Category::White_Noise,     widget_items[Asset_Category::White_Noise]) );
         widget_items[Asset_Category::Sound_Effects] =   new QTreeWidgetItem();
         asset_categories.push_back( std::make_pair(Asset_Category::Sound_Effects,   widget_items[Asset_Category::Sound_Effects]) );
         widget_items[Asset_Category::Speech] =          new QTreeWidgetItem();
@@ -417,9 +417,9 @@ void TreeAssets::buildAssetTree(QString search_text) {
                 case DrSoundType::Audio_File:                           category_name = Asset_Category::Audio_Files;        break;
                 case DrSoundType::Instrument:                           category_name = Asset_Category::Instruments;        break;
                 case DrSoundType::Mix:                                  break;
-                case DrSoundType::Noise:                                category_name = Asset_Category::Noise;              break;
                 case DrSoundType::Sound_Effect:                         category_name = Asset_Category::Sound_Effects;      break;
                 case DrSoundType::Speech:                               category_name = Asset_Category::Speech;             break;
+                case DrSoundType::White_Noise:                          category_name = Asset_Category::White_Noise;        break;
             }
         } else { continue; }
 
@@ -500,9 +500,9 @@ TreeCategoryButton* TreeAssets::createCategoryButton(QTreeWidgetItem *item, std:
     // Sounds
     else if (category_name == Asset_Category::Audio_Files)      { icon = "comp_sound_wave.png";         info = Advisor_Info::Asset_Sound;     }
     else if (category_name == Asset_Category::Instruments)      { icon = "comp_sound_instrument.png";   info = Advisor_Info::Asset_Sound;     }
-    else if (category_name == Asset_Category::Noise)            { icon = "comp_sound_noise.png";        info = Advisor_Info::Asset_Sound;     }
     else if (category_name == Asset_Category::Sound_Effects)    { icon = "comp_sound_effect.png";       info = Advisor_Info::Asset_Sound;     }
     else if (category_name == Asset_Category::Speech)           { icon = "comp_sound_speech.png";       info = Advisor_Info::Asset_Sound;     }
+    else if (category_name == Asset_Category::White_Noise)      { icon = "comp_sound_noise.png";        info = Advisor_Info::Asset_Sound;     }
     // Images
     else if (category_name == Asset_Category::Images)           { icon = "comp_images.png";             info = Advisor_Info::Asset_Image;     }
     else {

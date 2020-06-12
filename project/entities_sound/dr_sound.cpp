@@ -44,7 +44,16 @@ void DrSound::initializeSoundSettings(std::string new_name) {
     addComponent(Comps::Sound_Settings, "Sound Settings", "Settings for this Sound.", Component_Colors::RGB_18_Gray, false);
     getComponent(Comps::Sound_Settings)->setIcon(Component_Icons::Sound);
 
-    addPropertyToComponent(Comps::Sound_Settings, Props::Sound_Settings_Color, Property_Type::Color, DrColor(Component_Colors::RGB_13_Yellow).rgba(),
+    DrColor sound_color;
+    switch (m_sound_type) {
+        case DrSoundType::Mix:              sound_color = Component_Colors::RGB_01_Red;         break;
+        case DrSoundType::Audio_File:       sound_color = Component_Colors::RGB_04_Purple;      break;
+        case DrSoundType::Instrument:       sound_color = Component_Colors::RGB_07_LightBlue;   break;
+        case DrSoundType::Sound_Effect:     sound_color = Component_Colors::RGB_10_Green;       break;
+        case DrSoundType::Speech:           sound_color = Component_Colors::RGB_13_Yellow;      break;
+        case DrSoundType::White_Noise:      sound_color = Component_Colors::RGB_16_Orange;      break;
+    }
+    addPropertyToComponent(Comps::Sound_Settings, Props::Sound_Settings_Color, Property_Type::Color, sound_color.rgba(),
                            "Sound Color", "Color this Sound will appear in the Asset Tree.");
 
 }
