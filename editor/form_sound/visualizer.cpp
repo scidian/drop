@@ -90,7 +90,8 @@ void VisualFrame::paintEvent(QPaintEvent *) {
         // For Frequency Visual
         painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 1) );
         float y_size_f = (this->height() / 400.0) * (fft[i] * 32);
-        painter.drawLine(x, (this->rect().height()/2) - y_size_f, x, (this->rect().height()/2) + y_size_f);
+        float middle = static_cast<float>(this->rect().height()) / 2.f;
+        painter.drawLine(x, middle - y_size_f, x, middle + y_size_f);
     }
 }
 

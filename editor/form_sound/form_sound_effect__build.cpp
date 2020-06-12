@@ -216,14 +216,14 @@ void FormSoundEffect::buildSoundEffectForm() {
                 button_layout->addWidget(cancel);
 
                 // Accept Button
-                QPushButton *accept = new QPushButton("  Add Sound  ");
+                QPushButton *accept = new QPushButton("  Add Sound Effect  ");
                     accept->setObjectName(QStringLiteral("buttonDefault"));
                     accept->setSizePolicy(button_right);
                     Dr::ApplyDropShadowByType(accept, Shadow_Types::Button_Shadow);
                     connect(accept, &QPushButton::clicked, [this] () {
                         SoLoud::Sfxr *effect = getEffect(selectedEffectKey());
 
-                        if (effect) {
+                        if (effect != nullptr) {
                             // Add Sound
                             std::string sound_name = m_list->selectedItems().first()->text().toStdString();
                             DrSound *sound = m_project->addSound(DrSoundType::Sound_Effect, effect, c_no_key, sound_name);

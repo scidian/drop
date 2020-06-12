@@ -221,7 +221,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         QFrame *new_frame = dynamic_cast<QFrame*>(flow->itemAt(layout_index)->widget());
         long    new_key = new_frame->property(User_Property::Key).toLongLong();
         if (new_key != getSelectedKey()) {
-            setSelectedKey(new_key);
+            setSelectedKey(new_key, true);
             m_editor_relay->buildInspector( { new_key } );
         }
     }

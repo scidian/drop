@@ -11,6 +11,7 @@
 
 #include "editor/form_main/form_main.h"
 #include "editor/form_sound/form_sound_effect.h"
+#include "editor/form_sound/form_speech_synthesis.h"
 #include "editor/forms/form_popup.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
@@ -105,7 +106,17 @@ void FormPopup::buildPopupAddSoundEntity() {
         });
 
         // Adds Speech Synthesis
-        connect(buttonSpeech, &QRadioButton::released, []() {
+        connect(buttonSpeech, &QRadioButton::released, [this]() {
+            FormMain *form_main = Dr::GetActiveFormMain();
+            if (form_main != nullptr) {
+                FormSpeechSynthesis *speech = new FormSpeechSynthesis(m_project, form_main);
+                speech->setFocus(Qt::FocusReason::PopupFocusReason);
+                speech->show();
+                this->close();
+                speech->setFocus(Qt::FocusReason::PopupFocusReason);
+            } else {
+                this->close();
+            }
         });
 
         // Adds Sound Effect

@@ -31,16 +31,18 @@
 void FormSoundEffect::playSfxr(SoundEffectType preset, int seed) {
     SoLoud::Sfxr *effect = new SoLoud::Sfxr();
                   effect->loadPreset(preset, seed);
-    long effect_key = getNextKey(preset);
+    long effect_key = getNextKey();
     m_effects[effect_key] = effect;
     Dr::GetSoLoud()->play(*m_effects[effect_key]);
     drawVisuals();
 
-    QString item_text = stringFromEffectType(preset) + QString::number(effect_key);
+    long item_count = m_type_counts[preset]++;
+    QString item_text = stringFromEffectType(preset) + QString::number(item_count);
     QListWidgetItem *item = new QListWidgetItem(item_text);
-    item->setData(User_Roles::Key, QVariant::fromValue(effect_key));
+    item->setData(User_Roles::Key,  QVariant::fromValue(effect_key));
     m_list->addItem(item);
     item->setSelected(true);
+
     m_selected_effect = effect_key;
 }
 

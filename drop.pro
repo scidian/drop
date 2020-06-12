@@ -198,6 +198,8 @@ SOURCES += \
     3rd_party/soloud/filter/soloud_lofifilter.cpp \
     3rd_party/soloud/filter/soloud_robotizefilter.cpp \
     3rd_party/soloud/filter/soloud_waveshaperfilter.cpp \
+    3rd_party/soloud/soloud_basicwave.cpp \
+    3rd_party/soloud/soloud_padsynth.cpp \
     core/colors/colors.cpp \
     core/colors/palette_blank.cpp \
     core/colors/palette_material.cpp \
@@ -1087,6 +1089,7 @@ HEADERS += \
     3rd_party/soloud/backend/miniaudio/miniaudio.h \
     3rd_party/soloud/soloud.h \
     3rd_party/soloud/soloud_audiosource.h \
+    3rd_party/soloud/soloud_basicwave.h \
     3rd_party/soloud/soloud_bassboostfilter.h \
     3rd_party/soloud/soloud_biquadresonantfilter.h \
     3rd_party/soloud/soloud_bus.h \
@@ -1109,6 +1112,7 @@ HEADERS += \
     3rd_party/soloud/soloud_monotone.h \
     3rd_party/soloud/soloud_noise.h \
     3rd_party/soloud/soloud_openmpt.h \
+    3rd_party/soloud/soloud_padsynth.h \
     3rd_party/soloud/soloud_queue.h \
     3rd_party/soloud/soloud_robotizefilter.h \
     3rd_party/soloud/soloud_sfxr.h \

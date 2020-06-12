@@ -44,7 +44,8 @@ private:
     DrProject              *m_project;                                      // Pointer to the open project
 
     // Local Variables
-    std::map<SoundEffectType, long> m_key_gen;                              // Key generator for identifying sounds created on this Form
+    long                            m_key_gen           { 1 };              // Key generator for identifying sounds created on this Form
+    std::map<SoundEffectType, long> m_type_counts;                          // Keeps track of counts of different sound effect types for naming
     long                            m_selected_effect   { c_no_key };       // Local key of the Effect currently selected (to be passed back to Project)
 
     // Sound Variables
@@ -70,10 +71,10 @@ public:
     virtual ~FormSoundEffect() override;
 
     // Event Overrides
-    virtual void resizeEvent(QResizeEvent *event) override;
+    virtual void    resizeEvent(QResizeEvent *event) override;
 
     // Key Gen
-    int             getNextKey(SoundEffectType type)        { return m_key_gen[type]++; }
+    int             getNextKey()                            { return m_key_gen++; }
 
     // Form Functions
     void            buildSoundEffectForm();

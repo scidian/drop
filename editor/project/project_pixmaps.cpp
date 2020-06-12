@@ -74,8 +74,13 @@ QPixmap GetAssetPixmapSound(DrSoundType sound_type, DrSettings *entity) {
             tint_color = entity->getComponentPropertyValue(Comps::Mix_Settings, Props::Mix_Settings_Color).toColor();
             break;
         case DrSoundType::Sound_Effect:
-            pix = QPixmap(":/assets/asset_types/mix.png");
+            pix = QPixmap(":/assets/asset_types/sound_effect.png");
             tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
+            break;
+        case DrSoundType::Speech:
+            pix = QPixmap(":/assets/asset_types/speech.png");
+            tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
+            break;
         default: ;
     }
 

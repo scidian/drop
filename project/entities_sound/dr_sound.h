@@ -29,7 +29,7 @@ class DrSound : public DrSettings
 private:
     // Local Variables
     DrSoundType             m_sound_type        { DrSoundType::Sound_Effect };      // Type of this sound
-    SoLoud::AudioSource    *m_audio_source      { nullptr };                        // Pointer to sound in memory
+    SoLoud::AudioSource    *m_audio_source      { nullptr };                        // Audio Source
     DrBitmap                m_wave_form;                                            // Wave form image
 
 

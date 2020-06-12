@@ -33,14 +33,14 @@
 FormSoundEffect::FormSoundEffect(DrProject *project, FormMain *form_main, QWidget *parent)
     : QWidget(parent), m_sound_creator(form_main), m_project(project) {
 
-    // ***** Initialize Key Generators
-    m_key_gen[SoundEffectType::BLIP] = 1;
-    m_key_gen[SoundEffectType::COIN] = 1;
-    m_key_gen[SoundEffectType::HURT] = 1;
-    m_key_gen[SoundEffectType::JUMP] = 1;
-    m_key_gen[SoundEffectType::LASER] = 1;
-    m_key_gen[SoundEffectType::POWERUP] = 1;
-    m_key_gen[SoundEffectType::EXPLOSION] = 1;
+    // ***** Initialize type counts
+    m_type_counts[SoundEffectType::BLIP] = 1;
+    m_type_counts[SoundEffectType::COIN] = 1;
+    m_type_counts[SoundEffectType::HURT] = 1;
+    m_type_counts[SoundEffectType::JUMP] = 1;
+    m_type_counts[SoundEffectType::LASER] = 1;
+    m_type_counts[SoundEffectType::POWERUP] = 1;
+    m_type_counts[SoundEffectType::EXPLOSION] = 1;
 
     // ***** Set up initial window
     setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::Tool);
@@ -78,6 +78,7 @@ FormSoundEffect::FormSoundEffect(DrProject *project, FormMain *form_main, QWidge
 FormSoundEffect::~FormSoundEffect() {
     // ***** Delete sounds
     for (auto effect : m_effects) {
+        // Don't delete sound to be passed on back to Project
         if (effect.first != m_selected_effect) {
             delete effect.second;
         }

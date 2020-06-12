@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "core/colors/colors.h"
 #include "editor/helper_library.h"
 #include "editor/preferences.h"
 #include "editor/view_editor/editor_view.h"
@@ -55,7 +56,7 @@ void EditorView::paintCollisionShapes(QPainter &painter, DrStage *stage) {
         DrColor color = editorThingDebugColor(thing);
 
         // Set up QPainter
-        QPen cosmetic_pen(QBrush(QColor(color.red(), color.green(), color.blue())), 1);
+        QPen cosmetic_pen(QBrush(QColor(color.red(), color.green(), color.blue())), Dr::Scale(1.0));
         cosmetic_pen.setCosmetic(true);
         painter.setPen(cosmetic_pen);
         QColor brush_color = QColor(color.red(), color.green(), color.blue());

@@ -87,7 +87,7 @@ public:
     DrFilterHoverHandler*   getHoverHandler();
     void                    setHoverHandler(DrFilterHoverHandler* hover_handler) { m_filter_hover = hover_handler; }
     long                    getSelectedKey() { return m_selected_key; }
-    void                    setSelectedKey(long key);
+    void                    setSelectedKey(long key, bool respond_to_selection = false);
     QList<DrType>&          getShowTypes() { return m_show_types; }
     void                    setShowTypes(QList<DrType> types) { m_show_types = types; }
 

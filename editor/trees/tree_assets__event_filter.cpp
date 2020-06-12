@@ -64,17 +64,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
-        asset_tree->setSelectedKey( asset_key );
-
-        // If selected Asset is Sound, and auto play is enabled, play Sound
-        DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
-        if (entity->getType() == DrType::Sound) {
-            if (Dr::GetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds).toBool()) {
-                DrSound *sound = static_cast<DrSound*>(entity);
-                Dr::GetSoLoud()->play(*sound->getAudioSource());
-                if (Dr::GetActiveFormMain()) Dr::GetActiveFormMain()->drawVisuals();
-            }
-        }
+        asset_tree->setSelectedKey(asset_key, true);
 
         // Build Inspector and update Editor Widgets
         m_editor_relay->buildInspector( { asset_key } );

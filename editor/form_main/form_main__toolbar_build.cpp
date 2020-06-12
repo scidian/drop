@@ -48,6 +48,7 @@ void FormMain::buildToolBar() {
     // ***** Initialize toolbar widget
     m_toolbar = new QToolBar(this);
     m_toolbar->setObjectName(QStringLiteral("toolbar"));
+    m_toolbar->setWindowTitle( QMainWindow::tr("Toolbar") );
     m_toolbar->setMovable(false);
     m_toolbar->setFloatable(false);
     m_toolbar->installEventFilter(new DrFilterClickAndDragWindow(m_toolbar));

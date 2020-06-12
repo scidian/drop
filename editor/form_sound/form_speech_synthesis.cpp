@@ -41,12 +41,12 @@ FormSpeechSynthesis::FormSpeechSynthesis(DrProject *project, QWidget *parent) : 
     setAttribute(Qt::WA_Hover, true);
     setAttribute(Qt::WA_NoMousePropagation, false);
 
-    setMinimumSize(QSize(740, 560));
+    setMinimumSize(QSize(600, 500));
     setObjectName(QStringLiteral("childForm"));
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 
     // ***** Build Form
-    buildSoundEffectForm();
+    buildSpeechForm();
 
     // ***** Center window on Parent Form and install dragging event filter
     if (parent) {
@@ -63,10 +63,7 @@ FormSpeechSynthesis::FormSpeechSynthesis(DrProject *project, QWidget *parent) : 
     m_visual_timer->setTimerType(Qt::PreciseTimer);
 }
 
-FormSpeechSynthesis::~FormSpeechSynthesis() {
-    // Delete sounds
-    for (auto effect : m_effects)   { delete effect.second; }
-}
+FormSpeechSynthesis::~FormSpeechSynthesis() { }
 
 
 //####################################################################################
@@ -90,6 +87,17 @@ void FormSpeechSynthesis::drawVisuals() {
         m_visual_timer->setInterval(500);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -9,6 +9,8 @@
 #include <QScrollBar>
 
 #include "core/dr_containers.h"
+#include "core/sound.h"
+#include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
 #include "editor/preferences.h"
@@ -26,9 +28,23 @@
 //####################################################################################
 //##    Sets Selected Key, causes selected item to highlight
 //####################################################################################
-void TreeAssets::setSelectedKey(long key) {
+void TreeAssets::setSelectedKey(long key, bool respond_to_selection) {
     m_selected_key = key;
     ensureSelectedKeyVisible();
+
+    // Do something with new selection (play sound, etc) if respond_to_selection is true
+    if (respond_to_selection) {
+        DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(key);
+
+        // If selected Asset is Sound, and auto play is enabled, play Sound
+        if (entity->getType() == DrType::Sound) {
+            if (Dr::GetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds).toBool()) {
+                DrSound *sound = static_cast<DrSound*>(entity);
+                Dr::GetSoLoud()->play(*sound->getAudioSource());
+                if (Dr::GetActiveFormMain()) Dr::GetActiveFormMain()->drawVisuals();
+            }
+        }
+    }
 }
 
 // Scrolls to selected item if necessary
