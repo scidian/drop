@@ -22,7 +22,11 @@ namespace Dr {
     // ***** SoLoud Functions
     void            InitializeSound();
     void            CleanUpSound();
-    SoLoud::Soloud* GetSoLoud();
+
+    bool            IsSoundInitialized();
+
+    SoLoud::Soloud* GetSoLoud();                        // Returns active SoLoud singleton
+    SoLoud::Soloud* GetSound();                         // Returns active SoLoud singleton
 
 
 

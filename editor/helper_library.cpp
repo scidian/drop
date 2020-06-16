@@ -48,17 +48,6 @@ QString CurrentTimeAsString() {
     return QTime().currentTime().toString() + "." + QString::number(QTime().currentTime().msec());
 }
 
-// Pauses application for millseconds
-void Sleep(int milliseconds) {
-    if (milliseconds < 0) return;
-    #if defined(Q_OS_WIN)
-        Sleep(uint(milliseconds));
-    #elif defined(Q_OS_UNIX)
-        timespec ts = { milliseconds / 1000, (milliseconds % 1000) * 1000 * 1000 };
-        nanosleep(&ts, nullptr);
-    #endif
-}
-
 
 //####################################################################################
 //##

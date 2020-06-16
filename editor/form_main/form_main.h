@@ -126,14 +126,14 @@ private:
 
 
     // ***** "Empty" Widget
-    QWidget        *m_widget_central_clear;
+    QWidget        *m_widget_central_clear              { nullptr };
 
 
     // ***** "World Creator" (Editor) Widgets
-    QWidget         *m_widget_central_editor;
-    TreeProject         *m_tree_project;                        // Shows Project Entities
-    EditorScene         *m_scene_editor;                        // Holds the currently selected Stage
-    EditorView          *m_view_editor;                         // Renders the World Editor View
+    QWidget         *m_widget_central_editor            { nullptr };
+    TreeProject         *m_tree_project;                                    // Shows Project Entities
+    EditorScene         *m_scene_editor;                                    // Holds the currently selected Stage
+    EditorView          *m_view_editor;                                     // Renders the World Editor View
     QScrollArea         *m_area_bottom;
     QFrame              *m_status_bar;
     ViewToolbar         *m_toolbar_editor;
@@ -149,14 +149,14 @@ private:
 
 
     // ***** "World Graph" Widgets
-    QWidget         *m_widget_central_world_graph;
+    QWidget         *m_widget_central_world_graph       { nullptr };
     NodeScene           *m_scene_world_graph;
     NodeView            *m_view_world_graph;
     ViewToolbar         *m_toolbar_world_graph;
 
 
     // ***** "Sound Creator" Widgets
-    QWidget         *m_widget_central_sound_creator;
+    QWidget         *m_widget_central_sound_creator     { nullptr };
     MixerScene          *m_scene_mixer;
     MixerView           *m_view_mixer;
     VisualFrame         *m_visualizer;                                      // Widget that displays visualizer for current sounds playing

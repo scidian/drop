@@ -113,6 +113,7 @@
 #include <QSurfaceFormat>
 
 #include "core/colors/colors.h"
+#include "core/dr_debug.h"
 #include "core/sound.h"
 #include "editor/form_main/form_main.h"
 #include "editor/forms/form_expire.h"
@@ -172,23 +173,25 @@ int main(int argc, char *argv[]) {
 
 
     // ***** Declare / Load QMainWindows
-    ///FormMain     form_main(nullptr, open_file);                      // FormMain, main editor Form, trys to open command line argument as a file
-    FormMain     form_main;                                             // FormMain, main editor Form
-    FormExpire   form_expire;                                           // FormExpire used for demo versions that are expired
+    FormMain    *form_main      { nullptr };                            // FormMain, main editor Form
+    FormExpire  *form_expire    { nullptr };                            // FormExpire used for demo versions that are expired
 
     // ***** Check date for expired versions
     QDate now =         QDate::currentDate();
     QDate expire =      QDate(2020, 07, 02);
     long diff_days =    expire.daysTo(now);
     if (diff_days > 0) {
-        form_expire.show();
+        form_expire = new FormExpire();
+        form_expire->show();
 
     // ***** Create main form
     } else {
-        Dr::SetActiveFormMain(&form_main);                              // Set main form to active FormMain
-        Dr::SetActiveEditorRelay(&form_main);                           // Set main form to active EditorRelay
-        qApp->installEventFilter(&form_main);                           // Installs application wide event filter attached to FormMain (acts as key grabber)
-        form_main.show();                                               // Show FormMain
+        ///form_main = new FormMain(nullptr, open_file);                // FormMain, main editor Form, trys to open command line argument as a file
+        form_main = new FormMain();                                     // Create FormMain
+        Dr::SetActiveFormMain(form_main);                               // Set main form to active FormMain
+        Dr::SetActiveEditorRelay(form_main);                            // Set main form to active EditorRelay
+        qApp->installEventFilter(form_main);                            // Installs application wide event filter attached to FormMain (acts as key grabber)
+        form_main->show();                                              // Show FormMain
 
         // ***** Process events and mark as loaded
         qApp->processEvents();                                          // Ensure FormMain finishes showing
@@ -199,7 +202,7 @@ int main(int argc, char *argv[]) {
     drop.exec();
 
     // ***** Clean up singletons
-    Dr::CleanUpSound();
+    if (Dr::IsSoundInitialized()) Dr::CleanUpSound();
 
     ///Dr::ShowMessageBox("Finished running program");
     return 0;

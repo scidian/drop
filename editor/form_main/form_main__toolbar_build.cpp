@@ -15,6 +15,7 @@
 #include <QToolButton>
 
 #include "core/dr_random.h"
+#include "core/dr_time.h"
 #include "core/sound.h"
 #include "editor/enums_editor.h"
 #include "editor/event_filters/event_filters.h"

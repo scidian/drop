@@ -39,6 +39,24 @@ void AdjustTimer(DrTime &timer, int hours, int minutes, int seconds, int millise
 
 
 
+//####################################################################################
+//##
+//##    Sleep Function
+//##
+//####################################################################################
+// Pauses application for millseconds
+void Sleep(int milliseconds) {
+    if (milliseconds < 0) return;
+    #if defined(_WIN32)
+        Sleep(uint(milliseconds));
+    #elif defined(unix) || defined(__unix__) || defined(__unix) || defined(__APPLE__)
+        timespec ts = { milliseconds / 1000, (milliseconds % 1000) * 1000 * 1000 };
+        nanosleep(&ts, nullptr);
+    #endif
+}
+
+
+
 }   // namespace Dr
 
 

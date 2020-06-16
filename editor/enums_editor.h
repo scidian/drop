@@ -238,6 +238,11 @@ enum User_Roles {
     Category_Name,                                          // QString
     Description,                                            // QString
     Type,                                                   // int      static_cast from DrType
+
+    Bool,                                                   // bool     Stores a generic bool
+    Int,                                                    // int      Stores a generic int
+    Float,                                                  // float    Stores a generic float
+    Double,                                                 // double   Stores a generic double
 };
 
 

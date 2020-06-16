@@ -29,6 +29,7 @@ DrSound::DrSound(DrProject *parent_project, DrSoundType sound_type, SoLoud::Audi
 
 DrSound::~DrSound() {
     delete m_audio_source;
+    m_audio_source = nullptr;
 }
 
 

@@ -11,6 +11,7 @@
 #include <QElapsedTimer>
 #include <QLabel>
 #include <QListWidget>
+#include <QPushButton>
 #include <QSlider>
 #include <QWidget>
 
@@ -29,6 +30,15 @@ class WaveForm;
 
 // Type Definitions
 typedef SoLoud::Sfxr::SFXR_PRESETS SoundEffectType;
+
+// Local Enums
+enum SoundEffectWaveType {
+    Square      = 0,
+    Sawtooth    = 1,
+    Sine        = 2,
+    Noise       = 3,
+};
+
 
 //####################################################################################
 //##    FormSoundEffect
@@ -61,8 +71,26 @@ private:
     QListWidget        *m_list;                                             // Holds recently played sounds
     WaveForm           *m_sound_wave;                                       // Draws currently selected sound wave
 
-    QSlider            *m_slider_0, *m_slider_1, *m_slider_2, *m_slider_3, *m_slider_4;
-    QSlider            *m_slider_5, *m_slider_6, *m_slider_7, *m_slider_8, *m_slider_9;
+    // Wave Type Drop Down
+    QPushButton        *m_wave_button;
+    QAction            *m_action_square;
+    QAction            *m_action_saw;
+    QAction            *m_action_sine;
+    QAction            *m_action_noise;
+
+    // Effect Sliders
+    QSlider            *m_slider_0;         // Frequency
+    QSlider            *m_slider_1;         // Frequency Ramp
+    QSlider            *m_slider_2;         // Frequency Slide
+    QSlider            *m_slider_3;         // Delta Slide
+    QSlider            *m_slider_4;         // Vibrato Depth
+    QSlider            *m_slider_5;         // Vibrato Speed
+    QSlider            *m_slider_6;
+    QSlider            *m_slider_7;
+    QSlider            *m_slider_8;
+    QSlider            *m_slider_9;
+    QSlider            *m_slider_10;
+    QSlider            *m_slider_11;
 
 
 public:
@@ -78,22 +106,28 @@ public:
 
     // Form Functions
     void            buildSoundEffectForm();
-    QWidget*        sliderPair(QString slider_text, QSlider *&slider);
+    QWidget*        sliderPair(QString slider_text, QSlider *&slider, double range_min = 0.0, double range_max = 1.0);
 
     // Sound Generate Functions
-    void            playSfxr(SoundEffectType preset, int seed);
+    void            generateSfxr(SoundEffectType preset, int seed);
+    void            updateSliders(SoLoud::Sfxr *effect);
+    void            updateSelectedEffect(QSlider *from_slider);
+    void            updateWaveType(SoundEffectWaveType wave_type);
 
     // Existing Sounds
     SoLoud::Sfxr*   getEffect(long effect_key);
+    void            playSelected();
     long            selectedEffectKey()                     { return m_selected_effect; }
+
+    // Enums
     QString         stringFromEffectType(SoundEffectType preset);
+    QString         stringFromWaveType(SoundEffectWaveType wave);
 
 
 public slots:
-    void        drawItem();
     void        drawVisuals();
-    void        playItem(QListWidgetItem*);
-
+    void        itemClicked(QListWidgetItem *clicked_item);
+    void        selectionChanged();
 };
 
 

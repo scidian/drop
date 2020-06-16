@@ -38,6 +38,7 @@
 //##    Sets initial settings of FormMain
 //####################################################################################
 void FormMain::initializeFormMain() {
+
     // ***** Main window settings
     this->setObjectName(QStringLiteral("formMain"));
     this->setWindowModality(Qt::NonModal);
@@ -49,6 +50,8 @@ void FormMain::initializeFormMain() {
     this->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
     this->setDockOptions(AnimatedDocks | AllowNestedDocks);    /// | AllowTabbedDocks | GroupedDragging);
     ///this->setDocumentMode(true);         // Allows for left alignemnt of dock tabs, but not responsive to style sheets
+
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
 
     // ***** Center window on screen, sets initial size as a percentage of screen size
     Dr::CenterFormOnScreen(this, this, 80, 100);
@@ -82,9 +85,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     Editor_Mode old_mode = m_current_mode;
     m_current_mode = new_mode;
 
-    Dr::LockDockWidth( m_dock_advisor, m_dock_advisor->width() );
-    Dr::LockDockWidth( m_dock_assets, m_dock_assets->width() );
-    Dr::LockDockWidth( m_dock_inspector, m_dock_inspector->width() );
+    Dr::LockDockWidth(m_dock_advisor,       m_dock_advisor->width());
+    Dr::LockDockWidth(m_dock_assets,        m_dock_assets->width());
+    Dr::LockDockWidth(m_dock_inspector,     m_dock_inspector->width());
 
     // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {

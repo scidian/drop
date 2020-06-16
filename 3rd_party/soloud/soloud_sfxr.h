@@ -35,41 +35,49 @@ namespace SoLoud
 
 	struct SfxrParams
 	{
-		int wave_type;
+        int   wave_type;            //          Wave From                       0 square, 1 sawtooth, 2 sine, 3 noise
 
-		float p_base_freq;
-		float p_freq_limit;
-		float p_freq_ramp;
-		float p_freq_dramp;
-		float p_duty;
-		float p_duty_ramp;
+        // Frequency
+        float p_base_freq;          //  0, 1    Frequency                       Base note of sound
+        float p_freq_limit;         //  0, 1    Frequency Cutoff                If sliding, frequency will stop here to prevent low notes
+        float p_freq_ramp;          // -1, 1    Frequency Slide                 Slides the frequency up or down
+        float p_freq_dramp;         // -1, 1    Delta Slide                     Accelerates frequency slide, can be used to change slide directions
 
-		float p_vib_strength;
-		float p_vib_speed;
-		float p_vib_delay;
+        // Square Wave Form Only
+        float p_duty;               //  0, 1    Square Duty                     Controls ratio between up and down states of Square Wave (changing timbre)
+        float p_duty_ramp;          // -1, 1    Duty Sweep                      Sweeps the duty up or down
 
-		float p_env_attack;
-		float p_env_sustain;
-		float p_env_decay;
-		float p_env_punch;
+        // Vibrato
+        float p_vib_strength;       //  0, 1    Vibrato Depth                   Strength of the vibrato effect
+        float p_vib_speed;          //  0, 1    Vibrato Speed                   Speed of the bibrato effect (i.e. frequency)
+        float p_vib_delay;          //          ??
 
-		bool filter_on;
-		float p_lpf_resonance;
-		float p_lpf_freq;
-		float p_lpf_ramp;
-		float p_hpf_freq;
-		float p_hpf_ramp;
+        float p_env_attack;         //  0, 1    Attack Time                     Length of the volume envelope attack
+        float p_env_sustain;        //  0, 1    Sustain Time                    Length of the volume envelope sustain
+        float p_env_decay;          //  0, 1    Decay Time                      Length of the volume envelope decay (aka release)
+        float p_env_punch;          //  0, 1    Sustain Punch                   Tilts the sustain envelope for more 'pop'
 
-		float p_pha_offset;
-		float p_pha_ramp;
+        // Low-pass / High-pass Filters
+        bool  filter_on;            //          ??
+        float p_lpf_resonance;      //  0, 1    Low-pass Filter Resonance       Changes the attenuation rate for the low-pass filter, changing the timbre
+        float p_lpf_freq;           //  0, 1    Low-pass Filter Cutoff          Frequency at which the low-pass filter starts attenuating higher frequencies
+        float p_lpf_ramp;           // -1, 1    Low-pass Filter Sweep           Sweeps the low-pass cutoff up or down
+        float p_hpf_freq;           //  0, 1    High-pass Filter Cutoff         Frequency at which the high-pass filter starts attenuating lower frequencies
+        float p_hpf_ramp;           // -1, 1    High-pass Filter Sweep          Sweeps the high-pass filter up or down
 
-		float p_repeat_speed;
+        // Phaser
+        float p_pha_offset;         // -1, 1    Phaser (Flanger) Offset         Offsets a second copy of the wave by a small phase, changing the timbre
+        float p_pha_ramp;           // -1, 1    Phaser (Flanger) Sweep          Sweeps the phase up or down
 
-		float p_arp_speed;
-		float p_arp_mod;
+        // Repeat
+        float p_repeat_speed;       //  0, 1    Repeat Speed                    Speed of the note repeating
 
+        // Pitch Jump
+        float p_arp_speed;          //  0, 1    Pitch Jump (Change) Speed       Larger values means more pitch jumps, useful for arpeggiation
+        float p_arp_mod;            // -1, 1    Pitch Jump (Change) Amount      Jump in pitch, up or down
+
+        // Volume
 		float master_vol;
-
 		float sound_vol;
 	};
 
@@ -129,7 +137,7 @@ namespace SoLoud
 	class Sfxr : public AudioSource
 	{
 	public:
-		SfxrParams mParams;
+        SfxrParams mParams;
 
 		enum SFXR_PRESETS 
 		{

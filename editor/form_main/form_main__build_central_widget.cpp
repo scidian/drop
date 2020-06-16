@@ -124,46 +124,20 @@ void FormMain::buildCentralWidgetSoundCreator() {
     // ***** Initialize scene used for mixing DrMix
     m_scene_mixer = new MixerScene(this, m_project, this);
 
-//    // ***** Build central widgets
-//    m_widget_central_world_graph = new QWidget();
-//    m_widget_central_world_graph->setObjectName(QStringLiteral("widgetCentralWorldGraph"));
-//    m_widget_central_world_graph->setSizePolicy(size_policy_preferred_horizontal);
-//        QVBoxLayout *vertical_layout_world_graph = new QVBoxLayout(m_widget_central_world_graph);
-//        vertical_layout_world_graph->setSpacing(0);
-//        vertical_layout_world_graph->setObjectName(QStringLiteral("verticalLayoutWorldGraph"));
-//        // This sets the border with for the main view area between middle and docks
-//        vertical_layout_world_graph->setContentsMargins(0, 0, 0, 0);
+    // ***** Build central widgets
+    m_widget_central_sound_creator = new QWidget();
+    m_widget_central_sound_creator->setObjectName(QStringLiteral("widgetCentralSoundCreator"));
+    m_widget_central_sound_creator->setSizePolicy(size_policy_preferred_horizontal);
+        QVBoxLayout *vertical_layout_sound_creator = new QVBoxLayout(m_widget_central_sound_creator);
+        vertical_layout_sound_creator->setSpacing(0);
+        vertical_layout_sound_creator->setObjectName(QStringLiteral("verticalLayoutSoundCreator"));
+        // This sets the border with for the main view area between middle and docks
+        vertical_layout_sound_creator->setContentsMargins(0, 0, 0, 0);
 
-//        // ***** Load our EditorView to display our EditorScene collection of items
-//        m_view_world_graph = new NodeView(m_widget_central_world_graph, m_project, m_scene_world_graph, this);
-//        m_view_world_graph->setObjectName(QStringLiteral("viewWorldGraph"));
-//        m_view_world_graph->setAcceptDrops(true);
-//        m_view_world_graph->setFrameShape(QFrame::NoFrame);
-//        m_view_world_graph->setDragMode(QGraphicsView::DragMode::NoDrag);
-//        m_view_world_graph->setTransformationAnchor(QGraphicsView::ViewportAnchor::AnchorUnderMouse);
-//        m_view_world_graph->setOptimizationFlags(QGraphicsView::OptimizationFlag::DontSavePainterState);
-//        m_view_world_graph->zoomInOut( 0 );
 
-//        ///// This setting means we will decide when to call update(), controls recurssive paint events
-//        ///m_view_world_graph->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::NoViewportUpdate);
-//        m_view_world_graph->setViewportUpdateMode(QGraphicsView::ViewportUpdateMode::SmartViewportUpdate);
 
-//        if (!Dr::CheckDebugFlag(Debug_Flags::Turn_On_Antialiasing_in_Editor))
-//            m_view_world_graph->setRenderHint(QPainter::Antialiasing, false);
-//        else
-//            m_view_world_graph->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-//        if (Dr::CheckDebugFlag(Debug_Flags::Turn_On_OpenGL_in_Editor)) {
-//            QOpenGLWidget *gl_widget = new QOpenGLWidget();
-//            gl_widget->setUpdateBehavior(QOpenGLWidget::UpdateBehavior::NoPartialUpdate);
-//            m_view_world_graph->setViewport(gl_widget);
-//        }
 
-//        // ***** ToolBar above World Graph
-//        m_toolbar_world_graph = new ViewToolbar(m_widget_central_world_graph, m_project, this, Editor_Mode::World_Graph, nullptr, m_view_world_graph);
-
-//    vertical_layout_world_graph->addWidget(m_toolbar_world_graph);
-//    vertical_layout_world_graph->addWidget(m_view_world_graph);
 }
 
 

@@ -27,6 +27,12 @@ namespace Dr {
     void        AdjustTimer(DrTime &timer, int hours, int minutes, int seconds, int milliseconds);
 
 
+    //####################################################################################
+    //##    Sleep Function
+    //############################
+    void        Sleep(int milliseconds);
+
+
 }   // End namespace Dr
 
 #endif // DR_TIME_H
