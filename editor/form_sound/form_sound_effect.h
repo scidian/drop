@@ -56,7 +56,7 @@ private:
     // Local Variables
     long                            m_key_gen           { 1 };              // Key generator for identifying sounds created on this Form
     std::map<SoundEffectType, long> m_type_counts;                          // Keeps track of counts of different sound effect types for naming
-    long                            m_selected_effect   { c_no_key };       // Local key of the Effect currently selected (to be passed back to Project)
+    long                            m_current_effect   { c_no_key };        // Local key of the Effect currently selected (to be passed back to Project)
 
     // Sound Variables
     std::map<long, SoLoud::Sfxr*>   m_effects;                              // Sfxr sound effects
@@ -85,6 +85,7 @@ private:
     QSlider            *m_slider_3;         // Delta Slide
     QSlider            *m_slider_4;         // Vibrato Depth
     QSlider            *m_slider_5;         // Vibrato Speed
+
     QSlider            *m_slider_6;
     QSlider            *m_slider_7;
     QSlider            *m_slider_8;
@@ -117,7 +118,7 @@ public:
     // Existing Sounds
     SoLoud::Sfxr*   getEffect(long effect_key);
     void            playSelected();
-    long            selectedEffectKey()                     { return m_selected_effect; }
+    long            currentEffectKey()                      { return m_current_effect; }
 
     // Enums
     QString         stringFromEffectType(SoundEffectType preset);
@@ -126,8 +127,10 @@ public:
 
 public slots:
     void        drawVisuals();
-    void        itemClicked(QListWidgetItem *clicked_item);
-    void        selectionChanged();
+    void        currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void        itemClicked(QListWidgetItem *clicked);
+    void        itemEntered(QListWidgetItem *entered);
+
 };
 
 

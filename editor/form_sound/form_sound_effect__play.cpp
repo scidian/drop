@@ -69,8 +69,8 @@ void FormSoundEffect::generateSfxr(SoundEffectType preset, int seed) {
     item->setData(User_Roles::Key,  QVariant::fromValue(effect_key));           // Store effect key in widget user data
     m_list->addItem(item);
 
-    // Setting as selected fires list SIGNAL(itemSelectionChanged()) connected to this SLOT(playItem())
-    item->setSelected(true);
+    // Setting as current fires list SIGNAL(currentItemChanged()) connected to this SLOT(playSelected())
+    m_list->setCurrentItem(item);
 }
 
 
@@ -83,10 +83,8 @@ SoLoud::Sfxr* FormSoundEffect::getEffect(long effect_key) {
 }
 
 void FormSoundEffect::playSelected() {
-    qDebug() << "Play Item - " << Dr::CurrentTimeAsString();
-
     // Get selected item underlying Sfxr AudioSource
-    SoLoud::Sfxr* effect = getEffect(m_selected_effect);
+    SoLoud::Sfxr* effect = getEffect(m_current_effect);
 
     // Play sound, update wave form
     if (effect != nullptr) {
@@ -101,22 +99,29 @@ void FormSoundEffect::playSelected() {
     m_sound_wave->repaint();
 }
 
-// Get selected item, mark as selected
-void FormSoundEffect::selectionChanged() {
-    if (m_list->selectedItems().count() > 0) {
-        QListWidgetItem *item = m_list->selectedItems().first();
-        long sound_key = item->data(User_Roles::Key).toInt();
-        m_selected_effect = sound_key;
+void FormSoundEffect::currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous) {
+    if (current == nullptr) {
+        m_current_effect = c_no_key;
+        return;
+    }
+
+    if (current != previous) {
+        long sound_key = current->data(User_Roles::Key).toInt();
+        m_current_effect = sound_key;
         playSelected();
-    } else {
-        m_selected_effect = c_no_key;
     }
 }
 
-// If item was selected when first clicked, play it again now that it has been clicked
-void FormSoundEffect::itemClicked(QListWidgetItem *clicked_item) {
-    if (clicked_item == nullptr) return;
-    playSelected();
+// If item was clicked and it was already selected, play it again
+void FormSoundEffect::itemClicked(QListWidgetItem *clicked) {
+    if (clicked == nullptr) return;
+    long was_selected = clicked->data(User_Roles::Bool).toBool();
+    if (was_selected) playSelected();
+    clicked->setData(User_Roles::Bool, true);
+}
+void FormSoundEffect::itemEntered(QListWidgetItem *entered) {
+    if (entered == nullptr) return;
+    entered->setData(User_Roles::Bool, entered->isSelected());
 }
 
 
@@ -128,13 +133,13 @@ void FormSoundEffect::updateSliders(SoLoud::Sfxr *effect) {
     m_slider_1->setValue(effect->mParams.p_freq_limit   * 1000.0);      // Frequency Cutoff
     m_slider_2->setValue(effect->mParams.p_freq_ramp    * 1000.0);      // Frequency Slide
     m_slider_3->setValue(effect->mParams.p_freq_dramp   * 1000.0);      // Delta Slide
-    m_slider_3->setValue(effect->mParams.p_vib_strength * 1000.0);      // c
-    m_slider_3->setValue(effect->mParams.p_vib_speed    * 1000.0);      // Vibrato Speed
+    m_slider_4->setValue(effect->mParams.p_vib_strength * 1000.0);      // Vibrato Strength
+    m_slider_5->setValue(effect->mParams.p_vib_speed    * 1000.0);      // Vibrato Speed
 }
 
 // Update Parameters of selected Effect
 void FormSoundEffect::updateSelectedEffect(QSlider *from_slider) {
-    SoLoud::Sfxr *effect = getEffect(m_selected_effect);
+    SoLoud::Sfxr *effect = getEffect(m_current_effect);
     if (effect != nullptr) {
         if (from_slider == m_slider_0) effect->mParams.p_base_freq =    static_cast<double>(m_slider_0->value()) / 1000.0;
         if (from_slider == m_slider_1) effect->mParams.p_freq_limit =   static_cast<double>(m_slider_1->value()) / 1000.0;
@@ -146,7 +151,7 @@ void FormSoundEffect::updateSelectedEffect(QSlider *from_slider) {
 }
 
 void FormSoundEffect::updateWaveType(SoundEffectWaveType wave_type) {
-    SoLoud::Sfxr* effect = getEffect(m_selected_effect);
+    SoLoud::Sfxr* effect = getEffect(m_current_effect);
     if (effect != nullptr) {
         effect->mParams.wave_type = static_cast<int>(wave_type);
     }

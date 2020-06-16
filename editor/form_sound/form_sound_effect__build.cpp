@@ -75,16 +75,17 @@ void FormSoundEffect::buildSoundEffectForm() {
         left_side_layout->setSpacing(0);
         left_side_layout->setContentsMargins(0, 0, 0, 0);
             m_list = new QListWidget();
-            m_list->setObjectName(QStringLiteral("listView"));
-            m_list->setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
-            connect(m_list, SIGNAL(itemClicked(QListWidgetItem*)),  this, SLOT(itemClicked(QListWidgetItem*)));
-            connect(m_list, SIGNAL(itemSelectionChanged()),         this, SLOT(selectionChanged()));
-
+                m_list->setObjectName(QStringLiteral("listView"));
+                m_list->setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
+                m_list->setMouseTracking(true);
+                connect(m_list, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),  this, SLOT(currentItemChanged(QListWidgetItem*,QListWidgetItem*)));
+                connect(m_list, SIGNAL(itemClicked(QListWidgetItem*)),  this, SLOT(itemClicked(QListWidgetItem*)));
+                connect(m_list, SIGNAL(itemEntered(QListWidgetItem*)),  this, SLOT(itemEntered(QListWidgetItem*)));
             left_side_layout->addWidget(m_list);
 
             m_sound_wave = new WaveForm();
-            m_sound_wave->setObjectName(QStringLiteral("soundWave"));
-            m_sound_wave->setFixedHeight(100);
+                m_sound_wave->setObjectName(QStringLiteral("soundWave"));
+                m_sound_wave->setFixedHeight(100);
             left_side_layout->addWidget(m_sound_wave);
         splitter_horizontal->addWidget(left_side);
 
@@ -276,7 +277,7 @@ void FormSoundEffect::buildSoundEffectForm() {
                     accept->setSizePolicy(button_right);
                     Dr::ApplyDropShadowByType(accept, Shadow_Types::Button_Shadow);
                     connect(accept, &QPushButton::clicked, [this] () {
-                        SoLoud::Sfxr *effect = getEffect(selectedEffectKey());
+                        SoLoud::Sfxr *effect = getEffect(currentEffectKey());
 
                         if (effect != nullptr) {
                             // Add Sound

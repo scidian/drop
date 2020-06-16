@@ -1,4 +1,4 @@
-//
+﻿//
 //      Created by Stephens Nunnally on 5/25/2020, (c) 2020 Scidian Software, All Rights Reserved
 //
 //  File:
@@ -79,7 +79,7 @@ FormSoundEffect::~FormSoundEffect() {
     // ***** Delete sounds
     for (auto effect : m_effects) {
         // Don't delete sound to be passed on back to Project
-        if (effect.first != m_selected_effect) {
+        if (effect.first != m_current_effect) {
             delete effect.second;
         }
     }
