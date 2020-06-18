@@ -79,20 +79,27 @@ private:
     QAction            *m_action_noise;
 
     // Effect Sliders
-    QSlider            *m_slider_0;         // Frequency
+    QSlider            *m_slider_0;         // Frequency                    // For more information on these properties, look at "3rd_party/soloud/soloud_sfxr.h"
     QSlider            *m_slider_1;         // Frequency Ramp
     QSlider            *m_slider_2;         // Frequency Slide
     QSlider            *m_slider_3;         // Delta Slide
     QSlider            *m_slider_4;         // Vibrato Depth
     QSlider            *m_slider_5;         // Vibrato Speed
+    QSlider            *m_slider_6;         // Attack Time
+    QSlider            *m_slider_7;         // Sustain Time
+    QSlider            *m_slider_8;         // Decay Time
+    QSlider            *m_slider_9;         // Sustain Punch
 
-    QSlider            *m_slider_6;
-    QSlider            *m_slider_7;
-    QSlider            *m_slider_8;
-    QSlider            *m_slider_9;
-    QSlider            *m_slider_10;
-    QSlider            *m_slider_11;
-
+    QSlider            *m_slider_10;        // Repeat Speed
+    QSlider            *m_slider_11;        // Phaser (Flanger) Offset
+    QSlider            *m_slider_12;        // Phaser (Flanger) Sweep
+    QSlider            *m_slider_13;        // Pitch Jump (Change) Speed
+    QSlider            *m_slider_14;        // Pitch Jump (Change) Amount
+    QSlider            *m_slider_15;        // Low-pass Filter Resonance
+    QSlider            *m_slider_16;        // Low-pass Filter Cutoff
+    QSlider            *m_slider_17;        // Low-pass Filter Sweep
+    QSlider            *m_slider_18;        // High-pass Filter Cutoff
+    QSlider            *m_slider_19;        // High-pass Filter Sweep
 
 public:
     // Constructor / Destructor

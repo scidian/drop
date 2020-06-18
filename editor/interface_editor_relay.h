@@ -87,6 +87,8 @@ public:
     virtual void        viewUpdateToolbar(int button_id) = 0;
     virtual void        viewZoomToScale(double zoom_scale) = 0;
 
+    virtual void        stopAllSound() = 0;
+
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) = 0;
     virtual void        setAdvisorInfo(QString header, QString body) = 0;
     virtual void        setMousePosition(std::string x, std::string y) = 0;

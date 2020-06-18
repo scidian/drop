@@ -99,7 +99,7 @@ void FormSoundEffect::buildSoundEffectForm() {
 
             // Visualizer
             m_visualizer = new VisualFrame();
-            m_visualizer->setFixedHeight(100);
+            m_visualizer->setFixedHeight(70);
             middle_side_layout->addWidget(m_visualizer);
 
 
@@ -234,19 +234,56 @@ void FormSoundEffect::buildSoundEffectForm() {
                     left_slider_layout->addWidget( sliderPair("Delta Slide",        m_slider_3, -1.0, 1.0));
                     left_slider_layout->addWidget( sliderPair("Vibrato Depth",      m_slider_4));
                     left_slider_layout->addWidget( sliderPair("Vibrato Speed",      m_slider_5));
+                    left_slider_layout->addWidget( sliderPair("Attack Time",        m_slider_6));
+                    left_slider_layout->addWidget( sliderPair("Sustain Time",       m_slider_7));
+                    left_slider_layout->addWidget( sliderPair("Decay Time",         m_slider_8));
+                    left_slider_layout->addWidget( sliderPair("Sustain Punch",      m_slider_9));
                 sound_slider_layout->addWidget(left_sliders);
+
+                // Frequency
+                //  0   float p_base_freq;          //  0, 1    Frequency                       Base note of sound
+                //  1   float p_freq_limit;         //  0, 1    Frequency Cutoff                If sliding, frequency will stop here to prevent low notes
+                //  2   float p_freq_ramp;          // -1, 1    Frequency Slide                 Slides the frequency up or down
+                //  3   float p_freq_dramp;         // -1, 1    Delta Slide                     Accelerates frequency slide, can be used to change slide directions
+                // Vibrato
+                //  4   float p_vib_strength;       //  0, 1    Vibrato Depth                   Strength of the vibrato effect
+                //  5   float p_vib_speed;          //  0, 1    Vibrato Speed                   Speed of the bibrato effect (i.e. frequency)
+                // Volume Envelope
+                //  6   float p_env_attack;         //  0, 1    Attack Time                     Length of the volume envelope attack
+                //  7   float p_env_sustain;        //  0, 1    Sustain Time                    Length of the volume envelope sustain
+                //  8   float p_env_decay;          //  0, 1    Decay Time                      Length of the volume envelope decay (aka release)
+                //  9   float p_env_punch;          //  0, 1    Sustain Punch                   Tilts the sustain envelope for more 'pop'
+
+                // Repeat
+                // 10   float p_repeat_speed;       //  0, 1    Repeat Speed                    Speed of the note repeating
+                // Phaser
+                // 11   float p_pha_offset;         // -1, 1    Phaser (Flanger) Offset         Offsets a second copy of the wave by a small phase, changing the timbre
+                // 12   float p_pha_ramp;           // -1, 1    Phaser (Flanger) Sweep          Sweeps the phase up or down
+                // Pitch Jump
+                // 13   float p_arp_speed;          //  0, 1    Pitch Jump (Change) Speed       Larger values means more pitch jumps, useful for arpeggiation
+                // 14   float p_arp_mod;            // -1, 1    Pitch Jump (Change) Amount      Jump in pitch, up or down
+                // Low-pass / High-pass Filters
+                // 15   float p_lpf_resonance;      //  0, 1    Low-pass Filter Resonance       Changes the attenuation rate for the low-pass filter, changing the timbre
+                // 16   float p_lpf_freq;           //  0, 1    Low-pass Filter Cutoff          Frequency at which the low-pass filter starts attenuating higher frequencies
+                // 17   float p_lpf_ramp;           // -1, 1    Low-pass Filter Sweep           Sweeps the low-pass cutoff up or down
+                // 18   float p_hpf_freq;           //  0, 1    High-pass Filter Cutoff         Frequency at which the high-pass filter starts attenuating lower frequencies
+                // 19   float p_hpf_ramp;           // -1, 1    High-pass Filter Sweep          Sweeps the high-pass filter up or down
 
                 QWidget *right_sliders = new QWidget();
                 QVBoxLayout *right_slider_layout = new QVBoxLayout(right_sliders);
                 right_slider_layout->setObjectName(QStringLiteral("verticalLayout"));
                 right_slider_layout->setSpacing(2);
                 right_slider_layout->setContentsMargins(2, 2, 2, 2);
-                    right_slider_layout->addWidget( sliderPair("Slide 6",   m_slider_6));
-                    right_slider_layout->addWidget( sliderPair("Slide 7",   m_slider_7));
-                    right_slider_layout->addWidget( sliderPair("Slide 8",   m_slider_8));
-                    right_slider_layout->addWidget( sliderPair("Slide 9",   m_slider_9));
-                    right_slider_layout->addWidget( sliderPair("Slide 10",  m_slider_10));
-                    right_slider_layout->addWidget( sliderPair("Slide 11",  m_slider_11));
+                    right_slider_layout->addWidget( sliderPair("Repeat Speed",          m_slider_10));
+                    right_slider_layout->addWidget( sliderPair("Phaser Offset",         m_slider_11, -1.0, 1.0));
+                    right_slider_layout->addWidget( sliderPair("Phaser Sweep",          m_slider_12, -1.0, 1.0));
+                    right_slider_layout->addWidget( sliderPair("Pitch Jump Speed",      m_slider_13));
+                    right_slider_layout->addWidget( sliderPair("Pitch Jump Amount",     m_slider_14, -1.0, 1.0));
+                    right_slider_layout->addWidget( sliderPair("Low-pass Resonance",    m_slider_15));
+                    right_slider_layout->addWidget( sliderPair("Low-pass Cutoff",       m_slider_16));
+                    right_slider_layout->addWidget( sliderPair("Low-pass Sweep",        m_slider_17, -1.0, 1.0));
+                    right_slider_layout->addWidget( sliderPair("High-pass Cutoff",      m_slider_18));
+                    right_slider_layout->addWidget( sliderPair("High-pass Sweep",       m_slider_19, -1.0, 1.0));
                 sound_slider_layout->addWidget(right_sliders);
 
             middle_side_layout->addWidget(sound_sliders);
@@ -331,7 +368,7 @@ QWidget* FormSoundEffect::sliderPair(QString slider_text, QSlider *&slider, doub
     pair_layout->setSpacing(5);
     pair_layout->setContentsMargins(2, 0, 2, 0);
 
-    QSizePolicy size_left( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);   size_left.setHorizontalStretch(1);
+    QSizePolicy size_left( QSizePolicy::Minimum, QSizePolicy::Minimum);                     size_left.setHorizontalStretch(1);
     QSizePolicy size_right(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);   size_right.setHorizontalStretch(2);
 
     // Create Widgets
@@ -341,6 +378,7 @@ QWidget* FormSoundEffect::sliderPair(QString slider_text, QSlider *&slider, doub
 
     // Label
     label->setSizePolicy(size_left);
+    label->setFixedWidth(Dr::CheckFontWidth(Dr::CustomFont(), "Low-pass Resonance"));
 
     // Spin Box
     spin->setRange(range_min, range_max);

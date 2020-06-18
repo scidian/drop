@@ -40,6 +40,9 @@ void TreeAssets::setSelectedKey(long key, bool respond_to_selection) {
         if (entity->getType() == DrType::Sound) {
             if (Dr::GetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds).toBool()) {
                 DrSound *sound = static_cast<DrSound*>(entity);
+                if (sound->getSoundType() == DrSoundType::Audio_File) {
+                    m_editor_relay->stopAllSound();
+                }
                 Dr::GetSoLoud()->play(*sound->getAudioSource());
                 if (Dr::GetActiveFormMain()) Dr::GetActiveFormMain()->drawVisuals();
             }

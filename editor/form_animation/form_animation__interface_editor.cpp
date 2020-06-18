@@ -7,6 +7,7 @@
 //
 #include <QDockWidget>
 
+#include "core/sound.h"
 #include "editor/form_animation/form_animation.h"
 #include "editor/helper_library.h"
 #include "editor/trees/tree_advisor.h"
@@ -57,6 +58,8 @@ QPointF     FormAnimation::roundPointToGrid(QPointF point_in_scene) { return m_v
 void        FormAnimation::viewCenterOnPoint(QPointF center_point)  { m_view_editor->centerOn(center_point); }
 void        FormAnimation::viewFitToContents()                      { m_view_editor->zoomToContents(); }
 void        FormAnimation::viewZoomToScale(double zoom_scale)       { m_view_editor->zoomToScale(zoom_scale); }
+
+void        FormAnimation::stopAllSound()                           { Dr::GetSoLoud()->stopAll(); }
 
 // Call to change the Advisor
 void FormAnimation::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }

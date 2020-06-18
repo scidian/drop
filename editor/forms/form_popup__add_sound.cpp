@@ -6,9 +6,12 @@
 //
 //
 #include <QDebug>
+#include <QFileDialog>
 #include <QLabel>
 #include <QRadioButton>
+#include <QStandardPaths>
 
+#include <core/sound.h>
 #include "editor/form_main/form_main.h"
 #include "editor/form_sound/form_sound_effect.h"
 #include "editor/form_sound/form_speech_synthesis.h"
@@ -55,9 +58,9 @@ void FormPopup::buildPopupAddSoundEntity() {
     layout->setAlignment(Qt::AlignVCenter);
     layout->setSpacing(6);
 
-        QRadioButton *buttonMix =           new QRadioButton(options[0]);   buttonMix->setObjectName( QStringLiteral("popupRadio"));
-        QRadioButton *buttonAudio =         new QRadioButton(options[1]);   buttonAudio->setObjectName( QStringLiteral("popupRadio"));
-        QRadioButton *buttonInstrument =    new QRadioButton(options[2]);   buttonInstrument->setObjectName(  QStringLiteral("popupRadio"));
+        QRadioButton *buttonMix =           new QRadioButton(options[0]);   buttonMix->setObjectName(QStringLiteral("popupRadio"));
+        QRadioButton *buttonAudio =         new QRadioButton(options[1]);   buttonAudio->setObjectName(QStringLiteral("popupRadio"));
+        QRadioButton *buttonInstrument =    new QRadioButton(options[2]);   buttonInstrument->setObjectName(QStringLiteral("popupRadio"));
         QRadioButton *buttonSpeech =        new QRadioButton(options[3]);   buttonSpeech->setObjectName(QStringLiteral("popupRadio"));
         QRadioButton *buttonEffect =        new QRadioButton(options[4]);   buttonEffect->setObjectName(QStringLiteral("popupRadio"));
         QRadioButton *buttonNoise =         new QRadioButton(options[5]);   buttonNoise->setObjectName(QStringLiteral("popupRadio"));
@@ -76,13 +79,18 @@ void FormPopup::buildPopupAddSoundEntity() {
         buttonEffect->setCheckable(false);
         buttonNoise->setCheckable(false);
 
-        // Adds new Mix to Project
-        connect(buttonMix, &QRadioButton::released, [this]() {
-            DrMix *mix = nullptr;
+        // ****************************************
+
+        // ********** Adds new Mix to Project
+        connect(buttonMix, &QRadioButton::released, [this]() {            
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
-            // Add Mix, Update EditorRelay widgets
-            if (editor) {
-                mix = m_project->addMix();
+            if (editor) editor->stopAllSound();                                 // Cannot load files while SoLoud is playing sound
+
+            // Add Mix
+            DrMix *mix = m_project->addMix();
+
+            // Update EditorRelay widgets
+            if (editor && mix) {
                 editor->buildAssetTree();
                 editor->buildInspector( { mix->getKey() } );
                 editor->getAssetTree()->setSelectedKey(mix->getKey());
@@ -97,18 +105,69 @@ void FormPopup::buildPopupAddSoundEntity() {
             }
         });
 
-        // Adds Audio File
-        connect(buttonAudio, &QRadioButton::released, []() {
+        // ********** Adds Audio File
+        connect(buttonAudio, &QRadioButton::released, [this]() {
+            // Grab directory from current save file, if no save file yet, use Desktop location
+            QString directory = QString::fromStdString(getProject()->getOption(Project_Options::File_Name_Path).toString());
+            if (directory == "") {
+                directory = QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation);
+            }
+
+            // Show dialog for opening a file
+            QString caption =   tr("Open Project");
+            QString filter =    tr("All Files (*);;Audio Files (*.mp3 *.wav *.flac *.ogg);;Mp3 Files (*.mp3)");
+            QString selected =  tr("Mp3 Files (*.mp3)");
+            QFileDialog::Options dialog_options;
+            QString open_file = QFileDialog::getOpenFileName(this, caption, directory, filter, &selected, dialog_options);
+
+            if (!open_file.isEmpty()) {
+                // Figure out Sound name
+                QFileInfo file_info(open_file);
+                    QString full_path =     file_info.path();
+                    QString file_name =     file_info.fileName();
+                    QString simple_name =   file_info.baseName();
+                            simple_name =   simple_name.replace("_", " ");      // Replace underscores with spaces
+                            simple_name =   simple_name.replace("-", " ");      // Replace hyphens with spaces
+
+                // Load Audio File
+                SoLoud::Wav *wav = new SoLoud::Wav();
+                int result = wav->load(open_file.toStdString().data());
+
+                if (result == SoLoud::SO_NO_ERROR) {
+                    IEditorRelay *editor = Dr::GetActiveEditorRelay();
+                    if (editor) editor->stopAllSound();                         // Cannot load files while SoLoud is playing sound
+
+                    // Add Audio File Sound
+                    DrSound *sound = m_project->addSound(DrSoundType::Audio_File, wav, c_no_key, simple_name.toStdString());
+
+                    // Update EditorRelay widgets
+                    if (editor && sound) {
+                        editor->buildAssetTree();
+                        editor->buildInspector( { sound->getKey() } );
+                        editor->getAssetTree()->setSelectedKey(sound->getKey());
+                        editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+                        editor->updateItemSelection(Editor_Widgets::Asset_Tree);
+                    }
+                    // Close this popup
+                    this->close();
+                    // Make sure we leave with Asset Tree highlighted and active
+                    if (editor && sound) {
+                        editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
+                    }
+                }
+            }
         });
 
-        // Adds Instrument Sound
-        connect(buttonInstrument,   &QRadioButton::released, []() {
+        // ********** Adds Instrument Sound
+        connect(buttonInstrument, &QRadioButton::released, []() {
+
         });
 
-        // Adds Speech Synthesis
+        // ********** Adds Speech Synthesis
         connect(buttonSpeech, &QRadioButton::released, [this]() {
             FormMain *form_main = Dr::GetActiveFormMain();
             if (form_main != nullptr) {
+                form_main->stopAllSound();                                      // Cannot load files while SoLoud is playing sound
                 FormSpeechSynthesis *speech = new FormSpeechSynthesis(m_project, form_main);
                 speech->setFocus(Qt::FocusReason::PopupFocusReason);
                 speech->show();
@@ -119,10 +178,11 @@ void FormPopup::buildPopupAddSoundEntity() {
             }
         });
 
-        // Adds Sound Effect
+        // ********** Adds Sound Effect
         connect(buttonEffect, &QRadioButton::released, [this]() {
             FormMain *form_main = Dr::GetActiveFormMain();
             if (form_main != nullptr) {
+                form_main->stopAllSound();                                      // Cannot load files while SoLoud is playing sound
                 FormSoundEffect *sound_effects = new FormSoundEffect(m_project, form_main);
                 sound_effects->setFocus(Qt::FocusReason::PopupFocusReason);
                 sound_effects->show();
@@ -133,9 +193,11 @@ void FormPopup::buildPopupAddSoundEntity() {
             }
         });
 
-        // Adds White Noise
+        // ********** Adds White Noise
         connect(buttonEffect, &QRadioButton::released, []() {
         });
+
+        // ****************************************
 
         // Add Mix option
         layout->addSpacing(4);

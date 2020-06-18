@@ -12,6 +12,7 @@
 #include <QTimer>
 
 #include "core/colors/colors.h"
+#include "core/sound.h"
 #include "editor/form_main/form_main.h"
 #include "editor/helper_library.h"
 #include "editor/interface_editor_relay.h"
@@ -251,6 +252,10 @@ void FormMain::viewZoomToScale(double zoom_scale) {
     else if (getEditorMode() == Editor_Mode::World_Creator)     { m_view_editor->zoomToScale(zoom_scale); }
 }
 
+// Sound
+void FormMain::stopAllSound() {
+    Dr::GetSoLoud()->stopAll();
+}
 
 // SLOTS: Call to change the Advisor
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }

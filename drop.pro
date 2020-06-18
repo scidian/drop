@@ -357,6 +357,7 @@ SOURCES += \
     editor/view_node/node_view__select.cpp \
     editor/widgets/widgets_inspector_checkbox.cpp \
     editor/widgets/widgets_inspector_combobox.cpp \
+    editor/widgets/widgets_inspector_slider.cpp \
     editor/widgets/widgets_inspector_spin.cpp \
     editor/widgets/widgets_trees_category_button.cpp \
     editor/widgets/widgets_view_dial.cpp \

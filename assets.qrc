@@ -249,5 +249,8 @@
         <file>assets/asset_types/blob.png</file>
         <file>assets/asset_types/speech.png</file>
         <file>assets/asset_types/sound_effect.png</file>
+        <file>assets/asset_types/audio_file.png</file>
+        <file>assets/asset_types/instrument.png</file>
+        <file>assets/asset_types/noise.png</file>
     </qresource>
 </RCC>

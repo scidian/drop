@@ -221,6 +221,8 @@ public:
     virtual void        viewUpdateToolbar(int button_id) override;
     virtual void        viewZoomToScale(double zoom_scale) override;
 
+    virtual void        stopAllSound() override;
+
 public slots:
     virtual void        setAdvisorInfo(HeaderBodyList header_body_list) override;
     virtual void        setAdvisorInfo(QString header, QString body) override;

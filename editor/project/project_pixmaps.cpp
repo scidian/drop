@@ -69,6 +69,14 @@ QPixmap GetAssetPixmapSound(DrSoundType sound_type, DrSettings *entity) {
     DrColor tint_color;
 
     switch (sound_type) {
+        case DrSoundType::Audio_File:
+            pix = QPixmap(":/assets/asset_types/audio_file.png");
+            tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
+            break;
+        case DrSoundType::Instrument:
+            pix = QPixmap(":/assets/asset_types/intrument.png");
+            tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
+            break;
         case DrSoundType::Mix:
             pix = QPixmap(":/assets/asset_types/mix.png");
             tint_color = entity->getComponentPropertyValue(Comps::Mix_Settings, Props::Mix_Settings_Color).toColor();
@@ -81,7 +89,10 @@ QPixmap GetAssetPixmapSound(DrSoundType sound_type, DrSettings *entity) {
             pix = QPixmap(":/assets/asset_types/speech.png");
             tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
             break;
-        default: ;
+        case DrSoundType::White_Noise:
+            pix = QPixmap(":/assets/asset_types/noise.png");
+            tint_color = entity->getComponentPropertyValue(Comps::Sound_Settings, Props::Sound_Settings_Color).toColor();
+            break;
     }
 
     // Tint with Graphics Effect

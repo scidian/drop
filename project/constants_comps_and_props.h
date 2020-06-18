@@ -125,6 +125,7 @@ namespace Comps {
 
     // ***** DrSound Components
     const std::string Sound_Settings                    = "SoSe";
+    const std::string Sound_Effect_Settings             = "SoEfSe";
 
 
     // ***** DrAsset Components
@@ -257,6 +258,28 @@ namespace Props {
     // ******************** DrSound Component Properties
     // Sound_Settings
     const std::string Sound_Settings_Color                  = "SoSeColor";                  // color
+
+    // Sound_Effect_Settings
+    const std::string Sound_Effect_Frequency                = "SoEfFrequency";              // double
+    const std::string Sound_Effect_Frequency_Cutoff         = "SoEfFreqCutoff";             // double
+    const std::string Sound_Effect_Frequency_Slide          = "SoEfFreqSlide";              // double
+    const std::string Sound_Effect_Delta_Slide              = "SoEfDeltaSlide";             // double
+    const std::string Sound_Effect_Vibrato_Strength         = "SoEfVibStrength";            // double
+    const std::string Sound_Effect_Vibrato_Speed            = "SoEfVibSpeed";               // double
+    const std::string Sound_Effect_Attack_Time              = "SoEfAttackTime";             // double
+    const std::string Sound_Effect_Sustain_Time             = "SoEfSustainTime";            // double
+    const std::string Sound_Effect_Decay_Time               = "SoEfDecayTime";              // double
+    const std::string Sound_Effect_Sustain_Punch            = "SoEfSustainPunch";           // double
+    const std::string Sound_Effect_Repeat_Speed             = "SoEfRepeatSpeed";            // double
+    const std::string Sound_Effect_Phaser_Offset            = "SoEfPhOffset";               // double
+    const std::string Sound_Effect_Phaser_Sweep             = "SoEfPhSweep";                // double
+    const std::string Sound_Effect_Pitch_Jump_Speed         = "SoEfPiJuSpeed";              // double
+    const std::string Sound_Effect_Pitch_Jump_Amount        = "SoEfPiJuAmount";             // double
+    const std::string Sound_Effect_Lpf_Resonance            = "SoEfLpfResonance";           // double
+    const std::string Sound_Effect_Lpf_Cuttoff              = "SoEfLpfCutoff";              // double
+    const std::string Sound_Effect_Lpf_Sweep                = "SoEfLpfSweep";               // double
+    const std::string Sound_Effect_Hpf_Cutoff               = "SoEfHpfCutoff";              // double
+    const std::string Sound_Effect_Hpf_Sweep                = "SoEfHpfSweep";               // double
 
 
     // ******************** DrAsset Component Properties

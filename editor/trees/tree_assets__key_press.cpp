@@ -114,8 +114,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
             DrAsset *copy_asset = getParentProject()->addAsset( asset->getAssetType(), asset->getBaseKey() );
                      copy_asset->copyEntitySettings(asset);
                      copy_asset->setName( new_name.toStdString() );
-
-            duplicated_key = copy_asset->getKey();
+            if (copy_asset) duplicated_key = copy_asset->getKey();
 
         } else if (entity->getType() == DrType::Mix) {
             DrMix *mix = dynamic_cast<DrMix*>(entity);
@@ -129,8 +128,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
             // Create new Mix, copies Settings / Components / Properties
             DrMix *copy_mix = getParentProject()->addMixCopyFromMix(mix, new_name.toStdString());
-
-            duplicated_key = copy_mix->getKey();
+            if (copy_mix) duplicated_key = copy_mix->getKey();
 
         } else if (entity->getType() == DrType::Sound) {
             DrSound *sound = dynamic_cast<DrSound*>(entity);
@@ -144,8 +142,7 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
             // Create new Sound, copies Settings / Components / Properties
             DrSound *copy_sound = getParentProject()->addSoundCopyFromSound(sound, new_name.toStdString());
-
-            duplicated_key = copy_sound->getKey();
+            if (copy_sound) duplicated_key = copy_sound->getKey();
         }
 
         // Update EditorRelay widgets

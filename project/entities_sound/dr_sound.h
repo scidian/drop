@@ -44,6 +44,7 @@ public:
 
     // Initializing
     void                    initializeSoundSettings(std::string new_name);
+    void                    initializeSoundEffectSettings();
 
     // Getters / Setters
     SoLoud::AudioSource*    getAudioSource()                { return m_audio_source; }

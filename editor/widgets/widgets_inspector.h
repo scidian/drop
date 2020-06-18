@@ -15,6 +15,8 @@
 #include <QSlider>
 #include <QSpinBox>
 
+#include "core/dr_math.h"
+
 
 //####################################################################################
 //##    CheckBox
@@ -56,6 +58,70 @@ public:
 
 protected:
     virtual void    showPopup() override;
+};
+
+
+//class DoubleSlider(QSlider):
+
+//    # create our our signal that we can connect to if necessary
+//    doubleValueChanged = pyqtSignal(float)
+
+//    def __init__(self, decimals=3, *args, **kargs):
+//        super(DoubleSlider, self).__init__( *args, **kargs)
+//        self._multi = 10 ** decimals
+//        self.valueChanged.connect(self.emitDoubleValueChanged)
+
+//    def emitDoubleValueChanged(self):
+//        value = float(super(DoubleSlider, self).value())/self._multi
+//        self.doubleValueChanged.emit(value)
+
+//    def value(self):
+//        return float(super(DoubleSlider, self).value()) / self._multi
+
+//    def setMinimum(self, value):
+//        return super(DoubleSlider, self).setMinimum(value * self._multi)
+
+//    def setMaximum(self, value):
+//        return super(DoubleSlider, self).setMaximum(value * self._multi)
+
+//    def setSingleStep(self, value):
+//        return super(DoubleSlider, self).setSingleStep(value * self._multi)
+
+//    def singleStep(self):
+//        return float(super(DoubleSlider, self).singleStep()) / self._multi
+
+//    def setValue(self, value):
+//        super(DoubleSlider, self).setValue(int(value * self._multi))
+
+
+
+//####################################################################################
+//##    DoubleSlider
+//##        Allows us to use double precision with a slider
+//############################
+class InspectorDoubleSlider : public QSlider
+{
+    Q_OBJECT
+
+private:
+    int     m_decimals      { 0 };
+    double  m_multiplier    { 1.0 };
+
+public:
+    InspectorDoubleSlider(QWidget *parent = nullptr, int decimals = 0) : QSlider(parent), m_decimals(decimals) {
+        m_multiplier = std::pow(10.0, static_cast<double>(m_decimals));
+        connect(this, SIGNAL(valueChanged(int)), this, SLOT(doubleValueChanged(int)));
+    }
+
+    double value() { return double(QSlider::value()) * m_multiplier; }
+
+
+
+public slots:
+    void    doubleValueChanged(int value) {
+        double value_double = double(value) * m_multiplier;
+
+    }
 };
 
 

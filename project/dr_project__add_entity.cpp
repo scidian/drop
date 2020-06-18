@@ -7,6 +7,7 @@
 //
 #include "3rd_party/soloud/soloud_speech.h"
 #include "3rd_party/soloud/soloud_sfxr.h"
+#include "3rd_party/soloud/soloud_wav.h"
 #include "core/dr_containers.h"
 #include "core/dr_debug.h"
 #include "core/imaging/imaging.h"
@@ -139,10 +140,18 @@ DrSound* DrProject::addSound(DrSoundType sound_type, SoLoud::AudioSource *audio_
 
 DrSound* DrProject::addSoundCopyFromSound(DrSound *from_sound, std::string new_name) {
     // Copy Audio Data, compiler copy contructor
-    SoLoud::AudioSource *copy_audio;
+    SoLoud::AudioSource *copy_audio = nullptr;
     switch (from_sound->getSoundType()) {
-        case DrSoundType::Sound_Effect: copy_audio = new SoLoud::Sfxr(*static_cast<SoLoud::Sfxr*>(from_sound->getAudioSource()));         break;
-        case DrSoundType::Speech:       copy_audio = new SoLoud::Speech(*static_cast<SoLoud::Speech*>(from_sound->getAudioSource()));     break;
+        case DrSoundType::Audio_File: {
+            SoLoud::Wav *from_wav = static_cast<SoLoud::Wav*>(from_sound->getAudioSource());
+            SoLoud::Wav *copy_wav = new SoLoud::Wav();
+            int result = copy_wav->loadRawWave(from_wav->mData, from_wav->mSampleCount * from_wav->mChannels, from_wav->mBaseSamplerate, from_wav->mChannels, true);
+            if (result == SoLoud::SO_NO_ERROR) copy_audio = copy_wav;
+            break;
+        }
+        case DrSoundType::Mix:          /* mix is not a DrSound */                                                                          break;
+        case DrSoundType::Sound_Effect: copy_audio = new SoLoud::Sfxr(*static_cast<SoLoud::Sfxr*>(from_sound->getAudioSource()));           break;
+        case DrSoundType::Speech:       copy_audio = new SoLoud::Speech(*static_cast<SoLoud::Speech*>(from_sound->getAudioSource()));       break;
     }
 
     // Copy Audio Data, trying to use malloc
@@ -150,11 +159,14 @@ DrSound* DrProject::addSoundCopyFromSound(DrSound *from_sound, std::string new_n
     ///std::copy(from_sound->getAudioSource(), from_sound->getAudioSource() + sizeof(*from_sound->getAudioSource()), copy_audio);
 
     // Make Copy
-    DrSound *copy_sound = addSound(from_sound->getSoundType(), copy_audio);
-             copy_sound->copyEntitySettings(from_sound);
-             copy_sound->setName(new_name);
-
-    return copy_sound;
+    if (copy_audio) {
+        DrSound *copy_sound = addSound(from_sound->getSoundType(), copy_audio);
+                 copy_sound->copyEntitySettings(from_sound);
+                 copy_sound->setName(new_name);
+        return copy_sound;
+    } else {
+        return nullptr;
+    }
 }
 
 // Adds a World to the map container, finds next available "World xxx" name to assign to World

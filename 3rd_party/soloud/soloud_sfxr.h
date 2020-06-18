@@ -52,6 +52,7 @@ namespace SoLoud
         float p_vib_speed;          //  0, 1    Vibrato Speed                   Speed of the bibrato effect (i.e. frequency)
         float p_vib_delay;          //          ??
 
+        // Volume Envelope
         float p_env_attack;         //  0, 1    Attack Time                     Length of the volume envelope attack
         float p_env_sustain;        //  0, 1    Sustain Time                    Length of the volume envelope sustain
         float p_env_decay;          //  0, 1    Decay Time                      Length of the volume envelope decay (aka release)
