@@ -132,8 +132,9 @@ void FormMain::updateEditorWidgetsAfterItemChange(Editor_Widgets changed_from, s
 
     // !!!!! #NOTE: This order is semi important, best NOT TO CHANGE IT !!!!!
     if (changed_from != Editor_Widgets::View) {
-        if (getEditorMode() == Editor_Mode::World_Creator) {    m_scene_editor->updateChangesInScene(changed_items, property_names); }
-        if (getEditorMode() == Editor_Mode::World_Graph) {      m_scene_world_graph->updateChangesInScene(changed_items, property_names); }
+        if (getEditorMode() == Editor_Mode::World_Creator)  {   m_scene_editor->updateChangesInScene(changed_items, property_names); }
+        if (getEditorMode() == Editor_Mode::World_Graph)    {   m_scene_world_graph->updateChangesInScene(changed_items, property_names); }
+        if (getEditorMode() == Editor_Mode::Sound_Creator)  {   m_scene_mixer->updateChangesInScene(changed_items, property_names); }
     }
     if (changed_from != Editor_Widgets::Inspector_Tree)         m_tree_inspector->updateInspectorPropertyBoxes(changed_items, property_names);
     if (changed_from != Editor_Widgets::Project_Tree)           m_tree_project->updateItems(changed_items, property_names);

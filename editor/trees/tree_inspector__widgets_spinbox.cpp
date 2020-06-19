@@ -446,29 +446,32 @@ QWidget* TreeInspector::createSlider(DrProperty *property, QFont &font, QSizePol
         spin->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         spin->installEventFilter(new DrFilterMouseWheelAdjustmentGuard(spin));
 
-        QSlider *slider = new QSlider(Qt::Orientation::Horizontal);
+        // If Property_Type::Slider type, grab decimal precision for custom DoubleSlider class
+        int slider_decimal_precision = (spin_type == Property_Type::Slider ? property->getValue().toVector()[5].toInt() : 0);
+
+        InspectorDoubleSlider *slider = new InspectorDoubleSlider(Qt::Orientation::Horizontal, nullptr, slider_decimal_precision);
         size_policy.setHorizontalStretch(3);
         slider->setSizePolicy(size_policy);
         slider->setTickPosition(QSlider::TickPosition::NoTicks);
-        slider->setRange( static_cast<int>(spin->minimum()), static_cast<int>(spin->maximum()) );
-        slider->setValue( static_cast<int>(property_value));
-        slider->setProperty(User_Property::CompKey,  QVariant::fromValue(       property->getParentComponent()->getComponentKey()) );
-        slider->setProperty(User_Property::CompName, QString::fromStdString(    property->getParentComponent()->getComponentName()) );
-        slider->setProperty(User_Property::PropKey,  QVariant::fromValue(       property->getPropertyKey()) );
-        slider->setProperty(User_Property::PropName, QString::fromStdString(    property->getPropertyName()) );
+        slider->setRange( spin->minimum(), spin->maximum() );
+        slider->setValue( property_value );
+        slider->setProperty(User_Property::CompKey,  QVariant::fromValue(   property->getParentComponent()->getComponentKey()) );
+        slider->setProperty(User_Property::CompName, QString::fromStdString(property->getParentComponent()->getComponentName()) );
+        slider->setProperty(User_Property::PropKey,  QVariant::fromValue(   property->getPropertyKey()) );
+        slider->setProperty(User_Property::PropName, QString::fromStdString(property->getPropertyName()) );
         slider->setProperty(User_Property::Order, 2);
         this->addToWidgetList(slider);
 
     // Connect value changed to our handler function
     connect (spin,  QOverload<double>::of(&InspectorTripleSpinBox::valueChanged), this, [this, property, slider] (double d) {
         slider->blockSignals(true);
-        slider->setValue( static_cast<int>(d) );
+        slider->setValue(d);
         updateSettingsFromNewValue(property->getCompPropPair(), d);
         slider->blockSignals(false);
     });
 
     connect(slider, &QSlider::valueChanged, this, [spin, slider] () {
-        spin->setValue( slider->value() );
+        spin->setValue(slider->value());
     });
 
     horizontal_split->addWidget(spin);

@@ -28,16 +28,16 @@ void MixerScene::updateChangesInScene(std::list<DrSettings*> changed_items, std:
     for (auto settings_item : changed_items) {
         DrType my_type = settings_item->getType();
 
-        if (my_type == DrType::Thing) {
+        if (my_type == DrType::Mix) {
 
-        } else if (my_type == DrType::Stage || my_type == DrType::World) {
+        } else if (my_type == DrType::Sound) {
+
+        } else if (my_type == DrType::Track) {
 
         }
 
         //################ !!!!!!!!!!!!!!!!!!!!!!!
-        //
-        //      ROOM FOR MORE TYPES
-        //
+        //##    ROOM FOR MORE TYPES
         //################ !!!!!!!!!!!!!!!!!!!!!!!
     }
 
@@ -47,6 +47,10 @@ void MixerScene::updateChangesInScene(std::list<DrSettings*> changed_items, std:
         item->update();
     }
 }
+
+
+
+
 
 
 

@@ -184,47 +184,48 @@ void LoadPreferences() {
     */
 
     // ***** List of Inspector Component Categories Being Expanded
-    Dr::SetInspectorExpanded(Comps::Entity_Settings,           true);
-    Dr::SetInspectorExpanded(Comps::Hidden_Settings,           true);
-    Dr::SetInspectorExpanded(Comps::Size_Settings,             true);
+    Dr::SetInspectorExpanded(Comps::Entity_Settings,            true);
+    Dr::SetInspectorExpanded(Comps::Hidden_Settings,            true);
+    Dr::SetInspectorExpanded(Comps::Size_Settings,              true);
 
-    Dr::SetInspectorExpanded(Comps::Asset_Animation,           true);
-    Dr::SetInspectorExpanded(Comps::Asset_Settings_Character,  true);
-    Dr::SetInspectorExpanded(Comps::Asset_Settings_Font,       true);
-    Dr::SetInspectorExpanded(Comps::Asset_Settings_Object,     true);
+    Dr::SetInspectorExpanded(Comps::Asset_Animation,            true);
+    Dr::SetInspectorExpanded(Comps::Asset_Settings_Character,   true);
+    Dr::SetInspectorExpanded(Comps::Asset_Settings_Font,        true);
+    Dr::SetInspectorExpanded(Comps::Asset_Settings_Object,      true);
 
-    Dr::SetInspectorExpanded(Comps::Mix_Settings,              true);
-    Dr::SetInspectorExpanded(Comps::Sound_Settings,            true);
-    Dr::SetInspectorExpanded(Comps::Track_Settings,            true);
+    Dr::SetInspectorExpanded(Comps::Mix_Settings,               true);
+    Dr::SetInspectorExpanded(Comps::Sound_Settings,             true);
+    Dr::SetInspectorExpanded(Comps::Sound_Effect_Settings,      true);
+    Dr::SetInspectorExpanded(Comps::Track_Settings,             true);
 
-    Dr::SetInspectorExpanded(Comps::World_Settings,            true);
-    Dr::SetInspectorExpanded(Comps::World_Physics,             true);
+    Dr::SetInspectorExpanded(Comps::World_Settings,             true);
+    Dr::SetInspectorExpanded(Comps::World_Physics,              true);
 
-    Dr::SetInspectorExpanded(Comps::Stage_Settings,            true);
-    Dr::SetInspectorExpanded(Comps::Stage_Grid,                true);
+    Dr::SetInspectorExpanded(Comps::Stage_Settings,             true);
+    Dr::SetInspectorExpanded(Comps::Stage_Grid,                 true);
 
-    Dr::SetInspectorExpanded(Comps::Thing_Layering,            true);
-    Dr::SetInspectorExpanded(Comps::Thing_Transform,           true);
-    Dr::SetInspectorExpanded(Comps::Thing_Movement,            true);
+    Dr::SetInspectorExpanded(Comps::Thing_Layering,             true);
+    Dr::SetInspectorExpanded(Comps::Thing_Transform,            true);
+    Dr::SetInspectorExpanded(Comps::Thing_Movement,             true);
 
     // Pure Things
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Character,  true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Object,     true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Text,       true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Character,   true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Object,      true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Text,        true);
 
     // Device Things
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Camera,     true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Camera,      true);
 
     // Effect Things
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Fire,       true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Fisheye,    true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Light,      true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Mirror,     true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Swirl,      true);
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Water,      true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Fire,        true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Fisheye,     true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Light,       true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Mirror,      true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Swirl,       true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Water,       true);
 
     // Item Things
-    Dr::SetInspectorExpanded(Comps::Thing_Settings_Tile,       true);
+    Dr::SetInspectorExpanded(Comps::Thing_Settings_Tile,        true);
 }
 
 

@@ -124,16 +124,16 @@ void DrWorld::initializeWorldPhysics2D(std::string new_name) {
                            "Pixel Texture", "Design of pixelation. For plain blocky pixels leave as \"None\".");
     addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Pixelation, Property_Type::OneSizeF, DrPointF(1.0, 1.0),
                            "Pixelation", "Size of x and y pixels, larger numbers provide more pixelation.");
-    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Bitrate, Property_Type::Slider, std::vector<DrVariant>({256, 0, 256, 8, ""}),
+    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Bitrate, Property_Type::Slider, std::vector<DrVariant>({256, 0, 256, 8, "", 0}),
                            "Bit Depth", "Standard output has color channel depth of 256, you can use this value to limit the number of available colors. "
                                         "Combining this with Pixelation gives a great retro look.");
-    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Brightness, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
+    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Brightness, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, "", 0}),
                            "Brightness", "How light / dark this world should appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Contrast, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
+    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Contrast, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, "", 0}),
                            "Contrast", "Amount of distinguishable difference of colors. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Saturation, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, ""}),
+    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Saturation, Property_Type::Slider, std::vector<DrVariant>({0, -255, 255, 5, "", 0}),
                            "Saturation", "How colorful the colors appear. \nDefault: \t0 \nRange: \t-255 to 255");
-    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Hue, Property_Type::Slider, std::vector<DrVariant>({0, 0, 360, 5, ""}),
+    addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Hue, Property_Type::Slider, std::vector<DrVariant>({0, 0, 360, 5, "", 0}),
                            "Hue", "Rotate color values. \nDefault: \t0 \nRange: \t0 to 360");
     addPropertyToComponent(Comps::World_Appearance, Props::World_Filter_Grayscale, Property_Type::Bool, false,
                            "Grayscale", "Should this world be shown grayscale?");

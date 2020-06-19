@@ -85,9 +85,9 @@ void DrThing::addComponentSettingsLight(DrColor color) {
                                          "<b>Glow</b> - Provides diffuse lighting, no z-ordering available. ");
     addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Color, Property_Type::Color, color.rgba(),
                            "Light Color", "The Color for this Light.");
-    addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start, Property_Type::Slider, std::vector<DrVariant>({0, 0, 360, 5, "°"}),
+    addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_Start, Property_Type::Slider, std::vector<DrVariant>({0, 0, 360, 5, "°", 0}),
                            "Cone Start", "Starting angle of light, Cone Angles travel in counter-clockwise direction.");
-    addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End, Property_Type::Slider, std::vector<DrVariant>({360, 0, 360, 5, "°"}),
+    addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Cone_End, Property_Type::Slider, std::vector<DrVariant>({360, 0, 360, 5, "°", 0}),
                            "Cone End", "Ending angle of light, Cone Angles travel in counter-clockwise direction.");
     addPropertyToComponent(Comps::Thing_Settings_Light, Props::Thing_Light_Intensity, Property_Type::Percent, 50.0,
                            "Intensity", "How intense the light is starting from the middle out.");

@@ -45,9 +45,7 @@ void EditorScene::updateChangesInScene(std::list<DrSettings*> changed_items, std
         }
 
         //################ !!!!!!!!!!!!!!!!!!!!!!!
-        //
-        //      ROOM FOR MORE TYPES
-        //
+        //##    ROOM FOR MORE TYPES
         //################ !!!!!!!!!!!!!!!!!!!!!!!
     }
 

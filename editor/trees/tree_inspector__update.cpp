@@ -23,6 +23,7 @@
 #include "project/dr_project.h"
 #include "project/enums_entity_types.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_sound/dr_sound.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -363,7 +364,9 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
                 break;
         }
 
-        // ***** Special Cases
+        // ******************** Special Cases ********************
+
+        // When body type is not Rigid_Body, make body riginess slider enabled and vice versa
         if (property->getPropertyName() == Props::Asset_Physics_Body_Style) {
             bool rigid = (static_cast<Body_Style>(property->getValue().toInt()) == Body_Style::Rigid_Body);
             DrAsset *asset = dynamic_cast<DrAsset*>(settings);
@@ -372,6 +375,13 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
                 updateLockedSettings();
             }
         }
+
+        // If we updated a DrSound Sound Effect, apply changes to underlying DrSound
+        if (component->getComponentName() == Comps::Sound_Effect_Settings) {
+            DrSound *sound = dynamic_cast<DrSound*>(settings);
+            if (sound != nullptr) sound->updateSoundEffectProperties();
+        }
+
 
     }   // End for each key
 

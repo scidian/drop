@@ -108,19 +108,30 @@ private:
     double  m_multiplier    { 1.0 };
 
 public:
-    InspectorDoubleSlider(QWidget *parent = nullptr, int decimals = 0) : QSlider(parent), m_decimals(decimals) {
+    InspectorDoubleSlider(Qt::Orientation orientation, QWidget *parent = nullptr, int decimals = 0)
+        : QSlider(orientation, parent), m_decimals(decimals) {
+
         m_multiplier = std::pow(10.0, static_cast<double>(m_decimals));
-        connect(this, SIGNAL(valueChanged(int)), this, SLOT(doubleValueChanged(int)));
+        connect(this, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
     }
 
-    double value() { return double(QSlider::value()) * m_multiplier; }
+    double  singleStep()                { return static_cast<double>(QSlider::singleStep()) / m_multiplier; }
+    double  tickInterval()              { return static_cast<double>(QSlider::tickInterval()) / m_multiplier; }
+    double  value()                     { return static_cast<double>(QSlider::value()) / m_multiplier; }
 
+    void    setMaximum(double max)              { QSlider::setMaximum(max * m_multiplier); }
+    void    setMinimum(double min)              { QSlider::setMinimum(min * m_multiplier); }
+    void    setRange(double min, double max)    { QSlider::setRange(min * m_multiplier, max * m_multiplier); }
+    void    setSingleStep(double step)          { QSlider::setSingleStep(step * m_multiplier); }
+    void    setTickInterval(double ti)          { QSlider::setTickInterval(ti * m_multiplier); }
+    void    setValue(double value)              { QSlider::setValue(value * m_multiplier); }
 
+signals:
+    void    doubleValueChanged(double value);
 
 public slots:
-    void    doubleValueChanged(int value) {
-        double value_double = double(value) * m_multiplier;
-
+    void    valueChanged(int new_value) {
+        emit doubleValueChanged(static_cast<double>(new_value) / m_multiplier);
     }
 };
 

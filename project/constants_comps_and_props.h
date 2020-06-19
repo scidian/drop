@@ -42,7 +42,7 @@ enum class Property_Type {
     RangedDouble    = 11,   // vector<variant>      Decimal >= min and <= max
                             //                          4 values: double, double min value, double max value, double step size
     Slider          = 12,   // vector<variant>      Decimal >= min and <= max, with a slider
-                            //                          5 values: double, double min value, double max value, double step size, string suffix ("%", etc)
+                            //                          6 values: double, double min value, double max value, double step size, string suffix ("%", etc), decimal precision
     Percent         = 13,   // double               Decimal from 0.0 to 100.0, shows percent symbol, with a slider
 
     String          = 14,   // string               Uses QLineEdit
