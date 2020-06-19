@@ -36,6 +36,7 @@ void FormSpeechSynthesis::playSpeech(std::string speech_text) {
 
     // Set text / parameters
     m_speech_text = speech_text;
+    m_speech->setVolume(2.0);
     m_speech->setText(speech_text.data());
     m_speech->setParams(m_speech_slider_freq->value(),
                         static_cast<float>(m_speech_slider_speed->value()) / 10.0,
