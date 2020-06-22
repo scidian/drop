@@ -303,6 +303,7 @@ SOURCES += \
     editor/trees/tree_project__lock_box.cpp \
     editor/trees/tree_project__selection.cpp \
     editor/trees/tree_project__update.cpp \
+    editor/trees/tree_wave_form.cpp \
     editor/view_editor/editor_item.cpp \
     editor/view_editor/editor_item__item_change.cpp \
     editor/view_editor/editor_item__paint.cpp \
@@ -1178,6 +1179,7 @@ HEADERS += \
     editor/trees/tree_assets.h \
     editor/trees/tree_inspector.h \
     editor/trees/tree_project.h \
+    editor/trees/tree_wave_form.h \
     editor/view_editor/editor_item.h \
     editor/view_editor/editor_scene.h \
     editor/view_editor/editor_scene_undo_commands.h \

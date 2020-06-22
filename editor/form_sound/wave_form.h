@@ -37,7 +37,7 @@ private:
     // Local Variables
     std::vector<sample_pixel>   m_pixels;                                   // Holds pixel data for painting
     float                       m_audio_length      { 0 };                  // Length of AudioSource, in seconds
-    float                       m_largest_sample    { 0 };                  // Stores largest sample in data (for relative painting_
+    float                       m_largest_sample    { 0 };                  // Stores largest sample in data (for relative painting)
 
 
 public:

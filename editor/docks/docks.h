@@ -17,6 +17,7 @@ class IEditorRelay;
 class TreeAdvisor;
 class TreeAssets;
 class TreeInspector;
+class TreeWaveForm;
 enum class DrType;
 
 
@@ -29,10 +30,15 @@ namespace Dr {
     // ***** Building Shared Dock Widgets
     QDockWidget*        BuildDockAdvisor(   DrProject *project, IEditorRelay *editor_relay, TreeAdvisor   *&tree_advisor);
     QDockWidget*        BuildDockAssets(    DrProject *project, IEditorRelay *editor_relay, TreeAssets    *&tree_assets);
-    QDockWidget*        BuildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector) ;
+    QDockWidget*        BuildDockInspector( DrProject *project, IEditorRelay *editor_relay, TreeInspector *&tree_inspector);
+    QDockWidget*        BuildDockWaveForm(  DrProject *project, IEditorRelay *editor_relay, TreeWaveForm  *&tree_wave_form);
 
     // ***** Handling Shared Dock Widgets
-    void                InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector);
+    void                InitializeDockWidgets(QMainWindow *window,
+                                              QDockWidget *&dock_advisor,
+                                              QDockWidget *&dock_assets,
+                                              QDockWidget *&dock_inspector,
+                                              QDockWidget *&dock_wave_form);
     void                LockDockWidth(QDockWidget *&dock, int width);
     void                UnlockDockWidth(QMainWindow *window, QDockWidget *&dock);
 

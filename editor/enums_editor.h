@@ -51,6 +51,7 @@ enum class Editor_Widgets {
     Asset_Tree,
     Inspector_Tree,
     Project_Tree,
+    Wave_Form,
 };
 
 

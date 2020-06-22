@@ -15,6 +15,7 @@
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
+#include "editor/trees/tree_wave_form.h"
 
 
 namespace Dr {
@@ -176,6 +177,54 @@ QDockWidget* BuildDockInspector(DrProject *project, IEditorRelay *editor_relay, 
     return dock_inspector;
 }
 
+
+//####################################################################################
+//##    Builds Wave Form Dock
+//####################################################################################
+QDockWidget* BuildDockWaveForm(DrProject *project, IEditorRelay *editor_relay, TreeWaveForm *&tree_wave_form) {
+    QSizePolicy size_policy_less(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    size_policy_less.setHorizontalStretch(1);
+    size_policy_less.setVerticalStretch(1);
+
+    QDockWidget *dock_wave_form = new QDockWidget(nullptr, Qt::WindowType::Window | Qt::WindowType::FramelessWindowHint);
+    dock_wave_form->setWindowTitle( QMainWindow::tr("Wave Form") );
+    dock_wave_form->setObjectName(QStringLiteral("dockWaveForm"));
+    dock_wave_form->setSizePolicy(size_policy_less);
+    dock_wave_form->setFont(Dr::CustomFont());
+    dock_wave_form->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable); /// | QDockWidget::DockWidgetClosable);
+    dock_wave_form->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+        QWidget *widget_wave_form = new QWidget();
+        widget_wave_form->setObjectName(QStringLiteral("widgetWaveForm"));
+        widget_wave_form->setSizePolicy(size_policy_less);
+        //widget_wave_form->setMaximumHeight(180);
+            QVBoxLayout *vertical_layout_wave_form = new QVBoxLayout(widget_wave_form);
+            vertical_layout_wave_form->setObjectName(QStringLiteral("verticalLayoutWaveForm"));
+            vertical_layout_wave_form->setSpacing(0);
+            vertical_layout_wave_form->setContentsMargins(0, 0, 0, 0);
+
+                // ***** Load our custom TreeAdvisor for the helpful advisor text
+                tree_wave_form = new TreeWaveForm(widget_wave_form, project, editor_relay);
+                tree_wave_form->setObjectName(QStringLiteral("treeWaveForm"));
+                tree_wave_form->setColumnCount(1);
+                tree_wave_form->setFont(Dr::CustomFontLarger());
+                tree_wave_form->setProperty("showDropIndicator", false);
+                tree_wave_form->setDragEnabled(false);
+                tree_wave_form->setDragDropOverwriteMode(false);
+                tree_wave_form->setDragDropMode(QAbstractItemView::DragDropMode::NoDragDrop);
+                tree_wave_form->setDefaultDropAction(Qt::DropAction::IgnoreAction);
+                tree_wave_form->setAlternatingRowColors(false);
+                tree_wave_form->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+                tree_wave_form->setIndentation(12);
+                tree_wave_form->setRootIsDecorated(false);
+                tree_wave_form->setItemsExpandable(false);
+                tree_wave_form->setExpandsOnDoubleClick(false);
+                tree_wave_form->setHeaderHidden(true);
+                tree_wave_form->setFrameShape(QFrame::NoFrame);
+            vertical_layout_wave_form->addWidget(tree_wave_form);
+
+        dock_wave_form->setWidget(widget_wave_form);
+    return dock_wave_form;
+}
 
 
 

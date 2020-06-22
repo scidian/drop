@@ -73,7 +73,8 @@ void FormMain::initializeFormMain() {
     m_dock_advisor =        Dr::BuildDockAdvisor(   m_project, this, m_tree_advisor);
     m_dock_assets =         Dr::BuildDockAssets(    m_project, this, m_tree_assets);
     m_dock_inspector =      Dr::BuildDockInspector( m_project, this, m_tree_inspector);
-    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector);
+    m_dock_wave_form =      Dr::BuildDockWaveForm(  m_project, this, m_tree_wave_form);
+    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector, m_dock_wave_form);
 }
 
 
@@ -107,6 +108,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
                 m_widget_central_sound_creator = takeCentralWidget();
                 buildInspector( { } );
                 m_dock_assets->hide();
+                m_dock_wave_form->hide();
                 break;
             case Editor_Mode::Clear:
                 m_widget_central_clear = takeCentralWidget();
@@ -160,6 +162,7 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             m_tree_assets->setShowTypes({ DrType::Mix, DrType::Sound });
             buildAssetTree();
             m_dock_assets->show();
+            m_dock_wave_form->show();
             buildProjectTree();
             buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Mix).toInt() );
 

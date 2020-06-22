@@ -22,6 +22,7 @@ QString StringFromEditorWidget(Editor_Widgets widget) {
         case Editor_Widgets::Asset_Tree:        return "Asset Tree";
         case Editor_Widgets::Inspector_Tree:    return "Inspector Tree";
         case Editor_Widgets::Project_Tree:      return "Project Tree";
+        case Editor_Widgets::Wave_Form:         return "Wave Form";
     }
 }
 

@@ -28,6 +28,7 @@ class TreeAdvisor;
 class TreeAssets;
 class TreeInspector;
 class TreeProject;
+class TreeWaveForm;
 
 class EditorView;
 class MixerView;
@@ -53,6 +54,7 @@ public:
     virtual TreeAssets*         getAssetTree() = 0;
     virtual TreeInspector*      getInspector() = 0;
     virtual TreeProject*        getProjectTree() = 0;
+    virtual TreeWaveForm*       getTreeWaveForm() = 0;
 
     virtual EditorView*         getViewEditor() = 0;
     virtual MixerView*          getViewMixer() = 0;

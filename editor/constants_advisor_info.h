@@ -79,6 +79,7 @@ namespace Advisor_Info {
     const HeaderBodyList Asset_List             { "Asset List", "These are Things that can be dragged into your Project. Changing the properties "
                                                                 "of these Things will affect all instances of those Things Project wide." };
     const HeaderBodyList Asset_Search           { "Asset Search", "Type the name of an asset here to help find it in the Asset List." };
+    const HeaderBodyList Wave_Form              { "Wave Form", "This shows the Wave Form of the currently selected sound." };
     const HeaderBodyList World_Editor           { "World Editor", "Shows Things and layout of currently selected World / Stage. Drop assets into World "
                                                                   "Editor to add them to current Stage." };
     const HeaderBodyList Project_Tree           { "Project Tree", "Lists the Things contained within the currently displayed Stage. Select Things "

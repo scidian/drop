@@ -100,8 +100,6 @@ void DrSound::initializeSoundEffectSettings() {
     // 18   float p_hpf_freq;           //  0, 1    High-pass Filter Cutoff         Frequency at which the high-pass filter starts attenuating lower frequencies
     // 19   float p_hpf_ramp;           // -1, 1    High-pass Filter Sweep          Sweeps the high-pass filter up or down
 
-
-
     //    Slider          = 12,   // vector<variant>      Decimal >= min and <= max, with a slider
     //                            //                          6 values: double, double min value, double max value, double step size, string suffix ("%", etc), decimal precision
 

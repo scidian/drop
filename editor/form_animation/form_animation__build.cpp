@@ -53,7 +53,8 @@ void FormAnimation::initializeFormAnimation() {
     m_dock_advisor =    Dr::BuildDockAdvisor(  m_project, this, m_tree_advisor);
     m_dock_assets =     Dr::BuildDockAssets(   m_project, this, m_tree_assets);
     m_dock_inspector =  Dr::BuildDockInspector(m_project, this, m_tree_inspector);
-    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector);
+    m_dock_wave_form =  Dr::BuildDockWaveForm( m_project, this, m_tree_wave_form);
+    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector, m_dock_wave_form);
 
     // ***** Set up FormAnimation for first time
     Dr::LockDockWidth( m_dock_advisor, m_dock_advisor->width() );

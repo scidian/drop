@@ -38,12 +38,12 @@ private:
 public:
     // Constructor
     explicit        TreeAdvisor(QWidget *parent, DrProject *project, IEditorRelay *editor_relay) :
-                                QTreeWidget (parent), m_project(project), m_editor_relay(editor_relay) { }
+                                QTreeWidget(parent), m_project(project), m_editor_relay(editor_relay) { }
 
-    // Event Overrides, start at Qt Docs for QTreeWidget Class to find more
+    // Event Overrides
     virtual void    enterEvent(QEvent *event) override;
 
-    // Getters and setters
+    // Getters / Setters
     void            changeAdvisor(QString header, QString body);
     QString         getAdvisorHeader()  { return m_advisor_header; }
     QString         getAdvisorBody()    { return m_advisor_body; }

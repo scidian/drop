@@ -81,14 +81,14 @@ public:
     void            updateAssetList(std::list<DrSettings*> changed_entities, std::list<ComponentProperty> component_property_pairs);
 
     // Getters / Setters
-    IEditorRelay*           getEditorRelay() { return m_editor_relay; }
-    DrProject*              getParentProject() { return m_project; }
+    IEditorRelay*           getEditorRelay()    { return m_editor_relay; }
+    DrProject*              getParentProject()  { return m_project; }
 
     DrFilterHoverHandler*   getHoverHandler();
     void                    setHoverHandler(DrFilterHoverHandler* hover_handler) { m_filter_hover = hover_handler; }
-    long                    getSelectedKey() { return m_selected_key; }
+    long                    getSelectedKey()    { return m_selected_key; }
     void                    setSelectedKey(long key, bool respond_to_selection = false);
-    QList<DrType>&          getShowTypes() { return m_show_types; }
+    QList<DrType>&          getShowTypes()      { return m_show_types; }
     void                    setShowTypes(QList<DrType> types) { m_show_types = types; }
 
 private slots:

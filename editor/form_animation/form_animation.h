@@ -46,7 +46,8 @@ private:
     TreeAssets     *m_tree_assets;                                      // Shows Project Assets
     TreeInspector  *m_tree_inspector;                                   // Custom classes for Inspector Window
     TreeProject    *m_tree_project;
-    QDockWidget    *m_dock_advisor, *m_dock_assets, *m_dock_inspector;
+    TreeWaveForm   *m_tree_wave_form;
+    QDockWidget    *m_dock_advisor, *m_dock_assets, *m_dock_inspector, *m_dock_wave_form;
     QWidget        *m_widget_central;
 
     // ***** "Editor" (Animation Editor) Widgets
@@ -70,6 +71,7 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return m_tree_assets; }
     virtual TreeInspector*      getInspector() override     { return m_tree_inspector; }
     virtual TreeProject*        getProjectTree() override   { return m_tree_project; }
+    virtual TreeWaveForm*       getTreeWaveForm() override  { return m_tree_wave_form; }
 
     virtual EditorView*         getViewEditor() override    { return m_view_editor; }
     virtual MixerView*          getViewMixer() override     { return nullptr; }
