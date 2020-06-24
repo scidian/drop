@@ -64,6 +64,9 @@ public:
     void                    setSelectedKey(long key)    { m_selected_key = key; }
     void                    setSound(DrSound *sound);
 
+private slots:
+    void            setAdvisorInfo(QString header, QString body);
+
 };
 
 

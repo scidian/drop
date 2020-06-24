@@ -37,7 +37,7 @@ void TreeAssets::setSelectedKey(long key, bool respond_to_selection) {
         DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(key);
 
         // If selected Asset is Sound, and auto play is enabled, play Sound
-        if (entity->getType() == DrType::Sound) {
+        if (entity->getType() == DrType::Sound) {            
             if (Dr::GetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds).toBool()) {
                 DrSound *sound = static_cast<DrSound*>(entity);
                 if (sound->getSoundType() == DrSoundType::Audio_File) {
@@ -48,6 +48,8 @@ void TreeAssets::setSelectedKey(long key, bool respond_to_selection) {
             }
         }
     }
+
+    m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { key });
 }
 
 // Scrolls to selected item if necessary

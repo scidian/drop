@@ -32,14 +32,14 @@ void InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDoc
     } else {
         dock_assets->setFixedWidth( 221 );
     }
-    window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,   dock_assets);
-    window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,   dock_wave_form);
+    window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,       dock_assets);
+    window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,       dock_wave_form);
     dock_assets->hide();
     dock_wave_form->hide();
 
     // Add QMainWindow Docks, set starting widths
     dock_inspector->setFixedWidth( 310 );
-    window->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea,  dock_inspector);
+    window->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea,      dock_inspector);
 
     if (c_advisor_start_side == Advisor_Side::Start_On_Left) {
         window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,   dock_advisor);
@@ -51,7 +51,7 @@ void InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDoc
             window->resizeDocks( { dock_inspector }, { 900 }, Qt::Vertical);
         }
     } else {
-        window->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea,   dock_advisor);
+        window->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea,  dock_advisor);
         window->resizeDocks( { dock_assets }, { 900 }, Qt::Vertical);
         window->resizeDocks( { dock_advisor, dock_inspector }, { 160, 900 }, Qt::Vertical);
     }

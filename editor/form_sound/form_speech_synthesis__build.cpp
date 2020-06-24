@@ -215,7 +215,6 @@ void FormSpeechSynthesis::buildSpeechForm() {
                         if (editor && sound) {
                             editor->buildAssetTree();
                             editor->buildInspector( { sound->getKey() } );
-                            editor->updateItemSelection(Editor_Widgets::Asset_Tree);
                             editor->getAssetTree()->setSelectedKey(sound->getKey());
                             editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
                         }

@@ -25,7 +25,12 @@
 //####################################################################################
 //##    Constructor / Destructor
 //####################################################################################
-WaveForm::WaveForm(QWidget *parent, SoLoud::AudioSource *audio_source) : QFrame(parent), m_audio(audio_source) { }
+WaveForm::WaveForm(QWidget *parent, SoLoud::AudioSource *audio_source)
+    : QFrame(parent), m_audio(audio_source) {
+
+    this->setFixedHeight(100);
+}
+
 WaveForm::~WaveForm() { }
 
 
@@ -41,7 +46,7 @@ void WaveForm::setSound(SoLoud::AudioSource* audio) {
     SoLoud::AudioSourceInstance *voice = nullptr;
     if (m_audio != nullptr) voice = m_audio->createInstance();
 
-    // If we successfully createds AudioInstance
+    // If we successfully created AudioInstance
     if (voice != nullptr) {
         // ***** Get AudioSource sample data
         std::vector<float> voice_data;                                                          // Vector to hold voice data
@@ -96,6 +101,7 @@ void WaveForm::setSound(SoLoud::AudioSource* audio) {
 //##        - For all samples with the same x, average all samples, draw light line
 //####################################################################################
 void WaveForm::paintEvent(QPaintEvent *) {
+    if (m_audio == nullptr) return;
 
     // ***** Paint Wave Form
     QPainter painter(this);

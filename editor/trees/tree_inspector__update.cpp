@@ -379,7 +379,10 @@ void TreeInspector::updateSettingsFromNewValue(ComponentProperty component_prope
         // If we updated a DrSound Sound Effect, apply changes to underlying DrSound
         if (component->getComponentName() == Comps::Sound_Effect_Settings) {
             DrSound *sound = dynamic_cast<DrSound*>(settings);
-            if (sound != nullptr) sound->updateSoundEffectProperties();
+            if (sound != nullptr) {
+                sound->updateSoundEffectProperties();
+                getEditorRelay()->updateItemSelection(Editor_Widgets::Asset_Tree, { sound->getKey() });         // Force wave form to be redrawn in Wave Form dock
+            }
         }
 
 

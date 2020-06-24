@@ -193,6 +193,7 @@ QDockWidget* BuildDockWaveForm(DrProject *project, IEditorRelay *editor_relay, T
     dock_wave_form->setFont(Dr::CustomFont());
     dock_wave_form->setFeatures(QDockWidget::DockWidgetMovable); /// | QDockWidget::DockWidgetFloatable); /// | QDockWidget::DockWidgetClosable);
     dock_wave_form->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
         QWidget *widget_wave_form = new QWidget();
         widget_wave_form->setObjectName(QStringLiteral("widgetWaveForm"));
         widget_wave_form->setSizePolicy(size_policy_less);

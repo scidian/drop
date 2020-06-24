@@ -148,7 +148,6 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
         // Update EditorRelay widgets
         m_editor_relay->buildAssetTree();
         m_editor_relay->buildInspector( { duplicated_key } );
-        m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
         setSelectedKey(duplicated_key);
         setFocus(Qt::FocusReason::PopupFocusReason);
     }
@@ -209,7 +208,6 @@ void TreeAssets::keyPressEvent(QKeyEvent *event) {
 
         // ***** Update Selected Key
         setSelectedKey(new_key);
-        m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree);
     }
 
 

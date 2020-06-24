@@ -95,7 +95,6 @@ void FormPopup::buildPopupAddSoundEntity() {
                 editor->buildInspector( { mix->getKey() } );
                 editor->getAssetTree()->setSelectedKey(mix->getKey());
                 editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-                editor->updateItemSelection(Editor_Widgets::Asset_Tree);
             }
             // Close this popup
             this->close();
@@ -146,7 +145,6 @@ void FormPopup::buildPopupAddSoundEntity() {
                         editor->buildInspector( { sound->getKey() } );
                         editor->getAssetTree()->setSelectedKey(sound->getKey());
                         editor->getAssetTree()->setFocus(Qt::FocusReason::PopupFocusReason);
-                        editor->updateItemSelection(Editor_Widgets::Asset_Tree);
                     }
                     // Close this popup
                     this->close();

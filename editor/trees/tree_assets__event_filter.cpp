@@ -69,7 +69,6 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
         // Build Inspector and update Editor Widgets
         m_editor_relay->buildInspector( { asset_key } );
         m_editor_relay->setActiveWidget(Editor_Widgets::Asset_Tree);
-        m_editor_relay->updateItemSelection(Editor_Widgets::Asset_Tree, { });
 
         QMouseEvent *mouse_event = dynamic_cast<QMouseEvent*>(event);
         asset_frame->setProperty(User_Property::Mouse_Down,     true);

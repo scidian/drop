@@ -21,6 +21,7 @@
 #include "editor/trees/tree_assets.h"
 #include "editor/trees/tree_inspector.h"
 #include "editor/trees/tree_project.h"
+#include "editor/trees/tree_wave_form.h"
 #include "editor/view_editor/editor_item.h"
 #include "editor/view_editor/editor_scene.h"
 #include "editor/view_editor/editor_view.h"
@@ -37,6 +38,7 @@
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_sound/dr_sound.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -172,6 +174,10 @@ void FormMain::updateItemSelection(Editor_Widgets selected_from, QList<long> opt
         // Code commented on purpose, Asset Tree gaining focus should not clear Project Tree / Editor View selection
         ///m_scene_editor->updateSelectionFromKeyList( { } );
         ///treeProjectEditor->updateSelectionFromKeyList( { } );
+
+        if (getEditorMode() == Editor_Mode::Sound_Creator) {
+            if (optional_key_list.count() > 0)  { m_tree_wave_form->setSound(m_project->findSoundFromKey(optional_key_list.first())); }
+        }
     }
 
     // Updates status bar, enables / disables toolbar buttons
