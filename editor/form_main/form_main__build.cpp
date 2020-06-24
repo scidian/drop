@@ -86,9 +86,11 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     Editor_Mode old_mode = m_current_mode;
     m_current_mode = new_mode;
 
-    Dr::LockDockWidth(m_dock_advisor,       m_dock_advisor->width());
-    Dr::LockDockWidth(m_dock_assets,        m_dock_assets->width());
-    Dr::LockDockWidth(m_dock_inspector,     m_dock_inspector->width());
+    // Lock Dock sizes to stop from having them resized automatically
+    Dr::LockDockSize(m_dock_advisor);
+    Dr::LockDockSize(m_dock_assets);
+    Dr::LockDockSize(m_dock_inspector);
+    Dr::LockDockSize(m_dock_wave_form);
 
     // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {
@@ -182,9 +184,13 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     QApplication::processEvents();
     Dr::SetDoneLoading(true);
 
-    Dr::UnlockDockWidth( this, m_dock_advisor );
-    Dr::UnlockDockWidth( this, m_dock_assets );
-    Dr::UnlockDockWidth( this, m_dock_inspector );
+    // Unlock Docks to allow them to be manually resized
+    Dr::UnlockDockSize( this, m_dock_advisor );
+    Dr::UnlockDockSize( this, m_dock_assets );
+    Dr::UnlockDockSize( this, m_dock_inspector );
+    Dr::UnlockDockSize( this, m_dock_wave_form );
+
+    // Set Mode Button
     buttonGroupModeSetChecked(int(new_mode));
 }
 

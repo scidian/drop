@@ -5,6 +5,8 @@
 //
 //
 //
+#include <QApplication>
+
 #include "editor/docks/docks.h"
 #include "editor/trees/tree_advisor.h"
 #include "editor/trees/tree_assets.h"
@@ -27,15 +29,12 @@ namespace Dr {
 //####################################################################################
 void InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDockWidget *&dock_assets, QDockWidget *&dock_inspector, QDockWidget *&dock_wave_form) {
     // Starting width, if screen size is small, decrease starting width of assets to make more room (to single column)
-    if (window->geometry().width() < 1300) {
-        dock_assets->setFixedWidth( 124 );
-    } else {
-        dock_assets->setFixedWidth( 221 );
-    }
+    int left_dock_width = (window->geometry().width() < 1300 ? 124 : 221);
+    dock_assets->setFixedWidth(left_dock_width);
+    dock_wave_form->setFixedWidth(left_dock_width);
+    dock_wave_form->setFixedHeight(120);
     window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,       dock_assets);
     window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,       dock_wave_form);
-    dock_assets->hide();
-    dock_wave_form->hide();
 
     // Add QMainWindow Docks, set starting widths
     dock_inspector->setFixedWidth( 310 );
@@ -55,6 +54,9 @@ void InitializeDockWidgets(QMainWindow *window, QDockWidget *&dock_advisor, QDoc
         window->resizeDocks( { dock_assets }, { 900 }, Qt::Vertical);
         window->resizeDocks( { dock_advisor, dock_inspector }, { 160, 900 }, Qt::Vertical);
     }
+
+    dock_assets->hide();
+    dock_wave_form->hide();
 
 
     ///// Helpful QDockWidget commands

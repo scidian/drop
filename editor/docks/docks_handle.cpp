@@ -6,6 +6,7 @@
 //
 //
 #include <QApplication>
+#include <QDebug>
 
 #include "editor/docks/docks.h"
 
@@ -15,22 +16,26 @@ namespace Dr {
 //####################################################################################
 //##    Keeps docks from changing width while QMainWindow is changed around
 //####################################################################################
-void LockDockWidth(QDockWidget *&dock, int width) {
-    dock->setFixedWidth( width );
+void LockDockSize(QDockWidget *&dock) {
+    dock->setFixedWidth(  dock->width() );
+    ///dock->setFixedHeight( dock->height() );
 }
 
-void UnlockDockWidth(QMainWindow *window, QDockWidget *&dock) {
-    int pre_width = dock->width();
+void UnlockDockSize(QMainWindow *window, QDockWidget *&dock) {
+    int pre_width =  dock->width();
+    ///int pre_height = dock->height();
     dock->setMaximumSize(625, QWIDGETSIZE_MAX);
 
     QString dock_name = dock->objectName();
-    if (dock_name == "dockInspector")
+    if (dock_name == "dockInspector") {
         dock->setMinimumSize(260, 80);
-    else
+    } else {
         dock->setMinimumSize(124, 80);
+    }
 
     QApplication::processEvents();
-    window->resizeDocks( { dock }, { pre_width }, Qt::Horizontal);
+    window->resizeDocks( { dock }, { pre_width },  Qt::Horizontal);
+    ///window->resizeDocks( { dock }, { pre_height }, Qt::Vertical);
 }
 
 

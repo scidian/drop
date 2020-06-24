@@ -101,28 +101,62 @@ void WaveForm::setSound(SoLoud::AudioSource* audio) {
 //##        - For all samples with the same x, average all samples, draw light line
 //####################################################################################
 void WaveForm::paintEvent(QPaintEvent *) {
+    // Initialize painter
+    QPainter painter(this);
+    float   mid = static_cast<float>(this->height()) / 2.f;
+    float   size_y = mid;
+    int     start_x = 0;
+    int     end_x = this->width();
+
+    // ***** Paint Border
+    if (m_show_border) {
+        size_y *= 0.9;
+        start_x +=  7;
+        end_x -=    7;
+
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        QRect border_rect = this->rect().adjusted(6.0, 3.0, -6.0, -3.0);
+
+        QLinearGradient gradient(0, border_rect.top(), 0, border_rect.bottom());
+        gradient.setColorAt(0.000, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+        gradient.setColorAt(0.050, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+        gradient.setColorAt(0.051, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)));
+        gradient.setColorAt(0.970, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark)));
+        gradient.setColorAt(0.971, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+        gradient.setColorAt(1.000, Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)));
+
+        // Border
+        painter.setBrush(gradient);
+        painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).darker(150)), Dr::Scale(1.0)));
+        painter.drawRoundedRect(border_rect, Dr::Scale(9.0), Dr::Scale(9.0));
+
+        painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Background_Dark).lighter(150)), Dr::Scale(1.0)));
+        painter.drawLine(border_rect.left() + Dr::Scale(2.0), border_rect.bottom() + Dr::Scale(1.0), border_rect.right() - Dr::Scale(2.0), border_rect.bottom() + Dr::Scale(1.0));
+        painter.setRenderHint(QPainter::Antialiasing, false);
+    }
+
+    // If no audio source, exit now
     if (m_audio == nullptr) return;
 
     // ***** Paint Wave Form
-    QPainter painter(this);
-    float mid = static_cast<float>(this->height()) / 2.f;
-
-    for (int x = 0; x < this->width(); x++) {
+    for (int x = start_x; x < end_x; x++) {
         sample_pixel pixel(0, 0, 0);
         try { pixel = m_pixels.at(x); }
         catch (std::out_of_range const& error) { pixel = sample_pixel(0, 0, 0); }
 
+        float height_up, height_down;
+
         // Draw min / max samples
-        float height_up =   abs(pixel.max / m_largest_sample);
-        float height_down = abs(pixel.min / m_largest_sample);
+        height_up =   abs(pixel.max / m_largest_sample);
+        height_down = abs(pixel.min / m_largest_sample);
         painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Light)), 1) );
-        painter.drawLine(x, mid - (mid * height_up), x, mid + (mid * height_down));
+        painter.drawLine(x, mid - (size_y * height_up), x, mid + (size_y * height_down));
 
         // Draw average samples
         height_up =   pixel.average / m_largest_sample;
         height_down = pixel.average / m_largest_sample;
         painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark)), 1) );
-        painter.drawLine(x, mid - (mid * height_up), x, mid + (mid * height_down));
+        painter.drawLine(x, mid - (size_y * height_up), x, mid + (size_y * height_down));
     }
 
     // Draw playback length
@@ -130,11 +164,14 @@ void WaveForm::paintEvent(QPaintEvent *) {
     painter.setFont(Dr::CustomFont());
     QString play_time = Dr::RemoveTrailingDecimals(m_audio_length, 2) + "sec";
     painter.drawText(this->rect(), Qt::AlignRight | Qt::AlignBottom, play_time);
-
 }
 
-
-
+// Causes Wave Form to repaint on resize
+void WaveForm::resizeEvent(QResizeEvent *event) {
+    QFrame::resizeEvent(event);                         // Call base function
+    setSound(m_audio);                                  // Force recalculate sound data for new width
+    this->update();                                     // Request a repaint
+}
 
 
 

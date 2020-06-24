@@ -35,6 +35,7 @@ private:
     SoLoud::AudioSource        *m_audio             { nullptr };
 
     // Local Variables
+    bool                        m_show_border       { false };              // Should draw a border around frame?
     std::vector<sample_pixel>   m_pixels;                                   // Holds pixel data for painting
     float                       m_audio_length      { 0 };                  // Length of AudioSource, in seconds
     float                       m_largest_sample    { 0 };                  // Stores largest sample in data (for relative painting)
@@ -46,11 +47,13 @@ public:
 
     // Event Overrides
     virtual void    paintEvent(QPaintEvent *event) override;
+    virtual void    resizeEvent(QResizeEvent *event) override;
 
     // Getters / Setters
     float           getAudioLength()                            { return m_audio_length; }
     void            setAudioLength(double length)               { m_audio_length = length; }
     void            setSound(SoLoud::AudioSource* audio);
+    void            showBorder(bool border_on) { m_show_border = border_on; }
 
 };
 

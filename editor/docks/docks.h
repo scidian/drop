@@ -39,8 +39,8 @@ namespace Dr {
                                               QDockWidget *&dock_assets,
                                               QDockWidget *&dock_inspector,
                                               QDockWidget *&dock_wave_form);
-    void                LockDockWidth(QDockWidget *&dock, int width);
-    void                UnlockDockWidth(QMainWindow *window, QDockWidget *&dock);
+    void                LockDockSize(QDockWidget *&dock);
+    void                UnlockDockSize(QMainWindow *window, QDockWidget *&dock);
 
 
 }   // namespace Dr

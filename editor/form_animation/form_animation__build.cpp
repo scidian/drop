@@ -57,9 +57,10 @@ void FormAnimation::initializeFormAnimation() {
     Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector, m_dock_wave_form);
 
     // ***** Set up FormAnimation for first time
-    Dr::LockDockWidth( m_dock_advisor, m_dock_advisor->width() );
-    Dr::LockDockWidth( m_dock_assets, m_dock_assets->width() );
-    Dr::LockDockWidth( m_dock_inspector, m_dock_inspector->width() );
+    Dr::LockDockSize(m_dock_advisor);
+    Dr::LockDockSize(m_dock_assets);
+    Dr::LockDockSize(m_dock_inspector);
+    Dr::LockDockSize(m_dock_wave_form);
 
     this->setCentralWidget( m_widget_central );
     m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Images").toUtf8()) );
@@ -71,9 +72,10 @@ void FormAnimation::initializeFormAnimation() {
 
     //buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
 
-    Dr::UnlockDockWidth( this, m_dock_advisor );
-    Dr::UnlockDockWidth( this, m_dock_assets );
-    Dr::UnlockDockWidth( this, m_dock_inspector );
+    Dr::UnlockDockSize( this, m_dock_advisor );
+    Dr::UnlockDockSize( this, m_dock_assets );
+    Dr::UnlockDockSize( this, m_dock_inspector );
+    Dr::UnlockDockSize( this, m_dock_wave_form );
 }
 
 

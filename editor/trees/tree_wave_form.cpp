@@ -39,6 +39,7 @@ TreeWaveForm::TreeWaveForm(QWidget *parent, DrProject *project, IEditorRelay *ed
     // Create Wave Form instance
     m_wave_form = new WaveForm(this, nullptr);
     m_wave_form->setContentsMargins(0, 0, 0, 0);
+    m_wave_form->showBorder(true);
 
     // Apply wave form to tree, expand all
     this->setItemWidget(topLevelItem, 0, m_wave_form);
