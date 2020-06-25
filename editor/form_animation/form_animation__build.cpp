@@ -50,32 +50,33 @@ void FormAnimation::initializeFormAnimation() {
     // ***** Build docks, widgets, etc
     buildCentralWidget();
 
-    m_dock_advisor =    Dr::BuildDockAdvisor(  m_project, this, m_tree_advisor);
-    m_dock_assets =     Dr::BuildDockAssets(   m_project, this, m_tree_assets);
-    m_dock_inspector =  Dr::BuildDockInspector(m_project, this, m_tree_inspector);
-    m_dock_wave_form =  Dr::BuildDockWaveForm( m_project, this, m_tree_wave_form);
-    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector, m_dock_wave_form);
+    // Build Docks
+    setDock(Editor_Widgets::Advisor,        Dr::BuildDockAdvisor(m_project,     this, m_tree_advisor));
+    setDock(Editor_Widgets::Asset_Tree,     Dr::BuildDockAssets(m_project,      this, m_tree_assets));
+    setDock(Editor_Widgets::Inspector_Tree, Dr::BuildDockInspector(m_project,   this, m_tree_inspector));
+    setDock(Editor_Widgets::Wave_Form,      Dr::BuildDockWaveForm(m_project,    this, m_tree_wave_form));
+    Dr::InitializeDockWidgets(this);
 
     // ***** Set up FormAnimation for first time
-    Dr::LockDockSize(m_dock_advisor);
-    Dr::LockDockSize(m_dock_assets);
-    Dr::LockDockSize(m_dock_inspector);
-    Dr::LockDockSize(m_dock_wave_form);
+    // Lock Dock sizes to stop from having them resized automatically
+    for (auto &dock : dockWidgets()) {
+        Dr::LockDockSize(dock.second);
+    }
 
     this->setCentralWidget( m_widget_central );
-    m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Images").toUtf8()) );
+    getDock(Editor_Widgets::Asset_Tree)->setWindowTitle( QMainWindow::tr(QString("Images").toUtf8()) );
     m_tree_assets->setShowTypes({ DrType::Image });
     buildAssetTree();
-    m_dock_assets->show();
+    getDock(Editor_Widgets::Asset_Tree)->show();
     buildProjectTree();
     m_scene_editor->clearSceneOverride();
 
     //buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Stage).toInt() );
 
-    Dr::UnlockDockSize( this, m_dock_advisor );
-    Dr::UnlockDockSize( this, m_dock_assets );
-    Dr::UnlockDockSize( this, m_dock_inspector );
-    Dr::UnlockDockSize( this, m_dock_wave_form );
+    // Unlock Docks to allow them to be manually resized
+    for (auto &dock : dockWidgets()) {
+        Dr::UnlockDockSize(this, dock.second);
+    }
 }
 
 

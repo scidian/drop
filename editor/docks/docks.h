@@ -34,13 +34,9 @@ namespace Dr {
     QDockWidget*        BuildDockWaveForm(  DrProject *project, IEditorRelay *editor_relay, TreeWaveForm  *&tree_wave_form);
 
     // ***** Handling Shared Dock Widgets
-    void                InitializeDockWidgets(QMainWindow *window,
-                                              QDockWidget *&dock_advisor,
-                                              QDockWidget *&dock_assets,
-                                              QDockWidget *&dock_inspector,
-                                              QDockWidget *&dock_wave_form);
-    void                LockDockSize(QDockWidget *&dock);
-    void                UnlockDockSize(QMainWindow *window, QDockWidget *&dock);
+    void                InitializeDockWidgets(QMainWindow *window);
+    void                LockDockSize(QDockWidget *dock);
+    void                UnlockDockSize(QMainWindow *window, QDockWidget *dock);
 
 
 }   // namespace Dr

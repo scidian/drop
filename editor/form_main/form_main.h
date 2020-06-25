@@ -121,10 +121,10 @@ private:
 
 
     // ***** Shared FormMain Widgets
-    QDockWidget    *m_dock_advisor;         TreeAdvisor    *m_tree_advisor;
-    QDockWidget    *m_dock_assets;          TreeAssets     *m_tree_assets;
-    QDockWidget    *m_dock_inspector;       TreeInspector  *m_tree_inspector;
-    QDockWidget    *m_dock_wave_form;       TreeWaveForm   *m_tree_wave_form;
+    TreeAdvisor    *m_tree_advisor;
+    TreeAssets     *m_tree_assets;
+    TreeInspector  *m_tree_inspector;
+    TreeWaveForm   *m_tree_wave_form;
 
 
     // ***** "Empty" Widget
@@ -185,7 +185,7 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return m_tree_assets; }
     virtual TreeInspector*      getInspector() override     { return m_tree_inspector; }
     virtual TreeProject*        getProjectTree() override   { return m_tree_project; }
-    virtual TreeWaveForm*       getTreeWaveForm() override  { return m_tree_wave_form; }
+    virtual TreeWaveForm*       getWaveForm() override      { return m_tree_wave_form; }
 
     virtual EditorView*         getViewEditor() override    {
         if (getEditorMode() == Editor_Mode::World_Creator)    return m_view_editor;

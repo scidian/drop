@@ -8,6 +8,7 @@
 #ifndef I_EDITOR_RELAY_H
 #define I_EDITOR_RELAY_H
 
+#include <QDockWidget>
 #include <QList>
 #include <QPointF>
 #include <QString>
@@ -34,6 +35,9 @@ class EditorView;
 class MixerView;
 class NodeView;
 
+// Type Definitions
+typedef std::map<Editor_Widgets, QDockWidget*>  Editor_Docks;
+
 
 //####################################################################################
 //##    IEditorRelay
@@ -42,33 +46,47 @@ class NodeView;
 class IEditorRelay
 {
 private:
-    Editor_Widgets              m_active_widget         { Editor_Widgets::View };
+    // Editor Widgets
+    Editor_Widgets              m_active_widget         { Editor_Widgets::View };           // Tracks which Editor_Widget has focus
+    Editor_Docks                m_dock_widigets         { };                                // Holds all Docks for editor
+
 
 public:
     // Constructor / Destructor
     IEditorRelay() { }
     virtual ~IEditorRelay();
 
-    // Editor Widget Accessors
-    virtual TreeAdvisor*        getAdvisor() = 0;
-    virtual TreeAssets*         getAssetTree() = 0;
-    virtual TreeInspector*      getInspector() = 0;
-    virtual TreeProject*        getProjectTree() = 0;
-    virtual TreeWaveForm*       getTreeWaveForm() = 0;
 
-    virtual EditorView*         getViewEditor() = 0;
-    virtual MixerView*          getViewMixer() = 0;
-    virtual NodeView*           getViewNode() = 0;
+    //############################ Base Class Functions
 
-    // Local Getter / Setters
-    Editor_Widgets              getActiveWidget() { return m_active_widget; }
+    // Editor Widgets
+    Editor_Widgets              getActiveWidget()   { return m_active_widget; }
     void                        setActiveWidget(Editor_Widgets widget);
 
-    // Virtual Getters / Setters
+    Editor_Docks&               dockWidgets()       { return m_dock_widigets; }
+    QDockWidget*                getDock(Editor_Widgets editor_widget);
+    void                        setDock(Editor_Widgets editor_widget, QDockWidget *dock_widget) { m_dock_widigets[editor_widget] = dock_widget; }
+
+
+
+    //############################ Abstract Functions
+
+    // Virtual Editor Widget Accessors
+    virtual TreeAdvisor*        getAdvisor()        { return nullptr; }
+    virtual TreeAssets*         getAssetTree()      { return nullptr; }
+    virtual TreeInspector*      getInspector()      { return nullptr; }
+    virtual TreeProject*        getProjectTree()    { return nullptr; }
+    virtual TreeWaveForm*       getWaveForm()       { return nullptr; }
+
+    virtual EditorView*         getViewEditor()     { return nullptr; }
+    virtual MixerView*          getViewMixer()      { return nullptr; }
+    virtual NodeView*           getViewNode()       { return nullptr; }
+
+    // Abstract Getters / Setters
     virtual Editor_Mode         getEditorMode() = 0;
     virtual void                setEditorMode(Editor_Mode new_mode) = 0;
 
-    // Editor Functions
+    // Abstract Editor Functions
     virtual void        buildAssetTree() = 0;
     virtual void        buildInspector(QList<long> entity_key_list, bool force_rebuild = false) = 0;
     virtual void        buildProjectTree(bool total_rebuild = false) = 0;
@@ -98,6 +116,10 @@ public:
 
 
 #endif // I_EDITOR_RELAY_H
+
+
+
+
 
 
 

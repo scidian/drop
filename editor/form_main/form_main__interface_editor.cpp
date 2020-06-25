@@ -267,16 +267,11 @@ void FormMain::stopAllSound() {
 // SLOTS: Call to change the Advisor
 void FormMain::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
 void FormMain::setAdvisorInfo(QString header, QString body) {
-    // If Advisor not found, or Advisor dock was closed, cancel
-    if (m_dock_advisor == nullptr) return;
-    if (m_tree_advisor == nullptr) return;
-    if (m_dock_advisor->isHidden()) return;
-
-    // If Advisor header and body is already set to proper info, cancel
-    if (m_tree_advisor->getAdvisorHeader() == header && m_tree_advisor->getAdvisorBody() == body) return;
-
-    // Change Advisor text
-    m_tree_advisor->changeAdvisor(header, body);
+    if (getDock(Editor_Widgets::Advisor) == nullptr) return;                                            // If Advisor doesn't exist, cancel
+    if (getDock(Editor_Widgets::Advisor)->isHidden()) return;                                           // If Advisor dock was closed, cancel
+    if (getAdvisor() == nullptr) return;                                                                // If Advisor tree widget doesn't exist, cancel
+    if (getAdvisor()->getAdvisorHeader() == header && getAdvisor()->getAdvisorBody() == body) return;   // If Advisor header and body is already set to proper info, cancel
+    getAdvisor()->changeAdvisor(header, body);                                                          // Change Advisor text
 }
 void FormMain::setMousePosition(std::string x, std::string y) {
     if (x == "" || y == "")

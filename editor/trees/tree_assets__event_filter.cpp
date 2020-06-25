@@ -34,7 +34,9 @@
 //####################################################################################
 //##    DrFilterAssetMouseHandler Constructor
 //####################################################################################
-DrFilterAssetMouseHandler::DrFilterAssetMouseHandler(QObject *parent, IEditorRelay *editor_relay) : QObject(parent), m_editor_relay(editor_relay) {
+DrFilterAssetMouseHandler::DrFilterAssetMouseHandler(QObject *parent, IEditorRelay *editor_relay)
+    : QObject(parent), m_editor_relay(editor_relay) {
+
     m_timer = new QTimer(this);
     m_timer->setInterval(1000);
     m_timer->setSingleShot(true);
@@ -48,6 +50,9 @@ DrFilterAssetMouseHandler::DrFilterAssetMouseHandler(QObject *parent, IEditorRel
 //##                  starts drag and drop event
 //####################################################################################
 bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
+    // Check for editor relay
+    if (m_editor_relay == nullptr)  return QObject::eventFilter(object, event);
+
     // Grab the frame and get some properties from it
     QWidget *asset_frame =  dynamic_cast<QWidget*>(object);
     if (asset_frame == nullptr)     return QObject::eventFilter(object, event);
@@ -59,11 +64,10 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     if (label_name == nullptr)      return QObject::eventFilter(object, event);
     if (label_pixmap == nullptr)    return QObject::eventFilter(object, event);
 
-    TreeAssets *asset_tree = m_editor_relay->getAssetTree();
-    if (asset_tree == nullptr)      return QObject::eventFilter(object, event);
-
     // On mouse down, update the Inspector, prepare for drag and drop
     if (event->type() == QEvent::MouseButtonPress) {
+        TreeAssets *asset_tree = m_editor_relay->getAssetTree();
+        if (asset_tree == nullptr) return QObject::eventFilter(object, event);
         asset_tree->setSelectedKey(asset_key, true);
 
         // Build Inspector and update Editor Widgets
@@ -107,11 +111,13 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
 
     // Highlights selected Asset Item
     } else if (event->type() == QEvent::Paint) {
+        TreeAssets *asset_tree = m_editor_relay->getAssetTree();
+        if (asset_tree == nullptr) return QObject::eventFilter(object, event);
         if (asset_key == asset_tree->getSelectedKey()) {
             QPainter painter(asset_frame);
             painter.setRenderHint(QPainter::Antialiasing, true);
             int border_size = (m_editor_relay->getActiveWidget() == Editor_Widgets::Asset_Tree) ? 2 : 1;
-            painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark)), border_size) );
+            painter.setPen(QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark)), border_size));
             painter.setBrush(Qt::NoBrush);
             QRect box = asset_frame->rect();
             box.setX( box.x() + 6);     box.setWidth(  box.width() -  1 );

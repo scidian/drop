@@ -27,6 +27,15 @@ void IEditorRelay::setActiveWidget(Editor_Widgets widget) {
 }
 
 
+//####################################################################################
+//##    Get Dock by Editor_Widget if exists
+//####################################################################################
+QDockWidget* IEditorRelay::getDock(Editor_Widgets editor_widget) {
+    auto it = m_dock_widigets.find(editor_widget);
+    if (it == m_dock_widigets.end()) return nullptr; else return it->second;
+}
+
+
 
 
 

@@ -33,6 +33,7 @@
 #include "project/entities/dr_thing.h"
 #include "project/entities/dr_world.h"
 #include "project/entities_physics_2d/dr_asset.h"
+#include "project/entities_sound/dr_sound.h"
 #include "project/settings/settings.h"
 #include "project/settings/settings_component.h"
 #include "project/settings/settings_component_property.h"
@@ -244,6 +245,12 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
             DrAsset *asset2 = dynamic_cast<DrAsset*>(new_settings_to_show);
             if ((asset1 != nullptr) && (asset2 != nullptr)) {
                 if (asset1->getAssetType() == asset2->getAssetType()) same_type = true;
+            }
+        } else if (m_selected_type == DrType::Sound && new_type == DrType::Sound) {
+            DrSound *sound1 = dynamic_cast<DrSound*>(settings_shown);
+            DrSound *sound2 = dynamic_cast<DrSound*>(new_settings_to_show);
+            if ((sound1 != nullptr) && (sound2 != nullptr)) {
+                if (sound1->getSoundType() == sound2->getSoundType()) same_type = true;
             }
         } else if (m_selected_type == new_type) {
             same_type = true;

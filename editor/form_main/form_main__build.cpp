@@ -70,11 +70,11 @@ void FormMain::initializeFormMain() {
     buildCentralWidgetSoundCreator();
 
     // Build Docks
-    m_dock_advisor =        Dr::BuildDockAdvisor(   m_project, this, m_tree_advisor);
-    m_dock_assets =         Dr::BuildDockAssets(    m_project, this, m_tree_assets);
-    m_dock_inspector =      Dr::BuildDockInspector( m_project, this, m_tree_inspector);
-    m_dock_wave_form =      Dr::BuildDockWaveForm(  m_project, this, m_tree_wave_form);
-    Dr::InitializeDockWidgets(this, m_dock_advisor, m_dock_assets, m_dock_inspector, m_dock_wave_form);
+    setDock(Editor_Widgets::Advisor,        Dr::BuildDockAdvisor(m_project,     this, m_tree_advisor));
+    setDock(Editor_Widgets::Asset_Tree,     Dr::BuildDockAssets(m_project,      this, m_tree_assets));
+    setDock(Editor_Widgets::Inspector_Tree, Dr::BuildDockInspector(m_project,   this, m_tree_inspector));
+    setDock(Editor_Widgets::Wave_Form,      Dr::BuildDockWaveForm(m_project,    this, m_tree_wave_form));
+    Dr::InitializeDockWidgets(this);
 }
 
 
@@ -87,10 +87,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     m_current_mode = new_mode;
 
     // Lock Dock sizes to stop from having them resized automatically
-    Dr::LockDockSize(m_dock_advisor);
-    Dr::LockDockSize(m_dock_assets);
-    Dr::LockDockSize(m_dock_inspector);
-    Dr::LockDockSize(m_dock_wave_form);
+    for (auto &dock : dockWidgets()) {
+        Dr::LockDockSize(dock.second);
+    }
 
     // ***** Clear Current Layout ***** (if we aren't loading for the first time) and save central widgets for future use
     if ((old_mode != new_mode) && (old_mode != Editor_Mode::Program_Loading)) {
@@ -99,18 +98,18 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             case Editor_Mode::World_Graph:
                 m_widget_central_world_graph = takeCentralWidget();
                 buildInspector( { } );
-                m_dock_assets->hide();
+                getDock(Editor_Widgets::Asset_Tree)->hide();
                 break;
             case Editor_Mode::World_Creator:
                 m_widget_central_editor = takeCentralWidget();
                 buildInspector( { } );
-                m_dock_assets->hide();
+                getDock(Editor_Widgets::Asset_Tree)->hide();
                 break;
             case Editor_Mode::Sound_Creator:
                 m_widget_central_sound_creator = takeCentralWidget();
                 buildInspector( { } );
-                m_dock_assets->hide();
-                m_dock_wave_form->hide();
+                getDock(Editor_Widgets::Asset_Tree)->hide();
+                getDock(Editor_Widgets::Wave_Form)->hide();
                 break;
             case Editor_Mode::Clear:
                 m_widget_central_clear = takeCentralWidget();
@@ -132,10 +131,10 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             m_scene_world_graph->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             setCentralWidget( m_widget_central_world_graph );
-            m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
-            m_tree_assets->setShowTypes({ DrType::Block });
+            getDock(Editor_Widgets::Asset_Tree)->setWindowTitle( QMainWindow::tr(QString("Nodes").toUtf8()) );
+            getAssetTree()->setShowTypes({ DrType::Block });
             buildAssetTree();
-            m_dock_assets->show();
+            getDock(Editor_Widgets::Asset_Tree)->show();
             buildSceneAfterLoading( c_no_key );
             break;
 
@@ -143,10 +142,10 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             m_scene_editor->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - " + QString::fromStdString(m_project->getOption(Project_Options::Name).toString()) );
             setCentralWidget( m_widget_central_editor );
-            m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
-            m_tree_assets->setShowTypes({ DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
+            getDock(Editor_Widgets::Asset_Tree)->setWindowTitle( QMainWindow::tr(QString("Assets").toUtf8()) );
+            getAssetTree()->setShowTypes({ DrType::Asset, DrType::Device, DrType::Effect, DrType::Item, DrType::Prefab, DrType::Font });
             buildAssetTree();
-            m_dock_assets->show();
+            getDock(Editor_Widgets::Asset_Tree)->show();
             buildProjectTree();
             long stage_key = m_project->getOption(Project_Options::Current_Stage).toInt();
             buildSceneAfterLoading( stage_key );
@@ -160,11 +159,11 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
             m_scene_mixer->clearSceneOverride();
             setWindowTitle( tr("Drop") + " - Sound Creator");
             setCentralWidget( m_widget_central_sound_creator );
-            m_dock_assets->setWindowTitle( QMainWindow::tr(QString("Sounds").toUtf8()) );
-            m_tree_assets->setShowTypes({ DrType::Mix, DrType::Sound });
+            getDock(Editor_Widgets::Asset_Tree)->setWindowTitle( QMainWindow::tr(QString("Sounds").toUtf8()) );
+            getAssetTree()->setShowTypes({ DrType::Mix, DrType::Sound });
             buildAssetTree();
-            m_dock_assets->show();
-            m_dock_wave_form->show();
+            getDock(Editor_Widgets::Asset_Tree)->show();
+            getDock(Editor_Widgets::Wave_Form)->show();
             buildProjectTree();
             buildSceneAfterLoading( m_project->getOption(Project_Options::Current_Mix).toInt() );
 
@@ -185,10 +184,9 @@ void FormMain::rebuildFormMain(Editor_Mode new_mode) {
     Dr::SetDoneLoading(true);
 
     // Unlock Docks to allow them to be manually resized
-    Dr::UnlockDockSize( this, m_dock_advisor );
-    Dr::UnlockDockSize( this, m_dock_assets );
-    Dr::UnlockDockSize( this, m_dock_inspector );
-    Dr::UnlockDockSize( this, m_dock_wave_form );
+    for (auto &dock : dockWidgets()) {
+        Dr::UnlockDockSize(this, dock.second);
+    }
 
     // Set Mode Button
     buttonGroupModeSetChecked(int(new_mode));

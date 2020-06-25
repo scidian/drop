@@ -10,18 +10,22 @@
 
 #include "editor/docks/docks.h"
 
-
 namespace Dr {
+
 
 //####################################################################################
 //##    Keeps docks from changing width while QMainWindow is changed around
 //####################################################################################
-void LockDockSize(QDockWidget *&dock) {
+void LockDockSize(QDockWidget *dock) {
+    if (dock == nullptr) return;
+
     dock->setFixedWidth(  dock->width() );
     ///dock->setFixedHeight( dock->height() );
 }
 
-void UnlockDockSize(QMainWindow *window, QDockWidget *&dock) {
+void UnlockDockSize(QMainWindow *window, QDockWidget *dock) {
+    if (dock == nullptr) return;
+
     int pre_width =  dock->width();
     ///int pre_height = dock->height();
     dock->setMaximumSize(625, QWIDGETSIZE_MAX);
@@ -39,6 +43,13 @@ void UnlockDockSize(QMainWindow *window, QDockWidget *&dock) {
 }
 
 
-
-
 }   // End namespace Dr
+
+
+
+
+
+
+
+
+

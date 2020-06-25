@@ -29,7 +29,9 @@
 //      Project_Tree,
 
 Editor_Mode FormAnimation::getEditorMode() { return Editor_Mode::Animation_Creator; }
-void FormAnimation::setEditorMode(Editor_Mode new_mode) { }
+void FormAnimation::setEditorMode(Editor_Mode new_mode) {
+    (void) new_mode;
+}
 
 void FormAnimation::buildAssetTree() {
     m_tree_assets->buildAssetTree("");
@@ -64,12 +66,11 @@ void        FormAnimation::stopAllSound()                           { Dr::GetSoL
 // Call to change the Advisor
 void FormAnimation::setAdvisorInfo(HeaderBodyList header_body_list) { setAdvisorInfo(header_body_list[0], header_body_list[1]);  }
 void FormAnimation::setAdvisorInfo(QString header, QString body) {
-    if (m_dock_advisor == nullptr) return;
-    if (m_tree_advisor == nullptr) return;
-    if (m_dock_advisor->isHidden()) return;                                    // If Advisor dock was closed, cancel
-    if (m_tree_advisor->getAdvisorHeader() == header &&
-        m_tree_advisor->getAdvisorBody() == body) return;                      // If Advisor header and body is already set to proper info, cancel
-    m_tree_advisor->changeAdvisor(header, body);
+    if (getDock(Editor_Widgets::Advisor) == nullptr) return;                                            // If Advisor doesn't exist, cancel
+    if (getDock(Editor_Widgets::Advisor)->isHidden()) return;                                           // If Advisor dock was closed, cancel
+    if (getAdvisor() == nullptr) return;                                                                // If Advisor tree widget doesn't exist, cancel
+    if (getAdvisor()->getAdvisorHeader() == header && getAdvisor()->getAdvisorBody() == body) return;   // If Advisor header and body is already set to proper info, cancel
+    getAdvisor()->changeAdvisor(header, body);                                                          // Change Advisor text
 }
 void FormAnimation::setMousePosition(std::string x, std::string y) {
 
