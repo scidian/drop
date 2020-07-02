@@ -49,7 +49,7 @@ FormSoundEffect::FormSoundEffect(DrProject *project, FormMain *form_main, QWidge
     setAttribute(Qt::WA_Hover, true);
     setAttribute(Qt::WA_NoMousePropagation, false);
 
-    setMinimumSize(QSize(740, 560));
+    setMinimumSize(QSize(440 + Dr::Scale(300), 360 + Dr::Scale(200)));
     setObjectName(QStringLiteral("childForm"));
     setStyleSheet( Dr::CustomStyleSheetFormatting() );
 

@@ -162,8 +162,10 @@ void WaveForm::paintEvent(QPaintEvent *) {
     // Draw playback length
     painter.setPen( QPen(Dr::ToQColor(Dr::GetColor(Window_Colors::Text)), 1) );
     painter.setFont(Dr::CustomFont());
-    QString play_time = Dr::RemoveTrailingDecimals(m_audio_length, 2) + "sec";
-    painter.drawText(this->rect(), Qt::AlignRight | Qt::AlignBottom, play_time);
+    QString play_time = Dr::RemoveTrailingDecimals(m_audio_length, 2) + " sec";
+    QRect time_rect = this->rect();
+    if (m_show_border) time_rect.adjust(0, 0, -10, -10);
+    painter.drawText(time_rect, Qt::AlignRight | Qt::AlignBottom, play_time);
 }
 
 // Causes Wave Form to repaint on resize

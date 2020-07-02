@@ -177,6 +177,7 @@ void FormSoundEffect::buildSoundEffectForm() {
                 QSizePolicy size_right(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);   size_right.setHorizontalStretch(3);
 
                 QLabel *wave_label = new QLabel("Wave Type");
+                        wave_label->setFont(Dr::CustomFont());
                         wave_label->setSizePolicy(size_left);
                 wave_form_layout->addWidget(wave_label);
 
@@ -376,6 +377,7 @@ QWidget* FormSoundEffect::sliderPair(QString slider_text, QSlider *&slider, doub
     slider = new QSlider(Qt::Orientation::Horizontal);
 
     // Label
+    label->setFont(Dr::CustomFont());
     label->setSizePolicy(size_left);
     label->setFixedWidth(Dr::CheckFontWidth(Dr::CustomFont(), "Low-pass Resonance"));
 

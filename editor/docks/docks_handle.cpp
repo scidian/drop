@@ -33,6 +33,8 @@ void UnlockDockSize(QMainWindow *window, QDockWidget *dock) {
     QString dock_name = dock->objectName();
     if (dock_name == "dockInspector") {
         dock->setMinimumSize(260, 80);
+    } else if (dock_name == "dockWaveForm") {
+        dock->setMaximumHeight(125);
     } else {
         dock->setMinimumSize(124, 80);
     }

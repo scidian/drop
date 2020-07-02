@@ -41,7 +41,7 @@ FormSpeechSynthesis::FormSpeechSynthesis(DrProject *project, QWidget *parent) : 
     setAttribute(Qt::WA_Hover, true);
     setAttribute(Qt::WA_NoMousePropagation, false);
 
-    setMinimumSize(QSize(600, 500));
+    setMinimumSize(QSize(400 + Dr::Scale(200), 300 + Dr::Scale(200)));
     setObjectName(QStringLiteral("childForm"));
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
 

@@ -62,7 +62,9 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
             m_progress_bar->setTextVisible(false);
             std::string style;
             style +=    " QProgressBar          { "
-                        "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
+                        "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; "
+                        "       height: " + std::to_string(5 + Dr::Scale(5)) + "px; "
+                        "       border-radius: 4px; "
                         "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; } ";
                         ///"    background-image:url(:/assets/textures/fire_noise.png);  } ";
             style +=    " QProgressBar::chunk { border-radius: 4px; background: transparent; } ";
@@ -76,7 +78,7 @@ FormProgressBox::FormProgressBox(QString info_text, QString cancel_button_text, 
             button_spacer->addStretch();
 
             QPushButton *cancel = new QPushButton("  " + cancel_button_text + "  ");
-            cancel->setFixedHeight(13 + Dr::Scale(13));
+            cancel->setFixedHeight(25 + Dr::Scale(10));
             Dr::ApplyDropShadowByType(cancel, Shadow_Types::Button_Shadow);
             cancel->setObjectName(QStringLiteral("buttonDefault"));
 
@@ -228,7 +230,9 @@ void FormProgressBox::updateColors() {
         double offset = -(m_color_seconds/8.0) / percent;                                                   // Adjust gradient start by time to animate
         std::string style;
         style +=    " QProgressBar          { "
-                    "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; height: 13px; border-radius: 4px; "
+                    "       border: " + Dr::BorderWidth() + " solid; background-color:transparent; "
+                    "       height: " + std::to_string(5 + Dr::Scale(5)) + "px; "
+                    "       border-radius: 4px; "
                     "       border-color: " + Dr::GetColor(Window_Colors::Background_Dark).darker(250).name() + "; } ";
         style +=    " QProgressBar::chunk { "
                     "       border-radius: 4px; "

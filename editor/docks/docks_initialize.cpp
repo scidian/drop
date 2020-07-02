@@ -48,7 +48,7 @@ void InitializeDockWidgets(QMainWindow *window) {
     }
     if (dock_wave_form) {
         dock_wave_form->setFixedWidth(asset_start_width);
-        dock_wave_form->setFixedHeight(120);
+        dock_wave_form->setFixedHeight(125);
         window->addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea,       dock_wave_form);
     }
 

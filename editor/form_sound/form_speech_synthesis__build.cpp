@@ -19,6 +19,7 @@
 #include <QVBoxLayout>
 
 #include "3rd_party/soloud/soloud.h"
+#include "core/colors/colors.h"
 #include "core/dr_random.h"
 #include "editor/event_filters/event_filters.h"
 #include "editor/form_sound/form_speech_synthesis.h"
@@ -74,6 +75,7 @@ void FormSpeechSynthesis::buildSpeechForm() {
         speech_layout->setContentsMargins(2, 2, 2, 2);
 
             QTextEdit *speech_text_box = new QTextEdit();
+                speech_text_box->setFont(Dr::CustomFont());
                 speech_text_box->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
                 speech_text_box->setSizeAdjustPolicy(QTextEdit::SizeAdjustPolicy::AdjustToContents);
                 speech_text_box->setPlaceholderText("Enter text to speak...");
@@ -110,6 +112,7 @@ void FormSpeechSynthesis::buildSpeechForm() {
                     QSizePolicy size_right(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);   size_right.setHorizontalStretch(3);
 
                         QLabel *wave_label = new QLabel("Wave Form");
+                            wave_label->setFont(Dr::CustomFont());
                             wave_label->setSizePolicy(size_left);
                         wave_form_layout->addWidget(wave_label);
 
@@ -252,11 +255,12 @@ QWidget* FormSpeechSynthesis::sliderPair(QString slider_text, QSlider *&slider) 
     QSizePolicy size_right(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);   size_right.setHorizontalStretch(3);
 
     QLabel *label = new QLabel(slider_text);
+    label->setFont(Dr::CustomFont());
     label->setSizePolicy(size_left);
 
     slider = new QSlider(Qt::Orientation::Horizontal);
     slider->setSizePolicy(size_right);
-    slider->setMaximumHeight(26);
+    slider->setMaximumHeight(Dr::Scale(26));
     slider->setTickPosition(QSlider::TickPosition::NoTicks);
     slider->setRange( 0, 100 );
     slider->setValue( 0 );
