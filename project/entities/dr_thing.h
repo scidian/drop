@@ -33,6 +33,7 @@ struct Order_Info_Thing {
 //############################
 class DrThing : public DrSettings
 {
+
 private:
     // External Borrowed Pointers
     DrWorld            *m_parent_world;                     // Holds reference to parent DrWorld class
@@ -101,7 +102,6 @@ public:
     void    addComponentSettingsWater();
 
 };
-
 
 #endif // DRTHING_H
 

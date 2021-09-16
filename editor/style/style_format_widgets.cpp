@@ -13,6 +13,7 @@
 #include <QLayoutItem>
 #include <QPainterPath>
 #include <QScreen>
+#include <QStandardPaths>
 #include <QStyle>
 #include <QWindow>
 
@@ -160,7 +161,8 @@ void ApplyRoundedCornerMask(QWidget *widget, int x_radius, int y_radius, int met
         paint.drawRoundedRect(0, 0, widget->rect().width(), widget->rect().height(), x_radius, y_radius);
     }
 
-    widget->setMask(pixmap.createMaskFromColor(Qt::green));
+    QBitmap mask = pixmap.createMaskFromColor(Qt::green, Qt::MaskMode::MaskInColor);
+    widget->setMask(mask);
 }
 
 
@@ -186,8 +188,13 @@ void ApplyPopupMask(QWidget *widget, int x_radius, int y_radius, bool below) {
     paint.end();
 
     if (!below) pixmap = pixmap.transformed(QTransform().rotate(180));
+
+    QBitmap mask = pixmap.createMaskFromColor(Qt::green, Qt::MaskMode::MaskInColor);
     widget->clearMask();
-    widget->setMask(pixmap.createMaskFromColor(Qt::green));
+    widget->setMask(mask);
+
+    ///pixmap.save(QStandardPaths::writableLocation(QStandardPaths::StandardLocation::DesktopLocation) + "/mask.png");
+    ///qDebug() << "Applying popup mask";
 }
 
 

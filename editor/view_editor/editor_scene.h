@@ -15,6 +15,7 @@
 #include <QUndoStack>
 
 #include "editor/interface_editor_relay.h"
+#include "project/entities/dr_thing.h"
 #include "project/enums_entity_types.h"
 
 // Forward Declarations
@@ -61,7 +62,7 @@ private:
 
 public:
     // Mutexes
-    QMutex       scene_mutex { QMutex::NonRecursive };          // Used to stop from changing scene items more than once at a time
+    QMutex       scene_mutex { };//QMutex::NonRecursive };          // Used to stop from changing scene items more than once at a time
 
 
 public:

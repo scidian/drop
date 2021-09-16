@@ -72,7 +72,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_mode = new QButtonGroup();
         m_buttons_group_mode->setExclusive(true);
-        connect(m_buttons_group_mode, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
+        connect(m_buttons_group_mode, SIGNAL(idClicked(int)), this, SLOT(buttonGroupModeClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonModeWorldGraph"), Advisor_Info::Mode_World_Graph, true);
         m_buttons_group_mode->addButton(tool, int(Editor_Mode::World_Graph));
@@ -103,7 +103,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_edit = new QButtonGroup();
         m_buttons_group_edit->setExclusive(false);
-        connect(m_buttons_group_edit, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
+        connect(m_buttons_group_edit, SIGNAL(idClicked(int)), this, SLOT(buttonGroupEditClicked(int)));
 
         m_button_add = createToolBarButton(QStringLiteral("buttonAddThing"), Advisor_Info::Add_Entity, false, true);
         m_buttons_group_edit->addButton(m_button_add, int(Buttons_Edit::Add));
@@ -127,7 +127,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_play = new QButtonGroup();
         m_buttons_group_play->setExclusive(false);
-        connect(m_buttons_group_play, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
+        connect(m_buttons_group_play, SIGNAL(idClicked(int)), this, SLOT(buttonGroupPlayClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonPlay"), Advisor_Info::Play_Game, false, true);
         m_buttons_group_play->addButton(tool, int(Buttons_Play::Play));
@@ -206,7 +206,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_layering = new QButtonGroup();
         m_buttons_group_layering->setExclusive(false);
-        connect(m_buttons_group_layering, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
+        connect(m_buttons_group_layering, SIGNAL(idClicked(int)), this, SLOT(buttonGroupLayeringClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonSendToBack"), Advisor_Info::Send_to_Back, false, false);
         m_buttons_group_layering->addButton(tool, int(Buttons_Layering::Send_To_Back));
@@ -234,7 +234,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_transform = new QButtonGroup();
         m_buttons_group_transform->setExclusive(false);
-        connect(m_buttons_group_transform, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
+        connect(m_buttons_group_transform, SIGNAL(idClicked(int)), this, SLOT(buttonGroupTransformClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonResetObject"), Advisor_Info::Reset, false, false);
         m_buttons_group_transform->addButton(tool, int(Buttons_Transform::Reset_Object));
@@ -266,7 +266,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_grid_full = new QButtonGroup();
         m_buttons_group_grid_full->setExclusive(false);
-        connect(m_buttons_group_grid_full, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
+        connect(m_buttons_group_grid_full, SIGNAL(idClicked(int)), this, SLOT(buttonGroupGridFullClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonGridOnTop"), Advisor_Info::Grid_Show_On_Top, true);
         m_buttons_group_grid_full->addButton(tool, int(Buttons_Grid::Grid_On_Top));
@@ -302,7 +302,7 @@ void FormMain::buildToolBar() {
 
         m_buttons_group_grid_simple = new QButtonGroup();
         m_buttons_group_grid_simple->setExclusive(false);
-        connect(m_buttons_group_grid_simple, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
+        connect(m_buttons_group_grid_simple, SIGNAL(idClicked(int)), this, SLOT(buttonGroupGridSimpleClicked(int)));
 
         tool = createToolBarButton(QStringLiteral("buttonSnapToMap"), Advisor_Info::Grid_Snap_To_Grid, true);
         m_buttons_group_grid_simple->addButton(tool, int(Buttons_Grid::Snap_To_Grid));

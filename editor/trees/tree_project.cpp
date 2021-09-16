@@ -40,7 +40,7 @@ TreeProject::TreeProject(QWidget *parent, DrProject *project, IEditorRelay *edit
 }
 
 // Handles changing the Advisor on Mouse Enter
-void TreeProject::enterEvent(QEvent *event) {
+void TreeProject::enterEvent(QEnterEvent *event) {
     m_editor_relay->setAdvisorInfo(Advisor_Info::Project_Tree);
     QTreeWidget::enterEvent(event);
 }

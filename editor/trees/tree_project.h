@@ -69,7 +69,7 @@ public:
     void                        updateSelectionFromView(QList<QGraphicsItem*> item_list);
 
     // Event Overrides
-    virtual void    enterEvent(QEvent *event) override;                                                             // Inherited from QWidget
+    virtual void    enterEvent(QEnterEvent *event) override;                                                        // Inherited from QWidget
     virtual void    dragMoveEvent(QDragMoveEvent *event) override;                                                  // Inherited from QAbstractItemView
     virtual void    dropEvent(QDropEvent *event) override;                                                          // Inherited from QTreeWidget
     virtual void    focusInEvent(QFocusEvent *event) override;                                                      // Inherited from QAbstractItemView

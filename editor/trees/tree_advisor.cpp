@@ -68,7 +68,7 @@ void TreeAdvisor::changeAdvisor(QString header, QString body) {
 //####################################################################################
 //##    EVENT, Handles changing the Advisor on Mouse Enter
 //####################################################################################
-void TreeAdvisor::enterEvent(QEvent *event) {
+void TreeAdvisor::enterEvent(QEnterEvent *event) {
     m_editor_relay->setAdvisorInfo(Advisor_Info::Advisor_Window);
     QTreeWidget::enterEvent(event);
 }

@@ -79,7 +79,6 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
     // ***** Create the label that will display the image
     QBoxLayout *vertical_split = new QVBoxLayout(image_frame);
     vertical_split->setSpacing(0);
-    vertical_split->setMargin(0);
     vertical_split->setContentsMargins(0, 0, 0, 0);
         QLabel *asset_pix = new QLabel(image_frame);
         asset_pix->setObjectName(QStringLiteral("assetPixmap"));

@@ -79,7 +79,7 @@ QSize AssetFlowLayout::minimumSize() const {
     QSize size;
     for (auto item : item_list)
         size = size.expandedTo(item->minimumSize());
-    size += QSize(2 * margin(), 2 * margin());
+    size += QSize(2 * contentsMargins().left(), 2 * contentsMargins().top());
     return size;
 }
 

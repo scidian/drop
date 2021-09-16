@@ -69,7 +69,7 @@ TreeAssets::TreeAssets(QWidget *parent, DrProject *project, IEditorRelay *editor
     getHoverHandler()->attachToHoverHandler(m_search_widget, Advisor_Info::Asset_Search);
     m_search_widget->setToolTip( Advisor_Info::Asset_Search[0] );
         m_search_layout = new QVBoxLayout(m_search_widget);
-        m_search_layout->setMargin(4);
+        m_search_layout->setContentsMargins(4, 4, 4, 4);
             m_search_bar = new QLineEdit();
             m_search_bar->setObjectName("assetSearchBar");
             m_search_bar->setPlaceholderText("Search");
@@ -311,7 +311,6 @@ void TreeAssets::buildAssetTree(QString search_text) {
         // ***** Create the label that will display the asset
         QBoxLayout *vertical_split = new QVBoxLayout(single_asset);
         vertical_split->setSpacing(0);
-        vertical_split->setMargin(0);
         vertical_split->setContentsMargins(0, 14, 0, 0);                    // Put some space at the top
             QPixmap pix;
             QString description;

@@ -35,6 +35,7 @@ PointList ThingCompPhysics::createEllipseFromCircle(const DrPointF &center, cons
     return ellipse;
 }
 
+
 //####################################################################################
 //##    Add Shapes to Object
 //####################################################################################

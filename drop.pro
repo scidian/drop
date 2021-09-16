@@ -28,7 +28,9 @@ CONFIG  += drop_editor
 
 CONFIG(drop_editor){
     QT          += core gui
+    QT          += opengl
     QT          += widgets
+    QT          += openglwidgets
 
     DEFINES     += QT_DEPRECATED_WARNINGS                       # Show warnings if using any feature of Qt which has been marked as deprecated
     #DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060000        # Disables all the Qt APIs deprecated before Qt 6.0.0

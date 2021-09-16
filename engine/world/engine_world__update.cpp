@@ -61,8 +61,11 @@ struct Space_Time {
 //####################################################################################
 // #NOTE: time_passed is in milliseconds
 void DrEngineWorld::updateSpace(double time_passed) {
+    // Calculate amount of time to update space time
     double step_time = time_passed / 1000.0 * m_time_warp;
     ///double step_time = m_time_step * m_time_warp;
+
+    // Step Space
     cpSpaceStep(m_space, step_time);
 
     // Check Joint Forces
@@ -77,7 +80,6 @@ void DrEngineWorld::updateWorld(double time_passed) {
 
     // ***** Update global variables for use in callbacks
     g_gravity_normal = cpvnormalize( cpSpaceGetGravity(m_space) );
-
 
     // ***** Iterate through Things, delete if they go off screen
     updateThings(time_passed, m_time_warp, threshold);

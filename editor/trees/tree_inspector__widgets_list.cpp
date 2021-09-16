@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QActionGroup>
 #include <QApplication>
 #include <QCheckBox>
 #include <QHBoxLayout>

@@ -27,13 +27,23 @@ FormPopup::FormPopup(QWidget *parent, DrProject *project, QWidget *widget_to_use
 
     m_offset = QPoint(x_offset, y_offset);
 
-    // ***** Set up initial window
-    this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
-    this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
-    this->setWindowFlag(Qt::WindowType::Popup);
     this->setFixedSize(QSize(50, 50));
-    this->setObjectName(QStringLiteral("childForm"));
+    this->setObjectName(QStringLiteral("popupForm"));
     this->setStyleSheet( Dr::CustomStyleSheetFormatting() );
+
+    // Make sure this form is deleted when it closes
+    this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
+
+    // Set up transparent background
+    this->setStyleSheet("QWidget#popupForm { color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none; }");
+    this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, true);
+    this->setAttribute(Qt::WidgetAttribute::WA_NoSystemBackground, true);
+    this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, false);
+
+    // Other window flags
+    this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
+    this->setWindowFlag(Qt::WindowType::NoDropShadowWindowHint);
+    this->setWindowFlag(Qt::WindowType::Popup);
 
     // Create a layout for the form
     m_layout = new QVBoxLayout(this);

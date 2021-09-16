@@ -11,6 +11,8 @@
 #include <QPointF>
 #include <QUndoCommand>
 
+#include "project/entities/dr_thing.h"
+
 // Forward Declarations
 class DrProject;
 class DrThing;

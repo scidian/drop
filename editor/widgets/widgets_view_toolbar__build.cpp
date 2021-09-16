@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QActionGroup>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
@@ -51,7 +52,7 @@ void ViewToolbar::buildToolbar() {
 
             buttonsGroupMouse = new QButtonGroup();
             buttonsGroupMouse->setExclusive(true);
-            connect(buttonsGroupMouse, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupMouseClicked(int)));
+            connect(buttonsGroupMouse, SIGNAL(idClicked(int)), this, SLOT(buttonGroupMouseClicked(int)));
 
             mouse_pointer = createToolBarButton(QStringLiteral("mousePointer"), Advisor_Info::Mouse_Pointer, true);
             mouse_pointer->setChecked(true);
@@ -326,7 +327,7 @@ void ViewToolbar::buildToolbar() {
 
                 buttonsGroupToggle = new QButtonGroup();
                 buttonsGroupToggle->setExclusive(false);
-                connect(buttonsGroupToggle, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
+                connect(buttonsGroupToggle, SIGNAL(idClicked(int)), this, SLOT(buttonGroupToggleClicked(int)));
 
                 QToolButton *camera_on_off = createToolBarButton("cameraOnOff", Advisor_Info::Camera_On_Off, true);
                 buttonsGroupToggle->addButton(camera_on_off, int(Buttons_Toggle::CameraOnOff));

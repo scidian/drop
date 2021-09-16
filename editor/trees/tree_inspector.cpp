@@ -370,7 +370,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
         properties_frame->setObjectName("propertiesFrame");
         QVBoxLayout *vertical_layout = new QVBoxLayout(properties_frame);
         vertical_layout->setSpacing(0);
-        vertical_layout->setMargin(0);
         vertical_layout->setContentsMargins(0,2,0,2);
 
         // ***** Get property map, sort by listOrder
@@ -396,7 +395,6 @@ void TreeInspector::buildInspectorFromKeys(QList<long> new_key_list, bool force_
 
             QHBoxLayout *horizontal_split = new QHBoxLayout(single_row);
             horizontal_split->setSpacing(6);
-            horizontal_split->setMargin(0);
             horizontal_split->setContentsMargins(4,2,4,2);
 
             // Load Property name, include Property Key if debug flag Show_Hidden_Component is enabled

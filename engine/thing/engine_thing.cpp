@@ -51,9 +51,12 @@ DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long origina
 }
 
 DrEngineThing::~DrEngineThing() {
+    // Call destroy() function
     destroy();
+
     // Remove physics component first
     if (compPhysics() != nullptr) { removeComponent(Comps::Thing_Physics); }
+
     // Then other componenets
     for (auto &component_pair : m_components) {
         delete component_pair.second;

@@ -6,6 +6,7 @@
 //
 //
 #include "core/dr_containers.h"
+#include "core/dr_debug.h"
 #include "core/dr_random.h"
 #include "core/dr_time.h"
 #include "engine/engine.h"
@@ -130,8 +131,6 @@ extern void SeperateFuncWildcard(cpArbiter *arb, cpSpace *, void *) {
     if (GetPhysicsObjects(arb, physics_a, physics_b)) return;
     physics_a->collideSeperate(arb, physics_b->thing());
 }
-
-
 
 
 //####################################################################################

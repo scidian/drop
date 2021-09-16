@@ -6,7 +6,6 @@
 //
 //
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QGridLayout>
 #include <QGuiApplication>
 #include <QPainter>
@@ -32,13 +31,16 @@ constexpr int c_mouse_y_offset =   3;
 FormColorMagnifier::FormColorMagnifier(QWidget *parent, QPoint mouse_pos, int width, int height, double zoom)
     : QWidget (parent), m_parent(parent), m_width(width), m_height(height), m_zoom(zoom) {
 
+    this->setObjectName(QStringLiteral("colorMagForm"));
+
     // Make sure this form is deleted when it closes
     this->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose, true);
 
     // Set up transparent background
+    this->setStyleSheet("QWidget#colorMagForm { color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none; }");
     this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, true);
     this->setAttribute(Qt::WidgetAttribute::WA_NoSystemBackground, true);
-    this->setStyleSheet("color: rgba(0, 0, 0, 0); background-color: rgba(0, 0, 0, 0); border: none;");
+    this->setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground, false);
 
     // Window properties
     this->setWindowFlag(Qt::WindowType::FramelessWindowHint);
@@ -73,11 +75,12 @@ void FormColorMagnifier::grabScreen(QScreen *screen) {
     m_screen = screen;
     QRect sg  = m_screen->geometry();
 
-    QDesktopWidget *root_window = QApplication::desktop();
-    if (root_window != nullptr) {
-        m_capture = m_screen->grabWindow( root_window->winId(), sg.x(), sg.y(), sg.width(), sg.height());
+    //QDesktopWidget *root_window = QApplication::desktop();
+    //if (root_window != nullptr) {
+        //m_capture = m_screen->grabWindow( root_window->winId(), sg.x(), sg.y(), sg.width(), sg.height());
+        m_capture = m_screen->grabWindow( 0, sg.x(), sg.y(), sg.width(), sg.height());
         m_image   = m_capture.toImage();
-    }
+    //}
 }
 
 
@@ -136,7 +139,7 @@ void FormColorMagnifier::updateColor(QPoint mouse_pos) {
 //####################################################################################
 QPixmap FormColorMagnifier::drawCursor(QPoint screen_pos, int width, int height, double zoom) {
     // Set round clipping path for pixmap
-    QPixmap  small(width, height + c_text_box_height);
+    QPixmap small(width, height + c_text_box_height);
     small.fill( Qt::transparent );
     QPainter paint(&small);
     QPainterPath circle_path, square_path;

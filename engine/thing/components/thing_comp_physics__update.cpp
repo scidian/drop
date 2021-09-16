@@ -26,6 +26,7 @@ void ThingCompPhysics::updateBodyPosition(DrPointF updated_position, bool update
     thing()->setPosition( updated_position );
 }
 
+
 // Called during DrEngineWorld->updateWorld() step, returns true if parent DrEngineThing should be removed
 bool ThingCompPhysics::update(double time_passed, double time_warp) {
     (void) time_warp;

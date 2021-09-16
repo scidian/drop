@@ -15,6 +15,7 @@
 #include "core/types/dr_pointf.h"
 #include "editor/constants_advisor_info.h"
 #include "editor/enums_editor.h"
+#include "project/entities/dr_thing.h"
 #include "project/enums_entity_types.h"
 
 // Forward Declarations

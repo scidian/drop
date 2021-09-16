@@ -56,7 +56,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         connect(color_button, &QPushButton::clicked, [this, color_box, color_button, color] () {
             FormPopupColor *color_popup = new FormPopupColor(getParentProject(), color_box, color_button, -18, 5);
             color_popup->buildPopupColors(color_button, DrColor(color_button->property(User_Property::Color).toUInt()) );
-            connect(color_popup, SIGNAL(colorGrabbed(QWidget*, DrColor)), this, SLOT(setButtonColor(QWidget*, DrColor)) );
+            connect(color_popup, SIGNAL(colorGrabbed(QWidget*,DrColor)), this, SLOT(setButtonColor(QWidget*,DrColor)) );
             color_popup->show();
         });
         getHoverHandler()->attachToHoverHandler(color_button, Advisor_Info::ColorButton);
@@ -74,7 +74,7 @@ QWidget* TreeInspector::createColorBox(DrProperty *property, QFont &font, QSizeP
         picker_button->setFixedSize(Dr::Scale(25), Dr::Scale(20) + Dr::BorderWidthAsInt() * 2);           // Height has to include border thickness
         connect(picker_button, &QPushButton::pressed, this, [this, picker_button, color_button]() {
             FormColorMagnifier *picker = new FormColorMagnifier(color_button, QCursor::pos(), 115, 115, 8);
-            connect(picker, SIGNAL(colorGrabbed(QWidget*, DrColor)), this, SLOT(setButtonColor(QWidget*, DrColor)) );
+            connect(picker, SIGNAL(colorGrabbed(QWidget*,DrColor)), this, SLOT(setButtonColor(QWidget*,DrColor)));
             picker->show();
             picker_button->setDown(false);
         });

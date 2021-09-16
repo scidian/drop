@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QActionGroup>
 #include <QDebug>
 #include <QSizeGrip>
 #include <QListWidget>

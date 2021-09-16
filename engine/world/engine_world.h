@@ -46,7 +46,7 @@ extern void     ObjectUpdateVelocity(cpBody *body, cpVect gravity, cpFloat dampi
 extern void     PlayerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);                // defined in engine_world__update_player.cpp
 extern void     ApplyJumpForce(DrEngineThing *thing, cpVect current_vel, cpVect add_vel, bool initial_jump);    // defined in engine_world__update_player.cpp
 
-extern cpBool   WaterPreSolve(cpArbiter *arb, cpSpace *space, void *);
+extern cpBool   WaterPreSolve(cpArbiter *arb, cpSpace *space, void *);                                          // defined in engine_world_collision.cpp
 
 
 //####################################################################################

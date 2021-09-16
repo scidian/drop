@@ -256,7 +256,7 @@ PopupPushButtonPageSelect::PopupPushButtonPageSelect(QWidget *parent, FormPopupC
 }
 PopupPushButtonPageSelect::~PopupPushButtonPageSelect() { }
 
-void PopupPushButtonPageSelect::enterEvent(QEvent *) {
+void PopupPushButtonPageSelect::enterEvent(QEnterEvent *) {
     m_text_before = m_popup->getColorLabel()->text();
     m_popup->getColorLabel()->setText( m_description );
 }
@@ -275,7 +275,7 @@ PopupPushButtonColorSelect::PopupPushButtonColorSelect(QWidget *parent, FormPopu
 }
 PopupPushButtonColorSelect::~PopupPushButtonColorSelect() { }
 
-void PopupPushButtonColorSelect::enterEvent(QEvent *) {
+void PopupPushButtonColorSelect::enterEvent(QEnterEvent *) {
     if (m_color == m_popup->getStartColor()) {
         this->move( this->pos() - QPoint(1, 1) );
     } else {

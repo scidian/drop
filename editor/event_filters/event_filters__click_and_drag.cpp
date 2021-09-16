@@ -5,6 +5,7 @@
 //
 //
 //
+#include <QCoreApplication>
 #include <QDebug>
 #include <QEvent>
 #include <QMouseEvent>
@@ -44,7 +45,23 @@ bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
     } else if (event->type() == QEvent::HoverMove) {
         hover_event = dynamic_cast<QHoverEvent*>(event);
         if (hover_event == nullptr) return QObject::eventFilter(obj, event);
-        mouse_pos = hover_event->pos();
+        mouse_pos = hover_event->position().toPoint();
+    }
+
+    // Force new transparent mask when form is done loading and shown on screen
+    QResizeEvent *resize_event = nullptr;
+    if (event->type() == QEvent::Polish) {
+        // Check widget is valid
+        QWidget *widget = dynamic_cast<QWidget*>(obj);
+        if (widget == nullptr) return QObject::eventFilter(obj, event);
+
+        // Raise event
+        QSize new_size(widget->size());
+        QSize old_size(widget->size());
+        resize_event = new QResizeEvent(new_size, old_size);
+        QCoreApplication::postEvent(this, resize_event);
+
+        qDebug() << "Raised resize event";
     }
 
     if (event->type() == QEvent::MouseButtonPress ||
@@ -64,7 +81,7 @@ bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
         } else if (event->type() == QEvent::MouseButtonPress) {
             if (m_is_resizeable && m_over_border != Over_Border::None) {
                 m_press_window_rect = widget->window()->geometry();
-                m_press_pos = mouse_event->globalPos();
+                m_press_pos = mouse_event->globalPosition().toPoint();
                 m_is_moving = false;
                 m_is_resizing = true;
             } else {
@@ -88,7 +105,7 @@ bool DrFilterClickAndDragWindow::eventFilter(QObject *obj, QEvent *event) {
 
                 // Adjust new window Rect
                 QRect  window_rect = m_press_window_rect;
-                QPoint diff = mouse_event->globalPos() - m_press_pos;
+                QPoint diff = mouse_event->globalPosition().toPoint() - m_press_pos;
                 if (m_over_border == Over_Border::Bottom_Right) {
                     window_rect.adjust(0, 0, diff.x(), diff.y());
                 } else if (m_over_border == Over_Border::Bottom_Left) {

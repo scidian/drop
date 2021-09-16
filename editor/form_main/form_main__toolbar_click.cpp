@@ -30,6 +30,7 @@
 //##    buttonGroupMode SLOT and functions
 //####################################################################################
 void FormMain::buttonGroupModeClicked(int id) {
+
     Editor_Mode new_id = static_cast<Editor_Mode>(id);
     if (getEditorMode() == new_id) return;
     setEditorMode(new_id);

@@ -33,7 +33,7 @@ private:
     QString         m_advisor_header    { "No Data" };              // Keeps current Advisor Header
     QString         m_advisor_body      { "No Data" };              // Keeps current Advisor Body
 
-    QMutex          m_advisor_mutex     { QMutex::NonRecursive };   // Used to keep building function thread safe
+    QMutex          m_advisor_mutex     {}; // { QMutex:: ::NonRecursive };   // Used to keep building function thread safe
 
 public:
     // Constructor
@@ -41,7 +41,7 @@ public:
                                 QTreeWidget(parent), m_project(project), m_editor_relay(editor_relay) { }
 
     // Event Overrides
-    virtual void    enterEvent(QEvent *event) override;
+    virtual void    enterEvent(QEnterEvent *event) override;
 
     // Getters / Setters
     void            changeAdvisor(QString header, QString body);

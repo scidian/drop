@@ -213,10 +213,10 @@ QPixmap     ToQPixmap(const DrBitmap &bitmap)   { return QPixmap::fromImage(ToQI
 //####################################################################################
 // Compares 2 colors, returns true if they are the same
 bool SameQColor(QColor color1, QColor color2, double tolerance) {
-    return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   tolerance) &&
-             Dr::IsCloseTo(color1.greenF(), color2.greenF(), tolerance) &&
-             Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  tolerance) &&
-             Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), tolerance) );
+    return ( Dr::IsCloseTo(color1.redF(),   color2.redF(),   static_cast<float>(tolerance)) &&
+             Dr::IsCloseTo(color1.greenF(), color2.greenF(), static_cast<float>(tolerance)) &&
+             Dr::IsCloseTo(color1.blueF(),  color2.blueF(),  static_cast<float>(tolerance)) &&
+             Dr::IsCloseTo(color1.alphaF(), color2.alphaF(), static_cast<float>(tolerance)) );
 }
 
 

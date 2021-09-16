@@ -70,7 +70,7 @@ public:
     virtual TreeAssets*         getAssetTree() override     { return m_tree_assets; }
     virtual TreeInspector*      getInspector() override     { return m_tree_inspector; }
     virtual TreeProject*        getProjectTree() override   { return m_tree_project; }
-    virtual TreeWaveForm*       getWaveForm() override  { return m_tree_wave_form; }
+    virtual TreeWaveForm*       getWaveForm() override      { return m_tree_wave_form; }
 
     virtual EditorView*         getViewEditor() override    { return m_view_editor; }
     virtual MixerView*          getViewMixer() override     { return nullptr; }

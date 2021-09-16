@@ -62,7 +62,7 @@ void AddToColorHistory(DrColor color) {
 
     // Creat new list and add color as first item
     std::vector<DrVariant> color_vector;
-    color_vector.push_back( color.rgba() );
+    color_vector.push_back(color.rgba());
 
     // Add all the old colors skipping the lastest color
     for (auto item : variant_vector) {

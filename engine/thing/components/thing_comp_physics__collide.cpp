@@ -21,11 +21,11 @@
 Collision_Info GetCollisionInfo(cpArbiter *arb, ThingCompPhysics *physics_a, ThingCompPhysics *physics_b, bool get_points) {
     CP_ARBITER_GET_SHAPES(arb, a, b);
     Collision_Info info;
-    info.shape_a =              a;
-    info.shape_b =              b;
-    info.collision_count =      physics_a->checkCollisionCountWithObject(physics_b->thing());
-    info.velocity_a =           cpBodyGetVelocity(physics_a->body);
-    info.velocity_b =           cpBodyGetVelocity(physics_b->body);
+    info.shape_a =      a;
+    info.shape_b =      b;
+    if (physics_a && physics_b)     info.collision_count =  physics_a->checkCollisionCountWithObject(physics_b->thing());
+    if (physics_a)                  info.velocity_a =       cpBodyGetVelocity(physics_a->body);
+    if (physics_b)                  info.velocity_b =       cpBodyGetVelocity(physics_b->body);
     if (get_points) {
         info.point_a =          cpArbiterGetPointA(arb, 0);
         info.point_b =          cpArbiterGetPointB(arb, 0);
@@ -165,8 +165,9 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
 
     if (should_damage) {
         long damaged_by_key = thing_a->getKey();
-        if (physics_a->isPhysicsChild() && physics_a->getPhysicsParent() != nullptr)
+        if (physics_a->isPhysicsChild() && physics_a->getPhysicsParent() != nullptr) {
             damaged_by_key = physics_a->getPhysicsParent()->getKey();
+        }
 
         bool killed = physics_b->takeDamage(physics_a->getDamage(), true, physics_a->hasDeathTouch(), false, damaged_by_key);
 
@@ -176,7 +177,12 @@ bool ThingCompPhysics::collideStep(cpArbiter *arb, DrEngineThing *thing_b) {
         // Recoil force - if has and not invincible
         if ((Dr::FuzzyCompare(physics_b->getDamageRecoil(), 0.0) == false) && (physics_b->isInvincible() == false)) {
             physics_b->setUseForce(physics_b->getDamageRecoil());
-            physics_b->bodyAddRecoil( GetCollisionInfo(arb, physics_a, physics_b, true) );
+
+// !!!!!!!!!!!!!!!
+            Collision_Info recoil_info = GetCollisionInfo(arb, physics_a, physics_b, true);
+            ///physics_b->bodyAddRecoil( recoil_info );
+// !!!!!!!!!!!!!!!
+
         }
     }
 
@@ -212,6 +218,7 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
 
     // ******************** Process ********************
     // We can react to collision force here, such as show an explosion based on impact force
+    /**
     if (cpArbiterIsFirstContact(arb)) {
         // Divide the impulse by the timestep to get the collision force
         double impact = cpvlength(cpArbiterTotalImpulse(arb)) / cpSpaceGetCurrentTimeStep(world()->getSpace());
@@ -219,6 +226,7 @@ bool ThingCompPhysics::collideEnd(cpArbiter *arb, DrEngineThing *thing_b) {
 
         }
     }
+    */
 
 
     // ******************** Wrap Up ********************
