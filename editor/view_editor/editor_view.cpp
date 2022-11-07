@@ -61,11 +61,11 @@ EditorView::EditorView(QWidget *parent, DrProject *project, IEditorRelay *editor
     connect(my_scene, &EditorScene::updateViews, this, [this]() { update(); });
     connect(my_scene, &EditorScene::setViewRect, this, [this](QRectF new_rect) { setViewRect(new_rect); });
 
-    connect(this,   SIGNAL(selectionGroupMoved(EditorScene*, QPointF)),
-            my_scene, SLOT(selectionGroupMoved(EditorScene*, QPointF)));
+    connect(this,   SIGNAL(selectionGroupMoved(EditorScene*,QPointF)),
+            my_scene, SLOT(selectionGroupMoved(EditorScene*,QPointF)));
 
-    connect(this,   SIGNAL(selectionGroupNewGroup(EditorScene*, QList<DrThing*>, QList<DrThing*>)),
-            my_scene, SLOT(selectionGroupNewGroup(EditorScene*, QList<DrThing*>, QList<DrThing*>)) );
+    connect(this,   SIGNAL(selectionGroupNewGroup(EditorScene*,QList<DrThing*>,QList<DrThing*>)),
+            my_scene, SLOT(selectionGroupNewGroup(EditorScene*,QList<DrThing*>,QList<DrThing*>)) );
 
 }
 
@@ -208,7 +208,7 @@ void EditorView::updateSelectionBoundingBox(int called_from) {
     m_handles[Position_Flags::Right] =  add_rotation.map(temp_right);
 
     // *****  Store polygon centers for use later in paintHandles
-    for (auto h : m_handles) {
+    for (auto &h : m_handles) {
         m_handles_centers[h.first] = h.second.boundingRect().center();
     }
 
