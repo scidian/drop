@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 4/6/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/6/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -22,7 +22,7 @@
 //##    Drag / Drop Events
 //####################################################################################
 // This removes the item from under the mouse, sort of
-void TreeProject::startDrag(Qt::DropActions supportedActions) {    
+void TreeProject::startDrag(Qt::DropActions supportedActions) {
 
     return;
 

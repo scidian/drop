@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/6/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/6/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      A library of helpful Time functions within the global Dr namespace

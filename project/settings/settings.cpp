@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      DrSettings Class Definitions
@@ -187,7 +187,7 @@ std::string DrSettings::getName() {
         case DrType::Stage:
         case DrType::Thing:
         case DrType::Track:
-        case DrType::World:        
+        case DrType::World:
             name_component = getComponent(Comps::Entity_Settings);              if (name_component == nullptr) return "No Name Component";
             name_property  = name_component->getProperty(Props::Entity_Name);   if (name_property ==  nullptr) return "No Name Property";
             return name_property->getValue().toString();

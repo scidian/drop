@@ -1,5 +1,5 @@
 ﻿//
-//      Created by Stephens Nunnally on 9/8/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 9/8/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -289,7 +289,7 @@ bool FindObjectsInBitmap(const DrBitmap &bitmap, std::vector<DrBitmap> &bitmaps,
 //####################################################################################
 //##    Returns a clockwise list of points representing an alpha outline of an image.
 //##    This algorithm works by moving around the image in a clockwise manner trying to stay
-//##    on the largest angle between two points. Idea and code written by Scidian Software.
+//##    on the largest angle between two points. Idea and code written by Scidian Studios.
 //##        !!!!! #NOTE: Image passed in should be black and white,
 //##                     probably from DrImageing::BlackAndWhiteFromAlpha()
 //####################################################################################

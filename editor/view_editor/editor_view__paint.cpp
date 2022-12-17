@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/8/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/8/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Graphics View Paint Overrides
@@ -42,7 +42,7 @@ void EditorView::drawBackground(QPainter *painter, const QRectF &rect) {
                         static_cast<float>(Dr::GetColor(Window_Colors::Background_Dark).blueF()),
                         1.0f);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }   
+    }
 
     if (m_grid_show_on_top == false) {
         paintGrid(*painter);

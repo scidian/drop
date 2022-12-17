@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/17/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/17/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      A useful 3D Vector class
@@ -82,7 +82,7 @@ public:
     DrVec3          operator/   (const float d_) const;
     DrVec3          operator/   (const DrVec3 &v_) const;
 
-    // Overload Operators - Multiplication    
+    // Overload Operators - Multiplication
     DrVec3&         operator*=  (const DrVec3 &d_);
     DrVec3&         operator*=  (const float d_);
     DrVec3          operator*   (const DrVec3 &v_) const;

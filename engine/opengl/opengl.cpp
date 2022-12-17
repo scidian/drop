@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/3/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/3/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -19,7 +19,7 @@
 //##    Constructor / Destructor
 //####################################################################################
 DrOpenGL::DrOpenGL(QWidget *parent, FormEngine *form_engine, DrEngine *engine) : QOpenGLWidget(parent), m_form_engine(form_engine), m_engine(engine) {
-    // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead    
+    // ***** DO NOT perform any OpenGL resource initialization in constructor, use initializeGL() instead
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);            // Must setFocus to accept KeyPress events
 }
 

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      FormMain - Class that holds our main form window
@@ -180,7 +180,7 @@ public:
     virtual void        resizeEvent(QResizeEvent *event) override;                                          // Inherited from QWidget
 
 
-    //############################ START: Interface Relay Implementations    
+    //############################ START: Interface Relay Implementations
     virtual TreeAdvisor*        getAdvisor() override       { return m_tree_advisor; }
     virtual TreeAssets*         getAssetTree() override     { return m_tree_assets; }
     virtual TreeInspector*      getInspector() override     { return m_tree_inspector; }

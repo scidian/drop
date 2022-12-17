@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      List of Type Enumerations used by this project
@@ -36,7 +36,7 @@ constexpr double    c_node_spacing =            32;                 // Default s
 //##        - All Entities inherit DrSettings to use DrComponents which contain DrProperties compatible with the Inspector
 //##
 //############################
-enum class DrType {    
+enum class DrType {
     // Misc Types
     NotFound = 0,                   // For passing a value in functions that represents No Type Selected / Found, !!!!! #NOTE: Keep as zero
 

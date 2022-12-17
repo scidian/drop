@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/15/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/15/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      DrSlots are Node Slots that can hold a Signal (Input) or Output Slot

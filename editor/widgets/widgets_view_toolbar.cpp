@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/22/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/22/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -45,7 +45,7 @@ ViewToolbar::ViewToolbar(QWidget *parent, DrProject *project, IEditorRelay *edit
         case Editor_Mode::Sound_Creator:
             if (view_mixer == nullptr)  editor_mode = Editor_Mode::Clear;
         case Editor_Mode::Clear:
-        case Editor_Mode::Program_Loading:            
+        case Editor_Mode::Program_Loading:
             view_editor =   nullptr;
             view_mixer =    nullptr;
             view_node =     nullptr;

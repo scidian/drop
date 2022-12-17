@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/17/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/17/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      DrEngineCamera - Class Functions
@@ -191,7 +191,7 @@ void DrEngineCamera::moveCamera(const double& milliseconds) {
 //####################################################################################
 //##    DrEngineCamera - Update Camera Position
 //####################################################################################
-void DrEngineCamera::updateCamera() {        
+void DrEngineCamera::updateCamera() {
     // Movement is based on following an object stored in m_follow
     if (m_follow_key == c_no_key) return;
     DrEngineThing *follow = getThingFollowing();                        if (follow == nullptr) return;
@@ -240,7 +240,7 @@ void DrEngineCamera::updateCamera() {
     double pos_z = 0.0;
     double total = 0.0;
 
-    // Basic Camera = Object Position    
+    // Basic Camera = Object Position
     ///pos_x += follow_pos_x;
     ///pos_y += follow_pos_y;
     ///pos_z += follow_pos_z;
@@ -265,7 +265,7 @@ void DrEngineCamera::updateCamera() {
 
     if (update_x) m_target.x = static_cast<float>(pos_x);
     if (update_y) m_target.y = static_cast<float>(pos_y);
-    if (update_z) m_target.z = static_cast<float>(pos_z);    
+    if (update_z) m_target.z = static_cast<float>(pos_z);
 }
 
 

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 4/9/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/9/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -147,7 +147,7 @@ void TreeProject::updateSelectionFromKeyList(QList<long> key_list) {
         }
     }
 
-    ensureSelectionVisible();    
+    ensureSelectionVisible();
 
     // Make sure top selected item has keyboard focus, good for after item duplication
     if (selectedItems().count() > 0) {

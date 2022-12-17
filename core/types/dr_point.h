@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 10/2/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 10/2/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Useful 2D Point Class with Integers, adapted from HullFinder

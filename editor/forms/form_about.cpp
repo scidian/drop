@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 10/13/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 10/13/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -186,7 +186,7 @@ QString FormAbout::licenseText() {
             // 3rd_party Files
             "This software uses Delaunator writted by Volodymyr Bilonenko and distributed under the MIT License. "
             "Copyright (c) 2018 Volodymyr Bilonenko."
-            "<br><br>"            
+            "<br><br>"
 
             "This software uses Poly Partition written by Ivan Fratric and distributed under the MIT License. "
             "Copyright (c) 2011 by Ivan Fratric."

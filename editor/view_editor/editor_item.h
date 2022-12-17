@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/26/18, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      EditorItem - Class to hold one Graphics Item within a QGraphicsScene

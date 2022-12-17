@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/6/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/6/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -52,7 +52,7 @@ void DrEngineWorld::buildWorld(long world_id_to_build, Demo_Player player_to_use
     cpSpaceAddBody(m_space, m_engine->mouse_body);
 
 
-    // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health    
+    // ***** Custom Wildcard beginFunc CollisionHandlers: Damage / Health
     std::vector<Collision_Type> collide_types { Collision_Type::Damage_None,
                                                 Collision_Type::Damage_Player,
                                                 Collision_Type::Damage_Enemy,

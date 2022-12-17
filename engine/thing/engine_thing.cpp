@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 6/19/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/19/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Abstract Item representing a thing that has a body in the Physics Engine (object, character, light, etc)
@@ -45,7 +45,7 @@ DrEngineThing::DrEngineThing(DrEngineWorld *world, long unique_key, long origina
     this->setScaleX(scale.x);                                                   // Save x scale for later
     this->setScaleY(scale.y);                                                   // Save y scale for later
     this->setSize(size);
-    this->setZOrder(z);    
+    this->setZOrder(z);
 
     init();
 }
@@ -160,7 +160,7 @@ void DrEngineThing::removeComponent(std::string component_name) {
             if (component_name == Comps::Thing_Foliage)             m_comp_foliage =    nullptr;
             if (component_name == Comps::Thing_Physics)             m_comp_physics =    nullptr;
             if (component_name == Comps::Thing_Player)              m_comp_player =     nullptr;
-            if (component_name == Comps::Thing_Soft_Body)           m_comp_soft_body=   nullptr;            
+            if (component_name == Comps::Thing_Soft_Body)           m_comp_soft_body=   nullptr;
             delete (*it).second;
             it = m_components.erase(it);
             continue;

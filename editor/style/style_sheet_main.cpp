@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/21/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Helpful QWidget / QObject formating functions
@@ -468,7 +468,7 @@ QString CustomStyleSheetFormatting() {
         "       height: " + std::to_string(Dr::Scale(18)) + "px; "
         "       border: 1px solid; border-radius: 4px; "
         "       background: " +    Dr::GetColor(Window_Colors::Background_Light).name() + "; "
-        "       border-color: " +                
+        "       border-color: " +
                 (Dr::GetColorScheme() == Color_Scheme::Light ? Dr::GetColor(Window_Colors::Background_Light).darker(150) :
                                                                Dr::GetColor(Window_Colors::Background_Light).lighter(200)).name() +
                                    Dr::GetColor(Window_Colors::Background_Light).darker(150).name() +

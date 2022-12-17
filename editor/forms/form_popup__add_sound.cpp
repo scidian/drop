@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 6/4/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/4/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -82,7 +82,7 @@ void FormPopup::buildPopupAddSoundEntity() {
         // ****************************************
 
         // ********** Adds new Mix to Project
-        connect(buttonMix, &QRadioButton::released, [this]() {            
+        connect(buttonMix, &QRadioButton::released, [this]() {
             IEditorRelay *editor = Dr::GetActiveEditorRelay();
             if (editor) editor->stopAllSound();                                 // Cannot load files while SoLoud is playing sound
 

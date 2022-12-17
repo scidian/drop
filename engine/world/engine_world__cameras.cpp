@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/16/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/16/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -259,7 +259,7 @@ void DrEngineWorld::switchCameraToNext(bool only_switch_to_character_cameras, bo
                             }
                         }
                     }
-                }    
+                }
             }
         }
 

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 3/17/2020, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/17/2020, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Progress Bar Interface

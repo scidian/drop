@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/6/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/6/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -123,7 +123,7 @@ void NodeView::mousePressEvent(QMouseEvent *event) {
                             m_origin_item->setSelected(true);
                         }
 
-                        // ***** Process press event for item movement (Translation)                        
+                        // ***** Process press event for item movement (Translation)
                         if (origin_item_settings->isLocked() == false) {
                             NodeItem *graphics_item = dynamic_cast<NodeItem*>(m_origin_item);
 

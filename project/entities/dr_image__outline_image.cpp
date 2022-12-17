@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 2/7/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 2/7/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -40,7 +40,7 @@ void DrImage::setSimpleBox() {
 
 //####################################################################################
 //##    Loads list of points for Image and Image Holes
-//####################################################################################        
+//####################################################################################
 void DrImage::autoOutlinePoints(IProgressBar *progress) {
     m_poly_list.clear();
     m_hole_list.clear();
@@ -138,7 +138,7 @@ void DrImage::autoOutlinePoints(IProgressBar *progress) {
 
         // Breaks holes into seperate images for each Hole
         std::vector<DrBitmap> hole_images;
-        std::vector<DrRect>   hole_rects;        
+        std::vector<DrRect>   hole_rects;
         Dr::FindObjectsInBitmap(holes, hole_images, hole_rects, c_alpha_tolerance, false, progress);
 
         // Lock   Progress Bar for Remaining sub function

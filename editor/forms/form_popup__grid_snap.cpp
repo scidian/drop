@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 4/1/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/1/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //

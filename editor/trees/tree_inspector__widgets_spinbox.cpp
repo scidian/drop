@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/26/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/26/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Object Inspector Spin Boxes
@@ -156,7 +156,7 @@ QFrame* TreeInspector::createDoubleSpinBoxPair(DrProperty *property, QFont &font
 
     switch (spin_type) {
         case Property_Type::PointF:
-        case Property_Type::PositionF:    
+        case Property_Type::PositionF:
         case Property_Type::ScaleF:
             spin_left->setPrefix("X: ");        spin_right->setPrefix("Y: ");   break;
         case Property_Type::PositiveScaleF:

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 3/22/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/22/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -97,7 +97,7 @@ bool DrFilterAssetMouseHandler::eventFilter(QObject *object, QEvent *event) {
     } else if (event->type() == QEvent::HoverEnter) {
         DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(asset_key);
         if (entity == nullptr) return QObject::eventFilter(object, event);
-        QString asset_name = QString::fromStdString(entity->getName());        
+        QString asset_name = QString::fromStdString(entity->getName());
         if (asset_name != label_name->text()) {
             m_flag_scrolling =  true;
             m_position =        0;

@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 8/15/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 8/15/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -46,7 +46,7 @@ QMatrix4x4 billboardSphericalBegin(glm::vec3 camera, glm::vec3 object, glm::vec3
 
     Up_Vector uv = (glm::distance(c_up_vector_y, up) < 0.5f) ? Up_Vector::Y : Up_Vector::Z;
 
-    // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane    
+    // obj_to_cam_proj is the vector in world coordinates from the local origin to the camera projected in the XZ plane
     obj_to_cam_proj.x = camera.x - object.x;
     obj_to_cam_proj.y = camera.y - object.y;
     obj_to_cam_proj.z = camera.z - object.z;

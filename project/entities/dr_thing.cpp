@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/7/18, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      DrThing Class Definitions
@@ -62,7 +62,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             DrAsset *asset = dynamic_cast<DrAsset*>(from_entity);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setHidden(false);
             getComponentProperty(Comps::Entity_Settings, Props::Entity_Key)->setDisplayName("Object ID Key");
-            addComponentSettingsObject(new_thing_name, should_collide);            
+            addComponentSettingsObject(new_thing_name, should_collide);
             addComponentTransform(asset->getWidth(), asset->getHeight(), x, -y, DrThingType::Object);
             addComponentLayering(z);
             addComponentMovement();
@@ -91,7 +91,7 @@ DrThing::DrThing(DrProject *parent_project, DrWorld *parent_world, DrStage *pare
             addComponentAppearance(true, false);
             setComponentPropertyValue(Comps::Size_Settings, Props::Size_Max_Size, DrPointF(100, 100));
             setComponentPropertyValue(Comps::Size_Settings, Props::Size_Min_Size, DrPointF(100, 100));
-            break;            
+            break;
 
 
         // ***** Effect Things

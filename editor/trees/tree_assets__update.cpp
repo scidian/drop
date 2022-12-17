@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 4/9/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/9/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -37,7 +37,7 @@ void TreeAssets::setSelectedKey(long key, bool respond_to_selection) {
         DrSettings *entity = m_editor_relay->currentProject()->findSettingsFromKey(key);
 
         // If selected Asset is Sound, and auto play is enabled, play Sound
-        if (entity->getType() == DrType::Sound) {            
+        if (entity->getType() == DrType::Sound) {
             if (Dr::GetPreference(Preferences::Mixer_Auto_Play_Asset_Sounds).toBool()) {
                 DrSound *sound = static_cast<DrSound*>(entity);
                 if (sound->getSoundType() == DrSoundType::Audio_File) {
@@ -57,7 +57,7 @@ void TreeAssets::ensureSelectedKeyVisible() {
     for (auto frame : m_asset_frames) {
         if (frame == nullptr) continue;
 
-        if (frame->property(User_Property::Key).toLongLong() == m_selected_key) {    
+        if (frame->property(User_Property::Key).toLongLong() == m_selected_key) {
             QFrame *parent_frame = dynamic_cast<QFrame*>(frame->parentWidget());                // Parent is "Characters", "Objects", etc category frame
             if (parent_frame == nullptr) continue;
 

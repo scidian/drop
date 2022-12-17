@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/23/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/23/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Commands used with local m_undo QUndoStack
@@ -69,7 +69,7 @@ public:
 //##    Selected new group command
 //############################
 class UndoCommandNewSelection : public QUndoCommand
-{ 
+{
 private:
     // External Borrowed Pointers
     EditorScene    *m_scene;

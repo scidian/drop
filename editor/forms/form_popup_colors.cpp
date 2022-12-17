@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 4/1/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 4/1/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Subclassed FormPopup used to allow color picking with sweet options
@@ -34,7 +34,7 @@ void FormPopupColor::buildPopupColors(QWidget *wants_color, DrColor start_color)
     m_start_color = start_color;
     m_current_palette = Color_Palettes::Material;            // !!!!! #TEMP:
 
-    this->setFixedSize(210, 310);    
+    this->setFixedSize(210, 310);
 
     // ********* Buttons for changing pages in the QStackWidget
     PopupPushButtonPageSelect *change0 = new PopupPushButtonPageSelect(getInnerWidget(), this, tr("Color Palette") );

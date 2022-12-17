@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 8/3/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 8/3/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      Object Inspector Image Frame
@@ -122,7 +122,7 @@ QFrame* TreeInspector::createImageFrame(DrProperty *property, QFont &font, QSize
             // ***** Edit Button
             QToolButton *edit_button = new QToolButton(image_frame);
             edit_button->setObjectName("buttonImageMiniButton");
-            Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);            
+            Dr::ApplyDropShadowByType(edit_button, Shadow_Types::Button_Shadow_Thin);
                 QPixmap edit_icon(":/assets/gui_misc/image_edit.png");
                 edit_icon = QPixmap::fromImage( Dr::ColorizeImage(edit_icon.toImage(), Dr::ToQColor(Dr::GetColor(Window_Colors::Text))) );
                 edit_button->setIcon( QIcon(edit_icon.scaled(QSize(9, 9), Qt::KeepAspectRatio, Qt::SmoothTransformation)) );

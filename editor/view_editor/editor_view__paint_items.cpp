@@ -1,5 +1,5 @@
 ﻿//
-//      Created by Stephens Nunnally on 3/9/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 3/9/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      EditorView Paint Functions that paint on / around QGraphicsItems
@@ -115,7 +115,7 @@ void EditorView::paintHandles(QPainter &painter, Handle_Shapes shape_to_draw) {
                 corner_fade.setColorAt(1.0, Dr::ToQColor(Dr::GetColor(Window_Colors::Icon_Dark ).darker( 200)));
             painter.setBrush(corner_fade);
 
-            if (shape_to_draw == Handle_Shapes::Circles) {                
+            if (shape_to_draw == Handle_Shapes::Circles) {
                 painter.drawEllipse(square);
             } else if (shape_to_draw == Handle_Shapes::Squares) {
                 painter.drawRect(square);

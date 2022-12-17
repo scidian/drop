@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/3/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/3/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -21,7 +21,7 @@
 //####################################################################################
 //##    Render, Paint the Scene (called by update())
 //####################################################################################
-void DrOpenGL::paintGL() {    
+void DrOpenGL::paintGL() {
     // ***** Find OpenGL Version supported on this system
     ///auto ver = glGetString(GL_VERSION);
     ///g_info = std::string(reinterpret_cast<const char*>(ver));

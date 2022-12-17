@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/2/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/2/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -149,7 +149,7 @@ void DrOpenGL::drawDebugJoints() {
         cpVect point_a, point_b, pivot_point;
         bool   has_pivot = false;
 
-        // Find Joint Coordinates        
+        // Find Joint Coordinates
         cpBody *body_a = cpConstraintGetBodyA(joint);
         cpBody *body_b = cpConstraintGetBodyB(joint);
 

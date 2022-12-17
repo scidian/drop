@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/6/2019, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/6/2019, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -75,7 +75,7 @@ public:
     EngineMessages&         messageList(std::string name = "", long thing_key = c_no_key);
     void                    updateMessageList();
 
-    // Getter and Setters    
+    // Getter and Setters
     DrOpenGL*               getOpenGL()                 { return m_opengl; }
     void                    setOpenGl(DrOpenGL *opengl) { m_opengl = opengl; }
     DrProject*              getProject()                { return m_project; }

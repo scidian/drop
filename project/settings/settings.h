@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 12/13/18, (c) 2019 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      DrSettings - Base class to hold Settings and a collection of Components for all Project entities

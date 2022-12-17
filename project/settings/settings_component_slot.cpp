@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 5/15/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 5/15/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -72,7 +72,7 @@ void DrSlot::removeConnection(DrSlot *signal) {
     return removeConnection(signal->getParentSettings()->getKey(), signal->getParentComponent()->getComponentKey(), signal->getSlotKey());
 }
 
-void DrSlot::removeConnection(long entity_key, long component_key, long signal_key) {    
+void DrSlot::removeConnection(long entity_key, long component_key, long signal_key) {
     if (this->getSlotType() == DrSlotType::Signal) return;
     for (auto it = m_connections.begin(); it != m_connections.end(); ) {
         if ((*it).connected_entity_key == entity_key && (*it).connected_component_key == component_key && (*it).connected_signal_key == signal_key) {

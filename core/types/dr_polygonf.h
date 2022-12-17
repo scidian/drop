@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 1/28/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 1/28/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //      To be Engine compatible, this file does NOT, and should NOT #include any Qt Library types

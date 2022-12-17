@@ -1,5 +1,5 @@
 //
-//      Created by Stephens Nunnally on 6/2/2020, (c) 2020 Scidian Software, All Rights Reserved
+//      Created by Stephens Nunnally on 6/2/2020, (c) 2020 Scidian Studios, All Rights Reserved
 //
 //  File:
 //
@@ -58,7 +58,7 @@ void DrSound::initializeSoundSettings(std::string new_name) {
         case DrSoundType::White_Noise:      sound_color = Component_Colors::RGB_16_Orange;      break;
     }
     addPropertyToComponent(Comps::Sound_Settings, Props::Sound_Settings_Color, Property_Type::Color, sound_color.rgba(),
-                           "Sound Color", "Color this Sound will appear in the Asset Tree.");    
+                           "Sound Color", "Color this Sound will appear in the Asset Tree.");
 
 }
 
