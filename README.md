@@ -5,18 +5,16 @@
 # Drop Creator
 
 Drop Creator is no code, drang and dorp, 2.5D game engine written in C++. It is built on Qt, OpenGL, and [Chipmunk Physics](https://chipmunk-physics.net/).
-<br><br>
-<b>***** NOT IN ACTIVE DEVELOPMENT *****
-<br><br>
-<b>After attempting to contact the [Qt](https://www.qt.io/) company in regards to licensing and receiving no feedback, development on Drop was halted. We have shifted from C++ / Qt / OpenGL to a web friendly Javascript / WebGL stack. Current efforts are targeted on the [Onsight](https://github.com/onsightengine) engine.</b>
 
+## Status
+
+<b>***** NOT IN ACTIVE DEVELOPMENT *****</b>
 <br>
+<b>After attempting to contact the [Qt](https://www.qt.io/) company in regards to licensing and receiving no feedback, development on Drop was halted. We have shifted from C++ / Qt / OpenGL to a web friendly Javascript / WebGL stack. Current efforts are targeted on the [Onsight](https://github.com/onsightengine) engine.</b>
 
 ## Documentation
 
 An introduction to Drop and the beginning of a user manual can be found [online](https://docs.drop.scidian.com/).
-
-<br>
 
 ## Features
 - ⚡ Codeless. Simple Drag and Drop game design. No programming or scripting.
@@ -25,8 +23,6 @@ An introduction to Drop and the beginning of a user manual can be found [online]
 - 🌎 World Editor. Super fast level design with a flexible grid system that supports snapping and resizing of game objects to the 		grid.
 - 🏓 Physics Engine. Simple to customize Physics World. Support for auto creation of Physics shapes with concave collision support.
 - 🧞‍♀️ Powerful Shaders. Instantly change the color or look of any object. One click retro Pixelation or fun Cartoon graphics.
-
-<br>
 
 ## License
 - Drop Creator is MIT licensed and free to reproduce. However, it heavily utilizes Qt for the editor and engine access to OpenGL under the copyleft [LGPL](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License) license.
