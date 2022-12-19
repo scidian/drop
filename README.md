@@ -8,8 +8,8 @@ Drop Creator is a no code, drag and drop, 2.5D game engine written in C++. It is
 
 ## Status
 
-<center><b>***** NOT IN ACTIVE DEVELOPMENT *****</b></center><br>
-
+<div align="center"><b>***** NOT IN ACTIVE DEVELOPMENT *****</b></div>
+<br>
 After attempting to contact the [Qt](https://www.qt.io/) company in regards to licensing and receiving no feedback, development on Drop was halted. We have shifted away from C++ / Qt / OpenGL to a web first JavaScript / WebGL tech stack. Current efforts are targeted on the [Onsight Engine](https://github.com/onsightengine).
 
 ## Documentation
