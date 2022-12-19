@@ -18,12 +18,12 @@ After attempting to contact the [Qt](https://www.qt.io/) company in regards to l
 An introduction to Drop and the beginning of a user manual can be found [online](https://docs.drop.scidian.com/).
 
 ## Features
-- ⚡ Codeless. Simple Drag and Drop game design. No programming or scripting.
-- 👾 Instant 3D. Powerful 2D to 3D conversion engine instantly transforms any 2D graphics into 3D.
-- 🧭 Flexible UI. Customizable environment with easily resizable docking tabs. Colorful Interface with built in Themes.
-- 🌎 World Editor. Super fast level design with a flexible grid system.
-- 🏓 Physics Engine. Simple to customize Physics World. Support for auto creation of Physics shapes with concave collision support.
-- 🧞‍♀️ Powerful Shaders. Instantly change the color or look of any object. One click retro Pixelation or fun Cartoon graphics.
+- ⚡ **Codeless** - Simple drag and drop game design, no programming or scripting.
+- 🧞‍♀️ **Instant 3D** - Instantly transform any 2D graphics into 3D.
+- 🧭 **Flexible UI** - Customizable environment with built in themes.
+- 🌎 **World Editor** - Super fast level design with a flexible grid system.
+- 🏓 **Physics Engine** - Auto creation of physics shapes with concave collision support.
+- 👾 **Powerful Shaders** - One click retro pixelation or fun cartoon graphics.
 
 ## License
 - Drop Creator is MIT licensed and free to reproduce. However, it heavily utilizes Qt for the editor and engine access to OpenGL under the copyleft [LGPL](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License) license.
