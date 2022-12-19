@@ -6,11 +6,9 @@
 
 Drop Creator is a no code, drag and drop, 2.5D game engine written in C++. It is built on Qt, OpenGL, and [Chipmunk Physics](https://chipmunk-physics.net/).
 
-<br>
-
-<b>***** NOT IN ACTIVE DEVELOPMENT *****</b>
-
 ## Status
+
+<center><b>***** NOT IN ACTIVE DEVELOPMENT *****</b></center><br>
 
 After attempting to contact the [Qt](https://www.qt.io/) company in regards to licensing and receiving no feedback, development on Drop was halted. We have shifted away from C++ / Qt / OpenGL to a web first JavaScript / WebGL tech stack. Current efforts are targeted on the [Onsight Engine](https://github.com/onsightengine).
 
